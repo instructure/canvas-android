@@ -51,7 +51,7 @@ import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItem
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItemState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.utils.HorizonScaffold
+import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

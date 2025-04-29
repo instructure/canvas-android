@@ -91,6 +91,10 @@ class AccountAdvancedViewModel @Inject constructor(
             repository.updateUserTimeZone(selectedTimeZone.id)
 
             _uiState.update {
+                it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.accountAdvancedUpdatedMessage)))
+            }
+            
+            _uiState.update {
                 it.copy(isButtonEnabled = true)
             }
         } catch {

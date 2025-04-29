@@ -110,7 +110,7 @@ class AccountViewModel @Inject constructor(
         title = null,
         items = listOf(
             AccountItemState(
-                title = "Log Out",
+                title = context.getString(R.string.accountLogOutLabel),
                 type = AccountItemType.LogOut,
             )
         )

@@ -31,11 +31,10 @@ import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
-import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
-import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
+import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.utils.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -60,56 +59,6 @@ private fun AccountProfileContent(
     mainNavController: NavController,
     modifier: Modifier,
 ) {
-    val fullNameErrorMessage = stringResource(R.string.accountFullNameErrorMessage)
-    val fullNameState = TextFieldState(
-        value = state.fullNameTextValue,
-        label = stringResource(R.string.accountFullNameLabel),
-        size = TextFieldInputSize.Medium,
-        onFocusChanged = { state.updateFullNameIsFocused(it) },
-        onValueChange = {
-            state.updateFullName(it)
-            if (it.text.isEmpty()) {
-                state.updateFullNameErrorMessage(fullNameErrorMessage)
-            } else {
-                state.updateFullNameErrorMessage(null)
-            }
-        },
-        errorText = state.fullNameErrorMessage,
-    )
-    val displayNameErrorMessage = stringResource(R.string.accountDisplayNameErrorMessage)
-    val displayNameState = TextFieldState(
-        value = state.displayNameTextValue,
-        label = stringResource(R.string.accountDisplayNameLabel),
-        size = TextFieldInputSize.Medium,
-        onFocusChanged = { state.updateDisplayNameIsFocused(it) },
-        onValueChange = {
-            state.updateDisplayName(it)
-            if (it.text.isEmpty()) {
-                state.updateDisplayNameErrorMessage(displayNameErrorMessage)
-            } else {
-                state.updateDisplayNameErrorMessage(null)
-            }
-        },
-        errorText = state.displayNameErrorMessage,
-    )
-    val emailErrorMessage = stringResource(R.string.accountEmailErrorMessage)
-    val emailState = TextFieldState(
-        value = state.emailTextValue,
-        label = stringResource(R.string.accountEmailLabel),
-        size = TextFieldInputSize.Medium,
-        onFocusChanged = { state.updateEmailIsFocused(it) },
-        onValueChange = {
-            state.updateEmail(it)
-            if (it.text.isEmpty()) {
-                state.updateEmailErrorMessage(emailErrorMessage)
-            } else {
-                state.updateEmailErrorMessage(null)
-            }
-        },
-        errorText = state.emailErrorMessage,
-        helperText = stringResource(R.string.accountEmailHelperText),
-        enabled = false
-    )
     LazyColumn(
         contentPadding = PaddingValues(
             vertical = 48.dp,
@@ -119,22 +68,22 @@ private fun AccountProfileContent(
     ) {
         item {
             Column {
-                TextField(fullNameState)
+                TextField(state.fullNameInputState)
 
                 HorizonSpace(SpaceSize.SPACE_24)
 
-
-                TextField(displayNameState)
+                TextField(state.displayNameInputState)
 
                 HorizonSpace(SpaceSize.SPACE_24)
 
-                TextField(emailState)
+                TextField(state.emailInputState)
 
                 HorizonSpace(SpaceSize.SPACE_24)
 
                 Button(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
                     label = stringResource(R.string.accountProfileSaveChangesLabel),
+                    width = ButtonWidth.FILL,
                     onClick = {
                         state.saveChanges {
                             mainNavController.currentBackStackEntry?.savedStateHandle?.set(AccountViewModel.CHANGE_USER_NAME,

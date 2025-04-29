@@ -34,11 +34,12 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.utils.HorizonScaffold
+import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -90,6 +91,7 @@ private fun AccountAdvancedContent(state: AccountAdvancedUiState, modifier: Modi
             ) {
                 Button(
                     label = stringResource(R.string.accountAdvancedSaveChangesLabel),
+                    width = ButtonWidth.FILL,
                     enabled = state.isButtonEnabled,
                     onClick = { state.saveSelectedTimeZone() },
                     modifier = Modifier.align(Alignment.CenterHorizontally)

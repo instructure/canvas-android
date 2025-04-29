@@ -16,28 +16,13 @@
  */
 package com.instructure.horizon.features.account.profile
 
-import androidx.compose.ui.text.input.TextFieldValue
+import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class AccountProfileUiState(
     val screenState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
-    val fullNameTextValue: TextFieldValue = TextFieldValue(""),
-    val fullNameIsFocused: Boolean = false,
-    val fullNameErrorMessage: String? = null,
-    val displayNameTextValue: TextFieldValue = TextFieldValue(""),
-    val displayNameIsFocused: Boolean = false,
-    val displayNameErrorMessage: String? = null,
-    val emailTextValue: TextFieldValue = TextFieldValue(""),
-    val emailIsFocused: Boolean = false,
-    val emailErrorMessage: String? = null,
-    val updateFullName: (TextFieldValue) -> Unit = {},
-    val updateFullNameIsFocused: (Boolean) -> Unit = {},
-    val updateFullNameErrorMessage: (String?) -> Unit = {},
-    val updateDisplayName: (TextFieldValue) -> Unit = {},
-    val updateDisplayNameIsFocused: (Boolean) -> Unit = {},
-    val updateDisplayNameErrorMessage: (String?) -> Unit = {},
-    val updateEmail: (TextFieldValue) -> Unit = {},
-    val updateEmailIsFocused: (Boolean) -> Unit = {},
-    val updateEmailErrorMessage: (String?) -> Unit = {},
+    val fullNameInputState: TextFieldState,
+    val displayNameInputState: TextFieldState,
+    val emailInputState: TextFieldState,
     val saveChanges: (notifyParent: (String) -> Unit) -> Unit = {},
 )

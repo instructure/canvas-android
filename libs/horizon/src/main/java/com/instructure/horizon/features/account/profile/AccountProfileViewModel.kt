@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -41,15 +43,34 @@ class AccountProfileViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(AccountProfileUiState(
         screenState = LoadingState(isPullToRefreshEnabled = false, onErrorSnackbarDismiss = ::dismissSnackbar),
-        updateFullName = ::updateFullName,
-        updateFullNameIsFocused = ::updateFullNameIsFocused,
-        updateFullNameErrorMessage = ::updateFullNameErrorMessage,
-        updateDisplayName = ::updateDisplayName,
-        updateDisplayNameIsFocused = ::updateDisplayNameIsFocused,
-        updateDisplayNameErrorMessage = ::updateDisplayNameErrorMessage,
-        updateEmail = ::updateEmail,
-        updateEmailIsFocused = ::updateEmailIsFocused,
-        updateEmailErrorMessage = ::updateEmailErrorMessage,
+        fullNameInputState = TextFieldState(
+            label = context.getString(R.string.accountFullNameLabel),
+            size = TextFieldInputSize.Medium,
+            value = TextFieldValue(""),
+            isFocused = false,
+            errorText = null,
+            onValueChange = ::updateFullName,
+            onFocusChanged = ::updateFullNameIsFocused,
+        ),
+        displayNameInputState = TextFieldState(
+            label = context.getString(R.string.accountDisplayNameLabel),
+            size = TextFieldInputSize.Medium,
+            value = TextFieldValue(""),
+            isFocused = false,
+            errorText = null,
+            onValueChange = ::updateDisplayName,
+            onFocusChanged = ::updateDisplayNameIsFocused,
+        ),
+        emailInputState = TextFieldState(
+            label = context.getString(R.string.accountEmailLabel),
+            enabled = false,
+            size = TextFieldInputSize.Medium,
+            value = TextFieldValue(""),
+            isFocused = false,
+            errorText = null,
+            onValueChange = ::updateEmail,
+            onFocusChanged = ::updateEmailIsFocused,
+        ),
         saveChanges = ::saveChanges
     ))
     val uiState = _uiState.asStateFlow()
@@ -69,19 +90,31 @@ class AccountProfileViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     screenState = it.screenState.copy(isLoading = false),
-                    fullNameTextValue = TextFieldValue(user.name),
-                    fullNameErrorMessage = if (user.name.isEmpty()) {
-                        context.getString(R.string.accountFullNameErrorMessage)
-                    } else {
-                        null
-                    },
-                    displayNameTextValue = TextFieldValue(user.shortName ?: ""),
-                    displayNameErrorMessage = if (user.shortName.isNullOrEmpty()) {
-                        context.getString(R.string.accountDisplayNameErrorMessage)
-                    } else {
-                        null
-                    },
-                    emailTextValue = TextFieldValue(user.primaryEmail ?: ""),
+                    fullNameInputState = it.fullNameInputState.copy(
+                        value = TextFieldValue(user.name),
+                        errorText = if (user.name.isEmpty()) {
+                            context.getString(R.string.accountFullNameErrorMessage)
+                        } else {
+                            null
+                        }
+                    ),
+                    displayNameInputState = it.displayNameInputState.copy(
+                        value = TextFieldValue(user.shortName.orEmpty()),
+                        errorText = if (user.shortName.isNullOrEmpty()) {
+                            context.getString(R.string.accountDisplayNameErrorMessage)
+                        } else {
+                            null
+                        }
+                    ),
+                    emailInputState = it.emailInputState.copy(
+                        value = TextFieldValue(user.primaryEmail.orEmpty()),
+                        errorText = if (user.primaryEmail.isNullOrEmpty()) {
+                            context.getString(R.string.accountEmailErrorMessage)
+                        } else {
+                            null
+                        },
+                        helperText = context.getString(R.string.accountEmailHelperText),
+                    ),
                 )
             }
         } catch {
@@ -98,7 +131,14 @@ class AccountProfileViewModel @Inject constructor(
     private fun updateFullName(value: TextFieldValue) {
         _uiState.update {
             it.copy(
-                fullNameTextValue = value
+                fullNameInputState = it.fullNameInputState.copy(
+                    value = value,
+                    errorText = if (value.text.isEmpty()) {
+                        context.getString(R.string.accountFullNameErrorMessage)
+                    } else {
+                        null
+                    },
+                ),
             )
         }
     }
@@ -106,15 +146,7 @@ class AccountProfileViewModel @Inject constructor(
     private fun updateFullNameIsFocused(value: Boolean) {
         _uiState.update {
             it.copy(
-                fullNameIsFocused = value
-            )
-        }
-    }
-
-    private fun updateFullNameErrorMessage(value: String?) {
-        _uiState.update {
-            it.copy(
-                fullNameErrorMessage = value
+                fullNameInputState = it.fullNameInputState.copy(isFocused = value),
             )
         }
     }
@@ -122,7 +154,14 @@ class AccountProfileViewModel @Inject constructor(
     private fun updateDisplayName(value: TextFieldValue) {
         _uiState.update {
             it.copy(
-                displayNameTextValue = value
+                displayNameInputState = it.displayNameInputState.copy(
+                    value = value,
+                    errorText = if (value.text.isEmpty()) {
+                        context.getString(R.string.accountDisplayNameErrorMessage)
+                    } else {
+                        null
+                    },
+                ),
             )
         }
     }
@@ -130,15 +169,7 @@ class AccountProfileViewModel @Inject constructor(
     private fun updateDisplayNameIsFocused(value: Boolean) {
         _uiState.update {
             it.copy(
-                displayNameIsFocused = value
-            )
-        }
-    }
-
-    private fun updateDisplayNameErrorMessage(value: String?) {
-        _uiState.update {
-            it.copy(
-                displayNameErrorMessage = value
+                displayNameInputState = it.displayNameInputState.copy(isFocused = value),
             )
         }
     }
@@ -146,7 +177,14 @@ class AccountProfileViewModel @Inject constructor(
     private fun updateEmail(value: TextFieldValue) {
         _uiState.update {
             it.copy(
-                emailTextValue = value
+                emailInputState = it.emailInputState.copy(
+                    value = value,
+                    errorText = if (value.text.isEmpty()) {
+                        context.getString(R.string.accountEmailErrorMessage)
+                    } else {
+                        null
+                    },
+                )
             )
         }
     }
@@ -154,15 +192,7 @@ class AccountProfileViewModel @Inject constructor(
     private fun updateEmailIsFocused(value: Boolean) {
         _uiState.update {
             it.copy(
-                emailIsFocused = value
-            )
-        }
-    }
-
-    private fun updateEmailErrorMessage(value: String?) {
-        _uiState.update {
-            it.copy(
-                emailErrorMessage = value
+                emailInputState = it.emailInputState.copy(isFocused = value),
             )
         }
     }
@@ -176,15 +206,15 @@ class AccountProfileViewModel @Inject constructor(
     private fun saveChanges(notifyParent: (String) -> Unit) {
         viewModelScope.tryLaunch {
             repository.updateUser(
-                uiState.value.fullNameTextValue.text,
-                uiState.value.displayNameTextValue.text,
+                uiState.value.fullNameInputState.value.text,
+                uiState.value.displayNameInputState.value.text,
             )
             _uiState.update {
                 it.copy(
                     screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.accountProfileUpdated)),
                 )
             }
-            notifyParent(uiState.value.fullNameTextValue.text)
+            notifyParent(uiState.value.fullNameInputState.value.text)
         } catch {
             _uiState.update {
                 it.copy(

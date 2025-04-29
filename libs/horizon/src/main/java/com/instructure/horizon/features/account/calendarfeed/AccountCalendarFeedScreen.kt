@@ -39,11 +39,12 @@ import androidx.navigation.NavController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
+import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImage
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImageInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselectimage.SingleSelectImageState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.utils.HorizonScaffold
+import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -98,6 +99,7 @@ private fun AccountCalendarFeedContent(state: AccountCalendarUiState, modifier: 
             ){
                 Button(
                     label = stringResource(R.string.accountCalendarFeedCopyLinkButtonLabel),
+                    width = ButtonWidth.FILL,
                     iconPosition = ButtonIconPosition.End(R.drawable.link),
                     onClick = {
                         clipboardManager.setText(AnnotatedString(state.calendarUrl))
