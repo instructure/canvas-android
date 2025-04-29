@@ -100,6 +100,7 @@ class CoursesPage(private val composeTestRule: ComposeTestRule) {
             .performScrollTo()
             .assertIsDisplayed()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun refresh() {

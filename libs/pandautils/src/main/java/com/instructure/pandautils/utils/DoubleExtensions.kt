@@ -17,6 +17,19 @@
 package com.instructure.pandautils.utils
 
 import java.text.DecimalFormat
+import java.math.RoundingMode
+
+fun Double.toFormattedString(maxDecimals: Int? = 2): String {
+    return if (this % 1 == 0.0) {
+        this.toInt().toString()
+    } else {
+        if (maxDecimals != null) {
+            this.toBigDecimal().setScale(maxDecimals, RoundingMode.HALF_DOWN).toString()
+        } else {
+            this.toString()
+        }
+    }
+}
 
 val Double.stringValueWithoutTrailingZeros: String
     get() {

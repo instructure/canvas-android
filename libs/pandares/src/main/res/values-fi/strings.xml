@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Keskustelun poisto epäonnistui</string>
     <string name="conversationUpdateFailed">Keskustelun päivittäminen epäonnistui</string>
     <string name="sendIndividualMessage">Lähetä yksilöllinen viesti jokaiselle vastaanottajalle</string>
+    <string name="sendIndividualMessageIsMandatory">Voit lähettää vain yksittäisiä viestejä yli 100 vastaanottajalle.</string>
     <string name="invalidRecipients">Sinä et saa lähettää viestehä yhdelle tai usemmalla vastaanottajalle</string>
     <string name="newMessage">Uusi viesti</string>
     <string name="forwardMessage">Lähetä viesti eteenpäin</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Tämä tehtävä ei enää ole käytettävissä.</string>
     <string name="editDashboardOfflineMode">Olet verkon ulkopuolella</string>
+    <string name="editDashboardNoResults">Ei tuloksia</string>
+    <string name="editDashboardNoResultsMessage">Vastaavia kohteita ei löytynyt.</string>
     <string name="editDashboardOfflineModeMessage">Sinulla ei parhaillaan ole kursseja, jotka ovat saatavilla verkon ulkopuolella.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Verkon ulkopuolisen sisällön synkronointi onnistui</string>
     <string name="offlineContentSyncFailureNotificationTitle">Verkon ulkopuolisen sisällön synkronisointi epäonnistui.</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Lisää uusi kalenterikohde</string>
     <string name="calendarFilterCalendars">Kalenterit</string>
     <string name="calendarFilterUser">Käyttäjä</string>
+    <string name="calendarFilterFavoriteCourse">Suosikkikurssit</string>
+    <string name="calendarFilterMoreCourse">Lisää kursseja</string>
     <string name="calendarFilterCourse">Kurssit</string>
     <string name="calendarFilterGroup">Ryhmät</string>
     <string name="calendarFilterExplanationLimited">Valitse kaikki kalenterit, jotka haluat nähdä, enintään %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Kirjaudu ulos</string>
     <string name="noStudentsError">Ei opiskelijoita</string>
     <string name="noStudentsErrorDescription">Et tarkkaile yhtään opiskelijaa.</string>
+    <string name="noStudentsRefresh">Päivitä</string>
     <string name="noGrade">Ei arvosanaa</string>
     <string name="errorLoadingCourses">Opiskelijasi kurssien latauksessa ilmeni virhe.</string>
     <string name="parentNoCourses">Ei kursseja</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Lisää uusi opiskelija</string>
     <string name="selectStudentColor">Valitse Student-sovelluksen väri</string>
     <string name="errorSavingColor">Valintaasi tallennettaessa tapahtui virhe. Yritä uudelleen.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Värin tallennus onnistui</string>
     <string name="changeStudentColorLabel">Vaihda väri kohteelle %s</string>
     <string name="studentColorContentDescriptionBlue">Sähkönsininen</string>
     <string name="studentColorContentDescriptionPurple">Luumu, purppura</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Apilanvihreä</string>
     <string name="featureFlags">Ominaisuuden tunnisteet</string>
     <string name="addStudent">Lisää opiskelija</string>
+    <string name="addStudentSuccessfull">Opiskelijan tallennus onnistui</string>
     <string name="addStudentTitle">Lisää opiskelija, jolla on...</string>
     <string name="addStudentQrCodeTitle">Viivakoodi</string>
     <string name="addStudentQrCodeExplanation">Opiskelijat voivat luoda viivakoodin Canvas Student -sovelluksen avulla mobiililaitteellaan.</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Arvosanan prosenttiosuus</string>
     <string name="unpairStudentTitle">Delete</string>
     <string name="unpairStudentMessage">Tämä kumoaa parinmuodostuksen ja poistaa kaikki rekisteröitymiset tällel opiskelijalle tililtäsi.</string>
+    <string name="unpairStudentSuccessfull">Opiskelijan poisto onnistui</string>
     <string name="alertSettingsMinThresholdError">Täytyy olla yli %d</string>
     <string name="alertSettingsMaxThresholdError">Täytyy olla alle %d</string>
     <string name="alertSettingsErrorMessage">Ilmeni virhe noudettaessa hälytyksen asetuksia</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Opiskelijasi arvosanojen latauksessa ilmeni virhe. Yritä ladata sivua uudelleen tai yritä myöhemmin uudelleen.</string>
     <string name="errorLoadingCourse">Opiskelijasi kurssitietojen latauksessa ilmeni virhe. Yritä ladata sivua uudelleen tai yritä myöhemmin uudelleen.</string>
     <string name="gradesFilterContentDescription">Suodatin</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Arvosana-asetukset päivitetty onnistuneesti. Lista on päivitetty.</string>
     <string name="courseDetailsMessageContentDescription">Lähetä viesti tästä kurssista</string>
     <string name="gradeLockedContentDescription">Arvosana lukittu</string>
     <string name="gradesRefreshFailed">Arvosanojen päivitys epäonnistui</string>
     <string name="chooseACourseToMessage">Valitse kurssi, jolle lähetetään viesti</string>
     <string name="regardingHiddenMessage">Koskee: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Koskee: %1$s, Tehtävä - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Koskee: %1$s, Tapahtuma - %2$s</string>
     <string name="sendMessageAboutAssignment">”Lähetä viesti tästä tehtävästä”</string>
+    <string name="sendMessageAboutEvent">”Lähetä viesti tästä tapahtumasta”</string>
     <string name="forStudentLabel">%1$s</string>
     <string name="view_description">Näytä kuvaus</string>
     <string name="a11y_contentDescription_viewDescription">Näytä kuvaus</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Etusivun päivitys epäonnistui</string>
     <string name="failed_to_load_summary">Yhteenvedon lataus epäonnistui</string>
     <string name="no_summary_items_to_display">Ei näytettäviä yhteenvedon kohteita</string>
+    <string name="a11y_summaryEventContentDescription">Tapahtuma</string>
+    <string name="a11y_summaryLockedContentDescription">Lukittu</string>
+    <string name="a11y_summaryQuizContentDescription">Testi</string>
+    <string name="a11y_summaryDiscussionContentDescription">Keskustelu</string>
+    <string name="a11y_summaryAssignmentContentDescription">Tehtävä</string>
     <string name="scheduleItemNoDueDate">Ei määräpäivää</string>
     <string name="a11y_refresh">Päivitä</string>
     <string name="masqueradingAs">Toimit käyttäjänä %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Osittain tarkistettu</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Suodattimet on päivitetty</string>
+    <string name="inboxAllRecipients">Kaikki vastaanottajat</string>
+    <string name="inboxSearchIn">Haetaan seuraavista %1$s</string>
+    <string name="a11y_studentSelectorExpand">laajenna</string>
+    <string name="a11y_studentSelectorCollapse">kutista</string>
+    <string name="a11y_studentSelectorContentDescription">Napsauta %s opiskelijan valitsijatyökalu, valittu opiskelija on: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Valitse opiskelija %s</string>
+    <string name="inboxSettingsTitle">Saapuvien postien laatikko</string>
+    <string name="inboxSettingsInboxSignature">Saapuvien postien allekirjoitus</string>
+    <string name="inboxSignatureNotSet">Ei asetettu</string>
+    <string name="inboxSignatureEnabled">Käytössä</string>
+    <string name="inboxSignatureScreenTitle">Saapuvien postien allekirjoitus</string>
+    <string name="inboxSignatureScreenSubtitle">Allekirjoitus lisätään kaikkien viestien loppuun.</string>
+    <string name="inboxSignatureSwitchLabel">Allekirjoitus</string>
+    <string name="inboxSignatureTextfieldHeader">Allekirjoitusteksti</string>
+    <string name="due_dateTime">Määräpäivä: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Suodatin</string>
+    <string name="a11y_contentDescription_postPolicy">Lähetä käytäntö</string>
+    <string name="late">Myöhään</string>
+    <string name="a11y_contentDescription_expand">Laajenna</string>
+    <string name="missingTag">Puuttuu</string>
+    <string name="submissionFilter">Tehtäväpalautuksen suodatin</string>
+    <string name="submissionMessageSubject">%1$s kohteessa %2$s</string>
+    <string name="all">Kaikki</string>
 </resources>

@@ -487,4 +487,8 @@
     <string name="a11y_markAsDoneWithName">%s को हो गया के रूप में चिह्नित करें</string>
     <string name="a11y_markAsNotDoneWithName">%s को हो गया के रूप में चिह्नित करें</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">इनबॉक्स हस्ताक्षर लोड करने में विफल</string>
+    <string name="inboxSignatureSettingsUpdated">इनबॉक्स सेटिंग्स सहेजी गईं!</string>
+    <string name="inboxSignatureSettingsError">इनबॉक्स सेटिंग्स सहेजने में विफल</string>
+    <string name="inboxSignatureTextFieldPlaceholder">अपने हस्ताक्षर यहाँ लिखें</string>
 </resources>
