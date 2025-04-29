@@ -2,7 +2,6 @@ package com.instructure.student.activity
 
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
@@ -19,12 +18,6 @@ class ViewMediaActivity : BaseViewMediaActivity() {
         fun createIntent(context: Context, route: Route): Intent {
             val intent = Intent(context, ViewMediaActivity::class.java)
             intent.putExtras(route.arguments)
-            return intent
-        }
-
-        fun createIntent(context: Context, arguments: Bundle): Intent {
-            val intent = Intent(context, ViewMediaActivity::class.java)
-            intent.putExtras(arguments)
             return intent
         }
     }
