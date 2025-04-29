@@ -26,6 +26,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
@@ -100,5 +101,16 @@ fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked:
         },
         update = { _ -> },
         modifier = modifier
+    )
+}
+
+@UnstableApi
+@Composable
+@Preview
+fun MediaFileContentPreview() {
+    MediaFileContent(
+        mediaUrl = "https://www.example.com/media.mp4",
+        contentType = "video/mp4",
+        onFullScreenClicked = { _, _ -> }
     )
 }

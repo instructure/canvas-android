@@ -20,6 +20,7 @@ package com.instructure.pandautils.compose.composables.filedetails
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 
@@ -35,5 +36,14 @@ fun ImageFileContent(
         contentDescription = contentDescription,
         modifier = modifier,
         contentScale = contentScale
+    )
+}
+
+@Preview
+@Composable
+fun ImageFileContentPreview() {
+    ImageFileContent(
+        imageUrl = "https://www.instructure.com/themes/custom/themekit/logo.svg",
+        contentDescription = "Instructure Logo"
     )
 }
