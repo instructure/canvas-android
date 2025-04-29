@@ -38,6 +38,7 @@ import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -113,6 +114,11 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val progressPages = modules.map { createProgressPage(it) }
 
         val initialPosition = items.indexOfFirst { it.moduleItemId == moduleItemId }.coerceAtLeast(0)
+
+        val initialItem = moduleItems.find { it.id == moduleItemId }
+        initialItem?.let {
+            markItemAsRead(it)
+        }
 
         _uiState.update {
             it.copy(
@@ -238,6 +244,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
         viewModelScope.tryLaunch {
             val moduleItem = repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules) else it
             }
@@ -354,6 +361,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun moduleItemSelected(itemId: Long) {
         val moduleItem = moduleItems.find { it.id == itemId }
         if (moduleItem != null) {
+            markItemAsRead(moduleItem)
             val newPosition = _uiState.value.items.indexOfFirst { it.moduleItemId == itemId }
             _uiState.update {
                 it.copy(
@@ -412,6 +420,17 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 },
                 currentItem = updatedCurrentItem,
             )
+        }
+    }
+
+    private fun markItemAsRead(item: ModuleItem) {
+        val completionRequirement = item.completionRequirement
+        if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
+            viewModelScope.launch {
+                async {
+                    repository.markAsRead(courseId, item.moduleId, item.id)
+                }
+            }
         }
     }
 }
