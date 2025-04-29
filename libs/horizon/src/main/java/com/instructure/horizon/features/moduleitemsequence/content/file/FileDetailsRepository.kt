@@ -16,15 +16,21 @@
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
 import com.instructure.canvasapi2.apis.FileFolderAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.FileFolder
 import javax.inject.Inject
 
 class FileDetailsRepository @Inject constructor(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val oAuthApi: OAuthAPI.OAuthInterface
 ) {
     suspend fun getFileFolderFromURL(url: String): FileFolder? {
         val restParams = RestParams(isForceReadFromNetwork = false)
         return fileFolderApi.getFileFolderFromURL(url, restParams).dataOrNull
+    }
+
+    suspend fun getAuthenticatedFileUrl(fileUrl: String): String {
+        return oAuthApi.getAuthenticatedSession("$fileUrl?display=borderless", RestParams(isForceReadFromNetwork = true)).dataOrThrow.sessionUrl
     }
 }

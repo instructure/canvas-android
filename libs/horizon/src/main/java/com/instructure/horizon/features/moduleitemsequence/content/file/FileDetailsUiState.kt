@@ -48,8 +48,7 @@ sealed class FilePreviewUiState {
         val url: String,
     ) : FilePreviewUiState()
 
-    data class Text(
-        val url: String,
-        val fileName: String
+    data class WebView(
+        val url: String
     ) : FilePreviewUiState()
 }

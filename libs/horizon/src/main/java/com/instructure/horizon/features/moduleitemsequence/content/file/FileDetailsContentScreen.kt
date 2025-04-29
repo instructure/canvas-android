@@ -17,6 +17,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.file
 
 import android.content.Context
 import android.content.Intent
+import android.view.ViewGroup
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -50,10 +51,12 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
 import com.instructure.pandautils.compose.composables.filedetails.MediaFileContent
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.getActivityOrNull
 import java.io.File
 
 @UnstableApi
@@ -114,7 +117,9 @@ fun FileDetailsContentScreen(
                     }
                 }
             }
-            FilePreview(uiState.filePreview)
+            uiState.filePreview?.let {
+                FilePreview(it)
+            }
         }
     }
 }
@@ -144,8 +149,9 @@ private fun openFile(
 
 @UnstableApi
 @Composable
-private fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modifier = Modifier) {
+private fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    val activity = context.getActivityOrNull()
     Box(
         modifier = modifier
             .fillMaxSize()
@@ -170,9 +176,18 @@ private fun FilePreview(filePreviewUiState: FilePreviewUiState?, modifier: Modif
                     context.startActivity(ViewMediaActivity.createIntent(context, bundle))
                 })
 
-            is FilePreviewUiState.Pdf -> {}
-            is FilePreviewUiState.Text -> {}
-            else -> {}
+            is FilePreviewUiState.Pdf -> {} // TODO Will be implemented once we know if we can use PSPDFKit
+            is FilePreviewUiState.WebView -> ComposeCanvasWebView(url = filePreviewUiState.url, applyOnWebView = {
+                layoutParams = ViewGroup.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.MATCH_PARENT
+                )
+                settings.loadWithOverviewMode = true
+                settings.displayZoomControls = false
+                settings.setSupportZoom(true)
+                activity?.let { addVideoClient(it) }
+                setInitialScale(100)
+            })
         }
     }
 }

@@ -59,13 +59,13 @@ class FileDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
             fileFolder = fileDetailsRepository.getFileFolderFromURL(fileUrl)
-            _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+            val authUrl = fileDetailsRepository.getAuthenticatedFileUrl(fileUrl.replace("api/v1/", ""))
             fileFolder?.let { file ->
                 _uiState.update {
                     it.copy(
                         loadingState = it.loadingState.copy(isLoading = false),
                         fileName = file.displayName.orEmpty(),
-                        filePreview = getFilePreview(file)
+                        filePreview = getFilePreview(file, authUrl)
                     )
                 }
             }
@@ -116,7 +116,7 @@ class FileDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(filePathToOpen = null) }
     }
 
-    private fun getFilePreview(file: FileFolder): FilePreviewUiState? {
+    private fun getFilePreview(file: FileFolder, authUrl: String): FilePreviewUiState {
         val url = file.url.orEmpty()
         val displayName = file.displayName.orEmpty()
         val contentType = file.contentType.orEmpty()
@@ -134,9 +134,7 @@ class FileDetailsViewModel @Inject constructor(
 
             contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
 
-            contentType.startsWith("text") -> FilePreviewUiState.Text(url, displayName)
-
-            else -> null
+            else -> FilePreviewUiState.WebView("$authUrl&preview=1")
         }
     }
 }
