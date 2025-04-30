@@ -31,8 +31,7 @@ configurations {
 
 android {
     namespace 'com.instructure.student'
-    compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
+    compileSdk Versions.COMPILE_SDK
 
     defaultConfig {
         applicationId "com.instructure.candroid"
