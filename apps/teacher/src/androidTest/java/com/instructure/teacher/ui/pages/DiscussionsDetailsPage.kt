@@ -49,7 +49,7 @@ class DiscussionsDetailsPage(val moduleItemInteractions: ModuleItemInteractions)
 
     fun assertMoreMenuButtonDisplayed(menuText: String) {
         Web.onWebView()
-            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//ul[@role='menu']//span[text()='$menuText']")))
+            .check(WebViewAssertions.webContent(DomMatchers.hasElementWithXpath("//span[text()='$menuText']")))
     }
 
     fun assertToolbarDiscussionTitle(discussionTitle: String) {

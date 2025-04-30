@@ -20,6 +20,11 @@
         android:fontStyle="normal"
         android:fontWeight="400"
         android:font="@font/lato_regular" />
+
+    <font
+        android:fontStyle="normal"
+        android:fontWeight="600"
+        android:font="@font/lato_semibold" />
     <font
         android:fontStyle="italic"
         android:fontWeight="400"

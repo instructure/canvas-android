@@ -20,8 +20,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/backgroundLightest">
+    android:background="@color/backgroundLightest"
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
@@ -41,7 +41,6 @@
             android:layout_height="wrap_content">
 
             <TextView
-                app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/qrCodeExplanation"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -52,15 +51,28 @@
                 android:importantForAccessibility="yes"
                 android:text="@string/qrCodeExplanation"
                 android:textColor="@color/textDarkest"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/qrCodeInstruction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="8dp"
+                android:text="@string/qrCodeDisabledExplanation"
+                android:textColor="@color/textDark"
+                android:textSize="14sp"
+                app:layout_constraintTop_toBottomOf="@id/qrCodeExplanation" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/imageStart"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
+                app:layout_constraintGuide_percent=".125"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintGuide_percent=".125" />
+                app:layout_constraintTop_toBottomOf="@id/qrCodeInstruction" />
 
             <androidx.constraintlayout.widget.Guideline
                 android:id="@+id/imageEnd"
@@ -71,17 +83,18 @@
                 app:layout_constraintGuide_percent=".875" />
 
             <ImageView
-                app:layout_constraintStart_toEndOf="@id/imageStart"
-                app:layout_constraintEnd_toStartOf="@id/imageEnd"
-                app:layout_constraintTop_toBottomOf="@id/qrCodeExplanation"
+                android:id="@+id/image"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:adjustViewBounds="true"
                 android:layout_marginTop="24dp"
+                android:adjustViewBounds="true"
                 android:contentDescription="@string/qrCodeScreenshotContentDescription"
                 android:scaleType="fitCenter"
-                android:src="@drawable/locate_qr_code_screenshot" />
+                android:src="@drawable/locate_qr_code_screenshot"
+                app:layout_constraintEnd_toStartOf="@id/imageEnd"
+                app:layout_constraintStart_toEndOf="@id/imageStart"
+                app:layout_constraintTop_toBottomOf="@id/qrCodeInstruction" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

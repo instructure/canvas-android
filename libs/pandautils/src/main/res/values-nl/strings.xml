@@ -487,4 +487,8 @@
     <string name="a11y_markAsDoneWithName">%s Markeren als gereed</string>
     <string name="a11y_markAsNotDoneWithName">%s Markeren als niet gereed</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Inbox-handtekening laden mislukt</string>
+    <string name="inboxSignatureSettingsUpdated">Inbox-instellingen zijn opgeslagen!</string>
+    <string name="inboxSignatureSettingsError">Inbox-instellingen opslaan mislukt</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Zet hier je handtekening</string>
 </resources>
