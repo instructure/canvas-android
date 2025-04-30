@@ -23,17 +23,23 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.material.Text
+import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -43,6 +49,9 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
@@ -54,6 +63,7 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
 import com.instructure.pandautils.compose.composables.filedetails.MediaFileContent
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.ERROR
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.IN_PROGRESS
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.STARTING
 import com.instructure.pandautils.utils.Const
@@ -103,16 +113,34 @@ fun FileDetailsContentScreen(
                             uiState.onCancelDownloadClicked
                         ),
                         hasBorder = false,
-                        modifier = modifier.padding(vertical = 4.dp)
+                        modifier = Modifier.padding(vertical = 4.dp)
                     )
                 } else {
-                    Box(modifier = modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp, horizontal = 24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                        if (uiState.downloadState == ERROR) {
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(6.dp, alignment = Alignment.CenterHorizontally),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    painterResource(R.drawable.error),
+                                    tint = HorizonColors.Icon.error(),
+                                    contentDescription = null,
+                                    modifier = Modifier.size(24.dp)
+                                )
+                                Text(
+                                    text = stringResource(R.string.fileDetails_downloadError),
+                                    style = HorizonTypography.p1,
+                                    color = HorizonColors.Text.error()
+                                )
+                            }
+                            HorizonSpace(SpaceSize.SPACE_16)
+                        }
                         Button(
                             label = stringResource(R.string.fileDetails_downloadFile),
                             height = ButtonHeight.SMALL,
                             color = ButtonColor.Institution,
                             iconPosition = ButtonIconPosition.End(R.drawable.download),
-                            modifier = modifier.padding(vertical = 20.dp, horizontal = 24.dp),
                             onClick = uiState.onDownloadClicked
                         )
                     }
@@ -196,6 +224,20 @@ fun FileDetailsContentScreenPreview() {
     FileDetailsContentScreen(
         uiState = FileDetailsUiState(
             url = "https://example.com/file.pdf"
+        ),
+        modifier = Modifier.fillMaxSize()
+    )
+}
+
+@UnstableApi
+@Preview
+@Composable
+fun FileDetailsContentScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    FileDetailsContentScreen(
+        uiState = FileDetailsUiState(
+            url = "https://example.com/file.pdf",
+            downloadState = ERROR
         ),
         modifier = Modifier.fillMaxSize()
     )
