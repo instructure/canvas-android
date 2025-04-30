@@ -28,12 +28,15 @@ import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
+import com.instructure.horizon.features.notification.NotificationScreen
+import com.instructure.horizon.features.notification.NotificationViewModel
 import kotlinx.serialization.Serializable
 
 @Serializable
 sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
     data object AiAssistant : MainNavigationRoute("ai")
+    data object Notification : MainNavigationRoute("notification")
 
     @Serializable
     data class ModuleItemSequence(
@@ -62,6 +65,11 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             ModuleItemSequenceScreen(navController, uiState)
+        }
+        composable(MainNavigationRoute.Notification.route) {
+            val viewModel = hiltViewModel<NotificationViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            NotificationScreen(uiState, navController)
         }
     }
 }

@@ -133,6 +133,11 @@ fun Date.formatDayMonth(): String {
     return formatter.format(this)
 }
 
+fun Date.format(pattern: String): String {
+    val formatter = SimpleDateFormat(pattern, Locale.getDefault())
+    return formatter.format(this)
+}
+
 fun Date.formatDayMonthYear(): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return formatter.format(this)
