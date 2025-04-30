@@ -58,6 +58,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.toPx
 
 @Composable
@@ -68,7 +69,8 @@ fun FileDrop(
     onUploadClick: () -> Unit = {}
 ) {
     Column {
-        Column(horizontalAlignment = Alignment.CenterHorizontally,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level3)
@@ -108,7 +110,7 @@ sealed class FileDropItemState(open val fileName: String, val actionIconRes: Int
     data class Success(override val fileName: String, override val onActionClick: () -> Unit) :
         FileDropItemState(fileName, actionIconRes = R.drawable.delete)
 
-    data class InProgress(override val fileName: String, override val onActionClick: () -> Unit) :
+    data class InProgress(override val fileName: String, val progress: Float? = null, override val onActionClick: () -> Unit) :
         FileDropItemState(fileName, actionIconRes = R.drawable.close)
 
     data class NoLongerEditable(override val fileName: String, override val onActionClick: () -> Unit) :
@@ -120,7 +122,7 @@ sealed class FileDropItemState(open val fileName: String, val actionIconRes: Int
 }
 
 @Composable
-fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier) {
+fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier, hasBorder: Boolean = true) {
     Column(modifier = modifier) {
         HorizonSpace(SpaceSize.SPACE_8)
         Row(
@@ -128,12 +130,12 @@ fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier) {
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level3)
-                .border(HorizonBorder.level1(), shape = HorizonCornerRadius.level3)
+                .conditional(hasBorder) { border(HorizonBorder.level1(), shape = HorizonCornerRadius.level3) }
                 .padding(16.dp)
         ) {
             when (state) {
                 is FileDropItemState.InProgress -> {
-                    Spinner(size = SpinnerSize.EXTRA_SMALL, hasStrokeBackground = true)
+                    Spinner(size = SpinnerSize.EXTRA_SMALL, hasStrokeBackground = true, progress = state.progress)
                     HorizonSpace(SpaceSize.SPACE_8)
                 }
 

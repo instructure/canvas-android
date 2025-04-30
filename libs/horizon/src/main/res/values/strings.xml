@@ -109,4 +109,7 @@
     <string name="moduleItemCompleteAllItems">Complete all items</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
     <string name="externalTool_openInANewTab">Open in a New Tab</string>
+    <string name="fileDetails_downloadFile">Download File</string>
+    <string name="fileDetails_openWith">Open with</string>
+    <string name="fileDetails_downloadError">File couldn’t be downloaded.</string>
 </resources>

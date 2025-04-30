@@ -74,6 +74,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.file.FileDetailsContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.file.FileDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkUiState
 import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalToolContentScreen
@@ -354,7 +356,8 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
         if (moduleItemUiState.moduleItemContent is ModuleItemContent.Locked ||
             moduleItemUiState.moduleItemContent is ModuleItemContent.Page ||
             moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalLink ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalTool
+            moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalTool ||
+            moduleItemUiState.moduleItemContent is ModuleItemContent.File
         ) {
             NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
                 composable(
@@ -378,6 +381,19 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
                     val url = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.URL).orEmpty())
                     val uiState = ExternalLinkUiState(title, url)
                     ExternalLinkContentScreen(uiState)
+                }
+                composable(ModuleItemContent.File.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.File.FILE_URL) { type = NavType.StringType },
+                    navArgument(Const.MODULE_ITEM_ID) { type = NavType.LongType },
+                    navArgument(Const.MODULE_ID) { type = NavType.LongType }
+                )) {
+                    val viewModel = hiltViewModel<FileDetailsViewModel>()
+                    val uiState by viewModel.uiState.collectAsState()
+                    FileDetailsContentScreen(
+                        uiState = uiState,
+                        modifier = modifier
+                    )
                 }
                 composable(
                     route = ModuleItemContent.ExternalTool.ROUTE, arguments = listOf(
@@ -404,8 +420,7 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
             DummyContentScreen(
                 moduleItemName = moduleItemUiState.moduleItemName,
                 moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
-                scrollState = scrollState,
-                modifier = modifier
+                scrollState = scrollState
             )
         }
     }
