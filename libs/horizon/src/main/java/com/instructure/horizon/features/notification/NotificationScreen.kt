@@ -42,8 +42,8 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
-import com.instructure.horizon.utils.HorizonScaffold
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -51,9 +51,9 @@ fun NotificationScreen(state: NotificationUiState, mainNavController: NavControl
     HorizonScaffold(
         title = stringResource(R.string.notificationsTitle),
         onBackPressed = { mainNavController.popBackStack() },
-    ) {
+    ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            NotificationContent(state)
+            NotificationContent(state, modifier)
         }
     }
 }
