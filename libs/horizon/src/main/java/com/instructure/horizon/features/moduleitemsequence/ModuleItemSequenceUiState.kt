@@ -78,15 +78,15 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         }
     }
 
-    data class File(val url: String) :
+    data class File(val courseId: Long, val moduleId: Long, val moduleItemId: Long, val url: String) :
         ModuleItemContent(
-            "courses/{${Const.COURSE_ID}}/files/{${FILE_ID}}"
+            "courses/$courseId/files/${Uri.encode(url)}?moduleItemId=$moduleItemId&moduleId=$moduleId"
         ) {
         companion object {
-            const val FILE_ID = "fileId"
-            const val ROUTE = "courses/{${Const.COURSE_ID}}/files/{${FILE_ID}}"
+            const val FILE_URL = "fileUrl"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/files/{${FILE_URL}}?moduleItemId={${Const.MODULE_ITEM_ID}}&moduleId={${Const.MODULE_ID}}"
         }
-    } // TODO File learning object ticket
+    }
 
     data class ExternalTool(val courseId: Long, val url: String, val externalUrl: String) :
         ModuleItemContent(

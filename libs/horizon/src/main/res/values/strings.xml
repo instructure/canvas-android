@@ -158,4 +158,7 @@
     <string name="externalTool_openInANewTab">Open in a New Tab</string>
     <string name="accountAdvancedUpdatedMessage">Advanced settings successfully updated</string>
     <string name="accountLogOutLabel">Log Out</string>
+    <string name="fileDetails_downloadFile">Download File</string>
+    <string name="fileDetails_openWith">Open with</string>
+    <string name="fileDetails_downloadError">File couldn’t be downloaded.</string>
 </resources>

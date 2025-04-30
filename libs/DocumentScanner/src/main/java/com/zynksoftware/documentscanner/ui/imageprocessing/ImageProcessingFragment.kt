@@ -103,7 +103,7 @@ internal class ImageProcessingFragment : BaseFragment<FragmentImageProcessingBin
                     val paint = Paint()
                     paint.colorFilter = ColorMatrixColorFilter(ma)
                     getScanActivity().croppedImage?.let { canvas.drawBitmap(it, 0f, 0f, paint) }
-                    getScanActivity().transformedImage = bmpMonochrome.copy(bmpMonochrome.config, true)
+                    getScanActivity().transformedImage = bmpMonochrome.copy(bmpMonochrome.config!!, true)
                     getScanActivity().runOnUiThread {
                         hideProgressBar()
                         binding.imagePreview.setImageBitmap(getScanActivity().transformedImage)

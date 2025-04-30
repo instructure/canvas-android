@@ -26,5 +26,10 @@
             android:label="@string/horizon"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".features.moduleitemsequence.content.file.ViewMediaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"/>
     </application>
 </manifest>

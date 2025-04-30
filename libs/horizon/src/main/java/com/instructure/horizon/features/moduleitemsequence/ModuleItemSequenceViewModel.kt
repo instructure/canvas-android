@@ -38,6 +38,7 @@ import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -114,6 +115,11 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
         val initialPosition = items.indexOfFirst { it.moduleItemId == moduleItemId }.coerceAtLeast(0)
 
+        val initialItem = moduleItems.find { it.id == moduleItemId }
+        initialItem?.let {
+            markItemAsRead(it)
+        }
+
         _uiState.update {
             it.copy(
                 items = items,
@@ -162,8 +168,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
             }
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(courseId, item.contentId)
             item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.title.orEmpty(), item.externalUrl.orEmpty())
-            item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(courseId, item.htmlUrl.orEmpty(), item.externalUrl.orEmpty())
-            item.type == Type.File.name -> ModuleItemContent.File(item.url.orEmpty())
+            item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(
+                courseId,
+                item.htmlUrl.orEmpty(),
+                item.externalUrl.orEmpty()
+            )
+
+            item.type == Type.File.name -> ModuleItemContent.File(courseId, item.moduleId, item.id, item.url.orEmpty())
             else -> null
         }
 
@@ -237,7 +248,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
         viewModelScope.tryLaunch {
-            val moduleItem = repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            val moduleItem =
+                repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules) else it
             }
@@ -263,7 +276,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val currentModuleItemId = _uiState.value.currentItem?.moduleItemId ?: -1L
         val progressPosition = getProgressPosition(currentModuleItemId)
         _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(isLoading = true),
+            it.copy(
+                loadingState = it.loadingState.copy(isLoading = true),
                 progressScreenState = it.progressScreenState.copy(
                     visible = true,
                     currentPosition = progressPosition,
@@ -354,6 +368,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun moduleItemSelected(itemId: Long) {
         val moduleItem = moduleItems.find { it.id == itemId }
         if (moduleItem != null) {
+            markItemAsRead(moduleItem)
             val newPosition = _uiState.value.items.indexOfFirst { it.moduleItemId == itemId }
             _uiState.update {
                 it.copy(
@@ -412,6 +427,15 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 },
                 currentItem = updatedCurrentItem,
             )
+        }
+    }
+
+    private fun markItemAsRead(item: ModuleItem) {
+        val completionRequirement = item.completionRequirement
+        if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
+            viewModelScope.launch {
+                repository.markAsRead(courseId, item.moduleId, item.id)
+            }
         }
     }
 }
