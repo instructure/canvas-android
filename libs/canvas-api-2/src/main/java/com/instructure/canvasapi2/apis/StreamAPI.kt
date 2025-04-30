@@ -45,6 +45,9 @@ object StreamAPI {
         @GET
         fun getNextPageStream(@Url nextURL: String): Call<List<StreamItem>>
 
+        @GET
+        suspend fun getNextPageStream(@Url nextURL: String, @Tag params: RestParams): DataResult<List<StreamItem>>
+
         @DELETE("users/self/activity_stream/{streamId}")
         fun hideStreamItem(@Path("streamId") streamId: Long): Call<HiddenStreamItem>
 

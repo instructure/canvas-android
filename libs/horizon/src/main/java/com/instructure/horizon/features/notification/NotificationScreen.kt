@@ -59,9 +59,9 @@ fun NotificationScreen(state: NotificationUiState, mainNavController: NavControl
 }
 
 @Composable
-private fun NotificationContent(state: NotificationUiState) {
+private fun NotificationContent(state: NotificationUiState, modifier: Modifier = Modifier) {
     Column(
-        modifier = Modifier.background(HorizonColors.Surface.pageSecondary())
+        modifier = modifier.background(HorizonColors.Surface.pageSecondary())
     ) {
         LazyColumn(
             contentPadding = PaddingValues(top = 16.dp),

@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
+import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
 class NotificationRepository @Inject constructor(
@@ -29,7 +30,9 @@ class NotificationRepository @Inject constructor(
 ) {
     suspend fun getNotifications(forceRefresh: Boolean): List<StreamItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        return streamApi.getUserStream(restParams).dataOrThrow
+        return streamApi.getUserStream(restParams)
+            .depaginate { streamApi.getNextPageStream(it, restParams) }
+            .dataOrThrow
     }
 
     suspend fun getCourse(courseId: Long): Course {
