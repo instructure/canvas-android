@@ -38,8 +38,8 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
-import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -77,7 +77,7 @@ private fun AccountAdvancedContent(state: AccountAdvancedUiState, modifier: Modi
         selectedOption = state.selectedTimeZone.id,
     )
     LazyColumn(
-        contentPadding = PaddingValues(vertical = 32.dp, horizontal = 60.dp),
+        contentPadding = PaddingValues(vertical = 32.dp, horizontal = 32.dp),
         verticalArrangement = Arrangement.spacedBy(32.dp),
         modifier = modifier
     ) {
