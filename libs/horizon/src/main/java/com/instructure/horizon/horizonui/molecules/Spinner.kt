@@ -41,15 +41,32 @@ fun Spinner(
     modifier: Modifier = Modifier,
     size: SpinnerSize = SpinnerSize.SMALL,
     color: Color = HorizonColors.Surface.institution(),
-    hasStrokeBackground: Boolean = false
+    hasStrokeBackground: Boolean = false,
+    progress: Float? = null,
 ) {
     val strokeBackground = if (hasStrokeBackground) HorizonColors.LineAndBorder.lineDivider() else Color.Transparent
-        Box(
-            modifier = modifier,
-            contentAlignment = Alignment.Center
-        ) {
-            CircularProgressIndicator(color = color, modifier = Modifier.size(size.size), strokeWidth = size.strokeWidth, trackColor = strokeBackground)
+    Box(
+        modifier = modifier,
+        contentAlignment = Alignment.Center
+    ) {
+        if (progress != null) {
+            CircularProgressIndicator(
+                color = color,
+                modifier = Modifier.size(size.size),
+                strokeWidth = size.strokeWidth,
+                trackColor = strokeBackground,
+                progress = {
+                    progress
+                })
+        } else {
+            CircularProgressIndicator(
+                color = color,
+                modifier = Modifier.size(size.size),
+                strokeWidth = size.strokeWidth,
+                trackColor = strokeBackground
+            )
         }
+    }
 }
 
 @Preview
@@ -85,4 +102,11 @@ private fun SpinnerWithBackgroundMediumPreview() {
 private fun SpinnerWithBackgroundLargePreview() {
     ContextKeeper.appContext = LocalContext.current
     Spinner(hasStrokeBackground = true, size = SpinnerSize.LARGE)
+}
+
+@Preview
+@Composable
+private fun SpinnerWithProgressPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    Spinner(hasStrokeBackground = true, size = SpinnerSize.LARGE, progress = 0.5f)
 }

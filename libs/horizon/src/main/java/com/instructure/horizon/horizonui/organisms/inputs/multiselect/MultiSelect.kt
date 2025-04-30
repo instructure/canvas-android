@@ -160,6 +160,7 @@ private fun MultiSelectContent(state: MultiSelectState) {
 
         Icon(
             painter = painterResource(R.drawable.keyboard_arrow_down),
+            tint = HorizonColors.Icon.default(),
             contentDescription = null,
             modifier = Modifier
                 .rotate(iconRotation.value.toFloat())

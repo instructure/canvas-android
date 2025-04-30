@@ -30,6 +30,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -70,5 +71,15 @@ fun HorizonTopAppBar(
             titleContentColor = HorizonColors.Text.title(),
             navigationIconContentColor = HorizonColors.Icon.default()
         ),
+    )
+}
+
+@Composable
+@Preview
+private fun HorizonTopAppBarPreview() {
+    HorizonTopAppBar(
+        title = "Title",
+        onBackPressed = {},
+        actions = {}
     )
 }

@@ -73,4 +73,8 @@ dependencies {
     implementation(Libs.VIEW_MODEL)
     implementation(Libs.HILT_COMPOSE_NAVIGATION)
     implementation(Libs.KOTLIN_SERIALIZABLE)
+
+    /* WorkManager */
+    implementation(Libs.ANDROIDX_WORK_MANAGER)
+    implementation(Libs.ANDROIDX_WORK_MANAGER_KTX)
 }

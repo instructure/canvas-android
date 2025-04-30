@@ -7,6 +7,7 @@ import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
+import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
@@ -377,6 +378,16 @@ class ApiModule {
     @Provides
     fun provideStreamApi(): StreamAPI.StreamInterface {
         return RestBuilder().build(StreamAPI.StreamInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideNotificationPreferencesApi(): NotificationPreferencesAPI.NotificationPreferencesInterface {
+        return RestBuilder().build(NotificationPreferencesAPI.NotificationPreferencesInterface::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideCommunicationChannelsApi(): CommunicationChannelsAPI.CommunicationChannelInterface {
+        return RestBuilder().build(CommunicationChannelsAPI.CommunicationChannelInterface::class.java, RestParams())
     }
 
     @Provides

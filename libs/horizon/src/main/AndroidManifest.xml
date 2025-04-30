@@ -16,6 +16,7 @@
   ~
   -->
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
 
     <application>
         <activity
@@ -25,5 +26,10 @@
             android:label="@string/horizon"
             android:launchMode="singleTask"
             android:theme="@style/Theme.Material3.DayNight.NoActionBar" />
+
+        <activity
+            android:name=".features.moduleitemsequence.content.file.ViewMediaActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Material3.DayNight.NoActionBar"/>
     </application>
 </manifest>
