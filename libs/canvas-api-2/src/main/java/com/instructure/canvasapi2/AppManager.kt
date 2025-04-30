@@ -70,7 +70,7 @@ abstract class AppManager : Application(), Configuration.Provider {
     @Suppress("unused", "UNUSED_PARAMETER")
     @Subscribe
     fun authErrorEvent(event: CanvasAuthError) {
-        validateAuthentication()
+        performLogoutOnAuthError()
     }
 
     private fun logTokenAnalytics() {

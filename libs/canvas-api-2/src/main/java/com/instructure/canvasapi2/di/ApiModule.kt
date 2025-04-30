@@ -1,5 +1,8 @@
 package com.instructure.canvasapi2.di
 
+import android.content.Context
+import com.instructure.canvasapi2.LoginRouter
+import com.instructure.canvasapi2.TokenRefresher
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
@@ -58,11 +61,15 @@ import com.instructure.canvasapi2.managers.TabManager
 import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.EarlyEntryPoint
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import org.greenrobot.eventbus.EventBus
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -71,6 +78,12 @@ const val PLANNER_API_SERIALIZE_NULLS = "PLANNER_API_SERIALIZE_NULLS"
 @Module
 @InstallIn(SingletonComponent::class)
 class ApiModule {
+
+    @Provides
+    @Singleton
+    fun provideCanvasAuthenticator(tokenRefresher: TokenRefresher): CanvasAuthenticator {
+        return CanvasAuthenticator(tokenRefresher)
+    }
 
     @Provides
     fun provideCourseManager(): CourseManager {
@@ -370,4 +383,16 @@ class ApiModule {
     fun provideCommunicationChannelsApi(): CommunicationChannelsAPI.CommunicationChannelInterface {
         return RestBuilder().build(CommunicationChannelsAPI.CommunicationChannelInterface::class.java, RestParams())
     }
+
+    @Provides
+    @Singleton
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
+        return TokenRefresher(context, loginRouter, eventBus)
+    }
+}
+
+@EarlyEntryPoint
+@InstallIn(SingletonComponent::class)
+interface CanvasAuthenticatorEntryPoint {
+    fun canvasAuthenticator(): CanvasAuthenticator
 }

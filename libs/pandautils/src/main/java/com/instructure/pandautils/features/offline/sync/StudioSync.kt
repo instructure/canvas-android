@@ -81,13 +81,13 @@ class StudioSync(
     }
 
     private suspend fun authenticateStudio(): StudioLoginSession? {
-        val launchDefinitions = launchDefinitionsApi.getLaunchDefinitions(RestParams(isForceReadFromNetwork = true)).dataOrNull.orEmpty()
+        val launchDefinitions = launchDefinitionsApi.getLaunchDefinitions(RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)).dataOrNull.orEmpty()
         val studioLaunchDefinition = launchDefinitions.firstOrNull {
             it.domain == LaunchDefinition.STUDIO_DOMAIN
         } ?: return null
 
         val studioUrl = "${apiPrefs.fullDomain}/api/v1/accounts/self/external_tools/sessionless_launch?url=${studioLaunchDefinition.url}"
-        val studioLti = launchDefinitionsApi.getLtiFromAuthenticationUrl(studioUrl, RestParams(isForceReadFromNetwork = true)).dataOrNull ?: return null
+        val studioLti = launchDefinitionsApi.getLtiFromAuthenticationUrl(studioUrl, RestParams(isForceReadFromNetwork = true, shouldLoginOnTokenError = false)).dataOrNull ?: return null
 
         return studioLti.url?.let {
             val webView = withTimeoutOrNull(10000) { loadUrlIntoHeadlessWebView(context, it) }
@@ -134,7 +134,7 @@ class StudioSync(
             async {
                 studioApi.getStudioMediaMetadata(
                     "${studioSession.baseUrl}/api/public/v1/courses/$courseId/media",
-                    RestParams(isForceReadFromNetwork = true, shouldIgnoreToken = true),
+                    RestParams(isForceReadFromNetwork = true, shouldIgnoreToken = true, shouldLoginOnTokenError = false),
                     "Bearer ${studioSession.accessToken}"
                 ).dataOrNull.orEmpty()
             }
@@ -195,7 +195,7 @@ class StudioSync(
         try {
             val downloadResult = fileDownloadApi.downloadFile(
                 fileSyncData.fileUrl,
-                RestParams(shouldIgnoreToken = true, isForceReadFromNetwork = true)
+                RestParams(shouldIgnoreToken = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
             )
 
             downloadResult

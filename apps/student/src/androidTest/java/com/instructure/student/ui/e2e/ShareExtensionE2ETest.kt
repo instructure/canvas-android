@@ -19,11 +19,13 @@ package com.instructure.student.ui.e2e
 import android.content.Intent
 import android.net.Uri
 import android.util.Log
+import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.E2E
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
@@ -35,6 +37,7 @@ import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.Rule
 import org.junit.Test
 
 @HiltAndroidTest
@@ -43,6 +46,11 @@ class ShareExtensionE2ETest: StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
+
+    @get:Rule
+    val composeTestRule = createEmptyComposeRule()
+
+    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     @E2E
     @Test

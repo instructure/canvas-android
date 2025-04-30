@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Konversation konnte nicht gelöscht werden</string>
     <string name="conversationUpdateFailed">Konversation konnte nicht aktualisiert werden</string>
     <string name="sendIndividualMessage">Eine einzelne Nachricht an jeden Empfänger senden.</string>
+    <string name="sendIndividualMessageIsMandatory">Sie können nur einzelne Nachrichten an mehr als 100 Empfänger senden.</string>
     <string name="invalidRecipients">Sie sind nicht berechtigt, Nachrichten an einen oder mehrere der ausgewählten Empfänger zu senden.</string>
     <string name="newMessage">Neue Nachricht</string>
     <string name="forwardMessage">Nachricht weiterleiten</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Diese Aufgabe ist nicht mehr verfügbar.</string>
     <string name="editDashboardOfflineMode">Sie sind offline</string>
+    <string name="editDashboardNoResults">Keine Ergebnisse</string>
+    <string name="editDashboardNoResultsMessage">Keine übereinstimmenden Elemente gefunden.</string>
     <string name="editDashboardOfflineModeMessage">Sie haben derzeit keine offline verfügbaren Kurse.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Synchronisierung von Offline-Inhalten erfolgreich</string>
     <string name="offlineContentSyncFailureNotificationTitle">Synchronisierung vpn Offline-Inhalten fehlgeschlagen</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Neuen Kalendertermin hinzufügen</string>
     <string name="calendarFilterCalendars">Kalender</string>
     <string name="calendarFilterUser">Benutzer*in</string>
+    <string name="calendarFilterFavoriteCourse">Lieblingskurse</string>
+    <string name="calendarFilterMoreCourse">Weitere Kurse</string>
     <string name="calendarFilterCourse">Kurse</string>
     <string name="calendarFilterGroup">Gruppen</string>
     <string name="calendarFilterExplanationLimited">Wählen Sie bis zu %d Kalender zur Ansicht aus.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Abmelden</string>
     <string name="noStudentsError">Keine Studierende</string>
     <string name="noStudentsErrorDescription">Sie beobachten keine Studierende*n.</string>
+    <string name="noStudentsRefresh">Aktualisieren</string>
     <string name="noGrade">Keine Note</string>
     <string name="errorLoadingCourses">Fehler beim Laden der Kurse Ihres Studierenden.</string>
     <string name="parentNoCourses">Keine Kurse</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Neue/n Studierende*n hinzufügen</string>
     <string name="selectStudentColor">Studierendenfarbe auswählen</string>
     <string name="errorSavingColor">Fehler beim Speichern Ihrer Auswahl. Bitte versuchen Sie es erneut.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Farbe erfolgreich gespeichert</string>
     <string name="changeStudentColorLabel">Farbe ändern für %s</string>
     <string name="studentColorContentDescriptionBlue">Electric, Blue</string>
     <string name="studentColorContentDescriptionPurple">Pflaume, violett</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Kleeblatt, grün</string>
     <string name="featureFlags">Funktions-Flags</string>
     <string name="addStudent">Studierende*n hinzufügen</string>
+    <string name="addStudentSuccessfull">Studierende*r erfolgreich hinzugefügt</string>
     <string name="addStudentTitle">Studierende*n hinzufügen mit ...</string>
     <string name="addStudentQrCodeTitle">QR-Code</string>
     <string name="addStudentQrCodeExplanation">Studierende können einen QR-Code mit der Canvas Student App auf ihrem Mobilgerät erstellen</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Noten-Prozentsatz</string>
     <string name="unpairStudentTitle">Löschen</string>
     <string name="unpairStudentMessage">Dadurch werden alle Pairings für Einschreibungen für diese*n Studierende*n aufgehoben und die Einschreibungen werden von Ihrem Konto entfernt.</string>
+    <string name="unpairStudentSuccessfull">Studierende*r erfolgreich gelöscht</string>
     <string name="alertSettingsMinThresholdError">Muss über %d liegen</string>
     <string name="alertSettingsMaxThresholdError">Muss unter %d liegen</string>
     <string name="alertSettingsErrorMessage">Beim Abrufen der Benachrichtigungseinstellungen ist ein Fehler aufgetreten.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Wir haben Probleme beim Laden der Noten Ihrer Studierenden. Bitte versuchen Sie, die Seite neu zu laden oder versuchen Sie es später noch einmal.</string>
     <string name="errorLoadingCourse">Wir haben Probleme beim Laden der Kursdetails Ihrer Studierenden. Bitte versuchen Sie, die Seite neu zu laden oder versuchen Sie es später noch einmal.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Präferenzen für Noten erfolgreich aktualisiert Die Listre wurde neu geladen.</string>
     <string name="courseDetailsMessageContentDescription">Nachricht über diesen Kurs senden</string>
     <string name="gradeLockedContentDescription">Note gesperrt</string>
     <string name="gradesRefreshFailed">Noten konnten nicht aktualisiert werden.</string>
     <string name="chooseACourseToMessage">Einen Kurs zur Benachrichtigung wählen</string>
     <string name="regardingHiddenMessage">Betreffend: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Betreffend: %1$s, Aufgabe – %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Betreffend: %1$s, Ereignis – %2$s</string>
     <string name="sendMessageAboutAssignment">„Eine Nachricht zu dieser Aufgabe senden“</string>
+    <string name="sendMessageAboutEvent">„Eine Nachricht zu diesem Ereignis senden“</string>
     <string name="forStudentLabel">für %1$s</string>
     <string name="view_description">Beschreibung anzeigen</string>
     <string name="a11y_contentDescription_viewDescription">Beschreibung anzeigen</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Startseite konnte nicht aktualisiert werden</string>
     <string name="failed_to_load_summary">Zusammenfassung konnte nicht geladen werden</string>
     <string name="no_summary_items_to_display">Keine zusammengefassten Elemente anzuzeigen</string>
+    <string name="a11y_summaryEventContentDescription">Ereignis</string>
+    <string name="a11y_summaryLockedContentDescription">Gesperrt</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Diskussion</string>
+    <string name="a11y_summaryAssignmentContentDescription">Aufgabe</string>
     <string name="scheduleItemNoDueDate">Kein Abgabetermin</string>
     <string name="a11y_refresh">Aktualisieren</string>
     <string name="masqueradingAs">Sie handeln als %s.</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Teilweise aktiviert</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filter wurden aktualisiert</string>
+    <string name="inboxAllRecipients">Alle Empfänger</string>
+    <string name="inboxSearchIn">Suchen in %1$s</string>
+    <string name="a11y_studentSelectorExpand">erweitern</string>
+    <string name="a11y_studentSelectorCollapse">reduzieren</string>
+    <string name="a11y_studentSelectorContentDescription">Tippen Sie auf die %s Studierendenauswahl, der/die ausgewählte Studierende ist: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Studierende*n auswählen %s</string>
+    <string name="inboxSettingsTitle">Posteingang</string>
+    <string name="inboxSettingsInboxSignature">Posteingangs-Signatur</string>
+    <string name="inboxSignatureNotSet">Nicht definiert</string>
+    <string name="inboxSignatureEnabled">Aktiviert</string>
+    <string name="inboxSignatureScreenTitle">Posteingangs-Signatur</string>
+    <string name="inboxSignatureScreenSubtitle">Die Signatur wird am Ende aller Nachrichten hinzugefügt.</string>
+    <string name="inboxSignatureSwitchLabel">Signatur</string>
+    <string name="inboxSignatureTextfieldHeader">Text der Signatur</string>
+    <string name="due_dateTime">Fällig: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Post-Richtlinie</string>
+    <string name="late">Verspätet</string>
+    <string name="a11y_contentDescription_expand">Erweitern</string>
+    <string name="missingTag">Fehlt</string>
+    <string name="submissionFilter">Filter für Abgaben</string>
+    <string name="submissionMessageSubject">%1$s am %2$s</string>
+    <string name="all">Alle</string>
 </resources>

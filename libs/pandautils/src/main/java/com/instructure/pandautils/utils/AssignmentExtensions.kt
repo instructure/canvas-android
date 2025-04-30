@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 
 
 private const val NO_GRADE_INDICATOR = "-"
@@ -148,4 +149,13 @@ fun Assignment.getGrade(
         // Other remaining case is where the grade is displayed as a percentage
         else -> if (restrictQuantitativeData) DisplayGrade() else DisplayGrade(grade, gradeContentDescription)
     }
+}
+
+fun Assignment.getSubmissionStateLabel() = when {
+    this.submission?.late.orDefault() -> SubmissionStateLabel.LATE
+    this.isMissing() -> SubmissionStateLabel.MISSING
+    this.isGraded().orDefault() -> SubmissionStateLabel.GRADED
+    this.submission?.submittedAt != null -> SubmissionStateLabel.SUBMITTED
+    !this.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
+    else -> SubmissionStateLabel.NONE
 }
