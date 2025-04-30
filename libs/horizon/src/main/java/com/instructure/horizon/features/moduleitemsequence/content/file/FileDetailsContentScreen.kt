@@ -54,7 +54,8 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
 import com.instructure.pandautils.compose.composables.filedetails.MediaFileContent
-import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.IN_PROGRESS
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.STARTING
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.getActivityOrNull
 import java.io.File
@@ -88,7 +89,7 @@ fun FileDetailsContentScreen(
             )
         } else {
             AnimatedContent(
-                targetState = uiState.downloadState.isRunning(),
+                targetState = uiState.downloadState == IN_PROGRESS || uiState.downloadState == STARTING,
                 transitionSpec = {
                     fadeIn() togetherWith fadeOut()
                 },
@@ -98,7 +99,7 @@ fun FileDetailsContentScreen(
                     FileDropItem(
                         FileDropItemState.InProgress(
                             uiState.fileName,
-                            if (uiState.downloadState == FileDownloadProgressState.IN_PROGRESS) uiState.downloadProgress else null,
+                            if (uiState.downloadState == IN_PROGRESS) uiState.downloadProgress else null,
                             uiState.onCancelDownloadClicked
                         ),
                         hasBorder = false,
@@ -154,7 +155,7 @@ private fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifi
                 imageUrl = filePreviewUiState.url,
                 contentDescription = filePreviewUiState.displayName,
                 modifier = Modifier.fillMaxWidth(),
-                loadingIndicator = { Spinner() }
+                loadingIndicator = { Spinner(Modifier.fillMaxSize()) }
             )
 
             is FilePreviewUiState.Media -> MediaFileContent(
