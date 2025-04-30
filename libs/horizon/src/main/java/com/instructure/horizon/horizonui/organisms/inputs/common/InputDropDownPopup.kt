@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
@@ -44,16 +46,16 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.utils.toPx
 
 @Composable
-fun InputDropDownPopup(
+fun <T>InputDropDownPopup(
     isMenuOpen: Boolean,
-    options: List<String>,
+    options: List<T>,
     verticalOffsetPx: Int,
     width: Dp,
     onMenuOpenChanged: (Boolean) -> Unit,
-    onOptionSelected: (String) -> Unit,
+    onOptionSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
-    item: @Composable (String) -> Unit = { selectionOption ->
-        SingleSelectItem(selectionOption)
+    item: @Composable (T) -> Unit = { selectionOption ->
+        SingleSelectItem(selectionOption.toString())
     },
 ) {
     Popup(
@@ -88,7 +90,10 @@ fun InputDropDownPopup(
                     draggedElevation = HorizonElevation.level3
                 ),
             ) {
-                Column {
+                Column(
+                    modifier = Modifier
+                        .verticalScroll(rememberScrollState())
+                ) {
                     options.forEach { selectionOption ->
                         Row(
                             verticalAlignment = Alignment.CenterVertically,

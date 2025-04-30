@@ -16,6 +16,7 @@
 package com.instructure.horizon.horizonui.platform
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -48,6 +49,7 @@ data class LoadingState(
     val isLoading: Boolean = false,
     val isRefreshing: Boolean = false,
     val isError: Boolean = false,
+    val isPullToRefreshEnabled: Boolean = true,
     val errorMessage: String? = null,
     val errorSnackbar: String? = null,
     val onRefresh: () -> Unit = {},
@@ -75,33 +77,48 @@ fun LoadingStateWrapper(
     }
 
     Scaffold(containerColor = containerColor, snackbarHost = { SnackbarHost(snackbarHostState) }, modifier = modifier) { paddingValues ->
-        PullToRefreshBox(
-            isRefreshing = loadingState.isRefreshing,
-            onRefresh = loadingState.onRefresh,
-            modifier = Modifier.padding(paddingValues),
-            state = state,
-            indicator = {
-                Indicator(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 16.dp),
-                    isRefreshing = loadingState.isRefreshing,
-                    containerColor = HorizonColors.Surface.pageSecondary(),
-                    color = HorizonColors.Surface.institution(),
-                    state = state
-                )
-            },
-            content = {
+        if (loadingState.isPullToRefreshEnabled) {
+            PullToRefreshBox(
+                isRefreshing = loadingState.isRefreshing,
+                onRefresh = loadingState.onRefresh,
+                modifier = Modifier.padding(paddingValues),
+                state = state,
+                indicator = {
+                    Indicator(
+                        modifier = Modifier
+                            .align(Alignment.TopCenter)
+                            .padding(top = 16.dp),
+                        isRefreshing = loadingState.isRefreshing,
+                        containerColor = HorizonColors.Surface.pageSecondary(),
+                        color = HorizonColors.Surface.institution(),
+                        state = state
+                    )
+                },
+                content = {
+                    when {
+                        loadingState.isLoading -> LoadingContent()
+                        loadingState.isError -> ErrorContent(
+                            loadingState.errorMessage
+                                ?: stringResource(R.string.loadingStateWrapper_errorOccurred)
+                        )
+
+                        else -> content()
+                    }
+                }
+            )
+        } else {
+            Box {
                 when {
                     loadingState.isLoading -> LoadingContent()
                     loadingState.isError -> ErrorContent(
-                        loadingState.errorMessage ?: stringResource(R.string.loadingStateWrapper_errorOccurred)
+                        loadingState.errorMessage
+                            ?: stringResource(R.string.loadingStateWrapper_errorOccurred)
                     )
 
                     else -> content()
                 }
             }
-        )
+        }
     }
 }
 
