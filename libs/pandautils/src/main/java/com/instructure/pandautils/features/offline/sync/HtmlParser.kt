@@ -110,7 +110,7 @@ class HtmlParser(
     private suspend fun createLocalFilePath(fileId: Long, courseId: Long): String {
         var fileName = fileFolderDao.findById(fileId)?.displayName.orEmpty()
         if (fileName.isEmpty()) {
-            val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams(isForceReadFromNetwork = false)).dataOrNull
+            val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams(isForceReadFromNetwork = false, shouldLoginOnTokenError = false)).dataOrNull
             fileName = file?.displayName.orEmpty()
         }
         val fileNameWithId = if (fileName.isNotEmpty()) "${fileId}_$fileName" else "$fileId"

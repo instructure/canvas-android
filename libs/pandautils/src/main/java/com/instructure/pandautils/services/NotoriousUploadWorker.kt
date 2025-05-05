@@ -64,7 +64,8 @@ class NotoriousUploadWorker @AssistedInject constructor(
     @Assisted workerParams: WorkerParameters,
     private val notificationManager: NotificationManager,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
-    private val localBroadcastManager: LocalBroadcastManager
+    private val localBroadcastManager: LocalBroadcastManager,
+    private val notoriousUploader: NotoriousUploader
 ) : CoroutineWorker(context, workerParams) {
     private lateinit var builder: NotificationCompat.Builder
 
@@ -137,7 +138,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
         notificationManager.notify(notificationId, builder.build())
         uploadStartedToast()
 
-        val result = NotoriousUploader.performUpload(mediaPath, object : ProgressRequestUpdateListener {
+        val result = notoriousUploader.performUpload(mediaPath, object : ProgressRequestUpdateListener {
             override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
                 // Update progress in notification
                 builder.setProgress(1000, (progressPercent * 1000).toInt(), false)
@@ -172,7 +173,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
         val mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType)
         val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, assignment.courseId, Const.COURSE)
 
-        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id])
+        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id], shouldLoginOnTokenError = false)
         val postMediaSubmissionCommentResult = submissionApi.postMediaSubmissionComment(
             courseId = course.id,
             assignmentId = assignment.id,

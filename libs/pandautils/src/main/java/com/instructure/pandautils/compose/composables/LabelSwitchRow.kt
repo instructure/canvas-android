@@ -16,11 +16,12 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.defaultMinSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -30,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -53,8 +55,10 @@ fun LabelSwitchRow(
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
-                .defaultMinSize(minHeight = 52.dp)
+                .fillMaxWidth()
+                .requiredHeight(52.dp)
                 .alpha(if (enabled) 1f else 0.5f)
         ) {
             Text(
@@ -62,9 +66,12 @@ fun LabelSwitchRow(
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp,
                 fontWeight = fontWeight,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(end = 8.dp)
             )
-
-            Spacer(modifier = Modifier.weight(1f))
 
             CanvasSwitch(
                 checked = checked,
@@ -118,7 +125,7 @@ fun LabelSwitchRowUncheckedPreview() {
 fun LabelSwitchRowCheckedWithSubtitlePreview() {
     ContextKeeper.appContext = LocalContext.current
     LabelSwitchRow(
-        label = "Switch row",
+        label = "Switch row with a really long label that should be truncated and a subtitle",
         subtitle = "This a short description",
         checked = true,
         enabled = true,

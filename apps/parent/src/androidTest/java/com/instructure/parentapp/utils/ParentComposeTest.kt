@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsP
 import com.instructure.canvas.espresso.common.pages.compose.GradesPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.parentapp.features.login.LoginActivity
@@ -78,6 +79,7 @@ abstract class ParentComposeTest : ParentTest() {
     protected val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     protected val calendarFilterPage = CalendarFilterPage(composeTestRule)
     protected val reminderPage = ReminderPage(composeTestRule)
+    protected val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

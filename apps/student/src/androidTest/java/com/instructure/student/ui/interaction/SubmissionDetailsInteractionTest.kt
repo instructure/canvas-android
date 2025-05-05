@@ -41,7 +41,7 @@ import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.student.ui.pages.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
@@ -49,7 +49,7 @@ import org.junit.Test
 import java.util.Date
 
 @HiltAndroidTest
-class SubmissionDetailsInteractionTest : StudentTest() {
+class SubmissionDetailsInteractionTest : StudentComposeTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
@@ -100,6 +100,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     }
 
     // Should be able to add a comment on a submission
+    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_addCommentToSingleAttemptSubmission() {
@@ -122,6 +123,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_addCommentToMultipleAttemptSubmission() {

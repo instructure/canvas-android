@@ -487,4 +487,8 @@
     <string name="a11y_markAsDoneWithName">%s Marcar como terminado</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcar como no terminado</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Error al cargar la firma de la bandeja de entrada</string>
+    <string name="inboxSignatureSettingsUpdated">Se guardaron las configuraciones de la bandeja de entrada.</string>
+    <string name="inboxSignatureSettingsError">Error al guardar las configuraciones de la bandeja de entrada</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Escriba su firma aquí</string>
 </resources>
