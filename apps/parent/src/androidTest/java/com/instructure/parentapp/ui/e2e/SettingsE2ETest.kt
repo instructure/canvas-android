@@ -61,7 +61,7 @@ class SettingsE2ETest : ParentComposeTest() {
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -109,7 +109,7 @@ class SettingsE2ETest : ParentComposeTest() {
         val data = seedData(students = 1, teachers = 1, parents = 1, courses = 1)
         val parent = data.parentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -132,7 +132,7 @@ class SettingsE2ETest : ParentComposeTest() {
         val data = seedData(students = 1, teachers = 1, parents = 1, courses = 1)
         val parent = data.parentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -155,7 +155,7 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG,"Check that e-mail is equal to: '${parent.loginId}' (parent's Login ID).")
         aboutPage.emailIs(parent.loginId)
 
-        Log.d(STEP_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
+        Log.d(ASSERTION_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
         aboutPage.assertInstructureLogoDisplayed()
     }
 

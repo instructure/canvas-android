@@ -65,7 +65,7 @@ class CourseDetailsFrontPageE2ETest : ParentComposeTest() {
         val url = "https://mobileqa.beta.instructure.com/courses/${course.id}/assignments/${assignment.id}"
         val frontPageBody = "This is the front page body <a id=\"assignmentLink\" href=\"$url\">Assignment</a>"
 
-        Log.d(PREPARATION_TAG, "Seed a (front) page to the ${course.name} course and set the Home Page of the course to the seeded front page.")
+        Log.d(PREPARATION_TAG, "Seed a (front) page to the '${course.name}' course and set the Home Page of the course to the seeded front page.")
         PagesApi.createCoursePage(course.id, teacher.token, frontPage = true, editingRoles = "public", body = frontPageBody)
         CoursesApi.updateCourse(course.id, UpdateCourse(homePage = "wiki"))
 

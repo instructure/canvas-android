@@ -70,10 +70,11 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
+        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
         coursesPage.clickCourseItem(course.name)
         courseDetailsPage.assertCourseNameDisplayed(course)
 
@@ -85,7 +86,7 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
         assignmentDetailsPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the reminder section is displayed as well.")
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed as well.")
         reminderPage.assertReminderSectionDisplayed()
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -137,11 +138,12 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
+        Log.d(STEP_TAG, "Select '1 Day Before' again, and assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderDateOneDay)
         reminderPage.selectTime(reminderDateOneDay)
 
-        Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
 
         futureDueDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
@@ -152,7 +154,7 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG,"Click on assignment '${alreadyPastAssignment.name}'.")
         courseDetailsPage.clickAssignment(alreadyPastAssignment.name)
 
-        Log.d(STEP_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
         reminderPage.assertReminderSectionDisplayed()
     }
 
@@ -179,10 +181,11 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
+        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
         coursesPage.clickCourseItem(course.name)
         courseDetailsPage.assertCourseNameDisplayed(course)
 
@@ -194,7 +197,7 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
         assignmentDetailsPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the reminder section is displayed as well.")
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is displayed as well.")
         reminderPage.assertReminderSectionDisplayed()
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
@@ -242,7 +245,7 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
 
         reminderPage.clickBeforeReminderOption("1 Day Before")
 
-        Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
         composeTestRule.waitForIdle()
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
         composeTestRule.waitForIdle()
@@ -255,7 +258,7 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG,"Click on assignment '${alreadyPastAssignment.name}'.")
         courseDetailsPage.clickAssignment(alreadyPastAssignment.name)
 
-        Log.d(STEP_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
         reminderPage.assertReminderSectionDisplayed()
     }
 }

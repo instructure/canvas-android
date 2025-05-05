@@ -262,8 +262,10 @@ class CalendarE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
         calendarScreenPage.assertCalendarCollapsed()
 
-        Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
+        Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar.")
         calendarScreenPage.clickCalendarHeader()
+
+        Log.d(ASSERTION_TAG, "Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
         calendarScreenPage.assertCalendarExpanded()
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
@@ -305,14 +307,14 @@ class CalendarE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Save' button.")
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the created To Do item is not displayed on today's calendar.")
+        Log.d(ASSERTION_TAG, "Assert that the created To Do item is NOT displayed on today's calendar.")
         calendarScreenPage.assertItemNotExist(testTodoTitle) //It's created for 2 days from today so it shouldn't displayed for today.
 
         Log.d(STEP_TAG, "Swipe the calendar item 'body' to 2 days in the future from now.")
         calendarScreenPage.swipeEventsLeft()
         calendarScreenPage.swipeEventsLeft()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day. Assert that '$newEventTitle' calendar event is not displayed because it's created for today.")
+        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day. Assert that '$newEventTitle' calendar event is NOT displayed because it's created for today.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
         calendarScreenPage.assertItemNotExist(newEventTitle)
 
@@ -323,7 +325,7 @@ class CalendarE2ETest : ParentComposeTest() {
         calendarFilterPage.clickOnFilterItem(course.name)
         calendarFilterPage.closeFilterPage()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is not displayed because we filtered out from the calendar. Assert that the empty view is displayed because there are no items for today.")
+        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is NOT displayed because we filtered out from the calendar. Assert that the empty view is displayed because there are no items for today.")
         calendarScreenPage.assertItemNotExist(testTodoTitle)
         calendarScreenPage.assertEmptyView()
 

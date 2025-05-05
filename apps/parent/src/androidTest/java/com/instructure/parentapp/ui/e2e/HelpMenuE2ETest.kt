@@ -55,10 +55,10 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open 'Help' menu.")
         leftSideNavigationDrawerPage.clickHelpMenu()
 
-        Log.d(STEP_TAG, "Assert Help Menu Dialog is displayed.")
+        Log.d(ASSERTION_TAG, "Assert Help Menu Dialog is displayed.")
         helpPage.assertHelpMenuDisplayed()
 
-        Log.d(STEP_TAG, "Assert that all the corresponding Help menu content are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
         helpPage.assertHelpMenuContent()
 
         Log.d(STEP_TAG, "Click on the 'Report a Problem' help menu.")
@@ -67,7 +67,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
         helpPage.assertReportProblemDialogDisplayed()
 
-        Log.d(STEP_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
+        Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
         Intents.init()
 
         try {

@@ -85,7 +85,7 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click the '${assignment.name}' assignment's link within the syllabus body.")
         syllabusPage.clickLink("assignmentLink")
 
-        Log.d(STEP_TAG, "Assert that the Assignment Details Page is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
 

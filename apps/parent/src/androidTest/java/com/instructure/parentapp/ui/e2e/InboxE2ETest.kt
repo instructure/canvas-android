@@ -60,7 +60,7 @@ class InboxE2ETest: ParentComposeTest() {
         val parent = data.parentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -70,11 +70,13 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
 
-        Log.d(PREPARATION_TAG,"Seed an email from ${teacher.name}' to '${parent.name}'")
+        Log.d(PREPARATION_TAG,"Seed an email from '${teacher.name}' to '${parent.name}'")
         val seededConversation = ConversationsApi.createConversation(teacher.token, listOf(parent.id.toString()))[0]
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
+        Log.d(STEP_TAG,"Refresh the page.")
         refresh()
+
+        Log.d(ASSERTION_TAG,"Assert that there is a conversation and it is the previously seeded one.")
         inboxPage.assertHasConversation()
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
@@ -86,7 +88,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxDetailsPage.pressStarButton(true)
         inboxDetailsPage.assertStarred(true)
 
-        Log.d(STEP_TAG,"Navigate back to Inbox Page and  assert that the conversation itself is starred as well.")
+        Log.d(STEP_TAG,"Navigate back to Inbox Page and assert that the conversation itself is starred as well.")
         Espresso.pressBack() // To main inbox page
         inboxPage.assertConversationStarred(seededConversation.subject)
 
@@ -96,7 +98,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxDetailsPage.pressOverflowMenuItemForConversation("Mark as Unread")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
@@ -104,13 +106,13 @@ class InboxE2ETest: ParentComposeTest() {
         inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation. Assert that the selected number of conversations on the toolbar is 1." +
@@ -118,18 +120,20 @@ class InboxE2ETest: ParentComposeTest() {
         inboxPage.selectConversation(seededConversation.subject)
         inboxPage.assertSelectedConversationNumber("1")
 
-        Log.d(STEP_TAG, "Click on the 'Mark as Unread' button and assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
+        Log.d(STEP_TAG, "Click on the 'Mark as Unread' button.")
         inboxPage.clickMarkAsUnread()
+
+        Log.d(ASSERTION_TAG,"Assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
         inboxPage.assertInboxEmpty()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Select 'Unread' conversation filter.")
         inboxPage.filterInbox("Unread")
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed on the 'Inbox' tab.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation is displayed on the 'Inbox' tab.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation has been marked as unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
@@ -138,24 +142,26 @@ class InboxE2ETest: ParentComposeTest() {
         Espresso.pressBack()
         composeTestRule.waitForIdle()
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG,"Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
         refresh()
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
-        Log.d(STEP_TAG,"Assert that '${seededConversation.subject}' conversation does not have the unread mark because an archived conversation cannot be unread.")
+        Log.d(ASSERTION_TAG,"Assert that '${seededConversation.subject}' conversation does not have the unread mark because an archived conversation cannot be unread.")
         inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
 
         Log.d(STEP_TAG,"Select '${seededConversation.subject}' conversation.")
         inboxPage.selectConversation(seededConversation.subject)
 
-        Log.d(STEP_TAG, "Click on the 'Unarchive' button and assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
+        Log.d(STEP_TAG, "Click on the 'Unarchive' button.")
         inboxPage.clickUnArchive()
+
+        Log.d(ASSERTION_TAG,"Assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
         inboxPage.assertInboxEmpty()
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
@@ -175,12 +181,13 @@ class InboxE2ETest: ParentComposeTest() {
             inboxPage.assertConversationNotStarred(seededConversation.subject)
         }
 
-        Log.d(STEP_TAG, "Select the conversation '${seededConversation.subject}' and archive it. Assert that it has not displayed in the 'INBOX' scope.")
+        Log.d(STEP_TAG, "Select the conversation '${seededConversation.subject}' and archive it.")
         inboxPage.selectConversations(listOf(seededConversation.subject))
         inboxPage.clickArchive()
 
         sleep(2000)
 
+        Log.d(ASSERTION_TAG, "Assert that it has not displayed in the 'INBOX' scope.")
         inboxPage.assertConversationNotDisplayed(seededConversation.subject)
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope and assert that the conversation is displayed there.")
@@ -240,7 +247,7 @@ class InboxE2ETest: ParentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -253,8 +260,10 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(PREPARATION_TAG,"Seed an email from the teacher to '${parent.name}'.")
         val seededConversation = ConversationsApi.createConversationForCourse(teacher.token, course.id, listOf(parent.id.toString(), parent2.id.toString()))[0]
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
+        Log.d(STEP_TAG,"Refresh the page.")
         refresh()
+
+        Log.d(ASSERTION_TAG,"Assert that there is a conversation and it is the previously seeded one.")
         inboxPage.assertHasConversation()
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 
@@ -291,11 +300,13 @@ class InboxE2ETest: ParentComposeTest() {
 
         Log.d(STEP_TAG, "Navigate to 'SENT' scope")
         inboxPage.filterInbox("Sent")
+
+        Log.d(ASSERTION_TAG, "Assert that the new messages are displayed.")
         inboxPage.assertHasConversation()
         inboxPage.assertConversationDisplayed(newMessageSubject)
         inboxPage.assertConversationDisplayed(newMessageSubject2)
 
-        Log.d(STEP_TAG, "Log out from ${parent.name} account.")
+        Log.d(STEP_TAG, "Log out from '${parent.name}' account.")
         Espresso.pressBack()
         dashboardPage.openLeftSideMenu()
         composeTestRule.waitForIdle()
@@ -304,7 +315,7 @@ class InboxE2ETest: ParentComposeTest() {
         leftSideNavigationDrawerPage.clickOk()
         composeTestRule.waitForIdle()
 
-        Log.d(STEP_TAG, "Log in to ${parent2.name} account.")
+        Log.d(STEP_TAG, "Log in to '${parent2.name}' account.")
         tokenLogin(parent2)
         composeTestRule.waitForIdle()
 
@@ -354,8 +365,10 @@ class InboxE2ETest: ParentComposeTest() {
         Log.d(PREPARATION_TAG,"Seed an email from '${teacher.name}' to '${parent.name}'.")
         val seededConversation = ConversationsApi.createConversation(teacher.token, listOf(parent.id.toString()))[0]
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that there is a conversation and it is the previously seeded one.")
+        Log.d(STEP_TAG,"Refresh the page.")
         refresh()
+
+        Log.d(ASSERTION_TAG,"Assert that there is a conversation and it is the previously seeded one.")
         inboxPage.assertHasConversation()
         inboxPage.assertConversationDisplayed(seededConversation.subject)
 

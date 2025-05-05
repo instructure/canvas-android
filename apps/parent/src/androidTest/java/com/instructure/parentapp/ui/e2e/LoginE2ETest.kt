@@ -49,7 +49,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithUser(parent)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -77,8 +77,10 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Not a Parent' page has been displayed with all the corresponding information on it.")
         notAParentPage.assertNotAParentPageDetails()
 
-        Log.d(STEP_TAG, "Expand the 'Are you a student or teacher?' option to see the Canvas Student and Canvas Teacher app icons as links. Also, assert that the subtitle message is displayed.")
+        Log.d(STEP_TAG, "Expand the 'Are you a student or teacher?' option to see the Canvas Student and Canvas Teacher app icons as links.")
         notAParentPage.expandAppOptions()
+
+        Log.d(ASSERTION_TAG, "Assert that the subtitle message is displayed.")
         notAParentPage.assertOtherAppSubtitleDisplayed()
         notAParentPage.assertStudentAppDisplayed()
         notAParentPage.assertTeacherAppDisplayed()
@@ -89,7 +91,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithUser(parent, true)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -102,13 +104,13 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
 
-        Log.d(STEP_TAG, "Assert that the previously logins has been displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
 
         Log.d(STEP_TAG, "Login with user: '${parent2.name}', login id: '${parent2.loginId}'.")
         loginWithUser(parent2, true)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -132,7 +134,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with the '${parent2.name}' user, with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(parent2)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -142,7 +144,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
 
-        Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that '${parent2.name}' parent is displayed but '${parent.name}' parent is not displayed within the previous logins list (as it was removed before).")
+        Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed. Assert that '${parent2.name}' parent is displayed but '${parent.name}' parent is not displayed within the previous logins list (as it was removed before).")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(parent2.name)
         loginLandingPage.assertPreviousLoginUserNotExist(parent.name)
@@ -150,7 +152,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Remove '${parent2.name}' parent from the previous login section as well.")
         loginLandingPage.removeUserFromPreviousLogins(parent2.name)
 
-        Log.d(STEP_TAG, "Assert that none of the parents, '${parent.name}' and '${parent2.name}' are displayed and not even the 'Previous Logins' label is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that none of the parents, '${parent.name}' and '${parent2.name}' are displayed and not even the 'Previous Logins' label is displayed.")
         loginLandingPage.assertPreviousLoginUserNotExist(parent.name)
         loginLandingPage.assertPreviousLoginUserNotExist(parent2.name)
         loginLandingPage.assertNotDisplaysPreviousLogins()
@@ -169,7 +171,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithUser(parent)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -185,7 +187,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithLastSavedSchool(parent)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -213,7 +215,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ($INVALID_USERNAME, $INVALID_PASSWORD)." +
+        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ('$INVALID_USERNAME', '$INVALID_PASSWORD')." +
                 "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)

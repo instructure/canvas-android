@@ -83,7 +83,7 @@ class GradesListE2ETest : ParentComposeTest() {
         tokenLogin(parent)
         composeTestRule.waitForIdle()
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 

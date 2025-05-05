@@ -55,7 +55,7 @@ class CreateAccountE2ETest : ParentComposeTest() {
         val data = seedData(students = 2, teachers = 1, parents = 1, courses = 1)
         val student = data.studentsList[0]
 
-        Log.d(PREPARATION_TAG, "Generate pairing code for student with ${student.id} id")
+        Log.d(PREPARATION_TAG, "Generate pairing code for student with '${student.id}' id")
         val pairingCode = UserApi.postGeneratePairingCode(student.id)
 
         Log.d(PREPARATION_TAG, "Fetch Terms of Service")
@@ -63,27 +63,27 @@ class CreateAccountE2ETest : ParentComposeTest() {
 
         Log.d(
             STEP_TAG,
-            "Navigate to create account screen using generated QR code data: domain: ${student.domain}, pairing code: $pairingCode, accountId: ${terms.accountId}"
+            "Navigate to create account screen using generated QR code data: domain: '${student.domain}', pairing code: '$pairingCode', accountId: '${terms.accountId}'"
         )
         goToCreateAccount(student.domain, pairingCode.pairingCode, terms.accountId)
         composeTestRule.waitUntil { !createAccountPage.isLoading() }
         val email = "${randomString()}@test.com"
 
-        Log.d(STEP_TAG, "Fill account creation form using $email email")
+        Log.d(STEP_TAG, "Fill account creation form using '$email' email")
         createAccountPage.fillValidData(email)
 
         Log.d(STEP_TAG, "Create account")
         createAccountPage.clickCreateAccountButton()
         Thread.sleep(5000) // Wait for the account to be created
 
-        Log.d(STEP_TAG, "On login page login parent with $email email")
+        Log.d(STEP_TAG, "On login page login parent with '$email' email")
         loginSignInPage.loginAs(email, "password")
 
-        Log.d(STEP_TAG, "On dashboard screen assert that student name is displayed")
+        Log.d(ASSERTION_TAG, "On dashboard screen assert that student name is displayed")
         dashboardPage.waitForRender()
         dashboardPage.assertSelectedStudent(student.shortName)
 
-        Log.d(STEP_TAG, "On dashboard screen assert that parent is logged in")
+        Log.d(ASSERTION_TAG, "On dashboard screen assert that parent is logged in")
         leftSideNavigationDrawerPage.assertUserLoggedIn(email)
     }
 
