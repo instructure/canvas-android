@@ -8,8 +8,8 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.features.discussion.details.DiscussionDetailsWebViewFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouter
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.teacher.activities.FullscreenActivity
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.activities.SpeedGraderActivity.Companion.DISCUSSION_ENTRY_ID
 import com.instructure.teacher.router.RouteMatcher
 
@@ -41,7 +41,7 @@ class TeacherDiscussionRouter(private val activity: FragmentActivity) : Discussi
         anonymousGrading: Boolean?,
         discussionTopicEntryId: Long?,
     ) {
-        val bundle = SpeedGraderActivity.makeBundle(
+        val bundle = SpeedGraderFragment.makeBundle(
             courseId = courseId,
             assignmentId = assignmentId,
             selectedIdx = selectedIdx,

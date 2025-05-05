@@ -86,6 +86,10 @@ apollo {
         mapScalar("URL", "kotlin.String")
         mapScalar("DateTime", "java.util.Date")
         mapScalar("ID", "kotlin.String")
+
+        generateKotlinModels.set(true)
+
+        generateSourcesDuringGradleSync.set(true)
     }
 }
 

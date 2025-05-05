@@ -14,16 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader
+package com.instructure.pandautils.features.speedgrader.content
 
-import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 
-class SpeedGraderRepository(
-    private val assignmentDetailsManager: AssignmentDetailsManager
+class SpeedGraderContentRepository(
+    private val submissionContentManager: SubmissionContentManager
 ) {
 
-    suspend fun getAssignmentDetails(assignmentId: Long): AssignmentDetailsQuery.Data {
-        return assignmentDetailsManager.getAssignmentDetails(assignmentId)
+    suspend fun getSubmission(assignmentId: Long, studentId: Long): SubmissionContentQuery.Data {
+        return submissionContentManager.getSubmissionContent(studentId, assignmentId)
     }
 }

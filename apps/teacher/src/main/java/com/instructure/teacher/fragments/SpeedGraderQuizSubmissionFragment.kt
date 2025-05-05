@@ -25,11 +25,11 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_QUIZ_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.speedgrader.content.QuizContent
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderQuizSubmissionBinding
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.view.QuizContent
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe

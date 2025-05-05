@@ -22,16 +22,21 @@ import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
-import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.pandautils.compose.composables.DraggableResizableLayout
 import com.instructure.pandautils.compose.composables.HorizontalDraggableResizableLayout
+import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
-fun SpeedGraderSubmissionScreen(
-) {
+fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
 
     val horizontal = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
 
@@ -39,11 +44,13 @@ fun SpeedGraderSubmissionScreen(
         HorizontalDraggableResizableLayout(
             modifier = Modifier,
             leftContent = {
-                GlideImage(
-                    model = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png",
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
+                NavHost(
+                    navController = rememberNavController(),
+                    modifier = Modifier.fillMaxSize(),
+                    startDestination = "speedGraderContent/$assignmentId/$submissionId"
+                ) {
+                    speedGraderContentScreen()
+                }
             },
             rightContent = {
                 Text(text = "Right Content")
@@ -53,11 +60,13 @@ fun SpeedGraderSubmissionScreen(
         DraggableResizableLayout(
             modifier = Modifier,
             topContent = {
-                GlideImage(
-                    model = "https://upload.wikimedia.org/wikipedia/commons/thumb/1/11/Test-Logo.svg/783px-Test-Logo.svg.png",
-                    contentDescription = null,
-                    modifier = Modifier.fillMaxSize()
-                )
+                NavHost(
+                    navController = rememberNavController(),
+                    modifier = Modifier.fillMaxSize(),
+                    startDestination = "speedGraderContent/$assignmentId/$submissionId"
+                ) {
+                    speedGraderContentScreen()
+                }
             },
             bottomContent = {
                 Text(text = "Bottom Content")
@@ -69,17 +78,29 @@ fun SpeedGraderSubmissionScreen(
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 fun SpeedGraderSubmissionScreenTabletPreview() {
-    SpeedGraderSubmissionScreen()
+    SpeedGraderSubmissionScreen(1L, 1L)
 }
 
 @Preview
 @Composable
 fun SpeedGraderSubmissionScreenPhonePreview() {
-    SpeedGraderSubmissionScreen()
+    SpeedGraderSubmissionScreen(2L, 2L)
 }
 
 @Preview(device = "spec:width=411dp,height=891dp,orientation=landscape")
 @Composable
 fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
-    SpeedGraderSubmissionScreen()
+    SpeedGraderSubmissionScreen(3L, 3L)
+}
+
+fun NavGraphBuilder.speedGraderContentScreen() {
+    composable(
+        route = "speedGraderContent/{assignmentId}/{submissionId}",
+        arguments = listOf(
+            navArgument("assignmentId") { type = NavType.LongType },
+            navArgument("submissionId") { type = NavType.LongType }
+        )
+    ) {
+        SpeedGraderContentScreen()
+    }
 }

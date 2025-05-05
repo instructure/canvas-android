@@ -14,16 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader
+package com.instructure.pandautils.features.speedgrader.content
 
-import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-class SpeedGraderRepository(
-    private val assignmentDetailsManager: AssignmentDetailsManager
-) {
+@Module
+@InstallIn(ViewModelComponent::class)
+class SpeedGraderContentModule {
 
-    suspend fun getAssignmentDetails(assignmentId: Long): AssignmentDetailsQuery.Data {
-        return assignmentDetailsManager.getAssignmentDetails(assignmentId)
+    @Provides
+    fun provideSpeedGraderContentRepository(
+        submissionContentManager: SubmissionContentManager
+    ): SpeedGraderContentRepository {
+        return SpeedGraderContentRepository(submissionContentManager)
     }
 }

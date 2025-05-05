@@ -139,6 +139,7 @@ dependencies {
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
     implementation project(':rceditor')
+    implementation 'androidx.navigation:navigation-compose:2.8.9'
 
 
     /* Test Dependencies */
@@ -232,6 +233,8 @@ dependencies {
     api Libs.GLIDE_COMPOSE
     api Libs.COMPOSE_ADAPTIVE
     api Libs.COMPOSE_MATERIAL3_WINDOW_SIZE
+    api "androidx.hilt:hilt-navigation-compose:1.2.0"
+
 
     implementation Libs.FLEXBOX_LAYOUT
 

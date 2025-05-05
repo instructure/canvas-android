@@ -14,16 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader
+package com.instructure.pandautils.features.speedgrader.content
 
-import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import androidx.fragment.app.Fragment
 
-class SpeedGraderRepository(
-    private val assignmentDetailsManager: AssignmentDetailsManager
-) {
+interface SpeedGraderContentNavigation {
 
-    suspend fun getAssignmentDetails(assignmentId: Long): AssignmentDetailsQuery.Data {
-        return assignmentDetailsManager.getAssignmentDetails(assignmentId)
-    }
+    fun getContentFragment(gradeableContent: GradeableContent): Fragment
 }

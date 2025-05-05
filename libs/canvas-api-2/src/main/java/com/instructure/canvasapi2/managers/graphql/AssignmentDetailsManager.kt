@@ -13,21 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.di
+package com.instructure.canvasapi2.managers.graphql
 
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
-import com.instructure.pandautils.features.speedgrader.SpeedGraderRepository
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+import com.instructure.canvasapi2.AssignmentDetailsQuery
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class SpeedGraderModule {
+interface AssignmentDetailsManager {
 
-    @Provides
-    fun provideSpeedGraderRepository(assignmentDetailsManager: AssignmentDetailsManager): SpeedGraderRepository {
-        return SpeedGraderRepository(assignmentDetailsManager)
-    }
+    suspend fun getAssignmentDetails(assignmentId: Long): AssignmentDetailsQuery.Data
 }
