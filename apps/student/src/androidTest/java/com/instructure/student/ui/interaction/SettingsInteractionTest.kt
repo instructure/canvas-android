@@ -53,27 +53,6 @@ class SettingsInteractionTest : StudentComposeTest() {
 
     }
 
-    // Should launch an intent to go to our canvas-android github page
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)
-    fun testLegal_showCanvasOnGithub() {
-        setUpAndSignIn()
-
-        leftSideNavigationDrawerPage.clickSettingsMenu()
-        settingsPage.clickOnSettingsItem("Legal")
-
-        Intents.init()
-        try {
-            val expectedIntent = CoreMatchers.allOf(IntentMatchers.hasAction(Intent.ACTION_VIEW), IntentMatchers.hasData("https://github.com/instructure/canvas-android"))
-            Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-            legalPage.openCanvasOnGithub()
-            Intents.intended(expectedIntent)
-        }
-        finally {
-            Intents.release()
-        }
-    }
-
     // Should display terms of use in a WebView
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SETTINGS, TestCategory.INTERACTION)

@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">No s\'ha pogut suprimir la conversa</string>
     <string name="conversationUpdateFailed">No s\'ha pogut actualitzar la conversa</string>
     <string name="sendIndividualMessage">Envieu un missatge individual a cada destinatari</string>
+    <string name="sendIndividualMessageIsMandatory">Només podeu enviar missatges individuals a 100 destinataris</string>
     <string name="invalidRecipients">No se us permet enviar missatges a un o més dels destinataris seleccionats.</string>
     <string name="newMessage">Missatge nou</string>
     <string name="forwardMessage">Reenvia el missatge</string>
@@ -1540,6 +1541,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Aquesta activitat ja no està disponible.</string>
     <string name="editDashboardOfflineMode">Esteu sense connexió</string>
+    <string name="editDashboardNoResults">Cap resultat</string>
+    <string name="editDashboardNoResultsMessage">No s\'ha trobat cap element coincident.</string>
     <string name="editDashboardOfflineModeMessage">Actualment, no teniu cap assignatura que estigui disponible sense connexió.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">S’ha sincronitzat correctament el contingut sense connexió</string>
     <string name="offlineContentSyncFailureNotificationTitle">No s’ha pogut sincronitzar el contingut sense connexió</string>
@@ -1650,6 +1653,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Afegeix un nou element del calendari</string>
     <string name="calendarFilterCalendars">Calendaris</string>
     <string name="calendarFilterUser">Usuari</string>
+    <string name="calendarFilterFavoriteCourse">Assignatures preferides</string>
+    <string name="calendarFilterMoreCourse">Més assignatures</string>
     <string name="calendarFilterCourse">Assignatures</string>
     <string name="calendarFilterGroup">Grups</string>
     <string name="calendarFilterExplanationLimited">Seleccioneu els calendaris que vulgueu consultar, fins a %d.</string>
@@ -1776,6 +1781,7 @@
     <string name="navigationDrawerLogOut">Tanca la sessió</string>
     <string name="noStudentsError">Cap estudiant</string>
     <string name="noStudentsErrorDescription">No esteu observant cap estudiant.</string>
+    <string name="noStudentsRefresh">Actualitza-ho</string>
     <string name="noGrade">Sense nota</string>
     <string name="errorLoadingCourses">S\'ha produït un error en carregar les vostres assignatures de l\'estudiant.</string>
     <string name="parentNoCourses">No hi ha cap assignatura</string>
@@ -1811,6 +1817,7 @@
     <string name="addNewStudent">Afegeix un estudiant nou</string>
     <string name="selectStudentColor">Selecciona el color de l’estudiant</string>
     <string name="errorSavingColor">S\'ha produït un error en desar la vostra selecció. Torneu a provar-ho.</string>
+    <string name="manageStudentsColorSavedSuccessfully">S\'ha desat correctament el color</string>
     <string name="changeStudentColorLabel">Canvia el color de %s</string>
     <string name="studentColorContentDescriptionBlue">Elèctric, blau</string>
     <string name="studentColorContentDescriptionPurple">Pruna, porpra</string>
@@ -1820,6 +1827,7 @@
     <string name="studentColorContentDescriptionGreen">Trèvol, verd</string>
     <string name="featureFlags">Marques de característiques opcionals</string>
     <string name="addStudent">Afegeix un estudiant</string>
+    <string name="addStudentSuccessfull">S\'ha afegit correctament l’estudiant</string>
     <string name="addStudentTitle">Afegeix un estudiant amb...</string>
     <string name="addStudentQrCodeTitle">Codi QR</string>
     <string name="addStudentQrCodeExplanation">Al dispositiu mòbil, els estudiants poden generar un codi QR mitjançant l’aplicació Canvas Student</string>
@@ -1867,6 +1875,7 @@
     <string name="alertSettingsThresholdLabel">Percentatge de la nota</string>
     <string name="unpairStudentTitle">Suprimeix</string>
     <string name="unpairStudentMessage">Amb aquesta acció es cancel·larà l’emparellament i se suprimiran del vostre compte totes les inscripcions per a aquest estudiant.</string>
+    <string name="unpairStudentSuccessfull">S\'ha suprimit correctament l’estudiant</string>
     <string name="alertSettingsMinThresholdError">Ha de ser superior a %d</string>
     <string name="alertSettingsMaxThresholdError">Ha de ser inferior a %d</string>
     <string name="alertSettingsErrorMessage">S\'ha produït un error en obtenir la configuració dels avisos.</string>
@@ -1887,13 +1896,16 @@
     <string name="errorLoadingGrades">Tenim problemes per carregar les notes de l’estudiant. Proveu de tornar a carregar la pàgina ara mateix o reviseu-la més endavant.</string>
     <string name="errorLoadingCourse">Tenim problemes per carregar la informació de l\'assignatura de l’estudiant. Proveu de tornar a carregar la pàgina ara mateix o reviseu-la més endavant.</string>
     <string name="gradesFilterContentDescription">Filtra</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">S’han actualitzat correctament les preferències de notes. S’ha actualitzat la llista.</string>
     <string name="courseDetailsMessageContentDescription">Envia un missatge sobre aquesta assignatura</string>
     <string name="gradeLockedContentDescription">S’ha bloquejat la nota</string>
     <string name="gradesRefreshFailed">No s\'han pogut actualitzar les notes</string>
     <string name="chooseACourseToMessage">Trieu una assignatura per enviar el missatge</string>
     <string name="regardingHiddenMessage">Sobre: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Sobre: %1$s, activitat - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Sobre: %1$s, esdeveniment - %2$s</string>
     <string name="sendMessageAboutAssignment">“Envia un missatge sobre aquesta activitat”</string>
+    <string name="sendMessageAboutEvent">“Envia un missatge sobre aquest esdeveniment”</string>
     <string name="forStudentLabel">per a %1$s</string>
     <string name="view_description">Mostra la descripció</string>
     <string name="a11y_contentDescription_viewDescription">Mostra la descripció</string>
@@ -1932,6 +1944,11 @@
     <string name="frontPageRefreshFailed">No s’ha pogut actualitzar la portada</string>
     <string name="failed_to_load_summary">No s’ha pogut carregar el resum</string>
     <string name="no_summary_items_to_display">No hi ha cap element de resum per mostrar</string>
+    <string name="a11y_summaryEventContentDescription">Esdeveniment</string>
+    <string name="a11y_summaryLockedContentDescription">Bloquejat</string>
+    <string name="a11y_summaryQuizContentDescription">Prova</string>
+    <string name="a11y_summaryDiscussionContentDescription">Fòrum</string>
+    <string name="a11y_summaryAssignmentContentDescription">Activitat</string>
     <string name="scheduleItemNoDueDate">Sense data de lliurament</string>
     <string name="a11y_refresh">Actualitza-ho</string>
     <string name="masqueradingAs">Esteu fent de %s</string>
@@ -1974,4 +1991,27 @@
     <string name="a11y_indeterminate">Marcat parcialment</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">S’han actualitzat els filtres.</string>
+    <string name="inboxAllRecipients">Tots els destinataris</string>
+    <string name="inboxSearchIn">Cerca a %1$s</string>
+    <string name="a11y_studentSelectorExpand">desplega</string>
+    <string name="a11y_studentSelectorCollapse">redueix</string>
+    <string name="a11y_studentSelectorContentDescription">Toqueu el selector d’estudiants %s; l’estudiant seleccionat és: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Selecciona l\'estudiant %s</string>
+    <string name="inboxSettingsTitle">Safata d\'entrada</string>
+    <string name="inboxSettingsInboxSignature">Signatura de la safata d\'entrada</string>
+    <string name="inboxSignatureNotSet">No s\'ha definit</string>
+    <string name="inboxSignatureEnabled">Activat</string>
+    <string name="inboxSignatureScreenTitle">Signatura de la safata d\'entrada</string>
+    <string name="inboxSignatureScreenSubtitle">S’afegirà la signatura al final de tots els missatges.</string>
+    <string name="inboxSignatureSwitchLabel">Signatura</string>
+    <string name="inboxSignatureTextfieldHeader">Text de la signatura</string>
+    <string name="due_dateTime">Data de lliurament: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filtra</string>
+    <string name="a11y_contentDescription_postPolicy">Política de publicació</string>
+    <string name="late">Endarrerit</string>
+    <string name="a11y_contentDescription_expand">Desplega</string>
+    <string name="missingTag">No presentat</string>
+    <string name="submissionFilter">Filtre d’entregues</string>
+    <string name="submissionMessageSubject">%1$s el %2$s</string>
+    <string name="all">Tot</string>
 </resources>

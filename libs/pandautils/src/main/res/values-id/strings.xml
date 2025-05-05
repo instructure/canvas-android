@@ -488,4 +488,8 @@
     <string name="a11y_markAsNotDoneWithName">%s Tandai sebagai selesai</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
 
+    <string name="inboxSignatureError">Gagal memuat tanda tangan kotak masuk</string>
+    <string name="inboxSignatureSettingsUpdated">Pengaturan kotak masuk disimpan!</string>
+    <string name="inboxSignatureSettingsError">Gagal menyimpang pengaturan kotak masuk</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Tulis tanda tangan Anda di sini</string>
 </resources>

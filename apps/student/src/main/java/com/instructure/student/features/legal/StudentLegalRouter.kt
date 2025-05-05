@@ -16,8 +16,6 @@
 package com.instructure.student.features.legal
 
 import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import com.instructure.pandautils.features.legal.LegalRouter
 import com.instructure.student.R
 import com.instructure.student.activity.InternalWebViewActivity
@@ -39,12 +37,6 @@ class StudentLegalRouter(private val context: Context) : LegalRouter {
             context.getString(R.string.privacyPolicy),
             false
         )
-        context.startActivity(intent)
-    }
-
-    override fun routeToOpenSource() {
-        val intent =
-            Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/instructure/canvas-android"))
         context.startActivity(intent)
     }
 }

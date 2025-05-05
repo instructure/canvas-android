@@ -44,12 +44,4 @@ class ParentLegalRouter(private val activity: Activity) : LegalRouter {
     override fun routeToPrivacyPolicy() {
         activity.launchCustomTab("https://www.instructure.com/policies/product-privacy-policy", ThemePrefs.primaryColor)
     }
-
-    override fun routeToOpenSource() {
-        val intent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://github.com/instructure/canvas-android")
-        )
-        activity.startActivity(intent)
-    }
 }

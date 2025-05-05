@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">बातचीत मिटाने में विफल</string>
     <string name="conversationUpdateFailed">बातचीत अपडेट करने में विफल</string>
     <string name="sendIndividualMessage">प्रत्येक प्राप्तकर्ता को व्यक्तिगत संदेश भेजें</string>
+    <string name="sendIndividualMessageIsMandatory">आप केवल 100 से अधिक प्राप्तकर्ताओं को ही व्यक्तिगत संदेश भेज सकते हैं</string>
     <string name="invalidRecipients">आपको चयनित प्राप्तकर्ताओं में से एक या अधिक को संदेश भेजने की अनुमति नहीं है।</string>
     <string name="newMessage">नया संदेश</string>
     <string name="forwardMessage">अग्रेषित संदेश</string>
@@ -1547,6 +1548,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">यह असाइनमेंट अब उपलब्ध नहीं है।</string>
     <string name="editDashboardOfflineMode">आप ऑफ़लाइन हैं</string>
+    <string name="editDashboardNoResults">कोई नतीजा नहीं</string>
+    <string name="editDashboardNoResultsMessage">कोई मेल खाती आइटम नहीं मिली।</string>
     <string name="editDashboardOfflineModeMessage">फ़िलहाल आपके पास कोई भी ऐसा पाठ्यक्रम नहीं है, जो ऑफ़लाइन उपलब्ध हो।</string>
     <string name="offlineContentSyncSuccessNotificationTitle">ऑफ़लाइन सामग्री सिंक करना सफल हुआ</string>
     <string name="offlineContentSyncFailureNotificationTitle">ऑफ़लाइन सामग्री सिंक नहीं हो सकी</string>
@@ -1657,6 +1660,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">नया कैलेंडर आइटम जोड़ें</string>
     <string name="calendarFilterCalendars">कैलेंडर</string>
     <string name="calendarFilterUser">उपयोगकर्ता</string>
+    <string name="calendarFilterFavoriteCourse">पसंदीदा पाठ्यक्रम</string>
+    <string name="calendarFilterMoreCourse">अधिक पाठ्यक्रम</string>
     <string name="calendarFilterCourse">पाठ्यक्रम</string>
     <string name="calendarFilterGroup">ग्रुप्स</string>
     <string name="calendarFilterExplanationLimited">आप जो कैलेंडर देखना चाहते हैं, उन्हें %d तक चुनें।</string>
@@ -1783,6 +1788,7 @@
     <string name="navigationDrawerLogOut">लॉग आउट करें</string>
     <string name="noStudentsError">कोई छात्र नहीं</string>
     <string name="noStudentsErrorDescription">आप किसी भी छात्र की समीक्षा नहीं कर रहे हैं।</string>
+    <string name="noStudentsRefresh">रीफ़्रेश करें</string>
     <string name="noGrade">कोई ग्रेड नहीं</string>
     <string name="errorLoadingCourses">आपके छात्र के पाठ्यक्रम लोड करने में त्रुटि हुई।</string>
     <string name="parentNoCourses">कोई पाठ्यक्रम नहीं</string>
@@ -1818,6 +1824,7 @@
     <string name="addNewStudent">नया छात्र जोड़ें</string>
     <string name="selectStudentColor">छात्र रंग का चयन करें</string>
     <string name="errorSavingColor">आपका चयन सहेजते समय त्रुटि उत्पन्न हुई। कृपया फिर से कोशिश करें।</string>
+    <string name="manageStudentsColorSavedSuccessfully">रंग सफलतापूर्वक सहेजा गया</string>
     <string name="changeStudentColorLabel">%s के लिए रंग बदलें</string>
     <string name="studentColorContentDescriptionBlue">इलेक्ट्रिक, नीला</string>
     <string name="studentColorContentDescriptionPurple">प्लम, बैंगनी</string>
@@ -1827,6 +1834,7 @@
     <string name="studentColorContentDescriptionGreen">शैमरॉक, हरा</string>
     <string name="featureFlags">फ़ीचर फ़्लैग</string>
     <string name="addStudent">छात्र जोड़ें</string>
+    <string name="addStudentSuccessfull">छात्र सफलतापूर्वक जोड़ा गया</string>
     <string name="addStudentTitle">छात्र को इसके साथ जोड़ें...</string>
     <string name="addStudentQrCodeTitle">QR कोड</string>
     <string name="addStudentQrCodeExplanation">छात्र अपने मोबाइल डिवाइस पर Canvas छात्र ऐप का उपयोग करके QR कोड जेनरेट सकते हैं</string>
@@ -1874,6 +1882,7 @@
     <string name="alertSettingsThresholdLabel">ग्रेड प्रतिशत</string>
     <string name="unpairStudentTitle">मिटाएं</string>
     <string name="unpairStudentMessage">इस तरह से आपके खाते से इस छात्र के सभी नामांकन अनपेयर हो जाएंगे और निकाल दिए जाएंगे।</string>
+    <string name="unpairStudentSuccessfull">छात्र सफलतापूर्वक मिटाया गया</string>
     <string name="alertSettingsMinThresholdError">%d से ऊपर होना चाहिए</string>
     <string name="alertSettingsMaxThresholdError">%d से कम होना चाहिए</string>
     <string name="alertSettingsErrorMessage">चेतावनी सेटिंग्स प्राप्त करते समय एक त्रुटि उत्पन्न हुई।</string>
@@ -1894,13 +1903,16 @@
     <string name="errorLoadingGrades">हमें आपके छात्र के ग्रेड लोड करने में समस्या हो रही है। कृपया पेज को पुनः लोड करने का प्रयास करें या बाद में जांच करें।</string>
     <string name="errorLoadingCourse">हमें आपके छात्र का पाठ्यक्रम विवरण लोड करने में समस्या हो रही है। कृपया पेज को पुनः लोड करने का प्रयास करें या बाद में जांच करें।</string>
     <string name="gradesFilterContentDescription">फ़िल्टर</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">ग्रेड प्राथमिकताएं सफलतापूर्वक अपडेट की गईं। सूची को ताज़ा किया गया है।</string>
     <string name="courseDetailsMessageContentDescription">इस पाठ्यक्रम के बारे में संदेश भेजें</string>
     <string name="gradeLockedContentDescription">ग्रेड लॉक किया गया</string>
     <string name="gradesRefreshFailed">ग्रेड रीफ़्रेश करने में विफल</string>
     <string name="chooseACourseToMessage">संदेश भेजने के लिए कोई पाठ्यक्रम चुनें</string>
     <string name="regardingHiddenMessage">इसके संबंध में: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">इसके संबंध में: %1$s, असाइनमेंट - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">इसके संबंध में: %1$s, घटना - %2$s</string>
     <string name="sendMessageAboutAssignment">"इस असाइनमेंट के बारे में संदेश भेजें"</string>
+    <string name="sendMessageAboutEvent">"इस घटना के बारे में संदेश भेजें"</string>
     <string name="forStudentLabel">%1$s के लिए</string>
     <string name="view_description">विवरण देखें</string>
     <string name="a11y_contentDescription_viewDescription">विवरण देखें</string>
@@ -1939,6 +1951,11 @@
     <string name="frontPageRefreshFailed">मुख पृष्ठ रीफ़्रेश करने में विफल</string>
     <string name="failed_to_load_summary">सारांश लोड करने में विफल</string>
     <string name="no_summary_items_to_display">प्रदर्शित करने के लिए कोई सारांश आइटम नहीं</string>
+    <string name="a11y_summaryEventContentDescription">घटना</string>
+    <string name="a11y_summaryLockedContentDescription">लॉक किया गया</string>
+    <string name="a11y_summaryQuizContentDescription">प्रश्नोत्तरी</string>
+    <string name="a11y_summaryDiscussionContentDescription">चर्चा</string>
+    <string name="a11y_summaryAssignmentContentDescription">असाइनमेंट</string>
     <string name="scheduleItemNoDueDate">कोई नियत तिथि नहीं</string>
     <string name="a11y_refresh">रीफ़्रेश करें</string>
     <string name="masqueradingAs">आप %s के रूप में कार्य कर रहे हैं</string>
@@ -1981,4 +1998,27 @@
     <string name="a11y_indeterminate">आंशिक रूप से चिह्नित किया गया</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">फ़िल्टर अपडेट किए गए हैं</string>
+    <string name="inboxAllRecipients">सभी प्राप्तकर्ता</string>
+    <string name="inboxSearchIn">%1$s में खोजें</string>
+    <string name="a11y_studentSelectorExpand">बढ़ाएं</string>
+    <string name="a11y_studentSelectorCollapse">संक्षिप्त करें</string>
+    <string name="a11y_studentSelectorContentDescription">%s छात्र चयनकर्ता पर टैप करें, चयनित छात्र है: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">%s छात्र को चुनें</string>
+    <string name="inboxSettingsTitle">इनबॉक्स</string>
+    <string name="inboxSettingsInboxSignature">इनबॉक्स हस्ताक्षर</string>
+    <string name="inboxSignatureNotSet">सेट नहीं है</string>
+    <string name="inboxSignatureEnabled">सक्षम किया गया</string>
+    <string name="inboxSignatureScreenTitle">इनबॉक्स हस्ताक्षर</string>
+    <string name="inboxSignatureScreenSubtitle">सभी संदेशों के अंत में हस्ताक्षर जोड़े जाएंगे।</string>
+    <string name="inboxSignatureSwitchLabel">हस्ताक्षर</string>
+    <string name="inboxSignatureTextfieldHeader">हस्ताक्षर पाठ</string>
+    <string name="due_dateTime">नियत: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">फ़िल्टर</string>
+    <string name="a11y_contentDescription_postPolicy">पोस्ट नीति</string>
+    <string name="late">विलंब</string>
+    <string name="a11y_contentDescription_expand">बढ़ाएं</string>
+    <string name="missingTag">लापता</string>
+    <string name="submissionFilter">सबमिशन फ़िल्टर</string>
+    <string name="submissionMessageSubject">%1$s ने %2$s पर</string>
+    <string name="all">सभी</string>
 </resources>

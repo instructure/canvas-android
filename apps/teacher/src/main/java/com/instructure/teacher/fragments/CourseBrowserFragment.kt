@@ -37,6 +37,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_COURSE_BROWSER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
 import com.instructure.pandautils.utils.Const
@@ -52,13 +53,11 @@ import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.requestAccessibilityFocus
 import com.instructure.pandautils.utils.setCourseImage
 import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.CourseBrowserAdapter
 import com.instructure.teacher.databinding.FragmentCourseBrowserBinding
 import com.instructure.teacher.events.CourseUpdatedEvent
 import com.instructure.teacher.factory.CourseBrowserPresenterFactory
-import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
 import com.instructure.teacher.holders.CourseBrowserViewHolder
