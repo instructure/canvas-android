@@ -172,4 +172,10 @@
     <string name="fileDetails_downloadFile">Download File</string>
     <string name="fileDetails_openWith">Open with</string>
     <string name="fileDetails_downloadError">File couldn’t be downloaded.</string>
+    <string name="assignmentDetails_instructions">Instructions</string>
+    <string name="modulePager_unlimitedAttempts">Unlimited attempts allowed</string>
+    <plurals name="modulePager_numberOfAttemtps">
+        <item quantity="one">%d attempt allowed</item>
+        <item quantity="other">%d attempts allowed</item>
+    </plurals>
 </resources>

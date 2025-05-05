@@ -38,7 +38,6 @@ import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -77,6 +76,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private var modules = emptyList<ModuleObject>()
     private var moduleItems = emptyList<ModuleItem>()
 
+    private var currentModuleItem: ModuleItem? = null
+
     init {
         viewModelScope.tryLaunch {
             _uiState.update {
@@ -108,15 +109,20 @@ class ModuleItemSequenceViewModel @Inject constructor(
         modules = repository.getModulesWithItems(courseId)
         moduleItems = modules.flatMap { it.items }
 
+        currentModuleItem = moduleItems.find { it.id == moduleItemId }
+        val attempts = getAttemptCount(currentModuleItem)
+
         val items = modules
-            .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules) }
+            .flatMap { it.items }.mapNotNull {
+                val currentAttempts = if (it.id == moduleItemId) attempts else null
+                createModuleItemUiState(it, modules, currentAttempts)
+            }
 
         val progressPages = modules.map { createProgressPage(it) }
 
         val initialPosition = items.indexOfFirst { it.moduleItemId == moduleItemId }.coerceAtLeast(0)
 
-        val initialItem = moduleItems.find { it.id == moduleItemId }
-        initialItem?.let {
+        currentModuleItem?.let {
             markItemAsRead(it)
         }
 
@@ -152,7 +158,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
 
-    private fun createModuleItemUiState(item: ModuleItem, modules: List<ModuleObject>): ModuleItemUiState? {
+    private fun createModuleItemUiState(item: ModuleItem, modules: List<ModuleObject>, attempts: String?): ModuleItemUiState? {
         val moduleItemContent: ModuleItemContent? = when {
             item.isLocked() -> ModuleItemContent.Locked(
                 item.moduleDetails?.lockExplanation ?: context.getString(R.string.modulePager_locked)
@@ -197,13 +203,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
             moduleItemName = item.title.orEmpty(),
             moduleItemId = item.id,
             moduleItemContent = moduleItemContent,
-            detailTags = createDetailTags(item),
+            detailTags = createDetailTags(item, attempts),
             pillText = createPillText(item),
             markAsDoneUiState = markDoneUiState
         )
     }
 
-    private fun createDetailTags(item: ModuleItem): List<String> {
+    private fun createDetailTags(item: ModuleItem, attempts: String?): List<String> {
         val detailTags = mutableListOf<String>()
         item.estimatedDuration?.let {
             detailTags.add(it.formatIsoDuration(context))
@@ -215,7 +221,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
             val points = it.toDoubleOrNull()?.toInt() ?: 0
             detailTags.add(context.resources.getQuantityString(R.plurals.modulePager_pointsPossible, points, points))
         }
-        // TODO Handle attempts in the assignment details ticket
+        attempts?.let {
+            detailTags.add(it)
+        }
         return detailTags
     }
 
@@ -243,6 +251,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
         val currentItem = getCurrentItem(newPosition, newItems)
         _uiState.update { it.copy(currentPosition = newPosition, currentItem = currentItem, items = newItems) }
+        currentModuleItem = moduleItems.find { it.id == currentItem?.moduleItemId }
         loadModuleItem(newPosition, currentItem!!.moduleItemId)
     }
 
@@ -250,9 +259,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val moduleItem =
                 repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
+            val attempts = getAttemptCount(moduleItem)
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
-                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules) else it
+                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules, attempts) else it
             }
             val currentItem = getCurrentItem(items = newItems)
             _uiState.update { it.copy(items = newItems, currentItem = currentItem) }
@@ -308,8 +318,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
             modules = repository.getModulesWithItems(courseId)
             moduleItems = modules.flatMap { it.items }
 
+            val attempts = getAttemptCount(currentModuleItem)
+
             val items = modules
-                .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules) }
+                .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
 
             val progressPages = modules.map { createProgressPage(it) }
 
@@ -367,8 +379,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun moduleItemSelected(itemId: Long) {
         val moduleItem = moduleItems.find { it.id == itemId }
+        currentModuleItem = moduleItem
         if (moduleItem != null) {
-            markItemAsRead(moduleItem)
             val newPosition = _uiState.value.items.indexOfFirst { it.moduleItemId == itemId }
             _uiState.update {
                 it.copy(
@@ -377,6 +389,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     progressScreenState = it.progressScreenState.copy(visible = false)
                 )
             }
+            loadModuleItem(newPosition, itemId)
         }
     }
     //endregion
@@ -436,6 +449,17 @@ class ModuleItemSequenceViewModel @Inject constructor(
             viewModelScope.launch {
                 repository.markAsRead(courseId, item.moduleId, item.id)
             }
+        }
+    }
+
+    private suspend fun getAttemptCount(item: ModuleItem?): String? {
+        if (item?.type != Type.Assignment.name) return null
+
+        val assignment = repository.getAssignment(item.contentId, courseId, forceNetwork = true)
+        return if (assignment.allowedAttempts > 0) {
+            context.resources.getQuantityString(R.plurals.modulePager_numberOfAttemtps, assignment.allowedAttempts.toInt(), assignment.allowedAttempts)
+        } else {
+            context.getString(R.string.modulePager_unlimitedAttempts)
         }
     }
 }

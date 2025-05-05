@@ -13,7 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.moduleitemsequence.content.page
+@file:OptIn(ExperimentalMaterial3Api::class)
+
+package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
@@ -23,28 +25,31 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.views.CanvasWebView
 
 @Composable
-fun PageDetailsContentScreen(
-    uiState: PageDetailsUiState,
-    scrollState: ScrollState,
-    modifier: Modifier = Modifier
-) {
+fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
     val activity = LocalContext.current.getActivityOrNull()
-    uiState.pageHtmlContent?.let {
+    LoadingStateWrapper(loadingState = uiState.loadingState, containerColor = Color.Transparent,) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -58,8 +63,11 @@ fun PageDetailsContentScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState)
             ) {
+                HorizonSpace(SpaceSize.SPACE_24)
+                Text(stringResource(R.string.assignmentDetails_instructions), style = HorizonTypography.h3, modifier = Modifier.padding(horizontal = 8.dp))
+                HorizonSpace(SpaceSize.SPACE_8)
                 ComposeCanvasWebViewWrapper(
-                    html = it,
+                    html = uiState.instructions,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         canvasEmbeddedWebViewCallback = embeddedWebViewCallback
@@ -71,7 +79,6 @@ fun PageDetailsContentScreen(
             }
         }
     }
-
 }
 
 private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {

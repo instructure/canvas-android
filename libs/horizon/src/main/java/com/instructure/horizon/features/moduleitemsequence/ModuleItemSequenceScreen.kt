@@ -60,6 +60,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -74,6 +75,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.AssignmentDetailsScreen
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.AssignmentDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.file.FileDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.file.FileDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.link.ExternalLinkContentScreen
@@ -280,7 +283,9 @@ private fun ModuleHeaderContainer(
                     text = uiState.currentItem?.moduleName.orEmpty(),
                     style = HorizonTypography.p3,
                     color = HorizonColors.Text.surfaceColored(),
-                    textAlign = TextAlign.Center
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
                 )
                 HorizonSpace(SpaceSize.SPACE_4)
                 Text(
@@ -357,9 +362,21 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
             moduleItemUiState.moduleItemContent is ModuleItemContent.Page ||
             moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalLink ||
             moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalTool ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.File
+            moduleItemUiState.moduleItemContent is ModuleItemContent.File ||
+            moduleItemUiState.moduleItemContent is ModuleItemContent.Assignment
         ) {
             NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
+                composable(route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.Assignment.ASSIGNMENT_ID) { type = NavType.LongType }
+                )) {
+                    val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
+                    val uiState by viewModel.uiState.collectAsState()
+                    AssignmentDetailsScreen(
+                        uiState = uiState,
+                        scrollState = scrollState
+                    )
+                }
                 composable(
                     route = ModuleItemContent.Page.ROUTE, arguments = listOf(
                         navArgument(Const.COURSE_ID) { type = NavType.LongType },

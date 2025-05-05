@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.R
 import com.instructure.pandautils.utils.formatDayMonthYear
-import com.instructure.pandautils.utils.formatMinuteDuration
+import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Date
 import javax.inject.Inject
@@ -58,7 +58,7 @@ class ModuleHeaderStateMapper @Inject constructor(
             subtitle = getModuleSubtitle(module, allModules),
             itemCount = filteredItems.size,
             pastDueCount = filteredItems.count { it.overDue },
-            remainingMinutes = module.estimatedDuration?.formatMinuteDuration(context)
+            remainingMinutes = module.estimatedDuration?.formatIsoDuration(context)
         )
     }
 
