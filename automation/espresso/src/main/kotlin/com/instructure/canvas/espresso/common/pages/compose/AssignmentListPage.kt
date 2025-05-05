@@ -60,11 +60,13 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun clickAssignment(assignment: Assignment) {
+        composeTestRule.waitForIdle()
         composeTestRule.onNodeWithTag("assignmentList")
             .performScrollToNode(hasText(assignment.name!!))
 
         composeTestRule.onNodeWithText(assignment.name!!)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickQuiz(quiz: QuizApiModel) {
