@@ -487,4 +487,8 @@
     <string name="a11y_markAsDoneWithName">%s Marker som udført</string>
     <string name="a11y_markAsNotDoneWithName">%s Marker som ikke udført</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Indbakkesignaturen kunne ikke indlæses</string>
+    <string name="inboxSignatureSettingsUpdated">Indbakkeindstillinger gemt!</string>
+    <string name="inboxSignatureSettingsError">Indbakkeindstillingerne kunne ikke gemmes</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Skriv din signatur her</string>
 </resources>

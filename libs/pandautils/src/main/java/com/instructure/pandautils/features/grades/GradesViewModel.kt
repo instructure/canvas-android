@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.getCurrentGradingPeriod
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -34,6 +35,7 @@ import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
+import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -70,10 +72,13 @@ class GradesViewModel @Inject constructor(
     private var courseGrade: CourseGrade? = null
 
     init {
-        loadGrades(false)
+        loadGrades(
+            forceRefresh = false,
+            initialize = true
+        )
     }
 
-    private fun loadGrades(forceRefresh: Boolean) {
+    private fun loadGrades(forceRefresh: Boolean, initialize: Boolean = false) {
         viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
@@ -90,13 +95,24 @@ class GradesViewModel @Inject constructor(
             val course = repository.loadCourse(courseId, forceRefresh)
             this@GradesViewModel.course = course
             val gradingPeriods = repository.loadGradingPeriods(courseId, forceRefresh)
-            val selectedGradingPeriodId = _uiState.value.gradePreferencesUiState.selectedGradingPeriod?.id
-            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriodId, forceRefresh).filterHiddenAssignments()
-            val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriodId, forceRefresh)
+            val currentGradingPeriod = gradingPeriods.getCurrentGradingPeriod()
 
-            courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriodId)
+            var selectedGradingPeriod = _uiState.value.gradePreferencesUiState.selectedGradingPeriod
+            var sortBy = _uiState.value.gradePreferencesUiState.sortBy
 
-            val items = when (_uiState.value.gradePreferencesUiState.sortBy) {
+            if (initialize) {
+                selectedGradingPeriod = currentGradingPeriod
+                sortBy = repository.getSortBy() ?: sortBy
+            } else {
+                repository.setSortBy(_uiState.value.gradePreferencesUiState.sortBy)
+            }
+
+            val assignmentGroups = repository.loadAssignmentGroups(courseId, selectedGradingPeriod?.id, forceRefresh).filterHiddenAssignments()
+            val enrollments = repository.loadEnrollments(courseId, selectedGradingPeriod?.id, forceRefresh)
+
+            courseGrade = repository.getCourseGrade(course, repository.studentId, enrollments, selectedGradingPeriod?.id)
+
+            val items = when (sortBy) {
                 SortBy.GROUP -> groupByAssignmentGroup(assignmentGroups)
                 SortBy.DUE_DATE -> groupByDueDate(assignmentGroups)
             }.filter {
@@ -110,7 +126,10 @@ class GradesViewModel @Inject constructor(
                     isRefreshing = false,
                     gradePreferencesUiState = it.gradePreferencesUiState.copy(
                         courseName = course.name,
-                        gradingPeriods = gradingPeriods
+                        gradingPeriods = gradingPeriods,
+                        defaultGradingPeriod = currentGradingPeriod,
+                        selectedGradingPeriod = selectedGradingPeriod,
+                        sortBy = sortBy
                     ),
                     gradeText = gradeFormatter.getGradeString(course, courseGrade, !it.onlyGradedAssignmentsSwitchEnabled),
                     isGradeLocked = courseGrade?.isLocked.orDefault()
@@ -201,14 +220,7 @@ class GradesViewModel @Inject constructor(
             context.getString(R.string.due, "$dateText $timeText")
         } ?: context.getString(R.string.gradesNoDueDate)
 
-        val submissionStateLabel = when {
-            assignment.submission?.late.orDefault() -> SubmissionStateLabel.LATE
-            assignment.isMissing() -> SubmissionStateLabel.MISSING
-            assignment.isGraded().orDefault() -> SubmissionStateLabel.GRADED
-            assignment.submission?.submittedAt != null -> SubmissionStateLabel.SUBMITTED
-            !assignment.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
-            else -> SubmissionStateLabel.NONE
-        }
+        val submissionStateLabel = assignment.getSubmissionStateLabel()
 
         AssignmentUiState(
             id = assignment.id,

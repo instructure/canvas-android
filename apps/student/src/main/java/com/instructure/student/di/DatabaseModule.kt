@@ -7,6 +7,10 @@ import com.instructure.pandautils.room.appdatabase.appDatabaseMigrations
 import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import com.instructure.pandautils.room.calendar.calendarDatabaseMigrations
 import com.instructure.student.room.StudentDb
+import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
+import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.student.room.entities.daos.CreateSubmissionDao
 import com.instructure.student.room.studentDbMigrations
 import dagger.Module
 import dagger.Provides
@@ -46,5 +50,29 @@ class DatabaseModule {
             .addMigrations(*studentDbMigrations)
             .fallbackToDestructiveMigration()
             .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateSubmissionDao(studentDb: StudentDb): CreateSubmissionDao {
+        return studentDb.submissionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateFileSubmissionDao(studentDb: StudentDb): CreateFileSubmissionDao {
+        return studentDb.fileSubmissionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreatePendingSubmissionCommentDao(studentDb: StudentDb): CreatePendingSubmissionCommentDao {
+        return studentDb.pendingSubmissionCommentDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateSubmissionCommentFileDao(studentDb: StudentDb): CreateSubmissionCommentFileDao {
+        return studentDb.submissionCommentFileDao()
     }
 }

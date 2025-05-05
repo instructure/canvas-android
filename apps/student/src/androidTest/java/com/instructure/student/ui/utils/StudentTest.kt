@@ -47,10 +47,10 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.espresso.TestAppManager
 import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
-import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.pages.BookmarkPage
 import com.instructure.student.ui.pages.CanvasWebViewPage
 import com.instructure.student.ui.pages.ConferenceDetailsPage
@@ -103,6 +103,7 @@ import com.instructure.student.ui.pages.offline.SyncProgressPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
+import org.junit.Before
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
@@ -120,7 +121,6 @@ abstract class StudentTest : CanvasTest() {
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val assignmentDetailsPage = StudentAssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
-    val assignmentListPage = AssignmentListPage(Searchable(R.id.search, R.id.search_src_text))
     val bookmarkPage = BookmarkPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()
@@ -178,6 +178,12 @@ abstract class StudentTest : CanvasTest() {
     val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
+
+    @Before
+    fun setupWorkerFactory() {
+        val application = activityRule.activity.application as? TestAppManager
+        application?.workerFactory = workerFactory
+    }
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

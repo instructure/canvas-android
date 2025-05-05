@@ -28,14 +28,14 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.espresso.randomDouble
 import com.instructure.espresso.randomString
 import com.instructure.teacher.R
-import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 import org.junit.Test
 
 @HiltAndroidTest
-class EditAssignmentDetailsPageTest : TeacherTest() {
+class EditAssignmentDetailsPageTest : TeacherComposeTest() {
 
     @Test
     override fun displaysPageObjects() {

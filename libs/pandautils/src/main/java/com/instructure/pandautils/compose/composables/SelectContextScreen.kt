@@ -51,6 +51,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isCourse
@@ -73,26 +74,28 @@ fun SelectContextScreen(
     modifier: Modifier = Modifier,
     @DrawableRes navIconRes: Int = R.drawable.ic_close,
 ) {
-    Scaffold(
-        backgroundColor = colorResource(id = R.color.backgroundLightest),
-        topBar = {
-            CanvasAppBar(
-                title = title,
-                navigationActionClick = navigationActionClick,
-                navIconRes = navIconRes,
-                navIconContentDescription = stringResource(id = R.string.back)
-            )
-        },
-        content = { padding ->
-            SelectContextContent(
-                uiState = uiState,
-                onContextSelected = onContextSelected,
-                modifier = modifier
-                    .padding(padding)
-                    .fillMaxSize()
-            )
-        }
-    )
+    CanvasTheme {
+        Scaffold(
+            backgroundColor = colorResource(id = R.color.backgroundLightest),
+            topBar = {
+                CanvasAppBar(
+                    title = title,
+                    navigationActionClick = navigationActionClick,
+                    navIconRes = navIconRes,
+                    navIconContentDescription = stringResource(id = R.string.back)
+                )
+            },
+            content = { padding ->
+                SelectContextContent(
+                    uiState = uiState,
+                    onContextSelected = onContextSelected,
+                    modifier = modifier
+                        .padding(padding)
+                        .fillMaxSize()
+                )
+            }
+        )
+    }
 }
 
 @Composable

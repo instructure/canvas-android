@@ -19,6 +19,7 @@
 package com.instructure.teacher.ui.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
@@ -27,6 +28,7 @@ import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUp
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxComposePage
 import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
+import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
@@ -41,6 +43,7 @@ abstract class TeacherComposeTest : TeacherTest() {
     @get:Rule(order = 1)
     val composeTestRule = createAndroidComposeRule<LoginActivity>()
 
+    //Compose pages
     val calendarScreenPage = CalendarScreenPage(composeTestRule)
     val calendarEventCreateEditPage = CalendarEventCreateEditPage(composeTestRule)
     val calendarEventDetailsPage = CalendarEventDetailsPage(composeTestRule)
@@ -54,4 +57,6 @@ abstract class TeacherComposeTest : TeacherTest() {
     val recipientPickerPage = RecipientPickerPage(composeTestRule)
     val selectContextPage = SelectContextPage(composeTestRule)
     val assignmentSubmissionListPage = AssignmentSubmissionListPage(composeTestRule)
+    val assignmentListPage = AssignmentListPage(composeTestRule)
+    val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
 }

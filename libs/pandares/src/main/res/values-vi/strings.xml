@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Không xóa được cuộc trò chuyện</string>
     <string name="conversationUpdateFailed">Không cập nhật được cuộc trò chuyện</string>
     <string name="sendIndividualMessage">Gửi tin nhắn riêng đến từng người nhận</string>
+    <string name="sendIndividualMessageIsMandatory">Bạn chỉ có thể gửi tin nhắn riêng lẻ cho hơn 100 người nhận</string>
     <string name="invalidRecipients">Bạn không được phép gửi tin nhắn đến một hoặc nhiều trong số các người nhận.</string>
     <string name="newMessage">Tin Nhắn Mới</string>
     <string name="forwardMessage">Chuyển Tiếp Tin Nhắn</string>
@@ -1540,6 +1541,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Bài tập này không còn khả dụng.</string>
     <string name="editDashboardOfflineMode">Bạn đang ngoại tuyến</string>
+    <string name="editDashboardNoResults">Không có kết quả</string>
+    <string name="editDashboardNoResultsMessage">Không tìm thấy mục trùng khớp.</string>
     <string name="editDashboardOfflineModeMessage">Hiện tại bạn không có bất kỳ khóa học nào khả dụng ngoại tuyến.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Đồng Bộ Nội Dung Ngoại Tuyến Thành Công</string>
     <string name="offlineContentSyncFailureNotificationTitle">Đồng Bộ Nội Dung Ngoại Tuyến Không Thành Công</string>
@@ -1650,6 +1653,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Thêm mục lịch mới</string>
     <string name="calendarFilterCalendars">Lịch</string>
     <string name="calendarFilterUser">Người Dùng</string>
+    <string name="calendarFilterFavoriteCourse">Khóa Học Yêu Thích</string>
+    <string name="calendarFilterMoreCourse">Thêm Khóa Học</string>
     <string name="calendarFilterCourse">Các khóa học</string>
     <string name="calendarFilterGroup">Các nhóm</string>
     <string name="calendarFilterExplanationLimited">Chọn lịch bạn muốn xem, tối đa %d.</string>
@@ -1776,6 +1781,7 @@
     <string name="navigationDrawerLogOut">Đăng Xuất</string>
     <string name="noStudentsError">Không Có Sinh Viên</string>
     <string name="noStudentsErrorDescription">Bạn đang không quan sát bất kỳ sinh viên nào.</string>
+    <string name="noStudentsRefresh">Làm Mới</string>
     <string name="noGrade">Không Có Lớp</string>
     <string name="errorLoadingCourses">Đã xảy ra lỗi khi tải khóa học sinh viên của bạn.</string>
     <string name="parentNoCourses">Không Có Khóa Học</string>
@@ -1811,6 +1817,7 @@
     <string name="addNewStudent">Thêm sinh viên mới</string>
     <string name="selectStudentColor">Chọn Màu Sinh Viên</string>
     <string name="errorSavingColor">Đã xảy ra lỗi khi lưu lựa chọn của bạn. Vui lòng thử lại.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Đã lưu thành công màu</string>
     <string name="changeStudentColorLabel">Thay đổi màu cho %s</string>
     <string name="studentColorContentDescriptionBlue">Xanh Dương Tia Lửa Điện</string>
     <string name="studentColorContentDescriptionPurple">Tía Mận</string>
@@ -1820,6 +1827,7 @@
     <string name="studentColorContentDescriptionGreen">Xanh Lá Cây</string>
     <string name="featureFlags">Cờ Đặc Tính</string>
     <string name="addStudent">Thêm Sinh Viên</string>
+    <string name="addStudentSuccessfull">Đã thêm sinh viên thành công</string>
     <string name="addStudentTitle">Thêm sinh viên với...</string>
     <string name="addStudentQrCodeTitle">Mã QR</string>
     <string name="addStudentQrCodeExplanation">Sinh viên có thể tạo mã QR bằng cách sử dụng ứng dụng Canvas Student trên thiết bị di động của họ</string>
@@ -1867,6 +1875,7 @@
     <string name="alertSettingsThresholdLabel">Điểm dạng phần trăm</string>
     <string name="unpairStudentTitle">Xóa</string>
     <string name="unpairStudentMessage">Thao tác này sẽ bỏ ghép cặp và gỡ toàn bộ lượt ghi danh của sinh viên này ra khỏi tài khoản của bạn.</string>
+    <string name="unpairStudentSuccessfull">Đã xóa thành công sinh viên</string>
     <string name="alertSettingsMinThresholdError">Phải trên %d</string>
     <string name="alertSettingsMaxThresholdError">Phải dưới %d</string>
     <string name="alertSettingsErrorMessage">Đã xảy ra lỗi khi tải cài đặt cảnh báo.</string>
@@ -1887,13 +1896,16 @@
     <string name="errorLoadingGrades">Chúng tôi đang gặp khó khăn khi tải điểm sinh viên của bạn. Vui lòng thử tải lại trang hoặc kiểm tra lại sau.</string>
     <string name="errorLoadingCourse">Chúng tôi đang gặp khó khăn khi tải chi tiết khóa học của sinh viên của bạn. Vui lòng thử tải lại trang hoặc kiểm tra lại sau.</string>
     <string name="gradesFilterContentDescription">Lọc</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Đã cập nhật thành công tùy chọn điểm. Đã làm mới danh sách.</string>
     <string name="courseDetailsMessageContentDescription">Gửi tin nhắn về khóa học này</string>
     <string name="gradeLockedContentDescription">Đã khóa điểm</string>
     <string name="gradesRefreshFailed">Làm mới điểm thất bại</string>
     <string name="chooseACourseToMessage">Chọn khóa học để nhắn tin</string>
     <string name="regardingHiddenMessage">Về việc: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Về việc: %1$s, Bài Tập - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Về việc: %1$s, Sự Kiện - %2$s</string>
     <string name="sendMessageAboutAssignment">“Gửi tin nhắn về bài tập này”</string>
+    <string name="sendMessageAboutEvent">“Gửi tin nhắn về sự kiện này”</string>
     <string name="forStudentLabel">cho %1$s</string>
     <string name="view_description">Xem Mô Tả</string>
     <string name="a11y_contentDescription_viewDescription">Xem Mô Tả</string>
@@ -1932,6 +1944,11 @@
     <string name="frontPageRefreshFailed">Không thể làm mới trang đầu</string>
     <string name="failed_to_load_summary">Không tải được tóm tắt</string>
     <string name="no_summary_items_to_display">Không có mục tóm tắt để hiển thị</string>
+    <string name="a11y_summaryEventContentDescription">Sự Kiện</string>
+    <string name="a11y_summaryLockedContentDescription">Bị Khóa</string>
+    <string name="a11y_summaryQuizContentDescription">Kiểm Tra</string>
+    <string name="a11y_summaryDiscussionContentDescription">Thảo Luận</string>
+    <string name="a11y_summaryAssignmentContentDescription">Bài Tập</string>
     <string name="scheduleItemNoDueDate">Không Có Ngày Đến Hạn</string>
     <string name="a11y_refresh">Làm Mới</string>
     <string name="masqueradingAs">Bạn đang đóng vai trò %s</string>
@@ -1974,4 +1991,27 @@
     <string name="a11y_indeterminate">Đã kiểm tra một phần</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Bộ lọc đã được cập nhật</string>
+    <string name="inboxAllRecipients">Tất Cả Người Nhận</string>
+    <string name="inboxSearchIn">Tìm kiếm trong %1$s</string>
+    <string name="a11y_studentSelectorExpand">mở rộng</string>
+    <string name="a11y_studentSelectorCollapse">thu gọn</string>
+    <string name="a11y_studentSelectorContentDescription">Nhấn vào bộ chọn sinh viên %s, sinh viên được chọn là: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Chọn sinh viên %s</string>
+    <string name="inboxSettingsTitle">Hộp Thư Đến</string>
+    <string name="inboxSettingsInboxSignature">Chữ Ký Hộp Thư Đến</string>
+    <string name="inboxSignatureNotSet">Không Được Thiết Lập</string>
+    <string name="inboxSignatureEnabled">Đã bật</string>
+    <string name="inboxSignatureScreenTitle">Chữ Ký Hộp Thư Đến</string>
+    <string name="inboxSignatureScreenSubtitle">Chữ ký sẽ được thêm vào cuối tất cả tin nhắn.</string>
+    <string name="inboxSignatureSwitchLabel">Chữ Ký</string>
+    <string name="inboxSignatureTextfieldHeader">Văn bản chữ ký</string>
+    <string name="due_dateTime">Hạn: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Lọc</string>
+    <string name="a11y_contentDescription_postPolicy">Chính sách đăng bài</string>
+    <string name="late">Trễ</string>
+    <string name="a11y_contentDescription_expand">Mở Rộng</string>
+    <string name="missingTag">Bị Thiếu</string>
+    <string name="submissionFilter">Bộ Lọc Bài Nộp</string>
+    <string name="submissionMessageSubject">%1$s trên %2$s</string>
+    <string name="all">Tất Cả</string>
 </resources>

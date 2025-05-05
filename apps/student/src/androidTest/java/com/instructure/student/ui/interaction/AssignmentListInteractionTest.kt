@@ -25,21 +25,15 @@ import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class AssignmentListInteractionTest : StudentTest() {
+class AssignmentListInteractionTest : StudentComposeTest() {
 
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    override fun displaysPageObjects() {
-        setUpData(0)
-        goToAssignmentsPage()
-        assignmentListPage.assertPageObjects()
-    }
+    override fun displaysPageObjects() = Unit
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
@@ -59,34 +53,12 @@ class AssignmentListInteractionTest : StudentTest() {
 
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun sortAssignmentsByTimeByDefault() {
-        val assignment = setUpData()[0]
-        goToAssignmentsPage()
-        assignmentListPage.assertHasAssignment(assignment)
-        assignmentListPage.assertSortByButtonShowsSortByTime()
-        assignmentListPage.assertAssignmentGroupDisplayed("Undated Assignments")
-    }
-
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
-    fun sortAssignmentsByTypeWhenTypeIsSelectedInTheDialog() {
-        val assignment = setUpData()[0]
-        goToAssignmentsPage()
-
-        assignmentListPage.selectSortByType()
-
-        assignmentListPage.assertHasAssignment(assignment)
-        assignmentListPage.assertSortByButtonShowsSortByType()
-    }
-
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
     fun testLetterGradeAssignmentWithoutQuantitativeRestriction() {
         setUpData()
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "90/100 (B)")
+        assignmentListPage.assertHasAssignment(assignment, "90/100 (B)")
     }
 
     @Test
@@ -96,7 +68,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "90/100 (3.7)")
+        assignmentListPage.assertHasAssignment(assignment, "90/100 (3.7)")
     }
 
     @Test
@@ -106,7 +78,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "90/100")
+        assignmentListPage.assertHasAssignment(assignment, "90/100")
     }
 
     @Test
@@ -116,7 +88,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "EX/100")
+        assignmentListPage.assertHasAssignment(assignment, "EX/100")
     }
 
     @Test
@@ -126,7 +98,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "90%", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "90%")
+        assignmentListPage.assertHasAssignment(assignment, "90%")
     }
 
     @Test
@@ -136,7 +108,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "Complete")
+        assignmentListPage.assertHasAssignment(assignment, "Complete")
     }
 
     @Test
@@ -146,7 +118,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.LETTER_GRADE, "B", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "B")
+        assignmentListPage.assertHasAssignment(assignment, "B")
     }
 
     @Test
@@ -156,7 +128,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.GPA_SCALE, "3.7", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "3.7")
+        assignmentListPage.assertHasAssignment(assignment, "3.7")
     }
 
     @Test
@@ -166,7 +138,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, "90", 90.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "A")
+        assignmentListPage.assertHasAssignment(assignment, "A")
     }
 
     @Test
@@ -176,7 +148,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.POINTS, null, 90.0, 100, excused = true)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "Excused")
+        assignmentListPage.assertHasAssignment(assignment, "Excused")
     }
 
     @Test
@@ -186,7 +158,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PERCENT, "80%", 80.0, 100)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "B")
+        assignmentListPage.assertHasAssignment(assignment, "B")
     }
 
     @Test
@@ -196,7 +168,7 @@ class AssignmentListInteractionTest : StudentTest() {
         val assignment = addAssignment(MockCanvas.data, Assignment.GradingType.PASS_FAIL, "complete", 0.0, 0)
         goToAssignmentsPage()
 
-        assignmentListPage.assertAssignmentDisplayedWithGrade(assignment.name!!, "Complete")
+        assignmentListPage.assertHasAssignment(assignment, "Complete")
     }
 
     private fun setUpData(assignmentCount: Int = 1, restrictQuantitativeData: Boolean = false): List<Assignment> {
@@ -265,6 +237,5 @@ class AssignmentListInteractionTest : StudentTest() {
 
         return assignment
     }
-
 }
 

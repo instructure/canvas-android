@@ -20,11 +20,12 @@ import android.net.http.HttpResponseCache
 import com.google.gson.GsonBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.calladapter.DataResultCallAdapterFactory
+import com.instructure.canvasapi2.di.CanvasAuthenticatorEntryPoint
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.Logger
+import dagger.hilt.android.EarlyEntryPoints
 import okhttp3.Cache
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
@@ -65,7 +66,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
             .addNetworkInterceptor(PactRequestInterceptor(authUser))
             .addNetworkInterceptor(ResponseInterceptor())
             .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
-            .authenticator(CanvasAuthenticator())
+            .authenticator(canvasAuthenticator)
             .dispatcher(mDispatcher)
             .build()
     }
@@ -168,7 +169,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                 OkHttpClient.Builder()
                     .addInterceptor(loggingInterceptor)
                     .addInterceptor(RollCallInterceptor())
-                    .authenticator(CanvasAuthenticator())
+                    .authenticator(canvasAuthenticator)
                     .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
                     .dispatcher(mDispatcher)
                     .build()
@@ -271,6 +272,13 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
         private var mCache: Cache? = null
         var client: OkHttpClient? = null
 
+        private val canvasAuthenticator by lazy {
+            EarlyEntryPoints.get(
+                ContextKeeper.appContext.applicationContext,
+                CanvasAuthenticatorEntryPoint::class.java
+            ).canvasAuthenticator()
+        }
+
         val cacheDirectory: File
             get() {
                 if (mHttpCacheDirectory == null) {
@@ -304,7 +312,7 @@ protected constructor(var statusCallback: StatusCallback<*>?, private val authUs
                         .addNetworkInterceptor(ResponseInterceptor())
                         .readTimeout(TIMEOUT_IN_SECONDS.toLong(), TimeUnit.SECONDS)
                         .dispatcher(mDispatcher)
-                        .authenticator(CanvasAuthenticator())
+                        .authenticator(canvasAuthenticator)
                         .build()
                 }
 
