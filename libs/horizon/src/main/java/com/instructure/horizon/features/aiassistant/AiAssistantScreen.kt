@@ -58,7 +58,12 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 @Composable
 fun AiAssistantScreen(navHostController: NavHostController) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    ModalBottomSheet(containerColor = Color.White, onDismissRequest = { navHostController.popBackStack() }, dragHandle = null, sheetState = bottomSheetState) {
+    ModalBottomSheet(
+        containerColor = Color.White,
+        onDismissRequest = { navHostController.popBackStack() },
+        dragHandle = null,
+        sheetState = bottomSheetState
+    ) {
         Box(
             modifier = Modifier
                 .fillMaxSize()
