@@ -58,8 +58,10 @@ class CalendarE2ETest: TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Click on the 'Calendar' bottom menu to navigate to the Calendar page. Assert that the page title is 'Calendar'.")
+        Log.d(STEP_TAG,"Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'Calendar'.")
         calendarScreenPage.assertCalendarPageTitle()
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
@@ -69,13 +71,13 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are making a new one.")
         calendarEventCreateEditPage.assertTitle("New Event")
 
-        Log.d(STEP_TAG, "Type 'New Test Event' to the title input field and click on 'Save'.")
         val newEventTitle = "New Test Event"
+        Log.d(STEP_TAG, "Type 'New Test Event' to the title input field and click on 'Save'.")
         calendarEventCreateEditPage.typeTitle(newEventTitle)
         calendarEventCreateEditPage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         var currentDate = getDateInCanvasCalendarFormat()
+        Log.d(ASSERTION_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         calendarScreenPage.assertItemDetails(newEventTitle, teacher.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the previously created '$newEventTitle' event and assert the event details.")
@@ -111,7 +113,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         currentDate = getDateInCanvasCalendarFormat()
         calendarScreenPage.assertItemDetails(modifiedEventTitle, teacher.name, currentDate)
 
-        Log.d(STEP_TAG, "Click on the previously created '$modifiedEventTitle' event and assert the event details.")
+        Log.d(STEP_TAG, "Click on the previously created '$modifiedEventTitle' event.")
         calendarScreenPage.clickOnItem(modifiedEventTitle)
 
         Log.d(ASSERTION_TAG, "Assert that previously given location and address values are displayed on the Event Details Page.")
@@ -143,8 +145,10 @@ class CalendarE2ETest: TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page. Assert that the page title is 'Calendar'.")
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the page title is 'Calendar'.")
         calendarScreenPage.assertCalendarPageTitle()
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
@@ -161,8 +165,8 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarToDoCreateUpdatePage.typeDetails(testTodoDescription)
         calendarToDoCreateUpdatePage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously created To Do item is displayed with the corresponding title, context and date.")
         val currentDate = getDateInCanvasCalendarFormat()
+        Log.d(ASSERTION_TAG, "Assert that the user has been navigated back to the Calendar Screen Page and that the previously created To Do item is displayed with the corresponding title, context and date.")
         calendarScreenPage.assertItemDetails(testTodoTitle, "To Do", "$currentDate at 12:00 PM")
 
         Log.d(STEP_TAG, "Clicks on the '$testTodoTitle' To Do item.")
@@ -240,8 +244,10 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Calendar is collapsed and only 1 week is displayed in this state.")
         calendarScreenPage.assertCalendarCollapsed()
 
-        Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar. Assert that the Calendar is expanded and multiple weeks are displayed in this state.")
+        Log.d(STEP_TAG, "Click on the calendar header (Year and month string) to collapse the calendar.")
         calendarScreenPage.clickCalendarHeader()
+
+        Log.d(ASSERTION_TAG, "Assert that the Calendar is expanded and 4 weeks are displayed in this state.")
         calendarScreenPage.assertCalendarExpanded()
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add Event' to create a new event.")
@@ -251,13 +257,13 @@ class CalendarE2ETest: TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Calendar Event Page is displayed and the title is 'New Event' as we are making a new one.")
         calendarEventCreateEditPage.assertTitle("New Event")
 
-        Log.d(STEP_TAG, "Type 'New Test Event' to the title input field and click on 'Save'.")
         val newEventTitle = "New Test Event"
+        Log.d(STEP_TAG, "Type 'New Test Event' to the title input field and click on 'Save'.")
         calendarEventCreateEditPage.typeTitle(newEventTitle)
         calendarEventCreateEditPage.clickSave()
 
-        Log.d(ASSERTION_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         val currentDate = getDateInCanvasCalendarFormat()
+        Log.d(ASSERTION_TAG, "Assert that the event is displayed with the corresponding details (title, context name, date, status) on the page.")
         calendarScreenPage.assertItemDetails(newEventTitle, teacher.name, currentDate)
 
         Log.d(STEP_TAG, "Click on the 'Add' (FAB) button and 'Add To Do' to create a new To Do.")
@@ -269,7 +275,6 @@ class CalendarE2ETest: TeacherComposeTest() {
 
         val testTodoTitle = "Test ToDo Title"
         val testTodoDescription = "Details of ToDo"
-
         Log.d(STEP_TAG, "Fill the title with '$testTodoTitle' and the details/description with '$testTodoDescription'.")
         calendarToDoCreateUpdatePage.typeTodoTitle(testTodoTitle)
         calendarToDoCreateUpdatePage.typeDetails(testTodoDescription)
@@ -289,7 +294,8 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarScreenPage.swipeEventsLeft()
         calendarScreenPage.swipeEventsLeft()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day. Assert that '$newEventTitle' calendar event is not displayed because it's created for today.")
+        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is displayed because we created it to this particular day." +
+                "Assert that '$newEventTitle' calendar event is not displayed because it's created for today.")
         calendarScreenPage.assertItemDisplayed(testTodoTitle)
         calendarScreenPage.assertItemNotExist(newEventTitle)
 
@@ -300,7 +306,8 @@ class CalendarE2ETest: TeacherComposeTest() {
         calendarFilterPage.clickOnFilterItem(course.name)
         calendarFilterPage.closeFilterPage()
 
-        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is not displayed because we filtered out from the calendar. Assert that the empty view is displayed because there are no items for today.")
+        Log.d(ASSERTION_TAG, "Assert that the '$testTodoTitle' To Do item is not displayed because we filtered out from the calendar. " +
+                "Assert that the empty view is displayed because there are no items for today.")
         calendarScreenPage.assertItemNotExist(testTodoTitle)
         calendarScreenPage.assertEmptyView()
 
