@@ -61,14 +61,11 @@ class CreateAccountE2ETest : ParentComposeTest() {
         Log.d(PREPARATION_TAG, "Fetch Terms of Service")
         val terms = UserApi.getTermsOfService()
 
-        Log.d(
-            STEP_TAG,
-            "Navigate to create account screen using generated QR code data: domain: '${student.domain}', pairing code: '$pairingCode', accountId: '${terms.accountId}'"
-        )
+        Log.d(STEP_TAG, "Navigate to create account screen using generated QR code data: domain: '${student.domain}', pairing code: '$pairingCode', accountId: '${terms.accountId}'")
         goToCreateAccount(student.domain, pairingCode.pairingCode, terms.accountId)
         composeTestRule.waitUntil { !createAccountPage.isLoading() }
-        val email = "${randomString()}@test.com"
 
+        val email = "${randomString()}@test.com"
         Log.d(STEP_TAG, "Fill account creation form using '$email' email")
         createAccountPage.fillValidData(email)
 

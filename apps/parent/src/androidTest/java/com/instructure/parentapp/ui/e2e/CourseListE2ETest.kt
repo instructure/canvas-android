@@ -87,8 +87,10 @@ class CourseListE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that by default the selected student is that the one is the first ordered by 'sortableName'.")
         dashboardPage.assertSelectedStudent(selectedShortName)
 
-        Log.d(STEP_TAG, "Open the student selector and make sure that '${student.name}' student will be selected.")
+        Log.d(STEP_TAG, "Open the student selector.")
         dashboardPage.openStudentSelector()
+
+        Log.d(ASSERTION_TAG, "Assert that '${student.name}' student will be selected.")
         dashboardPage.assertAddStudentDisplayed()
 
         val otherStudentName = if (selectedShortName == student.shortName) {
@@ -116,8 +118,10 @@ class CourseListE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the course has its course code.")
         coursesPage.assertCourseCodeTextDisplayed(course.name, course.courseCode)
 
-        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the details of the course has opened.")
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Navigate back to the course list page of the selected student.")

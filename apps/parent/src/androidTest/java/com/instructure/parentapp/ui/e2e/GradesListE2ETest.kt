@@ -83,12 +83,14 @@ class GradesListE2ETest : ParentComposeTest() {
         tokenLogin(parent)
         composeTestRule.waitForIdle()
 
-        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the details of the course has opened.")
         courseDetailsPage.assertCourseNameDisplayed(course) //Course Details Page is actually the Grades page by default when there are no tabs.
 
         Log.d(ASSERTION_TAG, "Assert that the Grades Card text is 'Total' by default and the 'Based on graded assignments' label is displayed.")

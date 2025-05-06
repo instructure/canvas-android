@@ -80,6 +80,7 @@ class ManageStudentsE2ETest : ParentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
+
         Thread.sleep(1000) // Need to wait a bit because sometimes it wants to open the left side menu too fast.
 
         Log.d(STEP_TAG, "Open the Left Side Menu by clicking on the hamburger icon on the top-left corner.")

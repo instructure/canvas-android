@@ -56,7 +56,7 @@ class AlertsE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -80,6 +80,8 @@ class AlertsE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
         dashboardPage.clickAlertsBottomMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the Alerts Page is empty.")
         alertsPage.assertEmptyState()
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
@@ -147,7 +149,7 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.dismissAlert("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
         alertsPage.dismissAlert("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
-        Log.d(ASSERTION_TAG, "Assert that the alerts are dismissed.")
+        Log.d(ASSERTION_TAG, "Assert that the alerts are dismissed and refresh the page.")
         alertsPage.refresh()
         alertsPage.assertEmptyState()
     }
@@ -164,7 +166,7 @@ class AlertsE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -184,11 +186,13 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.enterThreshold("80")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
         dashboardPage.clickAlertsBottomMenu()
 
+        Log.d(ASSERTION_TAG, "Assert that the Alerts Page is empty.")
         alertsPage.assertEmptyState()
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
@@ -212,7 +216,6 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.assertAlertItemDisplayed("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
         val secondStudent = data.studentsList[1]
-
         Log.d(STEP_TAG, "Select student '${secondStudent.shortName}'.")
         dashboardPage.openStudentSelector()
         dashboardPage.selectStudent(secondStudent.shortName)
@@ -241,7 +244,7 @@ class AlertsE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -312,10 +315,13 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Never")
         studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
 
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
         dashboardPage.clickAlertsBottomMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the Alerts Page is empty.")
         alertsPage.assertEmptyState()
 
         Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")

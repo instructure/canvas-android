@@ -82,7 +82,7 @@ class CourseDetailsFrontPageE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'FRONT PAGE' tab has been selected.")
         courseDetailsPage.assertTabSelected("FRONT PAGE")
 
-        Log.d(ASSERTION_TAG, "Assert that the body string is displayed and click the link for the assignment.")
+        Log.d(ASSERTION_TAG,"Assert that the body string is displayed and click the link for the assignment.")
         frontPagePage.assertFrontPageBody("This is the front page body Assignment")
 
         Log.d(STEP_TAG, "Click on the 'assignmentLink' link text on the Front Page.")

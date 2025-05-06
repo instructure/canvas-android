@@ -101,7 +101,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Select '${assignment.name}' (assignment) Summary item to navigate to the Assignment Details Page.")
         summaryPage.selectItem(assignment.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is loaded successfully.")
+        Log.d(ASSERTION_TAG,"Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
 
         Log.d(STEP_TAG, "Navigate back to the Summary Page.")

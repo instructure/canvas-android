@@ -104,7 +104,7 @@ class DashboardE2ETest : ParentComposeTest() {
         pairingCodePage.clickOkButton()
         composeTestRule.waitForIdle()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${newStudent.shortName}' (new) student is displayed and selected as it is the recently added student.")
+        Log.d(ASSERTION_TAG,"Assert that the '${newStudent.shortName}' (new) student is displayed and selected as it is the recently added student.")
         dashboardPage.assertSelectedStudent(newStudent.shortName)
 
         Log.d(STEP_TAG, "Select '${student.shortName}' student.")

@@ -74,12 +74,16 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
         settingsPage.selectAppTheme(AppTheme.DARK)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the course label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG,"Navigate back to Dashboard.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG,"Assert that the course label has the proper text color (which is used in Dark mode).")
         coursesPage.assertCourseLabelTextColor(course, 0xFFFFFFFF)
 
-        Log.d(STEP_TAG,"Select '${course.name}' course and assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG,"Select '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG,"Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
         courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFFFFFFFF)
 
         Log.d(STEP_TAG, "Navigate back and open the Left Side Navigation Drawer menu.")
@@ -92,12 +96,16 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
         settingsPage.selectAppTheme(AppTheme.LIGHT)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the course label has the proper text color (which is used in Light mode).")
+        Log.d(STEP_TAG,"Navigate back to Dashboard.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG,"Assert that the course label has the proper text color (which is used in Light mode).")
         coursesPage.assertCourseLabelTextColor(course, 0xFF273540)
 
-        Log.d(STEP_TAG,"Select '${course.name}' course and assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG,"Select '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG,"Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
         courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFF273540)
     }
 
@@ -119,8 +127,10 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettings()
 
-        Log.d(STEP_TAG,"Open Legal Page and assert that all the corresponding buttons are displayed.")
+        Log.d(STEP_TAG,"Open Legal Page.")
         settingsPage.clickOnSettingsItem("Legal")
+
+        Log.d(ASSERTION_TAG,"Assert that all the corresponding buttons are displayed.")
         legalPage.assertPageObjects()
     }
 
@@ -190,7 +200,6 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxSignatureSettingsPage.assertSignatureEnabledState(false)
 
         val signatureText = "President of AC Milan\nVice President of Ferencvaros"
-
         Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$signatureText'. Save the changes.")
         inboxSignatureSettingsPage.toggleSignatureEnabledState()
         inboxSignatureSettingsPage.changeSignatureText(signatureText)

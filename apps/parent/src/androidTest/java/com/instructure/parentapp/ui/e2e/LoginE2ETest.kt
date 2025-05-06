@@ -123,7 +123,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Previous Logins' section is displayed and both the '${parent.name}' and '${parent2.name}' parents are displayed on the previous login list.")
+        Log.d(ASSERTION_TAG,"Assert that the 'Previous Logins' section is displayed and both the '${parent.name}' and '${parent2.name}' parents are displayed on the previous login list.")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(parent.name)
         loginLandingPage.assertPreviousLoginUserDisplayed(parent2.name)
@@ -215,24 +215,28 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ('$INVALID_USERNAME', '$INVALID_PASSWORD')." +
-                "Assert that the invalid credentials error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ('$INVALID_USERNAME', '$INVALID_PASSWORD').")
         loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
+
+        Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
 
-        Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field." +
-                "Assert that the no password was given error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field.")
         loginSignInPage.loginAs(EMPTY_STRING, EMPTY_STRING)
+
+        Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
-        Log.d(STEP_TAG, "Try to login with leaving only the password field empty." +
-                "Assert that the no password was given error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with leaving only the password field empty.")
         loginSignInPage.loginAs(INVALID_USERNAME, EMPTY_STRING)
+
+        Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
-        Log.d(STEP_TAG, "Try to login with leaving only the username field empty." +
-                "Assert that the invalid credentials error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with leaving only the username field empty.")
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
+
+        Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
     }
 
