@@ -165,10 +165,12 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
         )
         HorizonSpace(SpaceSize.SPACE_24)
     }
-    val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
-    when (selectedSubmissionType) {
-        is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
-        is AddSubmissionTypeUiState.Text -> Text(text = "Text Submission") // TODO Submission ticket
+    if (uiState.submissionTypes.isNotEmpty()) {
+        val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
+        when (selectedSubmissionType) {
+            is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
+            is AddSubmissionTypeUiState.Text -> Text(text = "Text Submission") // TODO Submission ticket
+        }
     }
 }
 

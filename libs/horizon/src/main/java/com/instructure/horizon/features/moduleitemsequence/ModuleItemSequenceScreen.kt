@@ -122,6 +122,8 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         ModuleItemSequenceBottomBar(
             showNextButton = uiState.currentPosition < uiState.items.size - 1,
             showPreviousButton = uiState.currentPosition > 0,
+            showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+            showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
             onNextClick = uiState.onNextClick,
             onPreviousClick = uiState.onPreviousClick
         )
@@ -366,7 +368,8 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
             moduleItemUiState.moduleItemContent is ModuleItemContent.Assignment
         ) {
             NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
-                composable(route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
+                composable(
+                    route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
                     navArgument(ModuleItemContent.Assignment.ASSIGNMENT_ID) { type = NavType.LongType }
                 )) {
@@ -399,7 +402,8 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
                     val uiState = ExternalLinkUiState(title, url)
                     ExternalLinkContentScreen(uiState)
                 }
-                composable(ModuleItemContent.File.ROUTE, arguments = listOf(
+                composable(
+                    ModuleItemContent.File.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
                     navArgument(ModuleItemContent.File.FILE_URL) { type = NavType.StringType },
                     navArgument(Const.MODULE_ITEM_ID) { type = NavType.LongType },
@@ -447,6 +451,8 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
 private fun ModuleItemSequenceBottomBar(
     showNextButton: Boolean,
     showPreviousButton: Boolean,
+    showNotebookButton: Boolean,
+    showAssignmentToolsButton: Boolean,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -461,7 +467,16 @@ private fun ModuleItemSequenceBottomBar(
             )
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
                 IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, elevation = HorizonElevation.level4)
-                IconButton(iconRes = R.drawable.menu_book_notebook, color = IconButtonColor.INVERSE, elevation = HorizonElevation.level4)
+                if (showNotebookButton) IconButton(
+                    iconRes = R.drawable.menu_book_notebook,
+                    color = IconButtonColor.INVERSE,
+                    elevation = HorizonElevation.level4
+                )
+                if (showAssignmentToolsButton) IconButton(
+                    iconRes = R.drawable.more_vert,
+                    color = IconButtonColor.INVERSE,
+                    elevation = HorizonElevation.level4
+                )
             }
             if (showNextButton) IconButton(
                 iconRes = R.drawable.chevron_right,
