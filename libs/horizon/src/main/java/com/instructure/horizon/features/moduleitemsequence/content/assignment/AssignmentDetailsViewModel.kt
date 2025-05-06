@@ -18,6 +18,8 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
@@ -49,14 +51,53 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
             val result = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
+            val lastActualSubmission = result.lastActualSubmission
+            val submissions = if (lastActualSubmission != null) {
+                mapSubmissions(result.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+            } else {
+                emptyList()
+            }
+            val initialAttempt = lastActualSubmission?.attempt ?: -1L
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
-                    instructions = result.description.orEmpty()
+                    instructions = result.description.orEmpty(),
+                    ltiUrl = result.externalToolAttributes?.url.orEmpty(),
+                    submissions = submissions,
+                    currentSubmissionAttempt = initialAttempt
                 )
             }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
+        }
+    }
+
+    private fun mapSubmissions(submissions: List<Submission>): List<SubmissionUiState> {
+        return submissions.mapNotNull {
+            if (it.submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString ||
+                it.submissionType == Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+            ) {
+                SubmissionUiState(
+                    submissionAttempt = it.attempt,
+                    submissionContent = when (it.submissionType) {
+                        Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> SubmissionContent.TextSubmission(it.body.orEmpty())
+                        Assignment.SubmissionType.ONLINE_UPLOAD.apiString -> SubmissionContent.FileSubmission(
+                            it.attachments.map { attachment ->
+                                FileItemUiState(
+                                    fileName = attachment.displayName.orEmpty(),
+                                    fileUrl = attachment.url.orEmpty(),
+                                    fileType = attachment.contentType.orEmpty()
+                                )
+                            }
+                        )
+
+                        else -> SubmissionContent.TextSubmission("")
+                    },
+                    date = it.submittedAt?.toString().orEmpty()
+                )
+            } else {
+                null
+            }
         }
     }
 }

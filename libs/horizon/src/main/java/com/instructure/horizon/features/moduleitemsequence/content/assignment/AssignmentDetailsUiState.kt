@@ -20,5 +20,28 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class AssignmentDetailsUiState(
     val loadingState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
     val instructions: String = "",
-    val ltiUrl: String = ""
+    val ltiUrl: String = "",
+    val submissions: List<SubmissionUiState> = emptyList(),
+    val currentSubmissionAttempt: Long = -1L,
+    val onNewAttemptClick: () -> Unit = {},
+)
+
+data class SubmissionUiState(
+    val submissionAttempt: Long,
+    val submissionContent: SubmissionContent,
+    val date: String,
+    val onClick: () -> Unit = {},
+)
+
+sealed class SubmissionContent {
+    data class TextSubmission(val text: String) : SubmissionContent()
+    data class FileSubmission(val fileItems: List<FileItemUiState>) : SubmissionContent()
+}
+
+data class FileItemUiState(
+    val fileName: String,
+    val fileUrl: String,
+    val fileType: String,
+    val onClick: () -> Unit = {},
+    val onDownloadClock: () -> Unit = {},
 )

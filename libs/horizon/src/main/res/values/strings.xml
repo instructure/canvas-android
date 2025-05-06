@@ -178,4 +178,7 @@
         <item quantity="one">%d attempt allowed</item>
         <item quantity="other">%d attempts allowed</item>
     </plurals>
+    <string name="assignmentDetails_newAttempt">New Attempt</string>
+    <string name="assignmentDetails_textSubmission">Your Text Submission</string>
+    <string name="assignmentDetails_fileSubmission">Your Uploaded Submission</string>
 </resources>
