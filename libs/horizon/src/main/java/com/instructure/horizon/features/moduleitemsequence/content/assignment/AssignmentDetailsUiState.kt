@@ -15,12 +15,21 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
+import androidx.annotation.StringRes
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class AssignmentDetailsUiState(
     val loadingState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
     val instructions: String = "",
     val ltiUrl: String = "",
+    val submissionDetailsUiState: SubmissionDetailsUiState = SubmissionDetailsUiState(),
+    val addSubmissionUiState: AddSubmissionUiState = AddSubmissionUiState(),
+    val showSubmissionDetails: Boolean = false,
+    val showAddSubmission: Boolean = false,
+)
+
+data class SubmissionDetailsUiState(
     val submissions: List<SubmissionUiState> = emptyList(),
     val currentSubmissionAttempt: Long = -1L,
     val onNewAttemptClick: () -> Unit = {},
@@ -45,3 +54,14 @@ data class FileItemUiState(
     val onClick: () -> Unit = {},
     val onDownloadClock: () -> Unit = {},
 )
+
+data class AddSubmissionUiState(
+    val submissionTypes: List<AddSubmissionTypeUiState> = emptyList(),
+    val selectedSubmissionTypeIndex: Int = 0,
+    val onSubmissionTypeSelected: (Int) -> Unit = {},
+)
+
+sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
+    data class Text(val text: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
+    data class File(val fileName: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
+}

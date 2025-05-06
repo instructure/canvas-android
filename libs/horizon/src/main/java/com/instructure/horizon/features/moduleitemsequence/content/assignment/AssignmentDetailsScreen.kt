@@ -23,6 +23,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,6 +49,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.SegmentedControl
+import com.instructure.horizon.horizonui.molecules.SegmentedControlIconPosition
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
@@ -112,13 +115,12 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                         })
                     HorizonSpace(SpaceSize.SPACE_24)
                 }
-                HorizonSpace(SpaceSize.SPACE_48)
-                if (uiState.submissions.isNotEmpty()) {
-                    SubmissionContent(uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt } ?: uiState.submissions.first())
-                    HorizonSpace(SpaceSize.SPACE_40)
-                    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                        Button(label = stringResource(R.string.assignmentDetails_newAttempt), color = ButtonColor.Institution, onClick = uiState.onNewAttemptClick)
-                    }
+                HorizonSpace(SpaceSize.SPACE_40)
+                if (uiState.showSubmissionDetails) {
+                    SubmissionDetailsContent(uiState.submissionDetailsUiState)
+                }
+                if (uiState.showAddSubmission) {
+                    AddSubmissionContent(uiState.addSubmissionUiState)
                 }
                 HorizonSpace(SpaceSize.SPACE_48)
             }
@@ -127,10 +129,46 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
 }
 
 @Composable
+private fun ColumnScope.SubmissionDetailsContent(uiState: SubmissionDetailsUiState, modifier: Modifier = Modifier) {
+    SubmissionContent(uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt }
+        ?: uiState.submissions.first(), modifier = modifier)
+    HorizonSpace(SpaceSize.SPACE_40)
+    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+        Button(
+            label = stringResource(R.string.assignmentDetails_newAttempt),
+            color = ButtonColor.Institution,
+            onClick = uiState.onNewAttemptClick
+        )
+    }
+}
+
+@Composable
 fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier) {
     when (uiState.submissionContent) {
         is SubmissionContent.TextSubmission -> TextSubmissionContent(text = uiState.submissionContent.text, modifier = modifier)
         is SubmissionContent.FileSubmission -> {}
+    }
+}
+
+@Composable
+fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Modifier = Modifier) {
+    if (uiState.submissionTypes.size > 1) {
+        Text(stringResource(R.string.assignmentDetails_selectSubmissionType), style = HorizonTypography.h3)
+        HorizonSpace(SpaceSize.SPACE_16)
+        val options = uiState.submissionTypes.map { stringResource(it.labelRes) }
+        SegmentedControl(
+            options = options,
+            onItemSelected = uiState.onSubmissionTypeSelected,
+            selectedIndex = uiState.selectedSubmissionTypeIndex,
+            iconPosition = SegmentedControlIconPosition.Start(checkmark = true),
+            modifier = modifier
+        )
+        HorizonSpace(SpaceSize.SPACE_24)
+    }
+    val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
+    when (selectedSubmissionType) {
+        is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
+        is AddSubmissionTypeUiState.Text -> Text(text = "Text Submission") // TODO Submission ticket
     }
 }
 
@@ -159,14 +197,17 @@ fun AssignmentDetailsScreenPreview() {
         uiState = AssignmentDetailsUiState(
             instructions = "This is a test",
             ltiUrl = "",
-            submissions = listOf(
-                SubmissionUiState(
-                    submissionAttempt = 1L,
-                    submissionContent = SubmissionContent.TextSubmission("This is a test"),
-                    date = "2023-10-01"
-                )
+            submissionDetailsUiState = SubmissionDetailsUiState(
+                submissions = listOf(
+                    SubmissionUiState(
+                        submissionAttempt = 1L,
+                        submissionContent = SubmissionContent.TextSubmission("This is a test"),
+                        date = "2023-10-01"
+                    )
+                ),
+                currentSubmissionAttempt = 1L
             ),
-            currentSubmissionAttempt = 1L
+            showSubmissionDetails = true
         ),
         scrollState = ScrollState(0)
     )

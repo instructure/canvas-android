@@ -40,7 +40,18 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val courseId = savedStateHandle[Const.COURSE_ID] ?: -1L
 
     private val _uiState =
-        MutableStateFlow(AssignmentDetailsUiState())
+        MutableStateFlow(AssignmentDetailsUiState(addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected)))
+
+    private fun submissionTypeSelected(index: Int) {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    selectedSubmissionTypeIndex = index,
+                )
+            )
+        }
+    }
+
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -50,21 +61,35 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun loadData() {
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
-            val result = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
-            val lastActualSubmission = result.lastActualSubmission
+            val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
+            val lastActualSubmission = assignment.lastActualSubmission
             val submissions = if (lastActualSubmission != null) {
-                mapSubmissions(result.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+                mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
             } else {
                 emptyList()
             }
             val initialAttempt = lastActualSubmission?.attempt ?: -1L
+
+            val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
+                when (it) {
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text("")
+                    Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File("")
+                    else -> null
+                }
+            }
+
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
-                    instructions = result.description.orEmpty(),
-                    ltiUrl = result.externalToolAttributes?.url.orEmpty(),
-                    submissions = submissions,
-                    currentSubmissionAttempt = initialAttempt
+                    instructions = assignment.description.orEmpty(),
+                    ltiUrl = assignment.externalToolAttributes?.url.orEmpty(),
+                    submissionDetailsUiState = SubmissionDetailsUiState(
+                        submissions = submissions,
+                        currentSubmissionAttempt = initialAttempt
+                    ),
+                    addSubmissionUiState = it.addSubmissionUiState.copy(submissionTypes = submissionTypes),
+                    showSubmissionDetails = lastActualSubmission != null,
+                    showAddSubmission = lastActualSubmission == null,
                 )
             }
         } catch {

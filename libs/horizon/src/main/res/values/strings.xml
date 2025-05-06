@@ -181,4 +181,7 @@
     <string name="assignmentDetails_newAttempt">New Attempt</string>
     <string name="assignmentDetails_textSubmission">Your Text Submission</string>
     <string name="assignmentDetails_fileSubmission">Your Uploaded Submission</string>
+    <string name="assignmentDetilas_submissionTypeText">Text</string>
+    <string name="assignmentDetilas_submissionTypeFileUpload">File Upload</string>
+    <string name="assignmentDetails_selectSubmissionType">Select a Submission Type</string>
 </resources>
