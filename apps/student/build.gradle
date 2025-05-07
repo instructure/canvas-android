@@ -329,7 +329,6 @@ dependencies {
 
     implementation Libs.NAVIGATION_FRAGMENT
     implementation Libs.NAVIGATION_KTX
-    implementation Libs.ANDROIDX_GLANCE
 
     implementation Libs.GLANCE
 }
@@ -375,5 +374,4 @@ if (coverageEnabled) {
             xml.enabled  false
         }
     }
-
 }
