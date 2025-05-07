@@ -25,6 +25,7 @@ query SubmissionContent($userId: ID!, $assignmentId: ID!) {
             type
             updatedAt
             url
+            submissionPreviewUrl
         }
         attempt
         body

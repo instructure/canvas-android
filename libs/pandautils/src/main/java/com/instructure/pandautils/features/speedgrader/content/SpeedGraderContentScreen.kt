@@ -17,14 +17,17 @@
 package com.instructure.pandautils.features.speedgrader.content
 
 import android.view.View
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.fragment.app.FragmentContainerView
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.fragment.compose.AndroidFragment
 import androidx.hilt.navigation.compose.hiltViewModel
+import dagger.hilt.android.EarlyEntryPoints
 
 @Composable
 fun SpeedGraderContentScreen() {
@@ -32,18 +35,21 @@ fun SpeedGraderContentScreen() {
     val containerId by rememberSaveable { mutableStateOf(View.generateViewId()) }
 
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
-    val uiState = viewModel.uiState.collectAsState()
+    val uiState by viewModel.uiState.collectAsState()
 
+    val context = LocalContext.current.applicationContext
 
-    AndroidView(
-        factory = { context ->
-            FragmentContainerView(context).apply{
-                id = containerId
-            }
-        },
-        update = { view ->
+    val router: SpeedGraderContentRouter by lazy {
+        EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java).speedGraderContentRouter()
+    }
 
-        }
-    )
+    uiState.content?.let {
+        val route = router.navigateToContent(it)
+        AndroidFragment(
+            clazz = route.clazz,
+            arguments = route.bundle,
+            modifier = Modifier.fillMaxSize()
+        )
+    }
 
 }

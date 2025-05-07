@@ -90,6 +90,10 @@ class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
         fun newInstance(content: ExternalToolContent) = SpeedGraderLtiSubmissionFragment().apply {
             url = content.url
         }
+
+        fun createBundle(content: ExternalToolContent) = Bundle().apply {
+            putString("url", content.url)
+        }
     }
 }
 

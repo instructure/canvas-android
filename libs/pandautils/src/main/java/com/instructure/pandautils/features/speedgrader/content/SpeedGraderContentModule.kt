@@ -20,7 +20,9 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.EarlyEntryPoint
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -32,4 +34,10 @@ class SpeedGraderContentModule {
     ): SpeedGraderContentRepository {
         return SpeedGraderContentRepository(submissionContentManager)
     }
+}
+
+@EarlyEntryPoint
+@InstallIn(SingletonComponent::class)
+interface SpeedGraderContentRouterEntryPoint {
+    fun speedGraderContentRouter(): SpeedGraderContentRouter
 }

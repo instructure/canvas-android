@@ -16,9 +16,15 @@
  */
 package com.instructure.pandautils.features.speedgrader.content
 
+import android.os.Bundle
 import androidx.fragment.app.Fragment
 
-interface SpeedGraderContentNavigation {
+interface SpeedGraderContentRouter {
 
-    fun getContentFragment(gradeableContent: GradeableContent): Fragment
+    fun navigateToContent(content: GradeableContent): SpeedGraderContentRoute
 }
+
+data class SpeedGraderContentRoute(
+    val clazz: Class<out Fragment>,
+    val bundle: Bundle
+)

@@ -157,7 +157,7 @@ class SpeedGraderContentViewModel @Inject constructor(
             }
 
             type.startsWith("image") -> ImageContent(
-                attachment.url ?: "",
+                attachment.url.orEmpty(),
                 attachment.contentType!!
             )
 

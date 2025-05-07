@@ -67,5 +67,13 @@ class SpeedGraderEmptyFragment : BaseCanvasFragment() {
             mIconRes = iconRes
             mIconUri = iconUri
         }
+
+        fun createBundle(title: String = "", subtitle: String = "", message: String = "", iconRes: Int = 0, iconUri: Uri? = null) = Bundle().apply {
+            putString("mTitle", title)
+            putString("mSubtitle", subtitle)
+            putString("mMessage", message)
+            putInt("mIconRes", iconRes)
+            putParcelable("mIconUri", iconUri)
+        }
     }
 }

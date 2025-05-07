@@ -91,7 +91,12 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
 
     companion object {
         fun newInstance(text: String) = SpeedGraderTextSubmissionFragment().apply {
+            arguments = createBundle(text)
             mSubmissionText = text
+        }
+
+        fun createBundle(text: String) = Bundle().apply {
+            putString("mSubmissionText", text)
         }
     }
 

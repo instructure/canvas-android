@@ -234,6 +234,7 @@ dependencies {
     api Libs.COMPOSE_ADAPTIVE
     api Libs.COMPOSE_MATERIAL3_WINDOW_SIZE
     api "androidx.hilt:hilt-navigation-compose:1.2.0"
+    api "androidx.fragment:fragment-compose:1.8.6"
 
 
     implementation Libs.FLEXBOX_LAYOUT

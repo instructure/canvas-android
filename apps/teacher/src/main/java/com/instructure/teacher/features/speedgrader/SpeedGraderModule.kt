@@ -16,14 +16,19 @@
  */
 package com.instructure.teacher.features.speedgrader
 
-import androidx.fragment.app.Fragment
-import com.instructure.pandautils.features.speedgrader.content.GradeableContent
-import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentNavigation
+import android.content.res.Resources
+import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
 
-class TeacherSpeedGraderContentNavigation : SpeedGraderContentNavigation {
+@Module
+@InstallIn(SingletonComponent::class)
+class SpeedGraderContentRouterModule {
 
-    override fun getContentFragment(content: GradeableContent): Fragment {
-        throw NotImplementedError()
+    @Provides
+    fun provideSpeedGraderContentRouter(resources: Resources): SpeedGraderContentRouter {
+        return TeacherSpeedGraderContentRouter(resources)
     }
-
 }
