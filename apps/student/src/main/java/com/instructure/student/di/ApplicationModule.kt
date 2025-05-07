@@ -25,6 +25,7 @@ import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.EnabledTabsImpl
 import com.instructure.student.util.StudentLogoutHelper
 import com.instructure.student.widget.grades.GradesWidgetRepository
+import com.instructure.student.widget.todo.ToDoWidgetRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -44,6 +45,13 @@ class ApplicationModule {
     @Singleton
     fun provideEnabledTabs(): EnabledTabs {
         return EnabledTabsImpl()
+    }
+
+    @Provides
+    fun provideToDoWidgetRepository(
+        plannerApi: PlannerAPI.PlannerInterface
+    ): ToDoWidgetRepository {
+        return ToDoWidgetRepository(plannerApi)
     }
 
     @Provides
