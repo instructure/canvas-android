@@ -73,13 +73,13 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
         coursesPage.clickCourseItem(course.name)
 
-        Log.d(STEP_TAG,"Navigate to Syllabus Page.")
+        Log.d(STEP_TAG, "Navigate to Syllabus Page.")
         courseDetailsPage.selectTab("SYLLABUS")
 
         Log.d(ASSERTION_TAG, "Assert that the 'SYLLABUS' tab has been selected.")
         courseDetailsPage.assertTabSelected("SYLLABUS")
 
-        Log.d(ASSERTION_TAG,"Assert that the syllabus body string is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the syllabus body string is displayed.")
         syllabusPage.assertSyllabusBody("this is the syllabus body Assignment")
 
         Log.d(STEP_TAG, "Click the '${assignment.name}' assignment's link within the syllabus body.")
@@ -88,5 +88,4 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
-
 }

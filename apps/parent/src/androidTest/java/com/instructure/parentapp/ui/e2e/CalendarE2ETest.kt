@@ -357,12 +357,12 @@ class CalendarE2ETest : ParentComposeTest() {
         val course = CoursesApi.createCourse(coursesService = coursesService)
         val course2 = CoursesApi.createCourse(coursesService = coursesService)
 
-        Log.d(PREPARATION_TAG,"Enroll '${student.name}' student, '${teacher.name}' teacher and '${parent.name}' parent to '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student, '${teacher.name}' teacher and '${parent.name}' parent to '${course.name}' course.")
         EnrollmentsApi.enrollUser(course.id, student.id, STUDENT_ENROLLMENT, enrollmentsService)
         EnrollmentsApi.enrollUser(course.id, teacher.id, TEACHER_ENROLLMENT, enrollmentsService)
         EnrollmentsApi.enrollUserAsObserver(course.id, parent.id, student.id)
 
-        Log.d(PREPARATION_TAG,"Enroll '${student.name}' student, '${teacher.name}' teacher and '${parent.name}' parent to '${course2.name}' course.")
+        Log.d(PREPARATION_TAG, "Enroll '${student.name}' student, '${teacher.name}' teacher and '${parent.name}' parent to '${course2.name}' course.")
         EnrollmentsApi.enrollUser(course2.id, student2.id, STUDENT_ENROLLMENT, enrollmentsService)
         EnrollmentsApi.enrollUser(course2.id, teacher.id, TEACHER_ENROLLMENT, enrollmentsService)
         EnrollmentsApi.enrollUserAsObserver(course2.id, parent.id, student2.id)

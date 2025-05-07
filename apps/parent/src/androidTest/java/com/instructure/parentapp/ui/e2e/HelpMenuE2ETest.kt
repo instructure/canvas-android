@@ -41,11 +41,11 @@ class HelpMenuE2ETest : ParentComposeTest() {
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testHelpMenuE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(parents = 1, students = 1, courses = 1)
         val parent = data.parentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -67,7 +67,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
         helpPage.assertReportProblemDialogDisplayed()
 
-        Log.d(ASSERTION_TAG,"Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
+        Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
         Intents.init()
 
         try {

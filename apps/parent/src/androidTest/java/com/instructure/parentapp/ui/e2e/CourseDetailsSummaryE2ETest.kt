@@ -74,7 +74,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
             Date().toApiString()
         )
 
-        Log.d(PREPARATION_TAG,"Seed a published quiz because it should be displayed on the Summary Page.")
+        Log.d(PREPARATION_TAG, "Seed a published quiz because it should be displayed on the Summary Page.")
         val testPublishedQuiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, listOf())
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course to set Syllabus as Home Page (with some syllabus body) and enable 'Show Course Summary' setting to make the Summary Tab displayed in the Parent app.")
@@ -87,7 +87,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
         coursesPage.clickCourseItem(course.name)
 
-        Log.d(STEP_TAG,"Navigate to Summary Page by selecting Summary Tab.")
+        Log.d(STEP_TAG, "Navigate to Summary Page by selecting Summary Tab.")
         courseDetailsPage.selectTab("SUMMARY")
 
         Log.d(ASSERTION_TAG, "Assert that the 'SUMMARY' tab has been selected.")
@@ -101,7 +101,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Select '${assignment.name}' (assignment) Summary item to navigate to the Assignment Details Page.")
         summaryPage.selectItem(assignment.name)
 
-        Log.d(ASSERTION_TAG,"Assert that the Assignment Details Page is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
 
         Log.d(STEP_TAG, "Navigate back to the Summary Page.")

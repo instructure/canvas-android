@@ -57,24 +57,24 @@ class GradesListE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course submitted by the observed student but not graded by the teacher.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course submitted by the observed student but not graded by the teacher.")
         val submittedAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 30.0, dueAt = 2.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignment.name}' with 13 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 13 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "13")
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${submittedAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${submittedAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, submittedAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course which is not submitted by the observed student.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course which is not submitted by the observed student.")
         val notSubmittedAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.ago.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Thread.sleep(5000) // Allow the grading to propagate
@@ -83,7 +83,7 @@ class GradesListE2ETest : ParentComposeTest() {
         tokenLogin(parent)
         composeTestRule.waitForIdle()
 
-        Log.d(ASSERTION_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 

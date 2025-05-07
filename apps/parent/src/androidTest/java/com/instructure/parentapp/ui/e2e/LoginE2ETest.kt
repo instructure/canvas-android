@@ -123,7 +123,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickSwitchUsers()
 
-        Log.d(ASSERTION_TAG,"Assert that the 'Previous Logins' section is displayed and both the '${parent.name}' and '${parent2.name}' parents are displayed on the previous login list.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Previous Logins' section is displayed and both the '${parent.name}' and '${parent2.name}' parents are displayed on the previous login list.")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(parent.name)
         loginLandingPage.assertPreviousLoginUserDisplayed(parent2.name)
@@ -156,7 +156,6 @@ class LoginE2ETest : ParentComposeTest() {
         loginLandingPage.assertPreviousLoginUserNotExist(parent.name)
         loginLandingPage.assertPreviousLoginUserNotExist(parent2.name)
         loginLandingPage.assertNotDisplaysPreviousLogins()
-
       }
 
     @E2E
@@ -209,10 +208,10 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG,"Enter domain: '$DOMAIN.instructure.com.'")
+        Log.d(STEP_TAG, "Enter domain: '$DOMAIN.instructure.com.'")
         loginFindSchoolPage.enterDomain(DOMAIN)
 
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
         Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials ('$INVALID_USERNAME', '$INVALID_PASSWORD').")

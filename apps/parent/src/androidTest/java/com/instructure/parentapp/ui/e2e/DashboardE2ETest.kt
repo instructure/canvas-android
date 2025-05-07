@@ -61,10 +61,10 @@ class DashboardE2ETest : ParentComposeTest() {
         val newStudent = UserApi.createCanvasUser()
         EnrollmentsApi.enrollUserAsStudent(course.id, newStudent.id)
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
@@ -104,7 +104,7 @@ class DashboardE2ETest : ParentComposeTest() {
         pairingCodePage.clickOkButton()
         composeTestRule.waitForIdle()
 
-        Log.d(ASSERTION_TAG,"Assert that the '${newStudent.shortName}' (new) student is displayed and selected as it is the recently added student.")
+        Log.d(ASSERTION_TAG, "Assert that the '${newStudent.shortName}' (new) student is displayed and selected as it is the recently added student.")
         dashboardPage.assertSelectedStudent(newStudent.shortName)
 
         Log.d(STEP_TAG, "Select '${student.shortName}' student.")
