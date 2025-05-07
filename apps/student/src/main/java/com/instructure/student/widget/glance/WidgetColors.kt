@@ -14,6 +14,10 @@ object WidgetColors {
     private val textDarkDark = Color(0xFF818991)
     private val textDangerLight = Color(0xFFE62429)
     private val textDangerDark = Color(0xFFFF3653)
+    private val textLightestLight = Color(0xFFFFFFFF)
+    private val textLightestDark = Color(0xFF0F1316)
+    private val borderMediumLight = Color(0xFF9EA6AD)
+    private val borderMediumDark = Color(0xFF565D64)
 
     val backgroundLightest = ColorProvider(
         day = backgroundLightestLight,
@@ -33,5 +37,15 @@ object WidgetColors {
     val textDanger = ColorProvider(
         day = textDangerLight,
         night = textDangerDark
+    )
+
+    val textLightest = ColorProvider(
+        day = textLightestLight,
+        night = textLightestDark
+    )
+
+    val borderMedium = ColorProvider(
+        day = borderMediumLight,
+        night = borderMediumDark
     )
 }
