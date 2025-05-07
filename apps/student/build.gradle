@@ -329,6 +329,8 @@ dependencies {
 
     implementation Libs.NAVIGATION_FRAGMENT
     implementation Libs.NAVIGATION_KTX
+
+    implementation Libs.GLANCE
 }
 
 // Comment out this line if the reporting logic starts going wonky.

@@ -42,6 +42,7 @@ object Versions {
     const val DATASTORE = "1.1.1"
     const val LOTTIE = "6.5.2"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
+    const val GLANCE = "1.1.1"
 }
 
 object Libs {
@@ -185,6 +186,7 @@ object Libs {
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
     const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3"
+    const val GLANCE = "androidx.glance:glance-appwidget:${Versions.GLANCE}"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"

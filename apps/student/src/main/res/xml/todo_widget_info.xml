@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2016 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -16,15 +15,13 @@
   ~
   -->
 
-<appwidget-provider
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.instructure.student.activity.WidgetSetupActivity"
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
+    android:initialKeyguardLayout="@layout/widget_homescreen"
+    android:initialLayout="@layout/widget_homescreen"
+    android:label="@string/Todo"
     android:minWidth="200dp"
     android:minHeight="110dp"
-    android:updatePeriodMillis="1800000"
-    android:resizeMode="horizontal|vertical"
-    android:widgetCategory="keyguard|home_screen"
-    android:initialLayout="@layout/widget_homescreen"
-    android:initialKeyguardLayout="@layout/widget_homescreen"
     android:previewImage="@drawable/widget_preview_todo_light"
-    android:label="@string/Todo"/>
+    android:resizeMode="horizontal|vertical"
+    android:updatePeriodMillis="1800000"
+    android:widgetCategory="keyguard|home_screen" />
