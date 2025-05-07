@@ -57,10 +57,10 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Make an assignment with a submission for the '${course.name}' course and '${student.name}' student. Set the 'Show suggestions when typing' setting to see the comment library itself.")
+        Log.d(PREPARATION_TAG, "Make an assignment with a submission for the '${course.name}' course and '${student.name}' student. Set the 'Show suggestions when typing' setting to see the comment library itself.")
         val testAssignment = prepareSettingsAndMakeAssignmentWithSubmission(course, student.token, teacher.token, teacher.id)
 
-        Log.d(PREPARATION_TAG,"Generate comments for comment library.")
+        Log.d(PREPARATION_TAG, "Generate comments for comment library.")
         val testComment = "Test Comment"
         val testComment2 = "This is another test comment."
         CommentLibraryApi.createComment(course.id, teacher.token, testComment)
@@ -69,7 +69,7 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG,"Navigate to submission's comments tab.")
+        Log.d(STEP_TAG, "Navigate to submission's comments tab.")
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(testAssignment)
@@ -78,10 +78,10 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         speedGraderPage.selectCommentsTab()
 
         val testText = "another"
-        Log.d(STEP_TAG,"Type '$testText' word.")
+        Log.d(STEP_TAG, "Type '$testText' word.")
         speedGraderCommentsPage.typeComment(testText)
 
-        Log.d(ASSERTION_TAG,"Assert if there is only one matching suggestion visible.")
+        Log.d(ASSERTION_TAG, "Assert if there is only one matching suggestion visible.")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
@@ -98,11 +98,11 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         commentLibraryPage.assertSuggestionsCount(2)
 
         val testText2 = "test"
-        Log.d(STEP_TAG,"Close the comment library and type '$testText2' word.")
+        Log.d(STEP_TAG, "Close the comment library and type '$testText2' word.")
         commentLibraryPage.closeCommentLibrary()
         speedGraderCommentsPage.typeComment(testText2)
 
-        Log.d(ASSERTION_TAG,"Assert if there are two matching suggestion visible.")
+        Log.d(ASSERTION_TAG, "Assert if there are two matching suggestion visible.")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(2)
         commentLibraryPage.assertSuggestionVisible(testComment)
@@ -111,27 +111,27 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Select a suggestion.")
         commentLibraryPage.selectSuggestion(testComment2)
 
-        Log.d(ASSERTION_TAG,"Assert if it's filled into the comment text field and the comment library is closed.")
+        Log.d(ASSERTION_TAG, "Assert if it's filled into the comment text field and the comment library is closed.")
         speedGraderCommentsPage.assertCommentFieldHasText(testComment2)
         speedGraderPage.assertCommentLibraryNotVisible()
 
-        Log.d(STEP_TAG,"Send the previously selected comment.")
+        Log.d(STEP_TAG, "Send the previously selected comment.")
         speedGraderCommentsPage.sendComment()
 
-        Log.d(ASSERTION_TAG,"Assert if it's successfully sent.")
+        Log.d(ASSERTION_TAG, "Assert if it's successfully sent.")
         speedGraderCommentsPage.assertDisplaysCommentText(testComment2)
 
         Log.d(STEP_TAG, "Clear the comment.")
         speedGraderCommentsPage.clearComment()
 
-        Log.d(ASSERTION_TAG,"Assert if all suggestions are displayed and the comment library is closed.")
+        Log.d(ASSERTION_TAG, "Assert if all suggestions are displayed and the comment library is closed.")
         commentLibraryPage.assertSuggestionsCount(2)
         commentLibraryPage.closeCommentLibrary()
 
-        Log.d(STEP_TAG,"Type some words which does not match with any of the suggestions in the comment library.")
+        Log.d(STEP_TAG, "Type some words which does not match with any of the suggestions in the comment library.")
         speedGraderCommentsPage.typeComment("empty filter")
 
-        Log.d(ASSERTION_TAG,"Assert that suggestions are not visible and empty view is visible.")
+        Log.d(ASSERTION_TAG, "Assert that suggestions are not visible and empty view is visible.")
         commentLibraryPage.assertSuggestionListNotVisible()
         commentLibraryPage.assertEmptyViewVisible()
     }

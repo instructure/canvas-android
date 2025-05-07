@@ -58,7 +58,7 @@ class CalendarE2ETest: TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+        Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
         dashboardPage.clickCalendarTab()
 
         Log.d(ASSERTION_TAG, "Assert that the page title is 'Calendar'.")
