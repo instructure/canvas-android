@@ -68,7 +68,7 @@ fun LockedContentScreen(lockExplanation: String, scrollState: ScrollState, modif
             )
             HorizonSpace(SpaceSize.SPACE_16)
             ComposeCanvasWebViewWrapper(
-                html = lockExplanation,
+                content = lockExplanation,
                 applyOnWebView = {
                     overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                 }

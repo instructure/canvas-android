@@ -58,7 +58,7 @@ fun TextSubmissionContent(
             VerticalDivider(thickness = 4.dp, color = HorizonColors.Text.beigePrimary())
             HorizonSpace(SpaceSize.SPACE_4)
             ComposeCanvasWebViewWrapper(
-                html = text,
+                content = text,
                 applyOnWebView = {
                     activity?.let { addVideoClient(it) }
 //                    canvasEmbeddedWebViewCallback = embeddedWebViewCallback

@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
+import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 
@@ -31,25 +32,3 @@ data class FileDetailsUiState(
     val filePreview: FilePreviewUiState? = null,
     val mimeType: String = "*/*",
 )
-
-sealed class FilePreviewUiState {
-    data class Pdf(
-        val url: String,
-    ) : FilePreviewUiState()
-
-    data class Media(
-        val url: String,
-        val thumbnailUrl: String,
-        val contentType: String,
-        val displayName: String
-    ) : FilePreviewUiState()
-
-    data class Image(
-        val displayName: String,
-        val url: String,
-    ) : FilePreviewUiState()
-
-    data class WebView(
-        val url: String
-    ) : FilePreviewUiState()
-}

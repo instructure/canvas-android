@@ -42,16 +42,6 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(AssignmentDetailsUiState(addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected)))
 
-    private fun submissionTypeSelected(index: Int) {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    selectedSubmissionTypeIndex = index,
-                )
-            )
-        }
-    }
-
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -108,10 +98,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                         Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString -> SubmissionContent.TextSubmission(it.body.orEmpty())
                         Assignment.SubmissionType.ONLINE_UPLOAD.apiString -> SubmissionContent.FileSubmission(
                             it.attachments.map { attachment ->
-                                FileItemUiState(
+                                FileItem(
                                     fileName = attachment.displayName.orEmpty(),
                                     fileUrl = attachment.url.orEmpty(),
-                                    fileType = attachment.contentType.orEmpty()
+                                    fileType = attachment.contentType.orEmpty(),
+                                    fileId = attachment.id,
+                                    thumbnailUrl = attachment.thumbnailUrl.orEmpty()
                                 )
                             }
                         )
@@ -123,6 +115,16 @@ class AssignmentDetailsViewModel @Inject constructor(
             } else {
                 null
             }
+        }
+    }
+
+    private fun submissionTypeSelected(index: Int) {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    selectedSubmissionTypeIndex = index,
+                )
+            )
         }
     }
 }

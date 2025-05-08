@@ -53,7 +53,7 @@ fun LearnOverviewScreen(
                 .padding(24.dp)
         ) {
             ComposeCanvasWebViewWrapper(
-                html = summaryText ?: "",
+                content = summaryText ?: "",
                 applyOnWebView = {
                     canvasEmbeddedWebViewCallback = embeddedWebViewCallback
                     canvasWebViewClientCallback = webViewClientCallback

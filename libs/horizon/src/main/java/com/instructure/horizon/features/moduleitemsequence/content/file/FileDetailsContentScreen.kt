@@ -17,21 +17,20 @@ package com.instructure.horizon.features.moduleitemsequence.content.file
 
 import android.content.Context
 import android.content.Intent
-import android.view.ViewGroup
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material.Text
+import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -47,6 +46,7 @@ import androidx.core.content.FileProvider
 import androidx.media3.common.util.UnstableApi
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.account.filepreview.FilePreview
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -59,15 +59,10 @@ import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
-import com.instructure.pandautils.activities.BaseViewMediaActivity
-import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
-import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
-import com.instructure.pandautils.compose.composables.filedetails.MediaFileContent
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.ERROR
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.IN_PROGRESS
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.STARTING
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.getActivityOrNull
 import java.io.File
 
 @UnstableApi
@@ -147,7 +142,7 @@ fun FileDetailsContentScreen(
                 }
             }
             uiState.filePreview?.let {
-                FilePreview(it)
+                FilePreview(it, modifier = Modifier.fillMaxWidth().height(400.dp))
             }
         }
     }
@@ -167,53 +162,6 @@ private fun openFile(
     }
 
     context.startActivity(Intent.createChooser(intent, context.getString(R.string.fileDetails_openWith)))
-}
-
-@UnstableApi
-@Composable
-private fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Modifier) {
-    val context = LocalContext.current
-    val activity = context.getActivityOrNull()
-    Box(
-        modifier = modifier
-            .fillMaxSize()
-    ) {
-        when (filePreviewUiState) {
-            is FilePreviewUiState.Image -> ImageFileContent(
-                imageUrl = filePreviewUiState.url,
-                contentDescription = filePreviewUiState.displayName,
-                modifier = Modifier.fillMaxWidth(),
-                loadingIndicator = { Spinner(Modifier.fillMaxSize()) }
-            )
-
-            is FilePreviewUiState.Media -> MediaFileContent(
-                mediaUrl = filePreviewUiState.url,
-                contentType = filePreviewUiState.contentType,
-                onFullScreenClicked = { url, contentType ->
-                    val bundle = BaseViewMediaActivity.makeBundle(
-                        url,
-                        filePreviewUiState.thumbnailUrl,
-                        contentType,
-                        filePreviewUiState.displayName,
-                        false
-                    )
-                    context.startActivity(ViewMediaActivity.createIntent(context, bundle))
-                })
-
-            is FilePreviewUiState.Pdf -> {} // TODO Will be implemented once we know if we can use PSPDFKit
-            is FilePreviewUiState.WebView -> ComposeCanvasWebView(url = filePreviewUiState.url, applyOnWebView = {
-                layoutParams = ViewGroup.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT
-                )
-                settings.loadWithOverviewMode = true
-                settings.displayZoomControls = false
-                settings.setSupportZoom(true)
-                activity?.let { addVideoClient(it) }
-                setInitialScale(100)
-            })
-        }
-    }
 }
 
 @UnstableApi

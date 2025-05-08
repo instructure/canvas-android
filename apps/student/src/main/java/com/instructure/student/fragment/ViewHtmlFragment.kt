@@ -18,7 +18,6 @@ package com.instructure.student.fragment
 
 import android.os.Bundle
 import com.instructure.pandautils.utils.filecache.FileCache
-import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.interactions.router.Route
@@ -26,6 +25,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_HTML
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.student.R
 import org.greenrobot.eventbus.EventBus
 import java.io.File

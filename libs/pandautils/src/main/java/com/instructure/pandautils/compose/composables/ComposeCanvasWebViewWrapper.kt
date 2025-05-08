@@ -34,8 +34,10 @@ import com.instructure.pandautils.views.CanvasWebViewWrapper
 
 @Composable
 fun ComposeCanvasWebViewWrapper(
-    html: String,
+    content: String,
     modifier: Modifier = Modifier,
+    contentType: String = "text/html",
+    useInAppFormatting: Boolean = true,
     title: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null
@@ -43,7 +45,7 @@ fun ComposeCanvasWebViewWrapper(
     val webViewState = rememberSaveable { bundleOf() }
 
     if (LocalInspectionMode.current) {
-        Text(text = html)
+        Text(text = content)
     } else {
         AndroidView(
             factory = {
@@ -53,13 +55,17 @@ fun ComposeCanvasWebViewWrapper(
             },
             update = {
                 if (webViewState.isEmpty) {
-                    it.loadHtml(html, title)
+                    if (useInAppFormatting) {
+                        it.loadHtml(content, title)
+                    } else {
+                        it.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), content, contentType, "UTF-8", null)
+                    }
 
                     if (onLtiButtonPressed != null) {
                         it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
                     }
 
-                    if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
+                    if (HtmlContentFormatter.hasGoogleDocsUrl(content)) {
                         it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
                     }
                 } else {

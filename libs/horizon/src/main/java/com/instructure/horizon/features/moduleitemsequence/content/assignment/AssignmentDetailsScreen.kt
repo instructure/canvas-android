@@ -32,6 +32,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -40,8 +43,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -85,7 +94,7 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                 )
                 HorizonSpace(SpaceSize.SPACE_8)
                 ComposeCanvasWebViewWrapper(
-                    html = uiState.instructions,
+                    content = uiState.instructions,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         canvasEmbeddedWebViewCallback = embeddedWebViewCallback
@@ -146,7 +155,18 @@ private fun ColumnScope.SubmissionDetailsContent(uiState: SubmissionDetailsUiSta
 fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier) {
     when (uiState.submissionContent) {
         is SubmissionContent.TextSubmission -> TextSubmissionContent(text = uiState.submissionContent.text, modifier = modifier)
-        is SubmissionContent.FileSubmission -> {}
+        is SubmissionContent.FileSubmission -> {
+            NavHost(rememberNavController(), startDestination = "fileSubmission", modifier = modifier) { // TODO We might not need a nav host here
+                composable("fileSubmission") {
+                    val viewModel = hiltViewModel<FileSubmissionContentViewModel>()
+                    LaunchedEffect(uiState.submissionContent.fileItems) {
+                        viewModel.setInitialData(uiState.submissionContent.fileItems)
+                    }
+                    val fileSubmissionContentUiState by viewModel.uiState.collectAsState()
+                    FileSubmissionContent(uiState = fileSubmissionContentUiState)
+                }
+            }
+        }
     }
 }
 

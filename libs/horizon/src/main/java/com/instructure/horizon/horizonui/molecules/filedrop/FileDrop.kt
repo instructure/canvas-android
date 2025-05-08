@@ -17,6 +17,7 @@ package com.instructure.horizon.horizonui.molecules.filedrop
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
@@ -28,8 +29,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
@@ -106,23 +109,38 @@ fun FileDrop(
     }
 }
 
-sealed class FileDropItemState(open val fileName: String, val actionIconRes: Int, open val onActionClick: () -> Unit = {}) {
-    data class Success(override val fileName: String, override val onActionClick: () -> Unit) :
+sealed class FileDropItemState(
+    open val fileName: String,
+    val actionIconRes: Int,
+    open val onActionClick: () -> Unit = {},
+    open val onClick: () -> Unit = {}
+) {
+    data class Success(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
         FileDropItemState(fileName, actionIconRes = R.drawable.delete)
 
-    data class InProgress(override val fileName: String, val progress: Float? = null, override val onActionClick: () -> Unit) :
+    data class InProgress(
+        override val fileName: String,
+        val progress: Float? = null,
+        override val onActionClick: () -> Unit = {},
+        override val onClick: () -> Unit = {}
+    ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.close)
 
-    data class NoLongerEditable(override val fileName: String, override val onActionClick: () -> Unit) :
+    data class NoLongerEditable(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
         FileDropItemState(fileName, actionIconRes = R.drawable.download)
 
-    data class Error(override val fileName: String, override val onActionClick: () -> Unit) :
+    data class Error(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
         FileDropItemState(fileName, actionIconRes = R.drawable.refresh)
 
 }
 
 @Composable
-fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier, hasBorder: Boolean = true) {
+fun FileDropItem(
+    state: FileDropItemState,
+    modifier: Modifier = Modifier,
+    hasBorder: Boolean = true,
+    borderColor: Color = HorizonColors.LineAndBorder.lineStroke()
+) {
     Column(modifier = modifier) {
         HorizonSpace(SpaceSize.SPACE_8)
         Row(
@@ -130,7 +148,9 @@ fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier, hasBor
             modifier = modifier
                 .fillMaxWidth()
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level3)
-                .conditional(hasBorder) { border(HorizonBorder.level1(), shape = HorizonCornerRadius.level3) }
+                .conditional(hasBorder) { border(HorizonBorder.level1(borderColor), shape = HorizonCornerRadius.level3) }
+                .clip(HorizonCornerRadius.level3)
+                .clickable { state.onClick() }
                 .padding(16.dp)
         ) {
             when (state) {
@@ -173,9 +193,9 @@ fun FileDropItem(state: FileDropItemState, modifier: Modifier = Modifier, hasBor
 fun FileDropPreview() {
     ContextKeeper.appContext = LocalContext.current
     FileDrop(listOf("pdf", "jpg"), fileItems = {
-        FileDropItem(state = FileDropItemState.InProgress("In progress file") {})
-        FileDropItem(state = FileDropItemState.Success("Success file") {})
-        FileDropItem(state = FileDropItemState.NoLongerEditable("No longer editable file") {})
-        FileDropItem(state = FileDropItemState.Error("Error text") {})
+        FileDropItem(state = FileDropItemState.InProgress("In progress file", onActionClick = {}, onClick = {}))
+        FileDropItem(state = FileDropItemState.Success("Success file", onActionClick = {}, onClick = {}))
+        FileDropItem(state = FileDropItemState.NoLongerEditable("No longer editable file", onActionClick = {}, onClick = {}))
+        FileDropItem(state = FileDropItemState.Error("Error text", onActionClick = {}, onClick = {}))
     })
 }

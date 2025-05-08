@@ -44,15 +44,15 @@ data class SubmissionUiState(
 
 sealed class SubmissionContent {
     data class TextSubmission(val text: String) : SubmissionContent()
-    data class FileSubmission(val fileItems: List<FileItemUiState>) : SubmissionContent()
+    data class FileSubmission(val fileItems: List<FileItem>) : SubmissionContent()
 }
 
-data class FileItemUiState(
+data class FileItem(
     val fileName: String,
     val fileUrl: String,
     val fileType: String,
-    val onClick: () -> Unit = {},
-    val onDownloadClock: () -> Unit = {},
+    val thumbnailUrl: String,
+    val fileId: Long
 )
 
 data class AddSubmissionUiState(

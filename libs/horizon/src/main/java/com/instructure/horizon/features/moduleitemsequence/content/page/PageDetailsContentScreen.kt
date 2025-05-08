@@ -59,7 +59,7 @@ fun PageDetailsContentScreen(
                     .verticalScroll(scrollState)
             ) {
                 ComposeCanvasWebViewWrapper(
-                    html = it,
+                    content = it,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         canvasEmbeddedWebViewCallback = embeddedWebViewCallback

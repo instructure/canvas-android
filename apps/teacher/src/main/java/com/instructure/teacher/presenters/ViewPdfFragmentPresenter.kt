@@ -18,7 +18,7 @@ package com.instructure.teacher.presenters
 
 import android.net.Uri
 import com.instructure.pandautils.utils.filecache.FileCache
-import com.instructure.annotations.awaitFileDownload
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.teacher.viewinterface.ViewPdfFragmentView
 import com.instructure.pandautils.blueprint.FragmentPresenter

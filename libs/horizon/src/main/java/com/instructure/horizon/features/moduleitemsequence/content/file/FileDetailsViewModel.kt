@@ -22,6 +22,7 @@ import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
