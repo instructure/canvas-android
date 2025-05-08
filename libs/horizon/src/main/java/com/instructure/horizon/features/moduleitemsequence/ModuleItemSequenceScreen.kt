@@ -206,7 +206,8 @@ private fun ModuleItemSequenceContent(
             modifier = Modifier.animateContentSize(
                 animationSpec = tween(
                     durationMillis = 200,
-                    easing = FastOutSlowInEasing
+                    easing = FastOutSlowInEasing,
+                    delayMillis = if (contentScrollState.value > 0) 0 else 200,
                 )
             )
         ) {

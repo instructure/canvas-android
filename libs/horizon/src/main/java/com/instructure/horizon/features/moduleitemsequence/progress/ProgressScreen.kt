@@ -123,7 +123,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
         }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            contentPadding = PaddingValues(top = 24.dp, bottom = 64.dp)
+            contentPadding = PaddingValues(top = 24.dp, bottom = 90.dp)
         ) {
             item {
                 Row(

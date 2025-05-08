@@ -80,8 +80,8 @@ fun ModuleItemCard(state: ModuleItemCardState, modifier: Modifier = Modifier) {
                     .weight(1f)
             ) {
                 Text(text = state.title, style = HorizonTypography.p2)
-                HorizonSpace(SpaceSize.SPACE_12)
-                FlowRow(verticalArrangement = Arrangement.spacedBy(20.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                HorizonSpace(SpaceSize.SPACE_4)
+                FlowRow(verticalArrangement = Arrangement.spacedBy(4.dp), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
                     LearningObjectTypePill(state.learningObjectType, modifier = Modifier.align(Alignment.CenterVertically))
                     ModuleItemText(
                         text = stringResource(state.learningObjectStatus.stringRes),
