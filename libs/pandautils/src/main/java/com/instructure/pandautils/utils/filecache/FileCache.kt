@@ -15,9 +15,8 @@
  *
  */
 
-package com.instructure.annotations.FileCaching
+package com.instructure.pandautils.utils.filecache
 
-import com.instructure.annotations.BuildConfig
 import com.instructure.canvasapi2.utils.ContextKeeper
 import java.io.InputStream
 
@@ -33,7 +32,8 @@ object FileCache {
         SimpleDiskCache.open(ContextKeeper.appContext.externalCacheDir!!, versionCode, DEFAULT_DISK_CACHE_SIZE.toLong())
     }
 
-    fun getInputStream(url: String, callback: FetchFileAsyncTask.FetchFileCallback) = FetchFileAsyncTask.download(mSimpleDiskCache, url, callback)
+    fun getInputStream(url: String, callback: FetchFileAsyncTask.FetchFileCallback) =
+        FetchFileAsyncTask.download(mSimpleDiskCache, url, callback)
 
     fun putInputStream(url: String, inputStream: InputStream) {
         mSimpleDiskCache.put(url, inputStream)
