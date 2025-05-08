@@ -5,6 +5,7 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
@@ -75,6 +76,12 @@ class DatabaseModule {
     @Singleton
     fun provideReminderDao(appDatabase: AppDatabase): ReminderDao {
         return appDatabase.reminderDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideFileDownloadProgressDao(appDatabase: AppDatabase): FileDownloadProgressDao {
+        return appDatabase.fileDownloadProgressDao()
     }
 
     @Provides
