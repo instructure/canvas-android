@@ -77,7 +77,7 @@ fun AiAssistantScreen(navHostController: NavHostController, viewModel: AiAssista
                 verticalArrangement = Arrangement.spacedBy(24.dp),
             ) {
                 stickyHeader {
-                    AiAssistToolbar({}, {})
+                    AiAssistToolbar({})
                 }
 
                 item {
@@ -150,9 +150,9 @@ fun AiAssistantScreen(navHostController: NavHostController, viewModel: AiAssista
                 item {
                     var selectedIndex by remember { mutableStateOf(0) }
                     AiAssistQuizAnswer(
-                        "This is a quiz answer",
-                        AiAssistQuizAnswerStatus.entries[selectedIndex],
-                        {
+                        text = "This is a quiz answer",
+                        status = AiAssistQuizAnswerStatus.entries[selectedIndex],
+                        onClick = {
                             if (selectedIndex == AiAssistQuizAnswerStatus.entries.lastIndex) {
                                 selectedIndex = 0
                             } else {
