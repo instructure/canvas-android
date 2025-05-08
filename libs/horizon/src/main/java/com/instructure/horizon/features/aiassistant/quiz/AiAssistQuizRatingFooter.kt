@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.AiAssistFeedback
 import com.instructure.horizon.features.aiassistant.common.AiAssistFeedbackType
@@ -73,4 +74,15 @@ fun AiAssistQuizRatingFooter(
             onClick = onRegenerateSelected,
         )
     }
+}
+
+@Composable
+@Preview
+private fun AiAssistQuizRatingFooterPreview() {
+    AiAssistQuizRatingFooter(
+        selectedFeedback = AiAssistFeedbackType.POSITIVE,
+        onPositiveFeedbackSelected = {},
+        onNegativeFeedbackSelected = {},
+        onRegenerateSelected = {},
+    )
 }

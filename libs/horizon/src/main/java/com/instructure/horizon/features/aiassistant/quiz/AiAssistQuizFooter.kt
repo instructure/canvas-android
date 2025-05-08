@@ -20,6 +20,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -54,4 +55,15 @@ fun AiAssistQuizFooter(
             onClick = onRegenerateSelected,
         )
     }
+}
+
+@Composable
+@Preview
+private fun AiAssistQuizFooterPreview() {
+    AiAssistQuizFooter(
+        checkButtonEnabled = true,
+        onCheckAnswerSelected = {},
+        onRegenerateSelected = {},
+        modifier = Modifier,
+    )
 }

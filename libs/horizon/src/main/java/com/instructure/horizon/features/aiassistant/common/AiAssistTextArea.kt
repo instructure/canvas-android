@@ -28,6 +28,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -83,4 +84,14 @@ private fun TextAreaBox(innerTextField: @Composable () -> Unit) {
     ){
         innerTextField()
     }
+}
+
+@Composable
+@Preview
+private fun AiAssistTextAreaPreview() {
+    AiAssistTextArea(
+        label = "Label",
+        value = TextFieldValue(""),
+        onValueChange = {}
+    )
 }

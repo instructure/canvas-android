@@ -49,9 +49,9 @@ enum class AiAssistQuizAnswerStatus {
 @Composable
 fun AiAssistQuizAnswer(
     text: String,
-    status: AiAssistQuizAnswerStatus = AiAssistQuizAnswerStatus.UNSELECTED,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    status: AiAssistQuizAnswerStatus = AiAssistQuizAnswerStatus.UNSELECTED,
 ) {
     AnimatedContent(
         status,
