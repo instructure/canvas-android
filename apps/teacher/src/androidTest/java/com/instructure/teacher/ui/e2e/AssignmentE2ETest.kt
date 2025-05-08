@@ -305,7 +305,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         editAssignmentDetailsPage.clickEditDueTime()
         editAssignmentDetailsPage.editTime(1, 30)
 
-        Log.d(ASSERTION_TAG, "Assert that the changes has been applied on Edit Assignment Details page.")
+        Log.d(ASSERTION_TAG, "Assert that the changes have been applied on Edit Assignment Details page.")
         editAssignmentDetailsPage.assertTimeChanged(1, 30, R.id.dueTime)
 
         Log.d(STEP_TAG, "Click on 'Assigned To' spinner and select '${student.name}' besides 'Everyone'.")

@@ -94,7 +94,7 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Clear comment input field.")
         speedGraderCommentsPage.clearComment()
 
-        Log.d(ASSERTION_TAG, "Assert if all the suggestions is displayed again.")
+        Log.d(ASSERTION_TAG, "Assert if all the suggestions are displayed again.")
         commentLibraryPage.assertSuggestionsCount(2)
 
         val testText2 = "test"
