@@ -39,8 +39,6 @@ class AiAssistantViewModel @Inject constructor(
             val redwoodToken = domainServicesAuthenticationManager.getDomainServicesAuthenticationToken(
                 domainService = com.instructure.canvasapi2.models.DomainService.REDWOOD
             )
-
-            val
             Log.d("AiAssistantToken", "pineToken: $pineToken")
             Log.d("AiAssistantToken", "cedarToken: $cedarToken")
             Log.d("AiAssistantToken", "redwoodToken: $redwoodToken")
