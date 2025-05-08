@@ -60,6 +60,7 @@ enum class IconButtonColor(
     INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Icon.surfaceColored()),
     BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Icon.default()),
     GHOST(Color.Transparent, HorizonColors.Icon.default()),
+    BLACK_GHOST(Color.Transparent, HorizonColors.Icon.surfaceColored()),
     WHITE_GREY_OUTLINE(
         HorizonColors.Surface.pagePrimary(),
         HorizonColors.Icon.default(),
