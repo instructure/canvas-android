@@ -25,8 +25,10 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -40,6 +42,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.pandautils.utils.openFile
 
 @UnstableApi
 @Composable
@@ -47,6 +51,14 @@ fun FileSubmissionContent(
     uiState: FileSubmissionContentUiState,
     modifier: Modifier = Modifier,
 ) {
+    val context = LocalContext.current
+    LaunchedEffect(uiState.filePathToOpen) {
+        if (uiState.filePathToOpen != null) {
+            context.openFile(uiState.filePathToOpen, uiState.mimeTypeToOpen ?: "*/*", context.getString(R.string.fileDetails_openWith))
+            uiState.onFileOpened()
+        }
+    }
+
     Column(modifier = modifier) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(painterResource(R.drawable.check_circle_full), contentDescription = null, tint = HorizonColors.Icon.success())
@@ -57,12 +69,22 @@ fun FileSubmissionContent(
         Column {
             uiState.files.forEach { file ->
                 val borderColor = if (file.selected) HorizonColors.Surface.institution() else HorizonColors.LineAndBorder.lineStroke()
-                FileDropItem(
-                    state = FileDropItemState.NoLongerEditable(
+                val fileDropItemState = if (file.downloadState == FileDownloadProgressState.STARTING || file.downloadState == FileDownloadProgressState.IN_PROGRESS) {
+                    FileDropItemState.InProgress(
                         fileName = file.fileName,
-                        onActionClick = file.onDownloadClick,
+                        progress = file.downloadProgress,
+                        onActionClick = { file.onCancelDownloadClick(file.fileId) },
                         onClick = file.onClick
-                    ), borderColor = borderColor
+                    )
+                } else {
+                    FileDropItemState.NoLongerEditable(
+                        fileName = file.fileName,
+                        onActionClick = { file.onDownloadClick(file) },
+                        onClick = file.onClick
+                    )
+                }
+                FileDropItem(
+                    state = fileDropItemState, borderColor = borderColor
                 )
             }
             HorizonSpace(SpaceSize.SPACE_8)

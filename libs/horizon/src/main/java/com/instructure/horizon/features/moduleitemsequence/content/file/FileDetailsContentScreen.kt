@@ -63,6 +63,7 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.IN_PROGRESS
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.STARTING
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.openFile
 import java.io.File
 
 @UnstableApi
@@ -74,7 +75,7 @@ fun FileDetailsContentScreen(
     val context = LocalContext.current
     LaunchedEffect(uiState.filePathToOpen) {
         if (uiState.filePathToOpen != null) {
-            openFile(uiState.filePathToOpen, uiState.mimeType, context)
+            context.openFile(uiState.filePathToOpen, uiState.mimeType, context.getString(R.string.fileDetails_openWith))
             uiState.onFileOpened()
         }
     }
@@ -111,7 +112,12 @@ fun FileDetailsContentScreen(
                         modifier = Modifier.padding(vertical = 4.dp)
                     )
                 } else {
-                    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 20.dp, horizontal = 24.dp), horizontalAlignment = Alignment.CenterHorizontally) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 20.dp, horizontal = 24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
                         if (uiState.downloadState == ERROR) {
                             Row(
                                 horizontalArrangement = Arrangement.spacedBy(6.dp, alignment = Alignment.CenterHorizontally),
@@ -142,26 +148,10 @@ fun FileDetailsContentScreen(
                 }
             }
             uiState.filePreview?.let {
-                FilePreview(it, modifier = Modifier.fillMaxWidth().height(400.dp))
+                FilePreview(it)
             }
         }
     }
-}
-
-private fun openFile(
-    filePathToOpen: String,
-    mimeType: String,
-    context: Context
-) {
-    val file = File(filePathToOpen)
-    val uri = FileProvider.getUriForFile(context, context.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
-
-    val intent = Intent(Intent.ACTION_VIEW).apply {
-        setDataAndType(uri, mimeType)
-        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-    }
-
-    context.startActivity(Intent.createChooser(intent, context.getString(R.string.fileDetails_openWith)))
 }
 
 @UnstableApi

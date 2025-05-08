@@ -17,26 +17,38 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment.s
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.FileItem
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.io.File
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
-class FileSubmissionContentViewModel @Inject constructor() : ViewModel() {
+class FileSubmissionContentViewModel @Inject constructor(
+    private val workManager: WorkManager,
+    private val fileDownloadProgressDao: FileDownloadProgressDao,
+) : ViewModel() {
 
     private val _uiState =
-        MutableStateFlow(FileSubmissionContentUiState())
+        MutableStateFlow(FileSubmissionContentUiState(onFileOpened = ::onFileOpened))
 
     val uiState = _uiState.asStateFlow()
+
+    private var fileIdToWorkerIdMap = mutableMapOf<Long, String>()
 
     fun setInitialData(files: List<FileItem>) {
         val fileItems = files.mapIndexed { index, fileItem ->
@@ -46,9 +58,12 @@ class FileSubmissionContentViewModel @Inject constructor() : ViewModel() {
                 fileType = fileItem.fileType,
                 selected = index == 0,
                 fileId = fileItem.fileId,
-                thumbnailUrl = "",
+                thumbnailUrl = fileItem.thumbnailUrl,
                 onClick = { onFileClick(index) },
-                onDownloadClick = { /* Handle download click */ }
+                onDownloadClick = { file -> downloadFile(file) },
+                onCancelDownloadClick = { id ->
+                    cancelDownload(id)
+                }
             )
         }
 
@@ -57,6 +72,55 @@ class FileSubmissionContentViewModel @Inject constructor() : ViewModel() {
         }
 
         fileSelected(fileItems.first())
+    }
+
+    private fun downloadFile(fileItem: FileItemUiState) {
+        updateFileItem(fileItem.copy(downloadState = FileDownloadProgressState.STARTING, downloadProgress = 0f))
+        val workRequest = FileDownloadWorker.createOneTimeWorkRequest(fileItem.fileName, fileItem.fileUrl)
+        workManager.enqueue(workRequest)
+        val workerId = workRequest.id.toString()
+        fileIdToWorkerIdMap[fileItem.fileId] = workerId
+        viewModelScope.tryLaunch {
+            fileDownloadProgressDao.findByWorkerIdFlow(workerId)
+                .collect { progress ->
+                    updateProgress(fileItem, progress)
+                }
+        } catch {
+            updateFileItem(fileItem.copy(downloadState = FileDownloadProgressState.COMPLETED, downloadProgress = 0f))
+        }
+    }
+
+    private fun updateProgress(fileItem: FileItemUiState, progressEntity: FileDownloadProgressEntity?) {
+        updateFileItem(
+            fileItem.copy(
+                downloadState = progressEntity?.progressState ?: FileDownloadProgressState.COMPLETED,
+                downloadProgress = (progressEntity?.progress ?: 0) / 100f
+            )
+        )
+        if (progressEntity?.progressState == FileDownloadProgressState.COMPLETED) {
+            _uiState.update {
+                it.copy(filePathToOpen = progressEntity.filePath, mimeTypeToOpen = fileItem.fileType)
+            }
+        }
+        if (progressEntity?.progressState?.isCompleted() == true) {
+            viewModelScope.launch {
+                fileDownloadProgressDao.deleteByWorkerId(progressEntity.workerId)
+            }
+        }
+    }
+
+    private fun updateFileItem(fileItem: FileItemUiState) {
+        _uiState.update {
+            it.copy(
+                files = it.files.map { item ->
+                    if (item.fileId == fileItem.fileId) {
+                        fileItem
+                    } else {
+                        item
+                    }
+                }
+            )
+        }
     }
 
     private fun onFileClick(index: Int) {
@@ -74,9 +138,9 @@ class FileSubmissionContentViewModel @Inject constructor() : ViewModel() {
     private fun fileSelected(fileItem: FileItemUiState) {
         viewModelScope.tryLaunch {
             val filePreview = getFilePreview(fileItem)
-                _uiState.update {
-                    it.copy(filePreview = filePreview)
-                }
+            _uiState.update {
+                it.copy(filePreview = filePreview)
+            }
         } catch {
             _uiState.update {
                 it.copy(filePreview = FilePreviewUiState.NoPreview)
@@ -115,6 +179,21 @@ class FileSubmissionContentViewModel @Inject constructor() : ViewModel() {
             else -> {
                 FilePreviewUiState.NoPreview
             }
+        }
+    }
+
+    private fun onFileOpened() {
+        _uiState.update { it.copy(filePathToOpen = null, mimeTypeToOpen = null) }
+    }
+
+    private fun cancelDownload(fileId: Long) {
+        val workerId = fileIdToWorkerIdMap[fileId]
+        if (workerId != null) {
+            workManager.cancelWorkById(UUID.fromString(workerId))
+            fileIdToWorkerIdMap.remove(fileId)
+            viewModelScope.tryLaunch {
+                fileDownloadProgressDao.deleteByWorkerId(workerId)
+            } catch {}
         }
     }
 }

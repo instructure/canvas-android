@@ -16,8 +16,15 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file
 
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 
-data class FileSubmissionContentUiState(val files: List<FileItemUiState> = emptyList(), val filePreview: FilePreviewUiState? = null)
+data class FileSubmissionContentUiState(
+    val files: List<FileItemUiState> = emptyList(),
+    val filePreview: FilePreviewUiState? = null,
+    val filePathToOpen: String? = null,
+    val mimeTypeToOpen: String? = null,
+    val onFileOpened: () -> Unit = {},
+)
 
 data class FileItemUiState(
     val fileName: String,
@@ -27,5 +34,8 @@ data class FileItemUiState(
     val selected: Boolean = false,
     val fileId: Long = -1L,
     val onClick: () -> Unit = {},
-    val onDownloadClick: () -> Unit = {}
+    val onDownloadClick: (FileItemUiState) -> Unit = {},
+    val onCancelDownloadClick: (Long) -> Unit = {},
+    val downloadState: FileDownloadProgressState = FileDownloadProgressState.COMPLETED,
+    val downloadProgress: Float = 0f,
 )

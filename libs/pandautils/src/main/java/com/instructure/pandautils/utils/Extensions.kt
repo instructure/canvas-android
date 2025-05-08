@@ -18,10 +18,13 @@ package com.instructure.pandautils.utils
 
 import android.app.Activity
 import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
+import androidx.core.content.FileProvider
 import androidx.work.Data
 import com.google.gson.Gson
 import com.google.gson.JsonArray
@@ -38,6 +41,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.ln
 import kotlin.math.pow
 import androidx.core.net.toUri
+import java.io.File
 
 fun Any.toJson(): String {
     return Gson().toJson(this)
@@ -172,4 +176,20 @@ fun String.SHA256(): String {
     return MessageDigest.getInstance("SHA-256").digest(toByteArray()).joinToString("") {
         "%02x".format(it)
     }
+}
+
+fun Context.openFile(
+    filePathToOpen: String,
+    mimeType: String,
+    chooserTitle: String
+) {
+    val file = File(filePathToOpen)
+    val uri = FileProvider.getUriForFile(this, applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file)
+
+    val intent = Intent(Intent.ACTION_VIEW).apply {
+        setDataAndType(uri, mimeType)
+        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+    }
+
+    startActivity(Intent.createChooser(intent, chooserTitle))
 }
