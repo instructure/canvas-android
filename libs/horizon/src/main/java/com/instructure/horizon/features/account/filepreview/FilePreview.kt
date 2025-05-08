@@ -30,9 +30,12 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.filedetails.ImageFileContent
 import com.instructure.pandautils.compose.composables.filedetails.MediaFileContent
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.utils.launchCustomTab
 
 @UnstableApi
 @Composable
@@ -64,17 +67,22 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
 
             is FilePreviewUiState.Pdf -> {} // TODO Will be implemented once we know if we can use PSPDFKit
             is FilePreviewUiState.WebView -> {
-                    ComposeCanvasWebView(url = filePreviewUiState.url, applyOnWebView = {
-                        layoutParams = ViewGroup.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT,
-                            ViewGroup.LayoutParams.MATCH_PARENT
-                        )
-                        settings.loadWithOverviewMode = true
-                        settings.displayZoomControls = false
-                        settings.setSupportZoom(true)
-                        activity?.let { addVideoClient(it) }
-                        setInitialScale(100)
-                    })
+                ComposeCanvasWebView(
+                    url = filePreviewUiState.url, applyOnWebView = {
+                    layoutParams = ViewGroup.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT
+                    )
+                    settings.loadWithOverviewMode = true
+                    settings.displayZoomControls = false
+                    settings.setSupportZoom(true)
+                    activity?.let { addVideoClient(it) }
+                    setInitialScale(100)
+                },
+                    embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                        shouldLaunchInternalWebViewFragment = { _ -> true },
+                        launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                    ))
             }
 
             FilePreviewUiState.NoPreview -> {}
@@ -85,11 +93,13 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
                     useInAppFormatting = false,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
-//                    canvasEmbeddedWebViewCallback = embeddedWebViewCallback
-//                    canvasWebViewClientCallback = webViewClientCallback
                         setZoomSettings(true)
                         setInitialScale(100)
                     },
+                    embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                        shouldLaunchInternalWebViewFragment = { _ -> true },
+                        launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                    ),
                     modifier = Modifier.padding(top = 8.dp)
                 )
             }

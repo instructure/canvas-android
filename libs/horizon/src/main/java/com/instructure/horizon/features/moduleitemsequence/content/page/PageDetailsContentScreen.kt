@@ -15,7 +15,6 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
-import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -34,8 +33,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
-import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.utils.launchCustomTab
 
 @Composable
 fun PageDetailsContentScreen(
@@ -62,32 +63,15 @@ fun PageDetailsContentScreen(
                     content = it,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
-                        canvasEmbeddedWebViewCallback = embeddedWebViewCallback
-                        canvasWebViewClientCallback = webViewClientCallback
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
-                    }
+                    },
+                    embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                        shouldLaunchInternalWebViewFragment = { _ -> true },
+                        launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                    )
                 )
                 HorizonSpace(SpaceSize.SPACE_48)
             }
         }
     }
-
-}
-
-private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-    override fun launchInternalWebViewFragment(url: String) = Unit
-
-    override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-}
-
-private val webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-    override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
-
-    override fun onPageStartedCallback(webView: WebView, url: String) = Unit
-
-    override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
-
-    override fun canRouteInternallyDelegate(url: String) = false
-
-    override fun routeInternallyCallback(url: String) = Unit
 }

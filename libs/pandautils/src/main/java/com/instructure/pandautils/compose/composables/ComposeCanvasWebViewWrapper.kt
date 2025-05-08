@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables
 
+import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +41,9 @@ fun ComposeCanvasWebViewWrapper(
     useInAppFormatting: Boolean = true,
     title: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
-    applyOnWebView: (CanvasWebView.() -> Unit)? = null
+    applyOnWebView: (CanvasWebView.() -> Unit)? = null,
+    webViewCallbacks: ComposeWebViewCallbacks? = null,
+    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
     val webViewState = rememberSaveable { bundleOf() }
 
@@ -50,6 +53,33 @@ fun ComposeCanvasWebViewWrapper(
         AndroidView(
             factory = {
                 CanvasWebViewWrapper(it).apply {
+                    if (webViewCallbacks != null) {
+                        webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+                            override fun openMediaFromWebView(mime: String, url: String, filename: String) =
+                                webViewCallbacks.openMedia(mime, url, filename)
+
+                            override fun onPageFinishedCallback(webView: WebView, url: String) = webViewCallbacks.onPageFinished(webView, url)
+
+                            override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
+
+                            override fun canRouteInternallyDelegate(url: String): Boolean = webViewCallbacks.canRouteInternally(url)
+
+                            override fun routeInternallyCallback(url: String) = webViewCallbacks.routeInternally(url)
+
+                            override fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) =
+                                webViewCallbacks.onReceivedError(webView, errorCode, description, failingUrl)
+                        }
+                    }
+                    if (embeddedWebViewCallbacks != null) {
+                        webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+                            override fun launchInternalWebViewFragment(url: String) =
+                                embeddedWebViewCallbacks.launchInternalWebViewFragment(url)
+
+                            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean =
+                                embeddedWebViewCallbacks.shouldLaunchInternalWebViewFragment(url)
+                        }
+                    }
+
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
                 }
             },

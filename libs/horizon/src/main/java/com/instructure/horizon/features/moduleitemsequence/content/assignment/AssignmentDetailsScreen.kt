@@ -18,7 +18,6 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.view.ViewGroup
-import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -67,7 +66,6 @@ import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCall
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
-import com.instructure.pandautils.views.CanvasWebView
 
 @Composable
 fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
@@ -97,10 +95,12 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     content = uiState.instructions,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
-                        canvasEmbeddedWebViewCallback = embeddedWebViewCallback
-                        canvasWebViewClientCallback = webViewClientCallback
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
-                    }
+                    },
+                    embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                        shouldLaunchInternalWebViewFragment = { _ -> true },
+                        launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                    )
                 )
                 if (uiState.ltiUrl.isNotEmpty()) {
                     HorizonSpace(SpaceSize.SPACE_24)
@@ -192,24 +192,6 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
             is AddSubmissionTypeUiState.Text -> Text(text = "Text Submission") // TODO Submission ticket
         }
     }
-}
-
-private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-    override fun launchInternalWebViewFragment(url: String) = Unit
-
-    override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-}
-
-private val webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-    override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
-
-    override fun onPageStartedCallback(webView: WebView, url: String) = Unit
-
-    override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
-
-    override fun canRouteInternallyDelegate(url: String) = false
-
-    override fun routeInternallyCallback(url: String) = Unit
 }
 
 @Preview

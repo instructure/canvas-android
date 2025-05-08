@@ -39,7 +39,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.utils.launchCustomTab
 
 @Composable
 fun TextSubmissionContent(
@@ -61,11 +64,13 @@ fun TextSubmissionContent(
                 content = text,
                 applyOnWebView = {
                     activity?.let { addVideoClient(it) }
-//                    canvasEmbeddedWebViewCallback = embeddedWebViewCallback
-//                    canvasWebViewClientCallback = webViewClientCallback
                     overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                     setZoomSettings(false)
                 },
+                embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                    shouldLaunchInternalWebViewFragment = { _ -> true },
+                    launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                ),
                 modifier = Modifier.padding(top = 8.dp)
             )
         }
