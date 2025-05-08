@@ -62,27 +62,31 @@ class DiscussionsE2ETest : TeacherTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open '${course.name}' course.")
+        Log.d(STEP_TAG, "Open '${course.name}' course.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open Discussions Page and assert has discussions: '${discussion.title}' and '${discussion2.title}'.")
+        Log.d(STEP_TAG, "Open Discussions Page.")
         courseBrowserPage.openDiscussionsTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the Page has discussions: '${discussion.title}' and '${discussion2.title}'.")
         discussionsListPage.assertHasDiscussion(discussion)
         discussionsListPage.assertHasDiscussion(discussion2)
 
-        Log.d(STEP_TAG,"Click on '${discussion.title}' discussion.")
+        Log.d(STEP_TAG, "Click on '${discussion.title}' discussion.")
         discussionsListPage.clickDiscussion(discussion)
 
-        Log.d(STEP_TAG, "Assert that the 'Reply' button is displayed on the discussion details (web view) page.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Reply' button is displayed on the discussion details (web view) page.")
         discussionDetailsPage.waitForReplyButtonDisplayed()
         discussionDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG, "Assert that the toolbar's title is the '${discussion.title}' discussion's title.")
+        Log.d(ASSERTION_TAG, "Assert that the toolbar's title is the '${discussion.title}' discussion's title.")
         discussionDetailsPage.assertToolbarDiscussionTitle(discussion.title)
 
-        Log.d(STEP_TAG, "Click on the more menu of the announcement and assert if the more menu items are all displayed.")
+        Log.d(STEP_TAG, "Click on the more menu of the announcement.")
         discussionDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the more menu items are all displayed.")
         discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
         discussionDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
         discussionDetailsPage.assertMoreMenuButtonDisplayed("Edit")
@@ -92,87 +96,103 @@ class DiscussionsE2ETest : TeacherTest() {
         discussionDetailsPage.assertMoreMenuButtonDisplayed("Copy To...")
         discussionDetailsPage.assertMoreMenuButtonDisplayed("Share to Commons")
 
-        Log.d(STEP_TAG, "Assert that the '$discussionEntryMessage' discussion entry message is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionEntryMessage' discussion entry message is displayed.")
         discussionDetailsPage.assertDiscussionEntryMessageDisplayed(discussionEntryMessage)
 
-        Log.d(STEP_TAG, "Assert that there is 1 reply and that is unread.")
+        Log.d(ASSERTION_TAG, "Assert that there is 1 reply and that is unread.")
         discussionDetailsPage.assertReplyCounter(1, 1)
 
-        Log.d(STEP_TAG, "Expand the replies and wait for the reply to be displayed. Assert that it's displayed.")
+        Log.d(STEP_TAG, "Expand the replies and wait for the reply to be displayed.")
         discussionDetailsPage.clickOnExpandRepliesButton()
         discussionDetailsPage.waitForReplyDisplayed(testDiscussionEntryReplyMessage)
+
+        Log.d(ASSERTION_TAG, "Assert that it's displayed.")
         discussionDetailsPage.assertReplyDisplayed(testDiscussionEntryReplyMessage)
 
-        Log.d(STEP_TAG, "Navigate back to Discussion List Page. Select 'Pin' overflow menu of '${discussion2.title}' discussion and assert that it has became Pinned.")
+        Log.d(STEP_TAG, "Navigate back to Discussion List Page. Select 'Pin' overflow menu of '${discussion2.title}' discussion.")
         Espresso.pressBack()
         discussionsListPage.clickDiscussionOverFlowMenu(discussion2.title)
         discussionsListPage.selectOverFlowMenu("Pin")
+
+        Log.d(ASSERTION_TAG, "Assert that it has became Pinned.")
         discussionsListPage.assertGroupDisplayed("Pinned")
         discussionsListPage.assertDiscussionInGroup("Pinned", discussion2.title)
         discussionsListPage.assertDiscussionNotInGroup("Discussions", discussion2.title)
 
-        Log.d(STEP_TAG, "Select 'Unpin' overflow menu of '${discussion2.title}' discussion and assert that it has became Unpinned, so it will be displayed (again) in the 'Discussions' group.")
+        Log.d(STEP_TAG, "Select 'Unpin' overflow menu of '${discussion2.title}' discussion.")
         discussionsListPage.clickDiscussionOverFlowMenu(discussion2.title)
         discussionsListPage.selectOverFlowMenu("Unpin")
+
+        Log.d(ASSERTION_TAG, "Assert that it has became Unpinned, so it will be displayed (again) in the 'Discussions' group.")
         discussionsListPage.assertDiscussionInGroup("Discussions", discussion2.title)
         discussionsListPage.assertDiscussionNotInGroup("Pinned", discussion2.title)
 
-        Log.d(STEP_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discussions are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that both of the discussions, '${discussion.title}' and '${discussion2.title}' discussions are displayed.")
         discussionsListPage.assertHasDiscussion(discussion)
         discussionsListPage.assertHasDiscussion(discussion2)
 
-        Log.d(STEP_TAG, "Select 'Closed for Comments' overflow menu of '${discussion.title}' discussion and assert that it has became 'Closed for Comments'.")
+        Log.d(STEP_TAG, "Select 'Closed for Comments' overflow menu of '${discussion.title}' discussion.")
         discussionsListPage.clickDiscussionOverFlowMenu(discussion.title)
         discussionsListPage.selectOverFlowMenu("Close for Comments")
+
+        Log.d(ASSERTION_TAG, "Assert that it has became 'Closed for Comments'.")
         discussionsListPage.assertGroupDisplayed("Closed for Comments")
         discussionsListPage.assertDiscussionInGroup("Closed for Comments", discussion.title)
 
-        Log.d(STEP_TAG, "Assert that the 'Discussions' group will be still displayed despite it has no items in it. Assert that the '${discussion2.title}' discussion is not in the 'Discussions' group any more.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Discussions' group will be still displayed despite it has no items in it. Assert that the '${discussion2.title}' discussion is not in the 'Discussions' group any more.")
         discussionsListPage.assertGroupDisplayed("Discussions")
         discussionsListPage.assertDiscussionNotInGroup("Discussions", discussion.title)
 
-        Log.d(STEP_TAG, "Select 'Open for Comments' overflow menu of '${discussion.title}' discussion and assert that it will be (again) displayed under the 'Discussions' group.")
+        Log.d(STEP_TAG, "Select 'Open for Comments' overflow menu of '${discussion.title}' discussion.")
         discussionsListPage.clickDiscussionOverFlowMenu(discussion.title)
         discussionsListPage.selectOverFlowMenu("Open for Comments")
+
+        Log.d(ASSERTION_TAG, "Assert that it will be (again) displayed under the 'Discussions' group.")
         discussionsListPage.assertDiscussionInGroup("Discussions", discussion.title)
 
-        Log.d(STEP_TAG, "Assert that the '${discussion2.title}' discussion is not in the 'Closed for Comments' group any more.")
+        Log.d(ASSERTION_TAG, "Assert that the '${discussion2.title}' discussion is not in the 'Closed for Comments' group any more.")
         discussionsListPage.assertDiscussionNotInGroup("Closed for Comments", discussion.title)
 
-        Log.d(STEP_TAG,"Click on more menu of '${discussion.title}' discussion and delete it.")
+        Log.d(STEP_TAG, "Click on more menu of '${discussion.title}' discussion and delete it.")
         discussionsListPage.deleteDiscussionFromOverflowMenu(discussion.title)
 
-        Log.d(STEP_TAG,"Assert that the previously deleted '${discussion.title}' discussion is not displayed, but the other, '${discussion2.title}' discussion is.")
+        Log.d(ASSERTION_TAG, "Assert that the previously deleted '${discussion.title}' discussion is not displayed, but the other, '${discussion2.title}' discussion is.")
         sleep(2000) //Allow the deletion to propagate
         discussionsListPage.assertDiscussionDoesNotExist(discussion.title)
         discussionsListPage.assertHasDiscussion(discussion2)
 
-        Log.d(STEP_TAG,"Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
+        Log.d(STEP_TAG, "Click on the Search icon and type some search query string which matches only with the previously created discussion's title.")
         discussionsListPage.searchable.clickOnSearchButton()
         discussionsListPage.searchable.typeToSearchBar(discussion3.title.dropLast(3))
 
-        Log.d(STEP_TAG,"Assert that the '${discussion3.title}' discussion is displayed and it is the only one.")
+        Log.d(STEP_TAG, "Assert that the '${discussion3.title}' discussion is displayed and it is the only one.")
         discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(discussion3.title)
+
+        Log.d(STEP_TAG, "Click on the clear search button.")
         discussionsListPage.searchable.clickOnClearSearchButton()
 
         Log.d(STEP_TAG, "Quit from Searching mechanism.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Click on more menu of '${discussion2.title}' discussion and delete it.")
+        Log.d(STEP_TAG, "Click on more menu of '${discussion2.title}' discussion and delete it.")
         discussionsListPage.deleteDiscussionFromOverflowMenu(discussion2.title)
 
-        Log.d(STEP_TAG,"Assert that the previously deleted '${discussion2.title}' discussion is not displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the previously deleted '${discussion2.title}' discussion is not displayed.")
         sleep(2000) //Allow the deletion to propagate
         discussionsListPage.assertDiscussionDoesNotExist(discussion2.title)
 
-        Log.d(STEP_TAG,"Collapse the discussion list and assert that the '${discussion3.title}' discussion can NOT be seen.")
+        Log.d(STEP_TAG, "Collapse the discussion list.")
         discussionsListPage.toggleCollapseExpandIcon()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${discussion3.title}' discussion can NOT be seen.")
         discussionsListPage.assertDiscussionCount(0) // header only
         discussionsListPage.assertDiscussionDoesNotExist(discussion3.title)
 
-        Log.d(STEP_TAG,"Expand the discussion list and assert that the '${discussion3.title}' discussion can be seen.")
+        Log.d(STEP_TAG, "Expand the discussion list.")
         discussionsListPage.toggleCollapseExpandIcon()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${discussion3.title}' discussion can be seen.")
         discussionsListPage.assertDiscussionCount(1)
         discussionsListPage.assertHasDiscussion(discussion3.title)
     }

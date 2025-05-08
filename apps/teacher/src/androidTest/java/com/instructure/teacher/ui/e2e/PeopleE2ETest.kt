@@ -61,19 +61,19 @@ class PeopleE2ETest: TeacherComposeTest() {
         val course = data.coursesList[0]
         val parent = data.parentsList[0]
 
-        Log.d(PREPARATION_TAG,"Seed some group info.")
+        Log.d(PREPARATION_TAG, "Seed some group info.")
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val groupCategory2 = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
         val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Create group membership for '${gradedStudent.name}' student to '${group.name}' group.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${gradedStudent.name}' student to '${group.name}' group.")
         GroupsApi.createGroupMembership(group.id, gradedStudent.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Create group membership for '${notGradedStudent.name}' student to '${group2.name}' group.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${notGradedStudent.name}' student to '${group2.name}' group.")
         GroupsApi.createGroupMembership(group2.id, notGradedStudent.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seed a 'Text Entry' assignment for course: '${course.name}'.")
+        Log.d(PREPARATION_TAG, "Seed a 'Text Entry' assignment for course: '${course.name}'.")
         val assignments = seedAssignments(
                 courseId = course.id,
                 dueAt = 1.days.fromNow.iso8601,
@@ -82,7 +82,7 @@ class PeopleE2ETest: TeacherComposeTest() {
                 pointsPossible = 10.0
         )
 
-        Log.d(PREPARATION_TAG,"Seed a submission for '${assignments[0].name}' assignment.")
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignments[0].name}' assignment.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -93,45 +93,65 @@ class PeopleE2ETest: TeacherComposeTest() {
                 studentToken = gradedStudent.token
         )
 
-        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${assignments[0].name}' assignment.")
+        Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${assignments[0].name}' assignment.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, assignments[0].id, gradedStudent.id, postedGrade = "10")
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to People Page.")
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to People Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openPeopleTab()
 
-        Log.d(STEP_TAG,"Click on '${teacher.name}', the teacher person and assert the that the teacher course info and the corresponding section name is displayed on Context Page.")
+        Log.d(ASSERTION_TAG, "Assert that '${teacher.name}' teacher is displayed and it is really a teacher person.")
         peopleListPage.assertPersonRole(teacher.name, PeopleListPage.UserRole.TEACHER)
+
+        Log.d(STEP_TAG, "Click on '${teacher.name}', the teacher person.")
         peopleListPage.clickPerson(teacher)
+
+        Log.d(ASSERTION_TAG, "Assert the that the teacher course info and the corresponding section name is displayed on Context Page.")
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
 
-        Log.d(STEP_TAG,"Navigate back and click on '${parent.name}', the parent (observer) person and assert the that the observer course info and the corresponding section name are displayed on Context Page.")
+        Log.d(STEP_TAG, "Navigate back.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that '${parent.name}' parent is displayed and it is really a parent person.")
         peopleListPage.assertPersonRole(parent.name, PeopleListPage.UserRole.OBSERVER)
+
+        Log.d(STEP_TAG,"Click on '${parent.name}', the parent (observer) person.")
         peopleListPage.clickPerson(parent)
+
+        Log.d(ASSERTION_TAG, "Assert the that the observer course info and the corresponding section name are displayed on Context Page.")
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.OBSERVER)
 
-        Log.d(STEP_TAG,"Navigate back and click on '${notGradedStudent.name}' student and assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
+        Log.d(STEP_TAG, "Navigate back.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that '${notGradedStudent.name}' student is displayed and it is really a student person.")
         peopleListPage.assertPersonRole(notGradedStudent.name, PeopleListPage.UserRole.STUDENT)
+
+        Log.d(STEP_TAG, "Navigate back and click on '${notGradedStudent.name}' student.")
         peopleListPage.clickPerson(notGradedStudent)
+
+        Log.d(ASSERTION_TAG, "Assert that the NOT GRADED student course info and the corresponding section name is displayed are displayed properly on Context Page.")
         studentContextPage.assertDisplaysStudentInfo(notGradedStudent.shortName, notGradedStudent.loginId)
         studentContextPage.assertSectionNameView(PersonContextPage.UserRole.STUDENT)
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.assertStudentGrade("--")
         studentContextPage.assertStudentSubmission("--")
 
-        Log.d(STEP_TAG,"Navigate back and click on '${gradedStudent.name}' student." +
-                "Assert that '${gradedStudent.name}' graded student's info," +
-                "and the '${course.name}' course's info are displayed properly on the Context Page.")
+        Log.d(STEP_TAG, "Navigate back.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that '${gradedStudent.name}' student is displayed and it is really a student person.")
         peopleListPage.assertPersonRole(gradedStudent.name, PeopleListPage.UserRole.STUDENT)
+
+        Log.d(STEP_TAG, "Click on '${gradedStudent.name}' student.")
         peopleListPage.clickPerson(gradedStudent)
+
+        Log.d(ASSERTION_TAG, "Assert that '${gradedStudent.name}' graded student's info, and the '${course.name}' course's info are displayed properly on the Context Page.")
         studentContextPage.assertDisplaysStudentInfo(gradedStudent.shortName, gradedStudent.loginId)
         studentContextPage.assertDisplaysCourseInfo(course)
         studentContextPage.assertSectionNameView(PersonContextPage.UserRole.STUDENT)
@@ -144,8 +164,7 @@ class PeopleE2ETest: TeacherComposeTest() {
 
         val subject = "Test Subject"
         val body = "This a test message from student context page."
-        Log.d(STEP_TAG,"Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
-
+        Log.d(STEP_TAG, "Fill in the 'Subject' field with the value: '$subject'. Add some message text and click on 'Send' (aka. 'Arrow') button.")
         inboxComposePage.typeSubject(subject)
         inboxComposePage.typeBody(body)
         inboxComposePage.pressSendButton()
@@ -157,12 +176,14 @@ class PeopleE2ETest: TeacherComposeTest() {
         peopleListPage.searchable.clickOnSearchButton()
         peopleListPage.searchable.typeToSearchBar(gradedStudent.name)
 
-        Log.d(STEP_TAG, "Assert that only 1 person matches for the search text, and it is '${gradedStudent.name}', the graded student.")
+        Log.d(ASSERTION_TAG, "Assert that only 1 person matches for the search text, and it is '${gradedStudent.name}', the graded student.")
         peopleListPage.assertSearchResultCount(1)
         peopleListPage.assertPersonListed(gradedStudent)
 
-        Log.d(STEP_TAG, "Click on 'Reset' search (X) icon and assert that all the people are displayed (5).")
+        Log.d(STEP_TAG, "Click on 'Reset' search (X) icon.")
         peopleListPage.searchable.clickOnClearSearchButton()
+
+        Log.d(ASSERTION_TAG, "Assert that all the people are displayed (5).")
         peopleListPage.assertSearchResultCount(5)
 
         Log.d(STEP_TAG, "Quit from searching and navigate to People List page.")
@@ -172,16 +193,19 @@ class PeopleE2ETest: TeacherComposeTest() {
         peopleListPage.clickOnPeopleFilterMenu()
         peopleListPage.selectFilter(listOf(group.name))
 
-        Log.d(STEP_TAG, "Assert that the filter title is the previously selected, '${group.name}' group.")
+        Log.d(ASSERTION_TAG, "Assert that the filter title is the previously selected, '${group.name}' group.")
         peopleListPage.assertFilterTitle(group.name)
 
-        Log.d(STEP_TAG, "Assert that only 1 person matches for the filter, and it is '${gradedStudent.name}', the graded student.")
+        Log.d(ASSERTION_TAG, "Assert that only 1 person matches for the filter, and it is '${gradedStudent.name}', the graded student.")
         peopleListPage.assertSearchResultCount(1)
         peopleListPage.assertPersonListed(gradedStudent)
 
-        Log.d(STEP_TAG, "Clear the filter and assert that the list title became 'All People' and all the people are displayed again.")
+        Log.d(STEP_TAG, "Clear the filter.")
         peopleListPage.clickOnClearFilter()
+
         sleep(1000) //Allow the clear filter process to propagate.
+
+        Log.d(ASSERTION_TAG, "Assert that the list title became 'All People' and all the people are displayed again.")
         peopleListPage.assertFilterTitle("All People")
         peopleListPage.assertSearchResultCount(5)
 
@@ -189,31 +213,36 @@ class PeopleE2ETest: TeacherComposeTest() {
         peopleListPage.clickOnPeopleFilterMenu()
         peopleListPage.selectFilter(listOf(group.name, group2.name))
 
-        Log.d(STEP_TAG, "Assert that the filter title is the previously selected TWO groups: '${group.name}' and '${group2.name}'.")
+        Log.d(ASSERTION_TAG, "Assert that the filter title is the previously selected TWO groups: '${group.name}' and '${group2.name}'.")
         //The order of how the filter title is generated is inconsistent, so we check both way if group1 is the leading and if group2.
         try { peopleListPage.assertFilterTitle(group.name + ", " + group2.name) }
         catch(e: AssertionError) { peopleListPage.assertFilterTitle(group2.name + ", " + group.name) }
 
-        Log.d(STEP_TAG, "Assert that only that 2 people matches for the filter, and they are '${gradedStudent.name}' and '${notGradedStudent.name}'.")
+        Log.d(ASSERTION_TAG, "Assert that only that 2 people matches for the filter, and they are '${gradedStudent.name}' and '${notGradedStudent.name}'.")
         peopleListPage.assertSearchResultCount(2)
         peopleListPage.assertPersonListed(gradedStudent)
         peopleListPage.assertPersonListed(notGradedStudent)
 
-        Log.d(STEP_TAG, "Clear the filter and assert that the list title became 'All People' and all the people are displayed again.")
+        Log.d(STEP_TAG, "Clear the filter.")
         peopleListPage.clickOnClearFilter()
+
         sleep(1000) //Allow the clear filter process to propagate.
+
+        Log.d(ASSERTION_TAG, "Assert that the list title became 'All People' and all the people are displayed again.")
         peopleListPage.assertFilterTitle("All People")
         peopleListPage.assertSearchResultCount(5)
 
-        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Click on the Inbox bottom menu. Assert that the 'All' section is empty.")
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page. Click on the Inbox bottom menu.")
         ViewUtils.pressBackButton(2)
         dashboardPage.openInbox()
+
+        Log.d(ASSERTION_TAG, "Assert that the Inbox is empty.")
         inboxPage.assertInboxEmpty()
 
-        Log.d(STEP_TAG,"Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
+        Log.d(STEP_TAG, "Filter the Inbox by selecting 'Sent' category from the spinner on Inbox Page.")
         inboxPage.filterInbox("Sent")
 
-        Log.d(STEP_TAG,"Assert that the previously sent conversation is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the previously sent conversation is displayed.")
         inboxPage.assertHasConversation()
      }
 
