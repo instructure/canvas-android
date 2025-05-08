@@ -11,6 +11,7 @@ import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
+import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
@@ -63,6 +64,7 @@ import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
+import com.instructure.canvasapi2.utils.DomainServicesApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
@@ -394,6 +396,16 @@ class ApiModule {
     @Singleton
     fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
         return TokenRefresher(context, loginRouter, eventBus)
+    }
+
+    @Provides
+    fun provideDomainServicesApi(): DomainServicesAuthenticationAPI {
+        return DomainServicesAuthenticationAPI
+    }
+
+    @Provides
+    fun provideDomainServicesApiPrefs(): DomainServicesApiPrefs {
+        return DomainServicesApiPrefs
     }
 }
 
