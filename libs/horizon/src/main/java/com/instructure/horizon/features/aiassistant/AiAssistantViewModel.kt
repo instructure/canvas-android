@@ -32,6 +32,9 @@ class AiAssistantViewModel @Inject constructor(
         viewModelScope.launch {
             val hello = cedarApiManager.sayHello()
             Log.d("AI Assistant", "Hello from Cedar: $hello")
+
+            val translated = cedarApiManager.translateText("Hello, world!", "es")
+            Log.d("AI Assistant", "Translated text: $translated")
         }
     }
 }
