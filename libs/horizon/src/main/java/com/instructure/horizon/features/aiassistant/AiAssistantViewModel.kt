@@ -19,7 +19,7 @@ package com.instructure.horizon.features.aiassistant
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.CedarApiManager
+import com.instructure.canvasapi2.managers.graphql.CedarApiManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject

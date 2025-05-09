@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.managers
+package com.instructure.canvasapi2.managers.graphql
 
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.CedarGraphQLClient
