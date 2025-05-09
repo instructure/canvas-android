@@ -1,9 +1,17 @@
 package com.instructure.canvasapi2.utils
 
-private const val DOMAIN_SERVICES_PREFERENCE_FILE_NAME = "canvas-domain-services"
+abstract class DomainServicesApiPref(preferenceName: String): PrefManager(preferenceName) {
+    abstract var token: String?
+}
 
-object DomainServicesApiPrefs: PrefManager(DOMAIN_SERVICES_PREFERENCE_FILE_NAME) {
-    var pineToken: String by StringPref()
-    var cedarToken: String by StringPref()
-    var redwoodToken: String by StringPref()
+class PineApiPref: DomainServicesApiPref("pine_api_prefs") {
+    override var token: String? by NStringPref(null, "pine_token")
+}
+
+class CedarApiPref: DomainServicesApiPref("cedar_api_prefs") {
+    override var token: String? by NStringPref(null, "cedar_token")
+}
+
+class RedwoodApiPref: DomainServicesApiPref("redwood_api_prefs") {
+    override var token: String? by NStringPref(null, "redwood_token")
 }

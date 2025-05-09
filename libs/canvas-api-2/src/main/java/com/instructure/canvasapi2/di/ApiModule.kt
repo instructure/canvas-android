@@ -64,7 +64,9 @@ import com.instructure.canvasapi2.managers.ToDoManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
-import com.instructure.canvasapi2.utils.DomainServicesApiPrefs
+import com.instructure.canvasapi2.utils.CedarApiPref
+import com.instructure.canvasapi2.utils.PineApiPref
+import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
 import dagger.Module
 import dagger.Provides
@@ -404,8 +406,21 @@ class ApiModule {
     }
 
     @Provides
-    fun provideDomainServicesApiPrefs(): DomainServicesApiPrefs {
-        return DomainServicesApiPrefs
+    @Singleton
+    fun providePineApiPrefs(): PineApiPref {
+        return PineApiPref()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCedarApiPrefs(): CedarApiPref {
+        return CedarApiPref()
+    }
+
+    @Provides
+    @Singleton
+    fun provideRedwoodApiPrefs(): RedwoodApiPref {
+        return RedwoodApiPref()
     }
 }
 

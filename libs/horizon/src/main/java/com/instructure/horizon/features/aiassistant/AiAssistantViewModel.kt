@@ -19,29 +19,19 @@ package com.instructure.horizon.features.aiassistant
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.DomainServicesAuthenticationManager
+import com.instructure.canvasapi2.managers.CedarApiManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AiAssistantViewModel @Inject constructor(
-    private val domainServicesAuthenticationManager: DomainServicesAuthenticationManager,
+    private val cedarApiManager: CedarApiManager,
 ): ViewModel() {
     init {
         viewModelScope.launch {
-            val pineToken = domainServicesAuthenticationManager.getDomainServicesAuthenticationToken(
-                domainService = com.instructure.canvasapi2.models.DomainService.PINE
-            )
-            val cedarToken = domainServicesAuthenticationManager.getDomainServicesAuthenticationToken(
-                domainService = com.instructure.canvasapi2.models.DomainService.CEDAR
-            )
-            val redwoodToken = domainServicesAuthenticationManager.getDomainServicesAuthenticationToken(
-                domainService = com.instructure.canvasapi2.models.DomainService.REDWOOD
-            )
-            Log.d("AiAssistantToken", "pineToken: $pineToken")
-            Log.d("AiAssistantToken", "cedarToken: $cedarToken")
-            Log.d("AiAssistantToken", "redwoodToken: $redwoodToken")
+            val hello = cedarApiManager.sayHello()
+            Log.d("AI Assistant", "Hello from Cedar: $hello")
         }
     }
 }

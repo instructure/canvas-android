@@ -21,76 +21,45 @@ import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DomainService
-import com.instructure.canvasapi2.utils.DomainServicesApiPrefs
+import com.instructure.canvasapi2.utils.CedarApiPref
+import com.instructure.canvasapi2.utils.DomainServicesApiPref
+import com.instructure.canvasapi2.utils.PineApiPref
+import com.instructure.canvasapi2.utils.RedwoodApiPref
 import java.util.Date
 import javax.inject.Inject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
-class DomainServicesAuthenticationManager @Inject constructor(
-    private val domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
-    private val domainApiPrefs: DomainServicesApiPrefs
+abstract class DomainServicesAuthenticationManager(
+    private val domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI
 ) {
-    @OptIn(ExperimentalEncodingApi::class)
-    suspend fun getDomainServicesAuthenticationToken(
-        domainService: DomainService
-    ): String {
-        val adapter = RestBuilder()
-        val params = RestParams()
-        return when(domainService) {
-            DomainService.PINE -> {
-                val cachedToken = domainApiPrefs.pineToken.ifEmpty { null }
-                if (cachedToken == null || isTokenExpired(cachedToken)) {
-                    val newToken = domainServicesAuthenticationAPI
-                        .getDomainServiceAuthentication(domainService, adapter, params)
-                        .map { it.token }
-                        .dataOrNull
-                        .orEmpty()
+    protected abstract val domainServicesApiPref: DomainServicesApiPref
+    protected abstract val domainService: DomainService
 
-                    val decoded = String(Base64.decode(newToken))
-                    domainApiPrefs.pineToken = decoded
+    suspend fun getAuthenticationToken(): String {
+        val cachedToken = domainServicesApiPref.token?.ifEmpty { null }
+        return if (cachedToken == null || isTokenExpired(cachedToken)) {
+            val newToken = requestAuthenticationToken(domainService)
+            domainServicesApiPref.token = newToken
 
-                    decoded
+            newToken
 
-                } else {
-                    cachedToken
-                }
-            }
-            DomainService.CEDAR -> {
-                val cachedToken = domainApiPrefs.cedarToken.ifEmpty { null }
-                if (cachedToken == null || isTokenExpired(cachedToken)) {
-                    val newToken = domainServicesAuthenticationAPI
-                        .getDomainServiceAuthentication(domainService, adapter, params)
-                        .map { it.token }
-                        .dataOrNull
-                        .orEmpty()
-
-                    val decoded = String(Base64.decode(newToken))
-                    domainApiPrefs.cedarToken = decoded
-
-                    decoded
-                } else {
-                    cachedToken
-                }
-            }
-            DomainService.REDWOOD -> {
-                val cachedToken = domainApiPrefs.redwoodToken.ifEmpty { null }
-                if (cachedToken == null || isTokenExpired(cachedToken)) {
-                    val newToken = domainServicesAuthenticationAPI
-                        .getDomainServiceAuthentication(domainService, adapter, params)
-                        .map { it.token }
-                        .dataOrNull
-                        .orEmpty()
-
-                    val decoded = String(Base64.decode(newToken))
-                    domainApiPrefs.redwoodToken = decoded
-
-                    decoded
-                } else {
-                    cachedToken
-                }
-            }
+        } else {
+            cachedToken
         }
+    }
+
+    @OptIn(ExperimentalEncodingApi::class)
+    private suspend fun requestAuthenticationToken(domainService: DomainService): String {
+        val adapter = RestBuilder()
+        val params = RestParams(isForceReadFromNetwork = true)
+        val newToken = domainServicesAuthenticationAPI
+            .getDomainServiceAuthentication(domainService, adapter, params)
+            .map { it.token }
+            .dataOrNull
+            .orEmpty()
+
+        return String(Base64.decode(newToken))
     }
 
     private fun isTokenExpired(token: String?): Boolean {
@@ -99,4 +68,28 @@ class DomainServicesAuthenticationManager @Inject constructor(
 
         return false
     }
+}
+
+class PineAuthenticationManager @Inject constructor(
+    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
+    pineApiPref: PineApiPref
+) : DomainServicesAuthenticationManager(domainServicesAuthenticationAPI) {
+    override val domainServicesApiPref = pineApiPref
+    override val domainService = DomainService.PINE
+}
+
+class CedarAuthenticationManager @Inject constructor(
+    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
+    cedarApiPref: CedarApiPref
+) : DomainServicesAuthenticationManager(domainServicesAuthenticationAPI) {
+    override val domainServicesApiPref = cedarApiPref
+    override val domainService = DomainService.CEDAR
+}
+
+class RedwoodAuthenticationManager @Inject constructor(
+    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
+    redwoodApiPref: RedwoodApiPref
+) : DomainServicesAuthenticationManager(domainServicesAuthenticationAPI) {
+    override val domainServicesApiPref = redwoodApiPref
+    override val domainService = DomainService.REDWOOD
 }

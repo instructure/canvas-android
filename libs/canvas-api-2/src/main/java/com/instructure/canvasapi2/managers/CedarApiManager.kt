@@ -16,10 +16,12 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.CedarGraphQLClient
 import com.instructure.canvasapi2.models.Page
 import com.instructure.cedar.GenerateQuizMutation
+import com.instructure.cedar.SayHelloQuery
 import com.instructure.cedar.type.QuizInput
+import javax.inject.Inject
 
 data class GeneratedQuiz(
     val question: String,
@@ -27,7 +29,9 @@ data class GeneratedQuiz(
     val result: Int
 )
 
-class CedarApiManager {
+class CedarApiManager @Inject constructor(
+    private val cedarClient: CedarGraphQLClient
+) {
     suspend fun generateQuiz(
         context: String,
         numberOfQuestions: Int = 1,
@@ -37,7 +41,7 @@ class CedarApiManager {
         val query = GenerateQuizMutation(
             QuizInput(context, numberOfQuestions.toDouble(), numberOfOptionsPerQuestion.toDouble(), maxLengthOfQuestions.toDouble())
         )
-        val result = QLClientConfig.enqueueMutation(query).dataAssertNoErrors
+        val result = cedarClient.enqueueMutation(query).dataAssertNoErrors
 
         return result.generateQuiz.map {
             GeneratedQuiz(
@@ -46,6 +50,13 @@ class CedarApiManager {
                 result = it.result.toInt()
             )
         }
+    }
+
+    suspend fun sayHello(): String {
+        val query = SayHelloQuery()
+        val result = cedarClient.enqueueQuery(query).dataAssertNoErrors.sayHello
+
+        return result
     }
 }
 
