@@ -31,6 +31,9 @@ import javax.inject.Inject
 abstract class DomainServicesRequestInterceptor(
     val apiPrefs: ApiPrefs
 ): Interceptor {
+    private val userAgentHeader = "User-Agent"
+    private val authorizationHeader = "Authorization"
+
     fun intercept(chain: Interceptor.Chain, token: String?): Response {
         val request = chain.request()
         val builder = request.newBuilder()
@@ -39,11 +42,11 @@ abstract class DomainServicesRequestInterceptor(
         val params = request.restParams() ?: RestParams()
 
         if (userAgent != "") {
-            builder.addHeader("User-Agent", userAgent)
+            builder.addHeader(userAgentHeader, userAgent)
         }
 
         if (!params.shouldIgnoreToken && !token.isNullOrEmpty()) {
-            builder.addHeader("Authorization", "Bearer $token")
+            builder.addHeader(authorizationHeader, "Bearer $token")
         }
 
         if (params.isForceReadFromCache) {
