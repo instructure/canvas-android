@@ -29,7 +29,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -55,6 +57,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.ActionBottomSheet
+import com.instructure.horizon.horizonui.molecules.BottomSheetActionState
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.SegmentedControl
@@ -69,6 +73,26 @@ import com.instructure.pandautils.utils.launchCustomTab
 
 @Composable
 fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
+    if (uiState.toolsBottomSheetUiState.show) {
+        ActionBottomSheet(
+            title = stringResource(R.string.assignmentDetails_tools),
+            actions = listOf(
+                BottomSheetActionState(
+                    stringResource(R.string.assignmentDetails_attemptHistory),
+                    R.drawable.history,
+                    onClick = uiState.toolsBottomSheetUiState.onAttemptsClick
+                ),
+                BottomSheetActionState(
+                    stringResource(R.string.assignmentDetails_comments),
+                    R.drawable.chat,
+                    onClick = uiState.toolsBottomSheetUiState.onCommentsClick
+                ),
+            ),
+            sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded, skipHiddenState = false),
+            onDismiss = uiState.toolsBottomSheetUiState.onDismiss
+        )
+    }
+
     val activity = LocalContext.current.getActivityOrNull()
     LoadingStateWrapper(loadingState = uiState.loadingState, containerColor = Color.Transparent) {
         Box(
@@ -156,7 +180,11 @@ fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier)
     when (uiState.submissionContent) {
         is SubmissionContent.TextSubmission -> TextSubmissionContent(text = uiState.submissionContent.text, modifier = modifier)
         is SubmissionContent.FileSubmission -> {
-            NavHost(rememberNavController(), startDestination = "fileSubmission", modifier = modifier) { // TODO We might not need a nav host here
+            NavHost(
+                rememberNavController(),
+                startDestination = "fileSubmission",
+                modifier = modifier
+            ) {
                 composable("fileSubmission") {
                     val viewModel = hiltViewModel<FileSubmissionContentViewModel>()
                     LaunchedEffect(uiState.submissionContent.fileItems) {

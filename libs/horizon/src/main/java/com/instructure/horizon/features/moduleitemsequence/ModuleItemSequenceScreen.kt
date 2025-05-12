@@ -125,7 +125,8 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
             showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
             onNextClick = uiState.onNextClick,
-            onPreviousClick = uiState.onPreviousClick
+            onPreviousClick = uiState.onPreviousClick,
+            onAssignmentToolsClick = uiState.onAssignmentToolsClick,
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
@@ -258,6 +259,8 @@ private fun ModuleItemSequenceContent(
                     ModuleItemContentScreen(
                         moduleItemUiState,
                         scrollState = contentScrollState,
+                        uiState.openAssignmentTools,
+                        uiState.assignmentToolsOpened
                     )
                 }
             }
@@ -349,7 +352,13 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 }
 
 @Composable
-private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
+private fun ModuleItemContentScreen(
+    moduleItemUiState: ModuleItemUiState,
+    scrollState: ScrollState,
+    openAssignmentTools: Boolean,
+    assignmentToolsOpened: () -> Unit,
+    modifier: Modifier = Modifier
+) {
     if (moduleItemUiState.isLoading) {
         Box(
             modifier = modifier
@@ -371,11 +380,17 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
             NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
                 composable(
                     route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
-                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                    navArgument(ModuleItemContent.Assignment.ASSIGNMENT_ID) { type = NavType.LongType }
-                )) {
+                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                        navArgument(ModuleItemContent.Assignment.ASSIGNMENT_ID) { type = NavType.LongType }
+                    )) {
                     val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
+                    LaunchedEffect(openAssignmentTools) {
+                        if (openAssignmentTools) {
+                            viewModel.openAssignmentTools()
+                            assignmentToolsOpened()
+                        }
+                    }
                     AssignmentDetailsScreen(
                         uiState = uiState,
                         scrollState = scrollState
@@ -405,11 +420,11 @@ private fun ModuleItemContentScreen(moduleItemUiState: ModuleItemUiState, scroll
                 }
                 composable(
                     ModuleItemContent.File.ROUTE, arguments = listOf(
-                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                    navArgument(ModuleItemContent.File.FILE_URL) { type = NavType.StringType },
-                    navArgument(Const.MODULE_ITEM_ID) { type = NavType.LongType },
-                    navArgument(Const.MODULE_ID) { type = NavType.LongType }
-                )) {
+                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                        navArgument(ModuleItemContent.File.FILE_URL) { type = NavType.StringType },
+                        navArgument(Const.MODULE_ITEM_ID) { type = NavType.LongType },
+                        navArgument(Const.MODULE_ID) { type = NavType.LongType }
+                    )) {
                     val viewModel = hiltViewModel<FileDetailsViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
                     FileDetailsContentScreen(
@@ -456,6 +471,7 @@ private fun ModuleItemSequenceBottomBar(
     showAssignmentToolsButton: Boolean,
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
+    onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
@@ -476,7 +492,8 @@ private fun ModuleItemSequenceBottomBar(
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
                     color = IconButtonColor.INVERSE,
-                    elevation = HorizonElevation.level4
+                    elevation = HorizonElevation.level4,
+                    onClick = onAssignmentToolsClick
                 )
             }
             if (showNextButton) IconButton(

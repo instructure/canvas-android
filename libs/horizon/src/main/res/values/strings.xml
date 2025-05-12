@@ -184,4 +184,7 @@
     <string name="assignmentDetilas_submissionTypeText">Text</string>
     <string name="assignmentDetilas_submissionTypeFileUpload">File Upload</string>
     <string name="assignmentDetails_selectSubmissionType">Select a Submission Type</string>
+    <string name="assignmentDetails_tools">Tools</string>
+    <string name="assignmentDetails_attemptHistory">Attempt History</string>
+    <string name="assignmentDetails_comments">Comments</string>
 </resources>

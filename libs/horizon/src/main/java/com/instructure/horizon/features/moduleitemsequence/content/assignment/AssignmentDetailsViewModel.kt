@@ -40,7 +40,12 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val courseId = savedStateHandle[Const.COURSE_ID] ?: -1L
 
     private val _uiState =
-        MutableStateFlow(AssignmentDetailsUiState(addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected)))
+        MutableStateFlow(
+            AssignmentDetailsUiState(
+                addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected),
+                toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet)
+            )
+        )
 
     val uiState = _uiState.asStateFlow()
 
@@ -124,6 +129,22 @@ class AssignmentDetailsViewModel @Inject constructor(
                 addSubmissionUiState = it.addSubmissionUiState.copy(
                     selectedSubmissionTypeIndex = index,
                 )
+            )
+        }
+    }
+
+    fun openAssignmentTools() {
+        _uiState.update {
+            it.copy(
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = true)
+            )
+        }
+    }
+
+    private fun dismissToolsBottomSheet() {
+        _uiState.update {
+            it.copy(
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
             )
         }
     }

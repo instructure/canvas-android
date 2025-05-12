@@ -63,7 +63,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     onCloseClick = ::progressCloseClicked,
                     onPreviousClick = ::progressPreviousClicked,
                     onNextClick = ::progressNextClicked,
-                )
+                ),
+                onAssignmentToolsClick = ::onAssignmentToolsClicked,
+                assignmentToolsOpened = ::assignmentToolsOpened
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -461,5 +463,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
         } else {
             context.getString(R.string.modulePager_unlimitedAttempts)
         }
+    }
+
+    private fun onAssignmentToolsClicked() {
+        _uiState.update { it.copy(openAssignmentTools = true) }
+    }
+
+    private fun assignmentToolsOpened() {
+        _uiState.update { it.copy(openAssignmentTools = false) }
     }
 }

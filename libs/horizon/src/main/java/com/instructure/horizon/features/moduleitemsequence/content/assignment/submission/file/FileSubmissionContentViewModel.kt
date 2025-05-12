@@ -41,6 +41,7 @@ import javax.inject.Inject
 class FileSubmissionContentViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
+    private val fileCache: FileCache
 ) : ViewModel() {
 
     private val _uiState =
@@ -167,7 +168,7 @@ class FileSubmissionContentViewModel @Inject constructor(
             contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
 
             contentType.startsWith("text") -> {
-                val tempFile: File? = FileCache.awaitFileDownload(file.fileUrl)
+                val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
                 tempFile?.let {
                     FilePreviewUiState.Text(
                         content = it.readText(),

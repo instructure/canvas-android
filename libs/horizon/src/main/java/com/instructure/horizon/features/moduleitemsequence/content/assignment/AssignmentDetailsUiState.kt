@@ -27,6 +27,7 @@ data class AssignmentDetailsUiState(
     val addSubmissionUiState: AddSubmissionUiState = AddSubmissionUiState(),
     val showSubmissionDetails: Boolean = false,
     val showAddSubmission: Boolean = false,
+    val toolsBottomSheetUiState: ToolsBottomSheetUiState = ToolsBottomSheetUiState(),
 )
 
 data class SubmissionDetailsUiState(
@@ -65,3 +66,10 @@ sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
     data class Text(val text: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
     data class File(val fileName: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
 }
+
+data class ToolsBottomSheetUiState(
+    val show: Boolean = false,
+    val onDismiss: () -> Unit = {},
+    val onAttemptsClick: () -> Unit = {},
+    val onCommentsClick: () -> Unit = {},
+)
