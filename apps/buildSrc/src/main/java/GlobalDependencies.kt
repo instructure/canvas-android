@@ -2,9 +2,9 @@
 
 object Versions {
     /* SDK Versions */
-    const val COMPILE_SDK = 34
+    const val COMPILE_SDK = 35
     const val MIN_SDK = 26
-    const val TARGET_SDK = 34
+    const val TARGET_SDK = 35
 
     /* Build/tooling */
     const val ANDROID_GRADLE_TOOLS = "8.6.1"
@@ -38,7 +38,7 @@ object Versions {
     const val ROOM = "2.6.1"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.3"
-    const val MEDIA3 = "1.4.1"
+    const val MEDIA3 = "1.6.1"
     const val DATASTORE = "1.1.1"
     const val LOTTIE = "6.5.2"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
