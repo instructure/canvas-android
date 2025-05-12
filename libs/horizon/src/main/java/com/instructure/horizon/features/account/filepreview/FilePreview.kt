@@ -23,8 +23,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.moduleitemsequence.content.file.ViewMediaActivity
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.pandautils.activities.BaseViewMediaActivity
@@ -105,4 +107,15 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
             }
         }
     }
+}
+
+@UnstableApi
+@Preview(showBackground = true)
+@Composable
+fun FilePreviewPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    FilePreview(FilePreviewUiState.Text(
+        content = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.",
+        contentType = "text/plain"
+    ))
 }

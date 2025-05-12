@@ -31,8 +31,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.media3.common.util.UnstableApi
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.filepreview.FilePreview
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
@@ -95,4 +97,27 @@ fun FileSubmissionContent(
             }
         }
     }
+}
+
+@UnstableApi
+@Preview(showBackground = true)
+@Composable
+fun FileSubmissionContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val fileItem = FileItemUiState(
+        fileName = "File Name",
+        fileUrl = "https://example.com/file.pdf",
+        fileType = "application/pdf",
+        fileId = 123L,
+        thumbnailUrl = ""
+    )
+    val fileItemSelected = fileItem.copy(fileName = "File 2", selected = true)
+    val uiState = FileSubmissionContentUiState(
+        files = listOf(fileItem, fileItemSelected),
+        onFileOpened = {},
+        filePathToOpen = null,
+        mimeTypeToOpen = null,
+        filePreview = null
+    )
+    FileSubmissionContent(uiState)
 }
