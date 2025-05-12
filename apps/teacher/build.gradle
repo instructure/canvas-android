@@ -26,12 +26,11 @@ def coverageEnabled = project.hasProperty('coverage')
 
 android {
     namespace 'com.instructure.teacher'
+    compileSdk Versions.COMPILE_SDK
+
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
-
-    compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
 
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
