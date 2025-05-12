@@ -323,7 +323,7 @@
                 android:resource="@xml/todo_widget_info" />
         </receiver>
 
-        <!-- Grades Widget -->
+        <!-- Grades Widget
         <receiver
             android:name=".widget.GradesWidgetProvider"
             android:label="@string/gradesWidgetTitleLong"
@@ -342,7 +342,7 @@
 
         <service
             android:name=".widget.GradesViewWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
+            android:permission="android.permission.BIND_REMOTEVIEWS"/>-->
 
         <!-- Notifications widget-->
         <receiver

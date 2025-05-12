@@ -30,23 +30,9 @@ class GradesWidgetRepository(
         val restParams =
             RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
 
-        val courses = coursesApi.getFirstPageCoursesWithGradingScheme(restParams)
+        return coursesApi.getFirstPageCoursesWithGradingScheme(restParams)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, restParams) }
             .dataOrThrow
             .filter { it.isFavorite && it.isCurrentEnrolment() && !it.isInvited() }
-
-        val course = Course(name = getRandomString(6))
-
-        val list = mutableListOf(course)
-        list.addAll(courses)
-
-        return list
-    }
-
-    private fun getRandomString(length: Int) : String {
-        val allowedChars = ('A'..'Z') + ('a'..'z') + ('0'..'9')
-        return (1..length)
-            .map { allowedChars.random() }
-            .joinToString("")
     }
 }

@@ -23,6 +23,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.toJson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
@@ -36,6 +37,9 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
 
     @Inject
     lateinit var repository: GradesWidgetRepository
+
+    @Inject
+    lateinit var colorKeeper: ColorKeeper
 
     private val coroutineScope = MainScope()
 
@@ -64,6 +68,10 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
             }
         }
     }
+
+
+
+
 
     companion object {
         val coursesKey = stringSetPreferencesKey("plannerItems")

@@ -18,8 +18,8 @@
 
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:configure="com.instructure.student.activity.WidgetSetupActivity"
     android:minWidth="200dp"
+    android:minResizeWidth="120dp"
     android:minHeight="110dp"
     android:updatePeriodMillis="1800000"
     android:resizeMode="horizontal|vertical"
