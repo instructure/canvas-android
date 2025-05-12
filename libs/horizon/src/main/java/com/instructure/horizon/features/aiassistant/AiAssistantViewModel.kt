@@ -19,7 +19,9 @@ package com.instructure.horizon.features.aiassistant
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.graphql.CedarApiManager
+import com.instructure.canvasapi2.managers.CedarApiManager
+import com.instructure.canvasapi2.managers.PineApiManager
+import com.instructure.canvasapi2.managers.RedwoodApiManager
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -27,9 +29,17 @@ import javax.inject.Inject
 @HiltViewModel
 class AiAssistantViewModel @Inject constructor(
     private val cedarApiManager: CedarApiManager,
+    private val pineApiManager: PineApiManager,
+    private val redwoodApiManager: RedwoodApiManager,
 ): ViewModel() {
     init {
         viewModelScope.launch {
+            val notes = redwoodApiManager.getNotes()
+            Log.d("AI Assistant", "Notes from Redwood: $notes")
+
+//            val ping = pineApiManager.ping()
+//            Log.d("AI Assistant", "Ping from Pine: $ping")
+
             val hello = cedarApiManager.sayHello()
             Log.d("AI Assistant", "Hello from Cedar: $hello")
 

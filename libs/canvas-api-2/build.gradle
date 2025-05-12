@@ -196,5 +196,5 @@ dependencies {
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
 
-    implementation("com.auth0:java-jwt:4.5.0")
+    implementation Libs.JAVA_JWT
 }

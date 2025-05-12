@@ -14,9 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.managers.graphql
+package com.instructure.canvasapi2.managers
 
 import com.instructure.canvasapi2.PineGraphQLClient
+import com.instructure.pine.PingQuery
 import com.instructure.pine.QueryDocumentMutation
 import com.instructure.pine.UpsertDocumentMutation
 import com.instructure.pine.type.DocumentUpsertInput
@@ -70,5 +71,12 @@ class PineApiManager @Inject constructor(
         val result = pineClient.enqueueMutation(mutation).dataAssertNoErrors.query
 
         return result.response
+    }
+
+    suspend fun ping(): String {
+        val query = PingQuery()
+        val result = pineClient.enqueueQuery(query).dataAssertNoErrors.ping
+
+        return result
     }
 }

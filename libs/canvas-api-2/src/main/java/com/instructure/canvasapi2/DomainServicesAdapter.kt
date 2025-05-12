@@ -51,7 +51,7 @@ abstract class DomainServicesAdapter {
             .cache(cache)
             .addInterceptor(loggingInterceptor)
             .addInterceptor(requestInterceptor)
-            .addNetworkInterceptor(ResponseInterceptor())
+            .addNetworkInterceptor(DomainServicesResponseInterceptor())
             .readTimeout(timeoutSeconds.toLong(), TimeUnit.SECONDS)
             .dispatcher(dispatcher)
             .authenticator(authenticator)

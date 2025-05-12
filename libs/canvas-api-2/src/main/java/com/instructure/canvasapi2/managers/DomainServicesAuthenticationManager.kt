@@ -36,9 +36,9 @@ abstract class DomainServicesAuthenticationManager(
     protected abstract val domainServicesApiPref: DomainServicesApiPref
     protected abstract val domainService: DomainService
 
-    suspend fun getAuthenticationToken(): String {
+    suspend fun getAuthenticationToken(forceRefresh: Boolean = false): String {
         val cachedToken = domainServicesApiPref.token?.ifEmpty { null }
-        return if (cachedToken == null || isTokenExpired(cachedToken)) {
+        return if (forceRefresh || cachedToken == null || isTokenExpired(cachedToken)) {
             val newToken = requestAuthenticationToken(domainService)
             domainServicesApiPref.token = newToken
 
