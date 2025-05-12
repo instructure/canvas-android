@@ -4,6 +4,7 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.student.widget.todo.ToDoWidgetReceiver
 
 /**
  * Responsible for refreshing widgets.
@@ -47,9 +48,9 @@ object WidgetUpdater {
     }
 
     fun getTodoWidgetUpdateIntent(appWidgetManager: AppWidgetManager): Intent {
-        val intent = Intent(ContextKeeper.appContext, TodoWidgetProvider::class.java)
+        val intent = Intent(ContextKeeper.appContext, ToDoWidgetReceiver::class.java)
         intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, TodoWidgetProvider::class.java))
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, ToDoWidgetReceiver::class.java))
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
         return intent
     }

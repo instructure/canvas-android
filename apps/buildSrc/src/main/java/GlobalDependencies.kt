@@ -186,7 +186,12 @@ object Libs {
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
     const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3"
-    const val GLANCE = "androidx.glance:glance-appwidget:${Versions.GLANCE}"
+
+    // Glance
+    const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"
+    const val GLANCE_PREVIEW = "androidx.glance:glance-preview:${Versions.GLANCE}"
+    const val GLANCE_APPWIDGET = "androidx.glance:glance-appwidget:${Versions.GLANCE}"
+    const val GLANCE_APPWIDGET_PREVIEW = "androidx.glance:glance-appwidget-preview:${Versions.GLANCE}"
 
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"

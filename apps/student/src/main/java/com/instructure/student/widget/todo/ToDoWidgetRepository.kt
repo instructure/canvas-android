@@ -17,14 +17,20 @@
 
 package com.instructure.student.widget.todo
 
+import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.depaginate
 
 class ToDoWidgetRepository(
-    private val plannerApi: PlannerAPI.PlannerInterface
+    private val plannerApi: PlannerAPI.PlannerInterface,
+    private val coursesApi: CourseAPI.CoursesInterface,
+    private val groupApi: GroupAPI.GroupInterface
 ) {
     suspend fun getPlannerItems(
         startDate: String,
@@ -42,6 +48,34 @@ class ToDoWidgetRepository(
             plannerApi.nextPagePlannerItems(it, restParams)
         }.dataOrThrow.filter {
             it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST
+        }
+    }
+
+    private suspend fun getFavouriteCourses(forceNetwork: Boolean): List<Course> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val courses = coursesApi.getFirstPageCourses(restParams).depaginate { nextUrl ->
+            coursesApi.next(nextUrl, restParams)
+        }.dataOrNull.orEmpty()
+
+        return courses.filter {
+            it.isFavorite
+        }.ifEmpty {
+            courses
+        }
+    }
+
+    private suspend fun getFavouriteGroups(forceNetwork: Boolean): List<Group> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+
+        val groups = groupApi.getFirstPageGroups(restParams).depaginate { nextUrl ->
+            groupApi.getNextPageGroups(nextUrl, restParams)
+        }.dataOrNull.orEmpty()
+
+        return groups.filter {
+            it.isFavorite
+        }.ifEmpty {
+            groups
         }
     }
 }
