@@ -20,8 +20,11 @@ import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CedarApiManager
+import com.instructure.canvasapi2.managers.DocumentSource
 import com.instructure.canvasapi2.managers.PineApiManager
 import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.pine.type.MessageInput
+import com.instructure.pine.type.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -39,6 +42,18 @@ class AiAssistantViewModel @Inject constructor(
 
 //            val ping = pineApiManager.ping()
 //            Log.d("AI Assistant", "Ping from Pine: $ping")
+
+            val answer = pineApiManager.queryDocument(
+                messages = listOf(
+                    MessageInput(
+                        role = Role.User,
+                        text = "Hello, world!",
+                    )
+                ),
+                metadata = emptyMap(),
+                source = DocumentSource.canvas,
+            )
+            Log.d("AI Assistant", "Answer from Pine: $answer")
 
             val hello = cedarApiManager.sayHello()
             Log.d("AI Assistant", "Hello from Cedar: $hello")
