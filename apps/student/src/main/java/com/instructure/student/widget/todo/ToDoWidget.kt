@@ -49,18 +49,15 @@ import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
 import androidx.glance.layout.width
+import androidx.glance.preview.ExperimentalGlancePreviewApi
+import androidx.glance.preview.Preview
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
-import com.instructure.canvasapi2.models.PlannableType
-import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.toDate
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ThemePrefs
-import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.fromJson
-import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.student.R
 import com.instructure.student.widget.glance.Empty
 import com.instructure.student.widget.glance.Error
@@ -68,6 +65,7 @@ import com.instructure.student.widget.glance.Loading
 import com.instructure.student.widget.glance.NotLoggedIn
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
+import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDate
 import java.util.Locale
 
@@ -79,79 +77,80 @@ class ToDoWidget : GlanceAppWidget() {
     override suspend fun provideGlance(context: Context, id: GlanceId) {
         provideContent {
             val prefs = currentState<Preferences>()
-            val state = WidgetState.valueOf(prefs[ToDoWidgetReceiver.stateKey] ?: WidgetState.Loading.name)
-            val plannerItems = prefs[ToDoWidgetReceiver.plannerItemsKey]?.map {
-                it.fromJson<PlannerItem>()
-            }.orEmpty().groupBy {
-                it.plannableDate.toLocalDate()
-            }.toList()
-
-            Scaffold(
-                backgroundColor = WidgetColors.backgroundLightest,
-                modifier = GlanceModifier.fillMaxSize()
-            ) {
-                when (state) {
-                    WidgetState.Loading -> Loading()
-                    WidgetState.Error -> Error()
-                    WidgetState.Empty -> Empty()
-                    WidgetState.NotLoggedIn -> NotLoggedIn()
-                    WidgetState.Content -> Content(plannerItems)
-                }
-                Box(
-                    contentAlignment = Alignment.TopEnd,
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                ) {
-                    Image(
-                        provider = ImageProvider(resId = R.drawable.ic_canvas_logo_student),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(colorProvider = WidgetColors.textLightest),
-                        modifier = GlanceModifier
-                            .size(32.dp)
-                            .cornerRadius(20.dp)
-                            .background(WidgetColors.textDanger)
-                            .padding(8.dp)
-                            .clickable {
-
-                            }
-                    )
-                }
-                Box(
-                    contentAlignment = Alignment.BottomEnd,
-                    modifier = GlanceModifier
-                        .fillMaxSize()
-                        .padding(8.dp)
-                ) {
-                    Image(
-                        provider = ImageProvider(resId = R.drawable.ic_add_lined),
-                        contentDescription = null,
-                        colorFilter = ColorFilter.tint(
-                            colorProvider = ColorProvider(
-                                color = Color(color = ThemePrefs.buttonTextColor)
-                            )
-                        ),
-                        modifier = GlanceModifier
-                            .size(32.dp)
-                            .cornerRadius(20.dp)
-                            .background(
-                                colorProvider = ColorProvider(
-                                    color = Color(color = ThemePrefs.buttonColor)
-                                )
-                            )
-                            .padding(8.dp)
-                            .clickable {
-
-                            }
-                    )
-                }
-            }
+            val state = prefs[ToDoWidgetReceiver.toDoWidgetUiStateKey]?.fromJson<ToDoWidgetUiState>() ?: ToDoWidgetUiState(WidgetState.Loading)
+            Content(state)
         }
     }
 
     @Composable
     private fun Content(
-        daysWithItems: List<Pair<LocalDate, List<PlannerItem>>>
+        toDoWidgetUiState: ToDoWidgetUiState
+    ) {
+        Scaffold(
+            backgroundColor = WidgetColors.backgroundLightest,
+            modifier = GlanceModifier.fillMaxSize()
+        ) {
+            when (toDoWidgetUiState.state) {
+                WidgetState.Loading -> Loading()
+                WidgetState.Error -> Error()
+                WidgetState.Empty -> Empty()
+                WidgetState.NotLoggedIn -> NotLoggedIn()
+                WidgetState.Content -> ListContent(toDoWidgetUiState.plannerItems.groupBy { it.date }.toList())
+            }
+            Box(
+                contentAlignment = Alignment.TopEnd,
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(8.dp)
+            ) {
+                Image(
+                    provider = ImageProvider(resId = R.drawable.ic_canvas_logo_student),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(colorProvider = WidgetColors.textLightest),
+                    modifier = GlanceModifier
+                        .size(32.dp)
+                        .cornerRadius(20.dp)
+                        .background(WidgetColors.textDanger)
+                        .padding(8.dp)
+                        .clickable {
+
+                        }
+                )
+            }
+            Box(
+                contentAlignment = Alignment.BottomEnd,
+                modifier = GlanceModifier
+                    .fillMaxSize()
+                    .padding(8.dp)
+            ) {
+                Image(
+                    provider = ImageProvider(resId = R.drawable.ic_add_lined),
+                    contentDescription = null,
+                    colorFilter = ColorFilter.tint(
+                        colorProvider = ColorProvider(
+                            color = Color(color = ThemePrefs.buttonTextColor)
+                        )
+                    ),
+                    modifier = GlanceModifier
+                        .size(32.dp)
+                        .cornerRadius(20.dp)
+                        .background(
+                            colorProvider = ColorProvider(
+                                color = Color(color = ThemePrefs.buttonColor)
+                            )
+                        )
+                        .padding(8.dp)
+                        .clickable {
+
+                        }
+                )
+            }
+        }
+    }
+
+    @Composable
+    private fun ListContent(
+        daysWithItems: List<Pair<LocalDate, List<WidgetPlannerItem>>>
     ) {
         LazyColumn(
             modifier = GlanceModifier.fillMaxSize()
@@ -163,7 +162,7 @@ class ToDoWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun DayItemContent(day: LocalDate, items: List<PlannerItem>, lastItem: Boolean) {
+    private fun DayItemContent(day: LocalDate, items: List<WidgetPlannerItem>, lastItem: Boolean) {
         Column {
             Row(
                 modifier = GlanceModifier.padding(vertical = 8.dp)
@@ -214,7 +213,7 @@ class ToDoWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun PlannerItemContent(plannerItem: PlannerItem, lastItem: Boolean) {
+    private fun PlannerItemContent(plannerItem: WidgetPlannerItem, lastItem: Boolean) {
         Column(
             modifier = GlanceModifier.padding(bottom = if (lastItem) 0.dp else 8.dp)
         ) {
@@ -222,11 +221,11 @@ class ToDoWidget : GlanceAppWidget() {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 val canvasContextColorProvider = ColorProvider(
-                    color = Color(color = plannerItem.canvasContext.color)
+                    color = Color(color = plannerItem.canvasContextColor)
                 )
 
                 Image(
-                    provider = getIconForPlannerItem(plannerItem),
+                    provider = ImageProvider(resId = plannerItem.iconRes),
                     contentDescription = null,
                     colorFilter = ColorFilter.tint(colorProvider = canvasContextColorProvider),
                     modifier = GlanceModifier.size(16.dp)
@@ -245,7 +244,7 @@ class ToDoWidget : GlanceAppWidget() {
                     modifier = GlanceModifier.width(4.dp)
                 )
                 Text(
-                    text = plannerItem.canvasContext.contextId,
+                    text = plannerItem.canvasContextText,
                     style = TextStyle(
                         color = canvasContextColorProvider,
                         fontSize = 12.sp
@@ -253,75 +252,61 @@ class ToDoWidget : GlanceAppWidget() {
                 )
             }
             Text(
-                text = plannerItem.plannable.title,
+                text = plannerItem.title,
                 style = TextStyle(
                     color = WidgetColors.textDarkest,
                     fontSize = 14.sp
                 )
             )
-            val dateText = getDateTextForPlannerItem(plannerItem)
-            dateText?.let {
-                Text(
-                    text = it,
-                    style = TextStyle(
-                        color = WidgetColors.textDark,
-                        fontSize = 12.sp
+            Text(
+                text = plannerItem.dateText,
+                style = TextStyle(
+                    color = WidgetColors.textDark,
+                    fontSize = 12.sp
+                )
+            )
+        }
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 250, heightDp = 200)
+    @Composable
+    private fun ToDoWidgetPreview() {
+        ContextKeeper.appContext = LocalContext.current
+        AndroidThreeTen.init(LocalContext.current)
+        Content(
+            ToDoWidgetUiState(
+                state = WidgetState.Content,
+                plannerItems = listOf(
+                    WidgetPlannerItem(
+                        date = LocalDate.now(),
+                        iconRes = R.drawable.ic_assignment,
+                        canvasContextColor = android.graphics.Color.BLUE,
+                        canvasContextText = "BIO 101",
+                        title = "Test",
+                        dateText = "7:00 AM to 7:30 AM",
+                        url = "https://www.instructure.com"
+                    ),
+                    WidgetPlannerItem(
+                        date = LocalDate.now(),
+                        iconRes = R.drawable.ic_quiz,
+                        canvasContextColor = android.graphics.Color.GREEN,
+                        canvasContextText = "GA 101",
+                        title = "Test 2",
+                        dateText = "7:00 AM to 7:30 AM",
+                        url = "https://www.instructure.com"
+                    ),
+                    WidgetPlannerItem(
+                        date = LocalDate.now().plusDays(1),
+                        iconRes = R.drawable.ic_calendar,
+                        canvasContextColor = android.graphics.Color.RED,
+                        canvasContextText = "MAT 101",
+                        title = "Test 3",
+                        dateText = "7:00 AM to 7:30 AM",
+                        url = "https://www.instructure.com"
                     )
                 )
-            }
-        }
-    }
-
-    @Composable
-    private fun getIconForPlannerItem(plannerItem: PlannerItem): ImageProvider {
-        val iconRes = when (plannerItem.plannableType) {
-            PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_assignment
-            PlannableType.QUIZ -> R.drawable.ic_quiz
-            PlannableType.CALENDAR_EVENT -> R.drawable.ic_calendar
-            PlannableType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
-            PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
-            else -> R.drawable.ic_calendar
-        }
-
-        return ImageProvider(iconRes)
-    }
-
-    @Composable
-    fun getDateTextForPlannerItem(plannerItem: PlannerItem): String? {
-        val context = LocalContext.current
-
-        return when (plannerItem.plannableType) {
-            PlannableType.PLANNER_NOTE -> {
-                plannerItem.plannable.todoDate.toDate()?.let {
-                    val dateText = DateHelper.dayMonthDateFormat.format(it)
-                    val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                    context.getString(R.string.calendarAtDateTime, dateText, timeText)
-                }
-            }
-
-            PlannableType.CALENDAR_EVENT -> {
-                val startDate = plannerItem.plannable.startAt
-                val endDate = plannerItem.plannable.endAt
-                if (startDate != null && endDate != null) {
-                    val dateText = DateHelper.dayMonthDateFormat.format(startDate)
-                    val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
-                    val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
-
-                    when {
-                        plannerItem.plannable.allDay == true -> dateText
-                        startDate == endDate -> context.getString(R.string.calendarAtDateTime, dateText, startText)
-                        else -> context.getString(R.string.calendarFromTo, dateText, startText, endText)
-                    }
-                } else null
-            }
-
-            else -> {
-                plannerItem.plannable.dueAt?.let {
-                    val dateText = DateHelper.dayMonthDateFormat.format(it)
-                    val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                    context.getString(R.string.calendarDueDate, dateText, timeText)
-                }
-            }
-        }
+            )
+        )
     }
 }

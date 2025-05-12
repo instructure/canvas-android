@@ -16,7 +16,6 @@
 package com.instructure.pandautils.features.calendar
 
 import android.content.Context
-import androidx.annotation.DrawableRes
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -32,6 +31,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.toLocalDate
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -282,7 +282,7 @@ class CalendarViewModel @Inject constructor(
                     it.plannable.id,
                     contextName = getContextNameForPlannerItem(it),
                     canvasContext = it.canvasContext,
-                    iconRes = getIconForPlannerItem(it),
+                    iconRes = it.getIconForPlannerItem(),
                     name = it.plannable.title,
                     date = getDateForPlannerItem(it),
                     status = getStatusForPlannerItem(it)
@@ -307,18 +307,6 @@ class CalendarViewModel @Inject constructor(
             }
         } else {
             plannerItem.contextName.orEmpty()
-        }
-    }
-
-    @DrawableRes
-    private fun getIconForPlannerItem(plannerItem: PlannerItem): Int {
-        return when (plannerItem.plannableType) {
-            PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_assignment
-            PlannableType.QUIZ -> R.drawable.ic_quiz
-            PlannableType.CALENDAR_EVENT -> R.drawable.ic_calendar
-            PlannableType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
-            PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
-            else -> R.drawable.ic_calendar
         }
     }
 
