@@ -49,5 +49,6 @@ query SubmissionContent($userId: ID!, $assignmentId: ID!) {
         }
         groupId
         state
+        userId
     }
 }

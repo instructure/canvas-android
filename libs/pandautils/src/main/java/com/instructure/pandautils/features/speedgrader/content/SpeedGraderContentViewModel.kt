@@ -57,7 +57,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         val submission = repository.getSubmission(assignmentId, studentId)
 
         val content = getContent(submission)
-        _uiState.update { it.copy(content = content) }
+        _uiState.update { it.copy(content = content, assigneeId = (submission.submission?.groupId ?: submission.submission?.userId)?.toLong()) }
     }
 
     private fun getContent(submissionData: SubmissionContentQuery.Data): GradeableContent {
@@ -94,7 +94,7 @@ class SpeedGraderContentViewModel @Inject constructor(
 
                 // File uploads
                 SubmissionType.ONLINE_UPLOAD -> submission.attachments?.get(0)?.let {
-                    getAttachmentContent(it)
+                    getAttachmentContent(it, submission.assignment?.courseId?.toLong(), (submission.groupId ?: submission.userId)?.toLong())
                 } ?: UnsupportedContent
 
                 // URL Submission
@@ -119,7 +119,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private fun getAttachmentContent(attachment: SubmissionContentQuery.Attachment1): GradeableContent {
+    private fun getAttachmentContent(attachment: SubmissionContentQuery.Attachment1, courseId: Long?, assigneeId: Long?): GradeableContent {
         var type = attachment.contentType ?: return OtherAttachmentContent(
             Attachment(
                 contentType = attachment.contentType,
@@ -139,9 +139,9 @@ class SpeedGraderContentViewModel @Inject constructor(
             type == "application/pdf" || (attachment.thumbnailUrl?.contains("canvadoc")
                 ?: false) -> {
                 if (attachment.thumbnailUrl?.contains("canvadoc") == true) {
-                    PdfContent(attachment.thumbnailUrl ?: "")
+                    PdfContent(attachment.thumbnailUrl.orEmpty(), courseId, assigneeId)
                 } else {
-                    PdfContent(attachment.url ?: "")
+                    PdfContent(attachment.url.orEmpty(), courseId, assigneeId)
                 }
             }
 

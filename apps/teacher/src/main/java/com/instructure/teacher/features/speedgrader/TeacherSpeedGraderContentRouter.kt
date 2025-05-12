@@ -29,6 +29,7 @@ import com.instructure.pandautils.features.speedgrader.content.NoSubmissionConte
 import com.instructure.pandautils.features.speedgrader.content.NoneContent
 import com.instructure.pandautils.features.speedgrader.content.OnPaperContent
 import com.instructure.pandautils.features.speedgrader.content.OtherAttachmentContent
+import com.instructure.pandautils.features.speedgrader.content.PdfContent
 import com.instructure.pandautils.features.speedgrader.content.QuizContent
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRoute
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
@@ -37,6 +38,7 @@ import com.instructure.pandautils.features.speedgrader.content.UnsupportedConten
 import com.instructure.pandautils.features.speedgrader.content.UrlContent
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.teacher.R
+import com.instructure.teacher.fragments.PdfSubmissionFragment
 import com.instructure.teacher.fragments.SimpleWebViewFragment
 import com.instructure.teacher.fragments.SpeedGraderEmptyFragment
 import com.instructure.teacher.fragments.SpeedGraderLtiSubmissionFragment
@@ -142,6 +144,15 @@ class TeacherSpeedGraderContentRouter(private val resources: Resources) : SpeedG
                 SpeedGraderEmptyFragment::class.java,
                 SpeedGraderEmptyFragment.createBundle(
                     message = resources.getString(R.string.speedGraderAnonymousSubmissionMessage)
+                )
+            )
+
+            is PdfContent -> SpeedGraderContentRoute(
+                PdfSubmissionFragment::class.java,
+                PdfSubmissionFragment.createBundle(
+                    url = content.url,
+                    courseId = content.courseId ?: 0L,
+                    assigneeId = content.assigneeId ?: 0L
                 )
             )
 

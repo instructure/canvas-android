@@ -45,13 +45,13 @@ class RequestInterceptor : Interceptor {
         val params: RestParams
         params = when {
             request.tag(RestParams::class.java) != null -> {
-                request.tag(RestParams::class.java) ?: RestParams()
+                request.tag(RestParams::class.java) ?: RestParams(disableFileVerifiers = false)
             }
             request.tag() != null && request.tag() is RestParams -> {
                 request.tag() as RestParams
             }
             else -> {
-                RestParams()
+                RestParams(disableFileVerifiers = false)
             }
         }
 

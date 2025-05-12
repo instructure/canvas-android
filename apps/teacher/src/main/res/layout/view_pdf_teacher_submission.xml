@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2025 - present  Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/pdfStudentRoot"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
+        android:id="@+id/loadingView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        app:pclv_indeterminate="true"
+        app:pclv_override_color="@color/login_studentAppTheme"/>
+
+    <LinearLayout
+        android:id="@+id/retryLoadingContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:importantForAccessibility="no"
+            android:src="@drawable/ic_warning"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/error_loading_submission"/>
+
+        <Button
+            android:id="@+id/retryLoadingButton"
+            style="@style/ButtonStyle"
+            android:layout_width="wrap_content"
+            android:layout_marginTop="48dp"
+            android:text="@string/retry"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:id="@+id/contentRoot"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
+            android:id="@+id/annotationToolbarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
+            android:id="@+id/inspectorCoordinatorLayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <ImageView
+            android:id="@+id/commentsButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:padding="10dp"
+            android:background="@drawable/bg_annotation_comments"
+            android:clickable="true"
+            android:contentDescription="@string/comments"
+            android:elevation="2dp"
+            android:visibility="gone"
+            android:tint="@color/white"
+            app:srcCompat="@drawable/ic_discussion"
+            tools:visibility="visible"
+            android:focusable="true" />
+
+        <FrameLayout
+            android:id="@+id/content"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipChildren="false"
+            android:clipToPadding="false"/>
+
+        <FrameLayout
+            android:id="@+id/loadingContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/backgroundLightest"
+            android:visibility="gone"
+            tools:visibility="visible">
+
+            <com.instructure.pandautils.views.ProgressiveCanvasLoadingView
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:pclv_override_color="@color/login_teacherAppTheme"
+                app:pclv_progress="1"/>
+
+        </FrameLayout>
+
+    </FrameLayout>
+
+</FrameLayout>

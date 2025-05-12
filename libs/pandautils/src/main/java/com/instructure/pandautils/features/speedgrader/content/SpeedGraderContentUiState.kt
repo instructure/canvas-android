@@ -21,7 +21,8 @@ import com.instructure.canvasapi2.models.Attachment
 import kotlinx.parcelize.Parcelize
 
 data class SpeedGraderContentUiState(
-    val content: GradeableContent? = null
+    val content: GradeableContent? = null,
+    val assigneeId: Long? = null
 )
 
 @Parcelize
@@ -32,7 +33,11 @@ class ExternalToolContent(val url: String) : GradeableContent()
 object OnPaperContent : GradeableContent()
 object UnsupportedContent : GradeableContent()
 class OtherAttachmentContent(val attachment: Attachment) : GradeableContent()
-class PdfContent(val url: String) : GradeableContent()
+class PdfContent(
+    val url: String,
+    val courseId: Long? = null,
+    val assigneeId: Long? = null
+) : GradeableContent()
 class TextContent(val text: String) : GradeableContent()
 class ImageContent(val url: String, val contentType: String) : GradeableContent()
 class UrlContent(val url: String, val previewUrl: String?) : GradeableContent()
