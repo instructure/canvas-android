@@ -33,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -104,6 +105,7 @@ fun CanvasThemedTextField(
                         color = colorResource(R.color.textDark),
                         fontSize = 16.sp,
                         fontFamily = FontFamily(Font(R.font.lato_font_family)),
+                        modifier = Modifier.clearAndSetSemantics {  }
                     )
                 }
             } else {

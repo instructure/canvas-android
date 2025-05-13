@@ -2064,4 +2064,5 @@
     <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
     <string name="a11y_searchAssignments">Search Assignments</string>
     <string name="dueAssignmentListItem">Due %1$s</string>
+    <string name="a11y_searchAmongRecipients">Search among Recipients</string>
 </resources>

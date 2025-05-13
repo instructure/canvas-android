@@ -47,6 +47,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -123,6 +125,11 @@ fun <T> MultipleValuesRow(
                         modifier = Modifier
                             .padding(4.dp)
                             .fillMaxWidth()
+                            .semantics {
+                                uiState.searchFieldContentDescription?.let {
+                                    contentDescription = it
+                                }
+                            }
                     )
                     DropdownMenu(
                         expanded = uiState.isShowResults,
@@ -186,6 +193,7 @@ data class MultipleValuesRowState<T>(
     val selectedValues: List<T> = emptyList(),
     val enabled: Boolean = true,
     val isLoading: Boolean = false,
+    val searchFieldContentDescription: String? = null,
     val isSearchEnabled: Boolean = false,
     val isShowResults: Boolean = false,
     val searchQuery: TextFieldValue = TextFieldValue(""),
