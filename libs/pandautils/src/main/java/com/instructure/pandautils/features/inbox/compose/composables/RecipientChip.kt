@@ -64,9 +64,11 @@ fun RecipientChip(
             .testTag("recipientChip")
             .clearAndSetSemantics {
                 contentDescription = recipient.name.orEmpty()
-                onClick(removeRecipientLabel) {
-                    onRemove()
-                    true
+                if (enabled ) {
+                    onClick(removeRecipientLabel) {
+                        onRemove()
+                        true
+                    }
                 }
             }
     ) {
@@ -97,7 +99,9 @@ fun RecipientChip(
             IconButton(
                 enabled = enabled,
                 onClick = { onRemove() },
-                modifier = Modifier.size(20.dp)
+                modifier = Modifier
+                    .size(20.dp)
+                    .testTag("removeButton")
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_close),
