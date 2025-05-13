@@ -57,7 +57,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         val submission = repository.getSubmission(assignmentId, studentId)
 
         val content = getContent(submission)
-        _uiState.update { it.copy(content = content, assigneeId = (submission.submission?.groupId ?: submission.submission?.userId)?.toLong()) }
+        _uiState.update { it.copy(content = content, assigneeId = submission.submission?.groupId?.toLongOrNull() ?: submission.submission?.userId?.toLongOrNull()) }
     }
 
     private suspend fun getContent(submissionData: SubmissionContentQuery.Data): GradeableContent {
@@ -70,8 +70,6 @@ class SpeedGraderContentViewModel @Inject constructor(
                 ?: emptyList()).fastMap { it.rawValue } -> OnPaperContent
 
             submission?.submissionType == null -> NoSubmissionContent
-//            assignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_MISSING ||
-//                    assignment.getState(submission) == AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING -> NoSubmissionContent
             else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType?.rawValue!!)) {
 
                 // LTI submission
