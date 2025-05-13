@@ -16,7 +16,8 @@
  */
 package com.instructure.canvasapi2.managers
 
-import com.instructure.canvasapi2.PineGraphQLClient
+import com.instructure.canvasapi2.PineGraphQLClientConfig
+import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.pine.PingQuery
 import com.instructure.pine.QueryDocumentMutation
 import com.instructure.pine.UpsertDocumentMutation
@@ -35,7 +36,7 @@ enum class UpsertDocumentType(val apiValue: String) {
 }
 
 class PineApiManager @Inject constructor(
-    private val pineClient: PineGraphQLClient
+    private val pineClient: PineGraphQLClientConfig
 ) {
     suspend fun upsertDocument(
         source: DocumentSource,
@@ -53,7 +54,9 @@ class PineApiManager @Inject constructor(
                 text = text,
             )
         )
-        pineClient.enqueueMutation(mutation).dataAssertNoErrors
+        QLClientConfig
+            .enqueueMutation(mutation, block = pineClient.createClientConfigBlock())
+            .dataAssertNoErrors
     }
 
     suspend fun queryDocument(
@@ -68,14 +71,18 @@ class PineApiManager @Inject constructor(
                 metadata = JSONObject(metadata).toString(),
             )
         )
-        val result = pineClient.enqueueMutation(mutation).dataAssertNoErrors.query
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = pineClient.createClientConfigBlock())
+            .dataAssertNoErrors.query
 
         return result.response
     }
 
     suspend fun ping(): String {
         val query = PingQuery()
-        val result = pineClient.enqueueQuery(query).dataAssertNoErrors.ping
+        val result = QLClientConfig
+            .enqueueQuery(query, block = pineClient.createClientConfigBlock())
+            .dataAssertNoErrors.ping
 
         return result
     }

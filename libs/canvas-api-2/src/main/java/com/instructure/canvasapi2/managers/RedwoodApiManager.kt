@@ -17,7 +17,8 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
-import com.instructure.canvasapi2.RedwoodGraphQLClient
+import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.NoteFilterInput
@@ -26,7 +27,7 @@ import java.util.Date
 import javax.inject.Inject
 
 class RedwoodApiManager @Inject constructor(
-    private val redwoodClient: RedwoodGraphQLClient,
+    private val redwoodClient: RedwoodGraphQLClientConfig,
 ) {
     suspend fun getNotes(
         filter: NoteFilterInput? = null,
@@ -44,7 +45,9 @@ class RedwoodApiManager @Inject constructor(
             before = Optional.presentIfNotNull(before?.toApiString()),
             orderBy = Optional.presentIfNotNull(orderBy),
         )
-        val result = redwoodClient.enqueueQuery(query).dataAssertNoErrors.notes
+        val result = QLClientConfig
+            .enqueueQuery(query, block = redwoodClient.createClientConfigBlock())
+            .dataAssertNoErrors.notes
 
         return result
     }

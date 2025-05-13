@@ -17,7 +17,8 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
-import com.instructure.canvasapi2.CedarGraphQLClient
+import com.instructure.canvasapi2.CedarGraphQLClientConfig
+import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.cedar.AnswerPromptMutation
 import com.instructure.cedar.EvaluateTopicResponseMutation
 import com.instructure.cedar.GenerateQuizMutation
@@ -48,7 +49,7 @@ data class EvaluatedTopic(
 )
 
 class CedarApiManager @Inject constructor(
-    private val cedarClient: CedarGraphQLClient
+    private val cedarClient: CedarGraphQLClientConfig
 ) {
     private val model: String = "anthropic.claude-3-sonnet-20240229-v1:0"
     suspend fun answerPrompt(
@@ -62,7 +63,9 @@ class CedarApiManager @Inject constructor(
                 document = Optional.presentIfNotNull(documentBlock),
             )
         )
-        val result = cedarClient.enqueueMutation(mutation).dataAssertNoErrors.answerPrompt
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors.answerPrompt
 
         return result
     }
@@ -77,7 +80,9 @@ class CedarApiManager @Inject constructor(
                 numberOfParagraphs.toDouble(),
             )
         )
-        val result = cedarClient.enqueueMutation(mutation).dataAssertNoErrors.summarizeContent
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors.summarizeContent
 
         return result.summarization
     }
@@ -88,10 +93,12 @@ class CedarApiManager @Inject constructor(
         numberOfOptionsPerQuestion: Int = 4,
         maxLengthOfQuestions: Int = 100
     ): List<GeneratedQuiz> {
-        val query = GenerateQuizMutation(
+        val mutation = GenerateQuizMutation(
             QuizInput(context, numberOfQuestions.toDouble(), numberOfOptionsPerQuestion.toDouble(), maxLengthOfQuestions.toDouble())
         )
-        val result = cedarClient.enqueueMutation(query).dataAssertNoErrors
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors
 
         return result.generateQuiz.map {
             GeneratedQuiz(
@@ -112,7 +119,9 @@ class CedarApiManager @Inject constructor(
                 comparisonText = comparisonText,
             )
         )
-        val result = cedarClient.enqueueMutation(mutation).dataAssertNoErrors.evaluateTopicResponse
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors.evaluateTopicResponse
 
         return EvaluatedTopic(
             complianceStatus = result.complianceStatus,
@@ -135,7 +144,9 @@ class CedarApiManager @Inject constructor(
                 sourceLanguage = Optional.presentIfNotNull(sourceLanguage)
             )
         )
-        val result = cedarClient.enqueueMutation(mutation).dataAssertNoErrors.translateText
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors.translateText
 
         return result.translation
     }
@@ -152,13 +163,17 @@ class CedarApiManager @Inject constructor(
                 sourceLanguage = Optional.presentIfNotNull(sourceLanguage)
             )
         )
-        val result = cedarClient.enqueueMutation(mutation).dataAssertNoErrors.translateHTML
+        val result = QLClientConfig
+            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors.translateHTML
         return result.translation
     }
 
     suspend fun sayHello(): String {
         val query = SayHelloQuery()
-        val result = cedarClient.enqueueQuery(query).dataAssertNoErrors.sayHello
+        val result = QLClientConfig
+            .enqueueQuery(query, block = cedarClient.createClientConfigBlock())
+            .dataAssertNoErrors.sayHello
 
         return result
     }
