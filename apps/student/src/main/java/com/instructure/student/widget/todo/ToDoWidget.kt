@@ -52,6 +52,7 @@ import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
@@ -172,7 +173,8 @@ class ToDoWidget : GlanceAppWidget() {
                     modifier = GlanceModifier
                         .width(40.dp)
                 ) {
-                    val dayTextColor = if (day == LocalDate.now()) {
+                    val isToday = day == LocalDate.now()
+                    val dayTextColor = if (isToday) {
                         ColorProvider(color = Color(color = ThemePrefs.brandColor))
                     } else {
                         WidgetColors.textDark
@@ -188,13 +190,30 @@ class ToDoWidget : GlanceAppWidget() {
                             fontSize = 12.sp
                         )
                     )
-                    Text(
-                        text = day.dayOfMonth.toString(),
-                        style = TextStyle(
-                            color = dayTextColor,
-                            fontSize = 12.sp
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = day.dayOfMonth.toString(),
+                            style = TextStyle(
+                                color = dayTextColor,
+                                fontSize = 12.sp,
+                                fontWeight = if (isToday) {
+                                    FontWeight.Bold
+                                } else {
+                                    FontWeight.Normal
+                                }
+                            )
                         )
-                    )
+                        if (isToday) {
+                            Image(
+                                provider = ImageProvider(resId = R.drawable.ic_circle_stroke),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(colorProvider = dayTextColor),
+                                modifier = GlanceModifier.size(32.dp)
+                            )
+                        }
+                    }
                 }
                 Column {
                     items.forEachIndexed { index, item ->

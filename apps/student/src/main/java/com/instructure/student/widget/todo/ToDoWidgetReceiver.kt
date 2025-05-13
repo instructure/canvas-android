@@ -24,6 +24,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -42,6 +43,8 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
+
+private const val PLANNER_DATE_RANGE_DAYS = 28L
 
 @AndroidEntryPoint
 class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -83,19 +86,33 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
             }
 
             try {
+                val courses = repository.getFavouriteCourses(true)
+                val groups = repository.getFavouriteGroups(true)
+
+                val contextCodes = buildList {
+                    addAll(courses.map { it.contextId })
+                    addAll(groups.map { it.contextId })
+                    apiPrefs.user?.contextId?.let { add(it) }
+                }
+
                 val now = LocalDateTime.now()
                 val plannerItems = repository.getPlannerItems(
                     now.toApiString().orEmpty(),
-                    now.plusDays(28).toApiString().orEmpty(),
+                    now.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
+                    contextCodes,
                     true
                 )
 
-                val state = if (plannerItems.isEmpty()) {
-                    WidgetState.Empty
-                } else {
-                    WidgetState.Content
-                }
-                val toDoWidgetUiState = ToDoWidgetUiState(state, plannerItems.map { it.toWidgetPlannerItem(context) })
+                val toDoWidgetUiState = ToDoWidgetUiState(
+                    if (plannerItems.isEmpty()) {
+                        WidgetState.Empty
+                    } else {
+                        WidgetState.Content
+                    },
+                    plannerItems.map {
+                        it.toWidgetPlannerItem(context, courses)
+                    }
+                )
                 setState(toDoWidgetUiState)
             } catch (e: Exception) {
                 setState(ToDoWidgetUiState(WidgetState.Error))
@@ -105,23 +122,45 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
         }
     }
 
-    private fun PlannerItem.toWidgetPlannerItem(context: Context) = WidgetPlannerItem(
+    private fun PlannerItem.toWidgetPlannerItem(
+        context: Context,
+        courses: List<Course>
+    ) = WidgetPlannerItem(
         date = this.plannableDate.toLocalDate(),
         iconRes = this.getIconForPlannerItem(),
         canvasContextColor = this.canvasContext.color,
-        canvasContextText = this.canvasContext.name.orEmpty(),
+        canvasContextText = getContextNameForPlannerItem(context, courses),
         title = this.plannable.title,
         dateText = this.getDateTextForPlannerItem(context).orEmpty(),
         url = this.htmlUrl.orEmpty(),
     )
 
+    private fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: List<Course>): String {
+        val courseCode = courses.find { it.id == this.canvasContext.id }?.courseCode
+        return when (this.plannableType) {
+            PlannableType.PLANNER_NOTE -> {
+                if (this.contextName.isNullOrEmpty()) {
+                    context.getString(R.string.userCalendarToDo)
+                } else {
+                    context.getString(R.string.courseToDo, courseCode)
+                }
+            }
+
+            else -> {
+                if (this.canvasContext is Course) {
+                    courseCode.orEmpty()
+                } else {
+                    this.contextName.orEmpty()
+                }
+            }
+        }
+    }
+
     private fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
         return when (this.plannableType) {
             PlannableType.PLANNER_NOTE -> {
                 this.plannable.todoDate.toDate()?.let {
-                    val dateText = DateHelper.dayMonthDateFormat.format(it)
-                    val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                    context.getString(R.string.calendarAtDateTime, dateText, timeText)
+                    DateHelper.getFormattedTime(context, it)
                 }
             }
 
@@ -129,23 +168,21 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
                 val startDate = this.plannable.startAt
                 val endDate = this.plannable.endAt
                 if (startDate != null && endDate != null) {
-                    val dateText = DateHelper.dayMonthDateFormat.format(startDate)
                     val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
                     val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
 
                     when {
-                        this.plannable.allDay == true -> dateText
-                        startDate == endDate -> context.getString(R.string.calendarAtDateTime, dateText, startText)
-                        else -> context.getString(R.string.calendarFromTo, dateText, startText, endText)
+                        this.plannable.allDay == true -> context.getString(R.string.widgetAllDay)
+                        startDate == endDate -> startText
+                        else -> context.getString(R.string.widgetFromTo, startText, endText)
                     }
                 } else null
             }
 
             else -> {
                 this.plannable.dueAt?.let {
-                    val dateText = DateHelper.dayMonthDateFormat.format(it)
                     val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                    context.getString(R.string.calendarDueDate, dateText, timeText)
+                    context.getString(R.string.widgetDueDate, timeText)
                 }
             }
         }
