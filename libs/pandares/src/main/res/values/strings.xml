@@ -1798,6 +1798,7 @@
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
     <string name="noStudentsRefresh">Refresh</string>
     <string name="noGrade">No Grade</string>
+    <string name="noGrades">No Grades</string>
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
     <string name="parentNoCoursesMessage">Your student’s courses might not be published yet.</string>

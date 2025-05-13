@@ -30,9 +30,12 @@ class GradesWidgetRepository(
         val restParams =
             RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
 
-        return coursesApi.getFirstPageCoursesWithGradingScheme(restParams)
+        val courses = coursesApi.getFirstPageCoursesWithGradingScheme(restParams)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, restParams) }
-            .dataOrThrow
+            .dataOrNull.orEmpty()
+
+        return courses
             .filter { it.isFavorite && it.isCurrentEnrolment() && !it.isInvited() }
+            .ifEmpty { courses }
     }
 }

@@ -19,6 +19,7 @@
 package com.instructure.student.di
 
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.router.EnabledTabs
@@ -49,9 +50,11 @@ class ApplicationModule {
 
     @Provides
     fun provideToDoWidgetRepository(
-        plannerApi: PlannerAPI.PlannerInterface
+        plannerApi: PlannerAPI.PlannerInterface,
+        coursesApi: CourseAPI.CoursesInterface,
+        groupApi: GroupAPI.GroupInterface
     ): ToDoWidgetRepository {
-        return ToDoWidgetRepository(plannerApi)
+        return ToDoWidgetRepository(plannerApi, coursesApi, groupApi)
     }
 
     @Provides
