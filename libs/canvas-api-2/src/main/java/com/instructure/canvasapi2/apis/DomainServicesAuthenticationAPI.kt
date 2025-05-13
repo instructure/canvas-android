@@ -16,29 +16,18 @@
  */
 package com.instructure.canvasapi2.apis
 
-import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.DomainService
 import com.instructure.canvasapi2.models.JWTTokenResponse
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.http.POST
 import retrofit2.http.Query
+import retrofit2.http.Tag
 
-object DomainServicesAuthenticationAPI {
-    internal interface DomainServicesInterface {
-        @POST("jwts")
-        suspend fun getDomainServiceAuthentication(
-            @Query("audience") audience: String,
-            @Query("workflows[]") workflows: String
-        ): DataResult<JWTTokenResponse>
-    }
-
+interface DomainServicesAuthenticationAPI {
+    @POST("jwts")
     suspend fun getDomainServiceAuthentication(
-        domainService: DomainService,
-        adapter: RestBuilder,
-        params: RestParams
-    ): DataResult<JWTTokenResponse> {
-        return adapter.build(DomainServicesInterface::class.java, params)
-            .getDomainServiceAuthentication(domainService.audience.replace("https://", ""), domainService.workflows)
-    }
+        @Query("audience") audience: String,
+        @Query("workflows[]") workflows: String,
+        @Tag params: RestParams
+    ): DataResult<JWTTokenResponse>
 }

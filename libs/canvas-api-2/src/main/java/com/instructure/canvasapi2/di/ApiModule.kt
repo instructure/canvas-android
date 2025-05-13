@@ -401,8 +401,8 @@ class ApiModule {
     }
 
     @Provides
-    fun provideDomainServicesApi(): DomainServicesAuthenticationAPI {
-        return DomainServicesAuthenticationAPI
+    fun provideDomainServicesAuthenticationAPI(): DomainServicesAuthenticationAPI {
+        return RestBuilder().build(DomainServicesAuthenticationAPI::class.java, RestParams())
     }
 
     @Provides

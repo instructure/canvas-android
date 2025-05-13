@@ -16,6 +16,8 @@
  */
 package com.instructure.canvasapi2
 
+import com.google.gson.Gson
+import com.instructure.canvasapi2.models.DomainServicesError
 import okhttp3.Interceptor
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
@@ -58,13 +60,18 @@ class DomainServicesResponseInterceptor : Interceptor {
         // Map 200 to 401 when body contains unathorized error
         if (response.code == 200) {
             val body = response.body
-            val bodyString = body?.string()
-            if (bodyString != null && bodyString.contains("UNAUTHENTICATED") && bodyString.contains("401")) {
-                builder
-                    .body(bodyString.toResponseBody(body.contentType())) // Body can be consumed only once, so we need to set it again
-                    .code(401)
-            } else {
-                builder.body(bodyString?.toResponseBody(body.contentType())) // Body can be consumed only once, so we need to set it again
+            val bodyString = response.body?.string().orEmpty()
+            if (body != null) {
+                try {
+                    val error = Gson().fromJson(bodyString, DomainServicesError::class.java)
+                    if (error.errors.any { it.extensions.originalError.statusCode == 401L && it.extensions.originalError.message == "Unauthorized" }) {
+                        builder
+                            .body(bodyString.toResponseBody(body.contentType())) // Body can be consumed only once, so we need to set it again
+                            .code(401)
+                    }
+                } catch (e: Exception) {
+                    builder.body(bodyString.toResponseBody(body.contentType())) // Body can be consumed only once, so we need to set it again
+                }
             }
         }
 

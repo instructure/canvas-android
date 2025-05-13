@@ -27,11 +27,11 @@ import okhttp3.Response
 import okhttp3.Route
 import javax.inject.Inject
 
-abstract class DomainServicesAuthenticator: Authenticator {
+abstract class DomainServicesAuthenticator(
+    private val authenticationManager: DomainServicesAuthenticationManager
+): Authenticator {
     private val retryHeader = "mobile_refresh"
     private val authHeader = "Authorization"
-
-    protected abstract val authenticationManager: DomainServicesAuthenticationManager
 
     override fun authenticate(route: Route?, response: Response): Request? {
         if (response.request.header(retryHeader) != null) {
@@ -49,18 +49,12 @@ abstract class DomainServicesAuthenticator: Authenticator {
 
 class PineAuthenticator @Inject constructor(
     pineAuthenticationManager: PineAuthenticationManager
-) : DomainServicesAuthenticator() {
-    override val authenticationManager = pineAuthenticationManager
-}
+) : DomainServicesAuthenticator(pineAuthenticationManager)
 
 class CedarAuthenticator @Inject constructor(
     cedarAuthenticationManager: CedarAuthenticationManager
-) : DomainServicesAuthenticator() {
-    override val authenticationManager = cedarAuthenticationManager
-}
+) : DomainServicesAuthenticator(cedarAuthenticationManager)
 
 class RedwoodAuthenticator @Inject constructor(
     redwoodAuthenticationManager: RedwoodAuthenticationManager
-) : DomainServicesAuthenticator() {
-    override val authenticationManager = redwoodAuthenticationManager
-}
+) : DomainServicesAuthenticator(redwoodAuthenticationManager)

@@ -16,11 +16,12 @@
  */
 package com.instructure.canvasapi2
 
+import android.content.Context
 import com.instructure.canvasapi2.utils.CedarAuthenticator
-import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DomainServicesAuthenticator
 import com.instructure.canvasapi2.utils.PineAuthenticator
 import com.instructure.canvasapi2.utils.RedwoodAuthenticator
+import dagger.hilt.android.qualifiers.ApplicationContext
 import okhttp3.Cache
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
@@ -29,9 +30,14 @@ import java.io.File
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
-abstract class DomainServicesAdapter {
-    private val timeoutSeconds = 60
-    protected val cacheSize = (20 * 1024 * 1024).toLong()
+abstract class DomainServicesAdapter(
+    cacheDirectory: File,
+    private val authenticator: DomainServicesAuthenticator,
+    private val requestInterceptor: DomainServicesRequestInterceptor
+) {
+    private val timeoutSeconds = TIMEOUT_SECONDS
+    private val cacheSize = CACHE_SIZE
+    private val cache: Cache = Cache(cacheDirectory, cacheSize)
     private val dispatcher = Dispatcher()
     private val loggingInterceptor = HttpLoggingInterceptor().apply {
         if (BuildConfig.DEBUG) {
@@ -41,10 +47,6 @@ abstract class DomainServicesAdapter {
         }
     }
 
-    protected abstract val cacheDirectory: File
-    protected abstract val cache: Cache
-    protected abstract val authenticator: DomainServicesAuthenticator
-    protected abstract val requestInterceptor: DomainServicesRequestInterceptor
 
     fun buildOHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
@@ -57,34 +59,39 @@ abstract class DomainServicesAdapter {
             .authenticator(authenticator)
             .build()
     }
+
+    companion object {
+        const val CACHE_SIZE = (20 * 1024 * 1024).toLong()
+        const val TIMEOUT_SECONDS = 60
+    }
 }
 
 class PineAdapter @Inject constructor(
+    @ApplicationContext context: Context,
     pineRequestInterceptor: PineRequestInterceptor,
     pineAuthenticator: PineAuthenticator
-) : DomainServicesAdapter() {
-    override val cacheDirectory = File(ContextKeeper.appContext.cacheDir, "pine_cache")
-    override val cache: Cache = Cache(cacheDirectory, cacheSize)
-    override val authenticator = pineAuthenticator
-    override val requestInterceptor = pineRequestInterceptor
-}
+) : DomainServicesAdapter(
+    File(context.cacheDir, "pine_cache"),
+    pineAuthenticator,
+    pineRequestInterceptor
+)
 
 class CedarAdapter @Inject constructor(
+    @ApplicationContext context: Context,
     cedarRequestInterceptor: CedarRequestInterceptor,
     cedarAuthenticator: CedarAuthenticator
-) : DomainServicesAdapter() {
-    override val cacheDirectory = File(ContextKeeper.appContext.cacheDir, "cedar_cache")
-    override val cache: Cache = Cache(cacheDirectory, cacheSize)
-    override val authenticator = cedarAuthenticator
-    override val requestInterceptor = cedarRequestInterceptor
-}
+) : DomainServicesAdapter(
+    File(context.cacheDir, "cedar_cache"),
+    cedarAuthenticator,
+    cedarRequestInterceptor
+)
 
 class RedwoodAdapter @Inject constructor(
+    @ApplicationContext context: Context,
     redwoodRequestInterceptor: RedwoodRequestInterceptor,
     redwoodAuthenticator: RedwoodAuthenticator
-) : DomainServicesAdapter() {
-    override val cacheDirectory = File(ContextKeeper.appContext.cacheDir, "redwood_cache")
-    override val cache: Cache = Cache(cacheDirectory, cacheSize)
-    override val authenticator = redwoodAuthenticator
-    override val requestInterceptor = redwoodRequestInterceptor
-}
+) : DomainServicesAdapter(
+    File(context.cacheDir, "redwood_cache"),
+    redwoodAuthenticator,
+    redwoodRequestInterceptor
+)

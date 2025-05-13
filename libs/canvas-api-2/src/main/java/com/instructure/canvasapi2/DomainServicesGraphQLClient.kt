@@ -24,16 +24,15 @@ import okhttp3.OkHttpClient
 import javax.inject.Inject
 
 abstract class DomainServicesGraphQLClient: QLClientConfig() {
-    override var fetchPolicy = HttpFetchPolicy.NetworkOnly // We don't need to cache AI responses
-
     suspend fun <DATA : Query.Data, T : Query<DATA>> enqueueQuery(
         query: T,
         forceNetwork: Boolean = false,
     ): ApolloResponse<DATA> {
-        val originalFetchPolicy = fetchPolicy
-        if (forceNetwork) fetchPolicy = HttpFetchPolicy.NetworkOnly
-        val result = buildClient().query(query).execute()
-        fetchPolicy = originalFetchPolicy
+        val refreshFetchPolicy = if (forceNetwork)
+            HttpFetchPolicy.NetworkOnly
+        else
+            HttpFetchPolicy.CacheFirst
+        val result = buildClient(refreshFetchPolicy).query(query).execute()
 
         return result
     }

@@ -58,7 +58,7 @@ open class QLClientConfig {
     open var fetchPolicy: HttpFetchPolicy = HttpFetchPolicy.CacheFirst
 
     /** Builds a new [ApolloClient] based on the current config values. */
-    fun buildClient(): ApolloClient {
+    fun buildClient(customFetchPolicy: HttpFetchPolicy? = null): ApolloClient {
         val builder = ApolloClient.Builder()
             .serverUrl(url)
             .okHttpClient(httpClient)
@@ -66,7 +66,7 @@ open class QLClientConfig {
             .addCustomScalarAdapter(URL.type, stringAdapter)
             .addCustomScalarAdapter(GraphQLID.type, stringAdapter)
             .httpCache(cacheFile, CACHE_SIZE)
-            .httpFetchPolicy(fetchPolicy)
+            .httpFetchPolicy(customFetchPolicy ?: fetchPolicy)
             .httpExpireTimeout(TimeUnit.HOURS.toMillis(1))
 
         return builder.build()
