@@ -78,11 +78,7 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
                     settings.setSupportZoom(true)
                     activity?.let { addVideoClient(it) }
                     setInitialScale(100)
-                },
-                    embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
-                        shouldLaunchInternalWebViewFragment = { _ -> true },
-                        launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
-                    ))
+                })
             }
 
             FilePreviewUiState.NoPreview -> {}

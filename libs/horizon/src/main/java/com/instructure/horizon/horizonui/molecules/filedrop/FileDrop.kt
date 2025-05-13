@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.horizonui.molecules.filedrop
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -126,7 +127,11 @@ sealed class FileDropItemState(
     ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.close)
 
-    data class NoLongerEditable(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
+    data class NoLongerEditable(
+        override val fileName: String,
+        override val onActionClick: () -> Unit = {},
+        override val onClick: () -> Unit = {}
+    ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.download)
 
     data class Error(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
@@ -153,28 +158,39 @@ fun FileDropItem(
                 .clickable { state.onClick() }
                 .padding(16.dp)
         ) {
-            when (state) {
-                is FileDropItemState.InProgress -> {
-                    Spinner(size = SpinnerSize.EXTRA_SMALL, hasStrokeBackground = true, progress = state.progress)
-                    HorizonSpace(SpaceSize.SPACE_8)
-                }
+            AnimatedContent(state) { targetState ->
+                when (targetState) {
+                    is FileDropItemState.InProgress -> {
+                        Spinner(
+                            size = SpinnerSize.EXTRA_SMALL,
+                            hasStrokeBackground = true,
+                            progress = targetState.progress,
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
 
-                is FileDropItemState.Success -> {
-                    Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null))
-                    HorizonSpace(SpaceSize.SPACE_8)
-                }
+                    is FileDropItemState.Success -> {
+                        Badge(
+                            type = BadgeType.Success,
+                            content = BadgeContent.Icon(R.drawable.check, null),
+                            modifier = Modifier.padding(end = 8.dp)
+                        )
+                    }
 
-                is FileDropItemState.Error -> {
-                    Icon(
-                        painter = painterResource(R.drawable.error),
-                        tint = HorizonColors.Text.error(),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    HorizonSpace(SpaceSize.SPACE_8)
-                }
+                    is FileDropItemState.Error -> {
+                        Icon(
+                            painter = painterResource(R.drawable.error),
+                            tint = HorizonColors.Text.error(),
+                            contentDescription = null,
+                            modifier = Modifier
+                                .padding(end = 8.dp)
+                                .size(24.dp)
+                        )
+                        HorizonSpace(SpaceSize.SPACE_8)
+                    }
 
-                else -> {}
+                    else -> {}
+                }
             }
             Text(text = state.fileName, style = HorizonTypography.p1, modifier = Modifier.weight(1f))
             HorizonSpace(SpaceSize.SPACE_8)
