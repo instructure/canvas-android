@@ -37,6 +37,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -51,6 +54,7 @@ fun RecipientChip(
     recipient: Recipient,
     onRemove: () -> Unit = {}
 ) {
+    val removeRecipientLabel = stringResource(id = R.string.a11y_removeRecipient)
     Box(
         modifier = Modifier
             .padding(4.dp)
@@ -58,6 +62,13 @@ fun RecipientChip(
             .background(colorResource(R.color.backgroundLightest))
             .border(1.dp, colorResource(R.color.borderMedium), CircleShape)
             .testTag("recipientChip")
+            .clearAndSetSemantics {
+                contentDescription = recipient.name.orEmpty()
+                onClick(removeRecipientLabel) {
+                    onRemove()
+                    true
+                }
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,

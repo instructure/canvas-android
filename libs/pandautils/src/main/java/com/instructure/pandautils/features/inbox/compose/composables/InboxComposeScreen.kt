@@ -55,6 +55,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -200,12 +201,19 @@ private fun InboxComposeScreenContent(
 
         AnimatedVisibility(visible = uiState.selectContextUiState.selectedCanvasContext != null && uiState.hiddenFields.isContextHidden.not()) {
             Column {
+                val context = LocalContext.current
+                val view = LocalView.current
                 MultipleValuesRow(
                     label = stringResource(R.string.recipientsTo),
                     uiState = uiState.inlineRecipientSelectorState,
                     itemComposable = { recipient, enabled ->
                         RecipientChip(enabled, recipient) {
                             actionHandler(InboxComposeActionHandler.RemoveRecipient(recipient))
+                            view.announceForAccessibility(
+                                context.getString(
+                                    com.instructure.pandautils.R.string.a11y_recipientIsRemoved,
+                                    recipient.name
+                                ))
                         }
                     },
                     actionHandler = { action ->
