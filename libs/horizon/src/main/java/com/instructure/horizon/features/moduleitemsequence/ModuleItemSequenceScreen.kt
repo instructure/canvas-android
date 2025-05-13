@@ -56,6 +56,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -147,6 +148,11 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
         modifier
             .align(Alignment.BottomEnd)
             .padding(end = 24.dp, bottom = 16.dp)
+            .shadow(
+                elevation = HorizonElevation.level4,
+                shape = HorizonCornerRadius.level6,
+                clip = false
+            )
             .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
             .animateContentSize()
     ) {
