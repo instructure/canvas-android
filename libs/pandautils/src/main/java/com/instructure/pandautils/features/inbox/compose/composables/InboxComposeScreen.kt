@@ -211,7 +211,7 @@ private fun InboxComposeScreenContent(
                             actionHandler(InboxComposeActionHandler.RemoveRecipient(recipient))
                             view.announceForAccessibility(
                                 context.getString(
-                                    com.instructure.pandautils.R.string.a11y_recipientIsRemoved,
+                                    R.string.a11y_recipientIsRemoved,
                                     recipient.name
                                 ))
                         }
