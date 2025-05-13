@@ -20,4 +20,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class PageDetailsUiState(
     val loadingState: LoadingState = LoadingState(),
     val pageHtmlContent: String? = null,
+    val ltiButtonPressed: ((String) -> Unit)? = null,
+    val urlToOpen: String? = null,
+    val onUrlOpened: () -> Unit = {},
 )

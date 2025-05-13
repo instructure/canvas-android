@@ -200,10 +200,10 @@
     <string name="a11y_correct">Correct</string>
     <string name="a11y_incorrect">Incorrect</string>
     <string name="assignmentDetails_instructions">Instructions</string>
-    <string name="modulePager_unlimitedAttempts">Unlimited attempts allowed</string>
+    <string name="modulePager_unlimitedAttempts">Unlimited Attempts Allowed</string>
     <plurals name="modulePager_numberOfAttemtps">
-        <item quantity="one">%d attempt allowed</item>
-        <item quantity="other">%d attempts allowed</item>
+        <item quantity="one">%d Attempt Allowed</item>
+        <item quantity="other">%d Attempts Allowed</item>
     </plurals>
     <string name="assignmentDetails_newAttempt">New Attempt</string>
     <string name="assignmentDetails_textSubmission">Your Text Submission</string>

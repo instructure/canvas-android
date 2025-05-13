@@ -67,12 +67,22 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.pandautils.views.JSInterface
 
 @Composable
 fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(uiState.urlToOpen) {
+        uiState.urlToOpen?.let { url ->
+            activity?.launchCustomTab(url, ThemePrefs.brandColor)
+            uiState.onUrlOpened()
+        }
+    }
+
     if (uiState.toolsBottomSheetUiState.show) {
         ActionBottomSheet(
             title = stringResource(R.string.assignmentDetails_tools),
@@ -93,7 +103,6 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         )
     }
 
-    val activity = LocalContext.current.getActivityOrNull()
     LoadingStateWrapper(loadingState = uiState.loadingState, containerColor = Color.Transparent) {
         Box(
             contentAlignment = Alignment.Center,
@@ -120,6 +129,9 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
+                        if (uiState.ltiButtonPressed != null) {
+                            addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
+                        }
                     },
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                         shouldLaunchInternalWebViewFragment = { _ -> true },

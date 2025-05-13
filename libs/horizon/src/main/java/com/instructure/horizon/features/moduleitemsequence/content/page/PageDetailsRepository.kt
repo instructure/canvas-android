@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
@@ -22,10 +23,18 @@ import com.instructure.canvasapi2.models.Page
 import javax.inject.Inject
 
 class PageDetailsRepository @Inject constructor(
-    private val pageApi: PageAPI.PagesInterface
+    private val pageApi: PageAPI.PagesInterface,
+    private val oAuthInterface: OAuthAPI.OAuthInterface
 ) {
     suspend fun getPageDetails(courseId: Long, pageId: String, forceNetwork: Boolean = false): Page {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return pageApi.getDetailedPage(CanvasContext.Type.COURSE.apiString, courseId, pageId, params).dataOrThrow
+    }
+
+    suspend fun authenticateUrl(url: String): String {
+        return oAuthInterface.getAuthenticatedSession(
+            url,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrNull?.sessionUrl ?: url
     }
 }

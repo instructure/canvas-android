@@ -15,8 +15,6 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
-import android.content.Context
-import android.content.Intent
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -27,11 +25,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.material3.Text
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -42,8 +39,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.content.FileProvider
-import androidx.media3.common.util.UnstableApi
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.filepreview.FilePreview
@@ -62,11 +57,8 @@ import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.ERROR
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.IN_PROGRESS
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState.STARTING
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.openFile
-import java.io.File
 
-@UnstableApi
 @Composable
 fun FileDetailsContentScreen(
     uiState: FileDetailsUiState,
@@ -154,7 +146,6 @@ fun FileDetailsContentScreen(
     }
 }
 
-@UnstableApi
 @Preview
 @Composable
 fun FileDetailsContentScreenPreview() {
@@ -167,7 +158,6 @@ fun FileDetailsContentScreenPreview() {
     )
 }
 
-@UnstableApi
 @Preview
 @Composable
 fun FileDetailsContentScreenErrorPreview() {

@@ -24,15 +24,18 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
+    private val htmlContentFormatter: HtmlContentFormatter,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -43,7 +46,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         MutableStateFlow(
             AssignmentDetailsUiState(
                 addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected),
-                toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet)
+                toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
+                ltiButtonPressed = ::ltiButtonPressed,
+                onUrlOpened = ::onUrlOpened,
             )
         )
 
@@ -73,10 +78,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
             }
 
+            val description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty())
+
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
-                    instructions = assignment.description.orEmpty(),
+                    instructions = description,
                     ltiUrl = assignment.externalToolAttributes?.url.orEmpty(),
                     submissionDetailsUiState = SubmissionDetailsUiState(
                         submissions = submissions,
@@ -147,5 +154,22 @@ class AssignmentDetailsViewModel @Inject constructor(
                 toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
             )
         }
+    }
+
+    private fun ltiButtonPressed(ltiUrl: String) {
+        viewModelScope.launch {
+            try {
+                val authenticatedSessionURL =
+                    assignmentDetailsRepository.authenticateUrl(ltiUrl)
+
+                _uiState.update { it.copy(urlToOpen = authenticatedSessionURL) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(urlToOpen = ltiUrl) }
+            }
+        }
+    }
+
+    private fun onUrlOpened() {
+        _uiState.update { it.copy(urlToOpen = null) }
     }
 }

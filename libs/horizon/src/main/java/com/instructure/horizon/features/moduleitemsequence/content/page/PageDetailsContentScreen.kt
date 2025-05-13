@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,9 +35,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.pandautils.views.JSInterface
 
 @Composable
 fun PageDetailsContentScreen(
@@ -45,6 +48,12 @@ fun PageDetailsContentScreen(
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(uiState.urlToOpen) {
+        uiState.urlToOpen?.let { url ->
+            activity?.launchCustomTab(url, ThemePrefs.brandColor)
+            uiState.onUrlOpened()
+        }
+    }
     uiState.pageHtmlContent?.let {
         Box(
             contentAlignment = Alignment.Center,
@@ -64,6 +73,9 @@ fun PageDetailsContentScreen(
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
+                        if (uiState.ltiButtonPressed != null) {
+                            addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
+                        }
                     },
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                         shouldLaunchInternalWebViewFragment = { _ -> true },

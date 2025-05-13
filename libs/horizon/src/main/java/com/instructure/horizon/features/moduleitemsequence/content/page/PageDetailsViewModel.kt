@@ -22,22 +22,25 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class PageDetailsViewModel @Inject constructor(
     private val pageDetailsRepository: PageDetailsRepository,
+    private val htmlContentFormatter: HtmlContentFormatter,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
     private val pageUrl: String = savedStateHandle[ModuleItemContent.Page.PAGE_URL] ?: ""
 
-    private val _uiState = MutableStateFlow(PageDetailsUiState())
+    private val _uiState = MutableStateFlow(PageDetailsUiState(ltiButtonPressed = ::ltiButtonPressed, onUrlOpened = ::onUrlOpened))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -50,10 +53,11 @@ class PageDetailsViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = true))
             }
             val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
+            val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty())
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
-                    pageHtmlContent = pageDetails.body
+                    pageHtmlContent = html
                 )
             }
             _uiState.update {
@@ -64,5 +68,22 @@ class PageDetailsViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
         }
+    }
+
+    private fun ltiButtonPressed(ltiUrl: String) {
+        viewModelScope.launch {
+            try {
+                val authenticatedSessionURL =
+                    pageDetailsRepository.authenticateUrl(ltiUrl)
+
+                _uiState.update { it.copy(urlToOpen = authenticatedSessionURL) }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(urlToOpen = ltiUrl) }
+            }
+        }
+    }
+
+    private fun onUrlOpened() {
+        _uiState.update { it.copy(urlToOpen = null) }
     }
 }

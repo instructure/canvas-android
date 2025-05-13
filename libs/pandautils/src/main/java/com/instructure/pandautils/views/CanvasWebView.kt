@@ -52,6 +52,7 @@ import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.MotionEvent
 import android.webkit.CookieManager
+import android.webkit.JavascriptInterface
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -835,3 +836,12 @@ data class HtmlFormatColors(
     @ColorRes val linkColor: Int = R.color.textInfo,
     @ColorRes val visitedLinkColor: Int = R.color.textMasquerade
 )
+
+class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
+
+    @JavascriptInterface
+    fun onLtiToolButtonPressed(id: String) {
+        val ltiUrl = URLDecoder.decode(id, "UTF-8")
+        onLtiButtonPressed(ltiUrl)
+    }
+}

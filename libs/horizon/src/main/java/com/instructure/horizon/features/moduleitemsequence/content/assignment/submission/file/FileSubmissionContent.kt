@@ -33,7 +33,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.util.UnstableApi
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.account.filepreview.FilePreview
@@ -47,7 +46,6 @@ import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.openFile
 
-@UnstableApi
 @Composable
 fun FileSubmissionContent(
     uiState: FileSubmissionContentUiState,
@@ -99,7 +97,6 @@ fun FileSubmissionContent(
     }
 }
 
-@UnstableApi
 @Preview(showBackground = true)
 @Composable
 fun FileSubmissionContentPreview() {

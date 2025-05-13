@@ -16,16 +16,25 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Assignment
 import javax.inject.Inject
 
 class AssignmentDetailsRepository @Inject constructor(
-    private val assignmentApi: AssignmentAPI.AssignmentInterface
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
+    private val oAuthInterface: OAuthAPI.OAuthInterface
 ) {
 
     suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
+    }
+
+    suspend fun authenticateUrl(url: String): String {
+        return oAuthInterface.getAuthenticatedSession(
+            url,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrNull?.sessionUrl ?: url
     }
 }

@@ -28,6 +28,9 @@ data class AssignmentDetailsUiState(
     val showSubmissionDetails: Boolean = false,
     val showAddSubmission: Boolean = false,
     val toolsBottomSheetUiState: ToolsBottomSheetUiState = ToolsBottomSheetUiState(),
+    val ltiButtonPressed: ((String) -> Unit)? = null,
+    val urlToOpen: String? = null,
+    val onUrlOpened: () -> Unit = {},
 )
 
 data class SubmissionDetailsUiState(
