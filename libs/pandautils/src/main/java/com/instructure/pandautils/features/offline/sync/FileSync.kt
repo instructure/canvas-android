@@ -105,7 +105,7 @@ class FileSync(
 
         val nonPublicFileIds = internalFileIdsToSync.minus(additionalPublicFilesToSync.map { it.id }.toSet())
         val nonPublicFiles = nonPublicFileIds.map {
-            fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false)).dataOrNull
+            fileFolderApi.getCourseFile(courseId, it, RestParams(isForceReadFromNetwork = false, shouldLoginOnTokenError = false)).dataOrNull
         }.filterNotNull()
 
         fileFolderDao.insertAll(nonPublicFiles.map { FileFolderEntity(it.copy(isHidden = true)) })
@@ -152,7 +152,7 @@ class FileSync(
         try {
             val downloadResult = fileDownloadApi.downloadFile(
                 fileSyncData.fileUrl,
-                RestParams(shouldIgnoreToken = fileSyncData.externalFile)
+                RestParams(shouldIgnoreToken = fileSyncData.externalFile, shouldLoginOnTokenError = false)
             )
 
             // External images can fail for various reasons (for example the file is no longer available),

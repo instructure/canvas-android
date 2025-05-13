@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2.utils
 
 import com.instructure.canvasapi2.builders.RestParams
+import okhttp3.Request
 import java.util.Locale
 
 /**
@@ -48,4 +49,18 @@ suspend fun <T>DataResult<List<T>>.depaginate(nextPageCall: suspend (nextUrl: St
     }
 
     return DataResult.Success(depaginatedList, apiType = apiType)
+}
+
+fun Request.restParams(): RestParams? {
+    return when {
+        this.tag(RestParams::class.java) != null -> {
+            this.tag(RestParams::class.java)
+        }
+
+        this.tag() != null && this.tag() is RestParams -> {
+            this.tag() as RestParams
+        }
+
+        else -> null
+    }
 }

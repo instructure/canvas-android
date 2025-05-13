@@ -444,6 +444,7 @@
     <string name="conversationDeletedFailed">تعذر حذف المحادثة</string>
     <string name="conversationUpdateFailed">تعذر تحديث المحادثة</string>
     <string name="sendIndividualMessage">إرسال رسالة فردية إلى كل متلق</string>
+    <string name="sendIndividualMessageIsMandatory">يمكنك فقط إرسال رسائل فردية لأكثر من 100 مستلم</string>
     <string name="invalidRecipients">غير مسموح لك بإرسال رسائل إلى أحد المتلقين المحددين أو أكثر.</string>
     <string name="newMessage">رسالة جديدة</string>
     <string name="forwardMessage">إعادة توجيه الرسالة</string>
@@ -1634,6 +1635,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">هذه المهمة لم تعد متوفرة.</string>
     <string name="editDashboardOfflineMode">أنت غير متصل بالإنترنت</string>
+    <string name="editDashboardNoResults">لا توجد نتائج</string>
+    <string name="editDashboardNoResultsMessage">لم يتم العثور على أي عناصر مطابقة.</string>
     <string name="editDashboardOfflineModeMessage">ليس لديك حاليًا أي مساقات غير متوفرة عبر الإنترنت.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">نجحت مزامنة المحتوى دون اتصال</string>
     <string name="offlineContentSyncFailureNotificationTitle">تعذرت مزامنة المحتوى دون اتصال</string>
@@ -1752,6 +1755,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">إضافة عنصر تقويم جديد</string>
     <string name="calendarFilterCalendars">التقويمات</string>
     <string name="calendarFilterUser">المستخدم</string>
+    <string name="calendarFilterFavoriteCourse">المساقات المفضلة</string>
+    <string name="calendarFilterMoreCourse">مزيد من المساقات</string>
     <string name="calendarFilterCourse">المساقات</string>
     <string name="calendarFilterGroup">المجموعات</string>
     <string name="calendarFilterExplanationLimited">حدد التقويمات التي تريد رؤيتها، حتى %d.</string>
@@ -1898,6 +1903,7 @@
     <string name="navigationDrawerLogOut">تسجيل الخروج</string>
     <string name="noStudentsError">لا يوجد طلاب</string>
     <string name="noStudentsErrorDescription">أنت لا تراقب أي طالب.</string>
+    <string name="noStudentsRefresh">تحديث</string>
     <string name="noGrade">لا توجد أي درجة</string>
     <string name="errorLoadingCourses">حدث خطأ أثناء تحميل مساقات الطالب لديك.</string>
     <string name="parentNoCourses">لا يوجد أي مساق</string>
@@ -1933,6 +1939,7 @@
     <string name="addNewStudent">إضافة طالب جديد</string>
     <string name="selectStudentColor">حدد اللون المخصص للطالب</string>
     <string name="errorSavingColor">حدث خطأ أثناء حفظ التحديد الخاص بك. يرجى إعادة المحاولة.</string>
+    <string name="manageStudentsColorSavedSuccessfully">تم حفظ اللون بنجاح</string>
     <string name="changeStudentColorLabel">تغيير اللون لـ %s</string>
     <string name="studentColorContentDescriptionBlue">أزرق، كهربائي</string>
     <string name="studentColorContentDescriptionPurple">أرجواني، برقوقي</string>
@@ -1942,6 +1949,7 @@
     <string name="studentColorContentDescriptionGreen">أخضر، النفل</string>
     <string name="featureFlags">علامات الميزة</string>
     <string name="addStudent">إضافة طالب</string>
+    <string name="addStudentSuccessfull">تم إضافة الطالب بنجاح</string>
     <string name="addStudentTitle">إضافة طالب بـ...</string>
     <string name="addStudentQrCodeTitle">رمز QR</string>
     <string name="addStudentQrCodeExplanation">يستطيع الطلاب إنشاء رمز QR باستخدام تطبيق Canvas Student على أجهزتهم المحمولة</string>
@@ -1989,6 +1997,7 @@
     <string name="alertSettingsThresholdLabel">النسبة المئوية للدرجة</string>
     <string name="unpairStudentTitle">حذف</string>
     <string name="unpairStudentMessage">سيؤدي هذا إلى إلغاء الإقران وإزالة جميع التسجيلات لهذا الطالب من حسابك.</string>
+    <string name="unpairStudentSuccessfull">تم حفظ الطالب بنجاح</string>
     <string name="alertSettingsMinThresholdError">يجب أن تزيد عن %d</string>
     <string name="alertSettingsMaxThresholdError">يجب أن تقل عن %d</string>
     <string name="alertSettingsErrorMessage">حدث خطأ أثناء إحضار إعدادات التنبيه.</string>
@@ -2009,13 +2018,16 @@
     <string name="errorLoadingGrades">أنت تواجه مشكلة في تحميل درجات الطالب. يرجى محاولة إعادة تحميل الصفحة أو إعادة المحاولة لاحقًا.</string>
     <string name="errorLoadingCourse">أنت تواجه مشكلة في تحميل تفاصيل مساق الطالب. يرجى محاولة إعادة تحميل الصفحة أو إعادة المحاولة لاحقًا.</string>
     <string name="gradesFilterContentDescription">عامل تصفية</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">تم تحديث تفضيلات الدرجة بنجاح. تم تحديث القائمة.</string>
     <string name="courseDetailsMessageContentDescription">إرسال رسالة حول هذا المساق</string>
     <string name="gradeLockedContentDescription">تم قفل الدرجة</string>
     <string name="gradesRefreshFailed">تعذر تحديث الدرجات</string>
     <string name="chooseACourseToMessage">اختر مساقاً لإرسال رسالة</string>
     <string name="regardingHiddenMessage">بخصوص: %1$s، %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">بخصوص: %1$s، المهمة - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">بخصوص: %1$s، الحدث - %2$s</string>
     <string name="sendMessageAboutAssignment">"إرسال رسالة حول هذه المهمة"</string>
+    <string name="sendMessageAboutEvent">"إرسال رسالة حول هذا الحدث"</string>
     <string name="forStudentLabel">بالنسبة لـ %1$s</string>
     <string name="view_description">وصف طريقة عرض</string>
     <string name="a11y_contentDescription_viewDescription">وصف طريقة عرض</string>
@@ -2054,6 +2066,11 @@
     <string name="frontPageRefreshFailed">تعذر تحديث الصفحة الأمامية</string>
     <string name="failed_to_load_summary">تعذر تحميل الملخص</string>
     <string name="no_summary_items_to_display">لا توجد عناصر ملخص متاحة للعرض</string>
+    <string name="a11y_summaryEventContentDescription">الحدث</string>
+    <string name="a11y_summaryLockedContentDescription">مؤمّن</string>
+    <string name="a11y_summaryQuizContentDescription">الاختبار الموجز</string>
+    <string name="a11y_summaryDiscussionContentDescription">النقاش</string>
+    <string name="a11y_summaryAssignmentContentDescription">المهمة</string>
     <string name="scheduleItemNoDueDate">لا يوجد تاريخ استحقاق</string>
     <string name="a11y_refresh">تحديث</string>
     <string name="masqueradingAs">أنت تتصرف باعتبارك %s</string>
@@ -2096,4 +2113,27 @@
     <string name="a11y_indeterminate">تم التحديد جزئيًا</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s، %2$s، %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">تم تحديث عوامل التصفية</string>
+    <string name="inboxAllRecipients">كل المستلمين</string>
+    <string name="inboxSearchIn">البحث في %1$s</string>
+    <string name="a11y_studentSelectorExpand">توسيع</string>
+    <string name="a11y_studentSelectorCollapse">طي</string>
+    <string name="a11y_studentSelectorContentDescription">انقر لـ %s محدد الطلاب، الطالب المحدد هو: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">حدد الطالب %s</string>
+    <string name="inboxSettingsTitle">علبة الوارد</string>
+    <string name="inboxSettingsInboxSignature">توقيع صندوق الوارد</string>
+    <string name="inboxSignatureNotSet">غير معيّن</string>
+    <string name="inboxSignatureEnabled">تم التمكين</string>
+    <string name="inboxSignatureScreenTitle">توقيع صندوق الوارد</string>
+    <string name="inboxSignatureScreenSubtitle">سيضاف التوقيع في نهاية كل الرسائل.</string>
+    <string name="inboxSignatureSwitchLabel">التوقيع</string>
+    <string name="inboxSignatureTextfieldHeader">نص التوقيع</string>
+    <string name="due_dateTime">تاريخ الاستحقاق: %1$s، %2$s</string>
+    <string name="a11y_contentDescription_filter">عامل تصفية</string>
+    <string name="a11y_contentDescription_postPolicy">سياسة النشر</string>
+    <string name="late">متأخر</string>
+    <string name="a11y_contentDescription_expand">توسيع</string>
+    <string name="missingTag">مفقود</string>
+    <string name="submissionFilter">عامل تصفية الإرسال</string>
+    <string name="submissionMessageSubject">%1$s في %2$s</string>
+    <string name="all">الكل</string>
 </resources>

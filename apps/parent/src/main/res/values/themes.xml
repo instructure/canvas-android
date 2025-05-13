@@ -33,5 +33,6 @@
         <item name="android:editTextStyle">@style/NoGifEditText</item>
         <item name="editTextStyle">@style/NoGifEditText</item>
         <item name="fontFamily">@font/lato_font_family</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 </resources>

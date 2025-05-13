@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2024 - present Instructure, Inc.
+  ~ Copyright (C) 2017 - present Instructure, Inc.
   ~
   ~     Licensed under the Apache License, Version 2.0 (the "License");
   ~     you may not use this file except in compliance with the License.
@@ -93,7 +93,7 @@
     <string name="oneMile">1 mile (1.6 km)</string>
     <string name="miles">miles</string>
     <string name="kilometers">km</string>
-    F
+F
     <!-- String for submitting tickets -->
     <string name="device">Device</string>
     <string name="osVersion">OS Version</string>

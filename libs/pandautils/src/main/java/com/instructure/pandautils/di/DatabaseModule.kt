@@ -1,7 +1,17 @@
 package com.instructure.pandautils.di
 
 import com.instructure.pandautils.room.appdatabase.AppDatabase
-import com.instructure.pandautils.room.appdatabase.daos.*
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
+import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
 import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import dagger.Module
@@ -70,7 +80,19 @@ class DatabaseModule {
 
     @Provides
     @Singleton
+    fun provideFileDownloadProgressDao(appDatabase: AppDatabase): FileDownloadProgressDao {
+        return appDatabase.fileDownloadProgressDao()
+    }
+
+    @Provides
+    @Singleton
     fun provideCalendarFilterDao(calendarFilterDatabase: CalendarFilterDatabase): CalendarFilterDao {
         return calendarFilterDatabase.calendarFilterDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideAssignmentListSelectedFiltersEntityDao(appDatabase: AppDatabase): AssignmentListSelectedFiltersEntityDao {
+        return appDatabase.assignmentListSelectedFiltersEntityDao()
     }
 }
