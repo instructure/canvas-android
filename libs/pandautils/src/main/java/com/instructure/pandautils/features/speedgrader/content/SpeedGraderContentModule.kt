@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader.content
 
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import dagger.Module
 import dagger.Provides
@@ -30,9 +31,10 @@ class SpeedGraderContentModule {
 
     @Provides
     fun provideSpeedGraderContentRepository(
-        submissionContentManager: SubmissionContentManager
+        submissionContentManager: SubmissionContentManager,
+        submissionApi: SubmissionAPI.SubmissionInterface
     ): SpeedGraderContentRepository {
-        return SpeedGraderContentRepository(submissionContentManager)
+        return SpeedGraderContentRepository(submissionContentManager, submissionApi)
     }
 }
 

@@ -17,13 +17,21 @@
 package com.instructure.pandautils.features.speedgrader.content
 
 import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.models.Submission
 
 class SpeedGraderContentRepository(
-    private val submissionContentManager: SubmissionContentManager
+    private val submissionContentManager: SubmissionContentManager,
+    private val submissionApi: SubmissionAPI.SubmissionInterface
 ) {
 
     suspend fun getSubmission(assignmentId: Long, studentId: Long): SubmissionContentQuery.Data {
         return submissionContentManager.getSubmissionContent(studentId, assignmentId)
+    }
+
+    suspend fun getSingleSubmission(courseId: Long,assignmentId: Long, studentId: Long): Submission? {
+        return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, RestParams(isForceReadFromNetwork = false)).dataOrNull
     }
 }

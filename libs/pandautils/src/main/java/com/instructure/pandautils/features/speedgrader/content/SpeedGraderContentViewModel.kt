@@ -60,7 +60,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         _uiState.update { it.copy(content = content, assigneeId = (submission.submission?.groupId ?: submission.submission?.userId)?.toLong()) }
     }
 
-    private fun getContent(submissionData: SubmissionContentQuery.Data): GradeableContent {
+    private suspend fun getContent(submissionData: SubmissionContentQuery.Data): GradeableContent {
         val submission = submissionData.submission
         return when {
             SubmissionType.NONE.apiString in (submission?.assignment?.submissionTypes
@@ -119,29 +119,37 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private fun getAttachmentContent(attachment: SubmissionContentQuery.Attachment1, courseId: Long?, assigneeId: Long?): GradeableContent {
+    private suspend fun getAttachmentContent(attachment: SubmissionContentQuery.Attachment1, courseId: Long?, assigneeId: Long?): GradeableContent {
+        // TODO remove; We need this now, because the GraphQL query doesn't return file verifiers.
+        val submission = courseId?.let {
+            repository.getSingleSubmission(courseId, assignmentId, studentId)
+        }
+
+        val thumbnailUrl = submission?.attachments?.firstOrNull()?.thumbnailUrl ?: attachment.thumbnailUrl.orEmpty()
+        val url = submission?.attachments?.firstOrNull()?.url ?: attachment.url.orEmpty()
+        val previewUrl = submission?.attachments?.firstOrNull()?.previewUrl ?: attachment.submissionPreviewUrl.orEmpty()
+
         var type = attachment.contentType ?: return OtherAttachmentContent(
             Attachment(
                 contentType = attachment.contentType,
                 createdAt = attachment.createdAt,
                 displayName = attachment.displayName,
-                thumbnailUrl = attachment.thumbnailUrl,
-                url = attachment.url
+                thumbnailUrl = thumbnailUrl,
+                url = url
             )
         )
         if (type == "*/*") {
             val fileExtension = attachment.title?.substringAfterLast(".") ?: ""
             type = MimeTypeMap.getSingleton().getMimeTypeFromExtension(fileExtension)
-                ?: MimeTypeMap.getFileExtensionFromUrl(attachment.url)
+                ?: MimeTypeMap.getFileExtensionFromUrl(url)
                         ?: type
         }
         return when {
-            type == "application/pdf" || (attachment.thumbnailUrl?.contains("canvadoc")
-                ?: false) -> {
-                if (attachment.thumbnailUrl?.contains("canvadoc") == true) {
-                    PdfContent(attachment.thumbnailUrl.orEmpty(), courseId, assigneeId)
+            type == "application/pdf" || previewUrl.contains("canvadoc") -> {
+                if (previewUrl.contains("canvadoc")) {
+                    PdfContent(previewUrl, courseId, assigneeId)
                 } else {
-                    PdfContent(attachment.url.orEmpty(), courseId, assigneeId)
+                    PdfContent(url, courseId, assigneeId)
                 }
             }
 
@@ -157,7 +165,7 @@ class SpeedGraderContentViewModel @Inject constructor(
             }
 
             type.startsWith("image") -> ImageContent(
-                attachment.url.orEmpty(),
+                url,
                 attachment.contentType!!
             )
 
@@ -166,8 +174,8 @@ class SpeedGraderContentViewModel @Inject constructor(
                     contentType = attachment.contentType,
                     createdAt = attachment.createdAt,
                     displayName = attachment.displayName,
-                    thumbnailUrl = attachment.thumbnailUrl,
-                    url = attachment.url
+                    thumbnailUrl = thumbnailUrl,
+                    url = url
                 )
             )
         }
@@ -180,7 +188,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         } else {
             QuizContent(
                 assignment.courseId!!.toLong(),
-                assignment.id.toLong(),
+                assignmentId,
                 studentId,
                 submission.previewUrl.orEmpty(),
                 QuizSubmission.parseWorkflowState(submission.state.rawValue) == QuizSubmission.WorkflowState.PENDING_REVIEW

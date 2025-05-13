@@ -13,7 +13,8 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.teacher.features.speedgrader
+ */
+package com.instructure.teacher.features.speedgrader
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -50,6 +51,7 @@ import com.instructure.teacher.view.AnnotationCommentDeleted
 import com.instructure.teacher.view.AnnotationCommentEdited
 import com.pspdfkit.preferences.PSPDFKitPreferences
 import com.pspdfkit.ui.inspector.PropertyInspectorCoordinatorLayout
+import com.pspdfkit.ui.special_mode.manager.AnnotationManager
 import com.pspdfkit.ui.toolbar.ToolbarCoordinatorLayout
 import kotlinx.coroutines.Job
 import okhttp3.ResponseBody
@@ -57,14 +59,19 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 
-class PdfTeacherSubmissionView(private val activity: FragmentActivity,
-                               private val pdfUrl: String,
-                               private val courseId: Long,
-                               private val assigneeId: Long,
-                               private val fragmentManager: FragmentManager,
-                               private val peerReviews: Boolean = false,
-                               private val studentAnnotationSubmit: Boolean = false,
-                               private val studentAnnotationView: Boolean = false,) : PdfSubmissionView(activity, studentAnnotationView, courseId) {
+class PdfTeacherSubmissionView(
+    private val activity: FragmentActivity,
+    private val pdfUrl: String,
+    private val courseId: Long,
+    private val assigneeId: Long,
+    private val fragmentManager: FragmentManager,
+    private val peerReviews: Boolean = false,
+    private val studentAnnotationSubmit: Boolean = false,
+    private val studentAnnotationView: Boolean = false,
+    private val enableViewPager: (Boolean) -> Unit,
+) : PdfSubmissionView(activity, studentAnnotationView, courseId),
+    AnnotationManager.OnAnnotationCreationModeChangeListener,
+    AnnotationManager.OnAnnotationEditingModeChangeListener {
 
     private val binding: ViewPdfTeacherSubmissionBinding
 
@@ -85,13 +92,15 @@ class PdfTeacherSubmissionView(private val activity: FragmentActivity,
         get() = R.color.login_studentAppTheme
 
     init {
-        if (!PSPDFKitPreferences.get(getContext()).isAnnotationCreatorSet) {
-            PSPDFKitPreferences.get(getContext()).setAnnotationCreator(ApiPrefs.user?.name)
+        if (!PSPDFKitPreferences.get(context).isAnnotationCreatorSet) {
+            PSPDFKitPreferences.get(context).setAnnotationCreator(ApiPrefs.user?.name)
         }
 
         binding = ViewPdfTeacherSubmissionBinding.inflate(LayoutInflater.from(context), this, true)
 
         setLoading(true)
+
+        setup()
     }
 
     private fun setLoading(isLoading: Boolean) {
@@ -107,23 +116,48 @@ class PdfTeacherSubmissionView(private val activity: FragmentActivity,
     override fun attachDocListener() {
         if (peerReviews.not()) {
             // We don't need to do annotations if there are anonymous peer reviews
-            if(docSession.annotationMetadata?.canWrite() == true) {
+            if (docSession.annotationMetadata?.canWrite() == true) {
                 if ((context as Activity).isTablet)
-                    pdfFragment?.setInsets(0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 68f, context.resources.displayMetrics).toInt(), 0, 0)
+                    pdfFragment?.setInsets(
+                        0,
+                        TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            68f,
+                            context.resources.displayMetrics
+                        ).toInt(),
+                        0,
+                        0
+                    )
                 else
-                    pdfFragment?.setInsets(0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 60f, context.resources.displayMetrics).toInt(), 0, 0)
+                    pdfFragment?.setInsets(
+                        0,
+                        TypedValue.applyDimension(
+                            TypedValue.COMPLEX_UNIT_DIP,
+                            60f,
+                            context.resources.displayMetrics
+                        ).toInt(),
+                        0,
+                        0
+                    )
             }
             super.attachDocListener()
         } else {
-            pdfFragment?.setInsets(0, TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 4f, context.resources.displayMetrics).toInt(), 0, 0)
+            pdfFragment?.setInsets(
+                0,
+                TypedValue.applyDimension(
+                    TypedValue.COMPLEX_UNIT_DIP,
+                    4f,
+                    context.resources.displayMetrics
+                ).toInt(),
+                0,
+                0
+            )
         }
     }
 
     override fun onAttachedToWindow() {
         super.onAttachedToWindow()
         EventBus.getDefault().register(this)
-
-        setup()
     }
 
     override fun onDetachedFromWindow() {
@@ -132,13 +166,19 @@ class PdfTeacherSubmissionView(private val activity: FragmentActivity,
         EventBus.getDefault().unregister(this)
     }
 
-    override fun disableViewPager() {}
-    override fun enableViewPager() {}
+    override fun disableViewPager() {
+        enableViewPager(false)
+    }
+
+    override fun enableViewPager() {
+        enableViewPager(true)
+    }
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
     @SuppressLint("CommitTransaction")
     override fun setFragment(fragment: Fragment) {
-        if (isAttachedToWindow) fragmentManager.beginTransaction().replace(binding.content.id, fragment).commitNowAllowingStateLoss()
+        if (isAttachedToWindow) fragmentManager.beginTransaction()
+            .replace(binding.content.id, fragment).commitNowAllowingStateLoss()
     }
 
     override fun removeContentFragment() {
@@ -152,13 +192,27 @@ class PdfTeacherSubmissionView(private val activity: FragmentActivity,
         NoInternetConnectionDialog.show(fragmentManager)
     }
 
-    override fun showAnnotationComments(commentList: ArrayList<CanvaDocAnnotation>, headAnnotationId: String, docSession: DocSession, apiValues: ApiValues) {
-        val bundle = AnnotationCommentListFragment.makeBundle(commentList, headAnnotationId, docSession, apiValues, assigneeId)
+    override fun showAnnotationComments(
+        commentList: ArrayList<CanvaDocAnnotation>,
+        headAnnotationId: String,
+        docSession: DocSession,
+        apiValues: ApiValues
+    ) {
+        val bundle = AnnotationCommentListFragment.makeBundle(
+            commentList,
+            headAnnotationId,
+            docSession,
+            apiValues,
+            assigneeId
+        )
         //if isTablet, we need to prevent the sliding panel from moving opening all the way with the keyboard
-        if(context.isTablet) {
+        if (context.isTablet) {
             setIsCurrentlyAnnotating(true)
         }
-        RouteMatcher.route(activity as FragmentActivity, Route(AnnotationCommentListFragment::class.java, null, bundle))
+        RouteMatcher.route(
+            activity as FragmentActivity,
+            Route(AnnotationCommentListFragment::class.java, null, bundle)
+        )
     }
 
     override fun showFileError() {
@@ -177,7 +231,8 @@ class PdfTeacherSubmissionView(private val activity: FragmentActivity,
     fun onAnnotationCommentEdited(event: AnnotationCommentEdited) {
         if (event.assigneeId == assigneeId) {
             //update the annotation in the hashmap
-            commentRepliesHashMap[event.annotation.inReplyTo]?.find { it.annotationId == event.annotation.annotationId }?.contents = event.annotation.contents
+            commentRepliesHashMap[event.annotation.inReplyTo]?.find { it.annotationId == event.annotation.annotationId }?.contents =
+                event.annotation.contents
         }
     }
 
@@ -200,8 +255,15 @@ class PdfTeacherSubmissionView(private val activity: FragmentActivity,
     fun onAnnotationCommentDeleteAcknowledged(event: AnnotationCommentDeleteAcknowledged) {
         if (event.assigneeId == assigneeId) {
             deleteJob = tryWeave {
-                for(annotation in event.annotationList) {
-                    awaitApi<ResponseBody> { CanvaDocsManager.deleteAnnotation(apiValues.sessionId, annotation.annotationId, apiValues.canvaDocsDomain, it) }
+                for (annotation in event.annotationList) {
+                    awaitApi<ResponseBody> {
+                        CanvaDocsManager.deleteAnnotation(
+                            apiValues.sessionId,
+                            annotation.annotationId,
+                            apiValues.canvaDocsDomain,
+                            it
+                        )
+                    }
                     commentRepliesHashMap[annotation.inReplyTo]?.remove(annotation)
                 }
             } catch {

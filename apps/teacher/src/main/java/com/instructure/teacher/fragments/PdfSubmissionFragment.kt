@@ -20,19 +20,25 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import com.instructure.pandautils.base.BaseCanvasFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.teacher.features.speedgrader.PdfTeacherSubmissionView
 
 class PdfSubmissionFragment : BaseCanvasFragment() {
 
+    private val sharedViewModel: SpeedGraderSharedViewModel by activityViewModels()
+
     private var pdfUrl by StringArg()
     private var courseId by LongArg()
     private var assigneeId by LongArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return PdfTeacherSubmissionView(requireActivity(), pdfUrl, courseId, assigneeId, childFragmentManager)
+        return PdfTeacherSubmissionView(requireActivity(), pdfUrl, courseId, assigneeId, childFragmentManager) {
+            sharedViewModel.enableViewPager(it)
+        }
     }
 
     companion object {

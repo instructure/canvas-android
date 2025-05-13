@@ -98,6 +98,14 @@
 
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/backgroundDarkest</item>
+        <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
+        <item name="pspdf__annotationCreationToolbarIconsStyle">@style/AnnotationCreationToolbarIconsStyle</item>
+        <item name="pspdf__annotationEditingToolbarIconsStyle">@style/AnnotationEditingToolbarIconsStyle</item>
+        <item name="pspdf__stampPickerStyle">@style/StampPickerStyle</item>
+        <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
+        <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
+        <item name="pspdf__backgroundColor">@color/backgroundLight</item>
+        <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
     </style>
 
     <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">

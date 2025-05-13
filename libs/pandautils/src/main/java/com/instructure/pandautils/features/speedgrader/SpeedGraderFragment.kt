@@ -23,6 +23,7 @@ import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.ComposeView
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -45,6 +46,8 @@ class SpeedGraderFragment : BaseCanvasFragment() {
 
     private val viewModel: SpeedGraderViewModel by viewModels()
 
+    private val sharedViewModel: SpeedGraderSharedViewModel by activityViewModels()
+
     private val courseId by LongArg(key = Const.COURSE_ID)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -62,7 +65,7 @@ class SpeedGraderFragment : BaseCanvasFragment() {
             setContent {
                 CanvasTheme {
                     val uiState by viewModel.uiState.collectAsState()
-                    SpeedGraderScreen(uiState) {
+                    SpeedGraderScreen(uiState, sharedViewModel) {
                         requireActivity().onBackPressedDispatcher.onBackPressed()
                     }
                 }

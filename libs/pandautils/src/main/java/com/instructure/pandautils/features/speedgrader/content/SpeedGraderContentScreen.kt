@@ -16,13 +16,10 @@
  */
 package com.instructure.pandautils.features.speedgrader.content
 
-import android.view.View
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.compose.AndroidFragment
@@ -31,8 +28,6 @@ import dagger.hilt.android.EarlyEntryPoints
 
 @Composable
 fun SpeedGraderContentScreen() {
-
-    val containerId by rememberSaveable { mutableStateOf(View.generateViewId()) }
 
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
