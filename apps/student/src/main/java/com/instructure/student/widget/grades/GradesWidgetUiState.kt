@@ -30,5 +30,6 @@ data class WidgetCourseItem(
     val isLocked: Boolean,
     val gradeText: String?,
     @ColorInt val courseColorLight: Int,
-    @ColorInt val courseColorDark: Int
+    @ColorInt val courseColorDark: Int,
+    val url: String
 )

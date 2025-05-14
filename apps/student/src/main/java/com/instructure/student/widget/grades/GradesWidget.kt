@@ -18,6 +18,7 @@
 package com.instructure.student.widget.grades
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
@@ -30,8 +31,10 @@ import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.LocalSize
+import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
 import androidx.glance.appwidget.provideContent
@@ -53,6 +56,7 @@ import androidx.glance.unit.ColorProvider
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.fromJson
+import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.glance.WidgetTextStyles
@@ -96,7 +100,16 @@ class GradesWidget : GlanceAppWidget() {
             ) {
                 itemsIndexed(items = state.courses) { index, item ->
                     Row(
-                        modifier = GlanceModifier.fillMaxSize().padding(8.dp, 8.dp),
+                        modifier = GlanceModifier.fillMaxSize()
+                            .padding(8.dp, 8.dp)
+                            .clickable(
+                                actionStartActivity(
+                                    InterwebsToApplication.createIntent(
+                                        ContextKeeper.appContext,
+                                        Uri.parse(item.url)
+                                    )
+                                )
+                            ),
                         verticalAlignment = Alignment.Vertical.CenterVertically
                     ) {
                         Text(
@@ -205,7 +218,8 @@ class GradesWidget : GlanceAppWidget() {
                 isLocked = false,
                 gradeText = "82%",
                 courseColorLight = 0xFF2573DF.toInt(),
-                courseColorDark = 0xFF2573DF.toInt()
+                courseColorDark = 0xFF2573DF.toInt(),
+                ""
             ),
             WidgetCourseItem(
                 name = "Mathematics 904 2024/25",
@@ -213,7 +227,8 @@ class GradesWidget : GlanceAppWidget() {
                 isLocked = false,
                 gradeText = "Good",
                 courseColorLight = 0xFF9E58BD.toInt(),
-                courseColorDark = 0xFF9E58BD.toInt()
+                courseColorDark = 0xFF9E58BD.toInt(),
+                ""
             ),
             WidgetCourseItem(
                 name = "Music Test Course something longer than a line or two for sh...",
@@ -221,7 +236,8 @@ class GradesWidget : GlanceAppWidget() {
                 isLocked = false,
                 gradeText = "A+",
                 courseColorLight = 0xFF197EAB.toInt(),
-                courseColorDark = 0xFF197EAB.toInt()
+                courseColorDark = 0xFF197EAB.toInt(),
+                ""
             ),
             WidgetCourseItem(
                 name = "English Literature 101",
@@ -229,7 +245,8 @@ class GradesWidget : GlanceAppWidget() {
                 isLocked = true,
                 gradeText = "",
                 courseColorLight = 0xFF27872B.toInt(),
-                courseColorDark = 0xFF27872B.toInt()
+                courseColorDark = 0xFF27872B.toInt(),
+                ""
             ),
             WidgetCourseItem(
                 name = "General Astrology",
@@ -237,7 +254,8 @@ class GradesWidget : GlanceAppWidget() {
                 isLocked = false,
                 gradeText = "",
                 courseColorLight = 0xFF00828E.toInt(),
-                courseColorDark = 0xFF00828E.toInt()
+                courseColorDark = 0xFF00828E.toInt(),
+                ""
             ),
         )
     )

@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.widget.glance.WidgetState
 import dagger.hilt.android.AndroidEntryPoint
@@ -99,7 +100,8 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
             isLocked(),
             getGradeText(),
             themedColor.light,
-            themedColor.dark
+            themedColor.dark,
+            getUrl()
         )
     }
 
@@ -126,6 +128,14 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
     private fun Course.isLocked(): Boolean {
         val courseGrade = getCourseGrade(false)
         return courseGrade == null || courseGrade.isLocked
+    }
+
+    private fun Course.getUrl(): String {
+        val domain = ApiPrefs.fullDomain
+
+        //Construct URL to route to grades page
+        val courseUrl = Const.COURSE_URL + id
+        return domain + courseUrl + Const.GRADE_URL
     }
 
     companion object {
