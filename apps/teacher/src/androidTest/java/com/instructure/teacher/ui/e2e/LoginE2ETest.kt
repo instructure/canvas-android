@@ -56,43 +56,43 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Login with user: '${teacher1.name}', login id: '${teacher1.loginId}'.")
         loginWithUser(teacher1)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertSuccessfulLogin(teacher1)
 
-        Log.d(STEP_TAG,"Validate '${teacher1.name}' user's role as a Teacher.")
+        Log.d(STEP_TAG, "Validate '${teacher1.name}' user's role as a Teacher.")
         validateUserRole(teacher1, course, "Teacher")
 
-        Log.d(STEP_TAG,"Log out with '${teacher1.name}' student.")
+        Log.d(STEP_TAG, "Log out with '${teacher1.name}' student.")
         leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: '${teacher2.name}', login id: '${teacher2.loginId}'.")
         loginWithUser(teacher2, true)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertSuccessfulLogin(teacher2)
 
-        Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
+        Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
-        Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
 
         Log.d(STEP_TAG, "Login with user: '${teacher1.name}', login id: '${teacher1.loginId}'.")
         loginWithUser(teacher1, true)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertSuccessfulLogin(teacher1)
 
-        Log.d(STEP_TAG,"Click on 'Change User' button on the left-side menu.")
+        Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
-        Log.d(STEP_TAG,"Assert that the previously logins has been displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
 
-        Log.d(STEP_TAG,"Login with the previous user, '${teacher2.name}', with one click, by clicking on the user's name on the bottom.")
+        Log.d(STEP_TAG, "Login with the previous user, '${teacher2.name}', with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(teacher2)
 
-        Log.d(STEP_TAG,"Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertSuccessfulLogin(teacher2)
     }
 
@@ -114,25 +114,25 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         loginWithUser(student)
 
-        Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
+        Log.d(ASSERTION_TAG, "Assert that the user has been landed on 'Not a teacher?' Page.")
         notATeacherPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Navigate back to the Teacher app's Login Landing Page's screen.")
+        Log.d(STEP_TAG, "Navigate back to the Teacher app's Login Landing Page's screen.")
         notATeacherPage.clickOnLoginButton()
 
-        Log.d(STEP_TAG,"Assert the Teacher app's Login Landing Page's screen is displayed.")
+        Log.d(ASSERTION_TAG, "Assert the Teacher app's Login Landing Page's screen is displayed.")
         loginLandingPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithUser(parent, true)
 
-        Log.d(STEP_TAG,"Assert that the user has been landed on 'Not a teacher?' Page.")
+        Log.d(ASSERTION_TAG, "Assert that the user has been landed on 'Not a teacher?' Page.")
         notATeacherPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Navigate back to the Teacher app's login screen.")
+        Log.d(STEP_TAG, "Navigate back to the Teacher app's login screen.")
         notATeacherPage.clickOnLoginButton()
 
-        Log.d(STEP_TAG,"Assert that the user has landed on Teacher app's Login Landing Page's screen.")
+        Log.d(ASSERTION_TAG, "Assert that the user has landed on Teacher app's Login Landing Page's screen.")
         loginLandingPage.assertPageObjects()
     }
 
@@ -149,7 +149,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Login with user: '${teacher1.name}', login id: '${teacher1.loginId}'.")
         loginWithUser(teacher1)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertSuccessfulLogin(teacher1)
 
         Log.d(STEP_TAG, "Log out with '${teacher1.name}' student.")
@@ -158,7 +158,7 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Login with user: '${teacher2.name}', login id: '${teacher2.loginId}', via the last saved school's button.")
         loginWithLastSavedSchool(teacher2)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         assertSuccessfulLogin(teacher2)
     }
 
@@ -214,30 +214,34 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG,"Enter domain: '$DOMAIN.instructure.com'.")
+        Log.d(STEP_TAG, "Enter domain: '$DOMAIN.instructure.com'.")
         loginFindSchoolPage.enterDomain(DOMAIN)
 
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials: '$INVALID_USERNAME', '$INVALID_PASSWORD'." +
-                "Assert that the invalid credentials error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with invalid, non-existing credentials: '$INVALID_USERNAME', '$INVALID_PASSWORD'.")
         loginSignInPage.loginAs(INVALID_USERNAME, INVALID_PASSWORD)
+
+        Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
 
-        Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field." +
-                "Assert that the no password was given error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with no credentials typed in either of the username and password field.")
         loginSignInPage.loginAs(EMPTY_STRING, EMPTY_STRING)
+
+        Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
-        Log.d(STEP_TAG, "Try to login with leaving only the password field empty." +
-                "Assert that the no password was given error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with leaving only the password field empty.")
         loginSignInPage.loginAs(INVALID_USERNAME, EMPTY_STRING)
+
+        Log.d(ASSERTION_TAG, "Assert that the no password was given error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(NO_PASSWORD_GIVEN_ERROR_MESSAGE)
 
-        Log.d(STEP_TAG, "Try to login with leaving only the username field empty." +
-                "Assert that the invalid credentials error message is displayed.")
+        Log.d(STEP_TAG, "Try to login with leaving only the username field empty.")
         loginSignInPage.loginAs(EMPTY_STRING, INVALID_PASSWORD)
+
+        Log.d(ASSERTION_TAG, "Assert that the invalid credentials error message is displayed.")
         loginSignInPage.assertLoginErrorMessage(INVALID_CREDENTIALS_ERROR_MESSAGE)
     }
 
@@ -264,13 +268,13 @@ class LoginE2ETest : TeacherTest() {
             loginLandingPage.clickFindMySchoolButton()
         }
 
-        Log.d(STEP_TAG, "Enter domain: ${user.domain}.")
+        Log.d(STEP_TAG, "Enter domain: '${user.domain}'.")
         loginFindSchoolPage.enterDomain(user.domain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Login with user: ${user.name}, login id: ${user.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${user.name}', login id: '${user.loginId}'.")
         loginSignInPage.loginAs(user)
     }
 
@@ -279,20 +283,20 @@ class LoginE2ETest : TeacherTest() {
         Log.d(STEP_TAG, "Click on last saved school's button.")
         loginLandingPage.clickOnLastSavedSchoolButton()
 
-        Log.d(STEP_TAG, "Login with ${user.name} user.")
+        Log.d(STEP_TAG, "Login with '${user.name}' user.")
         loginSignInPage.loginAs(user)
     }
 
     private fun validateUserRole(user: CanvasUserApiModel, course: CourseApiModel, role: String) {
 
-        Log.d(STEP_TAG,"Navigate to 'People' Page of ${course.name} course.")
+        Log.d(STEP_TAG, "Navigate to 'People' Page of '${course.name}' course.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.openPeopleTab()
 
-        Log.d(STEP_TAG,"Assert that ${user.name} user's role is $role.")
+        Log.d(ASSERTION_TAG, "Assert that '${user.name}' user's role is '$role'.")
         peopleListPage.assertPersonListed(user, role)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard Page.")
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
     }
 

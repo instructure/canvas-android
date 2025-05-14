@@ -27,23 +27,30 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.retryWithIncreasingDelay
 
 @OptIn(ExperimentalTestApi::class)
 class ProgressPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickDone() {
         composeTestRule.waitForIdle()
-        composeTestRule.waitUntilExactlyOneExists(hasText("Done"), 20000)
+        retryWithIncreasingDelay {
+            composeTestRule.waitUntilExactlyOneExists(hasText("Done"), 20000)
+        }
         composeTestRule.onNodeWithText("Done").performClick()
     }
 
-   fun assertProgressPageTitle(@StringRes title: Int) {
-        composeTestRule.waitUntilExactlyOneExists(hasText(getStringFromResource(title)), 10000)
+    fun assertProgressPageTitle(@StringRes title: Int) {
+        retryWithIncreasingDelay {
+            composeTestRule.waitUntilExactlyOneExists(hasText(getStringFromResource(title)), 10000)
+        }
         composeTestRule.onNodeWithText(getStringFromResource(title)).assertIsDisplayed()
     }
 
     fun assertProgressPageNote(@StringRes note: Int) {
-        composeTestRule.waitUntilExactlyOneExists(hasText(getStringFromResource(note)), 10000)
+        retryWithIncreasingDelay {
+            composeTestRule.waitUntilExactlyOneExists(hasText(getStringFromResource(note)), 10000)
+        }
         composeTestRule.onNodeWithText(getStringFromResource(note)).assertIsDisplayed()
     }
 }

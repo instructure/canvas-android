@@ -47,132 +47,148 @@ class ModulesE2ETest : TeacherComposeTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'. Assert that '${course.name}' course is displayed on the Dashboard.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that '${course.name}' course is displayed on the Dashboard.")
         dashboardPage.assertDisplaysCourse(course)
 
-        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to Modules Page.")
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Modules Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openModulesTab()
 
-        Log.d(STEP_TAG,"Assert that empty view is displayed because there is no Module within the course.")
+        Log.d(ASSERTION_TAG, "Assert that empty view is displayed because there is no Module within the course.")
         moduleListPage.assertEmptyView()
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
-        Log.d(PREPARATION_TAG,"Seeding quiz for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding quiz for '${course.name}' course.")
         val quiz = QuizzesApi.createQuiz(course.id, teacher.token, withDescription = true, dueAt = 3.days.fromNow.iso8601)
 
-        Log.d(PREPARATION_TAG,"Create an unpublished page for course: '${course.name}'.")
+        Log.d(PREPARATION_TAG, "Create an unpublished page for course: '${course.name}'.")
         val testPage = PagesApi.createCoursePage(course.id, teacher.token, published = false, body = "<h1 id=\"header1\">Test Page Text</h1>")
 
-        Log.d(PREPARATION_TAG,"Create a discussion topic for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Create a discussion topic for '${course.name}' course.")
         val discussionTopic = DiscussionTopicsApi.createDiscussion(courseId = course.id, token = teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seeding a module for '${course.name}' course. It starts as unpublished.")
+        Log.d(PREPARATION_TAG, "Seeding a module for '${course.name}' course. It starts as unpublished.")
         val module = ModulesApi.createModule(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Associate '${assignment.name}' assignment with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${assignment.name}' assignment with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = assignment.name, moduleItemType = ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment.id.toString())
 
-        Log.d(PREPARATION_TAG,"Associate '${quiz.title}' quiz with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${quiz.title}' quiz with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = quiz.title, moduleItemType = ModuleItemTypes.QUIZ.stringVal, contentId = quiz.id.toString())
 
-        Log.d(PREPARATION_TAG,"Associate '${testPage.title}' page with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${testPage.title}' page with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = testPage.title, moduleItemType = ModuleItemTypes.PAGE.stringVal, contentId = null, pageUrl = testPage.url)
 
-        Log.d(PREPARATION_TAG,"Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = discussionTopic.title, moduleItemType = ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic.id.toString())
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that '${module.name}' module is displayed and it is unpublished by default.")
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that '${module.name}' module is displayed and it is unpublished by default.")
         moduleListPage.refresh()
         moduleListPage.assertModuleIsDisplayed(module.name)
         moduleListPage.assertModuleNotPublished(module.name)
 
-        Log.d(STEP_TAG,"Assert that '${testPage.title}' page is present as a module item, but it's not published.")
+        Log.d(ASSERTION_TAG, "Assert that '${testPage.title}' page is present as a module item, but it's not published.")
         moduleListPage.assertModuleItemIsDisplayed(testPage.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
 
-        Log.d(PREPARATION_TAG,"Publish '${module.name}' module via API.")
+        Log.d(PREPARATION_TAG, "Publish '${module.name}' module via API.")
         ModulesApi.updateModule(courseId = course.id, moduleId = module.id, published = true, teacherToken = teacher.token)
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that '${module.name}' module is displayed and it is published.")
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that '${module.name}' module is displayed and it is published.")
         moduleListPage.refresh()
         moduleListPage.assertModuleIsDisplayed(module.name)
         moduleListPage.assertModuleIsPublished()
 
-        Log.d(STEP_TAG,"Assert that '${assignment.name}' assignment and '${quiz.title}' quiz are present as module items, and they are published since their module is published.")
+        Log.d(ASSERTION_TAG, "Assert that '${assignment.name}' assignment and '${quiz.title}' quiz are present as module items, and they are published since their module is published.")
         moduleListPage.assertModuleItemIsDisplayed(assignment.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
         moduleListPage.assertModuleItemIsDisplayed(quiz.title)
         moduleListPage.assertModuleItemIsPublished(quiz.title)
 
-        Log.d(STEP_TAG,"Assert that '${testPage.title}' page is present as a module item, but it's not published.")
+        Log.d(ASSERTION_TAG, "Assert that '${testPage.title}' page is present as a module item, but it's not published.")
         moduleListPage.assertModuleItemIsDisplayed(testPage.title)
         moduleListPage.assertModuleItemIsPublished(testPage.title)
 
-        Log.d(STEP_TAG, "Collapse the '${module.name}' and assert that the module items has not displayed.")
+        Log.d(STEP_TAG, "Collapse the '${module.name}'.")
         moduleListPage.clickOnCollapseExpandIcon()
+
+        Log.d(ASSERTION_TAG, "Assert that the module items has not displayed.")
         moduleListPage.assertItemCountInModule(module.name, 0)
 
-        Log.d(STEP_TAG, "Expand the '${module.name}' and assert that the module items are displayed.")
+        Log.d(STEP_TAG, "Expand the '${module.name}'.")
         moduleListPage.clickOnCollapseExpandIcon()
+
+        Log.d(ASSERTION_TAG, "Assert that the module items are displayed.")
         moduleListPage.assertItemCountInModule(module.name, 4)
 
-        Log.d(STEP_TAG, "Open the '${assignment.name}' assignment module item and assert that the Assignment Details Page is displayed. Assert that the module name is displayed at the bottom.")
+        Log.d(STEP_TAG, "Open the '${assignment.name}' assignment module item.")
         moduleListPage.clickOnModuleItem(assignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed. Assert that the module name is displayed at the bottom.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertAssignmentDetails(assignment)
         assignmentDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
 
-        Log.d(STEP_TAG, "Assert that the previous arrow button is not displayed because the user is on the first assignment's details page, but the next arrow button is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the previous arrow button is not displayed because the user is on the first assignment's details page, but the next arrow button is displayed.")
         assignmentDetailsPage.moduleItemInteractions.assertPreviousArrowNotDisplayed()
         assignmentDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
 
-        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${quiz.title}' quiz module item's details page is displayed. Assert that the module name is displayed at the bottom.")
+        Log.d(STEP_TAG, "Click on the next arrow button.")
         assignmentDetailsPage.moduleItemInteractions.clickOnNextArrow()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz module item's details page is displayed. Assert that the module name is displayed at the bottom.")
         quizDetailsPage.assertQuizDetails(quiz)
         quizDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
 
-        Log.d(STEP_TAG, "Assert that both the previous and next arrow buttons are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that both the previous and next arrow buttons are displayed.")
         quizDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
         quizDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
 
-        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
+        Log.d(STEP_TAG, "Click on the next arrow button.")
         quizDetailsPage.moduleItemInteractions.clickOnNextArrow()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
         editPageDetailsPage.assertPageDetails(testPage)
         editPageDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
 
-        Log.d(STEP_TAG, "Assert that both the previous and next arrow buttons are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that both the previous and next arrow buttons are displayed.")
         editPageDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
         editPageDetailsPage.moduleItemInteractions.assertNextArrowDisplayed()
 
-        Log.d(STEP_TAG, "Click on the next arrow button and assert that the '${discussionTopic.title}' discussion module item's details (web view) page is displayed. Assert that the module name is displayed at the bottom.")
+        Log.d(STEP_TAG, "Click on the next arrow button.")
         editPageDetailsPage.moduleItemInteractions.clickOnNextArrow()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${discussionTopic.title}' discussion module item's details (web view) page is displayed. Assert that the module name is displayed at the bottom.")
         discussionDetailsPage.assertToolbarDiscussionTitle(discussionTopic.title)
         discussionDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
 
-        Log.d(STEP_TAG, "Assert that the next arrow button is not displayed because the user is on the last assignment's details page, but the previous arrow button is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the next arrow button is not displayed because the user is on the last assignment's details page, but the previous arrow button is displayed.")
         discussionDetailsPage.moduleItemInteractions.assertPreviousArrowDisplayed()
         discussionDetailsPage.moduleItemInteractions.assertNextArrowNotDisplayed()
 
-        Log.d(STEP_TAG, "Click on the previous arrow button and assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
+        Log.d(STEP_TAG, "Click on the previous arrow button.")
         quizDetailsPage.moduleItemInteractions.clickOnPreviousArrow()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page module item's details page is displayed. Assert that the module name is displayed at the bottom.")
         editPageDetailsPage.assertPageDetails(testPage)
         editPageDetailsPage.moduleItemInteractions.assertModuleNameDisplayed(module.name)
 
         Log.d(STEP_TAG, "Navigate back to Module List Page.")
         Espresso.pressBack()
 
-        Log.d(PREPARATION_TAG,"Unpublish '${module.name}' module via API.")
+        Log.d(PREPARATION_TAG, "Unpublish '${module.name}' module via API.")
         ModulesApi.updateModule(courseId = course.id, moduleId = module.id, published = false, teacherToken = teacher.token)
 
         Log.d(STEP_TAG, "Refresh the Module List Page.")
         moduleListPage.refresh()
 
-        Log.d(STEP_TAG,"Assert that '${assignment.name}' assignment and '${quiz.title}' quiz and '${testPage.title}' page are present as module items, and they are NOT published since their module is unpublished.")
+        Log.d(STEP_TAG, "Assert that '${assignment.name}' assignment and '${quiz.title}' quiz and '${testPage.title}' page are present as module items, and they are NOT published since their module is unpublished.")
         moduleListPage.assertModuleItemIsDisplayed(assignment.name)
         moduleListPage.assertModuleItemNotPublished(assignment.name)
         moduleListPage.assertModuleItemIsDisplayed(quiz.title)
@@ -180,10 +196,10 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemIsDisplayed(testPage.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
 
-        Log.d(STEP_TAG, "Open the '${assignment.name}' assignment module item and assert that the Assignment Details Page is displayed")
+        Log.d(STEP_TAG, "Open the '${assignment.name}' assignment module item.")
         moduleListPage.clickOnModuleItem(assignment.name)
 
-        Log.d(STEP_TAG, "Assert that the published status of the '${assignment.name}' assignment became 'Unpublished' on the Assignment Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that the published status of the '${assignment.name}' assignment became 'Unpublished' on the Assignment Details Page.")
         assignmentDetailsPage.assertPublishedStatus(false)
 
         Log.d(STEP_TAG, "Open Edit Page of '${assignment.name}' assignment and publish it. Save the change.")
@@ -191,11 +207,13 @@ class ModulesE2ETest : TeacherComposeTest() {
         editAssignmentDetailsPage.clickPublishSwitch()
         editAssignmentDetailsPage.saveAssignment()
 
-        Log.d(STEP_TAG, "Assert that the published status of the '${assignment.name}' assignment became 'Published' on the Assignment Details Page (as well).")
+        Log.d(ASSERTION_TAG, "Assert that the published status of the '${assignment.name}' assignment became 'Published' on the Assignment Details Page (as well).")
         assignmentDetailsPage.assertPublishedStatus(true)
 
-        Log.d(STEP_TAG, "Navigate back to Module List Page and assert that the '${assignment.name}' assignment module item's status became 'Published'.")
+        Log.d(STEP_TAG, "Navigate back to Module List Page.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment module item's status became 'Published'.")
         moduleListPage.assertModuleItemIsPublished(assignment.name)
     }
 
@@ -213,7 +231,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, withDescription = true, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), dueAt = 1.days.fromNow.iso8601)
 
-        Log.d(PREPARATION_TAG,"Submit '${assignment.name}' assignment for '${student.name}' student.")
+        Log.d(PREPARATION_TAG, "Submit '${assignment.name}' assignment for '${student.name}' student.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
         Log.d(PREPARATION_TAG, "Seeding another 'Text Entry' assignment for '${course.name}' course.")
@@ -237,16 +255,16 @@ class ModulesE2ETest : TeacherComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding another module for '${course.name}' course. It starts as unpublished.")
         val module2 = ModulesApi.createModule(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Associate '${assignment.name}' assignment with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${assignment.name}' assignment with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = assignment.name, moduleItemType = ModuleItemTypes.ASSIGNMENT.stringVal, contentId = assignment.id.toString())
 
-        Log.d(PREPARATION_TAG,"Associate '${quiz.title}' quiz with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${quiz.title}' quiz with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = quiz.title, moduleItemType = ModuleItemTypes.QUIZ.stringVal, contentId = quiz.id.toString())
 
-        Log.d(PREPARATION_TAG,"Associate '${testPage.title}' page with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${testPage.title}' page with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = testPage.title, moduleItemType = ModuleItemTypes.PAGE.stringVal, contentId = null, pageUrl = testPage.url)
 
-        Log.d(PREPARATION_TAG,"Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
+        Log.d(PREPARATION_TAG, "Associate '${discussionTopic.title}' discussion with module: '${module.id}'.")
         ModulesApi.createModuleItem(course.id, teacher.token, module.id, moduleItemTitle = discussionTopic.title, moduleItemType = ModuleItemTypes.DISCUSSION.stringVal, contentId = discussionTopic.id.toString())
 
         Log.d(PREPARATION_TAG, "Associate '${assignment2.name}' assignment with module: '${module2.id}'.")
@@ -263,7 +281,8 @@ class ModulesE2ETest : TeacherComposeTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openModulesTab()
 
-        Log.d(STEP_TAG, "Assert that '${module.name}' and '${module2.name}' modules are displayed and they are unpublished by default. Assert that the '${testPage.title}' page module item is not published and the other module items are published in '${module.name}' module.")
+        Log.d(STEP_TAG, "Assert that '${module.name}' and '${module2.name}' modules are displayed and they are unpublished by default. " +
+                "Assert that the '${testPage.title}' page module item is not published and the other module items are published in '${module.name}' module.")
         moduleListPage.assertModuleIsDisplayed(module.name)
         moduleListPage.assertModuleNotPublished(module.name)
         moduleListPage.assertModuleIsDisplayed(module2.name)
@@ -275,20 +294,24 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemNotPublished(testPage.title)
 
         //Upper layer - All Modules and Items
-        Log.d(STEP_TAG, "Open Module List Page overflow menu and assert that the corresponding menu items are displayed.")
+        Log.d(STEP_TAG, "Open Module List Page overflow menu.")
         openOverflowMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding menu items are displayed.")
         moduleListPage.assertToolbarMenuItems()
 
         Log.d(STEP_TAG, "Click on 'Publish all Modules and Items' and confirm it via the publish dialog.")
         moduleListPage.clickOnText(R.string.publishAllModulesAndItems)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'All Modules and Items' is displayed as title and the corresponding note also displayed on the Progress Page. Click on 'Done' on the Progress Page once it finished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'All Modules and Items' is displayed as title and the corresponding note also displayed on the Progress Page.")
         progressPage.assertProgressPageTitle(R.string.allModulesAndItems)
         progressPage.assertProgressPageNote(R.string.moduleBulkUpdateNote)
+
+        Log.d(STEP_TAG, "Click on 'Done' on the Progress Page once it finished.")
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became published.")
+        Log.d(ASSERTION_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became published.")
         moduleListPage.assertSnackbarText(R.string.allModulesAndAllItemsPublished)
         moduleListPage.assertModuleIsPublished(module.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
@@ -296,7 +319,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemIsPublished(testPage.title)
         moduleListPage.assertModuleItemIsPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Assert that '${module2.name}' module and all of it's items became published.")
+        Log.d(ASSERTION_TAG, "Assert that '${module2.name}' module and all of it's items became published.")
         moduleListPage.assertModuleIsPublished(module2.name)
         moduleListPage.assertModuleItemIsPublished(assignment2.name)
         moduleListPage.assertModuleItemIsPublished(testPage2.title)
@@ -308,21 +331,23 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.unpublishAllModulesAndItems)
         moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'All Modules and Items' is displayed as title on the Progress page. Click on 'Done' on the Progress Page once it finished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'All Modules and Items' is displayed as title on the Progress page.")
         progressPage.assertProgressPageTitle(R.string.allModulesAndItems)
+
+        Log.d(STEP_TAG, "Click on 'Done' on the Progress Page once it finished.")
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment)  became unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment)  became unpublished.")
         moduleListPage.assertSnackbarText(R.string.allModulesAndAllItemsUnpublished)
         moduleListPage.assertModuleNotPublished(module.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
         moduleListPage.assertModuleItemIsPublished(assignment.name)
 
-        Log.d(STEP_TAG, "Assert that '${module2.name}' module and all of it's items became unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that '${module2.name}' module and all of it's items became unpublished.")
         moduleListPage.assertModuleNotPublished(module2.name)
         moduleListPage.assertModuleItemNotPublished(assignment2.name)
         moduleListPage.assertModuleItemNotPublished(testPage2.title)
@@ -334,11 +359,13 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.publishModulesOnly)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'All Modules' title is displayed on the Progress page. Click on 'Done' on the Progress Page once it finished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'All Modules' title is displayed on the Progress page.")
         progressPage.assertProgressPageTitle(R.string.allModules)
+
+        Log.d(STEP_TAG, "Click on 'Done' on the Progress Page once it finished.")
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and only the '${module.name}' module became published, but it's items remaining unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that the proper snack bar text is displayed and only the '${module.name}' module became published, but it's items remaining unpublished.")
         moduleListPage.assertSnackbarText(R.string.onlyModulesPublished)
         moduleListPage.assertModuleIsPublished(module.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
@@ -346,26 +373,30 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Assert that '${module2.name}' module became published but all of it's items are remaining unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that '${module2.name}' module became published but all of it's items are remaining unpublished.")
         moduleListPage.assertModuleIsPublished(module2.name)
         moduleListPage.assertModuleItemNotPublished(assignment2.name)
         moduleListPage.assertModuleItemNotPublished(testPage2.title)
 
         //Middle layer - One Module and Items
 
-        Log.d(STEP_TAG, "Click on '${module.name}' module overflow and assert that the corresponding menu items are displayed.")
+        Log.d(STEP_TAG, "Click on '${module.name}' module overflow.")
         moduleListPage.clickItemOverflow(module.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding menu items are displayed.")
         moduleListPage.assertModuleMenuItems()
 
         Log.d(STEP_TAG, "Click on 'Publish Module and all Items' and confirm it via the publish dialog.")
         moduleListPage.clickOnText(R.string.publishModuleAndItems)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Selected Modules and Items' is displayed as title on the Progress page. Click on 'Done' on the Progress Page once it finished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Selected Modules and Items' is displayed as title on the Progress page.")
         progressPage.assertProgressPageTitle(R.string.selectedModulesAndItems)
+
+        Log.d(STEP_TAG, "Click on 'Done' on the Progress Page once it finished.")
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became published.")
+        Log.d(ASSERTION_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items became published.")
         moduleListPage.assertSnackbarText(R.string.moduleAndAllItemsPublished)
         moduleListPage.assertModuleIsPublished(module.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
@@ -380,18 +411,20 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.unpublishModuleAndItems)
         moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Selected Modules and Items' is displayed as title on the Progress page. Click on 'Done' on the Progress Page once it finished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Selected Modules and Items' is displayed as title on the Progress page.")
         progressPage.assertProgressPageTitle(R.string.selectedModulesAndItems)
+
+        Log.d(STEP_TAG, "Click on 'Done' on the Progress Page once it finished.")
         progressPage.clickDone()
 
-        Log.d(STEP_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment) became unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that the proper snack bar text is displayed and the '${module.name}' module and all of it's items (except '${assignment.name}' assignment) became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleAndAllItemsUnpublished)
         moduleListPage.assertModuleNotPublished(module.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment remained published because it's unpublishable since it has a submission already.")
         moduleListPage.assertModuleItemIsPublished(assignment.name)
 
         Log.d(STEP_TAG, "Click on '${module.name}' module overflow.")
@@ -403,7 +436,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         device.waitForWindowUpdate(null, 3000)
         device.waitForIdle()
 
-        Log.d(STEP_TAG, "Assert that only the '${module.name}' module became published, but it's items (except '${assignment.name}' assignment) remaining unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that only the '${module.name}' module became published, but it's items (except '${assignment.name}' assignment) remaining unpublished.")
         moduleListPage.assertModuleIsPublished(module.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
@@ -417,7 +450,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.publishModuleItemAction)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Item published' snack bar has displayed and the '${quiz.title}' quiz became published.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Item published' snack bar has displayed and the '${quiz.title}' quiz became published.")
         moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
         moduleListPage.assertModuleItemIsPublished(quiz.title)
 
@@ -426,7 +459,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.publishModuleItemAction)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Item published' snack bar has displayed and the '${testPage.title}' page module item became published.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Item published' snack bar has displayed and the '${testPage.title}' page module item became published.")
         moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
 
@@ -435,12 +468,14 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.publishModuleItemAction)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Item published' snack bar has displayed and the '${discussionTopic.title}' discussion topic became published.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Item published' snack bar has displayed and the '${discussionTopic.title}' discussion topic became published.")
         moduleListPage.assertSnackbarText(R.string.moduleItemPublished)
         moduleListPage.assertModuleItemIsPublished(discussionTopic.title)
 
-        Log.d(STEP_TAG, "Try to click on '${assignment.name}' assignment's overflow menu (in order to unpublish it). Assert that a snack bar with a proper text will be displayed that it cannot be unpublished since it has student submissions.")
+        Log.d(STEP_TAG, "Try to click on '${assignment.name}' assignment's overflow menu (in order to unpublish it).")
         moduleListPage.clickItemOverflow(assignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert that a snack bar with a proper text will be displayed that it cannot be unpublished since it has student submissions.")
         moduleListPage.assertSnackbarContainsText(assignment.name)
         moduleListPage.assertModuleItemIsPublished(assignment.name)
 
@@ -449,7 +484,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.unpublishModuleItemAction)
         moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${quiz.title}' quiz became unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${quiz.title}' quiz became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
         moduleListPage.assertModuleItemNotPublished(quiz.title)
 
@@ -458,7 +493,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.unpublishModuleItemAction)
         moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${testPage.title}' page module item became unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${testPage.title}' page module item became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
         moduleListPage.assertModuleItemNotPublished(testPage.title)
 
@@ -467,7 +502,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         moduleListPage.clickOnText(R.string.unpublishModuleItemAction)
         moduleListPage.clickOnText(R.string.unpublishDialogPositiveButton)
 
-        Log.d(STEP_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${discussionTopic.title}' discussion topic became unpublished.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Item unpublished' snack bar has displayed and the '${discussionTopic.title}' discussion topic became unpublished.")
         moduleListPage.assertSnackbarText(R.string.moduleItemUnpublished)
         moduleListPage.assertModuleItemNotPublished(discussionTopic.title)
     }
@@ -522,58 +557,62 @@ class ModulesE2ETest : TeacherComposeTest() {
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openModulesTab()
 
-        Log.d(STEP_TAG, "Assert that both, the '${testTextFile.fileName}' and '${testTextFile2.fileName}' files are published.")
+        Log.d(ASSERTION_TAG, "Assert that both, the '${testTextFile.fileName}' and '${testTextFile2.fileName}' files are published.")
         moduleListPage.assertModuleItemIsPublished(testTextFile.fileName)
         moduleListPage.assertModuleItemIsPublished(testTextFile2.fileName)
 
         Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
         moduleListPage.clickItemOverflow(testTextFile.fileName)
 
-        Log.d(STEP_TAG, "Assert that by default, on the Update File Permissions Page the 'Published' radio button is checked within the 'Availability' section.")
+        Log.d(ASSERTION_TAG, "Assert that by default, on the Update File Permissions Page the 'Published' radio button is checked within the 'Availability' section.")
         updateFilePermissionsPage.assertFilePublished()
 
-        Log.d(STEP_TAG, "Assert that the 'Visibility' section radio buttons are enabled and the 'Inherit from course' radio button is checked by default within the 'Visibility' section.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Visibility' section radio buttons are enabled and the 'Inherit from course' radio button is checked by default within the 'Visibility' section.")
         updateFilePermissionsPage.assertVisibilityEnabled()
         updateFilePermissionsPage.assertFileVisibilityInherit()
 
-        Log.d(STEP_TAG, "Click on the 'Unpublish' radio button and assert that the 'Visibility' section radio buttons became disabled.")
+        Log.d(STEP_TAG, "Click on the 'Unpublish' radio button.")
         updateFilePermissionsPage.clickUnpublishRadioButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Visibility' section radio buttons became disabled.")
         updateFilePermissionsPage.assertVisibilityDisabled()
 
-        Log.d(STEP_TAG, "Click on the 'Update' button and assert on the Module List Page that the '${testTextFile.fileName}' file became unpublished.")
+        Log.d(STEP_TAG, "Click on the 'Update' button.")
         updateFilePermissionsPage.clickUpdateButton()
+
+        Log.d(ASSERTION_TAG, "Assert on the Module List Page that the '${testTextFile.fileName}' file became unpublished.")
         moduleListPage.assertModuleItemNotPublished(testTextFile.fileName)
 
         Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
         moduleListPage.clickItemOverflow(testTextFile.fileName)
 
-        Log.d(STEP_TAG, "Assert that the 'Unpublished' radio button is checked because of the previous modifications.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Unpublished' radio button is checked because of the previous modifications.")
         updateFilePermissionsPage.assertFileUnpublished()
 
         Log.d(STEP_TAG, "Click on the 'Only available with link' (aka. 'Hide') radio button and click on the 'Update' button to save the changes.")
         updateFilePermissionsPage.clickHideRadioButton()
         updateFilePermissionsPage.clickUpdateButton()
 
-        Log.d(STEP_TAG, "Assert that the '${testTextFile.fileName}' file module item became hidden.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testTextFile.fileName}' file module item became hidden.")
         moduleListPage.assertModuleItemHidden(testTextFile.fileName)
 
         Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
         moduleListPage.clickItemOverflow(testTextFile.fileName)
 
-        Log.d(STEP_TAG, "Assert that the 'Hidden' radio button is checked because of the previous modifications.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Hidden' radio button is checked because of the previous modifications.")
         updateFilePermissionsPage.assertFileHidden()
 
         Log.d(STEP_TAG, "Click on the 'Schedule availability' (aka. 'Scheduled') radio button without setting any 'From' and 'Until' dates and click on the 'Update' button to save the changes.")
         updateFilePermissionsPage.clickScheduleRadioButton()
         updateFilePermissionsPage.clickUpdateButton()
 
-        Log.d(STEP_TAG, "Assert that the '${testTextFile.fileName}' file is published since that is the expected behaviour if we does not select any dates for schedule.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testTextFile.fileName}' file is published since that is the expected behaviour if we does not select any dates for schedule.")
         moduleListPage.assertModuleItemIsPublished(testTextFile.fileName)
 
         Log.d(STEP_TAG, "Click on the 'more menu' of the '${testTextFile.fileName}' file.")
         moduleListPage.clickItemOverflow(testTextFile.fileName)
 
-        Log.d(STEP_TAG, "Assert that by default, on the Update File Permissions Page the 'Published' radio button is checked within the 'Availability' section.")
+        Log.d(ASSERTION_TAG, "Assert that by default, on the Update File Permissions Page the 'Published' radio button is checked within the 'Availability' section.")
         updateFilePermissionsPage.assertFilePublished()
 
         Log.d(STEP_TAG, "Click on the 'Schedule availability' (aka. 'Scheduled') radio button, set some dates and click on the 'Update' button to save the changes.")
@@ -590,7 +629,7 @@ class ModulesE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Update' button to save the changes.")
         updateFilePermissionsPage.clickUpdateButton()
 
-        Log.d(STEP_TAG, "Assert that the '${testTextFile.fileName}' file module item is scheduled.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testTextFile.fileName}' file module item is scheduled.")
         moduleListPage.assertModuleItemScheduled(testTextFile.fileName)
     }
 
