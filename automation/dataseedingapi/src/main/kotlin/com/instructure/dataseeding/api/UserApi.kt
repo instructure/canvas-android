@@ -34,6 +34,7 @@ import org.jsoup.Jsoup
 import org.jsoup.nodes.FormElement
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.PUT
@@ -58,6 +59,9 @@ object UserApi {
                 @Query(value = "redirect_uri", encoded = true) redirectURI: String
         ): Call<OAuthToken>
 
+        @DELETE("/login/oauth2/token?expire_sessions=1")
+        fun deleteToken(@Query("access_token") accessToken: String): Call<ForwardURL>
+
         @PUT("users/{userId}/settings")
         fun putSelfSettings(@Path("userId") userId: Long, @Body body: UserSettingsApiModel): Call<UserSettingsApiModel>
 
@@ -66,8 +70,10 @@ object UserApi {
 
         @GET("accounts/self/terms_of_service")
         fun getTermsOfService(): Call<TermsOfServiceApiResponseModel>
-
     }
+
+    private fun userService(token: String): UserService
+            = CanvasNetworkAdapter.retrofitWithToken(token).create(UserService::class.java)
 
     private val userAdminService: UserService by lazy {
         CanvasNetworkAdapter.adminRetrofit.create(UserService::class.java)
@@ -133,6 +139,12 @@ object UserApi {
                 CanvasNetworkAdapter.redirectUri
         ).execute()
         return response.body()?.accessToken ?: ""
+    }
+
+    fun deleteToken(
+        accessToken: String
+    ): ForwardURL {
+        return userService(accessToken).deleteToken(accessToken).execute().body()!!
     }
 
     /**

@@ -28,7 +28,11 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.assertDisplayed
+import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
+import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withText
 import com.instructure.loginapi.login.R
 import org.hamcrest.CoreMatchers.containsString
 
@@ -85,9 +89,17 @@ class LoginSignInPage: BasePage() {
         forgotPasswordButton()
     }
 
+    fun assertLoginRequiredDialog() {
+        waitForViewWithText(R.string.loginRequired).assertDisplayed()
+    }
+
     //endregion
 
     //region UI Action Helpers
+
+    fun clickLogInOnLoginRequiredDialog() {
+        onView(withText("LOG IN")).click()
+    }
 
     private fun enterEmail(email: String) {
         emailField().perform(clearElement())
