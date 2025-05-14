@@ -12,9 +12,7 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */
-
-package com.instructure.student.widget.grades
+ */package com.instructure.student.widget.grades.singleGrade
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -30,15 +28,17 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.widget.glance.WidgetState
+import com.instructure.student.widget.grades.GradesWidgetRepository
+import com.instructure.student.widget.grades.WidgetCourseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
+class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
 
-    override val glanceAppWidget = GradesWidget()
+    override val glanceAppWidget = SingleGradeWidget()
 
     @Inject
     lateinit var repository: GradesWidgetRepository
@@ -59,20 +59,20 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
         coroutineScope.launch {
 
             val glanceId =
-                GlanceAppWidgetManager(context).getGlanceIds(GradesWidget::class.java).firstOrNull()
+                GlanceAppWidgetManager(context).getGlanceIds(SingleGradeWidget::class.java).firstOrNull()
                     ?: return@launch
 
-            suspend fun setState(state: GradesWidgetUiState) {
+            suspend fun setState(state: SingleGradeWidgetUiState) {
                 updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { pref ->
                     pref.toMutablePreferences().apply {
-                        this[gradesWidgetUiStateKey] = state.toJson()
+                        this[singleGradeWidgetUiStateKey] = state.toJson()
                     }
                 }
             }
 
             val user = apiPrefs.user
             if (user == null) {
-                setState(GradesWidgetUiState(WidgetState.NotLoggedIn))
+                setState(SingleGradeWidgetUiState(WidgetState.NotLoggedIn))
                 glanceAppWidget.update(context, glanceId)
                 return@launch
             }
@@ -80,12 +80,12 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
             try {
                 val courses = repository.getCoursesWithGradingScheme(true)
                 setState(
-                    GradesWidgetUiState(
+                    SingleGradeWidgetUiState(
                         WidgetState.Content,
-                        courses.map { it.toWidgetCourseItem() })
+                        courses[0].toWidgetCourseItem())
                 )
             } catch (e: Exception) {
-                setState(GradesWidgetUiState(WidgetState.Error))
+                setState(SingleGradeWidgetUiState(WidgetState.Error))
             }
 
             glanceAppWidget.update(context, glanceId)
@@ -139,6 +139,6 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
     }
 
     companion object {
-        val gradesWidgetUiStateKey = stringPreferencesKey("gradesWidgetUiState")
+        val singleGradeWidgetUiStateKey = stringPreferencesKey("singleGradeWidgetUiState")
     }
 }

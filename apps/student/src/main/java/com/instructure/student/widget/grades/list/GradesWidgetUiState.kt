@@ -14,22 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.widget.grades
+package com.instructure.student.widget.grades.list
 
-import androidx.annotation.ColorInt
 import com.instructure.student.widget.glance.WidgetState
+import com.instructure.student.widget.grades.WidgetCourseItem
 
 data class GradesWidgetUiState(
     val state: WidgetState,
     val courses: List<WidgetCourseItem> = emptyList()
 )
 
-data class WidgetCourseItem(
-    val name: String,
-    val courseCode: String,
-    val isLocked: Boolean,
-    val gradeText: String?,
-    @ColorInt val courseColorLight: Int,
-    @ColorInt val courseColorDark: Int,
-    val url: String
-)
+

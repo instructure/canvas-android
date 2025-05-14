@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.widget.grades
+package com.instructure.student.widget.grades.list
 
 import android.content.Context
 import android.net.Uri
@@ -60,6 +60,7 @@ import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.glance.WidgetTextStyles
+import com.instructure.student.widget.grades.WidgetCourseItem
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 class GradesWidget : GlanceAppWidget() {
