@@ -81,7 +81,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
     abstract val isTesting: Boolean
 
-    var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = Matchers.anyOf()
+    var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = anyOf()
 
     val connectivityManager = InstrumentationRegistry.getInstrumentation().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -303,6 +303,7 @@ abstract class CanvasTest : InstructureTestingContract {
                                     matchesViews(ViewMatchers.isAssignableFrom(WebView::class.java)),
                                     matchesCheckNames(`is`("TouchTargetSizeViewCheck"))
                             ),
+
                             allOf(
                                 matchesCheckNames(`is`("SpeakableTextPresentCheck")),
                                 matchesViews(

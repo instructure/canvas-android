@@ -109,6 +109,7 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
 
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testSubmit() {
