@@ -38,10 +38,10 @@ fun FileDropScreen() {
         FileDropBottomSheet(onDismiss = { showBottomSheet = false })
     }
     FileDrop(listOf("pdf", "jpg"), fileItems = {
-        FileDropItem(state = FileDropItemState.InProgress("In progress file") {})
-        FileDropItem(state = FileDropItemState.Success("Success file") {})
-        FileDropItem(state = FileDropItemState.NoLongerEditable("No longer editable file") {})
-        FileDropItem(state = FileDropItemState.Error("Error text") {})
+        FileDropItem(state = FileDropItemState.InProgress("In progress file"))
+        FileDropItem(state = FileDropItemState.Success("Success file"))
+        FileDropItem(state = FileDropItemState.NoLongerEditable("No longer editable file"))
+        FileDropItem(state = FileDropItemState.Error("Error text"))
     }, onUploadClick = {
         showBottomSheet = true
     })

@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.learn.overview
 
-import android.webkit.WebView
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,17 +27,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
-import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.utils.launchCustomTab
 
 @Composable
 fun LearnOverviewScreen(
     summaryText: String?,
     modifier: Modifier = Modifier,
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
@@ -53,31 +57,15 @@ fun LearnOverviewScreen(
                 .padding(24.dp)
         ) {
             ComposeCanvasWebViewWrapper(
-                html = summaryText ?: "",
+                content = summaryText ?: "",
                 applyOnWebView = {
-                    canvasEmbeddedWebViewCallback = embeddedWebViewCallback
-                    canvasWebViewClientCallback = webViewClientCallback
                     overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                 },
+                embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                    shouldLaunchInternalWebViewFragment = { _ -> true },
+                    launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                )
             )
         }
     }
-}
-
-private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-    override fun launchInternalWebViewFragment(url: String) = Unit
-
-    override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-}
-
-private val webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-    override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
-
-    override fun onPageStartedCallback(webView: WebView, url: String) = Unit
-
-    override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
-
-    override fun canRouteInternallyDelegate(url: String) = false
-
-    override fun routeInternallyCallback(url: String) = Unit
 }

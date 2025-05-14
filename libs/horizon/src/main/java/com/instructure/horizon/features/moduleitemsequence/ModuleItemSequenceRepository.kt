@@ -15,8 +15,10 @@
  */
 package com.instructure.horizon.features.moduleitemsequence
 
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
@@ -26,7 +28,10 @@ import com.instructure.canvasapi2.utils.depaginate
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
-class ModuleItemSequenceRepository @Inject constructor(private val moduleApi: ModuleAPI.ModuleInterface) {
+class ModuleItemSequenceRepository @Inject constructor(
+    private val moduleApi: ModuleAPI.ModuleInterface,
+    private val assignmentApi: AssignmentAPI.AssignmentInterface
+) {
 
     suspend fun getModuleItemSequence(courseId: Long, assetType: String, assetId: String): ModuleItemSequence {
         val params = RestParams(isForceReadFromNetwork = true)
@@ -84,15 +89,32 @@ class ModuleItemSequenceRepository @Inject constructor(private val moduleApi: Mo
     }
 
     suspend fun markAsNotDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
-        return moduleApi.markModuleItemAsNotDone(CanvasContext.Type.COURSE.apiString, courseId, moduleItem.moduleId, moduleItem.id, RestParams())
+        return moduleApi.markModuleItemAsNotDone(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleItem.moduleId,
+            moduleItem.id,
+            RestParams()
+        )
     }
 
     suspend fun markAsDone(courseId: Long, moduleItem: ModuleItem): DataResult<ResponseBody> {
-        return moduleApi.markModuleItemAsDone(CanvasContext.Type.COURSE.apiString, courseId, moduleItem.moduleId, moduleItem.id, RestParams())
+        return moduleApi.markModuleItemAsDone(
+            CanvasContext.Type.COURSE.apiString,
+            courseId,
+            moduleItem.moduleId,
+            moduleItem.id,
+            RestParams()
+        )
     }
 
-    suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long): Unit {
+    suspend fun markAsRead(courseId: Long, moduleId: Long, itemId: Long) {
         val restParams = RestParams(isForceReadFromNetwork = true)
         moduleApi.markModuleItemRead(CanvasContext.Type.COURSE.apiString, courseId, moduleId, itemId, restParams)
+    }
+
+    suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
+        return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
     }
 }

@@ -15,7 +15,6 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
-import android.webkit.WebView
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -25,20 +24,22 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
-import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
-import com.instructure.pandautils.views.CanvasWebView
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.pandautils.views.JSInterface
 
 @Composable
 fun PageDetailsContentScreen(
@@ -46,6 +47,13 @@ fun PageDetailsContentScreen(
     scrollState: ScrollState,
     modifier: Modifier = Modifier
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(uiState.urlToOpen) {
+        uiState.urlToOpen?.let { url ->
+            activity?.launchCustomTab(url, ThemePrefs.brandColor)
+            uiState.onUrlOpened()
+        }
+    }
     uiState.pageHtmlContent?.let {
         Box(
             contentAlignment = Alignment.Center,
@@ -61,34 +69,21 @@ fun PageDetailsContentScreen(
                     .verticalScroll(scrollState)
             ) {
                 ComposeCanvasWebViewWrapper(
-                    html = it,
+                    content = it,
                     applyOnWebView = {
-                        canvasEmbeddedWebViewCallback = embeddedWebViewCallback
-                        canvasWebViewClientCallback = webViewClientCallback
+                        activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
-                    }
+                        if (uiState.ltiButtonPressed != null) {
+                            addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
+                        }
+                    },
+                    embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                        shouldLaunchInternalWebViewFragment = { _ -> true },
+                        launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+                    )
                 )
                 HorizonSpace(SpaceSize.SPACE_48)
             }
         }
     }
-
-}
-
-private val embeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-    override fun launchInternalWebViewFragment(url: String) = Unit
-
-    override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
-}
-
-private val webViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-    override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
-
-    override fun onPageStartedCallback(webView: WebView, url: String) = Unit
-
-    override fun onPageFinishedCallback(webView: WebView, url: String) = Unit
-
-    override fun canRouteInternallyDelegate(url: String) = false
-
-    override fun routeInternallyCallback(url: String) = Unit
 }

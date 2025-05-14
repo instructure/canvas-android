@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.filecache.FileCache
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -180,5 +181,10 @@ class ApplicationModule {
     @Provides
     fun provideLocaleUtils(): LocaleUtils {
         return LocaleUtils
+    }
+
+    @Provides
+    fun provideFileCache(): FileCache {
+        return FileCache
     }
 }

@@ -29,6 +29,9 @@ data class ModuleItemSequenceUiState(
     val onPreviousClick: () -> Unit = {},
     val onNextClick: () -> Unit = {},
     val onProgressClick: () -> Unit = {},
+    val onAssignmentToolsClick: () -> Unit = {},
+    val openAssignmentTools: Boolean = false,
+    val assignmentToolsOpened: () -> Unit = {},
 )
 
 data class ModuleItemUiState(

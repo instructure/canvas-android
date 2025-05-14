@@ -13,22 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.moduleitemsequence.content.page
+package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.Page
+import com.instructure.canvasapi2.models.Assignment
 import javax.inject.Inject
 
-class PageDetailsRepository @Inject constructor(
-    private val pageApi: PageAPI.PagesInterface,
+class AssignmentDetailsRepository @Inject constructor(
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val oAuthInterface: OAuthAPI.OAuthInterface
 ) {
-    suspend fun getPageDetails(courseId: Long, pageId: String, forceNetwork: Boolean = false): Page {
+
+    suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return pageApi.getDetailedPage(CanvasContext.Type.COURSE.apiString, courseId, pageId, params).dataOrThrow
+        return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
     }
 
     suspend fun authenticateUrl(url: String): String {

@@ -199,4 +199,19 @@
     <string name="a11y_selected">Selected</string>
     <string name="a11y_correct">Correct</string>
     <string name="a11y_incorrect">Incorrect</string>
+    <string name="assignmentDetails_instructions">Instructions</string>
+    <string name="modulePager_unlimitedAttempts">Unlimited Attempts Allowed</string>
+    <plurals name="modulePager_numberOfAttemtps">
+        <item quantity="one">%d Attempt Allowed</item>
+        <item quantity="other">%d Attempts Allowed</item>
+    </plurals>
+    <string name="assignmentDetails_newAttempt">New Attempt</string>
+    <string name="assignmentDetails_textSubmission">Your Text Submission</string>
+    <string name="assignmentDetails_fileSubmission">Your Uploaded Submission</string>
+    <string name="assignmentDetilas_submissionTypeText">Text</string>
+    <string name="assignmentDetilas_submissionTypeFileUpload">File Upload</string>
+    <string name="assignmentDetails_selectSubmissionType">Select a Submission Type</string>
+    <string name="assignmentDetails_tools">Tools</string>
+    <string name="assignmentDetails_attemptHistory">Attempt History</string>
+    <string name="assignmentDetails_comments">Comments</string>
 </resources>

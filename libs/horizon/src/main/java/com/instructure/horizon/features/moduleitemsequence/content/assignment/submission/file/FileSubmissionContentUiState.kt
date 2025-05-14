@@ -13,22 +13,29 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.moduleitemsequence.content.file
+package com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file
 
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
-import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 
-data class FileDetailsUiState(
-    val url: String = "",
-    val fileName: String = "",
-    val loadingState: LoadingState = LoadingState(),
-    val onDownloadClicked: () -> Unit = {},
-    val downloadProgress: Float = 0f,
-    val downloadState: FileDownloadProgressState = FileDownloadProgressState.COMPLETED,
-    val onCancelDownloadClicked: () -> Unit = {},
-    val filePathToOpen: String? = null,
-    val onFileOpened: () -> Unit = {},
+data class FileSubmissionContentUiState(
+    val files: List<FileItemUiState> = emptyList(),
     val filePreview: FilePreviewUiState? = null,
-    val mimeType: String = "*/*",
+    val filePathToOpen: String? = null,
+    val mimeTypeToOpen: String? = null,
+    val onFileOpened: () -> Unit = {},
+)
+
+data class FileItemUiState(
+    val fileName: String,
+    val fileUrl: String,
+    val fileType: String,
+    val thumbnailUrl: String,
+    val selected: Boolean = false,
+    val fileId: Long = -1L,
+    val onClick: () -> Unit = {},
+    val onDownloadClick: (FileItemUiState) -> Unit = {},
+    val onCancelDownloadClick: (Long) -> Unit = {},
+    val downloadState: FileDownloadProgressState = FileDownloadProgressState.COMPLETED,
+    val downloadProgress: Float = 0f,
 )
