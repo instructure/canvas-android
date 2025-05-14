@@ -36,6 +36,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.common.AiAssistDetailedFeedback
 import com.instructure.horizon.features.aiassistant.common.AiAssistFeedback
@@ -56,7 +57,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun AiAssistantScreen(navHostController: NavHostController) {
+fun AiAssistantScreen(navHostController: NavHostController, viewModel: AiAssistantViewModel = hiltViewModel()) {
     val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     ModalBottomSheet(
         containerColor = Color.White,

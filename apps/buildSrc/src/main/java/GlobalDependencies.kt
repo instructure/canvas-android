@@ -42,6 +42,7 @@ object Versions {
     const val DATASTORE = "1.1.1"
     const val LOTTIE = "6.5.2"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
+    const val JAVA_JWT = "4.5.0"
 }
 
 object Libs {
@@ -78,6 +79,7 @@ object Libs {
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.9.0"
     const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
     const val ENCRYPTED_SHARED_PREFERENCES = "androidx.security:security-crypto:${Versions.ENCRYPTED_SHARED_PREFERENCES}"
+    const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:33.4.0"
