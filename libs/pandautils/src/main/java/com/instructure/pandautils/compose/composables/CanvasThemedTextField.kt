@@ -34,6 +34,8 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.Font
 import androidx.compose.ui.text.font.FontFamily
@@ -77,6 +79,7 @@ fun CanvasThemedTextField(
             onValueChange(it)
         },
         modifier = modifier
+            .semantics { placeholder?.let { contentDescription = it } }
             .bringIntoViewRequester(bringIntoViewRequester),
         enabled = enabled,
         readOnly = readOnly,
