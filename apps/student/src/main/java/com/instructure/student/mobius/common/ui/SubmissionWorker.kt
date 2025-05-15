@@ -60,13 +60,14 @@ import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.trySend
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
-import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
-import com.instructure.student.room.entities.CreateSubmissionEntity
-import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
-import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
-import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
-import com.instructure.student.room.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -304,10 +305,10 @@ class SubmissionWorker @AssistedInject constructor(
 
             // Upload config setup
             val fso = FileSubmitObject(
-                pendingAttachment.name,
-                pendingAttachment.size,
-                pendingAttachment.contentType,
-                pendingAttachment.fullPath
+                pendingAttachment.name.orEmpty(),
+                pendingAttachment.size.orDefault(),
+                pendingAttachment.contentType.orEmpty(),
+                pendingAttachment.fullPath.orEmpty()
             )
             val config = if (groupId == null) {
                 FileUploadConfig.forSubmission(
@@ -492,7 +493,7 @@ class SubmissionWorker @AssistedInject constructor(
             notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
             notoriousUploader.performUpload(
-                comment.mediaPath,
+                comment.mediaPath.orEmpty(),
                 object : ProgressRequestUpdateListener {
                     override fun onProgressUpdated(
                         progressPercent: Float,

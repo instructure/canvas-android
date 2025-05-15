@@ -13,13 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.room.entities.daos
+package com.instructure.pandautils.room.studentdb.entities.daos
 
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 
 @Dao
 interface CreateSubmissionDao {

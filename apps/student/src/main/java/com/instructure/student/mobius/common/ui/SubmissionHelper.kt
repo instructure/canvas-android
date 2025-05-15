@@ -28,11 +28,11 @@ import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
-import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
-import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
-import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionCommentFileEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import kotlinx.coroutines.runBlocking
 import java.io.File
 import java.util.Date

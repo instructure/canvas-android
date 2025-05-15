@@ -52,10 +52,10 @@ class StudentLoginNavigation(
         }
         return intent
 
-        //val intent = Intent(activity, NavigationActivity.startActivityClass)
-        //activity.intent?.extras?.let { extras ->
-        //    intent.putExtras(extras)
-        //}
-        //return intent
+//        val intent = Intent(activity, NavigationActivity.startActivityClass)
+//        activity.intent?.extras?.let { extras ->
+//            intent.putExtras(extras)
+//        }
+//        return intent
     }
 }
