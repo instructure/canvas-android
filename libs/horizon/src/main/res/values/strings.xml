@@ -214,4 +214,7 @@
     <string name="assignmentDetails_tools">Tools</string>
     <string name="assignmentDetails_attemptHistory">Attempt History</string>
     <string name="assignmentDetails_comments">Comments</string>
+    <string name="assignmentDetails_submitAssignment">Submit Assignment</string>
+    <string name="assignmentDetails_deleteDraft">Delete Draft</string>
+    <string name="assignmentDetails_textEntryHint">Add your text entry</string>
 </resources>

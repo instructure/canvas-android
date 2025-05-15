@@ -63,10 +63,17 @@ data class AddSubmissionUiState(
     val submissionTypes: List<AddSubmissionTypeUiState> = emptyList(),
     val selectedSubmissionTypeIndex: Int = 0,
     val onSubmissionTypeSelected: (Int) -> Unit = {},
+    val onSubmissionButtonClicked: () -> Unit = {},
+    val draftDateString: String = "",
+    val onDeleteDraftClicked: () -> Unit = {}
 )
 
 sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
-    data class Text(val text: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
+    data class Text(
+        val text: String = "",
+        val onTextChanged: (String) -> Unit = {},
+    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
+
     data class File(val fileName: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
 }
 

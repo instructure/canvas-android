@@ -20,9 +20,11 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 import android.view.ViewGroup
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,7 +50,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddTextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
@@ -61,6 +65,7 @@ import com.instructure.horizon.horizonui.molecules.ActionBottomSheet
 import com.instructure.horizon.horizonui.molecules.BottomSheetActionState
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.SegmentedControl
 import com.instructure.horizon.horizonui.molecules.SegmentedControlIconPosition
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -229,7 +234,28 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
         val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
         when (selectedSubmissionType) {
             is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
-            is AddSubmissionTypeUiState.Text -> Text(text = "Text Submission") // TODO Submission ticket
+            is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType)
+        }
+        HorizonSpace(SpaceSize.SPACE_24)
+        Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
+            Text(uiState.draftDateString, style = HorizonTypography.p1, color = HorizonColors.Text.timestamp())
+            Button(
+                label = stringResource(R.string.assignmentDetails_deleteDraft),
+                color = ButtonColor.Custom(
+                    backgroundColor = HorizonColors.Surface.pageSecondary(),
+                    contentColor = HorizonColors.Text.error()
+                ),
+                onClick = uiState.onSubmissionButtonClicked,
+                iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+            )
+        }
+        HorizonSpace(SpaceSize.SPACE_16)
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            Button(
+                label = stringResource(R.string.assignmentDetails_submitAssignment),
+                color = ButtonColor.Institution,
+                onClick = uiState.onSubmissionButtonClicked
+            )
         }
     }
 }
@@ -237,6 +263,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
 @Preview
 @Composable
 fun AssignmentDetailsScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
     AssignmentDetailsScreen(
         uiState = AssignmentDetailsUiState(
             instructions = "This is a test",
@@ -252,6 +279,27 @@ fun AssignmentDetailsScreenPreview() {
                 currentSubmissionAttempt = 1L
             ),
             showSubmissionDetails = true
+        ),
+        scrollState = ScrollState(0)
+    )
+}
+
+@Preview
+@Composable
+fun AssignmentDetailsScreenAddSubmissionPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AssignmentDetailsScreen(
+        uiState = AssignmentDetailsUiState(
+            instructions = "This is a test",
+            ltiUrl = "",
+            addSubmissionUiState = AddSubmissionUiState(
+                draftDateString = "Saved at 2023-10-01",
+                submissionTypes = listOf(
+                    AddSubmissionTypeUiState.Text(""),
+                    AddSubmissionTypeUiState.File("File Name")
+                ),
+            ),
+            showAddSubmission = true
         ),
         scrollState = ScrollState(0)
     )

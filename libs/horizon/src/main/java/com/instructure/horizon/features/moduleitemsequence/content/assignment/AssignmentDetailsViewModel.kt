@@ -45,6 +45,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(
             AssignmentDetailsUiState(
+                submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
                 addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
                 ltiButtonPressed = ::ltiButtonPressed,
@@ -72,7 +73,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
                 when (it) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text("")
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text("", ::onTextSubmissionChanged)
                     Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File("")
                     else -> null
                 }
@@ -85,7 +86,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     loadingState = it.loadingState.copy(isLoading = false),
                     instructions = description,
                     ltiUrl = assignment.externalToolAttributes?.url.orEmpty(),
-                    submissionDetailsUiState = SubmissionDetailsUiState(
+                    submissionDetailsUiState = it.submissionDetailsUiState.copy(
                         submissions = submissions,
                         currentSubmissionAttempt = initialAttempt
                     ),
@@ -171,5 +172,33 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun onUrlOpened() {
         _uiState.update { it.copy(urlToOpen = null) }
+    }
+
+    private fun onNewAttemptClick() {
+        _uiState.update {
+            it.copy(
+                showSubmissionDetails = false,
+                showAddSubmission = true
+            )
+        }
+    }
+
+    private fun onTextSubmissionChanged(text: String) {
+        val textSubmission = uiState.value.addSubmissionUiState.submissionTypes[uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex]
+        if (textSubmission is AddSubmissionTypeUiState.Text) {
+            _uiState.update {
+                it.copy(
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionTypes = it.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
+                            if (index == uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex) {
+                                textSubmission.copy(text = text)
+                            } else {
+                                submissionType
+                            }
+                        }
+                    )
+                )
+            }
+        }
     }
 }
