@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -13,40 +13,21 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.mobius.common.ui
+package com.instructure.horizon.features.moduleitemsequence.content.assignment.submission
 
-import androidx.work.Constraints
-import androidx.work.Data
-import androidx.work.NetworkType
-import androidx.work.OneTimeWorkRequest
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.submission.BaseSubmissionHelper
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.room.studentdb.StudentDb
-import com.instructure.pandautils.utils.Const
 
-class SubmissionHelper(
+class HorizonSubmissionHelper(
     studentDb: StudentDb,
     apiPrefs: ApiPrefs,
     private val workManager: WorkManager
 ) : BaseSubmissionHelper(studentDb, apiPrefs) {
 
     override fun startSubmissionWorker(action: SubmissionWorkerAction, submissionId: Long?, commentId: Long?) {
-        val data = Data.Builder()
-        data.putString(Const.ACTION, action.name)
 
-        submissionId?.let {
-            data.putLong(Const.SUBMISSION_ID, it)
-        }
-        commentId?.let {
-            data.putLong(Const.ID, it)
-        }
-        val submissionWork = OneTimeWorkRequest.Builder(SubmissionWorker::class.java)
-            .setInputData(data.build())
-            .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
-            .build()
-        workManager.enqueue(submissionWork)
     }
-
 }

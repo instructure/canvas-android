@@ -50,6 +50,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
@@ -110,14 +111,14 @@ class SubmissionWorker @AssistedInject constructor(
                     ?: return Result.failure()// Return early if deleted, means it was canceled
             }
 
-            return when (Action.valueOf(action)) {
-                Action.TEXT_ENTRY -> uploadText(submission)
-                Action.FILE_ENTRY -> uploadFileSubmission(submission)
-                Action.MEDIA_ENTRY -> uploadMedia(submission)
-                Action.URL_ENTRY -> uploadUrl(submission, false)
-                Action.STUDIO_ENTRY -> uploadUrl(submission, true)
-                Action.COMMENT_ENTRY -> uploadComment()
-                Action.STUDENT_ANNOTATION -> uploadStudentAnnotation(submission)
+            return when (SubmissionWorkerAction.valueOf(action)) {
+                SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
+                SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
+                SubmissionWorkerAction.MEDIA_ENTRY -> uploadMedia(submission)
+                SubmissionWorkerAction.URL_ENTRY -> uploadUrl(submission, false)
+                SubmissionWorkerAction.STUDIO_ENTRY -> uploadUrl(submission, true)
+                SubmissionWorkerAction.COMMENT_ENTRY -> uploadComment()
+                SubmissionWorkerAction.STUDENT_ANNOTATION -> uploadStudentAnnotation(submission)
             }
         } catch (e: IllegalArgumentException) {
             Log.e("SubmissionWorker", "Invalid Action")
@@ -835,10 +836,6 @@ class SubmissionWorker @AssistedInject constructor(
     }
 
     // endregion
-
-    enum class Action {
-        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY, STUDENT_ANNOTATION
-    }
 
     companion object {
         private const val CHANNEL_ID = "submissionChannel"
