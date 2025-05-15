@@ -126,20 +126,20 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
         context: Context,
         courses: List<Course>
     ) = WidgetPlannerItem(
-        date = this.plannableDate.toLocalDate(),
-        iconRes = this.getIconForPlannerItem(),
-        canvasContextColor = this.canvasContext.color,
+        date = plannableDate.toLocalDate(),
+        iconRes = getIconForPlannerItem(),
+        canvasContextColor = canvasContext.color,
         canvasContextText = getContextNameForPlannerItem(context, courses),
-        title = this.plannable.title,
-        dateText = this.getDateTextForPlannerItem(context).orEmpty(),
-        url = this.htmlUrl.orEmpty(),
+        title = plannable.title,
+        dateText = getDateTextForPlannerItem(context).orEmpty(),
+        url = getUrl(),
     )
 
     private fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: List<Course>): String {
-        val courseCode = courses.find { it.id == this.canvasContext.id }?.courseCode
-        return when (this.plannableType) {
+        val courseCode = courses.find { it.id == canvasContext.id }?.courseCode
+        return when (plannableType) {
             PlannableType.PLANNER_NOTE -> {
-                if (this.contextName.isNullOrEmpty()) {
+                if (contextName.isNullOrEmpty()) {
                     context.getString(R.string.userCalendarToDo)
                 } else {
                     context.getString(R.string.courseToDo, courseCode)
@@ -147,32 +147,32 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
             }
 
             else -> {
-                if (this.canvasContext is Course) {
+                if (canvasContext is Course) {
                     courseCode.orEmpty()
                 } else {
-                    this.contextName.orEmpty()
+                    contextName.orEmpty()
                 }
             }
         }
     }
 
     private fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
-        return when (this.plannableType) {
+        return when (plannableType) {
             PlannableType.PLANNER_NOTE -> {
-                this.plannable.todoDate.toDate()?.let {
+                plannable.todoDate.toDate()?.let {
                     DateHelper.getFormattedTime(context, it)
                 }
             }
 
             PlannableType.CALENDAR_EVENT -> {
-                val startDate = this.plannable.startAt
-                val endDate = this.plannable.endAt
+                val startDate = plannable.startAt
+                val endDate = plannable.endAt
                 if (startDate != null && endDate != null) {
                     val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
                     val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
 
                     when {
-                        this.plannable.allDay == true -> context.getString(R.string.widgetAllDay)
+                        plannable.allDay == true -> context.getString(R.string.widgetAllDay)
                         startDate == endDate -> startText
                         else -> context.getString(R.string.widgetFromTo, startText, endText)
                     }
@@ -180,11 +180,33 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
             }
 
             else -> {
-                this.plannable.dueAt?.let {
+                plannable.dueAt?.let {
                     val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
                     context.getString(R.string.widgetDueDate, timeText)
                 }
             }
+        }
+    }
+
+    private fun PlannerItem.getUrl(): String {
+        val url = when (plannableType) {
+            PlannableType.CALENDAR_EVENT -> {
+                "/${canvasContext.type.apiString}/${canvasContext.id}/calendar_events/${plannable.id}"
+            }
+
+            PlannableType.PLANNER_NOTE -> {
+                "/todos/${plannable.id}"
+            }
+
+            else -> {
+                htmlUrl.orEmpty()
+            }
+        }
+
+        return if (url.startsWith("/")) {
+            apiPrefs.fullDomain + url
+        } else {
+            url
         }
     }
 

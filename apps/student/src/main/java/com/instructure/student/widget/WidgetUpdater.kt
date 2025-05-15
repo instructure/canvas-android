@@ -47,7 +47,7 @@ object WidgetUpdater {
         return intent
     }
 
-    fun getTodoWidgetUpdateIntent(appWidgetManager: AppWidgetManager): Intent {
+    private fun getTodoWidgetUpdateIntent(appWidgetManager: AppWidgetManager): Intent {
         val intent = Intent(ContextKeeper.appContext, ToDoWidgetReceiver::class.java)
         intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, ToDoWidgetReceiver::class.java))
