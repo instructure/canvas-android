@@ -42,10 +42,11 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.onClick
 
-@SuppressLint("UnsafeOptInUsageError")
+@UnstableApi
 @Composable
-fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, String) -> Unit, modifier: Modifier = Modifier) {
+fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked: (String, String) -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
+    val uri = mediaUrl.toUri()
     val exoAgent = remember(uri) { ExoAgent.getAgentForUri(uri) }
     var playerViewInstance: PlayerView? by remember { mutableStateOf(null) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -86,7 +87,7 @@ fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, S
 
                 findViewById<View>(R.id.fullscreenButton).onClick {
                     exoAgent.flagForResume()
-                    onFullScreenClicked(uri, contentType)
+                    onFullScreenClicked(mediaUrl, contentType)
                 }
 
                 exoAgent.attach(this, object : ExoInfoListener {
@@ -110,7 +111,7 @@ fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, S
 @Preview
 fun MediaFileContentPreview() {
     MediaFileContent(
-        uri = "https://www.example.com/media.mp4".toUri(),
+        mediaUrl = "https://www.example.com/media.mp4",
         contentType = "video/mp4",
         onFullScreenClicked = { _, _ -> }
     )

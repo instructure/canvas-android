@@ -69,7 +69,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
         helpPage.assertReportProblemDialogDisplayed()
 
-        Log.d(STEP_TAG, "Click on 'Cancel' button on the 'Report a problem' dialog.")
+        Log.d(ASSERTION_TAG, "Click on 'Cancel' button on the 'Report a problem' dialog.")
         helpPage.clickCancelReportProblem()
 
         Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")

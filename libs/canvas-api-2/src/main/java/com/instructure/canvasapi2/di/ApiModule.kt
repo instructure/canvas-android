@@ -378,6 +378,12 @@ class ApiModule {
     fun provideSectionApi(): SectionAPI.SectionsInterface {
         return RestBuilder().build(SectionAPI.SectionsInterface::class.java, RestParams())
     }
+}
+
+@EarlyEntryPoint
+@InstallIn(SingletonComponent::class)
+interface CanvasAuthenticatorEntryPoint {
+    fun canvasAuthenticator(): CanvasAuthenticator
 
     @Provides
     fun provideStreamApi(): StreamAPI.StreamInterface {

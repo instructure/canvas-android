@@ -225,13 +225,12 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Type the '${gradedStudent.name}' student's name into the search input field.")
         assignmentSubmissionListPage.searchSubmission(gradedStudent.name)
 
-        Log.d(ASSERTION_TAG, "Assert that there is one submission displayed and that is for '${gradedStudent.name}' student.")
+        Log.d(ASSERTION_TAG,"Assert that there is one submission displayed and that is for '${gradedStudent.name}' student.")
         assignmentSubmissionListPage.assertHasSubmission(1)
         assignmentSubmissionListPage.assertHasStudentSubmission(gradedStudent)
 
         Log.d(STEP_TAG, "Clear the search field.")
         assignmentSubmissionListPage.clearSearch()
-
         Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
         assignmentSubmissionListPage.clickOnPostPolicies()
 
