@@ -60,7 +60,7 @@ object UserApi {
         ): Call<OAuthToken>
 
         @DELETE("/login/oauth2/token?expire_sessions=1")
-        fun deleteToken(@Query("access_token") accessToken: String): Call<ForwardURL>
+        fun deleteToken(@Query("access_token") accessToken: String): Call<Unit>
 
         @PUT("users/{userId}/settings")
         fun putSelfSettings(@Path("userId") userId: Long, @Body body: UserSettingsApiModel): Call<UserSettingsApiModel>
@@ -143,8 +143,8 @@ object UserApi {
 
     fun deleteToken(
         accessToken: String
-    ): ForwardURL {
-        return userService(accessToken).deleteToken(accessToken).execute().body()!!
+    ) {
+        userService(accessToken).deleteToken(accessToken).execute()
     }
 
     /**

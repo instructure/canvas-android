@@ -207,7 +207,6 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, courses = 1, parents = 1)
         val parent = data.parentsList[0]
-        val student = data.studentsList[0]
 
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithUser(parent)

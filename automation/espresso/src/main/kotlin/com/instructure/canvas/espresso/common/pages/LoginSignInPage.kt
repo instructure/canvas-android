@@ -98,7 +98,7 @@ class LoginSignInPage: BasePage() {
     //region UI Action Helpers
 
     fun clickLogInOnLoginRequiredDialog() {
-        onView(withText("LOG IN")).click()
+        onView(withText(R.string.login)).click()
     }
 
     private fun enterEmail(email: String) {
