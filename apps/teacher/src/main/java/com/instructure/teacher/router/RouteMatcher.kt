@@ -42,6 +42,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -77,7 +78,6 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
@@ -487,7 +487,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 .newInstance((canvasContext as Course?)!!)
             DashboardFragment::class.java.isAssignableFrom(cls) -> fragment = DashboardFragment.getInstance()
             AssignmentListFragment::class.java.isAssignableFrom(cls) -> fragment = AssignmentListFragment
-                .getInstance(canvasContext!!, route.arguments)
+                .newInstance(canvasContext!!, route)
             AssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getAssignmentDetailsFragment(canvasContext, route)
             DueDatesFragment::class.java.isAssignableFrom(cls) -> fragment = DueDatesFragment
                 .getInstance((canvasContext as Course?)!!, route.arguments)

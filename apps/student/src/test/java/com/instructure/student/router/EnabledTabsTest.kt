@@ -18,6 +18,7 @@ package com.instructure.student.router
 
 import android.net.Uri
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.DataResult
@@ -25,6 +26,7 @@ import com.instructure.interactions.router.Route
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertFalse
@@ -37,12 +39,16 @@ import org.junit.Test
 class EnabledTabsTest {
     private val mockUri: Uri = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val enabledTabs = EnabledTabsImpl(courseApi)
+    private val enabledTabs = EnabledTabsImpl()
 
     @Before
     fun setup() {
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } returns mockUri
+
+        mockkConstructor(RestBuilder::class)
+        every { anyConstructed<RestBuilder>().build(CourseAPI.CoursesInterface::class.java, any()) } returns courseApi
+
     }
 
     @After
@@ -276,6 +282,40 @@ class EnabledTabsTest {
         val route = Route(uri = mockUri)
         every { mockUri.path } returns "http://www.google.com/courses/1/external_tools/retrive"
         every { mockUri.pathSegments } returns listOf("courses", "1", "external_tools", "retrive")
+        val result = enabledTabs.isPathTabNotEnabled(route)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `routing to pages with wiki url`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 1, tabs = listOf(Tab(tabId = Tab.PAGES_ID, htmlUrl = "/courses/1/pages"))),
+            )
+        )
+
+        enabledTabs.initTabs()
+
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/1/wiki"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "wiki")
+        val result = enabledTabs.isPathTabNotEnabled(route)
+        assertFalse(result)
+    }
+
+    @Test
+    fun `routing to wiki with pages url`() = runTest {
+        coEvery { courseApi.getFirstPageCourses(any()) } returns DataResult.Success(
+            listOf(
+                Course(id = 1, tabs = listOf(Tab(tabId = Tab.PAGES_ID, htmlUrl = "/courses/1/wiki"))),
+            )
+        )
+
+        enabledTabs.initTabs()
+
+        val route = Route(uri = mockUri)
+        every { mockUri.path } returns "http://www.google.com/courses/1/pages"
+        every { mockUri.pathSegments } returns listOf("courses", "1", "pages")
         val result = enabledTabs.isPathTabNotEnabled(route)
         assertFalse(result)
     }

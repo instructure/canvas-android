@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -34,8 +35,7 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.ViewUtils
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
-import com.instructure.student.ui.pages.AssignmentListPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -43,7 +43,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class OfflineAssignmentsE2ETest : StudentTest() {
+class OfflineAssignmentsE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -142,15 +142,11 @@ class OfflineAssignmentsE2ETest : StudentTest() {
         assignmentListPage.assertHasAssignment(otherTypeAssignment)
 
         Log.d(ASSERTION_TAG, "Assert that the '${gradedAssignment.name}' assignment's grade is: '13/20 (D)'.")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(gradedAssignment.name, "13/20 (D)")
+        assignmentListPage.assertHasAssignment(gradedAssignment, expectedGrade = "13/20 (D)")
 
         Log.d(ASSERTION_TAG, "Assert that that the 'Upcoming Assignments' and 'Undated Assignments' filter groups are displayed and the sorting is 'Sort by Time'.")
         assignmentListPage.assertAssignmentGroupDisplayed("Upcoming Assignments") //Because 2 of our assignments has 1 and 10 days due date from today
         assignmentListPage.assertAssignmentGroupDisplayed("Undated Assignments") //Because one of our assignments has no due date
-        assignmentListPage.assertSortByButtonShowsSortByTime()
-
-        Log.d(STEP_TAG, "Select 'Sort by Type' and assert that.")
-        assignmentListPage.selectSortByType()
 
         Log.d(ASSERTION_TAG, "Assert that all the seeded (4) assignments are displayed on the Assignment List Page.")
         assignmentListPage.assertHasAssignment(notSubmittedAssignment)
@@ -159,39 +155,39 @@ class OfflineAssignmentsE2ETest : StudentTest() {
         assignmentListPage.assertHasAssignment(otherTypeAssignment)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Assignments' (type) filter group is displayed and the sorting is 'Sort by Type'.")
+        assignmentListPage.groupByAssignments(AssignmentListPage.GroupByOption.AssignmentGroup)
         assignmentListPage.assertAssignmentGroupDisplayed("Assignments")
         assignmentListPage.assertAssignmentGroupDisplayed("Discussions") //Because one of our seeded data is actually a discussion.
-        assignmentListPage.assertSortByButtonShowsSortByType()
 
-        Log.d(STEP_TAG, "Filter the 'LATE' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.LATE)
-
-        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed.")
-        assignmentListPage.assertDisplaysNoAssignmentsView()
-
-        Log.d(STEP_TAG, "Filter the 'MISSING' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.MISSING)
-
-        Log.d(STEP_TAG, "Filter the 'GRADED' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.GRADED)
-
-        Log.d(STEP_TAG, "Assert that the '${gradedAssignment.name}' GRADED assignment is displayed and the others at NOT.")
-        assignmentListPage.assertHasAssignment(gradedAssignment)
-        assignmentListPage.assertAssignmentNotDisplayed(submittedAssignment.name)
-        assignmentListPage.assertAssignmentNotDisplayed(notSubmittedAssignment.name)
-        assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
-
-        Log.d(STEP_TAG, "Filter the 'Upcoming' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.UPCOMING)
-
-        Log.d(STEP_TAG, "Assert that the '${notSubmittedAssignment.name}' UPCOMING assignment is displayed and the others at NOT.")
+        Log.d(STEP_TAG, "Filter the 'Not Yet Submitted' assignments.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Graded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Other)
         assignmentListPage.assertHasAssignment(notSubmittedAssignment)
         assignmentListPage.assertAssignmentNotDisplayed(submittedAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
 
+        Log.d(STEP_TAG, "Filter the 'To Be Graded' assignments.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NotYetSubmitted)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
+        assignmentListPage.assertHasAssignment(submittedAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(notSubmittedAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
+
+        Log.d(STEP_TAG, "Filter the 'GRADED' assignments.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Graded)
+        assignmentListPage.assertHasAssignment(gradedAssignment)
+        assignmentListPage.assertAssignmentNotDisplayed(notSubmittedAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(submittedAssignment.name)
+        assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
+
         Log.d(STEP_TAG, "Filter the 'ALL' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.ALL)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NotYetSubmitted)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Other)
 
         Log.d(ASSERTION_TAG, "Assert that all the seeded (5) assignments are displayed on the Assignment List Page.")
         assignmentListPage.assertHasAssignment(notSubmittedAssignment)

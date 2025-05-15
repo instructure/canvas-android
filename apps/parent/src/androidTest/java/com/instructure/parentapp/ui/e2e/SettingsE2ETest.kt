@@ -57,11 +57,11 @@ class SettingsE2ETest : ParentComposeTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -71,33 +71,41 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettings()
 
-        Log.d(STEP_TAG,"Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG, "Select Dark App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Dark mode).")
         settingsPage.selectAppTheme(AppTheme.DARK)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the course label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the course label has the proper text color (which is used in Dark mode).")
         coursesPage.assertCourseLabelTextColor(course, 0xFFFFFFFF)
 
-        Log.d(STEP_TAG,"Select '${course.name}' course and assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG, "Select '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
         courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFFFFFFFF)
 
         Log.d(STEP_TAG, "Navigate back and open the Left Side Navigation Drawer menu.")
         Espresso.pressBack()
         dashboardPage.openLeftSideMenu()
 
-        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
+        Log.d(STEP_TAG, "Navigate to Settings Page and open App Theme Settings again.")
         leftSideNavigationDrawerPage.clickSettings()
 
-        Log.d(STEP_TAG,"Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
+        Log.d(STEP_TAG, "Select Light App Theme and assert that the App Theme Title and Status has the proper text color (which is used in Light mode).")
         settingsPage.selectAppTheme(AppTheme.LIGHT)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the course label has the proper text color (which is used in Light mode).")
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the course label has the proper text color (which is used in Light mode).")
         coursesPage.assertCourseLabelTextColor(course, 0xFF273540)
 
-        Log.d(STEP_TAG,"Select '${course.name}' course and assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG, "Select '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
         courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFF273540)
     }
 
@@ -109,7 +117,7 @@ class SettingsE2ETest : ParentComposeTest() {
         val data = seedData(students = 1, teachers = 1, parents = 1, courses = 1)
         val parent = data.parentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -119,8 +127,10 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettings()
 
-        Log.d(STEP_TAG,"Open Legal Page and assert that all the corresponding buttons are displayed.")
+        Log.d(STEP_TAG, "Open Legal Page.")
         settingsPage.clickOnSettingsItem("Legal")
+
+        Log.d(ASSERTION_TAG, "Assert that all the corresponding buttons are displayed.")
         legalPage.assertPageObjects()
     }
 
@@ -132,7 +142,7 @@ class SettingsE2ETest : ParentComposeTest() {
         val data = seedData(students = 1, teachers = 1, parents = 1, courses = 1)
         val parent = data.parentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -146,16 +156,16 @@ class SettingsE2ETest : ParentComposeTest() {
         settingsPage.clickOnSettingsItem("About")
         aboutPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Check that domain is equal to: '${parent.domain}' (parent's domain).")
+        Log.d(STEP_TAG, "Check that domain is equal to: '${parent.domain}' (parent's domain).")
         aboutPage.domainIs(parent.domain)
 
-        Log.d(STEP_TAG,"Check that Login ID is equal to: '${parent.loginId}' (parent's Login ID).")
+        Log.d(STEP_TAG, "Check that Login ID is equal to: '${parent.loginId}' (parent's Login ID).")
         aboutPage.loginIdIs(parent.loginId)
 
-        Log.d(STEP_TAG,"Check that e-mail is equal to: '${parent.loginId}' (parent's Login ID).")
+        Log.d(STEP_TAG, "Check that e-mail is equal to: '${parent.loginId}' (parent's Login ID).")
         aboutPage.emailIs(parent.loginId)
 
-        Log.d(STEP_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
+        Log.d(ASSERTION_TAG, "Assert that the Instructure company logo has been displayed on the About page.")
         aboutPage.assertInstructureLogoDisplayed()
     }
 
@@ -190,7 +200,6 @@ class SettingsE2ETest : ParentComposeTest() {
         inboxSignatureSettingsPage.assertSignatureEnabledState(false)
 
         val signatureText = "President of AC Milan\nVice President of Ferencvaros"
-
         Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$signatureText'. Save the changes.")
         inboxSignatureSettingsPage.toggleSignatureEnabledState()
         inboxSignatureSettingsPage.changeSignatureText(signatureText)
@@ -221,7 +230,7 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
         inboxCoursePickerPage.selectCourseWithUser(course.name, student.shortName)
 

@@ -35,7 +35,7 @@
         android:backgroundTint="@color/borderInfo"
         android:gravity="center_vertical"
         android:minHeight="55dp"
-        android:onClick="@{() -> itemViewModel.handleJoin()}"
+        app:onClickWithNetworkCheck="@{() -> itemViewModel.handleJoin()}"
         android:orientation="horizontal"
         tools:layout_margin="16dp">
 

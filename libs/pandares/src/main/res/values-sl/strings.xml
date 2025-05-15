@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Brisanje pogovora ni uspelo</string>
     <string name="conversationUpdateFailed">Posodobitev pogovora ni uspela</string>
     <string name="sendIndividualMessage">Vsakemu prejemniku pošlji individualno sporočilo.</string>
+    <string name="sendIndividualMessageIsMandatory">Posamezna sporočila lahko pošljete samo več kot 100 prejemnikom</string>
     <string name="invalidRecipients">Nimate dovoljenja za pošiljanje sporočil enemu ali več izbranim prejemnikom.</string>
     <string name="newMessage">Novo sporočilo</string>
     <string name="forwardMessage">Prepošlji sporočilo</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Ta naloga ni več na voljo.</string>
     <string name="editDashboardOfflineMode">Nimate povezave</string>
+    <string name="editDashboardNoResults">Ni rezultatov</string>
+    <string name="editDashboardNoResultsMessage">Ni najdenih ujemajočih se elementov.</string>
     <string name="editDashboardOfflineModeMessage">Trenutno nimate nobenega predmeta, ki bi bil na voljo brez povezave.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Sinhronizacija vsebine brez povezave je uspela</string>
     <string name="offlineContentSyncFailureNotificationTitle">Sinhronizacija vsebine brez povezave ni uspela</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Dodaj nov element koledarja</string>
     <string name="calendarFilterCalendars">Koledarji</string>
     <string name="calendarFilterUser">Uporabnik</string>
+    <string name="calendarFilterFavoriteCourse">Priljubljeni predmeti</string>
+    <string name="calendarFilterMoreCourse">Več predmetov</string>
     <string name="calendarFilterCourse">Predmeti</string>
     <string name="calendarFilterGroup">Skupine</string>
     <string name="calendarFilterExplanationLimited">Izberite koledarje, ki jih želite videti, do %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Odjava</string>
     <string name="noStudentsError">Ni študentov</string>
     <string name="noStudentsErrorDescription">Ne opazujete nobenega študenta.</string>
+    <string name="noStudentsRefresh">Osveži</string>
     <string name="noGrade">Ni ocen</string>
     <string name="errorLoadingCourses">Pri nalaganju predmetov vašega študenta je prišlo do napake.</string>
     <string name="parentNoCourses">Ni predmetov</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Dodaj novega študenta</string>
     <string name="selectStudentColor">Izberite barvo študenta</string>
     <string name="errorSavingColor">Med shranjevanjem vaše izbire je prišlo do napake. Poskusite znova.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Barva je bila uspešno shranjena</string>
     <string name="changeStudentColorLabel">Spremeni barvo za %s</string>
     <string name="studentColorContentDescriptionBlue">Električna, modra</string>
     <string name="studentColorContentDescriptionPurple">Sliva, vijolična</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Detelja, zelena</string>
     <string name="featureFlags">Oznake funkcionalnosti</string>
     <string name="addStudent">Dodaj študenta</string>
+    <string name="addStudentSuccessfull">Študent je bil uspešno dodan</string>
     <string name="addStudentTitle">Dodaj študenta s/z ...</string>
     <string name="addStudentQrCodeTitle">Koda QR</string>
     <string name="addStudentQrCodeExplanation">Študenti lahko ustvarijo kodo QR z aplikacijo Canvas Student na svoji mobilni napravi</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Odstotek ocene</string>
     <string name="unpairStudentTitle">Izbriši</string>
     <string name="unpairStudentMessage">Ta možnost bo odstranila seznanitev in vse vpise za tega študenta v vašem računu.</string>
+    <string name="unpairStudentSuccessfull">Študent je bil uspešno odstranjen</string>
     <string name="alertSettingsMinThresholdError">Mora biti višje od %d</string>
     <string name="alertSettingsMaxThresholdError">Mora biti nižje od %d</string>
     <string name="alertSettingsErrorMessage">Med pridobivanjem nastavitev opozoril je prišlo do napake.</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Imamo težave pri nalaganju ocen vašega študenta. Poskusite znova naložiti stran ali spet obiščite pozneje.</string>
     <string name="errorLoadingCourse">Imamo težave pri nalaganju podrobnosti predmeta vašega študenta. Poskusite znova naložiti stran ali spet obiščite pozneje.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Nastavitve ocene so bile uspešno posodobljene. Seznam je bil osvežen.</string>
     <string name="courseDetailsMessageContentDescription">Pošlji sporočilo o tem predmetu</string>
     <string name="gradeLockedContentDescription">Ocena zaklenjena</string>
     <string name="gradesRefreshFailed">Osveževanje ocen ni uspelo</string>
     <string name="chooseACourseToMessage">Izberite predmet za pošiljanje sporočila</string>
     <string name="regardingHiddenMessage">Zadeva: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Zadeva: %1$s, Naloga – %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Zadeva: %1$s, Dogodek – %2$s</string>
     <string name="sendMessageAboutAssignment">»Pošlji sporočilo o tej nalogi«</string>
+    <string name="sendMessageAboutEvent">»Pošlji sporočilo o tem dogodku«</string>
     <string name="forStudentLabel">za %1$s</string>
     <string name="view_description">Prikaz opisa</string>
     <string name="a11y_contentDescription_viewDescription">Prikaz opisa</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Osveževanje prve strani ni uspelo</string>
     <string name="failed_to_load_summary">Nalaganje povzetka ni uspelo</string>
     <string name="no_summary_items_to_display">Ni elementov povzetka za prikaz</string>
+    <string name="a11y_summaryEventContentDescription">Dogodek</string>
+    <string name="a11y_summaryLockedContentDescription">Zaklenjeno</string>
+    <string name="a11y_summaryQuizContentDescription">Kviz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Razprava</string>
+    <string name="a11y_summaryAssignmentContentDescription">Naloga</string>
     <string name="scheduleItemNoDueDate">Ni roka</string>
     <string name="a11y_refresh">Osveži</string>
     <string name="masqueradingAs">Nastopate v vlogi %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Delno preverjeno</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filtri so posodobljeni</string>
+    <string name="inboxAllRecipients">Vsi prejemniki</string>
+    <string name="inboxSearchIn">Išči v %1$s</string>
+    <string name="a11y_studentSelectorExpand">razširi</string>
+    <string name="a11y_studentSelectorCollapse">strni</string>
+    <string name="a11y_studentSelectorContentDescription">Tapnite za %s izbirnik študentov, izbrani študent je: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Izberi študenta %s</string>
+    <string name="inboxSettingsTitle">Pošta</string>
+    <string name="inboxSettingsInboxSignature">Podpis za pošto</string>
+    <string name="inboxSignatureNotSet">Ni nastavljeno.</string>
+    <string name="inboxSignatureEnabled">Omogočeno</string>
+    <string name="inboxSignatureScreenTitle">Podpis za pošto</string>
+    <string name="inboxSignatureScreenSubtitle">Podpis bo dodan na koncu vseh sporočil.</string>
+    <string name="inboxSignatureSwitchLabel">Podpis</string>
+    <string name="inboxSignatureTextfieldHeader">Besedilo podpisa</string>
+    <string name="due_dateTime">Rok: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Pravila o objavah</string>
+    <string name="late">Zamuda</string>
+    <string name="a11y_contentDescription_expand">Razširi</string>
+    <string name="missingTag">Manjkajoče</string>
+    <string name="submissionFilter">Filter oddaje</string>
+    <string name="submissionMessageSubject">%1$s za nalogo %2$s</string>
+    <string name="all">Vse</string>
 </resources>

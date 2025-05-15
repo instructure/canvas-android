@@ -481,4 +481,8 @@
     <string name="a11y_markAsDoneWithName">%s 标记为“已完成”</string>
     <string name="a11y_markAsNotDoneWithName">%s 标记为“未完成”</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">加载收件箱签名失败</string>
+    <string name="inboxSignatureSettingsUpdated">收件箱设置已保存！</string>
+    <string name="inboxSignatureSettingsError">保存收件箱设置失败</string>
+    <string name="inboxSignatureTextFieldPlaceholder">在此处撰写签名</string>
 </resources>

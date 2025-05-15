@@ -92,6 +92,7 @@ class CanvasWebView @JvmOverloads constructor(
         fun onPageFinishedCallback(webView: WebView, url: String)
         fun routeInternallyCallback(url: String)
         fun canRouteInternallyDelegate(url: String): Boolean
+        fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) = Unit
 
     }
 
@@ -459,6 +460,8 @@ class CanvasWebView @JvmOverloads constructor(
             super.onReceivedError(view, errorCode, description, failingUrl)
             if (failingUrl.startsWith("file://")) {
                 view.loadUrl(failingUrl.replaceFirst("file://".toRegex(), "https://"), Utils.referer)
+            } else {
+                canvasWebViewClientCallback?.onReceivedErrorCallback(view, errorCode, description, failingUrl)
             }
         }
     }

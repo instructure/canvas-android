@@ -487,4 +487,8 @@
     <string name="a11y_markAsDoneWithName">%s Mark as done</string>
     <string name="a11y_markAsNotDoneWithName">%s Mark as not done</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Failed to load inbox signature</string>
+    <string name="inboxSignatureSettingsUpdated">Inbox settings saved!</string>
+    <string name="inboxSignatureSettingsError">Failed to save inbox settings</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Write your signature here</string>
 </resources>

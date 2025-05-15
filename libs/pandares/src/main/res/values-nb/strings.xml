@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Kunne ikke slette samtale</string>
     <string name="conversationUpdateFailed">Kunne ikke oppdatere samtale</string>
     <string name="sendIndividualMessage">Send individuell melding til hver mottaker</string>
+    <string name="sendIndividualMessageIsMandatory">Du kan bare sende individuelle meldinger til over 100 mottakere</string>
     <string name="invalidRecipients">Da har ikke tillatelse til å sende melding til en eller flere av de valgte mottakerne.</string>
     <string name="newMessage">Ny melding</string>
     <string name="forwardMessage">Videresend melding</string>
@@ -1540,6 +1541,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Denne oppgaven er ikke lenger tilgjengelig.</string>
     <string name="editDashboardOfflineMode">Du er frakoblet</string>
+    <string name="editDashboardNoResults">Ingen resultater</string>
+    <string name="editDashboardNoResultsMessage">Ingen matchende elementer funnet.</string>
     <string name="editDashboardOfflineModeMessage">Du har ingen emner som er tilgjengelig i frakoblet modus.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Synkronisering av frakoblet emneinnhold vellykket</string>
     <string name="offlineContentSyncFailureNotificationTitle">Synkronisering av frakoblet emneinnhold mislyktes</string>
@@ -1650,6 +1653,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Legg til nytt kalenderelement</string>
     <string name="calendarFilterCalendars">Kalendere</string>
     <string name="calendarFilterUser">Bruker</string>
+    <string name="calendarFilterFavoriteCourse">Favorittemner</string>
+    <string name="calendarFilterMoreCourse">Flere emner</string>
     <string name="calendarFilterCourse">Emner</string>
     <string name="calendarFilterGroup">Grupper</string>
     <string name="calendarFilterExplanationLimited">Velg alle kalenderne du ønsker å se, opptil %d.</string>
@@ -1776,6 +1781,7 @@
     <string name="navigationDrawerLogOut">Logg Ut</string>
     <string name="noStudentsError">Ingen studenter</string>
     <string name="noStudentsErrorDescription">Du har ingen studenter under observasjon.</string>
+    <string name="noStudentsRefresh">Oppdater</string>
     <string name="noGrade">Ingen vurdering</string>
     <string name="errorLoadingCourses">Det oppsto en feil under lasting av studentemnene dine.</string>
     <string name="parentNoCourses">Ingen emner</string>
@@ -1811,6 +1817,7 @@
     <string name="addNewStudent">Legg til ny student</string>
     <string name="selectStudentColor">Velg studentfarge</string>
     <string name="errorSavingColor">Det oppsto en feil ved lagring av valget ditt. Prøv på nytt.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Fargeendringer lagret</string>
     <string name="changeStudentColorLabel">Endre farge for %s</string>
     <string name="studentColorContentDescriptionBlue">Elektrisk, blå</string>
     <string name="studentColorContentDescriptionPurple">Plomme, blå</string>
@@ -1820,6 +1827,7 @@
     <string name="studentColorContentDescriptionGreen">Kløver, grønn</string>
     <string name="featureFlags">Merk funksjonen</string>
     <string name="addStudent">Legg til student</string>
+    <string name="addStudentSuccessfull">Student lagt til</string>
     <string name="addStudentTitle">Legg til en student til&#8230;</string>
     <string name="addStudentQrCodeTitle">QR-kode</string>
     <string name="addStudentQrCodeExplanation">Studenter kan opprette en QR-kode ved å bruke Canvas Student-appen på mobilenheten</string>
@@ -1867,6 +1875,7 @@
     <string name="alertSettingsThresholdLabel">Vurderingsskala i prosent</string>
     <string name="unpairStudentTitle">Slett</string>
     <string name="unpairStudentMessage">Dette vil koble fra og fjerne alle påmeldinger for denne studenten fra kontoen din.</string>
+    <string name="unpairStudentSuccessfull">Student slettet</string>
     <string name="alertSettingsMinThresholdError">Må være over %d</string>
     <string name="alertSettingsMaxThresholdError">Må være under %d</string>
     <string name="alertSettingsErrorMessage">Det oppsto en feil under henting av varselsinnstillinger.</string>
@@ -1887,13 +1896,16 @@
     <string name="errorLoadingGrades">Vi har problemer med å laste inn studentenes vurderinger. Prøv å laste inn siden på nytt eller sjekk innom senere.</string>
     <string name="errorLoadingCourse">Vi har problemer med å laste inn studentenes emnedetaljer. Prøv å laste inn siden på nytt eller sjekk innom senere.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Vurderingspreferanser ble oppdatert. Listen er oppdatert.</string>
     <string name="courseDetailsMessageContentDescription">Send en melding om dette emnet</string>
     <string name="gradeLockedContentDescription">Vurdering låst</string>
     <string name="gradesRefreshFailed">Kunne ikke oppdatere vurderinger</string>
     <string name="chooseACourseToMessage">Velg et emne du vil sende melding til</string>
     <string name="regardingHiddenMessage">Vedrørende: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Vedrørende: %1$s, Oppgave - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Vedrørende: %1$s, Hendelse - %2$s</string>
     <string name="sendMessageAboutAssignment">«Send en melding om denne oppgaven»</string>
+    <string name="sendMessageAboutEvent">«Send en melding om denne hendelsen»</string>
     <string name="forStudentLabel">for %1$s</string>
     <string name="view_description">Vise beskrivelsen</string>
     <string name="a11y_contentDescription_viewDescription">Vise beskrivelsen</string>
@@ -1932,6 +1944,11 @@
     <string name="frontPageRefreshFailed">Kunne ikke oppdatere forside</string>
     <string name="failed_to_load_summary">Kunne ikke laste inn sammendrag</string>
     <string name="no_summary_items_to_display">Ingen sammendrag å vise</string>
+    <string name="a11y_summaryEventContentDescription">Hendelse</string>
+    <string name="a11y_summaryLockedContentDescription">Låst</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Diskusjon</string>
+    <string name="a11y_summaryAssignmentContentDescription">Oppgave</string>
     <string name="scheduleItemNoDueDate">Ingen forfallsdato</string>
     <string name="a11y_refresh">Oppdater</string>
     <string name="masqueradingAs">Du opptrer som %s</string>
@@ -1974,4 +1991,27 @@
     <string name="a11y_indeterminate">Delvis avmerket</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filtre er oppdatert</string>
+    <string name="inboxAllRecipients">Alle mottakere</string>
+    <string name="inboxSearchIn">Søk i %1$s</string>
+    <string name="a11y_studentSelectorExpand">vis</string>
+    <string name="a11y_studentSelectorCollapse">skjul</string>
+    <string name="a11y_studentSelectorContentDescription">Trykk for å %s studentvelger. Valgt student er: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Velg student %s</string>
+    <string name="inboxSettingsTitle">Innboks</string>
+    <string name="inboxSettingsInboxSignature">Innbokssignatur</string>
+    <string name="inboxSignatureNotSet">Ikke satt</string>
+    <string name="inboxSignatureEnabled">Aktivert</string>
+    <string name="inboxSignatureScreenTitle">Innbokssignatur</string>
+    <string name="inboxSignatureScreenSubtitle">Signaturen blir lagt til nederst i alle meldinger.</string>
+    <string name="inboxSignatureSwitchLabel">Signatur</string>
+    <string name="inboxSignatureTextfieldHeader">Signaturtekst</string>
+    <string name="due_dateTime">Frist: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Publiser retningslinjer</string>
+    <string name="late">Sent</string>
+    <string name="a11y_contentDescription_expand">Utvid</string>
+    <string name="missingTag">Mangler</string>
+    <string name="submissionFilter">Innleveringsfilter</string>
+    <string name="submissionMessageSubject">%1$s I %2$s</string>
+    <string name="all">Alle</string>
 </resources>

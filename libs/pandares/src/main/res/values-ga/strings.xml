@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Theip ar scriosadh an chomhrá</string>
     <string name="conversationUpdateFailed">Theip ar nuashonrú an chomhrá</string>
     <string name="sendIndividualMessage">Seol teachtaireacht aonair chuig gach faighteoir</string>
+    <string name="sendIndividualMessageIsMandatory">Ní féidir leat ach teachtaireachtaí aonair os cionn 100 faighteoir a sheoladh</string>
     <string name="invalidRecipients">Níl cead agat teachtaireachtaí a sheoladh chuig ceann amháin nó níos mó de na faighteoirí roghnaithe.</string>
     <string name="newMessage">Teachtaireacht Nua</string>
     <string name="forwardMessage">Cuir Teachtaireacht ar Aghaidh</string>
@@ -500,7 +501,7 @@
     <string name="calendar">Féilire</string>
     <string name="bookmarks">Leabharmharcanna</string>
     <string name="showGrades">Taispeáin Marcanna</string>
-    <string name="colorOverlay">Forleagan Dath</string>
+    <string name="colorOverlay">Forleagan Datha</string>
     <string name="gradesAreHidden">Níl na Marcanna le feiceáil don chúrsa seo.</string>
 
     <string name="entireGroupSelected">Tá an grúpa iomlán seo roghnaithe cheana féin.</string>
@@ -680,7 +681,7 @@
 
     <!-- Quiz Strings -->
     <string name="assignmentQuizzes">Quizeanna Taisc</string>
-    <string name="practiceQuizzes">Quizeanna le haghaidh Cleachtadh</string>
+    <string name="practiceQuizzes">Quizeanna mar Chleachtadh</string>
     <string name="gradedSurveys">Suirbhéanna Marcáilte</string>
     <string name="surveys">Suirbhéanna</string>
 
@@ -1479,6 +1480,7 @@
     <string name="offline_content_other">Aipeanna Eile</string>
     <string name="offline_content_canvas_student">Mac Léinn Canvas</string>
     <string name="offline_content_remaining">Fágtha</string>
+    <string name="offline_content_storage_info_a11y_description">Eolas Stórais: Úsáideadh %s de %s, Aipeanna Eile %d%%, Mac Léinn Canvas %d%%, fágtha %d%%</string>
     <string name="offline_content_all_courses">Cúrsaí Ar Fad</string>
     <string name="offline_content_sync">Sioncrónaigh</string>
     <string name="offline_content_selected">%d Roghnaithe</string>
@@ -1498,8 +1500,11 @@
     <string name="offline_content_sync_dialog_positive">Sioncrónaigh</string>
     <string name="offline_content_sync_loading_title">Ag lódáil...</string>
     <string name="offline_content_sync_loading_message">Fan go docht, táimid ag ullmhú rudaí duit.</string>
+    <string name="offline_content_a11y_sync_started_announcement">Sábháladh socruithe sioncronaithe as líne. Cuirfear tús le sioncronú go luath sa chúlra.</string>
     <string name="content_description_expand_content">Leathnaigh ábhar</string>
+    <string name="content_description_expand_content_with_param">Leathnaigh an t-ábhar, %s</string>
     <string name="content_description_collapse_content">Leacaigh ábhar</string>
+    <string name="content_description_collapse_content_with_param">Leacaigh an t-ábhar, %s</string>
     <string name="syncSettings_autoContentSyncDescription">Má chumasaíonn tú an tábhar Uathoibríoch Sync tabharfar aird ar an ábhar roghnaithe a íoslódáil bunaithe ar na socruithe thíos. Tarlóidh an sioncrónú ábhair fiú mura bhfuil an feidhmchlár ag rith. Má tá an socrú múchta ansin ní tharlóidh sioncrónú ar bith. Ní scriosfar an t-ábhar atá íoslódáilte cheana féin.</string>
     <string name="syncSettings_syncFrequencyTitle">Minicíocht Sioncronaithe</string>
     <string name="syncSettings_autoContentSyncTitle">Sioncronú Ábhar Uathoibríoch</string>
@@ -1544,6 +1549,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Níl an tasc seo ar fáil a thuilleadh.</string>
     <string name="editDashboardOfflineMode">Tá tú as líne</string>
+    <string name="editDashboardNoResults">Níl aon thorthaí</string>
+    <string name="editDashboardNoResultsMessage">Níor aimsíodh aon mhír meaitseála.</string>
     <string name="editDashboardOfflineModeMessage">Níl aon chúrsaí agat atá ar fáil as líne faoi láthair.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">D\'éirigh le Sioncronú Ábhar As Líne</string>
     <string name="offlineContentSyncFailureNotificationTitle">Theip ar Shioncronú Ábhar As Líne</string>
@@ -1629,8 +1636,15 @@
     <string name="discussionMenuRefresh">Athnuaigh</string>
 
     <string name="a11y_contentDescriptionCalendarJumpToToday">Léim go Inniu</string>
+    <string name="a11y_contentDescriptionCalendarJumpToTodayWithDates">Léim go Inniu, is é %s an lá atá roghnaithe, %s atá ann inniu</string>
     <string name="a11y_calendarSwitchToMonthView">Malartaigh go hamharc na míosa</string>
     <string name="a11y_calendarSwitchToWeekView">Malartaigh go hamharc na seachtaine</string>
+    <string name="a11y_calendarSwitchBetweenMonthAndWeekView">Athraigh idir radharc na míosa agus na seachtaine</string>
+    <string name="a11y_calendarMonthButtonContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_calendarMonthView">Tá an féilire i radharc na míosa</string>
+    <string name="a11y_calendarWeekView">Tá an féilire i radharc na seachtaine</string>
+    <string name="a11y_calendarSwitchedToWeekView">Aistríodh an féilire go hamharc na seachtaine</string>
+    <string name="a11y_calendarSwitchedToMonthView">Aistríodh an féilire go hamharc míosa</string>
     <string name="calendarNoEvents">Níl aon Imeachtaí inniu!</string>
     <string name="calendarNoEventsDescription">Breathnaíonn sé cosúil le lá iontach chun sos a ghlacadh, scíth a ligean, agus d\'anáil a tharraingt.</string>
     <string name="userCalendarToDo">Le Déanamh</string>
@@ -1648,6 +1662,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Cuir mír fhéilire nua leis</string>
     <string name="calendarFilterCalendars">Féilirí</string>
     <string name="calendarFilterUser">Úsáideoir</string>
+    <string name="calendarFilterFavoriteCourse">Cúrsaí is Fearr</string>
+    <string name="calendarFilterMoreCourse">Tuilleadh Cúrsaí</string>
     <string name="calendarFilterCourse">Cúrsaí</string>
     <string name="calendarFilterGroup">Grúpaí</string>
     <string name="calendarFilterExplanationLimited">Roghnaigh na féilirí is mian leat a fheiceáil, suas go dtí %d.</string>
@@ -1655,6 +1671,10 @@
     <string name="calendarFilterTitle">Féilirí</string>
     <string name="calendarFiltersFailed">Theip ar lodáil na scagairí</string>
 
+    <string name="a11y_eventCreatedAnnouncement">Cruthaíodh an t-imeacht seo go rathúil: %s.</string>
+    <string name="a11y_eventUpdatedAnnouncement">Nuashonraíodh an t-imeacht seo go rathúil: %s.</string>
+    <string name="a11y_toDoCreatedAnnouncement">Cruthaíodh an Le Déanamh seo go rathúil: %s.</string>
+    <string name="a11y_toDoUpdatedAnnouncement">Nuashonraíodh an Le Déanamh seo go rathúil: %s.</string>
     <string name="todoScreenTitle">Le Déanamh</string>
     <string name="todoDateLabel">Dáta</string>
     <string name="todoDescriptionLabel">Cur síos</string>
@@ -1775,6 +1795,7 @@
     <string name="navigationDrawerLogOut">Logáil Amach</string>
     <string name="noStudentsError">Níl Mic Léinn Ann</string>
     <string name="noStudentsErrorDescription">Níl tú ag breathnú ar mhac léinn ar bith.</string>
+    <string name="noStudentsRefresh">Athnuaigh</string>
     <string name="noGrade">Níl aon Mharc ann</string>
     <string name="errorLoadingCourses">Tharla earráid agus cúrsaí do mhic léinn á lódáil.</string>
     <string name="parentNoCourses">Níl Cúrsaí Ann</string>
@@ -1810,6 +1831,7 @@
     <string name="addNewStudent">Cuir mac léinn nua leis</string>
     <string name="selectStudentColor">Roghnaigh Dath an Mhic Léinn</string>
     <string name="errorSavingColor">Tharla earráid agus do rogha á shábháil. Bain triail as arís, le do thoil.</string>
+    <string name="manageStudentsColorSavedSuccessfully">D\'éirigh le sábháil an dath</string>
     <string name="changeStudentColorLabel">Athraigh dath le haghaidh %s</string>
     <string name="studentColorContentDescriptionBlue">Leictreach, Gorm</string>
     <string name="studentColorContentDescriptionPurple">Plumchorcra, Corcra</string>
@@ -1819,6 +1841,7 @@
     <string name="studentColorContentDescriptionGreen">Seamróg, Glas</string>
     <string name="featureFlags">Bratacha Gnéithe</string>
     <string name="addStudent">Cuir Mac Léinn leis</string>
+    <string name="addStudentSuccessfull">D\'éirigh le cur an mac léinn leis</string>
     <string name="addStudentTitle">Cuir mac léinn le&#8230;</string>
     <string name="addStudentQrCodeTitle">Cód MF</string>
     <string name="addStudentQrCodeExplanation">Is féidir le mic léinn cód MF a ghiniúint ag baint úsáide as an aip Canvas Student ar a ngléas móibíleach</string>
@@ -1866,6 +1889,7 @@
     <string name="alertSettingsThresholdLabel">Céatadán an mairc</string>
     <string name="unpairStudentTitle">Scrios</string>
     <string name="unpairStudentMessage">Déanfaidh sé seo na rolluithe ar fad don mhac léinn seo a dhíphéireáil agus a bhaint de do chuntas.</string>
+    <string name="unpairStudentSuccessfull">D\'éirigh le scriosadh an mac léinn</string>
     <string name="alertSettingsMinThresholdError">Ní mór dó a bheith thar %d</string>
     <string name="alertSettingsMaxThresholdError">Ní mór dó a bheith faoi %d</string>
     <string name="alertSettingsErrorMessage">Tharla earráid agus na socruithe foláirimh á fháil.</string>
@@ -1886,22 +1910,25 @@
     <string name="errorLoadingGrades">Tá deacracht againn marcanna do mhic léinn a lódáil. Bain triail as an leathanach a athlódáil nó seiceáil ar ais ar ball.</string>
     <string name="errorLoadingCourse">Tá deacracht againn sonraí cúrsa do mhic léinn a lódáil. Bain triail as an leathanach a athlódáil nó seiceáil ar ais ar ball.</string>
     <string name="gradesFilterContentDescription">Scag</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">D\'éirigh le nuashonrú sainroghanna marcanna. Athnuadh an liosta.</string>
     <string name="courseDetailsMessageContentDescription">Seol teachtaireacht faoin gcúrsa seo</string>
     <string name="gradeLockedContentDescription">Marc faoi ghlas</string>
     <string name="gradesRefreshFailed">Theip ar na marcanna a athnuachan</string>
     <string name="chooseACourseToMessage">Roghnaigh cúrsa chun teachtaireacht a dhéanamh</string>
     <string name="regardingHiddenMessage">Maidir le: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Maidir le: %1$s, Tasc - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Maidir le: %1$s, Imeacht - %2$s</string>
     <string name="sendMessageAboutAssignment">"Seol teachtaireacht faoin tasc seo"</string>
+    <string name="sendMessageAboutEvent">"Seol teachtaireacht faoin imeacht seo"</string>
     <string name="forStudentLabel">le haghaidh %1$s</string>
     <string name="view_description">Amharc ar Chur síos</string>
     <string name="a11y_contentDescription_viewDescription">Amharc ar Chur síos</string>
     <string name="errorLoadingAnnouncement">Tharla earráid agus an fógra seo á lódáil</string>
     <string name="announcementPageTitle">Fógra</string>
     <string name="globalAnnouncementPageTitle">Fógra Uilíoch</string>
-    <string name="openTheQuizButton">Oscail an Tráth na gCeist</string>
+    <string name="openTheQuizButton">Oscail an Quiz</string>
     <string name="newQuizSubmissionTitle">Uaslódáil Quiz</string>
-    <string name="newQuizSubmissionSubtitle">Osclaítear an tráth na gceist seo i mbrabhsálaí gréasáin. Roghnaigh "Oscail an Tráth na gCeist" chun dul ar aghaidh.</string>
+    <string name="newQuizSubmissionSubtitle">Osclaítear an quiz seo i mbrabhsálaí gréasáin. Roghnaigh "Oscail an Quiz" chun dul ar aghaidh.</string>
     <string name="haveCanvasAccount">Tá cuntas Canvas agam</string>
     <string name="notHaveCanvasAccount">Níl cuntas Canvas agam</string>
     <string name="createAccFullName">Ainm iomlán</string>
@@ -1931,6 +1958,11 @@
     <string name="frontPageRefreshFailed">Theip ar athnuachan an leathanach tosaigh</string>
     <string name="failed_to_load_summary">Theip ar lódáil an achoimre</string>
     <string name="no_summary_items_to_display">Níl aon mhíreanna achoimre le taispeáint</string>
+    <string name="a11y_summaryEventContentDescription">Imeacht</string>
+    <string name="a11y_summaryLockedContentDescription">Faoi ghlas</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Fóram</string>
+    <string name="a11y_summaryAssignmentContentDescription">Tasc</string>
     <string name="scheduleItemNoDueDate">Níl aon Dáta Dlite</string>
     <string name="a11y_refresh">Athnuaigh</string>
     <string name="masqueradingAs">Tá tú ag gníomhú mar %s</string>
@@ -1965,5 +1997,35 @@
     <string name="smartSearchAssignmentGroupTitle">Tascanna (%d)</string>
     <string name="smartSearchPageGroupTitle">Leathanaigh (%d)</string>
     <string name="a11y_commentSentSuccess">D\'éirigh leis an ráiteas a sheoladh</string>
+    <string name="a11y_dragViewContentDescription">Leathnaigh Tarraiceán</string>
     <string name="a11y_inboxRecyclerViewContentDescription">Comhráite</string>
+    <string name="a11y_contentDescription_moduleItem">%s, %s</string>
+    <string name="a11y_checked">Seiceáilte</string>
+    <string name="a11y_unchecked">Neamhsheiceáilte</string>
+    <string name="a11y_indeterminate">Seiceáilte go páirteach</string>
+    <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
+    <string name="a11y_submissionFiltersHaveBeenUpdated">Nuashonraíodh na scagairí</string>
+    <string name="inboxAllRecipients">Gach Faighteoir</string>
+    <string name="inboxSearchIn">Cuardaigh anseo: %1$s</string>
+    <string name="a11y_studentSelectorExpand">leathnaigh</string>
+    <string name="a11y_studentSelectorCollapse">leacaigh</string>
+    <string name="a11y_studentSelectorContentDescription">Tapáil chun %s roghnóir mac léinn, is é seo an mac léinn roghnaithe: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Roghnaigh mac léinn %s</string>
+    <string name="inboxSettingsTitle">Bosca Isteach</string>
+    <string name="inboxSettingsInboxSignature">Síniú an Bhosca Isteach</string>
+    <string name="inboxSignatureNotSet">Níl sé Socruithe</string>
+    <string name="inboxSignatureEnabled">Cumasaithe</string>
+    <string name="inboxSignatureScreenTitle">Síniú an Bhosca Isteach</string>
+    <string name="inboxSignatureScreenSubtitle">Cuirfear an síniú le deireadh gach teachtaireachta.</string>
+    <string name="inboxSignatureSwitchLabel">Síniú</string>
+    <string name="inboxSignatureTextfieldHeader">Téacs sínithe</string>
+    <string name="due_dateTime">Dlite: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Scag</string>
+    <string name="a11y_contentDescription_postPolicy">Polasaí postála</string>
+    <string name="late">Déanach</string>
+    <string name="a11y_contentDescription_expand">Leathnaigh</string>
+    <string name="missingTag">Ar iarraidh</string>
+    <string name="submissionFilter">Scagaire Uaslódála</string>
+    <string name="submissionMessageSubject">%1$s ar %2$s</string>
+    <string name="all">Gach</string>
 </resources>

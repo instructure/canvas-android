@@ -41,8 +41,12 @@ import com.instructure.canvasapi2.apis.saveFile
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.delay
 import java.io.File
 import kotlin.random.Random
 
@@ -53,7 +57,8 @@ class FileDownloadWorker @AssistedInject constructor(
     @Assisted private val context: Context,
     @Assisted workerParameters: WorkerParameters,
     private val fileDownloadApi: FileDownloadAPI,
-    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface
+    private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
+    private val fileDownloadProgressDao: FileDownloadProgressDao
 ) : CoroutineWorker(context, workerParameters) {
 
     private val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -72,10 +77,10 @@ class FileDownloadWorker @AssistedInject constructor(
         } else {
             val (courseId, fileId) = getCourseAndFileId(fileUrl)
             if (courseId != -1L && fileId != -1L) {
-                val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams())
+                val file = fileFolderApi.getCourseFile(courseId, fileId, RestParams(shouldLoginOnTokenError = false))
                 file.dataOrNull?.displayName ?: FALLBACK_FILE_NAME
             } else if (fileId != -1L) {
-                val file = fileFolderApi.getUserFile(fileId, RestParams())
+                val file = fileFolderApi.getUserFile(fileId, RestParams(shouldLoginOnTokenError = false))
                 file.dataOrNull?.displayName ?: FALLBACK_FILE_NAME
             } else {
                 FALLBACK_FILE_NAME
@@ -92,13 +97,17 @@ class FileDownloadWorker @AssistedInject constructor(
         }
         var result = Result.retry()
 
+        val filePath = downloadedFile.absolutePath
+        updateProgress(0, FileDownloadProgressState.STARTING, filePath)
+
         try {
-            fileDownloadApi.downloadFile(fileUrl, RestParams())
+            fileDownloadApi.downloadFile(fileUrl, RestParams(shouldLoginOnTokenError = false))
                 .dataOrThrow
                 .saveFile(downloadedFile)
                 .collect { downloadState ->
                     when (downloadState) {
                         is DownloadState.InProgress -> {
+                            updateProgress(downloadState.progress, FileDownloadProgressState.IN_PROGRESS, filePath)
                             notification = createNotification(notificationId, realFileName, downloadState.progress)
                             if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
                                 setForeground(ForegroundInfo(notificationId, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_DATA_SYNC))
@@ -108,10 +117,12 @@ class FileDownloadWorker @AssistedInject constructor(
                         }
 
                         is DownloadState.Failure -> {
+                            updateProgress(0, FileDownloadProgressState.ERROR, filePath)
                             throw downloadState.throwable
                         }
 
                         is DownloadState.Success -> {
+                            updateProgress(100, FileDownloadProgressState.COMPLETED, filePath)
                             result = Result.success()
                             updateNotificationComplete(notificationId, realFileName)
                         }
@@ -199,9 +210,26 @@ class FileDownloadWorker @AssistedInject constructor(
     }
 
     private fun getCourseAndFileId(fileUrl: String): Pair<Long, Long> {
-        val courseId = fileUrl.substringAfter("courses/", missingDelimiterValue = "-1").substringBefore("/files", missingDelimiterValue = "-1").toLong()
+        val courseId =
+            fileUrl.substringAfter("courses/", missingDelimiterValue = "-1").substringBefore("/files", missingDelimiterValue = "-1").toLong()
         val fileId = fileUrl.substringAfter("files/", missingDelimiterValue = "-1").takeWhile { it.isDigit() }.toLong()
         return Pair(courseId, fileId)
+    }
+
+    private suspend fun updateProgress(progress: Int, progressState: FileDownloadProgressState, downloadFileName: String) {
+        val newProgress = fileDownloadProgressDao.findByWorkerId(id.toString())?.copy(progress = progress, progressState = progressState, filePath = downloadFileName)
+
+        if (newProgress == null) {
+            fileDownloadProgressDao.insert(FileDownloadProgressEntity(
+                workerId = id.toString(),
+                fileName = fileName ?: "",
+                progress = progress,
+                progressState = progressState,
+                filePath = downloadFileName
+            ))
+        } else {
+            fileDownloadProgressDao.update(newProgress)
+        }
     }
 
     companion object {
