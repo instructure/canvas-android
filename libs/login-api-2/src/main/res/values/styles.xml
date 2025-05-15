@@ -32,18 +32,22 @@
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/darkStatusBarColor</item>
         <item name="android:fontFamily">@font/lato_font_family</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="LoginFlowTheme.Splash_Student" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_student</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="LoginFlowTheme.Splash_Teacher" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_teacher</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="LoginFlowTheme.Splash_Parent" parent="@style/LoginFlowTheme.NoActionBar">
         <item name="android:windowBackground">@drawable/splash_background_parent</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="ToolBarStyle" parent="Theme.AppCompat.DayNight.DarkActionBar">

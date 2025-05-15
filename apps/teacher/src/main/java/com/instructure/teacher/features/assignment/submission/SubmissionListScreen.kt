@@ -276,7 +276,8 @@ private fun SubmissionListItem(
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
                     color = colorResource(id = R.color.textDarkest),
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("submissionListItemStudentName")
                 )
                 if (submissionListUiState.isFakeStudent) {
                     Text(
@@ -296,7 +297,8 @@ private fun SubmissionListItem(
                 text = submissionListUiState.grade ?: "-",
                 fontSize = 16.sp,
                 color = courseColor,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.testTag("scoreText")
             )
             if (submissionListUiState.hidden) {
                 Icon(

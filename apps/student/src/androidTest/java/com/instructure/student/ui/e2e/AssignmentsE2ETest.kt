@@ -29,6 +29,7 @@ import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
@@ -43,7 +44,6 @@ import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
-import com.instructure.student.ui.pages.AssignmentListPage
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -328,11 +328,13 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG,"Refresh the page. Assert that the assignment ${pointsTextAssignment.name} has been graded with 13 points.")
         assignmentDetailsPage.refresh()
+        composeTestRule.waitForIdle()
         assignmentDetailsPage.assertAssignmentGraded("13")
 
         Log.d(STEP_TAG,"Navigate back to Assignments Page and assert that the assignment ${pointsTextAssignment.name} can be seen there with the corresponding grade.")
         Espresso.pressBack()
-        assignmentListPage.refresh()
+        composeTestRule.waitForIdle()
+        assignmentListPage.refreshAssignmentList()
         assignmentListPage.assertHasAssignment(pointsTextAssignment, textGrade.grade)
     }
 
@@ -488,7 +490,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    fun testFilterAndSortAssignmentsE2E() {
+    fun testFilterAndGroupByAssignmentsE2E() {
         Log.d(PREPARATION_TAG,"Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
@@ -520,7 +522,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG,"Select ${course.name} course and navigate to it's Assignments Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
-        assignmentListPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Assert that the corresponding assignment are displayed on the Assignment List Page.")
         assignmentListPage.assertHasAssignment(upcomingAssignment)
@@ -528,17 +529,20 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.assertHasAssignment(otherTypeAssignment)
         assignmentListPage.assertHasAssignment(gradedAssignment)
 
-        Log.d(STEP_TAG, "Filter the 'MISSING' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.MISSING)
+        Log.d(STEP_TAG, "Filter the 'Not Yet Submitted' assignments.")
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Graded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Other)
 
-        Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' MISSING assignment is displayed and the others at NOT.")
+        Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' 'Not Yet Submitted' assignment is displayed and the others at NOT.")
         assignmentListPage.assertHasAssignment(missingAssignment)
         assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
 
         Log.d(STEP_TAG, "Filter the 'GRADED' assignments.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.GRADED)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NotYetSubmitted)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Graded)
 
         Log.d(STEP_TAG, "Assert that the '${gradedAssignment.name}' GRADED assignment is displayed.")
         assignmentListPage.assertHasAssignment(gradedAssignment)
@@ -547,21 +551,12 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.assertAssignmentNotDisplayed(missingAssignment.name)
 
         Log.d(STEP_TAG, "Set back the filter to show 'ALL' the assignments like by default.")
-        assignmentListPage.filterAssignments(AssignmentListPage.AssignmentType.ALL)
-        assignmentListPage.assertPageObjects()
-
-        Log.d(STEP_TAG, "Assert that by default, the 'Sort by Time' is selected.")
-        assignmentListPage.assertSortByButtonShowsSortByTime()
-
-        Log.d(STEP_TAG, "Select 'Sort by Type' sorting.")
-        assignmentListPage.selectSortByType()
-
-        Log.d(STEP_TAG, "Assert that after the selection, the button is really changed to 'Sort by Type'.")
-        assignmentListPage.assertPageObjects()
-        assignmentListPage.assertSortByButtonShowsSortByType()
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.NotYetSubmitted)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.ToBeGraded)
+        assignmentListPage.filterAssignments("Assignment Filter", AssignmentListPage.FilterOption.Other)
 
         Log.d(STEP_TAG, "Assert that still all the assignment are displayed and the corresponding groups (Assignments, Discussions) as well.")
-        assignmentListPage.assertAssignmentItemCount(4, 2) //Two groups: Assignments and Discussions
+        assignmentListPage.groupByAssignments(AssignmentListPage.GroupByOption.AssignmentGroup)
         assignmentListPage.assertAssignmentGroupDisplayed("Assignments")
         assignmentListPage.assertAssignmentGroupDisplayed("Discussions")
         assignmentListPage.assertHasAssignment(upcomingAssignment)
@@ -582,10 +577,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.expandCollapseAssignmentGroup("Assignments")
 
         Log.d(STEP_TAG, "Click on the 'Search' (magnifying glass) icon at the toolbar.")
-        assignmentListPage.searchable.clickOnSearchButton()
+        assignmentListPage.searchBar.clickOnSearchButton()
 
         Log.d(STEP_TAG, "Type the name of the '${missingAssignment.name}' assignment.")
-        assignmentListPage.searchable.typeToSearchBar(missingAssignment.name.drop(5))
+        assignmentListPage.searchBar.typeToSearchBar(missingAssignment.name.drop(5))
 
         Log.d(STEP_TAG, "Assert that the '${missingAssignment.name}' assignment has been found by previously typed search string.")
         sleep(3000) // Allow the search input to propagate
@@ -914,11 +909,11 @@ class AssignmentsE2ETest: StudentComposeTest() {
         courseBrowserPage.selectAssignments()
 
         Log.d(STEP_TAG, "Assert that all the different types of assignments' grades has been converted properly.")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(pointsTextAssignment.name, "B-")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(percentageAssignment.name, "D")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(letterGradeAssignment.name, "C")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(passFailAssignment.name, "Incomplete")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(gpaScaleAssignment.name, "F")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment, "B-")
+        assignmentListPage.assertHasAssignment(percentageAssignment, "D")
+        assignmentListPage.assertHasAssignment(letterGradeAssignment, "C")
+        assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
+        assignmentListPage.assertHasAssignment(gpaScaleAssignment, "F")
 
         Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
         assignmentListPage.clickAssignment(pointsTextAssignment)
@@ -956,12 +951,12 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Refresh the Assignment List Page. Assert that all the different types of assignments' grades" +
                 "has been shown as their original grade types, since the restriction has been turned off.")
-        assignmentListPage.refresh()
-        assignmentListPage.assertAssignmentDisplayedWithGrade(pointsTextAssignment.name, "12/15")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(percentageAssignment.name, "66.67%")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(letterGradeAssignment.name, "11.4/15 (C)")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(passFailAssignment.name, "Incomplete")
-        assignmentListPage.assertAssignmentDisplayedWithGrade(gpaScaleAssignment.name, "3.7/15 (F)")
+        assignmentListPage.refreshAssignmentList()
+        assignmentListPage.assertHasAssignment(pointsTextAssignment, "12/15")
+        assignmentListPage.assertHasAssignment(percentageAssignment, "66.67%")
+        assignmentListPage.assertHasAssignment(letterGradeAssignment, "11.4/15 (C)")
+        assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
+        assignmentListPage.assertHasAssignment(gpaScaleAssignment, "3.7/15 (F)")
 
         Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
         assignmentListPage.clickAssignment(pointsTextAssignment)

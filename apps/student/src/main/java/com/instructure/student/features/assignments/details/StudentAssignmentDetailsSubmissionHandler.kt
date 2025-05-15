@@ -135,11 +135,7 @@ class StudentAssignmentDetailsSubmissionHandler(
                     }
                     if (isUploading && submission.errorFlag) {
                         data.value?.attempts = attempts?.toMutableList()?.apply {
-                            if (isNotEmpty()) if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.VANILLA_ICE_CREAM) {
-                                removeFirst()
-                            } else {
-                                removeAt(0)
-                            }
+                            if (isNotEmpty()) removeAt(0)
                             add(0, AssignmentDetailsAttemptItemViewModel(
                                 AssignmentDetailsAttemptViewData(
                                     resources.getString(R.string.attempt, attempts.size),

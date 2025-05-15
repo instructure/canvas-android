@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Gagal menghapus percakapan</string>
     <string name="conversationUpdateFailed">Gagal untuk memperbarui percakapan</string>
     <string name="sendIndividualMessage">Kirim pesan individu ke setiap penerima</string>
+    <string name="sendIndividualMessageIsMandatory">Anda hanya dapat mengirim pesan individu kepada 100 penerima</string>
     <string name="invalidRecipients">Anda tidak diizinkan mengirim pesan kepada satu atau lebih dari penerima yang dipilih.</string>
     <string name="newMessage">Pesan Baru</string>
     <string name="forwardMessage">Teruskan Pesan</string>
@@ -1542,6 +1543,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Tugas tidak lagi tersedia.</string>
     <string name="editDashboardOfflineMode">Anda offline</string>
+    <string name="editDashboardNoResults">Tidak ada hasil</string>
+    <string name="editDashboardNoResultsMessage">Tidak ditemukan item yang cocok.</string>
     <string name="editDashboardOfflineModeMessage">Anda saat ini tidak memiliki kursus apa pun yang tersedia offline.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Sinkronisasi Konten Offline Berhasil</string>
     <string name="offlineContentSyncFailureNotificationTitle">Sinkronisasi Konten Offline Gagal</string>
@@ -1652,6 +1655,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Tambah item kalender baru</string>
     <string name="calendarFilterCalendars">Kalender</string>
     <string name="calendarFilterUser">Pengguna</string>
+    <string name="calendarFilterFavoriteCourse">Kursus Favorit</string>
+    <string name="calendarFilterMoreCourse">Kursus Lain</string>
     <string name="calendarFilterCourse">Kursus</string>
     <string name="calendarFilterGroup">Grup</string>
     <string name="calendarFilterExplanationLimited">Pilih kalender yang ingin digunakan, hingga %d.</string>
@@ -1778,6 +1783,7 @@
     <string name="navigationDrawerLogOut">Logout</string>
     <string name="noStudentsError">Tidak Ada Siswa</string>
     <string name="noStudentsErrorDescription">Anda tidak mengamati siswa manapun.</string>
+    <string name="noStudentsRefresh">Muat Ulang</string>
     <string name="noGrade">Tanpa Nilai</string>
     <string name="errorLoadingCourses">Terjadi kesalahan ketika memuat kursus siswa Anda.</string>
     <string name="parentNoCourses">Tidak Ada Kursus</string>
@@ -1813,6 +1819,7 @@
     <string name="addNewStudent">Tambah siswa baru</string>
     <string name="selectStudentColor">Pilih Warna Siswa</string>
     <string name="errorSavingColor">Kesalahan terjadi saat menyimpan pilihan Anda. Silakan coba lagi.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Warna berhasil disimpan</string>
     <string name="changeStudentColorLabel">Ubah warna untuk %s</string>
     <string name="studentColorContentDescriptionBlue">Electric, Blue</string>
     <string name="studentColorContentDescriptionPurple">Plum, Purple</string>
@@ -1822,6 +1829,7 @@
     <string name="studentColorContentDescriptionGreen">Shamrock, Green</string>
     <string name="featureFlags">Tanda Fitur</string>
     <string name="addStudent">Tambah Siswa</string>
+    <string name="addStudentSuccessfull">Siswa berhasil ditambahkan</string>
     <string name="addStudentTitle">Tambah siswa dengan...</string>
     <string name="addStudentQrCodeTitle">Kode QR</string>
     <string name="addStudentQrCodeExplanation">Siswa dapat membuat kode QR menggunakan aplikasi Canvas Student di perangkat selulernya</string>
@@ -1869,6 +1877,7 @@
     <string name="alertSettingsThresholdLabel">Persentase nilai</string>
     <string name="unpairStudentTitle">Hapus</string>
     <string name="unpairStudentMessage">Ini akan menghapus pairing dan menghapus semua pendaftaran untuk siswa ini dari akun Anda.</string>
+    <string name="unpairStudentSuccessfull">Siswa berhasil dihapus</string>
     <string name="alertSettingsMinThresholdError">Harus di atas %d</string>
     <string name="alertSettingsMaxThresholdError">Harus di bawah %d</string>
     <string name="alertSettingsErrorMessage">Terjadi kesalahan saat mengambil pengaturan peringatan.</string>
@@ -1889,13 +1898,16 @@
     <string name="errorLoadingGrades">Kami kesulitan memuat nilai siswa Anda. Silakan memuat ulang halaman atau coba lagi nanti.</string>
     <string name="errorLoadingCourse">Kami kesulitan memuat detail kursus siswa Anda. Silakan memuat ulang halaman atau coba lagi nanti.</string>
     <string name="gradesFilterContentDescription">Filter</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Preferensi nilai berhasil diperbarui. Daftar telah disegarkan.</string>
     <string name="courseDetailsMessageContentDescription">Kirim pesan tentang kursus ini</string>
     <string name="gradeLockedContentDescription">Nilai terkunci</string>
     <string name="gradesRefreshFailed">Gagal memuat ulang nilai</string>
     <string name="chooseACourseToMessage">Pilih kursus ke pesan</string>
     <string name="regardingHiddenMessage">Tentang: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Tentang: %1$s, Tugas - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Tentang: %1$s, Acara - %2$s</string>
     <string name="sendMessageAboutAssignment">“Kirim pesan tentang tugas ini”</string>
+    <string name="sendMessageAboutEvent">“Kirim pesan tentang acara ini”</string>
     <string name="forStudentLabel">untuk %1$s</string>
     <string name="view_description">Lihat Deskripsi</string>
     <string name="a11y_contentDescription_viewDescription">Lihat Deskripsi</string>
@@ -1934,6 +1946,11 @@
     <string name="frontPageRefreshFailed">Gagal menyegarkan halaman depan</string>
     <string name="failed_to_load_summary">Gagal memuat rangkuman</string>
     <string name="no_summary_items_to_display">Tidak ada item rangkuman untuk ditampilkan</string>
+    <string name="a11y_summaryEventContentDescription">Acara</string>
+    <string name="a11y_summaryLockedContentDescription">Terkunci</string>
+    <string name="a11y_summaryQuizContentDescription">Kuis</string>
+    <string name="a11y_summaryDiscussionContentDescription">Diskusi</string>
+    <string name="a11y_summaryAssignmentContentDescription">Tugas</string>
     <string name="scheduleItemNoDueDate">Tidak Ada Batas Waktu</string>
     <string name="a11y_refresh">Muat Ulang</string>
     <string name="masqueradingAs">Anda bertindak sebagai %s</string>
@@ -1976,4 +1993,27 @@
     <string name="a11y_indeterminate">Dicentang parsial</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filter telah diperbarui</string>
+    <string name="inboxAllRecipients">Semua Penerima</string>
+    <string name="inboxSearchIn">Cari di %1$s</string>
+    <string name="a11y_studentSelectorExpand">perbesar</string>
+    <string name="a11y_studentSelectorCollapse">perkecil</string>
+    <string name="a11y_studentSelectorContentDescription">Ketuk %s pemilih siswa, siswa yang dipilih adalah: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Pilih siswa %s</string>
+    <string name="inboxSettingsTitle">Kotak Masuk</string>
+    <string name="inboxSettingsInboxSignature">Tanda Tangan Kotak Masuk</string>
+    <string name="inboxSignatureNotSet">Tidak Ditentukan</string>
+    <string name="inboxSignatureEnabled">Diaktifkan</string>
+    <string name="inboxSignatureScreenTitle">Tanda Tangan Kotak Masuk</string>
+    <string name="inboxSignatureScreenSubtitle">Tanda tangan akan ditambahkan ke akhir dari semua pesan.</string>
+    <string name="inboxSignatureSwitchLabel">Tanda Tangan</string>
+    <string name="inboxSignatureTextfieldHeader">Teks tanda tangan</string>
+    <string name="due_dateTime">Batas waktu: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filter</string>
+    <string name="a11y_contentDescription_postPolicy">Kebijakan posting</string>
+    <string name="late">Terlambat</string>
+    <string name="a11y_contentDescription_expand">Perbesar</string>
+    <string name="missingTag">Tidak Ada</string>
+    <string name="submissionFilter">Filter Penyerahan</string>
+    <string name="submissionMessageSubject">%1$s pada %2$s</string>
+    <string name="all">Semua</string>
 </resources>

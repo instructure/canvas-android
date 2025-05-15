@@ -30,6 +30,7 @@
         <item name="android:actionOverflowButtonStyle">@style/Widget.ActionButton.Overflow</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
         <item name="android:datePickerStyle">@style/DatePickerStyle</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="PSPDFKitTheme" parent="AppTheme.NoActionBar">
@@ -48,6 +49,7 @@
         <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
         <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="ContextualToolbarStyle">
@@ -95,7 +97,6 @@
     <style name="AppTheme.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
-
         <item name="android:windowDrawsSystemBarBackgrounds">true</item>
         <item name="android:statusBarColor">@color/backgroundDarkest</item>
         <item name="pspdf__contextualToolbarStyle">@style/ContextualToolbarStyle</item>
@@ -106,6 +107,7 @@
         <item name="pspdf__propertyInspectorStyle">@style/PropertyInspector</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
         <item name="pspdf__modalDialogStyle">@style/ModalDialogStyle</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="Widget.ActionButton.Overflow" parent="@android:style/Widget.Holo.ActionButton.Overflow">
@@ -128,6 +130,7 @@
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="android:editTextStyle">@style/NoGifEditText</item>
         <item name="editTextStyle">@style/NoGifEditText</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="RoundedContextDialog" parent="Theme.AppCompat.DayNight.Dialog.Alert">

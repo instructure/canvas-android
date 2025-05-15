@@ -413,6 +413,7 @@
     <string name="conversationDeletedFailed">Enposib pou elimine konvèsasyon</string>
     <string name="conversationUpdateFailed">Echwe pou aktyalize konvèsasyon</string>
     <string name="sendIndividualMessage">Voye mesaj pèsonèl bay chak destinatè</string>
+    <string name="sendIndividualMessageIsMandatory">Ou ka voye mesaj endividyèl bay 100 destinatè sèlman</string>
     <string name="invalidRecipients">Ou pa otorize pou voye mesaj bay yonn oswa plizyè nan moun ki seleksyone yo.</string>
     <string name="newMessage">Nouvo Mesaj</string>
     <string name="forwardMessage">Mesaj Transfere</string>
@@ -1539,6 +1540,8 @@
     </plurals>
     <string name="assignmentNoLongerAvailable">Travay sa pa diponib ankò.</string>
     <string name="editDashboardOfflineMode">Ou pa konekte</string>
+    <string name="editDashboardNoResults">Okenn rezilta</string>
+    <string name="editDashboardNoResultsMessage">Yo pa jwenn okenn eleman ki koresponn.</string>
     <string name="editDashboardOfflineModeMessage">Kounye a ou pa gen okenn kou ki disponib san koneksyon.</string>
     <string name="offlineContentSyncSuccessNotificationTitle">Senkwonizasyon Kontni san Koneksyon an Reyisi</string>
     <string name="offlineContentSyncFailureNotificationTitle">Senkwonizasyon Kontni san Koneksyon an Echwe</string>
@@ -1649,6 +1652,8 @@
     <string name="calendarAddNewCalendarItemContentDescription">Ajoute yon nouvo eleman nan kalandriye a</string>
     <string name="calendarFilterCalendars">Kalandriye</string>
     <string name="calendarFilterUser">Itilizatè</string>
+    <string name="calendarFilterFavoriteCourse">Kou Prefere</string>
+    <string name="calendarFilterMoreCourse">Plis Kou</string>
     <string name="calendarFilterCourse">Kou</string>
     <string name="calendarFilterGroup">Gwoup</string>
     <string name="calendarFilterExplanationLimited">Seleksyone kalandriye ou vle wè yo, jiska %d.</string>
@@ -1775,6 +1780,7 @@
     <string name="navigationDrawerLogOut">Dekonekte</string>
     <string name="noStudentsError">Pa gen Elèv</string>
     <string name="noStudentsErrorDescription">Ou pa p obsève okenn elèv.</string>
+    <string name="noStudentsRefresh">Aktyalize</string>
     <string name="noGrade">Pa gen Klas</string>
     <string name="errorLoadingCourses">Te gen yon erè nan chajman kou elèv ou a</string>
     <string name="parentNoCourses">Pa gen Kou</string>
@@ -1810,6 +1816,7 @@
     <string name="addNewStudent">Ajoute nouvo elèv</string>
     <string name="selectStudentColor">Seleksyone Koulè Elèv</string>
     <string name="errorSavingColor">Te gen yon erè ki fpet pandan anrejistreman seleksyone ou an, Tanpri eseye ankò.</string>
+    <string name="manageStudentsColorSavedSuccessfully">Koulè sovgade avèk siksè</string>
     <string name="changeStudentColorLabel">Chanje koulè pou %s</string>
     <string name="studentColorContentDescriptionBlue">Elektrik, Ble</string>
     <string name="studentColorContentDescriptionPurple">Prin, vyolèt</string>
@@ -1819,6 +1826,7 @@
     <string name="studentColorContentDescriptionGreen">Trèf, Vèt</string>
     <string name="featureFlags">Drapo Fonksyon</string>
     <string name="addStudent">Ajoute Elèv</string>
+    <string name="addStudentSuccessfull">Elèv ajoute avèk siksè</string>
     <string name="addStudentTitle">Ajoute elèv ak...</string>
     <string name="addStudentQrCodeTitle">Kòd QR</string>
     <string name="addStudentQrCodeExplanation">Elèv yo ka jenere yon kòd QR avèk aplikasyon Canvas Student lan sou pòtab yo</string>
@@ -1866,6 +1874,7 @@
     <string name="alertSettingsThresholdLabel">Pousantaj nòt</string>
     <string name="unpairStudentTitle">Efase</string>
     <string name="unpairStudentMessage">Operasyon sa a ap anile kouplaj la epi l ap elimine tout enskripsyon elèv sa a genyen sou kont ou a.</string>
+    <string name="unpairStudentSuccessfull">Elèv elimine avèk siksè</string>
     <string name="alertSettingsMinThresholdError">Dwe siperyè a %d</string>
     <string name="alertSettingsMaxThresholdError">Dwe enferyè a %d</string>
     <string name="alertSettingsErrorMessage">Yon erè fèt pandan ekstraksyon paramèt alèt yo</string>
@@ -1886,13 +1895,16 @@
     <string name="errorLoadingGrades">Nou gen pwoblèm pou chaje nòt elèv ou yo. Eseye aktyalize paj la oswa eseye ankò pita.</string>
     <string name="errorLoadingCourse">Nou gen pwoblèm pou chaje detay kou elèv ou yo. Eseye aktyalize paj la oswa eseye ankò pita.</string>
     <string name="gradesFilterContentDescription">Filtè</string>
+    <string name="a11y_gradesFilterUpdatedAnnouncement">Preferans nòt aktyalize avèk siksè Lis la te aktyalize.</string>
     <string name="courseDetailsMessageContentDescription">Voye yon mesaj osijè e kou sa a</string>
     <string name="gradeLockedContentDescription">Nòt bloke</string>
     <string name="gradesRefreshFailed">Echèk aktyalizasyon nòt yo</string>
     <string name="chooseACourseToMessage">Chwazi yon kou pou voye mesaj</string>
     <string name="regardingHiddenMessage">Konsènan: %1$s, %2$s</string>
     <string name="regardingHiddenMessageWithAssignmentPrefix">Konsènan: %1$s, Devwa - %2$s</string>
+    <string name="regardingHiddenMessageWithEventPrefix">Konsènan: %1$s, Aktivite - %2$s</string>
     <string name="sendMessageAboutAssignment">"Voye yon mesaj konsènan devwa sa a"</string>
+    <string name="sendMessageAboutEvent">"Voye yon mesaj konsènan aktivite sa a"</string>
     <string name="forStudentLabel">pou %1$s</string>
     <string name="view_description">Afiche Deskripsyon</string>
     <string name="a11y_contentDescription_viewDescription">Afiche Deskripsyon</string>
@@ -1931,6 +1943,11 @@
     <string name="frontPageRefreshFailed">Echèk aktyalizasyon paj akèy la</string>
     <string name="failed_to_load_summary">Echèk chajman rezime</string>
     <string name="no_summary_items_to_display">Pa gen eleman sentèz pou afiche</string>
+    <string name="a11y_summaryEventContentDescription">Aktivite</string>
+    <string name="a11y_summaryLockedContentDescription">Bloke</string>
+    <string name="a11y_summaryQuizContentDescription">Quiz</string>
+    <string name="a11y_summaryDiscussionContentDescription">Diskisyon</string>
+    <string name="a11y_summaryAssignmentContentDescription">Sesyon</string>
     <string name="scheduleItemNoDueDate">San Delè</string>
     <string name="a11y_refresh">Aktyalize</string>
     <string name="masqueradingAs">W ap aji tankou %s</string>
@@ -1973,4 +1990,27 @@
     <string name="a11y_indeterminate">Tcheke pasyèlman</string>
     <string name="a11y_offlineContentItemContentDescription">%1$s, %2$s, %3$s</string>
     <string name="a11y_submissionFiltersHaveBeenUpdated">Filtè yo aktyalize</string>
+    <string name="inboxAllRecipients">Tout Destinatè yo</string>
+    <string name="inboxSearchIn">Chèche nan %1$s</string>
+    <string name="a11y_studentSelectorExpand">elaji</string>
+    <string name="a11y_studentSelectorCollapse">ratresi</string>
+    <string name="a11y_studentSelectorContentDescription">Tape sou seleksyonè %s elèv  la, elèv ki seleksyone a se: %s</string>
+    <string name="a11y_studentSelectorSelectStudent">Seleksyone elèv %s</string>
+    <string name="inboxSettingsTitle">Bwat resepsyon</string>
+    <string name="inboxSettingsInboxSignature">Siyati Bwat resepsyon</string>
+    <string name="inboxSignatureNotSet">Pa Defini</string>
+    <string name="inboxSignatureEnabled">Aktive</string>
+    <string name="inboxSignatureScreenTitle">Siyati Bwat resepsyon</string>
+    <string name="inboxSignatureScreenSubtitle">Siyati a ap ajoute nan fen tout mesaj yo.</string>
+    <string name="inboxSignatureSwitchLabel">Siyati</string>
+    <string name="inboxSignatureTextfieldHeader">Tèks siyati</string>
+    <string name="due_dateTime">Delè: %1$s, %2$s</string>
+    <string name="a11y_contentDescription_filter">Filtè</string>
+    <string name="a11y_contentDescription_postPolicy">Politik pòs</string>
+    <string name="late">An reta</string>
+    <string name="a11y_contentDescription_expand">Elaji</string>
+    <string name="missingTag">Manke</string>
+    <string name="submissionFilter">Filtè Soumisyon</string>
+    <string name="submissionMessageSubject">%1$s le %2$s</string>
+    <string name="all">Tout</string>
 </resources>

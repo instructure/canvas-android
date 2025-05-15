@@ -22,6 +22,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.parentapp.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -71,7 +72,7 @@ class ParentInboxCoursePickerViewModel @Inject constructor(
                 StudentContextItem(course, user)
             }
 
-            _uiState.update { it.copy(screenState = ScreenState.Data, studentContextItems = studentContextItems.distinct()) }
+            _uiState.update { it.copy(screenState = ScreenState.Content, studentContextItems = studentContextItems.distinct()) }
         }
     }
 

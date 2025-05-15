@@ -19,7 +19,6 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'au.com.dius.pact'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -34,9 +33,6 @@ static String isTesting() {
 buildscript {
     repositories {
         mavenCentral()
-    }
-    dependencies {
-        classpath 'au.com.dius:pact-jvm-provider-gradle:4.0.2'
     }
 }
 
@@ -145,8 +141,6 @@ dependencies {
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
     testImplementation "org.mockito:mockito-inline:2.25.0"
-    testImplementation "au.com.dius:pact-jvm-consumer-junit:4.0.7"
-    testImplementation "au.com.dius:pact-jvm-consumer-java8:4.0.7"
     testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.26'
 
     /* Support Libs */
@@ -169,21 +163,4 @@ dependencies {
 
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
-}
-
-// Define our pact-publish object
-// This is designed to be run as part of a bitrise job.  But, in a pinch, you could run it
-// locally and manually fill in the required environment variable values.
-// Also, keep in mind that this will publish ALL contracts in the pacts directory.  If you
-// would like to publish a specific contract, make sure that you have some logic in place to
-// remove the unwanted pact contracts before publishing.
-pact {
-    publish {
-        pactDirectory = System.getenv("BITRISE_SOURCE_DIR") + '/libs/canvas-api-2/build/pacts'
-        pactBrokerUrl = 'https://inst-pact-broker.inseng.net/'
-        pactBrokerUsername = System.getenv("PACT_BROKER_USERNAME")
-        pactBrokerPassword = System.getenv("PACT_BROKER_PASSWORD")
-        tags = [System.getenv("BITRISE_GIT_BRANCH")]
-        version = '1.0.' + System.getenv("BITRISE_BUILD_NUMBER")
-    }
 }

@@ -25,6 +25,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -169,7 +170,7 @@ class InboxDetailsViewModel @Inject constructor(
                         _uiState.update { it.copy(state = ScreenState.Empty, conversation =  conversation) }
                     } else {
                         _uiState.update { uiState -> uiState.copy(
-                            state = ScreenState.Success,
+                            state = ScreenState.Content,
                             conversation =  conversation,
                             messageStates = conversation.messages.map { getMessageViewState(conversation, it) },
                         ) }
