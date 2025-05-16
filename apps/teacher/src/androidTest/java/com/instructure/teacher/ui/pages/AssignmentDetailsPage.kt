@@ -215,16 +215,14 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     /**
      * Assert that the given submission types are displayed.
      *
-     * @param: submissionTypes: The given submission types.
+     * @param submissionTypes: The given submission types.
      */
     fun assertSubmissionTypes(@StringRes vararg submissionTypes: Int) {
         scrollToSubmissionType()
         submissionTypesSectionLabel.assertDisplayed()
 
-        var submissionTypesResult = ""
-        submissionTypes.forEach { submissionType ->
-            submissionTypesResult += getStringFromResource(submissionType)
-            submissionTypesResult += "\n"
+        val submissionTypesResult = submissionTypes.joinToString("\n") { submissionType ->
+            getStringFromResource(submissionType)
         }
 
         submissionTypesTextView.assertDisplayed().assertHasText(submissionTypesResult.trim())
