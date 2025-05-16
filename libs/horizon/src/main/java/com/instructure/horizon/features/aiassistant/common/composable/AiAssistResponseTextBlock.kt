@@ -39,14 +39,19 @@ data class AiAssistResponseTextBlockSource(
     val url: String,
 )
 
+data class AiAssistResponseTextBlockFooterState(
+    val isFooterEnabled: Boolean = false,
+    val sources: List<AiAssistResponseTextBlockSource> = emptyList(),
+    val selectedFeedback: AiAssistFeedbackType? = null,
+    val onSourceSelected: (AiAssistResponseTextBlockSource) -> Unit = {},
+    val onPositiveFeedbackSelected: () -> Unit = {},
+    val onNegativeFeedbackSelected: () -> Unit = {},
+)
+
 @Composable
 fun AiAssistResponseTextBlock(
     text: String,
-    sources: List<AiAssistResponseTextBlockSource>,
-    selectedFeedback: AiAssistFeedbackType?,
-    onSourceSelected: (AiAssistResponseTextBlockSource) -> Unit,
-    onPositiveFeedbackSelected: () -> Unit,
-    onNegativeFeedbackSelected: () -> Unit,
+    footerState: AiAssistResponseTextBlockFooterState = AiAssistResponseTextBlockFooterState(),
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -58,39 +63,41 @@ fun AiAssistResponseTextBlock(
             color = HorizonColors.Text.surfaceColored(),
         )
 
-        HorizonSpace(SpaceSize.SPACE_8)
+        if (footerState.isFooterEnabled){
+            HorizonSpace(SpaceSize.SPACE_8)
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.horizontalScroll(rememberScrollState())
-        ) {
-            sources.forEach { source ->
-                TextLink(
-                    text = source.label,
-                    textLinkColor = TextLinkColor.Beige,
-                    onClick = { onSourceSelected(source) },
-                )
-
-                if (source != sources.last()) {
-                    HorizonSpace(SpaceSize.SPACE_4)
-
-                    VerticalDivider(
-                        thickness = 1.dp,
-                        color = HorizonColors.Text.surfaceColored()
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.horizontalScroll(rememberScrollState())
+            ) {
+                footerState.sources.forEach { source ->
+                    TextLink(
+                        text = source.label,
+                        textLinkColor = TextLinkColor.Beige,
+                        onClick = { footerState.onSourceSelected(source) },
                     )
 
-                    HorizonSpace(SpaceSize.SPACE_4)
+                    if (source != footerState.sources.last()) {
+                        HorizonSpace(SpaceSize.SPACE_4)
+
+                        VerticalDivider(
+                            thickness = 1.dp,
+                            color = HorizonColors.Text.surfaceColored()
+                        )
+
+                        HorizonSpace(SpaceSize.SPACE_4)
+                    }
                 }
             }
+
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            AiAssistFeedback(
+                selected = footerState.selectedFeedback,
+                onPositiveFeedbackSelected = footerState.onPositiveFeedbackSelected,
+                onNegativeFeedbackSelected = footerState.onNegativeFeedbackSelected
+            )
         }
-
-        HorizonSpace(SpaceSize.SPACE_8)
-
-        AiAssistFeedback(
-            selected = selectedFeedback,
-            onPositiveFeedbackSelected = onPositiveFeedbackSelected,
-            onNegativeFeedbackSelected = onNegativeFeedbackSelected
-        )
     }
 }
 
@@ -99,13 +106,5 @@ fun AiAssistResponseTextBlock(
 private fun AiAssistResponseTextBlockPreview() {
     AiAssistResponseTextBlock(
         text = "This is a sample response text block.",
-        sources = listOf(
-            AiAssistResponseTextBlockSource("Source 1", "https://example.com/1"),
-            AiAssistResponseTextBlockSource("Source 2", "https://example.com/2"),
-        ),
-        selectedFeedback = null,
-        onSourceSelected = {},
-        onPositiveFeedbackSelected = {},
-        onNegativeFeedbackSelected = {},
     )
 }

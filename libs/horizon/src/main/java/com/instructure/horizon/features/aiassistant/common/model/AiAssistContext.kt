@@ -1,16 +1,6 @@
 package com.instructure.horizon.features.aiassistant.common.model
 
 data class AiAssistContext(
-    val contextString: String = "",
-    val chatHistory: List<AiAssistMessage> = emptyList(),
+    val contextString: String? = null,
+    val contextSources: Map<String, String> = emptyMap(),
 )
-
-data class AiAssistMessage(
-    val message: String,
-    val role: AiAssistMessageRole,
-)
-
-enum class AiAssistMessageRole {
-    USER,
-    ASSISTANT,
-}

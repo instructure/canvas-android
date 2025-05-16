@@ -16,16 +16,23 @@
  */
 package com.instructure.horizon.features.aiassistant.chat
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistInput
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistSuggestionTextBlock
-import com.instructure.horizon.features.aiassistant.common.composable.AiAssistToolbar
-import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistUserTextBlock
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.molecules.Spinner
 
 @Composable
 fun AiAssistChatScreen(
@@ -33,33 +40,49 @@ fun AiAssistChatScreen(
     navController: NavHostController,
     state: AiAssistChatUiState
 ) {
-    Column(
-        modifier = Modifier.fillMaxSize()
-    ){
+    AiAssistScaffold(
+        mainNavController = mainNavController,
+        navController = navController,
+        inputTextValue = state.inputTextValue,
+        onInputTextChanged = { state.onInputTextChanged(it) },
+        onInputTextSubmitted = { state.onInputTextSubmitted() },
+    ) { modifier ->
+        LazyColumn(
+            verticalArrangement = Arrangement.spacedBy(16.dp),
+            modifier = modifier
+        ) {
+            items(state.messages) { message ->
+                Row(
+                    modifier = Modifier.fillMaxWidth()
+                ){
+                    when (message.role) {
+                        is AiAssistMessageRole.User -> {
+                            Spacer(modifier = Modifier.weight(1f))
+                            AiAssistUserTextBlock(
+                                text = message.message,
+                                modifier = Modifier.padding(start = 24.dp)
+                            )
+                        }
 
-        AiAssistToolbar(
-            onDismissPressed = { mainNavController.popBackStack() },
-            onBackPressed = if (navController.previousBackStackEntry != null) {
-                { navController.popBackStack() }
-            } else {
-                null
+                        is AiAssistMessageRole.Assistant -> AiAssistResponseTextBlock(
+                            text = message.message,
+                            modifier = Modifier.padding(end = 24.dp)
+                        )
+                    }
+                }
             }
-        )
-        LazyColumn(modifier = Modifier.weight(1f)) {
-            (0..20).forEach {
+
+            if (state.isLoading) {
                 item {
-                    AiAssistSuggestionTextBlock(
-                        text = "Chat Screen",
-                        onClick = { navController.navigate(AiAssistRoute.AiAssistChat.route) },
-                    )
+                    Row(
+                        modifier = Modifier.fillMaxWidth()
+                    ){
+                        Spacer(modifier = Modifier.weight(1f))
+                        Spinner(color = HorizonColors.Surface.cardPrimary())
+                        Spacer(modifier = Modifier.weight(1f))
+                    }
                 }
             }
         }
-
-        AiAssistInput(
-            value = state.inputTextValue,
-            onValueChange = { state.onInputTextChanged(it) },
-            onSubmitPressed = { state.onInputTextSubmitted() },
-        )
     }
 }
