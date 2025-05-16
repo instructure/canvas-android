@@ -308,9 +308,9 @@
 
         <!-- To do widget -->
         <receiver
-            android:name=".widget.TodoWidgetProvider"
-            android:label="@string/todoWidgetTitleLong"
-            android:exported="false">
+            android:name=".widget.todo.ToDoWidgetReceiver"
+            android:exported="true"
+            android:label="@string/todoWidgetTitleLong">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -320,12 +320,8 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/todo_widget_info"/>
+                android:resource="@xml/todo_widget_info" />
         </receiver>
-
-        <service
-            android:name=".widget.TodoViewWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Grades Widget -->
         <receiver

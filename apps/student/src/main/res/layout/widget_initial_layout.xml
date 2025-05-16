@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?><!--
-  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~ Copyright (C) 2025 - present Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -15,13 +15,18 @@
   ~
   -->
 
-<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android"
-    android:initialKeyguardLayout="@layout/widget_initial_layout"
-    android:initialLayout="@layout/widget_initial_layout"
-    android:label="@string/Todo"
-    android:minWidth="200dp"
-    android:minHeight="110dp"
-    android:previewImage="@drawable/widget_preview_todo_light"
-    android:resizeMode="horizontal|vertical"
-    android:updatePeriodMillis="1800000"
-    android:widgetCategory="keyguard|home_screen" />
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/backgroundLightest">
+
+    <ImageView
+        android:id="@+id/widget_refresh"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_centerInParent="true"
+        android:importantForAccessibility="no"
+        android:scaleType="centerInside"
+        android:src="@drawable/ic_canvas_logo_student" />
+
+</RelativeLayout>
