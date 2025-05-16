@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui.pages
 
 
+import androidx.annotation.StringRes
 import androidx.test.InstrumentationRegistry
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.web.assertion.WebViewAssertions
@@ -38,6 +39,7 @@ import com.instructure.espresso.assertNotHasText
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.scrollTo
@@ -211,49 +213,21 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     }
 
     /**
-     * Assert submission type none
+     * Assert that the given submission types are displayed.
      *
+     * @param: submissionTypes: The given submission types.
      */
-    fun assertSubmissionTypeNone() {
-        scrollToSubmissionType()
-        submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_none)
-    }
-
-    /**
-     * Assert submission type on paper
-     *
-     */
-    fun assertSubmissionTypeOnPaper() {
-        scrollToSubmissionType()
-        submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onPaper)
-    }
-
-    /**
-     * Assert submission type online text entry
-     *
-     */
-    fun assertSubmissionTypeOnlineTextEntry() {
+    fun assertSubmissionTypes(@StringRes vararg submissionTypes: Int) {
         scrollToSubmissionType()
         submissionTypesSectionLabel.assertDisplayed()
-        submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineTextEntry)
-    }
 
-    /**
-     * Assert submission type online url
-     *
-     */
-    fun assertSubmissionTypeOnlineUrl() {
-        scrollToSubmissionType()
-        submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineURL)
-    }
+        var submissionTypesResult = ""
+        submissionTypes.forEach { submissionType ->
+            submissionTypesResult += getStringFromResource(submissionType)
+            submissionTypesResult += "\n"
+        }
 
-    /**
-     * Assert submission type online upload
-     *
-     */
-    fun assertSubmissionTypeOnlineUpload() {
-        scrollToSubmissionType()
-        submissionTypesTextView.assertDisplayed().assertHasText(R.string.canvasAPI_onlineUpload)
+        submissionTypesTextView.assertDisplayed().assertHasText(submissionTypesResult.trim())
     }
 
     /**
