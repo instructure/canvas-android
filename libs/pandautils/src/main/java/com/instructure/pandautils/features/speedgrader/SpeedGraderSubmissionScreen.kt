@@ -29,12 +29,10 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
-import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.instructure.pandautils.compose.composables.DraggableResizableLayout
 import com.instructure.pandautils.compose.composables.HorizontalDraggableResizableLayout
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
 

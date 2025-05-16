@@ -23,6 +23,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
@@ -57,7 +58,13 @@ class SpeedGraderContentViewModel @Inject constructor(
         val submission = repository.getSubmission(assignmentId, studentId)
 
         val content = getContent(submission)
-        _uiState.update { it.copy(content = content, assigneeId = submission.submission?.groupId?.toLongOrNull() ?: submission.submission?.userId?.toLongOrNull()) }
+        _uiState.update {
+            it.copy(
+                content = content,
+                assigneeId = submission.submission?.groupId?.toLongOrNull()
+                    ?: submission.submission?.userId?.toLongOrNull()
+            )
+        }
     }
 
     private suspend fun getContent(submissionData: SubmissionContentQuery.Data): GradeableContent {
@@ -92,7 +99,11 @@ class SpeedGraderContentViewModel @Inject constructor(
 
                 // File uploads
                 SubmissionType.ONLINE_UPLOAD -> submission.attachments?.get(0)?.let {
-                    getAttachmentContent(it, submission.assignment?.courseId?.toLong(), (submission.groupId ?: submission.userId)?.toLong())
+                    getAttachmentContent(
+                        it,
+                        submission.assignment?.courseId?.toLong(),
+                        (submission.groupId ?: submission.userId)?.toLong()
+                    )
                 } ?: UnsupportedContent
 
                 // URL Submission
@@ -108,7 +119,19 @@ class SpeedGraderContentViewModel @Inject constructor(
                 SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submission.previewUrl)
 
                 SubmissionType.STUDENT_ANNOTATION -> {
-                    StudentAnnotationContent(submission.id.toLong(), submission.attempt.toLong())
+                    try {
+                        val canvaDocSession = CanvaDocsManager.createCanvaDocSessionAsync(
+                            submission._id.toLong(),
+                            submission.attempt.toString()
+                        ).await().dataOrThrow
+                        PdfContent(
+                            canvaDocSession.canvadocsSessionUrl.orEmpty(),
+                            submission.assignment?.courseId?.toLong(),
+                            (submission.groupId ?: submission.userId)?.toLong()
+                        )
+                    } catch (e: Exception) {
+                        UnsupportedContent
+                    }
                 }
 
                 // Unsupported type
@@ -117,15 +140,21 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAttachmentContent(attachment: SubmissionContentQuery.Attachment1, courseId: Long?, assigneeId: Long?): GradeableContent {
+    private suspend fun getAttachmentContent(
+        attachment: SubmissionContentQuery.Attachment1,
+        courseId: Long?,
+        assigneeId: Long?
+    ): GradeableContent {
         // TODO remove; We need this now, because the GraphQL query doesn't return file verifiers.
         val submission = courseId?.let {
             repository.getSingleSubmission(courseId, assignmentId, studentId)
         }
 
-        val thumbnailUrl = submission?.attachments?.firstOrNull()?.thumbnailUrl ?: attachment.thumbnailUrl.orEmpty()
+        val thumbnailUrl = submission?.attachments?.firstOrNull()?.thumbnailUrl
+            ?: attachment.thumbnailUrl.orEmpty()
         val url = submission?.attachments?.firstOrNull()?.url ?: attachment.url.orEmpty()
-        val previewUrl = submission?.attachments?.firstOrNull()?.previewUrl ?: attachment.submissionPreviewUrl.orEmpty()
+        val previewUrl = submission?.attachments?.firstOrNull()?.previewUrl
+            ?: attachment.submissionPreviewUrl.orEmpty()
 
         var type = attachment.contentType ?: return OtherAttachmentContent(
             Attachment(
