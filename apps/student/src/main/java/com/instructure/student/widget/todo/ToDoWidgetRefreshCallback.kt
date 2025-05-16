@@ -17,22 +17,20 @@
 
 package com.instructure.student.widget.todo
 
-import androidx.annotation.DrawableRes
-import com.instructure.student.widget.glance.WidgetState
-import org.threeten.bp.LocalDate
+import android.appwidget.AppWidgetManager
+import android.content.Context
+import android.content.Intent
+import androidx.glance.GlanceId
+import androidx.glance.action.ActionParameters
+import androidx.glance.appwidget.action.ActionCallback
 
 
-data class ToDoWidgetUiState(
-    val state: WidgetState,
-    val plannerItems: List<WidgetPlannerItem> = emptyList()
-)
+class ToDoWidgetRefreshCallback : ActionCallback {
+    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+        val intent = Intent(context, ToDoWidgetReceiver::class.java).apply {
+            action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        }
 
-data class WidgetPlannerItem(
-    val date: LocalDate,
-    @DrawableRes val iconRes: Int,
-    val canvasContextColor: Int,
-    val canvasContextText: String,
-    val title: String,
-    val dateText: String,
-    val url: String
-)
+        context.sendBroadcast(intent)
+    }
+}

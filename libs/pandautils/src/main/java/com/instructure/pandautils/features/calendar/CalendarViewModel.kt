@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -47,6 +48,7 @@ import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.YearMonth
+import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import kotlin.math.min
@@ -62,10 +64,14 @@ class CalendarViewModel @Inject constructor(
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
     private val calendarStateMapper: CalendarStateMapper,
-    private val calendarSharedEvents: CalendarSharedEvents
+    private val calendarSharedEvents: CalendarSharedEvents,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var selectedDay = LocalDate.now(clock)
+    private val initialSelectedDayString = savedStateHandle.get<String>(CalendarFragment.SELECTED_DAY)
+    private var selectedDay = initialSelectedDayString?.let {
+        LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
+    } ?: LocalDate.now(clock)
 
     // Helper fields to handle page change animations when a day in a different month is selected
     private var pendingSelectedDay: LocalDate? = null

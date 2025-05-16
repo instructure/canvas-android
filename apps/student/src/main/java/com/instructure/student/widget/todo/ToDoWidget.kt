@@ -19,6 +19,7 @@ package com.instructure.student.widget.todo
 
 import android.content.Context
 import android.net.Uri
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -30,8 +31,10 @@ import androidx.glance.GlanceModifier
 import androidx.glance.Image
 import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
+import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
@@ -69,6 +72,7 @@ import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
 import com.jakewharton.threetenabp.AndroidThreeTen
 import org.threeten.bp.LocalDate
+import org.threeten.bp.format.DateTimeFormatter
 import java.util.Locale
 
 
@@ -94,7 +98,8 @@ class ToDoWidget : GlanceAppWidget() {
                 .background(WidgetColors.backgroundLightest)
                 .cornerRadius(16.dp)
         ) {
-            when (toDoWidgetUiState.state) {
+            val state = toDoWidgetUiState.state
+            when (state) {
                 WidgetState.Loading -> Loading()
 
                 WidgetState.Error -> Error(
@@ -117,64 +122,75 @@ class ToDoWidget : GlanceAppWidget() {
 
                 WidgetState.Content -> ListContent(toDoWidgetUiState.plannerItems.groupBy { it.date }.toList())
             }
-            Box(
-                contentAlignment = Alignment.TopEnd,
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(8.dp)
-            ) {
-                Image(
-                    provider = ImageProvider(resId = R.drawable.ic_canvas_logo_student),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(colorProvider = WidgetColors.textLightest),
-                    modifier = GlanceModifier
-                        .size(32.dp)
-                        .cornerRadius(20.dp)
-                        .background(WidgetColors.textDanger)
-                        .padding(8.dp)
-                        .clickable(
-                            actionStartActivity(
-                                InterwebsToApplication.createIntent(
-                                    LocalContext.current,
-                                    Uri.parse("${ApiPrefs.fullDomain}/todolist")
-                                )
-                            )
-                        )
+            WidgetFloatingActionButton(
+                alignment = Alignment.TopEnd,
+                imageRes = R.drawable.ic_canvas_logo_student,
+                backgroundColor = WidgetColors.textDanger,
+                tintColor = WidgetColors.textLightest,
+                onClickAction = actionStartActivity(
+                    InterwebsToApplication.createIntent(
+                        LocalContext.current,
+                        Uri.parse("${ApiPrefs.fullDomain}/todolist")
+                    )
                 )
-            }
-            Box(
-                contentAlignment = Alignment.BottomEnd,
-                modifier = GlanceModifier
-                    .fillMaxSize()
-                    .padding(8.dp)
+            )
+            if (
+                state != WidgetState.Loading &&
+                state != WidgetState.NotLoggedIn
             ) {
-                Image(
-                    provider = ImageProvider(resId = R.drawable.ic_add_lined),
-                    contentDescription = null,
-                    colorFilter = ColorFilter.tint(
-                        colorProvider = ColorProvider(
-                            color = Color(color = ThemePrefs.buttonTextColor)
-                        )
+                WidgetFloatingActionButton(
+                    alignment = Alignment.BottomEnd,
+                    imageRes = if (state == WidgetState.Error) {
+                        R.drawable.ic_refresh_lined
+                    } else {
+                        R.drawable.ic_add_lined
+                    },
+                    backgroundColor = ColorProvider(
+                        color = Color(color = ThemePrefs.buttonColor)
                     ),
-                    modifier = GlanceModifier
-                        .size(32.dp)
-                        .cornerRadius(20.dp)
-                        .background(
-                            colorProvider = ColorProvider(
-                                color = Color(color = ThemePrefs.buttonColor)
+                    tintColor = ColorProvider(
+                        color = Color(color = ThemePrefs.buttonTextColor)
+                    ),
+                    onClickAction = if (state == WidgetState.Error) {
+                        actionRunCallback<ToDoWidgetRefreshCallback>()
+                    } else {
+                        actionStartActivity(
+                            InterwebsToApplication.createIntent(
+                                LocalContext.current,
+                                Uri.parse("${ApiPrefs.fullDomain}/todos/new")
                             )
                         )
-                        .padding(8.dp)
-                        .clickable(
-                            actionStartActivity(
-                                InterwebsToApplication.createIntent(
-                                    LocalContext.current,
-                                    Uri.parse("${ApiPrefs.fullDomain}/todos/new")
-                                )
-                            )
-                        )
+                    }
                 )
             }
+        }
+    }
+
+    @Composable
+    fun WidgetFloatingActionButton(
+        alignment: Alignment,
+        @DrawableRes imageRes: Int,
+        backgroundColor: ColorProvider,
+        tintColor: ColorProvider,
+        onClickAction: Action
+    ) {
+        Box(
+            contentAlignment = alignment,
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .padding(8.dp)
+        ) {
+            Image(
+                provider = ImageProvider(resId = imageRes),
+                contentDescription = null,
+                colorFilter = ColorFilter.tint(tintColor),
+                modifier = GlanceModifier
+                    .size(32.dp)
+                    .cornerRadius(20.dp)
+                    .background(backgroundColor)
+                    .padding(8.dp)
+                    .clickable(onClickAction)
+            )
         }
     }
 
@@ -205,7 +221,7 @@ class ToDoWidget : GlanceAppWidget() {
                         actionStartActivity(
                             InterwebsToApplication.createIntent(
                                 LocalContext.current,
-                                Uri.parse("${ApiPrefs.fullDomain}/calendar")
+                                Uri.parse("${ApiPrefs.fullDomain}/calendar/${day.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
                             )
                         )
                     )

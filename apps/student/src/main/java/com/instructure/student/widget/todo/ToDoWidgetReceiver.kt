@@ -19,6 +19,7 @@ package com.instructure.student.widget.todo
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -64,6 +65,11 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
         updateData(context)
     }
 
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        updateData(context)
+    }
+
     private fun updateData(context: Context) {
         coroutineScope.launch {
             val glanceId = GlanceAppWidgetManager(context)
@@ -76,12 +82,15 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
                         this[toDoWidgetUiStateKey] = state.toJson()
                     }
                 }
+
+                glanceAppWidget.update(context, glanceId)
             }
+
+            setState(ToDoWidgetUiState(WidgetState.Loading))
 
             val user = apiPrefs.user
             if (user == null) {
                 setState(ToDoWidgetUiState(WidgetState.NotLoggedIn))
-                glanceAppWidget.update(context, glanceId)
                 return@launch
             }
 
@@ -117,8 +126,6 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
             } catch (e: Exception) {
                 setState(ToDoWidgetUiState(WidgetState.Error))
             }
-
-            glanceAppWidget.update(context, glanceId)
         }
     }
 
