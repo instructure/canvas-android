@@ -113,7 +113,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         assignmentDetailsPage.assertHasGraded(actual = 1, outOf = 3)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Submission Types' is 'Text Entry' at this assignment and the 'Submissions' and 'All' labels are displayed on the 'Submissions' card.")
-        assignmentDetailsPage.assertSubmissionTypeOnlineTextEntry()
+        assignmentDetailsPage.assertSubmissionTypes(R.string.canvasAPI_onlineTextEntry  )
         assignmentDetailsPage.assertSubmissionsLabel()
         assignmentDetailsPage.assertAllSubmissionsLabel()
 
