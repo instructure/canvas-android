@@ -18,6 +18,8 @@
 import androidx.annotation.ColorInt
 
 data class SpeedGraderUiState(
+    val assignmentId: Long,
+    val submissionIds: List<Long>,
     val courseName: String = "",
     val assignmentName: String = "",
     @ColorInt val courseColor: Int = 0

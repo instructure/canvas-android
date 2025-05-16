@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 import io.mockk.coEvery
 import io.mockk.coVerify

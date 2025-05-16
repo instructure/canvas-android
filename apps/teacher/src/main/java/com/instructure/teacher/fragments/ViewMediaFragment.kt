@@ -37,6 +37,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
+import com.instructure.pandautils.features.speedgrader.content.MediaContent
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.utils.*
@@ -46,7 +47,6 @@ import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
-import com.instructure.teacher.view.MediaContent
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
@@ -54,15 +54,15 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
 
     private val binding by viewBinding(FragmentSpeedGraderMediaBinding::bind)
 
-    private var mUri by ParcelableArg(Uri.EMPTY)
-    private var mContentType by StringArg()
-    private var mThumbnailUrl by NullableStringArg()
-    private var mDisplayName by NullableStringArg()
+    private var uri by ParcelableArg(Uri.EMPTY)
+    private var contentType by StringArg()
+    private var thumbnailUrl by NullableStringArg()
+    private var displayName by NullableStringArg()
     private var isInModulesPager by BooleanArg()
     private var toolbarColor by IntArg()
     private var editableFile: EditableFile? by NullableParcelableArg()
 
-    private val mExoAgent get() = ExoAgent.getAgentForUri(mUri)
+    private val exoAgent get() = ExoAgent.getAgentForUri(uri)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_speed_grader_media, container, false)
@@ -75,7 +75,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     override fun onStart() = with(binding) {
         super.onStart()
 
-        Glide.with(requireContext()).load(mThumbnailUrl).into(mediaThumbnailView)
+        Glide.with(requireContext()).load(thumbnailUrl).into(mediaThumbnailView)
 
         prepareMediaButton.onClick {
             MobileDataWarningDialog.showIfNeeded(
@@ -88,17 +88,17 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
         tryAgainButton.onClick { prepare() }
 
         ViewStyler.themeButton(openExternallyButton)
-        openExternallyButton.onClick { mUri.viewExternally(requireContext(), mContentType) }
+        openExternallyButton.onClick { uri.viewExternally(requireContext(), contentType) }
 
         speedGraderMediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).onClick {
-            mExoAgent.flagForResume()
-            val bundle = BaseViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
+            exoAgent.flagForResume()
+            val bundle = BaseViewMediaActivity.makeBundle(uri.toString(), thumbnailUrl, contentType, displayName, false)
             RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.MEDIA))
         }
     }
 
     override fun viewExternally() {
-        mUri.viewExternally(requireContext(), mContentType)
+        uri.viewExternally(requireContext(), contentType)
     }
 
     override fun onResume() = with(binding) {
@@ -112,7 +112,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
 
         setupToolbar()
 
-        mExoAgent.attach(speedGraderMediaPlayerView, object : ExoInfoListener {
+        exoAgent.attach(speedGraderMediaPlayerView, object : ExoInfoListener {
             override fun onStateChanged(newState: ExoAgentState) {
                 when (newState) {
                     ExoAgentState.IDLE -> {
@@ -136,7 +136,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
                         mediaProgressBar.setGone()
                     }
                     ExoAgentState.ENDED -> {
-                        mExoAgent.reset()
+                        exoAgent.reset()
                         mediaPreviewContainer.setVisible()
                         mediaPlaybackErrorView.setGone()
                         speedGraderMediaPlayerView.setGone()
@@ -166,7 +166,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
         })
     }
 
-    private fun prepare() = mExoAgent.prepare(binding.speedGraderMediaPlayerView)
+    private fun prepare() = exoAgent.prepare(binding.speedGraderMediaPlayerView)
 
     private fun setupToolbar() = with(binding) {
         editableFile?.let {
@@ -207,7 +207,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     }
 
     override fun onDetach() {
-        mExoAgent.release()
+        exoAgent.release()
         super.onDetach()
     }
 
@@ -224,15 +224,22 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
             toolbarColor: Int = 0,
             editableFile: EditableFile? = null
         ) = ViewMediaFragment().apply {
-            mUri = uri
-            mThumbnailUrl = thumbnailUrl
-            mContentType = contentType
-            mDisplayName = displayName
+            this.uri = uri
+            this.thumbnailUrl = thumbnailUrl
+            this.contentType = contentType
+            this.displayName = displayName
             this.isInModulesPager = isInModulesPager
             this.toolbarColor = toolbarColor
             this.editableFile = editableFile
         }
 
         fun newInstance(bundle: Bundle) = ViewMediaFragment().apply { arguments = bundle }
+
+        fun createBundle(media: MediaContent) = Bundle().apply {
+            putParcelable("uri", media.uri)
+            putString("thumbnailUrl", media.thumbnailUrl)
+            putString("contentType", media.contentType)
+            putString("displayName", media.displayName)
+        }
     }
 }

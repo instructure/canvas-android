@@ -50,7 +50,7 @@ class SpeedGraderViewModelTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         Dispatchers.setMain(testDispatcher)
         repository = mockk()
-        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L))
+        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L, SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)))
     }
 
     @After
@@ -78,6 +78,15 @@ class SpeedGraderViewModelTest {
     @Test
     fun `init throws exception when assignmentId is missing`() {
         savedStateHandle = SavedStateHandle()
+
+        assertThrows(IllegalStateException::class.java) {
+            SpeedGraderViewModel(savedStateHandle, repository)
+        }
+    }
+
+    @Test
+    fun `init throws exception when submissionIds are missing`() {
+        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L))
 
         assertThrows(IllegalStateException::class.java) {
             SpeedGraderViewModel(savedStateHandle, repository)

@@ -30,12 +30,14 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsMan
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
-import com.instructure.canvasapi2.managers.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.teacher.ui.utils.TeacherComposeTest
@@ -66,6 +68,10 @@ class CommentLibraryPageTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
 
     @Stub
     @Test

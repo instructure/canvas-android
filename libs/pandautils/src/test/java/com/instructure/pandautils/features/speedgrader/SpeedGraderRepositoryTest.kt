@@ -17,7 +17,7 @@
 package com.instructure.pandautils.features.speedgrader
 
 import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.managers.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk

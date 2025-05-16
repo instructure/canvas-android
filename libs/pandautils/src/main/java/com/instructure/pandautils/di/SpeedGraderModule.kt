@@ -15,7 +15,7 @@
  */
 package com.instructure.pandautils.di
 
-import com.instructure.canvasapi2.managers.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.pandautils.features.speedgrader.SpeedGraderRepository
 import dagger.Module
 import dagger.Provides
