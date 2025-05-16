@@ -139,7 +139,7 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         allCoursesPage.openCourse(course1.name)
 
         Log.d(ASSERTION_TAG, "Assert if it will navigate the user to the CourseBrowser Page.")
-        courseBrowserPage.assertTitleCorrect(course1)
+        courseBrowserPage.assertInitialBrowserTitle(course1)
     }
 
     @After
