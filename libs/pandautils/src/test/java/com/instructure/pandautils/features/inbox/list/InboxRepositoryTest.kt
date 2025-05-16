@@ -35,7 +35,6 @@ import com.instructure.canvasapi2.utils.Failure
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import junit.framework.Assert
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -204,6 +203,6 @@ class InboxRepositoryTest {
         inboxRepository.getInboxSignature()
 
         coVerify { featuresApi.getAccountSettingsFeatures(any()) }
-        coVerify { inboxSettingsManager.getInboxSignatureSettings() }
+        coVerify { inboxSettingsManager.getInboxSignatureSettings(true) }
     }
 }
