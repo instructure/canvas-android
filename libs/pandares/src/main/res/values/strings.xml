@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifications</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Grades</string>
+    <string name="gradeWidgetTitleLong">Canvas - Grade</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
     <string name="notLoggedIn">You are not logged in</string>
     <string name="widgetStyle">Choose your widget style</string>
@@ -2065,4 +2066,5 @@
     <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
     <string name="a11y_searchAssignments">Search Assignments</string>
     <string name="dueAssignmentListItem">Due %1$s</string>
+    <string name="selectCourse">Select Course</string>
 </resources>

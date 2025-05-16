@@ -13,13 +13,13 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.widget.grades.singleGrade
+package com.instructure.student.widget.grades.courseselector
 
-import com.instructure.student.widget.glance.WidgetState
-import com.instructure.student.widget.grades.WidgetCourseItem
+import com.instructure.canvasapi2.models.Course
+import com.instructure.pandautils.utils.ScreenState
 
-class SingleGradeWidgetUiState(
-    val state: WidgetState,
-    val course: WidgetCourseItem? = null
+
+data class CourseSelectorUiState(
+    val state: ScreenState = ScreenState.Loading,
+    val courses: List<Course> = emptyList()
 )
-

@@ -253,6 +253,15 @@
         </activity>
 
         <activity
+            android:name=".widget.grades.courseselector.CourseSelectorActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".activity.BookmarkShortcutActivity"
             android:icon="@drawable/ic_bookmark_shortcut"
             android:label="@string/student_app_name"
@@ -323,27 +332,6 @@
                 android:resource="@xml/todo_widget_info" />
         </receiver>
 
-        <!-- Grades Widget
-        <receiver
-            android:name=".widget.GradesWidgetProvider"
-            android:label="@string/gradesWidgetTitleLong"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/grades_widget_info"/>
-        </receiver>
-
-        <service
-            android:name=".widget.GradesViewWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>-->
-
         <!-- Notifications widget-->
         <receiver
             android:name=".widget.NotificationWidgetProvider"
@@ -365,6 +353,32 @@
             android:name=".widget.NotificationViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
+        <!-- Grades widget-->
+        <receiver
+            android:name=".widget.grades.list.GradesWidgetReceiver"
+            android:label="@string/gradesWidgetTitleLong"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/grades_widget_info" />
+        </receiver>
+
+        <!-- Grade widget-->
+        <receiver
+            android:name=".widget.grades.singleGrade.SingleGradeWidgetReceiver"
+            android:label="@string/gradeWidgetTitleLong"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/single_grade_widget_info" />
+        </receiver>
+
         <!-- End of Widget Items -->
 
         <provider
@@ -382,26 +396,6 @@
             android:authorities="${applicationId}.androidx-startup"
             tools:node="remove">
         </provider>
-
-        <receiver android:name=".widget.grades.list.GradesWidgetReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/grades_widget_info" />
-        </receiver>
-
-        <receiver android:name=".widget.grades.singleGrade.SingleGradeWidgetReceiver"
-            android:exported="true">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-            </intent-filter>
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/single_grade_widget_info" />
-        </receiver>
 
     </application>
 

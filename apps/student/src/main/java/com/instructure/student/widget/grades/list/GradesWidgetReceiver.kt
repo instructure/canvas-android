@@ -18,20 +18,17 @@ package com.instructure.student.widget.grades.list
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.GradesWidgetRepository
-import com.instructure.student.widget.grades.WidgetCourseItem
+import com.instructure.student.widget.grades.toWidgetCourseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -54,6 +51,11 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
+        updateData(context)
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
         updateData(context)
     }
 
@@ -92,52 +94,6 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
 
             glanceAppWidget.update(context, glanceId)
         }
-    }
-
-    private fun Course.toWidgetCourseItem(): WidgetCourseItem {
-        val themedColor = ColorKeeper.getOrGenerateColor(this)
-        return WidgetCourseItem(
-            name,
-            courseCode ?: name,
-            isLocked(),
-            getGradeText(),
-            themedColor.light,
-            themedColor.dark,
-            getUrl()
-        )
-    }
-
-    private fun Course.getGradeText(): String? {
-        return if (!isTeacher && !isTA) {
-            val courseGrade = getCourseGrade(false)
-            if (courseGrade == null || courseGrade.isLocked || courseGrade.noCurrentGrade) {
-                ""
-            } else if (settings?.restrictQuantitativeData == true) {
-                if (courseGrade.currentGrade.isNullOrEmpty()) {
-                    ""
-                } else {
-                    courseGrade.currentGrade.orEmpty()
-                }
-            } else {
-                val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
-                "${if (courseGrade.hasCurrentGradeString()) courseGrade.currentGrade else ""} $scoreString"
-            }
-        } else {
-            null
-        }
-    }
-
-    private fun Course.isLocked(): Boolean {
-        val courseGrade = getCourseGrade(false)
-        return courseGrade == null || courseGrade.isLocked
-    }
-
-    private fun Course.getUrl(): String {
-        val domain = ApiPrefs.fullDomain
-
-        //Construct URL to route to grades page
-        val courseUrl = Const.COURSE_URL + id
-        return domain + courseUrl + Const.GRADE_URL
     }
 
     companion object {

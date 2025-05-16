@@ -21,7 +21,6 @@
     android:minWidth="200dp"
     android:minResizeWidth="120dp"
     android:minHeight="110dp"
-    android:configure="com.instructure.student.activity.WidgetSetupActivity"
     android:updatePeriodMillis="1800000"
     android:resizeMode="horizontal|vertical"
     android:widgetCategory="keyguard|home_screen"

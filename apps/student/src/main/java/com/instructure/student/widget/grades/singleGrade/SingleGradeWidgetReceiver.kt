@@ -15,21 +15,22 @@
  */package com.instructure.student.widget.grades.singleGrade
 
 import android.appwidget.AppWidgetManager
+import android.appwidget.AppWidgetManager.EXTRA_APPWIDGET_IDS
 import android.content.Context
+import android.content.Intent
+import android.os.Bundle
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.NumberHelper
-import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.toJson
+import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.GradesWidgetRepository
-import com.instructure.student.widget.grades.WidgetCourseItem
+import com.instructure.student.widget.grades.courseselector.CourseSelectorActivity
+import com.instructure.student.widget.grades.toWidgetCourseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
@@ -52,90 +53,86 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        updateData(context)
+        updateData(context, appWidgetIds.toList())
     }
 
-    private fun updateData(context: Context) {
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        val widgetIds = intent.extras?.getIntArray(EXTRA_APPWIDGET_IDS)
+        widgetIds?.let {
+            updateData(context, it.toList())
+        }
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        for (widgetId in appWidgetIds) {
+            StudentPrefs.remove(CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId)
+        }
+        super.onDeleted(context, appWidgetIds)
+    }
+
+    override fun onAppWidgetOptionsChanged(
+        context: Context,
+        appWidgetManager: AppWidgetManager,
+        appWidgetId: Int,
+        newOptions: Bundle
+    ) {
+        super.onAppWidgetOptionsChanged(context, appWidgetManager, appWidgetId, newOptions)
+        updateData(context, listOf(appWidgetId))
+    }
+
+    private fun updateData(context: Context, widgetIds: List<Int>) {
+        if (widgetIds.isEmpty()) {
+            return
+        }
         coroutineScope.launch {
+            val courses = repository.getCoursesWithGradingScheme(true)
 
-            val glanceId =
-                GlanceAppWidgetManager(context).getGlanceIds(SingleGradeWidget::class.java).firstOrNull()
-                    ?: return@launch
+            for (widgetId in widgetIds) {
+                val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
 
-            suspend fun setState(state: SingleGradeWidgetUiState) {
-                updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { pref ->
-                    pref.toMutablePreferences().apply {
-                        this[singleGradeWidgetUiStateKey] = state.toJson()
+                suspend fun setState(state: SingleGradeWidgetUiState) {
+                    updateAppWidgetState(
+                        context,
+                        PreferencesGlanceStateDefinition,
+                        glanceId
+                    ) { pref ->
+                        pref.toMutablePreferences().apply {
+                            this[singleGradeWidgetUiStateKey] = state.toJson()
+                        }
                     }
                 }
-            }
 
-            val user = apiPrefs.user
-            if (user == null) {
-                setState(SingleGradeWidgetUiState(WidgetState.NotLoggedIn))
-                glanceAppWidget.update(context, glanceId)
-                return@launch
-            }
-
-            try {
-                val courses = repository.getCoursesWithGradingScheme(true)
-                setState(
-                    SingleGradeWidgetUiState(
-                        WidgetState.Content,
-                        courses[0].toWidgetCourseItem())
-                )
-            } catch (e: Exception) {
-                setState(SingleGradeWidgetUiState(WidgetState.Error))
-            }
-
-            glanceAppWidget.update(context, glanceId)
-        }
-    }
-
-    private fun Course.toWidgetCourseItem(): WidgetCourseItem {
-        val themedColor = ColorKeeper.getOrGenerateColor(this)
-        return WidgetCourseItem(
-            name,
-            courseCode ?: name,
-            isLocked(),
-            getGradeText(),
-            themedColor.light,
-            themedColor.dark,
-            getUrl()
-        )
-    }
-
-    private fun Course.getGradeText(): String? {
-        return if (!isTeacher && !isTA) {
-            val courseGrade = getCourseGrade(false)
-            if (courseGrade == null || courseGrade.isLocked || courseGrade.noCurrentGrade) {
-                ""
-            } else if (settings?.restrictQuantitativeData == true) {
-                if (courseGrade.currentGrade.isNullOrEmpty()) {
-                    ""
-                } else {
-                    courseGrade.currentGrade.orEmpty()
+                val user = apiPrefs.user
+                if (user == null) {
+                    setState(SingleGradeWidgetUiState(WidgetState.NotLoggedIn))
+                    glanceAppWidget.update(context, glanceId)
+                    return@launch
                 }
-            } else {
-                val scoreString = NumberHelper.doubleToPercentage(courseGrade.currentScore, 2)
-                "${if (courseGrade.hasCurrentGradeString()) courseGrade.currentGrade else ""} $scoreString"
+
+                try {
+                    val courseId = StudentPrefs.getLong(
+                        CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId,
+                        -1
+                    )
+                    val course = courses.find { it.id == courseId }
+                    if (course != null) {
+                        setState(
+                            SingleGradeWidgetUiState(
+                                WidgetState.Content,
+                                course.toWidgetCourseItem()
+                            )
+                        )
+                    } else {
+                        setState(SingleGradeWidgetUiState(WidgetState.Error))
+                    }
+                } catch (e: Exception) {
+                    setState(SingleGradeWidgetUiState(WidgetState.Error))
+                }
+
+                glanceAppWidget.update(context, glanceId)
             }
-        } else {
-            null
         }
-    }
-
-    private fun Course.isLocked(): Boolean {
-        val courseGrade = getCourseGrade(false)
-        return courseGrade == null || courseGrade.isLocked
-    }
-
-    private fun Course.getUrl(): String {
-        val domain = ApiPrefs.fullDomain
-
-        //Construct URL to route to grades page
-        val courseUrl = Const.COURSE_URL + id
-        return domain + courseUrl + Const.GRADE_URL
     }
 
     companion object {

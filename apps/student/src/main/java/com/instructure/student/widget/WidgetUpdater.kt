@@ -4,6 +4,8 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 import android.content.Intent
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.student.widget.grades.list.GradesWidgetReceiver
+import com.instructure.student.widget.grades.singleGrade.SingleGradeWidgetReceiver
 import com.instructure.student.widget.todo.ToDoWidgetReceiver
 
 /**
@@ -17,6 +19,7 @@ object WidgetUpdater {
         updateNotificationsWidget(appWidgetManager)
         updateGradesWidget(appWidgetManager)
         updateTodoWidget(appWidgetManager)
+         updateSingleGradeWidget(appWidgetManager)
     }
 
     private fun updateNotificationsWidget(appWidgetManager: AppWidgetManager) {
@@ -25,6 +28,10 @@ object WidgetUpdater {
 
     private fun updateGradesWidget(appWidgetManager: AppWidgetManager) {
         ContextKeeper.appContext.sendBroadcast(getGradesWidgetUpdateIntent(appWidgetManager))
+    }
+
+    private fun updateSingleGradeWidget(appWidgetManager: AppWidgetManager) {
+        ContextKeeper.appContext.sendBroadcast(getSingleGradeWidgetUpdateIntent(appWidgetManager))
     }
 
     private fun updateTodoWidget(appWidgetManager: AppWidgetManager) {
@@ -40,9 +47,17 @@ object WidgetUpdater {
     }
 
     fun getGradesWidgetUpdateIntent(appWidgetManager: AppWidgetManager): Intent {
-        val intent = Intent(ContextKeeper.appContext, GradesWidgetProvider::class.java)
+        val intent = Intent(ContextKeeper.appContext, GradesWidgetReceiver::class.java)
         intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, GradesWidgetProvider::class.java))
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, GradesWidgetReceiver::class.java))
+        intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
+        return intent
+    }
+
+    fun getSingleGradeWidgetUpdateIntent(appWidgetManager: AppWidgetManager): Intent {
+        val intent = Intent(ContextKeeper.appContext, SingleGradeWidgetReceiver::class.java)
+        intent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(ComponentName(ContextKeeper.appContext, SingleGradeWidgetReceiver::class.java))
         intent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, appWidgetIds)
         return intent
     }

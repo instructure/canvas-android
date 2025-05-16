@@ -16,10 +16,12 @@
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.datastore.preferences.core.Preferences
 import androidx.glance.ColorFilter
 import androidx.glance.GlanceId
@@ -35,8 +37,11 @@ import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.currentState
+import androidx.glance.layout.Alignment
 import androidx.glance.layout.Box
 import androidx.glance.layout.Column
+import androidx.glance.layout.Row
+import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
@@ -60,8 +65,8 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 class SingleGradeWidget : GlanceAppWidget() {
 
     companion object {
-        private val NARROW = DpSize(100.dp, 110.dp)
-        private val WIDE = DpSize(250.dp, 110.dp)
+        private val NARROW = DpSize(70.dp, 70.dp)
+        private val WIDE = DpSize(100.dp, 70.dp)
     }
 
     override val sizeMode = SizeMode.Responsive(
@@ -79,6 +84,7 @@ class SingleGradeWidget : GlanceAppWidget() {
             val state =
                 prefs[SingleGradeWidgetReceiver.singleGradeWidgetUiStateKey]?.fromJson<SingleGradeWidgetUiState>()
                     ?: SingleGradeWidgetUiState(WidgetState.Loading)
+            Log.d("ASDF", (state.course == null).toString())
             Content(state)
         }
     }
@@ -99,20 +105,94 @@ class SingleGradeWidget : GlanceAppWidget() {
                         )
                     )
             ) {
-                Column {
-                    Text(
-                        modifier = GlanceModifier.defaultWeight().padding(end = 8.dp),
-                        text = if (LocalSize.current.width < WIDE.width) it.courseCode else it.name,
-                        style = WidgetTextStyles.mediumDarkest.copy(
-                            color = androidx.glance.color.ColorProvider(
-                                Color(it.courseColorLight),
-                                Color(it.courseColorDark)
-                            )
-                        )
-                    )
-                    GradeLayout(it)
+                if (LocalSize.current.width < WIDE.width) {
+                    NarrowContent(it)
+                } else {
+                    WideContent(it)
                 }
+
             }
+        }
+    }
+
+    @Composable
+    private fun NarrowContent(courseItem: WidgetCourseItem) {
+        Column(
+            modifier = GlanceModifier.fillMaxSize().padding(top = 12.dp, bottom = 12.dp, start = 4.dp, end = 4.dp),
+            horizontalAlignment = Alignment.Horizontal.CenterHorizontally
+        ) {
+            Row (
+                verticalAlignment = Alignment.Vertical.CenterVertically
+            ) {
+                Image(
+                    modifier = GlanceModifier.size(16.dp),
+                    provider = ImageProvider(R.drawable.ic_canvas_logo),
+                    contentDescription = LocalContext.current.getString(R.string.locked)
+                )
+
+                Text(
+                    modifier = GlanceModifier.padding(start = 4.dp),
+                    text = "Grades",
+                    style = WidgetTextStyles.mediumDarkest.copy(
+                        fontSize = 12.sp
+                    )
+                )
+            }
+            Spacer(modifier = GlanceModifier.defaultWeight())
+            GradeLayout(courseItem)
+            Text(
+                modifier = GlanceModifier,
+                text = courseItem.courseCode,
+                style = WidgetTextStyles.mediumDarkest.copy(
+                    color = androidx.glance.color.ColorProvider(
+                        Color(courseItem.courseColorLight),
+                        Color(courseItem.courseColorDark)
+                    ),
+                    fontWeight = FontWeight.Bold
+                ),
+                maxLines = 1
+            )
+
+        }
+    }
+
+    @Composable
+    private fun WideContent(courseItem: WidgetCourseItem) {
+        Column(
+            modifier = GlanceModifier.fillMaxSize().padding(top = 12.dp, bottom = 18.dp, start = 8.dp, end = 8.dp),
+            horizontalAlignment = Alignment.Horizontal.Start
+        ) {
+            Row (
+                verticalAlignment = Alignment.Vertical.CenterVertically
+            ) {
+                Image(
+                    modifier = GlanceModifier.size(24.dp),
+                    provider = ImageProvider(R.drawable.ic_canvas_logo),
+                    contentDescription = LocalContext.current.getString(R.string.locked)
+                )
+
+                Text(
+                    modifier = GlanceModifier.padding(start = 4.dp),
+                    text = "Grades",
+                    style = WidgetTextStyles.mediumDarkest.copy(
+                        fontSize = 16.sp
+                    )
+                )
+            }
+            Spacer(modifier = GlanceModifier.defaultWeight())
+            Text(
+                modifier = GlanceModifier,
+                text = courseItem.name,
+                style = WidgetTextStyles.mediumDarkest.copy(
+                    color = androidx.glance.color.ColorProvider(
+                        Color(courseItem.courseColorLight),
+                        Color(courseItem.courseColorDark)
+                    ),
+                    textAlign = TextAlign.Left
+                ),
+                maxLines = 2
+            )
+            GradeLayout(courseItem)
         }
     }
 
@@ -127,7 +207,7 @@ class SingleGradeWidget : GlanceAppWidget() {
             } else if (it == "") {
                 NoGradesLabel(modifier)
             } else {
-                TextLabel(label = it, modifier = modifier)
+                TextLabel(label = it, modifier = modifier, fontWeight = FontWeight.Bold)
             }
         }
     }
@@ -182,12 +262,11 @@ class SingleGradeWidget : GlanceAppWidget() {
             courseColorLight = 0xFF2573DF.toInt(),
             courseColorDark = 0xFF2573DF.toInt(),
             ""
-
         )
     )
 
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 110, heightDp = 100)
+    @Preview(widthDp = 140, heightDp = 100)
     @Composable
     private fun GradesWidgetPreview() {
         ContextKeeper.appContext = LocalContext.current
@@ -198,7 +277,7 @@ class SingleGradeWidget : GlanceAppWidget() {
     }
 
     @OptIn(ExperimentalGlancePreviewApi::class)
-    @Preview(widthDp = 50, heightDp = 100)
+    @Preview(widthDp = 70, heightDp = 100)
     @Composable
     private fun GradesWidgetNarrowPreview() {
         ContextKeeper.appContext = LocalContext.current
