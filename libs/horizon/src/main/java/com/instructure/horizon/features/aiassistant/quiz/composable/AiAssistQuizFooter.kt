@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.aiassistant.quiz
+package com.instructure.horizon.features.aiassistant.quiz.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.runtime.Composable
