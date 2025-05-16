@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageItem
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageUiState
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
@@ -51,6 +52,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+    private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
+    private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
+    private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
+    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
 
     private val _uiState =
         MutableStateFlow(
@@ -66,15 +71,15 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 ),
                 onAssignmentToolsClick = ::onAssignmentToolsClicked,
                 assignmentToolsOpened = ::assignmentToolsOpened,
-                updateShowAiAssist = ::updateShowAiAssist
+                updateShowAiAssist = ::updateShowAiAssist,
+                aiContext = AiAssistContext(
+                    contextSources = mapOf(
+                        "course-id" to courseId.toString(),
+                    )
+                )
             )
         )
     val uiState = _uiState.asStateFlow()
-
-    private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
-    private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
-    private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
-    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
 
     private var modules = emptyList<ModuleObject>()
     private var moduleItems = emptyList<ModuleItem>()
@@ -138,6 +143,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     pages = progressPages,
                     currentPosition = getProgressPosition(moduleItemId, progressPages)
                 ),
+                aiContext = it.aiContext.copy(
+                    contextSources = it.aiContext.contextSources.toMutableMap().apply {
+                        this += "title" to currentModuleItem?.title.orEmpty()
+                        this += "module-id" to currentModuleItem?.id.orDefault().toString()
+                    }
+                )
             )
         }
     }
@@ -268,7 +279,18 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules, attempts) else it
             }
             val currentItem = getCurrentItem(items = newItems)
-            _uiState.update { it.copy(items = newItems, currentItem = currentItem) }
+            _uiState.update {
+                it.copy(
+                    items = newItems,
+                    currentItem = currentItem,
+                    aiContext = it.aiContext.copy(
+                        contextSources = it.aiContext.contextSources.toMutableMap().apply {
+                            this += "title" to currentModuleItem?.title.orEmpty()
+                            this += "module-id" to currentModuleItem?.id.orDefault().toString()
+                        }
+                    )
+                )
+            }
         } catch {
             // TODO Handle error
             val currentItem = getCurrentItem()
@@ -296,6 +318,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     currentPosition = progressPosition,
                     movingDirection = 0,
                     selectedModuleItemId = currentModuleItemId
+                ),
+                aiContext = it.aiContext.copy(
+                    contextSources = it.aiContext.contextSources.toMutableMap().apply {
+                        this += "title" to currentModuleItem?.title.orEmpty()
+                        this += "module-id" to currentModuleItem?.id.orDefault().toString()
+                    }
                 )
             )
         }

@@ -74,7 +74,6 @@ import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
@@ -136,7 +135,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
-                    aiContext = AiAssistContext(),
+                    aiContext = uiState.aiContext,
                     mainNavController = navController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
