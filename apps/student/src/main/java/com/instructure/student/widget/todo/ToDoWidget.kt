@@ -18,6 +18,7 @@
 package com.instructure.student.widget.todo
 
 import android.content.Context
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -31,7 +32,7 @@ import androidx.glance.ImageProvider
 import androidx.glance.LocalContext
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
-import androidx.glance.appwidget.components.Scaffold
+import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -52,17 +53,18 @@ import androidx.glance.layout.width
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.student.R
-import com.instructure.student.widget.glance.Empty
+import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.student.widget.glance.Error
 import com.instructure.student.widget.glance.Loading
-import com.instructure.student.widget.glance.NotLoggedIn
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
 import com.jakewharton.threetenabp.AndroidThreeTen
@@ -86,15 +88,33 @@ class ToDoWidget : GlanceAppWidget() {
     private fun Content(
         toDoWidgetUiState: ToDoWidgetUiState
     ) {
-        Scaffold(
-            backgroundColor = WidgetColors.backgroundLightest,
-            modifier = GlanceModifier.fillMaxSize()
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .background(WidgetColors.backgroundLightest)
+                .cornerRadius(16.dp)
         ) {
             when (toDoWidgetUiState.state) {
                 WidgetState.Loading -> Loading()
-                WidgetState.Error -> Error()
-                WidgetState.Empty -> Empty()
-                WidgetState.NotLoggedIn -> NotLoggedIn()
+
+                WidgetState.Error -> Error(
+                    imageRes = R.drawable.ic_panda_notsupported,
+                    titleRes = R.string.widgetErrorTitle,
+                    subtitleRes = R.string.widgetErrorSubtitle
+                )
+
+                WidgetState.Empty -> Error(
+                    imageRes = R.drawable.ic_no_events,
+                    titleRes = R.string.widgetToDoEmptyTitle,
+                    subtitleRes = R.string.widgetToDoEmptySubtitle
+                )
+
+                WidgetState.NotLoggedIn -> Error(
+                    imageRes = R.drawable.ic_smart_search_empty,
+                    titleRes = R.string.widgetNotLoggedInTitle,
+                    subtitleRes = R.string.widgetToDoNotLoggedInSubtitle
+                )
+
                 WidgetState.Content -> ListContent(toDoWidgetUiState.plannerItems.groupBy { it.date }.toList())
             }
             Box(
@@ -112,9 +132,14 @@ class ToDoWidget : GlanceAppWidget() {
                         .cornerRadius(20.dp)
                         .background(WidgetColors.textDanger)
                         .padding(8.dp)
-                        .clickable {
-
-                        }
+                        .clickable(
+                            actionStartActivity(
+                                InterwebsToApplication.createIntent(
+                                    LocalContext.current,
+                                    Uri.parse("${ApiPrefs.fullDomain}/todolist")
+                                )
+                            )
+                        )
                 )
             }
             Box(
@@ -140,9 +165,14 @@ class ToDoWidget : GlanceAppWidget() {
                             )
                         )
                         .padding(8.dp)
-                        .clickable {
-
-                        }
+                        .clickable(
+                            actionStartActivity(
+                                InterwebsToApplication.createIntent(
+                                    LocalContext.current,
+                                    Uri.parse("${ApiPrefs.fullDomain}/todos/new")
+                                )
+                            )
+                        )
                 )
             }
         }
@@ -163,21 +193,33 @@ class ToDoWidget : GlanceAppWidget() {
 
     @Composable
     private fun DayItemContent(day: LocalDate, items: List<WidgetPlannerItem>, lastItem: Boolean) {
-        Column {
+        Column(
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp)
+        ) {
             Row(
-                modifier = GlanceModifier.padding(vertical = 8.dp)
+                modifier = GlanceModifier
+                    .padding(vertical = 8.dp)
+                    .clickable(
+                        actionStartActivity(
+                            InterwebsToApplication.createIntent(
+                                LocalContext.current,
+                                Uri.parse("${ApiPrefs.fullDomain}/calendar")
+                            )
+                        )
+                    )
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = GlanceModifier
-                        .width(40.dp)
+                    modifier = GlanceModifier.width(40.dp)
                 ) {
-                    val dayTextColor = if (day == LocalDate.now()) {
+                    val isToday = day == LocalDate.now()
+                    val dayTextColor = if (isToday) {
                         ColorProvider(color = Color(color = ThemePrefs.brandColor))
                     } else {
                         WidgetColors.textDark
                     }
-
                     Text(
                         text = day.dayOfWeek.getDisplayName(
                             org.threeten.bp.format.TextStyle.SHORT,
@@ -188,17 +230,38 @@ class ToDoWidget : GlanceAppWidget() {
                             fontSize = 12.sp
                         )
                     )
-                    Text(
-                        text = day.dayOfMonth.toString(),
-                        style = TextStyle(
-                            color = dayTextColor,
-                            fontSize = 12.sp
+                    Box(
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = day.dayOfMonth.toString(),
+                            style = TextStyle(
+                                color = dayTextColor,
+                                fontSize = 12.sp,
+                                fontWeight = if (isToday) {
+                                    FontWeight.Bold
+                                } else {
+                                    FontWeight.Normal
+                                }
+                            )
                         )
-                    )
+                        if (isToday) {
+                            Image(
+                                provider = ImageProvider(resId = R.drawable.ic_circle_stroke),
+                                contentDescription = null,
+                                colorFilter = ColorFilter.tint(colorProvider = dayTextColor),
+                                modifier = GlanceModifier.size(32.dp)
+                            )
+                        }
+                    }
                 }
+                Spacer(modifier = GlanceModifier.width(8.dp))
                 Column {
                     items.forEachIndexed { index, item ->
-                        PlannerItemContent(item, index == items.lastIndex)
+                        PlannerItemContent(item)
+                        if (index != items.lastIndex) {
+                            Spacer(modifier = GlanceModifier.height(8.dp))
+                        }
                     }
                 }
             }
@@ -213,9 +276,18 @@ class ToDoWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun PlannerItemContent(plannerItem: WidgetPlannerItem, lastItem: Boolean) {
+    private fun PlannerItemContent(plannerItem: WidgetPlannerItem) {
         Column(
-            modifier = GlanceModifier.padding(bottom = if (lastItem) 0.dp else 8.dp)
+            modifier = GlanceModifier
+                .fillMaxWidth()
+                .clickable(
+                    actionStartActivity(
+                        InterwebsToApplication.createIntent(
+                            LocalContext.current,
+                            Uri.parse(plannerItem.url)
+                        )
+                    )
+                )
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
@@ -248,15 +320,18 @@ class ToDoWidget : GlanceAppWidget() {
                     style = TextStyle(
                         color = canvasContextColorProvider,
                         fontSize = 12.sp
-                    )
+                    ),
+                    maxLines = 1
                 )
             }
             Text(
                 text = plannerItem.title,
                 style = TextStyle(
                     color = WidgetColors.textDarkest,
-                    fontSize = 14.sp
-                )
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Medium
+                ),
+                maxLines = 1
             )
             Text(
                 text = plannerItem.dateText,

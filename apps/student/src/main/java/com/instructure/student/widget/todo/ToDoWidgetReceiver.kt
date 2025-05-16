@@ -24,6 +24,7 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -42,6 +43,8 @@ import kotlinx.coroutines.launch
 import org.threeten.bp.LocalDateTime
 import javax.inject.Inject
 
+
+private const val PLANNER_DATE_RANGE_DAYS = 28L
 
 @AndroidEntryPoint
 class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
@@ -83,19 +86,33 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
             }
 
             try {
+                val courses = repository.getFavouriteCourses(true)
+                val groups = repository.getFavouriteGroups(true)
+
+                val contextCodes = buildList {
+                    addAll(courses.map { it.contextId })
+                    addAll(groups.map { it.contextId })
+                    apiPrefs.user?.contextId?.let { add(it) }
+                }
+
                 val now = LocalDateTime.now()
                 val plannerItems = repository.getPlannerItems(
                     now.toApiString().orEmpty(),
-                    now.plusDays(28).toApiString().orEmpty(),
+                    now.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
+                    contextCodes,
                     true
                 )
 
-                val state = if (plannerItems.isEmpty()) {
-                    WidgetState.Empty
-                } else {
-                    WidgetState.Content
-                }
-                val toDoWidgetUiState = ToDoWidgetUiState(state, plannerItems.map { it.toWidgetPlannerItem(context) })
+                val toDoWidgetUiState = ToDoWidgetUiState(
+                    if (plannerItems.isEmpty()) {
+                        WidgetState.Empty
+                    } else {
+                        WidgetState.Content
+                    },
+                    plannerItems.map {
+                        it.toWidgetPlannerItem(context, courses)
+                    }
+                )
                 setState(toDoWidgetUiState)
             } catch (e: Exception) {
                 setState(ToDoWidgetUiState(WidgetState.Error))
@@ -105,49 +122,91 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
         }
     }
 
-    private fun PlannerItem.toWidgetPlannerItem(context: Context) = WidgetPlannerItem(
-        date = this.plannableDate.toLocalDate(),
-        iconRes = this.getIconForPlannerItem(),
-        canvasContextColor = this.canvasContext.color,
-        canvasContextText = this.canvasContext.name.orEmpty(),
-        title = this.plannable.title,
-        dateText = this.getDateTextForPlannerItem(context).orEmpty(),
-        url = this.htmlUrl.orEmpty(),
+    private fun PlannerItem.toWidgetPlannerItem(
+        context: Context,
+        courses: List<Course>
+    ) = WidgetPlannerItem(
+        date = plannableDate.toLocalDate(),
+        iconRes = getIconForPlannerItem(),
+        canvasContextColor = canvasContext.color,
+        canvasContextText = getContextNameForPlannerItem(context, courses),
+        title = plannable.title,
+        dateText = getDateTextForPlannerItem(context).orEmpty(),
+        url = getUrl(),
     )
 
-    private fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
-        return when (this.plannableType) {
+    private fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: List<Course>): String {
+        val courseCode = courses.find { it.id == canvasContext.id }?.courseCode
+        return when (plannableType) {
             PlannableType.PLANNER_NOTE -> {
-                this.plannable.todoDate.toDate()?.let {
-                    val dateText = DateHelper.dayMonthDateFormat.format(it)
-                    val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                    context.getString(R.string.calendarAtDateTime, dateText, timeText)
+                if (contextName.isNullOrEmpty()) {
+                    context.getString(R.string.userCalendarToDo)
+                } else {
+                    context.getString(R.string.courseToDo, courseCode)
+                }
+            }
+
+            else -> {
+                if (canvasContext is Course) {
+                    courseCode.orEmpty()
+                } else {
+                    contextName.orEmpty()
+                }
+            }
+        }
+    }
+
+    private fun PlannerItem.getDateTextForPlannerItem(context: Context): String? {
+        return when (plannableType) {
+            PlannableType.PLANNER_NOTE -> {
+                plannable.todoDate.toDate()?.let {
+                    DateHelper.getFormattedTime(context, it)
                 }
             }
 
             PlannableType.CALENDAR_EVENT -> {
-                val startDate = this.plannable.startAt
-                val endDate = this.plannable.endAt
+                val startDate = plannable.startAt
+                val endDate = plannable.endAt
                 if (startDate != null && endDate != null) {
-                    val dateText = DateHelper.dayMonthDateFormat.format(startDate)
                     val startText = DateHelper.getFormattedTime(context, startDate).orEmpty()
                     val endText = DateHelper.getFormattedTime(context, endDate).orEmpty()
 
                     when {
-                        this.plannable.allDay == true -> dateText
-                        startDate == endDate -> context.getString(R.string.calendarAtDateTime, dateText, startText)
-                        else -> context.getString(R.string.calendarFromTo, dateText, startText, endText)
+                        plannable.allDay == true -> context.getString(R.string.widgetAllDay)
+                        startDate == endDate -> startText
+                        else -> context.getString(R.string.widgetFromTo, startText, endText)
                     }
                 } else null
             }
 
             else -> {
-                this.plannable.dueAt?.let {
-                    val dateText = DateHelper.dayMonthDateFormat.format(it)
+                plannable.dueAt?.let {
                     val timeText = DateHelper.getFormattedTime(context, it).orEmpty()
-                    context.getString(R.string.calendarDueDate, dateText, timeText)
+                    context.getString(R.string.widgetDueDate, timeText)
                 }
             }
+        }
+    }
+
+    private fun PlannerItem.getUrl(): String {
+        val url = when (plannableType) {
+            PlannableType.CALENDAR_EVENT -> {
+                "/${canvasContext.type.apiString}/${canvasContext.id}/calendar_events/${plannable.id}"
+            }
+
+            PlannableType.PLANNER_NOTE -> {
+                "/todos/${plannable.id}"
+            }
+
+            else -> {
+                htmlUrl.orEmpty()
+            }
+        }
+
+        return if (url.startsWith("/")) {
+            apiPrefs.fullDomain + url
+        } else {
+            url
         }
     }
 

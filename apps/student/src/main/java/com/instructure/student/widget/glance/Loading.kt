@@ -18,12 +18,21 @@
 package com.instructure.student.widget.glance
 
 import androidx.compose.runtime.Composable
-import androidx.glance.text.Text
+import androidx.glance.GlanceModifier
+import androidx.glance.appwidget.CircularProgressIndicator
+import androidx.glance.layout.Alignment
+import androidx.glance.layout.Box
+import androidx.glance.layout.fillMaxSize
 
 
 @Composable
 fun Loading() {
-    Text(
-        text = "Loading"
-    )
+    Box(
+        modifier = GlanceModifier.fillMaxSize(),
+        contentAlignment = Alignment.Center
+    ) {
+        CircularProgressIndicator(
+            color = WidgetColors.textDanger
+        )
+    }
 }

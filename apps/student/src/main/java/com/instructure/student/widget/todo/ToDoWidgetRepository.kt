@@ -35,6 +35,7 @@ class ToDoWidgetRepository(
     suspend fun getPlannerItems(
         startDate: String,
         endDate: String,
+        contextCodes: List<String>,
         forceNetwork: Boolean
     ): List<PlannerItem> {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
@@ -42,7 +43,7 @@ class ToDoWidgetRepository(
         return plannerApi.getPlannerItems(
             startDate,
             endDate,
-            emptyList(),
+            contextCodes,
             restParams
         ).depaginate {
             plannerApi.nextPagePlannerItems(it, restParams)
@@ -51,7 +52,7 @@ class ToDoWidgetRepository(
         }
     }
 
-    private suspend fun getFavouriteCourses(forceNetwork: Boolean): List<Course> {
+    suspend fun getFavouriteCourses(forceNetwork: Boolean): List<Course> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         val courses = coursesApi.getFirstPageCourses(restParams).depaginate { nextUrl ->
@@ -65,7 +66,7 @@ class ToDoWidgetRepository(
         }
     }
 
-    private suspend fun getFavouriteGroups(forceNetwork: Boolean): List<Group> {
+    suspend fun getFavouriteGroups(forceNetwork: Boolean): List<Group> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
 
         val groups = groupApi.getFirstPageGroups(restParams).depaginate { nextUrl ->
