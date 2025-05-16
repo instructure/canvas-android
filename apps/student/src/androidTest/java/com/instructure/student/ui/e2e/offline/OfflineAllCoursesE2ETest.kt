@@ -123,7 +123,7 @@ class OfflineAllCoursesE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Click on '${course1.name}' course and assert if it will navigate the user to the CourseBrowser Page.")
         allCoursesPage.openCourse(course1.name)
-        courseBrowserPage.assertTitleCorrect(course1)
+        courseBrowserPage.assertInitialBrowserTitle(course1)
     }
 
     @After
