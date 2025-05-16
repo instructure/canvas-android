@@ -76,7 +76,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     contextSources = mapOf(
                         "course-id" to courseId.toString(),
                     )
-                )
+                ),
+                updateAiContextString = ::updateAiContext,
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -504,5 +505,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun updateShowAiAssist(show: Boolean) {
         _uiState.update { it.copy(showAiAssist = show) }
+    }
+
+    private fun updateAiContext(value: String) {
+        _uiState.update { it.copy(aiContext = it.aiContext.copy(contextString = value)) }
     }
 }

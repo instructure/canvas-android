@@ -278,7 +278,8 @@ private fun ModuleItemSequenceContent(
                         moduleItemUiState,
                         scrollState = contentScrollState,
                         uiState.openAssignmentTools,
-                        uiState.assignmentToolsOpened
+                        uiState.assignmentToolsOpened,
+                        uiState.updateAiContextString
                     )
                 }
             }
@@ -378,6 +379,7 @@ private fun ModuleItemContentScreen(
     scrollState: ScrollState,
     openAssignmentTools: Boolean,
     assignmentToolsOpened: () -> Unit,
+    updateAiContext: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -401,7 +403,9 @@ private fun ModuleItemContentScreen(
             moduleItemUiState.moduleItemContent is ModuleItemContent.File ||
             moduleItemUiState.moduleItemContent is ModuleItemContent.Assignment
         ) {
-            NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
+            val navController = rememberNavController()
+
+            NavHost(navController, startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
                 composable(
                     route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
                         navArgument(Const.COURSE_ID) { type = NavType.LongType },
@@ -409,6 +413,7 @@ private fun ModuleItemContentScreen(
                     )) {
                     val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
+                    updateAiContext(uiState.instructions)
                     LaunchedEffect(openAssignmentTools) {
                         if (openAssignmentTools) {
                             viewModel.openAssignmentTools()
@@ -427,6 +432,7 @@ private fun ModuleItemContentScreen(
                     )) {
                     val viewModel = hiltViewModel<PageDetailsViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
+                    updateAiContext(uiState.pageHtmlContent.orEmpty())
                     PageDetailsContentScreen(
                         uiState = uiState,
                         scrollState = scrollState

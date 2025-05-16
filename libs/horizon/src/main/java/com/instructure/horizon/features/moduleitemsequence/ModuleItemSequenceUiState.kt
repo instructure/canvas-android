@@ -36,6 +36,7 @@ data class ModuleItemSequenceUiState(
     val showAiAssist: Boolean = false,
     val updateShowAiAssist: (Boolean) -> Unit = {},
     val aiContext: AiAssistContext = AiAssistContext(),
+    val updateAiContextString: (String) -> Unit = {},
 )
 
 data class ModuleItemUiState(
