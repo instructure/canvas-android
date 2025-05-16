@@ -57,20 +57,28 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Open the 'All Courses' page and wait for it to be rendered.")
+        Log.d(STEP_TAG, "Open the 'All Courses' page.")
         dashboardPage.openAllCoursesPage()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'All Courses' page is rendered.")
         allCoursesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Favourite '${course1.name}' course and assert if it became favourited. Then navigate back to Dashboard page.")
+        Log.d(STEP_TAG, "Favourite '${course1.name}' course.")
         allCoursesPage.favoriteCourse(course1.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${course1.name}' course is favorited.")
         allCoursesPage.assertCourseFavorited(course1)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         dashboardPage.openGlobalManageOfflineContentPage()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Manage Offline Content' page is rendered.")
         manageOfflineContentPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state is 'Unchecked'.")
+        Log.d(ASSERTION_TAG, "Assert that the '${course1.name}' course's checkbox state is 'Unchecked'.")
         manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_UNCHECKED)
         manageOfflineContentPage.assertCheckedStateOfItem(course2.name, MaterialCheckBox.STATE_UNCHECKED)
 
@@ -79,7 +87,7 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course2.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon is displayed on the synced  (and favorited) course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon is displayed on the synced (and favorited) course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
         device.waitForIdle()
 
@@ -87,42 +95,50 @@ class OfflineAllCoursesE2ETest : StudentTest() {
         turnOffConnectionViaADB()
         waitForNetworkToGoOffline(device)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered, and assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertCourseNotDisplayed(course2)
         dashboardPage.assertCourseNotDisplayed(course3)
 
-        Log.d(STEP_TAG, "Open the 'All Courses' page and wait for it to be rendered.")
+        Log.d(STEP_TAG, "Open the 'All Courses' page.")
         dashboardPage.openAllCoursesPage()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'All Courses' page is rendered.")
         allCoursesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the plus 'Note' box is displayed in which warns the user that favouring courses can only be done in online mode.")
+        Log.d(ASSERTION_TAG, "Assert that the plus 'Note' box is displayed in which warns the user that favouring courses can only be done in online mode.")
         allCoursesPage.assertOfflineNoteDisplayed()
 
-        Log.d(STEP_TAG, "Dismiss the offline 'Note' box and assert if it's disappear.")
+        Log.d(STEP_TAG, "Dismiss the offline 'Note' box.")
         allCoursesPage.dismissOfflineNoteBox()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Note' box is not displayed.")
         allCoursesPage.assertOfflineNoteNotDisplayed()
 
-        Log.d(STEP_TAG, "Assert that the select/unselect all button is not clickable because offline mode does not supports it.")
+        Log.d(ASSERTION_TAG, "Assert that the select/unselect all button is not clickable because offline mode does not supports it.")
         allCoursesPage.assertSelectUnselectAllButtonNotClickable()
 
-        Log.d(STEP_TAG, "Try to unfavorite '${course1.name}' course and assert it does not happened because favoring does not allowed in offline state.")
+        Log.d(STEP_TAG, "Try to unfavorite '${course1.name}' course.")
         allCoursesPage.unfavoriteCourse(course1.name)
+
+        Log.d(ASSERTION_TAG, "Assert it does not happened because favoring does not allowed in offline state.")
         allCoursesPage.assertCourseFavorited(course1)
 
-        Log.d(STEP_TAG, "Assert that '${course3.name}' course's details are faded (and they having 0.4 alpha value) and it's offline sync icon is not displayed since it's not synced.")
+        Log.d(ASSERTION_TAG, "Assert that '${course3.name}' course's details are faded (and they having 0.4 alpha value) and it's offline sync icon is not displayed since it's not synced.")
         allCoursesPage.assertCourseDetailsAlpha(course3.name, 0.4f)
         allCoursesPage.assertCourseOfflineSyncButton(course3.name, ViewMatchers.Visibility.GONE)
 
-        Log.d(STEP_TAG, "Assert that '${course1.name}' course's favourite star is faded (and it's having 0.4 alpha value) because favoring is not possible in offline mode," +
+        Log.d(ASSERTION_TAG, "Assert that '${course1.name}' course's favourite star is faded (and it's having 0.4 alpha value) because favoring is not possible in offline mode," +
                 "the course title and open button are not faded (1.0 alpha value) and the offline sync icon is displayed since the course is synced.")
         allCoursesPage.assertCourseFavouriteStarAlpha(course1.name, 0.4f)
         allCoursesPage.assertCourseTitleAlpha(course1.name, 1.0f)
         allCoursesPage.assertCourseOpenButtonAlpha(course1.name, 1.0f)
         allCoursesPage.assertCourseOfflineSyncButton(course1.name, ViewMatchers.Visibility.VISIBLE)
 
-        Log.d(STEP_TAG, "Click on '${course1.name}' course and assert if it will navigate the user to the CourseBrowser Page.")
+        Log.d(STEP_TAG, "Click on '${course1.name}' course.")
         allCoursesPage.openCourse(course1.name)
+
+        Log.d(ASSERTION_TAG, "Assert if it will navigate the user to the CourseBrowser Page.")
         courseBrowserPage.assertTitleCorrect(course1)
     }
 

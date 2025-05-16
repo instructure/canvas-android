@@ -47,28 +47,28 @@ class OfflineDashboardE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineDashboardE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2, announcements = 1)
         val student = data.studentsList[0]
         val course1 = data.coursesList[0]
         val course2 = data.coursesList[1]
         val testAnnouncement = data.announcementsList[0]
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         dashboardPage.openGlobalManageOfflineContentPage()
 
-        Log.d(STEP_TAG, "Assert that the '${course1.name}' course's checkbox state is 'Unchecked'.")
+        Log.d(ASSERTION_TAG, "Assert that the '${course1.name}' course's checkbox state is 'Unchecked'.")
         manageOfflineContentPage.assertCheckedStateOfItem(course1.name, MaterialCheckBox.STATE_UNCHECKED)
 
         Log.d(STEP_TAG, "Select the entire '${course1.name}' course for sync. Click on the 'Sync' button.")
         manageOfflineContentPage.changeItemSelectionState(course1.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
         device.waitForIdle()
 
@@ -79,10 +79,10 @@ class OfflineDashboardE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
         dashboardPage.assertCourseOfflineSyncIconGone(course2.name)
 
@@ -90,7 +90,7 @@ class OfflineDashboardE2ETest : StudentTest() {
         dashboardPage.selectCourse(course1)
         courseBrowserPage.selectAnnouncements()
 
-        Log.d(STEP_TAG,"Assert that the '${testAnnouncement.title}' titled announcement is displayed, so the user is able to see it in offline mode because it was synced.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testAnnouncement.title}' titled announcement is displayed, so the user is able to see it in offline mode because it was synced.")
         announcementListPage.assertTopicDisplayed(testAnnouncement.title)
     }
 
@@ -99,7 +99,7 @@ class OfflineDashboardE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineDashboardUnavailableFeaturesE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val course = data.coursesList[0]
@@ -107,7 +107,7 @@ class OfflineDashboardE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG, "Get the device to be able to perform app-independent actions on it.")
         val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -118,7 +118,7 @@ class OfflineDashboardE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -129,21 +129,29 @@ class OfflineDashboardE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
-        Log.d(STEP_TAG, "Assert that the bottom menus (except Dashboard) are disabled and unavailable in offline mode.")
+        Log.d(ASSERTION_TAG, "Assert that the bottom menus (except Dashboard) are disabled and unavailable in offline mode.")
         dashboardPage.assertBottomMenusAreDisabled()
 
-        Log.d(STEP_TAG, "Try to open the '${course.name}' course's more menu of the Dashboard Page. Assert that the 'No Internet Connection' dialog is displayed. Dismiss it after the assertion.")
+        Log.d(STEP_TAG, "Try to open the '${course.name}' course's more menu of the Dashboard Page.")
         dashboardPage.clickOnCourseOverflowButton(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Try to open the global 'Manage Offline Content' page via the more menu of the Dashboard Page. Assert that the 'No Internet Connection' dialog is displayed. Dismiss it after the assertion.")
+        Log.d(STEP_TAG, "Try to open the global 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         Thread.sleep(5000) //Wait for the system notification to disappear, because it overlaps the More menu button on the toolbar.
         dashboardPage.openGlobalManageOfflineContentPage()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         OfflineTestUtils.dismissNoInternetConnectionDialog()
     }
 
