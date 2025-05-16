@@ -65,7 +65,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     onNextClick = ::progressNextClicked,
                 ),
                 onAssignmentToolsClick = ::onAssignmentToolsClicked,
-                assignmentToolsOpened = ::assignmentToolsOpened
+                assignmentToolsOpened = ::assignmentToolsOpened,
+                updateShowAiAssist = ::updateShowAiAssist
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -471,5 +472,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun assignmentToolsOpened() {
         _uiState.update { it.copy(openAssignmentTools = false) }
+    }
+
+    private fun updateShowAiAssist(show: Boolean) {
+        _uiState.update { it.copy(showAiAssist = show) }
     }
 }

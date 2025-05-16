@@ -27,8 +27,8 @@ import androidx.navigation.NavHostController
 
 @Composable
 fun AiAssistScaffold(
-    mainNavController: NavHostController,
     navController: NavHostController,
+    onDismiss: () -> Unit,
     inputTextValue: TextFieldValue,
     onInputTextChanged: (TextFieldValue) -> Unit,
     onInputTextSubmitted: () -> Unit,
@@ -41,7 +41,7 @@ fun AiAssistScaffold(
             .padding(24.dp)
     ){
         AiAssistToolbar(
-            onDismissPressed = { mainNavController.popBackStack() },
+            onDismissPressed = { onDismiss() },
             onBackPressed = if (navController.previousBackStackEntry != null) {
                 { navController.popBackStack() }
             } else {

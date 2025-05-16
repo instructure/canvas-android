@@ -19,6 +19,7 @@ package com.instructure.horizon.features.aiassistant.chat
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -37,6 +38,14 @@ class AiAssistChatViewModel @Inject constructor(
         onInputTextSubmitted = ::onTextInputSubmitted,
     ))
     val uiState = _uiState.asStateFlow()
+
+    fun updateContext(aiContext: AiAssistContext) {
+        _uiState.update {
+            it.copy(
+                aiContext = aiContext,
+            )
+        }
+    }
 
     private fun onTextInputChanged(newValue: TextFieldValue) {
         _uiState.update {

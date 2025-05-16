@@ -73,6 +73,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.AiAssistantScreen
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
@@ -128,9 +130,17 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onNextClick = uiState.onNextClick,
             onPreviousClick = uiState.onPreviousClick,
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+            onAiAssistClick = { uiState.updateShowAiAssist(true) }
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
+            if (uiState.showAiAssist) {
+                AiAssistantScreen(
+                    aiContext = AiAssistContext(),
+                    mainNavController = navController,
+                    onDismiss = { uiState.updateShowAiAssist(false) },
+                )
+            }
             ModuleItemSequenceContent(uiState = uiState, navController = navController, onBackPressed = {
                 navController.popBackStack()
             })
@@ -153,7 +163,10 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
                 shape = HorizonCornerRadius.level6,
                 clip = false
             )
-            .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
+            .background(
+                color = HorizonColors.Surface.pagePrimary(),
+                shape = HorizonCornerRadius.level6
+            )
             .animateContentSize()
     ) {
         if (markAsDoneState.isLoading) {
@@ -350,7 +363,10 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
+                .background(
+                    color = HorizonColors.Surface.pageSecondary(),
+                    shape = HorizonCornerRadius.level5
+                )
         ) {
             content(page)
         }
@@ -369,7 +385,10 @@ private fun ModuleItemContentScreen(
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5),
+                .background(
+                    color = HorizonColors.Surface.pageSecondary(),
+                    shape = HorizonCornerRadius.level5
+                ),
             contentAlignment = Alignment.Center
         ) {
             Spinner()
@@ -478,6 +497,7 @@ private fun ModuleItemSequenceBottomBar(
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
+    onAiAssistClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
@@ -489,7 +509,12 @@ private fun ModuleItemSequenceBottomBar(
                 onClick = onPreviousClick
             )
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
-                IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, elevation = HorizonElevation.level4)
+                IconButton(
+                    iconRes = R.drawable.ai,
+                    color = IconButtonColor.AI,
+                    elevation = HorizonElevation.level4,
+                    onClick = onAiAssistClick,
+                )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
                     color = IconButtonColor.INVERSE,

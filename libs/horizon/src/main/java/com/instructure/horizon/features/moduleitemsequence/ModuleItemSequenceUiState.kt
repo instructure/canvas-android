@@ -32,6 +32,8 @@ data class ModuleItemSequenceUiState(
     val onAssignmentToolsClick: () -> Unit = {},
     val openAssignmentTools: Boolean = false,
     val assignmentToolsOpened: () -> Unit = {},
+    val showAiAssist: Boolean = false,
+    val updateShowAiAssist: (Boolean) -> Unit = {},
 )
 
 data class ModuleItemUiState(

@@ -26,14 +26,14 @@ import com.instructure.horizon.features.aiassistant.common.composable.AiAssistTo
 
 @Composable
 fun AiAssistFlashcardScreen(
-    mainNavController: NavHostController,
     navController: NavHostController,
+    onDismiss: () -> Unit
 ) {
     Column(
         modifier = Modifier.fillMaxSize()
     ) {
         AiAssistToolbar(
-            onDismissPressed = { mainNavController.popBackStack() },
+            onDismissPressed = { onDismiss() },
             onBackPressed = if (navController.previousBackStackEntry != null) {
                 { navController.popBackStack() }
             } else {

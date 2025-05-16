@@ -36,13 +36,13 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 
 @Composable
 fun AiAssistChatScreen(
-    mainNavController: NavHostController,
     navController: NavHostController,
+    onDismiss: () -> Unit,
     state: AiAssistChatUiState
 ) {
     AiAssistScaffold(
-        mainNavController = mainNavController,
         navController = navController,
+        onDismiss = { onDismiss() },
         inputTextValue = state.inputTextValue,
         onInputTextChanged = { state.onInputTextChanged(it) },
         onInputTextSubmitted = { state.onInputTextSubmitted() },

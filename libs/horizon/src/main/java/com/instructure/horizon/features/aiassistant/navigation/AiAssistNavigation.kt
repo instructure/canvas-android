@@ -26,13 +26,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatScreen
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatViewModel
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
 
 @Composable
 fun AiAssistNavigation(
     navController: NavHostController,
-    mainNavController: NavHostController,
+    onDismiss: () -> Unit,
+    aiContext: AiAssistContext,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -42,16 +44,17 @@ fun AiAssistNavigation(
     ) {
         composable(AiAssistRoute.AiAssistChat.route) {
             val viewModel: AiAssistChatViewModel = hiltViewModel()
+            viewModel.updateContext(aiContext)
             val state by viewModel.uiState.collectAsState()
-            AiAssistChatScreen(mainNavController, navController, state)
+            AiAssistChatScreen(navController, onDismiss, state)
         }
 
         composable(AiAssistRoute.AiAssistQuiz.route) {
-            AiAssistQuizScreen(mainNavController, navController)
+            AiAssistQuizScreen(navController, onDismiss)
         }
 
         composable(AiAssistRoute.AiAssistFlashcard.route) {
-            AiAssistFlashcardScreen(mainNavController, navController)
+            AiAssistFlashcardScreen(navController, onDismiss)
         }
     }
 }
