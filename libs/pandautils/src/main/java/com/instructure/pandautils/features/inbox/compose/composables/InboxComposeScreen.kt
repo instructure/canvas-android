@@ -202,7 +202,9 @@ private fun InboxComposeScreenContent(
             Column {
                 MultipleValuesRow(
                     label = stringResource(R.string.recipientsTo),
-                    uiState = uiState.inlineRecipientSelectorState,
+                    uiState = uiState.inlineRecipientSelectorState.copy(
+                        searchFieldContentDescription = stringResource(R.string.a11y_searchAmongRecipients)
+                    ),
                     itemComposable = { recipient, enabled ->
                         RecipientChip(enabled, recipient) {
                             actionHandler(InboxComposeActionHandler.RemoveRecipient(recipient))

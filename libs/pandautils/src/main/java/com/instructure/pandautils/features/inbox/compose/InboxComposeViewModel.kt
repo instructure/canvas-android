@@ -137,7 +137,6 @@ class InboxComposeViewModel @Inject constructor(
                     inlineRecipientSelectorState = it.inlineRecipientSelectorState.copy(
                         selectedValues = options.defaultValues.recipients,
                         enabled = options.disabledFields.isRecipientsDisabled.not(),
-                        searchFieldContentDescription = context.getString(R.string.a11y_searchAmongRecipients)
                     ),
                     disabledFields = options.disabledFields,
                     hiddenFields = options.hiddenFields,
