@@ -73,7 +73,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentCustomReminderE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
@@ -81,61 +81,71 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val futureDueDate = 2.days.fromNow
         val pastDueDate = 2.days.ago
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = futureDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
         val alreadyPastAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = pastDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select course: '${course.name}'.")
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to course Assignments Page.")
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
         courseBrowserPage.selectAssignments()
 
-        Log.d(STEP_TAG,"Click on assignment '${testAssignment.name}'.")
+        Log.d(STEP_TAG, "Click on assignment '${testAssignment.name}'.")
         assignmentListPage.clickAssignment(testAssignment)
 
-        Log.d(STEP_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page. Assert that the reminder section is displayed as well.")
+        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page." +
+                "Assert that the reminder section is displayed as well.")
         assignmentDetailsPage.assertPageObjects()
         reminderPage.assertReminderSectionDisplayed()
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Hour Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         val reminderDateOneHour = futureDueDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Hour Before'.")
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderDateOneHour)
         reminderPage.selectTime(reminderDateOneHour)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         reminderPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Hour Before' again, and assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
+        Log.d(STEP_TAG, "Select '1 Hour Before' again.")
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderDateOneHour)
         reminderPage.selectTime(reminderDateOneHour)
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
 
-        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog and assert that the '1 Hour Before' reminder is not displayed any more.")
+        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog.")
         reminderPage.removeReminderWithText(reminderDateOneHour.time.toFormattedString())
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Hour Before' reminder is not displayed any more.")
         reminderPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
         futureDueDate.apply { add(Calendar.HOUR, 1) }
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Week Before' and assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an assignment which ends tomorrow).")
         val reminderDateOneWeek = futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        Log.d(STEP_TAG, "Select '1 Week Before'.")
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderDateOneWeek)
         reminderPage.selectTime(reminderDateOneWeek)
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Week Before' reminder is not displayed, as it is in the past." +
+                "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an assignment which ends tomorrow).")
         reminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
         checkToastText(R.string.reminderInPast, activityRule.activity)
         futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, 1) }
@@ -143,21 +153,24 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Day Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         val reminderDateOneDay = futureDueDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
+        Log.d(STEP_TAG, "Select '1 Day Before'.")
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderDateOneDay)
         reminderPage.selectTime(reminderDateOneDay)
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         reminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
+        Log.d(STEP_TAG, "Select '1 Day Before' again.")
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(reminderDateOneDay)
         reminderPage.selectTime(reminderDateOneDay)
 
-        Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
 
         futureDueDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
@@ -165,10 +178,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Click on assignment '${alreadyPastAssignment.name}'.")
+        Log.d(STEP_TAG, "Click on assignment '${alreadyPastAssignment.name}'.")
         assignmentListPage.clickAssignment(alreadyPastAssignment)
 
-        Log.d(STEP_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
         reminderPage.assertReminderSectionDisplayed()
     }
 
@@ -176,7 +189,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentBeforeReminderE2E() {
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
@@ -184,55 +197,64 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val futureDueDate = 2.days.fromNow
         val pastDueDate = 2.days.ago
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = futureDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 2 days past due date.")
         val alreadyPastAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = pastDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select course: '${course.name}'.")
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to course Assignments Page.")
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
         courseBrowserPage.selectAssignments()
 
-        Log.d(STEP_TAG,"Click on assignment '${testAssignment.name}'.")
+        Log.d(STEP_TAG, "Click on assignment '${testAssignment.name}'.")
         assignmentListPage.clickAssignment(testAssignment)
 
-        Log.d(STEP_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page. Assert that the reminder section is displayed as well.")
+        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page. Assert that the reminder section is displayed as well.")
         assignmentDetailsPage.assertPageObjects()
         reminderPage.assertReminderSectionDisplayed()
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Hour Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         val reminderDateOneHour = futureDueDate.apply { add(Calendar.HOUR, -1) }
+        Log.d(STEP_TAG, "Select '1 Hour Before'.")
         reminderPage.clickBeforeReminderOption("1 Hour Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         reminderPage.assertReminderDisplayedWithText(reminderDateOneHour.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Hour Before' again, and assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
+        Log.d(STEP_TAG, "Select '1 Hour Before' again.")
         reminderPage.clickBeforeReminderOption("1 Hour Before")
+
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice.")
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
 
-        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog and assert that the '1 Hour Before' reminder is not displayed any more.")
+        Log.d(STEP_TAG, "Remove the '1 Hour Before' reminder, confirm the deletion dialog.")
         reminderPage.removeReminderWithText(reminderDateOneHour.time.toFormattedString())
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Hour Before' reminder is not displayed any more.")
         reminderPage.assertReminderNotDisplayedWithText(reminderDateOneHour.time.toFormattedString())
         futureDueDate.apply { add(Calendar.HOUR, 1) }
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Week Before' and assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an assignment which ends tomorrow).")
         val reminderDateOneWeek = futureDueDate.apply { add(Calendar.WEEK_OF_YEAR, -1) }
+        Log.d(STEP_TAG, "Select '1 Week Before'.")
         reminderPage.clickBeforeReminderOption("1 Week Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the '1 Week Before' reminder is not displayed, as it is in the past." +
+                "Assert that a toast message is occurring which warns that we cannot pick up a reminder which has already passed (for example cannot pick '1 Week Before' reminder for an assignment which ends tomorrow).")
         reminderPage.assertReminderNotDisplayedWithText(reminderDateOneWeek.time.toFormattedString())
         composeTestRule.waitForIdle()
         checkToastText(R.string.reminderInPast, activityRule.activity)
@@ -242,17 +264,20 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
-        Log.d(STEP_TAG, "Select '1 Day Before' and assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         val reminderDateOneDay = futureDueDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
+        Log.d(STEP_TAG, "Select '1 Day Before'.")
         reminderPage.clickBeforeReminderOption("1 Day Before")
+
+        Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         reminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         reminderPage.clickAddReminder()
 
+        Log.d(STEP_TAG, "Select '1 Day Before' again.")
         reminderPage.clickBeforeReminderOption("1 Day Before")
 
-        Log.d(STEP_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
+        Log.d(ASSERTION_TAG, "Assert that a toast message is occurring which warns that we cannot pick up the same time reminder twice. (Because 1 days and 24 hours is the same)")
         composeTestRule.waitForIdle()
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
         composeTestRule.waitForIdle()
@@ -262,10 +287,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Click on assignment '${alreadyPastAssignment.name}'.")
+        Log.d(STEP_TAG, "Click on assignment '${alreadyPastAssignment.name}'.")
         assignmentListPage.clickAssignment(alreadyPastAssignment)
 
-        Log.d(STEP_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
+        Log.d(ASSERTION_TAG, "Assert that the reminder section is NOT displayed, because the '${alreadyPastAssignment.name}' assignment has already passed..")
         reminderPage.assertReminderSectionDisplayed()
     }
 
@@ -274,13 +299,13 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testPointsGradeTextAssignmentE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for ${course.name} course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val pointsTextAssignment = AssignmentsApi.createAssignment(
             courseId = course.id,
             teacherToken = teacher.token,
@@ -290,50 +315,59 @@ class AssignmentsE2ETest: StudentComposeTest() {
             submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY)
         )
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select course: ${course.name}.")
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to course Assignments Page.")
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
         courseBrowserPage.selectAssignments()
 
-        Log.d(STEP_TAG,"Verify that our assignments are present, along with any grade/date info. Click on assignment ${pointsTextAssignment.name}.")
+        Log.d(ASSERTION_TAG, "Assert that our assignments are present, along with any grade/date info.")
         assignmentListPage.assertHasAssignment(pointsTextAssignment)
+
+        Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
         assignmentListPage.clickAssignment(pointsTextAssignment)
 
-        Log.d(STEP_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there is no submission yet.")
+        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there is no submission yet.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertStatusNotSubmitted()
 
-        Log.d(STEP_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed.")
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(STEP_TAG, "Navigate to Submission Details Page.")
         assignmentDetailsPage.goToSubmissionDetails()
 
-        Log.d(STEP_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
+        Log.d(ASSERTION_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
         submissionDetailsPage.assertNoSubmissionEmptyView()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment Details Page.")
         Espresso.pressBack()
 
-        Log.d(PREPARATION_TAG,"Submit assignment: ${pointsTextAssignment.name} for student: ${student.name}.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been submitted and the 'Submission & Rubric' label is displayed.")
         assignmentDetailsPage.refresh()
         assignmentDetailsPage.assertStatusSubmitted()
         assignmentDetailsPage.assertSubmissionAndRubricLabel()
 
-        Log.d(PREPARATION_TAG,"Grade submission: ${pointsTextAssignment.name} with 13 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 13 points.")
         val textGrade = SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "13")
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the assignment ${pointsTextAssignment.name} has been graded with 13 points.")
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the assignment '${pointsTextAssignment.name}' has been graded with 13 points.")
         assignmentDetailsPage.refresh()
         composeTestRule.waitForIdle()
         assignmentDetailsPage.assertAssignmentGraded("13")
 
-        Log.d(STEP_TAG,"Navigate back to Assignments Page and assert that the assignment ${pointsTextAssignment.name} can be seen there with the corresponding grade.")
+        Log.d(STEP_TAG, "Navigate back to Assignments Page.")
         Espresso.pressBack()
         composeTestRule.waitForIdle()
+
+        Log.d(ASSERTION_TAG, "Refresh the Assignments List Page. Assert that the assignment '${pointsTextAssignment.name}' can be seen there with the corresponding grade.")
         assignmentListPage.refreshAssignmentList()
         assignmentListPage.assertHasAssignment(pointsTextAssignment, textGrade.grade)
     }
