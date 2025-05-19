@@ -18,6 +18,7 @@ package com.instructure.canvas.espresso.common.pages.compose
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.hasAnyAncestor
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
@@ -88,6 +89,7 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
         )
             .assertIsDisplayed()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun clickOnFilters() {
@@ -105,6 +107,11 @@ class SmartSearchPage(private val composeTestRule: ComposeTestRule) : BasePage()
         composeTestRule.onNodeWithTag("${type.name.lowercase()}GroupHeader", useUnmergedTree = true)
             .assertIsDisplayed()
             .assertHasClickAction()
+    }
+
+    fun assertGroupItemCount(expectedCount: String, type: SmartSearchContentType) {
+        composeTestRule.onNode(hasTestTag("groupHeaderTitle") and hasAnyAncestor(hasTestTag("${type.name.lowercase()}GroupHeader")) and hasText("($expectedCount)", substring = true), useUnmergedTree = true)
+            .assertIsDisplayed()
     }
 
     fun assertGroupHeaderNotDisplayed(type: SmartSearchContentType) {

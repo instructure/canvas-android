@@ -31,15 +31,14 @@ configurations {
 
 android {
     namespace 'com.instructure.student'
-    compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
+    compileSdk Versions.COMPILE_SDK
 
     defaultConfig {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 275
-        versionName = '7.11.0'
+        versionCode = 276
+        versionName = '7.12.0'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
