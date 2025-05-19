@@ -34,6 +34,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.toLocalDate
+import com.instructure.pandautils.utils.toLocalDateOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
@@ -48,7 +49,6 @@ import org.threeten.bp.Clock
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.YearMonth
-import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.temporal.ChronoUnit
 import javax.inject.Inject
 import kotlin.math.min
@@ -69,9 +69,7 @@ class CalendarViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val initialSelectedDayString = savedStateHandle.get<String>(CalendarFragment.SELECTED_DAY)
-    private var selectedDay = initialSelectedDayString?.let {
-        LocalDate.parse(it, DateTimeFormatter.ISO_LOCAL_DATE)
-    } ?: LocalDate.now(clock)
+    private var selectedDay = initialSelectedDayString?.toLocalDateOrNull() ?: LocalDate.now(clock)
 
     // Helper fields to handle page change animations when a day in a different month is selected
     private var pendingSelectedDay: LocalDate? = null

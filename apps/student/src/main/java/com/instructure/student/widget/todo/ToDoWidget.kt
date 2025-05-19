@@ -167,7 +167,7 @@ class ToDoWidget : GlanceAppWidget() {
     }
 
     @Composable
-    fun WidgetFloatingActionButton(
+    private fun WidgetFloatingActionButton(
         alignment: Alignment,
         @DrawableRes imageRes: Int,
         backgroundColor: ColorProvider,

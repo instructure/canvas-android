@@ -23,6 +23,7 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
+import org.threeten.bp.format.DateTimeParseException
 import java.text.DateFormat
 import java.util.Calendar
 import java.util.Date
@@ -91,3 +92,11 @@ fun Date.toFormattedString(): String = DateFormat.getDateTimeInstance(
     DateFormat.SHORT,
     Locale.getDefault()
 ).format(this)
+
+fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {
+    return try {
+        LocalDate.parse(this, formatter)
+    } catch (e: DateTimeParseException) {
+        null
+    }
+}
