@@ -1792,7 +1792,7 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Manage Students</string>
     <string name="screenTitleSettings">Settings</string>
-    <string name="navigationDrawerSwitchUsers">Switch Users</string>
+    <string name="navigationDrawerSwitchUsers">Change User</string>
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
