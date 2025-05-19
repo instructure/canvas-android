@@ -291,7 +291,7 @@
     <string name="Todo">Att göra</string>
     <string name="todoFilter">Filtrera kurser</string>
     <string name="filterByEllipsis">Filtrera efter ...</string>
-    <string name="favoritedCoursesLabel">Favoritmärkta kurser</string>
+    <string name="favoriteCoursesLabel">Favoritmärkta kurser</string>
     <string name="Event">Händelse</string>
     <string name="eventSuccessfulDeletion">Händelsen togs bort</string>
     <string name="timeIconDescription">Tidsikon</string>

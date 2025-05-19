@@ -291,7 +291,7 @@
     <string name="Todo">Zu erledigen</string>
     <string name="todoFilter">Kurse filtern</string>
     <string name="filterByEllipsis">Filtern nach ...</string>
-    <string name="favoritedCoursesLabel">Bevorzugte Kurse</string>
+    <string name="favoriteCoursesLabel">Bevorzugte Kurse</string>
     <string name="Event">Ereignis</string>
     <string name="eventSuccessfulDeletion">Das Ereignis wurde erfolgreich gelöscht</string>
     <string name="timeIconDescription">Zeitsymbol</string>

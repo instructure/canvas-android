@@ -291,7 +291,7 @@
     <string name="Todo">Tasgau i’w Gwneud</string>
     <string name="todoFilter">Hidlo Cyrsiau</string>
     <string name="filterByEllipsis">Hidlo yn ôl&#8230;</string>
-    <string name="favoritedCoursesLabel">Cyrsiau wedi’u hoffi</string>
+    <string name="favoriteCoursesLabel">Cyrsiau wedi’u hoffi</string>
     <string name="Event">Digwyddiad</string>
     <string name="eventSuccessfulDeletion">Wedi llwyddo i ddileu digwyddiad</string>
     <string name="timeIconDescription">Eicon Amser</string>

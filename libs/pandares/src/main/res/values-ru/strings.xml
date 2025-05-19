@@ -301,7 +301,7 @@
     <string name="Todo">Задачи</string>
     <string name="todoFilter">Фильтровать курсы</string>
     <string name="filterByEllipsis">Фильтровать по&#8230;</string>
-    <string name="favoritedCoursesLabel">Избранные курсы</string>
+    <string name="favoriteCoursesLabel">Избранные курсы</string>
     <string name="Event">Событие</string>
     <string name="eventSuccessfulDeletion">Мероприятие было успешно удалено</string>
     <string name="timeIconDescription">Значок времени</string>
