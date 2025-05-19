@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.utils.color
 import com.instructure.student.R
 import com.instructure.student.mobius.common.ui.Presenter
-import com.instructure.student.room.StudentDb
+import com.instructure.pandautils.room.studentdb.StudentDb
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 

@@ -15,17 +15,28 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
+import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,21 +45,31 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val submissionHelper: HorizonSubmissionHelper,
+    private val apiPrefs: ApiPrefs,
+    private val createSubmissionDao: CreateSubmissionDao,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val assignmentId = savedStateHandle[ModuleItemContent.Assignment.ASSIGNMENT_ID] ?: -1L
     private val courseId = savedStateHandle[Const.COURSE_ID] ?: -1L
+    private var assignmentName: String = ""
 
     private val _uiState =
         MutableStateFlow(
             AssignmentDetailsUiState(
-                addSubmissionUiState = AddSubmissionUiState(onSubmissionTypeSelected = ::submissionTypeSelected),
+                submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
+                addSubmissionUiState = AddSubmissionUiState(
+                    onSubmissionTypeSelected = ::submissionTypeSelected,
+                    onSubmissionButtonClicked = ::sendSubmission
+                ),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
+                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed)
             )
         )
 
@@ -62,6 +83,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
             val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
+            assignmentName = assignment.name.orEmpty()
             val lastActualSubmission = assignment.lastActualSubmission
             val submissions = if (lastActualSubmission != null) {
                 mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
@@ -72,7 +94,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
                 when (it) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text("")
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text("", ::onTextSubmissionChanged)
                     Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File("")
                     else -> null
                 }
@@ -85,7 +107,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     loadingState = it.loadingState.copy(isLoading = false),
                     instructions = description,
                     ltiUrl = assignment.externalToolAttributes?.url.orEmpty(),
-                    submissionDetailsUiState = SubmissionDetailsUiState(
+                    submissionDetailsUiState = it.submissionDetailsUiState.copy(
                         submissions = submissions,
                         currentSubmissionAttempt = initialAttempt
                     ),
@@ -171,5 +193,131 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun onUrlOpened() {
         _uiState.update { it.copy(urlToOpen = null) }
+    }
+
+    private fun onNewAttemptClick() {
+        _uiState.update {
+            it.copy(
+                showSubmissionDetails = false,
+                showAddSubmission = true
+            )
+        }
+    }
+
+    private fun onTextSubmissionChanged(text: String) {
+        val textSubmission =
+            uiState.value.addSubmissionUiState.submissionTypes[uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex]
+        if (textSubmission is AddSubmissionTypeUiState.Text) {
+            _uiState.update {
+                it.copy(
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionTypes = it.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
+                            if (index == uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex) {
+                                textSubmission.copy(text = text)
+                            } else {
+                                submissionType
+                            }
+                        }
+                    )
+                )
+            }
+        }
+    }
+
+    private fun sendSubmission() {
+        val selectedSubmissionType =
+            uiState.value.addSubmissionUiState.submissionTypes[uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex]
+        if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
+            submissionHelper.startTextSubmission(
+                canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                assignmentId = assignmentId,
+                text = selectedSubmissionType.text,
+                assignmentName = assignmentName
+            )
+            viewModelScope.launch {
+                createSubmissionDao.findSubmissionByAssignmentIdFlow(assignmentId, apiPrefs.user?.id.orDefault()).collect { entity ->
+                    if (entity != null) {
+                        updateSubmissionProgress(entity)
+                    }
+                }
+            }
+        } else if (selectedSubmissionType is AddSubmissionTypeUiState.File) {
+
+        }
+    }
+
+    private suspend fun updateSubmissionProgress(entity: CreateSubmissionEntity) {
+        val progress = entity.progress ?: 0f
+        val showProgress = progress > 0f && progress < 100.0
+        if (progress == 100.0f) {
+            updateAssignment()
+            onTextSubmissionChanged("")
+            _uiState.update {
+                it.copy(
+                    showSubmissionDetails = true,
+                    showAddSubmission = false,
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionInProgress = showProgress,
+                    ),
+                    submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
+                        show = true
+                    )
+                )
+            }
+        } else {
+            _uiState.update {
+                it.copy(
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionInProgress = showProgress,
+                    ),
+                    showSubmissionDetails = false,
+                    showAddSubmission = true,
+                )
+            }
+        }
+    }
+
+    private suspend fun updateAssignment() {
+        val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
+        val lastActualSubmission = assignment.lastActualSubmission
+        val submissions = if (lastActualSubmission != null) {
+            mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+        } else {
+            emptyList()
+        }
+        val initialAttempt = lastActualSubmission?.attempt ?: -1L
+
+        val currentAttempt = lastActualSubmission?.let {
+            createAttemptCard(it)
+        }
+
+        _uiState.update {
+            it.copy(
+                submissionDetailsUiState = it.submissionDetailsUiState.copy(
+                    submissions = submissions,
+                    currentSubmissionAttempt = initialAttempt
+                ),
+                showSubmissionDetails = lastActualSubmission != null,
+                showAddSubmission = lastActualSubmission == null,
+                submissionConfirmationUiState = it.submissionConfirmationUiState.copy(attemptCardState = currentAttempt)
+            )
+        }
+    }
+
+    private fun createAttemptCard(submission: Submission): AttemptCardState {
+        return AttemptCardState(
+            attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
+            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty()
+        )
+    }
+
+    private fun onSubmissionDialogDismissed() {
+        _uiState.update {
+            it.copy(
+                submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
+                    show = false
+                )
+            )
+        }
     }
 }
