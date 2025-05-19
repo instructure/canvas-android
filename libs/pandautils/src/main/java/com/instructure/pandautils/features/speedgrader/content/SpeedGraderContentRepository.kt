@@ -17,14 +17,18 @@
 package com.instructure.pandautils.features.speedgrader.content
 
 import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionRequestBody
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 
 class SpeedGraderContentRepository(
     private val submissionContentManager: SubmissionContentManager,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val canvaDocsApi: CanvaDocsAPI.CanvaDocsInterFace
 ) {
 
     suspend fun getSubmission(assignmentId: Long, studentId: Long): SubmissionContentQuery.Data {
@@ -33,5 +37,12 @@ class SpeedGraderContentRepository(
 
     suspend fun getSingleSubmission(courseId: Long,assignmentId: Long, studentId: Long): Submission? {
         return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, RestParams(isForceReadFromNetwork = false)).dataOrNull
+    }
+
+    suspend fun createCanvaDocSession(
+        submissionId: String,
+        attempt: String
+    ): CanvaDocSessionResponseBody {
+        return canvaDocsApi.createCanvaDocSession(CanvaDocSessionRequestBody(submissionId, attempt), RestParams()).dataOrThrow
     }
 }

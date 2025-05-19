@@ -23,7 +23,6 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.SubmissionContentQuery
-import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
@@ -120,10 +119,7 @@ class SpeedGraderContentViewModel @Inject constructor(
 
                 SubmissionType.STUDENT_ANNOTATION -> {
                     try {
-                        val canvaDocSession = CanvaDocsManager.createCanvaDocSessionAsync(
-                            submission._id.toLong(),
-                            submission.attempt.toString()
-                        ).await().dataOrThrow
+                        val canvaDocSession = repository.createCanvaDocSession(submission._id, submission.attempt.toString())
                         PdfContent(
                             canvaDocSession.canvadocsSessionUrl.orEmpty(),
                             submission.assignment?.courseId?.toLong(),

@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.speedgrader.content
 
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionType
 import io.mockk.coEvery
@@ -309,18 +310,23 @@ class SpeedGraderContentViewModelTest {
         coEvery { submissionData.submission } returns submission
         coEvery { submission.assignment } returns null
         coEvery { submission.submissionType } returns SubmissionType.student_annotation
-        coEvery { submission.id } returns submissionId.toString()
+        coEvery { submission._id } returns submissionId.toString()
         coEvery { submission.attempt } returns attempt
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
+        coEvery { repository.createCanvaDocSession(any(), any()) } returns CanvaDocSessionResponseBody(
+            canvadocsSessionUrl = "https://example.com/canvadocs"
+        )
+
+
         createViewModel()
 
-        assert(viewModel.uiState.value.content is StudentAnnotationContent)
-        val content = viewModel.uiState.value.content as StudentAnnotationContent
-        assertEquals(submissionId, content.submissionId)
+        assert(viewModel.uiState.value.content is PdfContent)
+        val content = viewModel.uiState.value.content as PdfContent
+        assertEquals("https://example.com/canvadocs", content.url)
         assertEquals(studentId, viewModel.uiState.value.assigneeId)
     }
 
