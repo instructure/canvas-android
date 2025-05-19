@@ -1776,7 +1776,7 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Cursisten beheren</string>
     <string name="screenTitleSettings">Instellingen</string>
-    <string name="navigationDrawerSwitchUsers">Wissel van gebruikers</string>
+    <string name="navigationDrawerChangeUser">Wissel van gebruikers</string>
     <string name="navigationDrawerLogOut">Afmelden</string>
     <string name="noStudentsError">Geen cursisten</string>
     <string name="noStudentsErrorDescription">Je observeert geen cursisten.</string>

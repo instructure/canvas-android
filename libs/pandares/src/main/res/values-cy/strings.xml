@@ -1776,7 +1776,7 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Rheoli Myfyrwyr</string>
     <string name="screenTitleSettings">Gosodiadau</string>
-    <string name="navigationDrawerSwitchUsers">Newid Defnyddwyr</string>
+    <string name="navigationDrawerChangeUser">Newid Defnyddwyr</string>
     <string name="navigationDrawerLogOut">Allgofnodi</string>
     <string name="noStudentsError">Dim Myfyrwyr</string>
     <string name="noStudentsErrorDescription">Dydych chi ddim yn arsyllu unrhyw fyfyrwyr.</string>

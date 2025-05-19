@@ -1838,7 +1838,7 @@
     <string name="screenTitleHelp">Pomoc</string>
     <string name="screenTitleManageStudents">Zarządzaj uczestnikami</string>
     <string name="screenTitleSettings">Ustawienia</string>
-    <string name="navigationDrawerSwitchUsers">Przełącz użytkownika</string>
+    <string name="navigationDrawerChangeUser">Przełącz użytkownika</string>
     <string name="navigationDrawerLogOut">Wyloguj</string>
     <string name="noStudentsError">Brak uczestników</string>
     <string name="noStudentsErrorDescription">Nie obserwujesz żadnych uczestników.</string>

@@ -1776,7 +1776,7 @@
     <string name="screenTitleHelp">Āwhina</string>
     <string name="screenTitleManageStudents">Whakahaere ngā ākonga</string>
     <string name="screenTitleSettings">Ngā Tautuhinga</string>
-    <string name="navigationDrawerSwitchUsers">Whakakā ngā Kaiwhakamahi</string>
+    <string name="navigationDrawerChangeUser">Whakakā ngā Kaiwhakamahi</string>
     <string name="navigationDrawerLogOut">Takiputa</string>
     <string name="noStudentsError">Kāore he ākonga</string>
     <string name="noStudentsErrorDescription">Kaore koe e tirotiro ana ētahi ākonga.</string>

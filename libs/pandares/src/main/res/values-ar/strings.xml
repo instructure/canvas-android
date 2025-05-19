@@ -1899,7 +1899,7 @@
     <string name="screenTitleHelp">التعليمات</string>
     <string name="screenTitleManageStudents">إدارة الطلاب</string>
     <string name="screenTitleSettings">الإعدادات</string>
-    <string name="navigationDrawerSwitchUsers">تبديل المستخدمين</string>
+    <string name="navigationDrawerChangeUser">تبديل المستخدمين</string>
     <string name="navigationDrawerLogOut">تسجيل الخروج</string>
     <string name="noStudentsError">لا يوجد طلاب</string>
     <string name="noStudentsErrorDescription">أنت لا تراقب أي طالب.</string>

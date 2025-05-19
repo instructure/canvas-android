@@ -1745,7 +1745,7 @@
     <string name="screenTitleHelp">帮助</string>
     <string name="screenTitleManageStudents">管理学生</string>
     <string name="screenTitleSettings">设置</string>
-    <string name="navigationDrawerSwitchUsers">转换用户</string>
+    <string name="navigationDrawerChangeUser">转换用户</string>
     <string name="navigationDrawerLogOut">注销</string>
     <string name="noStudentsError">没有学生</string>
     <string name="noStudentsErrorDescription">您未观察任何学生。</string>

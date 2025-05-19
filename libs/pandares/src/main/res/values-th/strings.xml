@@ -1776,7 +1776,7 @@
     <string name="screenTitleHelp">ความช่วยเหลือ</string>
     <string name="screenTitleManageStudents">จัดการผู้เรียน</string>
     <string name="screenTitleSettings">ค่าปรับตั้ง</string>
-    <string name="navigationDrawerSwitchUsers">สลับผู้ใช้</string>
+    <string name="navigationDrawerChangeUser">สลับผู้ใช้</string>
     <string name="navigationDrawerLogOut">ล็อกเอาท์</string>
     <string name="noStudentsError">ไม่มีผู้เรียน</string>
     <string name="noStudentsErrorDescription">คุณไม่ได้สังเกตการณ์ผู้เรียนรายใด</string>

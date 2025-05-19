@@ -1782,7 +1782,7 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Urus Pelajar</string>
     <string name="screenTitleSettings">Tetapan</string>
-    <string name="navigationDrawerSwitchUsers">Tukar Pengguna</string>
+    <string name="navigationDrawerChangeUser">Tukar Pengguna</string>
     <string name="navigationDrawerLogOut">Log Keluar</string>
     <string name="noStudentsError">Tiada Pelajar</string>
     <string name="noStudentsErrorDescription">Anda tidak memerhatikan mana-mana pelajar.</string>
