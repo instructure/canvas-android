@@ -217,4 +217,8 @@
     <string name="assignmentDetails_submitAssignment">Submit Assignment</string>
     <string name="assignmentDetails_deleteDraft">Delete Draft</string>
     <string name="assignmentDetails_textEntryHint">Add your text entry</string>
+    <string name="assignmentDetails_submissionSuccessTitle">Assignment Successfully Submitted!</string>
+    <string name="assignmentDetails_submissionSuccessSubtitle">We received your submission. You will be notified once it\'s been reviewed.</string>
+    <string name="assignmentDetails_submissionSuccessButton">View Submission</string>
+    <string name="assignmentDetails_attemptNumber">Attempt %1$d</string>
 </resources>

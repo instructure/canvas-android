@@ -18,6 +18,7 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.view.ViewGroup
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -62,12 +63,20 @@ import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ActionBottomSheet
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
+import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.BottomSheetActionState
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.SegmentedControl
 import com.instructure.horizon.horizonui.molecules.SegmentedControlIconPosition
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
+import com.instructure.horizon.horizonui.organisms.cards.AttemptCard
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
@@ -86,6 +95,24 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
             activity?.launchCustomTab(url, ThemePrefs.brandColor)
             uiState.onUrlOpened()
         }
+    }
+
+    if (uiState.submissionConfirmationUiState.show) {
+        Modal(
+            dialogState = ModalDialogState(
+                title = stringResource(R.string.assignmentDetails_submissionSuccessTitle),
+                message = stringResource(R.string.assignmentDetails_submissionSuccessSubtitle),
+                primaryButtonTitle = stringResource(R.string.assignmentDetails_submissionSuccessButton),
+                primaryButtonClick = uiState.submissionConfirmationUiState.onDismiss
+            ),
+            headerIcon = { Badge(type = BadgeType.Success, content = BadgeContent.Icon(R.drawable.check, null)) },
+            onDismiss = uiState.submissionConfirmationUiState.onDismiss,
+            extraBody = {
+                uiState.submissionConfirmationUiState.attemptCardState?.let {
+                    AttemptCard(it, modifier = Modifier.fillMaxWidth())
+                }
+            }
+        )
     }
 
     if (uiState.toolsBottomSheetUiState.show) {
@@ -245,17 +272,40 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                     backgroundColor = HorizonColors.Surface.pageSecondary(),
                     contentColor = HorizonColors.Text.error()
                 ),
-                onClick = uiState.onSubmissionButtonClicked,
+                onClick = uiState.onDeleteDraftClicked,
                 iconPosition = ButtonIconPosition.Start(R.drawable.delete),
             )
         }
         HorizonSpace(SpaceSize.SPACE_16)
-        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-            Button(
-                label = stringResource(R.string.assignmentDetails_submitAssignment),
-                color = ButtonColor.Institution,
-                onClick = uiState.onSubmissionButtonClicked
-            )
+        Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
+            Box(
+                contentAlignment = Alignment.CenterEnd,
+                modifier = Modifier
+                    .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                    .animateContentSize()
+            ) {
+                if (uiState.submissionInProgress) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                    ) {
+                        Spinner(
+                            size = SpinnerSize.EXTRA_SMALL,
+                            color = HorizonColors.Surface.cardPrimary(),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 22.dp, vertical = 10.dp),
+                        )
+                    }
+                } else {
+                    Button(
+                        label = stringResource(R.string.assignmentDetails_submitAssignment),
+                        color = ButtonColor.Institution,
+                        onClick = uiState.onSubmissionButtonClicked
+                    )
+                }
+            }
         }
     }
 }

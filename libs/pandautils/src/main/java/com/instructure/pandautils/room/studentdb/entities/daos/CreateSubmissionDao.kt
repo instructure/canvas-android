@@ -20,6 +20,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface CreateSubmissionDao {
@@ -52,6 +53,12 @@ interface CreateSubmissionDao {
     ): LiveData<CreateSubmissionEntity?>
 
     @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId LIMIT 1")
+    fun findSubmissionByAssignmentIdFlow(
+        assignmentId: Long,
+        userId: Long
+    ): Flow<CreateSubmissionEntity?>
+
+    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId LIMIT 1")
     fun findSubmissionsByAssignmentIdLiveData(
         assignmentId: Long,
         userId: Long
@@ -62,6 +69,9 @@ interface CreateSubmissionDao {
 
     @Query("UPDATE CreateSubmissionEntity SET currentFile = :currentFile, fileCount = :fileCount, progress = :progress WHERE id = :id")
     suspend fun updateProgress(currentFile: Long, fileCount: Long, progress: Double, id: Long)
+
+    @Query("UPDATE CreateSubmissionEntity SET progress = :progress WHERE id = :id")
+    suspend fun updateProgress(progress: Double, id: Long)
 
     @Query("SELECT id FROM CreateSubmissionEntity WHERE ROWID = last_insert_rowid()")
     suspend fun getLastInsert(): Long
