@@ -129,6 +129,20 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         )
     }
 
+    if (uiState.addSubmissionUiState.showSubmissionConfirmation) {
+        Modal(
+            dialogState = ModalDialogState(
+                title = stringResource(R.string.assignmentDetails_submissionConfirmationTitle),
+                message = stringResource(R.string.assignmentDetails_submissionConfirmationMessage),
+                primaryButtonTitle = stringResource(R.string.assignmentDetails_submissionConfirmationConfirm),
+                secondaryButtonTitle = stringResource(R.string.assignmentDetails_submissionConfirmationCancel),
+                primaryButtonClick = uiState.addSubmissionUiState.onSubmitAssignment,
+                secondaryButtonClick = uiState.addSubmissionUiState.onDismissSubmissionConfirmation
+            ),
+            onDismiss = uiState.addSubmissionUiState.onDismissSubmissionConfirmation
+        )
+    }
+
     if (uiState.toolsBottomSheetUiState.show) {
         ActionBottomSheet(
             title = stringResource(R.string.assignmentDetails_tools),

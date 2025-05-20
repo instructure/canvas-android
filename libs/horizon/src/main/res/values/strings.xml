@@ -226,4 +226,8 @@
     <string name="assignmentDetails_deleteDraftMessage">Once deleted, this draft cannot be recovered.</string>
     <string name="assignmentDetails_deleteDraftCancel">Cancel</string>
     <string name="assignmentDetails_deleteDraftConfirm">Delete Draft</string>
+    <string name="assignmentDetails_submissionConfirmationTitle">Confirm Submission</string>
+    <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
+    <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
+    <string name="assignmentDetails_submissionConfirmationConfirm">Submit Attempt</string>
 </resources>

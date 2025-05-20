@@ -71,6 +71,9 @@ data class AddSubmissionUiState(
     val showDeleteDraftConfirmation: Boolean = false,
     val onDismissDeleteDraftConfirmation: () -> Unit = {},
     val onDraftDeleted: () -> Unit = {},
+    val showSubmissionConfirmation: Boolean = false,
+    val onDismissSubmissionConfirmation: () -> Unit = {},
+    val onSubmitAssignment: () -> Unit = {},
     val submissionInProgress: Boolean = false
 )
 

@@ -67,10 +67,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
                 addSubmissionUiState = AddSubmissionUiState(
                     onSubmissionTypeSelected = ::submissionTypeSelected,
-                    onSubmissionButtonClicked = ::sendSubmission,
+                    onSubmissionButtonClicked = ::showSubmissionConfirmation,
                     onDeleteDraftClicked = ::deleteDraftClicked,
                     onDismissDeleteDraftConfirmation = ::deleteDraftDismissed,
                     onDraftDeleted = ::deleteDraftSubmission,
+                    onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
+                    onSubmitAssignment = ::sendSubmission
                 ),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
                 ltiButtonPressed = ::ltiButtonPressed,
@@ -264,6 +266,13 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun sendSubmission() {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    showSubmissionConfirmation = false
+                )
+            )
+        }
         val selectedSubmissionType =
             uiState.value.addSubmissionUiState.submissionTypes[uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex]
         if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
@@ -391,6 +400,26 @@ class AssignmentDetailsViewModel @Inject constructor(
                 )
             }
             onTextSubmissionChanged("")
+        }
+    }
+
+    private fun showSubmissionConfirmation() {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    showSubmissionConfirmation = true
+                )
+            )
+        }
+    }
+
+    private fun submissionConfirmationDismissed() {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    showSubmissionConfirmation = false
+                )
+            )
         }
     }
 }
