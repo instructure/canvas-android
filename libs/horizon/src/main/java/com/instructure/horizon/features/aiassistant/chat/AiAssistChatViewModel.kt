@@ -17,11 +17,11 @@
 package com.instructure.horizon.features.aiassistant.chat
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
@@ -34,6 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -42,21 +43,20 @@ class AiAssistChatViewModel @Inject constructor(
     private val repository: AiAssistChatRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-//    private val aiContext: AiAssistContext
+    private val aiContext = Json.decodeFromString<AiAssistContext>(savedStateHandle.get<String>("aiContext").orEmpty())
 
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
         onInputTextChanged = ::onTextInputChanged,
         onInputTextSubmitted = ::onTextInputSubmitted,
+        aiContext = aiContext,
+        messages = aiContext.chatHistory,
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
-        val result = savedStateHandle.get<String>("aiContext")
-        Log.d("AiAssistChatViewModel", "aiContext: ${result}")
-//        aiContext = savedStateHandle.toRoute<AiAssistRoute.AiAssistChat>().aiContext
-//        aiContext.chatHistory.lastOrNull()?.let { message ->
-//            executeExistingPrompt(message.prompt)
-//        }
+        aiContext.chatHistory.lastOrNull()?.let { message ->
+            executeExistingPrompt(message.prompt)
+        }
     }
 
     private fun executeExistingPrompt(prompt: AiAssistMessagePrompt) {

@@ -58,7 +58,6 @@ fun AiAssistMainScreen(
                     )
                 )
             )
-            navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", newContext)
             navController.navigate(AiAssistRoute.AiAssistChat(newContext))
        }
     ) { modifier ->
@@ -90,7 +89,6 @@ fun AiAssistMainScreen(
                             )
                         )
                     )
-                    navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", newContext)
 
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_summarize),
@@ -110,7 +108,6 @@ fun AiAssistMainScreen(
                             )
                         )
                     )
-                    navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", newContext)
 
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_giveMeKeyTakeaways),
@@ -130,7 +127,6 @@ fun AiAssistMainScreen(
                             )
                         )
                     )
-                    navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", newContext)
 
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_tellMeMore),
