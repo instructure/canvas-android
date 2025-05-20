@@ -39,7 +39,10 @@ class SpeedGraderViewModel @Inject constructor(
     private val assignmentId: Long = savedStateHandle[Const.ASSIGNMENT_ID]
         ?: throw IllegalStateException("Assignment ID is required")
 
-    private val _uiState = MutableStateFlow(SpeedGraderUiState())
+    private val submissionIds: LongArray = savedStateHandle[SpeedGraderFragment.FILTERED_SUBMISSION_IDS]
+        ?: throw IllegalStateException("Submission IDs are required")
+
+    private val _uiState = MutableStateFlow(SpeedGraderUiState(assignmentId, submissionIds.toList()))
     val uiState = _uiState.asStateFlow()
 
     init {

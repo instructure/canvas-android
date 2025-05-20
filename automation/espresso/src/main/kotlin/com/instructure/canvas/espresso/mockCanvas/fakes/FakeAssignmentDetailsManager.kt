@@ -16,7 +16,7 @@
 
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.managers.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 
 class FakeAssignmentDetailsManager : AssignmentDetailsManager {
 

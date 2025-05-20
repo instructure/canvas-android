@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
@@ -36,8 +37,10 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.toPx
 import kotlin.math.max
 import kotlin.math.min
@@ -64,6 +67,7 @@ fun DraggableResizableLayout(
     ) {
         Box(
             modifier = Modifier
+                .background(color = colorResource(R.color.backgroundLightest))
                 .fillMaxWidth()
                 .height(with(density) { topSectionHeightPx.toDp() })
         ) {
@@ -72,6 +76,7 @@ fun DraggableResizableLayout(
 
         Box(
             modifier = Modifier
+                .background(color = colorResource(R.color.backgroundLightest))
                 .fillMaxWidth()
                 .fillMaxSize()
         ) {

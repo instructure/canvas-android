@@ -21,19 +21,30 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.navigation.NavGraphBuilder
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 
 @Composable
 fun SpeedGraderScreen(
     uiState: SpeedGraderUiState,
+    sharedViewModel: SpeedGraderSharedViewModel,
     navigationActionClick: () -> Unit
 ) {
 
-    val pagerState = rememberPagerState(pageCount = { 3 })
+    val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size })
+    val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
+
     Scaffold(
         topBar = {
             CanvasAppBar(
@@ -46,8 +57,26 @@ fun SpeedGraderScreen(
             )
         },
     ) { padding ->
-        HorizontalPager(modifier = Modifier.padding(padding), state = pagerState) {
-            SpeedGraderSubmissionScreen()
+        HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
+            val submissionId = uiState.submissionIds[page]
+            NavHost(navController = rememberNavController(), startDestination = "${uiState.assignmentId}/submission/$submissionId") {
+                submissionScreen()
+            }
         }
+    }
+}
+
+fun NavGraphBuilder.submissionScreen() {
+    composable(
+        route = "{assignmentId}/submission/{submissionId}",
+        arguments = listOf(
+            navArgument("assignmentId") { type = NavType.LongType },
+            navArgument("submissionId") { type = NavType.LongType }
+        )
+    ) {
+        SpeedGraderSubmissionScreen(
+            assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
+            submissionId = it.arguments?.getLong("submissionId") ?: 0L
+        )
     }
 }

@@ -47,12 +47,12 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
     private val binding by viewBinding(FragmentViewPdfBinding::bind)
 
-    private var mUrl by StringArg()
-    private var mToolbarColor by IntArg()
-    private var mEditableFile: EditableFile? by NullableParcelableArg()
+    private var url by StringArg()
+    private var toolbarColor by IntArg()
+    private var editableFile: EditableFile? by NullableParcelableArg()
     private var isInModulesPager by BooleanArg()
 
-    private val mPdfConfiguration: PdfConfiguration = PdfConfiguration.Builder().scrollDirection(PageScrollDirection.VERTICAL).build()
+    private val pdfConfiguration: PdfConfiguration = PdfConfiguration.Builder().scrollDirection(PageScrollDirection.VERTICAL).build()
 
     override fun onPresenterPrepared(presenter: ViewPdfFragmentPresenter) = Unit
     override fun onRefreshFinished() = Unit
@@ -69,13 +69,13 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
         // If returning from editing this file, check if it was deleted so we can immediately go back
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
-        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == mEditableFile?.file?.id) {
+        if (fileFolderDeletedEvent != null && fileFolderDeletedEvent.deletedFileFolder.id == editableFile?.file?.id) {
             requireActivity().finish()
         }
     }
 
     private fun updateFileNameIfNeeded() {
-        mEditableFile?.let { editableFile ->
+        editableFile?.let { editableFile ->
             val fileFolderUpdatedEvent = EventBus.getDefault().getStickyEvent(FileFolderUpdatedEvent::class.java)
             fileFolderUpdatedEvent?.let { event ->
                 if (editableFile.file.id == event.updatedFileFolder.id) {
@@ -88,9 +88,9 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
     override fun onActivityCreated(savedInstanceState: Bundle?) = with(binding) {
         super.onActivityCreated(savedInstanceState)
-        toolbar.title = mUrl
+        toolbar.title = url
 
-        mEditableFile?.let {
+        editableFile?.let {
             toolbar.setupMenu(R.menu.menu_file_details) { menu ->
                 when (menu.itemId) {
                     R.id.edit -> {
@@ -109,13 +109,13 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
         if (isInModulesPager) {
             toolbar.setupBackButtonWithExpandCollapseAndBack(this@ViewPdfFragment) {
                 toolbar.updateToolbarExpandCollapseIcon(this@ViewPdfFragment)
-                ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
+                ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.textLightest))
                 (activity as MasterDetailInteractions).toggleExpandCollapse()
             }
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, requireContext().getColor(R.color.textLightest))
-        } else if (isTablet && mToolbarColor != 0) {
-            val textColor = if (mToolbarColor == ThemePrefs.primaryColor) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
-            ViewStyler.themeToolbarColored(requireActivity(), toolbar, mToolbarColor, textColor)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, requireContext().getColor(R.color.textLightest))
+        } else if (isTablet && toolbarColor != 0) {
+            val textColor = if (toolbarColor == ThemePrefs.primaryColor) ThemePrefs.primaryTextColor else requireContext().getColor(R.color.textLightest)
+            ViewStyler.themeToolbarColored(requireActivity(), toolbar, toolbarColor, textColor)
         } else {
             toolbar.setupBackButton {
                 requireActivity().onBackPressed()
@@ -125,7 +125,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
         }
     }
 
-    override fun getPresenterFactory() = ViewPdfFragmentPresenterFactory(mUrl)
+    override fun getPresenterFactory() = ViewPdfFragmentPresenterFactory(url)
 
     override fun onReadySetGo(presenter: ViewPdfFragmentPresenter) { presenter.loadData(false) }
 
@@ -142,7 +142,7 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
 
     override fun onLoadingFinished(fileUri: Uri) {
         binding.pdfProgressBar.setGone()
-        val newPdfFragment = PdfFragment.newInstance(fileUri, mPdfConfiguration)
+        val newPdfFragment = PdfFragment.newInstance(fileUri, pdfConfiguration)
         childFragmentManager.beginTransaction().replace(R.id.pdfFragmentContainer, newPdfFragment).commit()
     }
 
@@ -160,9 +160,9 @@ class ViewPdfFragment : PresenterFragment<ViewPdfFragmentPresenter, ViewPdfFragm
             editableFile: EditableFile? = null,
             isInModulesPager: Boolean = false
         ) = ViewPdfFragment().apply {
-            mUrl = url
-            mToolbarColor = toolbarColor
-            mEditableFile = editableFile
+            this.url = url
+            this.toolbarColor = toolbarColor
+            this.editableFile = editableFile
             this.isInModulesPager = isInModulesPager
         }
 
