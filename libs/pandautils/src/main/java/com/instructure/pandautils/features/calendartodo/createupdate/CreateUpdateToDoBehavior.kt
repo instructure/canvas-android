@@ -15,20 +15,9 @@
  *
  */
 
-package com.instructure.student.widget.todo
-
-import android.appwidget.AppWidgetManager
-import android.content.Context
-import androidx.glance.GlanceId
-import androidx.glance.action.ActionParameters
-import androidx.glance.appwidget.action.ActionCallback
-import com.instructure.student.widget.WidgetUpdater
+package com.instructure.pandautils.features.calendartodo.createupdate
 
 
-class ToDoWidgetRefreshCallback : ActionCallback {
-    override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
-        WidgetUpdater.getTodoWidgetUpdateIntent(AppWidgetManager.getInstance(context)).also { intent ->
-            context.sendBroadcast(intent)
-        }
-    }
+interface CreateUpdateToDoBehavior {
+    fun updateWidget()
 }

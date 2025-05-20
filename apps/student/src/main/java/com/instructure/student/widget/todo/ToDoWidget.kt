@@ -20,6 +20,7 @@ package com.instructure.student.widget.todo
 import android.content.Context
 import android.net.Uri
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
@@ -125,6 +126,7 @@ class ToDoWidget : GlanceAppWidget() {
             WidgetFloatingActionButton(
                 alignment = Alignment.TopEnd,
                 imageRes = R.drawable.ic_canvas_logo_student,
+                contentDescriptionRes = R.string.a11y_widgetToDoOpenToDoList,
                 backgroundColor = WidgetColors.textDanger,
                 tintColor = WidgetColors.textLightest,
                 onClickAction = actionStartActivity(
@@ -144,6 +146,11 @@ class ToDoWidget : GlanceAppWidget() {
                         R.drawable.ic_refresh_lined
                     } else {
                         R.drawable.ic_add_lined
+                    },
+                    contentDescriptionRes = if (state == WidgetState.Error) {
+                        R.string.a11y_refresh
+                    } else {
+                        R.string.a11y_widgetToDoCreateNewToDo
                     },
                     backgroundColor = ColorProvider(
                         color = Color(color = ThemePrefs.buttonColor)
@@ -170,6 +177,7 @@ class ToDoWidget : GlanceAppWidget() {
     private fun WidgetFloatingActionButton(
         alignment: Alignment,
         @DrawableRes imageRes: Int,
+        @StringRes contentDescriptionRes: Int,
         backgroundColor: ColorProvider,
         tintColor: ColorProvider,
         onClickAction: Action
@@ -182,7 +190,7 @@ class ToDoWidget : GlanceAppWidget() {
         ) {
             Image(
                 provider = ImageProvider(resId = imageRes),
-                contentDescription = null,
+                contentDescription = LocalContext.current.getString(contentDescriptionRes),
                 colorFilter = ColorFilter.tint(tintColor),
                 modifier = GlanceModifier
                     .size(32.dp)
@@ -362,7 +370,7 @@ class ToDoWidget : GlanceAppWidget() {
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview(widthDp = 250, heightDp = 200)
     @Composable
-    private fun ToDoWidgetPreview() {
+    private fun ToDoWidgetContentPreview() {
         ContextKeeper.appContext = LocalContext.current
         AndroidThreeTen.init(LocalContext.current)
         Content(
@@ -397,6 +405,45 @@ class ToDoWidget : GlanceAppWidget() {
                         url = "https://www.instructure.com"
                     )
                 )
+            )
+        )
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 250, heightDp = 200)
+    @Composable
+    private fun ToDoWidgetEmptyPreview() {
+        ContextKeeper.appContext = LocalContext.current
+        AndroidThreeTen.init(LocalContext.current)
+        Content(
+            ToDoWidgetUiState(
+                state = WidgetState.Empty
+            )
+        )
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 250, heightDp = 200)
+    @Composable
+    private fun ToDoWidgetErrorPreview() {
+        ContextKeeper.appContext = LocalContext.current
+        AndroidThreeTen.init(LocalContext.current)
+        Content(
+            ToDoWidgetUiState(
+                state = WidgetState.Error
+            )
+        )
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 250, heightDp = 200)
+    @Composable
+    private fun ToDoWidgetNotLoggedInPreview() {
+        ContextKeeper.appContext = LocalContext.current
+        AndroidThreeTen.init(LocalContext.current)
+        Content(
+            ToDoWidgetUiState(
+                state = WidgetState.NotLoggedIn
             )
         )
     }

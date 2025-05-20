@@ -19,7 +19,6 @@ package com.instructure.student.widget.todo
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
-import android.content.Intent
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
@@ -41,7 +40,7 @@ import com.instructure.student.widget.glance.WidgetState
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.launch
-import org.threeten.bp.LocalDateTime
+import org.threeten.bp.LocalDate
 import javax.inject.Inject
 
 
@@ -62,11 +61,6 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        updateData(context)
-    }
-
-    override fun onReceive(context: Context, intent: Intent) {
-        super.onReceive(context, intent)
         updateData(context)
     }
 
@@ -104,10 +98,10 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
                     apiPrefs.user?.contextId?.let { add(it) }
                 }
 
-                val now = LocalDateTime.now()
+                val startDateTime = LocalDate.now().atStartOfDay()
                 val plannerItems = repository.getPlannerItems(
-                    now.toApiString().orEmpty(),
-                    now.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
+                    startDateTime.toApiString().orEmpty(),
+                    startDateTime.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
                     contextCodes,
                     true
                 )
