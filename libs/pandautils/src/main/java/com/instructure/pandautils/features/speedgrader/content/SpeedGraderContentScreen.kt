@@ -70,7 +70,7 @@ fun SpeedGraderContentScreen() {
         UserHeader(uiState.userUrl, uiState.userName, uiState.submissionState, uiState.dueDate)
         CanvasDivider()
         uiState.content?.let {
-            val route = router.navigateToContent(it)
+            val route = router.getRouteForContent(it)
             AndroidFragment(
                 clazz = route.clazz,
                 arguments = route.bundle,

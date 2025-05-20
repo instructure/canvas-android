@@ -36,13 +36,13 @@ class SpeedGraderContentRepository(
     }
 
     suspend fun getSingleSubmission(courseId: Long,assignmentId: Long, studentId: Long): Submission? {
-        return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, RestParams(isForceReadFromNetwork = false)).dataOrNull
+        return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, RestParams()).dataOrNull
     }
 
     suspend fun createCanvaDocSession(
         submissionId: String,
         attempt: String
     ): CanvaDocSessionResponseBody {
-        return canvaDocsApi.createCanvaDocSession(CanvaDocSessionRequestBody(submissionId, attempt), RestParams()).dataOrThrow
+        return canvaDocsApi.createCanvaDocSession(CanvaDocSessionRequestBody(submissionId, attempt), RestParams(isForceReadFromNetwork = true)).dataOrThrow
     }
 }

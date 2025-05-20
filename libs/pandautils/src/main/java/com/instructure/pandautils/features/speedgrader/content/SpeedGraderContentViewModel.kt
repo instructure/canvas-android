@@ -94,7 +94,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 ?: emptyList()).fastMap { it.rawValue } -> OnPaperContent
 
             submission?.submissionType == null -> NoSubmissionContent
-            else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType?.rawValue!!)) {
+            else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType?.rawValue.orEmpty())) {
 
                 // LTI submission
                 SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
@@ -115,7 +115,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 } ?: UnsupportedContent
 
                 // File uploads
-                SubmissionType.ONLINE_UPLOAD -> submission.attachments?.get(0)?.let {
+                SubmissionType.ONLINE_UPLOAD -> submission.attachments?.firstOrNull()?.let {
                     getAttachmentContent(
                         it,
                         submission.assignment?.courseId?.toLong(),
@@ -125,7 +125,7 @@ class SpeedGraderContentViewModel @Inject constructor(
 
                 // URL Submission
                 SubmissionType.ONLINE_URL -> UrlContent(
-                    submission.url!!,
+                    submission.url.orEmpty(),
                     submission.attachments?.firstOrNull()?.url
                 )
 
@@ -207,7 +207,7 @@ class SpeedGraderContentViewModel @Inject constructor(
 
             type.startsWith("image") -> ImageContent(
                 url,
-                attachment.contentType!!
+                attachment.contentType.orEmpty(),
             )
 
             else -> OtherAttachmentContent(
@@ -228,7 +228,7 @@ class SpeedGraderContentViewModel @Inject constructor(
             AnonymousSubmissionContent
         } else {
             QuizContent(
-                assignment.courseId!!.toLong(),
+                assignment.courseId?.toLongOrNull() ?: -1L,
                 assignmentId,
                 studentId,
                 submission.previewUrl.orEmpty(),

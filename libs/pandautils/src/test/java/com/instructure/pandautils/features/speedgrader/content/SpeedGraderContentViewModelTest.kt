@@ -46,6 +46,7 @@ class SpeedGraderContentViewModelTest {
     private val assignmentId = 123L
     private val studentId = 456L
     private val courseId = 789L
+    private val groupId = 987L
 
     @Before
     fun setup() {

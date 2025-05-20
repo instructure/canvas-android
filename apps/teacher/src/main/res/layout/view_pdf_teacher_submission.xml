@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         app:pclv_indeterminate="true"
-        app:pclv_override_color="@color/login_studentAppTheme"/>
+        app:pclv_override_color="@color/login_teacherAppTheme"/>
 
     <LinearLayout
         android:id="@+id/retryLoadingContainer"
