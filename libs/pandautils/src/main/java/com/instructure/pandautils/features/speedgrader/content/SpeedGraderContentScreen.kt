@@ -39,7 +39,7 @@ fun SpeedGraderContentScreen() {
     }
 
     uiState.content?.let {
-        val route = router.navigateToContent(it)
+        val route = router.getRouteForContent(it)
         AndroidFragment(
             clazz = route.clazz,
             arguments = route.bundle,

@@ -42,6 +42,11 @@ class PdfSubmissionFragment : BaseCanvasFragment() {
     }
 
     companion object {
+
+        const val PDF_URL = "pdfUrl"
+        const val COURSE_ID = "courseId"
+        const val ASSIGNEE_ID = "assigneeId"
+
         fun newInstance(url: String, courseId: Long) = PdfSubmissionFragment().apply {
             pdfUrl = url
             this.courseId = courseId
@@ -49,9 +54,9 @@ class PdfSubmissionFragment : BaseCanvasFragment() {
 
         fun createBundle(url: String, courseId: Long, assigneeId: Long): Bundle {
             return Bundle().apply {
-                putString("pdfUrl", url)
-                putLong("courseId", courseId)
-                putLong("assigneeId", assigneeId)
+                putString(PDF_URL, url)
+                putLong(COURSE_ID, courseId)
+                putLong(ASSIGNEE_ID, assigneeId)
             }
         }
     }

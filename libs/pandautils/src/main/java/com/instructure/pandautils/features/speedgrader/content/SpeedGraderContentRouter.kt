@@ -21,7 +21,7 @@ import androidx.fragment.app.Fragment
 
 interface SpeedGraderContentRouter {
 
-    fun navigateToContent(content: GradeableContent): SpeedGraderContentRoute
+    fun getRouteForContent(content: GradeableContent): SpeedGraderContentRoute
 }
 
 data class SpeedGraderContentRoute(

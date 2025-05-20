@@ -16,13 +16,11 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -46,10 +44,6 @@ fun SpeedGraderScreen(
 
     val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size })
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
-
-    LaunchedEffect(viewPagerEnabled) {
-        Log.d("SpeedGraderScreen", "viewPagerEnabled: $viewPagerEnabled")
-    }
 
     Scaffold(
         topBar = {

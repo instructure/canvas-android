@@ -91,7 +91,7 @@ fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
     SpeedGraderSubmissionScreen(3L, 3L)
 }
 
-fun NavGraphBuilder.speedGraderContentScreen() {
+private fun NavGraphBuilder.speedGraderContentScreen() {
     composable(
         route = "speedGraderContent/{assignmentId}/{submissionId}",
         arguments = listOf(
