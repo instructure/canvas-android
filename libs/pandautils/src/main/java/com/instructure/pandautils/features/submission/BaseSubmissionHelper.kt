@@ -15,7 +15,6 @@
  */
 package com.instructure.pandautils.features.submission
 
-import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -348,8 +347,8 @@ abstract class BaseSubmissionHelper(
         return studentDb.submissionDao().getLastInsert()
     }
 
-    private suspend fun deleteDraftsForAssignment(id: Long) {
-        studentDb.submissionDao().deleteDraftById(id, getUserId())
+    private suspend fun deleteDraftsForAssignment(assignmentId: Long) {
+        studentDb.submissionDao().deleteDraftByAssignmentId(assignmentId, getUserId())
     }
 
     fun deletePendingComment(commentId: Long) {

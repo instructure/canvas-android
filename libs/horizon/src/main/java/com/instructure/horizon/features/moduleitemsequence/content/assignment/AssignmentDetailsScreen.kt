@@ -115,6 +115,20 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         )
     }
 
+    if (uiState.addSubmissionUiState.showDeleteDraftConfirmation) {
+        Modal(
+            dialogState = ModalDialogState(
+                title = stringResource(R.string.assignmentDetails_deleteDraftTitle),
+                message = stringResource(R.string.assignmentDetails_deleteDraftMessage),
+                primaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftConfirm),
+                secondaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftCancel),
+                primaryButtonClick = uiState.addSubmissionUiState.onDraftDeleted,
+                secondaryButtonClick = uiState.addSubmissionUiState.onDismissDeleteDraftConfirmation
+            ),
+            onDismiss = uiState.addSubmissionUiState.onDismissDeleteDraftConfirmation
+        )
+    }
+
     if (uiState.toolsBottomSheetUiState.show) {
         ActionBottomSheet(
             title = stringResource(R.string.assignmentDetails_tools),
@@ -258,8 +272,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
         HorizonSpace(SpaceSize.SPACE_24)
     }
     if (uiState.submissionTypes.isNotEmpty()) {
-        val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
-        when (selectedSubmissionType) {
+        when (val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]) {
             is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
             is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType)
         }

@@ -221,4 +221,9 @@
     <string name="assignmentDetails_submissionSuccessSubtitle">We received your submission. You will be notified once it\'s been reviewed.</string>
     <string name="assignmentDetails_submissionSuccessButton">View Submission</string>
     <string name="assignmentDetails_attemptNumber">Attempt %1$d</string>
+    <string name="assignmentDetails_draftSaved">Saved at %1$s</string>
+    <string name="assignmentDetails_deleteDraftTitle">Delete Draft</string>
+    <string name="assignmentDetails_deleteDraftMessage">Once deleted, this draft cannot be recovered.</string>
+    <string name="assignmentDetails_deleteDraftCancel">Cancel</string>
+    <string name="assignmentDetails_deleteDraftConfirm">Delete Draft</string>
 </resources>

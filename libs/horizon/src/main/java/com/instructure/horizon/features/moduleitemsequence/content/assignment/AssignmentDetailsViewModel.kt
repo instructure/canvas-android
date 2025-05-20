@@ -37,10 +37,13 @@ import com.instructure.pandautils.utils.format
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -64,7 +67,10 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
                 addSubmissionUiState = AddSubmissionUiState(
                     onSubmissionTypeSelected = ::submissionTypeSelected,
-                    onSubmissionButtonClicked = ::sendSubmission
+                    onSubmissionButtonClicked = ::sendSubmission,
+                    onDeleteDraftClicked = ::deleteDraftClicked,
+                    onDismissDeleteDraftConfirmation = ::deleteDraftDismissed,
+                    onDraftDeleted = ::deleteDraftSubmission,
                 ),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
                 ltiButtonPressed = ::ltiButtonPressed,
@@ -92,9 +98,17 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
             val initialAttempt = lastActualSubmission?.attempt ?: -1L
 
+            val text = withContext(Dispatchers.IO) {
+                val draft = createSubmissionDao.findDraftSubmissionByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+                draft?.lastActivityDate?.let {
+                    updateDraftText(it)
+                }
+                draft?.submissionEntry.orEmpty()
+            }
+
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
                 when (it) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text("", ::onTextSubmissionChanged)
+                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged)
                     Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File("")
                     else -> null
                 }
@@ -221,6 +235,31 @@ class AssignmentDetailsViewModel @Inject constructor(
                     )
                 )
             }
+            viewModelScope.launch {
+                // We need to replace the line breaks from the RCE because if we delete any text it will still leave a <br> tag in the RCE
+                if (text.replace("<br>", "").isNotBlank()) {
+                    submissionHelper.saveDraft(CanvasContext.emptyCourseContext(id = courseId), assignmentId, assignmentName, text)
+                    updateDraftText(Date())
+                } else {
+                    createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+                    updateDraftText()
+                }
+            }
+        }
+    }
+
+    private fun updateDraftText(date: Date? = null) {
+        val draftText = if (date == null) {
+            ""
+        } else {
+            context.getString(R.string.assignmentDetails_draftSaved, date.format("dd/MM, h:mm a"))
+        }
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    draftDateString = draftText
+                )
+            )
         }
     }
 
@@ -257,7 +296,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     showSubmissionDetails = true,
                     showAddSubmission = false,
                     addSubmissionUiState = it.addSubmissionUiState.copy(
-                        submissionInProgress = showProgress,
+                        submissionInProgress = showProgress
                     ),
                     submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
                         show = true
@@ -318,6 +357,40 @@ class AssignmentDetailsViewModel @Inject constructor(
                     show = false
                 )
             )
+        }
+    }
+
+    private fun deleteDraftClicked() {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    showDeleteDraftConfirmation = true
+                )
+            )
+        }
+    }
+
+    private fun deleteDraftDismissed() {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    showDeleteDraftConfirmation = false
+                )
+            )
+        }
+    }
+
+    private fun deleteDraftSubmission() {
+        viewModelScope.launch {
+            createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+            _uiState.update {
+                it.copy(
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        showDeleteDraftConfirmation = false
+                    )
+                )
+            }
+            onTextSubmissionChanged("")
         }
     }
 }

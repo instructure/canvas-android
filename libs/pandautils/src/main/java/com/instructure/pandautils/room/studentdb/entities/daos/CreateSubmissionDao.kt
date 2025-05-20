@@ -64,6 +64,12 @@ interface CreateSubmissionDao {
         userId: Long
     ): LiveData<List<CreateSubmissionEntity>>
 
+    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND isDraft = 1 LIMIT 1")
+    fun findDraftSubmissionByAssignmentId(
+        assignmentId: Long,
+        userId: Long
+    ): CreateSubmissionEntity?
+
     @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId")
     suspend fun deleteSubmissionsForAssignmentId(assignmentId: Long, userId: Long)
 
@@ -79,6 +85,6 @@ interface CreateSubmissionDao {
     @Query("SELECT * FROM CreateSubmissionEntity WHERE ROWID = :rowId")
     suspend fun findSubmissionByRowId(rowId: Long): CreateSubmissionEntity?
 
-    @Query("DELETE FROM CreateSubmissionEntity WHERE id = :id AND userId = :userId AND isDraft = 1")
-    suspend fun deleteDraftById(id: Long, userId: Long)
+    @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND isDraft = 1")
+    suspend fun deleteDraftByAssignmentId(assignmentId: Long, userId: Long)
 }

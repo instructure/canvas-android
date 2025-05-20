@@ -68,6 +68,9 @@ data class AddSubmissionUiState(
     val onSubmissionButtonClicked: () -> Unit = {},
     val draftDateString: String = "",
     val onDeleteDraftClicked: () -> Unit = {},
+    val showDeleteDraftConfirmation: Boolean = false,
+    val onDismissDeleteDraftConfirmation: () -> Unit = {},
+    val onDraftDeleted: () -> Unit = {},
     val submissionInProgress: Boolean = false
 )
 

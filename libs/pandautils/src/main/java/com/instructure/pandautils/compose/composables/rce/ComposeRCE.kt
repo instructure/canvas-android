@@ -176,7 +176,12 @@ fun ComposeRCE(
 
     LaunchedEffect(Unit) {
         rceTextEditor.setPlaceholder(hint)
-        rceTextEditor.applyHtml(html)
+    }
+
+    LaunchedEffect(html) {
+        if (html != rceTextEditor.getHtml()) {
+            rceTextEditor.applyHtml(html)
+        }
     }
 
     Column(modifier = modifier) {

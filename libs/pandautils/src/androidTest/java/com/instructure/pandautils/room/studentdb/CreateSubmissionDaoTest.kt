@@ -211,7 +211,7 @@ class CreateSubmissionDaoTest {
     }
 
     @Test
-    fun testDeleteDraftById() = runTest {
+    fun testDeleteDraftByAssignmentId() = runTest {
         val entities = listOf(
             CreateSubmissionEntity(
                 id = 1,
@@ -244,7 +244,7 @@ class CreateSubmissionDaoTest {
 
         entities.forEach { dao.insert(it) }
 
-        dao.deleteDraftById(1L, 1L)
+        dao.deleteDraftByAssignmentId(1L, 1L)
 
         val result = dao.findSubmissionById(1L)
         assertNull(result)
