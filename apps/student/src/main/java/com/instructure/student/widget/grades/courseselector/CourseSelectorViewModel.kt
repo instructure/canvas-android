@@ -20,6 +20,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.student.widget.grades.GradesWidgetRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -39,8 +40,17 @@ class CourseSelectorViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            val courses = repository.getCoursesWithGradingScheme(true)
-            _uiState.update { it.copy(state = ScreenState.Content, courses = courses) }
+            try {
+                val courses = repository.getCoursesWithGradingScheme(true)
+                if (courses.isEmpty()) {
+                    _uiState.update { it.copy(state = ScreenState.Empty) }
+                } else {
+                    _uiState.update { it.copy(state = ScreenState.Content, courses = courses) }
+                }
+            } catch (e: Exception) {
+                _uiState.update { it.copy(state = ScreenState.Error) }
+                viewModelScope.ensureActive()
+            }
         }
     }
 }

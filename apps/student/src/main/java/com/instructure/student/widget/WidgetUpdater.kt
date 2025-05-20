@@ -16,9 +16,9 @@ object WidgetUpdater {
      fun updateWidgets() {
         val appWidgetManager = AppWidgetManager.getInstance(ContextKeeper.appContext)
 
-        updateNotificationsWidget(appWidgetManager)
-        updateGradesWidget(appWidgetManager)
-        updateTodoWidget(appWidgetManager)
+         updateNotificationsWidget(appWidgetManager)
+         updateGradesWidget(appWidgetManager)
+         updateTodoWidget(appWidgetManager)
          updateSingleGradeWidget(appWidgetManager)
     }
 

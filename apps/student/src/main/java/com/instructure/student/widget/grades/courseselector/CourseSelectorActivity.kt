@@ -22,6 +22,8 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -30,6 +32,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -40,6 +43,10 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.pandares.R
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.EmptyContent
+import com.instructure.pandautils.compose.composables.ErrorContent
+import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater.updateWidgets
 import dagger.hilt.android.AndroidEntryPoint
@@ -76,28 +83,45 @@ class CourseSelectorActivity : BaseCanvasActivity() {
                     )
                 },
                 content = { paddingValues ->
-                    LazyColumn(
-                        modifier = Modifier
-                            .padding(paddingValues)
-                    ) {
-                        items(uiState.courses) {
-                            Text(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .clickable {
-                                        courseSelected(it)
-                                    }
-                                    .padding(16.dp),
-                                text = it.name,
-                                style = MaterialTheme.typography.body1.copy(
-                                    color = colorResource(R.color.textDarkest),
-                                )
-                            )
-                            HorizontalDivider(thickness = 1.dp)
-                        }
+                    when (uiState.state) {
+                        ScreenState.Content -> Content(uiState, paddingValues)
+                        ScreenState.Empty -> EmptyContent(
+                            emptyMessage = stringResource(R.string.edit_dashboard_empty_title),
+                            imageRes = R.drawable.ic_panda_nocourses,
+                            modifier = Modifier.fillMaxSize(),
+                        )
+                        ScreenState.Error -> ErrorContent(
+                            errorMessage = stringResource(R.string.widgetGradesErrorLoadingCourses),
+                            modifier = Modifier.fillMaxSize()
+                        )
+                        ScreenState.Loading -> Loading(modifier = Modifier.fillMaxSize())
                     }
                 }
             )
+        }
+    }
+
+    @Composable
+    private fun Content(uiState: CourseSelectorUiState, paddingValues: PaddingValues) {
+        LazyColumn(
+            modifier = Modifier
+                .padding(paddingValues)
+        ) {
+            items(uiState.courses) {
+                Text(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable {
+                            courseSelected(it)
+                        }
+                        .padding(16.dp),
+                    text = it.name,
+                    style = MaterialTheme.typography.body1.copy(
+                        color = colorResource(R.color.textDarkest),
+                    )
+                )
+                HorizontalDivider(thickness = 1.dp)
+            }
         }
     }
 

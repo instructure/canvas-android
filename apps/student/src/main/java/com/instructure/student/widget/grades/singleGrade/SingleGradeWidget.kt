@@ -14,9 +14,12 @@
  *     limitations under the License.
  */package com.instructure.student.widget.grades.singleGrade
 
+import android.appwidget.AppWidgetManager
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
-import android.util.Log
+import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
@@ -32,6 +35,7 @@ import androidx.glance.LocalContext
 import androidx.glance.LocalSize
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.provideContent
@@ -43,8 +47,11 @@ import androidx.glance.layout.Column
 import androidx.glance.layout.Row
 import androidx.glance.layout.Spacer
 import androidx.glance.layout.fillMaxSize
+import androidx.glance.layout.fillMaxWidth
+import androidx.glance.layout.height
 import androidx.glance.layout.padding
 import androidx.glance.layout.size
+import androidx.glance.layout.wrapContentWidth
 import androidx.glance.preview.ExperimentalGlancePreviewApi
 import androidx.glance.preview.Preview
 import androidx.glance.state.PreferencesGlanceStateDefinition
@@ -56,10 +63,13 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.student.activity.InterwebsToApplication
+import com.instructure.student.activity.LoginActivity
+import com.instructure.student.widget.glance.Loading
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.glance.WidgetTextStyles
 import com.instructure.student.widget.grades.WidgetCourseItem
+import com.instructure.student.widget.grades.courseselector.CourseSelectorActivity
 import com.jakewharton.threetenabp.AndroidThreeTen
 
 class SingleGradeWidget : GlanceAppWidget() {
@@ -84,14 +94,51 @@ class SingleGradeWidget : GlanceAppWidget() {
             val state =
                 prefs[SingleGradeWidgetReceiver.singleGradeWidgetUiStateKey]?.fromJson<SingleGradeWidgetUiState>()
                     ?: SingleGradeWidgetUiState(WidgetState.Loading)
-            Log.d("ASDF", (state.course == null).toString())
-            Content(state)
+            Content(state, id)
         }
     }
 
     @Composable
-    private fun Content(state: SingleGradeWidgetUiState) {
-        state.course?.let {
+    private fun Content(state: SingleGradeWidgetUiState, glanceId: GlanceId? = null) {
+        Box(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .background(WidgetColors.backgroundLightest)
+        ) {
+            when (state.state) {
+                WidgetState.Loading -> Loading()
+
+                WidgetState.Error -> SingleGradeError(
+                    imageRes = com.instructure.student.R.drawable.ic_panda_notsupported,
+                    titleRes = com.instructure.student.R.string.widgetErrorTitle,
+                    subtitleRes = com.instructure.student.R.string.widgetSingleGradeErrorSubtitle
+                )
+
+                WidgetState.Empty -> {
+                    glanceId?.let {
+                        SingleGradeEmpty(
+                            imageRes = com.instructure.student.R.drawable.ic_smart_search_empty,
+                            titleRes = com.instructure.student.R.string.selectCourse,
+                            it
+                        )
+                    }
+
+                }
+
+                WidgetState.NotLoggedIn -> SingleGradeError(
+                    imageRes = com.instructure.student.R.drawable.ic_smart_search_empty,
+                    titleRes = com.instructure.student.R.string.widgetNotLoggedInTitle,
+                    subtitleRes = com.instructure.student.R.string.widgetSingleGradeNotLoggedInSubtitle
+                )
+
+                WidgetState.Content -> CourseContent(state.course)
+            }
+        }
+    }
+
+    @Composable
+    private fun CourseContent(courseItem: WidgetCourseItem?) {
+        courseItem?.let {
             Box(
                 modifier = GlanceModifier
                     .fillMaxSize()
@@ -115,13 +162,21 @@ class SingleGradeWidget : GlanceAppWidget() {
         }
     }
 
+    private fun getConfigurationIntent(glanceId: GlanceId): Intent {
+        val widgetId = GlanceAppWidgetManager(ContextKeeper.appContext).getAppWidgetId(glanceId)
+        return Intent(ContextKeeper.appContext, CourseSelectorActivity::class.java).apply {
+            putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId)
+        }
+    }
+
     @Composable
     private fun NarrowContent(courseItem: WidgetCourseItem) {
         Column(
-            modifier = GlanceModifier.fillMaxSize().padding(top = 12.dp, bottom = 12.dp, start = 4.dp, end = 4.dp),
+            modifier = GlanceModifier.fillMaxSize()
+                .padding(top = 12.dp, bottom = 12.dp, start = 4.dp, end = 4.dp),
             horizontalAlignment = Alignment.Horizontal.CenterHorizontally
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.Vertical.CenterVertically
             ) {
                 Image(
@@ -159,16 +214,17 @@ class SingleGradeWidget : GlanceAppWidget() {
     @Composable
     private fun WideContent(courseItem: WidgetCourseItem) {
         Column(
-            modifier = GlanceModifier.fillMaxSize().padding(top = 12.dp, bottom = 18.dp, start = 8.dp, end = 8.dp),
+            modifier = GlanceModifier.fillMaxSize()
+                .padding(top = 12.dp, bottom = 18.dp, start = 8.dp, end = 8.dp),
             horizontalAlignment = Alignment.Horizontal.Start
         ) {
-            Row (
+            Row(
                 verticalAlignment = Alignment.Vertical.CenterVertically
             ) {
                 Image(
                     modifier = GlanceModifier.size(24.dp),
                     provider = ImageProvider(R.drawable.ic_canvas_logo),
-                    contentDescription = LocalContext.current.getString(R.string.locked)
+                    contentDescription = "",
                 )
 
                 Text(
@@ -193,6 +249,84 @@ class SingleGradeWidget : GlanceAppWidget() {
                 maxLines = 2
             )
             GradeLayout(courseItem)
+        }
+    }
+
+    @Composable
+    fun SingleGradeError(
+        @DrawableRes imageRes: Int,
+        @StringRes titleRes: Int,
+        @StringRes subtitleRes: Int,
+    ) {
+        Column(
+            modifier = GlanceModifier
+                .fillMaxSize().clickable(
+                    actionStartActivity(
+                        Intent(ContextKeeper.appContext, LoginActivity::class.java)
+                    )
+                )
+                .padding(vertical = 16.dp, horizontal = 16.dp),
+            verticalAlignment = Alignment.Vertical.CenterVertically,
+            horizontalAlignment = Alignment.Horizontal.Start,
+        ) {
+            Image(
+                provider = ImageProvider(imageRes),
+                contentDescription = null,
+                modifier = GlanceModifier.wrapContentWidth().defaultWeight()
+            )
+            Spacer(modifier = GlanceModifier.height(4.dp))
+            Text(
+                text = LocalContext.current.getString(titleRes),
+                style = WidgetTextStyles.mediumDarkest.copy(
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Left
+                ),
+                modifier = GlanceModifier.fillMaxWidth()
+            )
+            Spacer(modifier = GlanceModifier.height(4.dp))
+            Text(
+                text = LocalContext.current.getString(subtitleRes),
+                style = WidgetTextStyles.normalDark.copy(
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Left
+                ),
+                modifier = GlanceModifier.fillMaxWidth()
+            )
+        }
+    }
+
+    @Composable
+    fun SingleGradeEmpty(
+        @DrawableRes imageRes: Int,
+        @StringRes titleRes: Int,
+        glanceId: GlanceId
+    ) {
+        Column(
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .clickable(
+                    actionStartActivity(
+                        getConfigurationIntent(glanceId)
+                    )
+                )
+                .padding(vertical = 16.dp, horizontal = 16.dp),
+            verticalAlignment = Alignment.Vertical.CenterVertically,
+            horizontalAlignment = Alignment.Horizontal.Start,
+        ) {
+            Image(
+                provider = ImageProvider(imageRes),
+                contentDescription = null,
+                modifier = GlanceModifier.wrapContentWidth().defaultWeight()
+            )
+            Spacer(modifier = GlanceModifier.height(16.dp))
+            Text(
+                text = LocalContext.current.getString(titleRes),
+                style = WidgetTextStyles.mediumDarkest.copy(
+                    fontSize = 12.sp,
+                    textAlign = TextAlign.Left
+                ),
+                modifier = GlanceModifier.fillMaxWidth()
+            )
         }
     }
 
@@ -284,6 +418,17 @@ class SingleGradeWidget : GlanceAppWidget() {
         AndroidThreeTen.init(LocalContext.current)
         Content(
             getPreviewSampleData()
+        )
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 140, heightDp = 100)
+    @Composable
+    private fun GradesWidgetErrorPreview() {
+        ContextKeeper.appContext = LocalContext.current
+        AndroidThreeTen.init(LocalContext.current)
+        Content(
+            SingleGradeWidgetUiState(WidgetState.Error)
         )
     }
 }

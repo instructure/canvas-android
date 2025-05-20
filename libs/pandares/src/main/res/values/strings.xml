@@ -2076,5 +2076,10 @@
     <string name="widgetToDoEmptySubtitle">Looks like you\'re free for the next 4 weeks. Do you want to add some to-dos?</string>
     <string name="widgetNotLoggedInTitle">Let\'s Get You Logged In!</string>
     <string name="widgetToDoNotLoggedInSubtitle">To see your to-dos, please log in to your account in the app. It\'ll just take a sec!</string>
+    <string name="widgetGradesErrorSubtitle">We\'re having trouble showing your grades right now. Please try again in a bit or head to the app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">To see your grades, please log in to your account in the app. It\'ll just take a sec!</string>
+    <string name="widgetSingleGradeErrorSubtitle">We\'re having trouble showing your grades right now.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
     <string name="selectCourse">Select Course</string>
+    <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
 </resources>

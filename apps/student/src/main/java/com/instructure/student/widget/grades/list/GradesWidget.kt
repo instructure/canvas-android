@@ -18,6 +18,7 @@
 package com.instructure.student.widget.grades.list
 
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
@@ -36,7 +37,7 @@ import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
 import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.lazy.LazyColumn
-import androidx.glance.appwidget.lazy.itemsIndexed
+import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.currentState
@@ -57,6 +58,9 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.student.activity.InterwebsToApplication
+import com.instructure.student.activity.LoginActivity
+import com.instructure.student.widget.glance.Error
+import com.instructure.student.widget.glance.Loading
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.glance.WidgetTextStyles
@@ -96,35 +100,60 @@ class GradesWidget : GlanceAppWidget() {
                 .fillMaxSize()
                 .background(WidgetColors.backgroundLightest)
         ) {
-            LazyColumn(
-                modifier = GlanceModifier.fillMaxSize()
-            ) {
-                itemsIndexed(items = state.courses) { index, item ->
-                    Row(
-                        modifier = GlanceModifier.fillMaxSize()
-                            .padding(8.dp, 8.dp)
-                            .clickable(
-                                actionStartActivity(
-                                    InterwebsToApplication.createIntent(
-                                        ContextKeeper.appContext,
-                                        Uri.parse(item.url)
-                                    )
-                                )
-                            ),
-                        verticalAlignment = Alignment.Vertical.CenterVertically
-                    ) {
-                        Text(
-                            modifier = GlanceModifier.defaultWeight().padding(end = 8.dp),
-                            text = if (LocalSize.current.width < WIDE.width) item.courseCode else item.name,
-                            style = WidgetTextStyles.mediumDarkest.copy(
-                                color = androidx.glance.color.ColorProvider(
-                                    Color(item.courseColorLight),
-                                    Color(item.courseColorDark)
+            when (state.state) {
+                WidgetState.Loading -> Loading()
+
+                WidgetState.Error, WidgetState.Empty -> ClickHandlerBox {
+                    Error(
+                        imageRes = com.instructure.student.R.drawable.ic_panda_notsupported,
+                        titleRes = com.instructure.student.R.string.widgetErrorTitle,
+                        subtitleRes = com.instructure.student.R.string.widgetGradesErrorSubtitle
+                    )
+                }
+
+                WidgetState.NotLoggedIn -> ClickHandlerBox {
+                    Error(
+                        imageRes = com.instructure.student.R.drawable.ic_smart_search_empty,
+                        titleRes = com.instructure.student.R.string.widgetNotLoggedInTitle,
+                        subtitleRes = com.instructure.student.R.string.widgetGradesNotLoggedInSubtitle
+                    )
+                }
+
+                WidgetState.Content -> CourseList(state.courses)
+            }
+        }
+    }
+
+    @Composable
+    private fun CourseList(courses: List<WidgetCourseItem>) {
+        LazyColumn(
+            modifier = GlanceModifier.fillMaxSize()
+        ) {
+            items(courses) { item ->
+                Row(
+                    modifier = GlanceModifier.fillMaxSize()
+                        .padding(8.dp, 8.dp)
+                        .clickable(
+                            actionStartActivity(
+                                InterwebsToApplication.createIntent(
+                                    ContextKeeper.appContext,
+                                    Uri.parse(item.url)
                                 )
                             )
+                        ),
+                    verticalAlignment = Alignment.Vertical.CenterVertically
+                ) {
+                    Text(
+                        modifier = GlanceModifier.defaultWeight().padding(end = 8.dp),
+                        text = if (LocalSize.current.width < WIDE.width) item.courseCode else item.name,
+                        style = WidgetTextStyles.mediumDarkest.copy(
+                            color = androidx.glance.color.ColorProvider(
+                                Color(item.courseColorLight),
+                                Color(item.courseColorDark)
+                            )
                         )
-                        GradeLayout(item)
-                    }
+                    )
+                    GradeLayout(item)
                 }
             }
         }
@@ -143,31 +172,6 @@ class GradesWidget : GlanceAppWidget() {
             } else {
                 TextLabel(label = it, modifier = modifier)
             }
-        }
-    }
-
-    @Composable
-    private fun testGrade(index: Int, modifier: GlanceModifier) {
-        when (index) {
-            0 -> RatioLabel(81, 100)
-            1 -> TextLabel("Good", modifier = modifier)
-            2 -> TextLabel("No Grades", WidgetColors.textDark, FontWeight.Normal, modifier)
-            3 -> LockIcon()
-            else -> TextLabel("72%", modifier = modifier)
-        }
-    }
-
-    @Composable
-    private fun RatioLabel(points: Int, max: Int) {
-        Row {
-            Text(
-                text = points.toString(),
-                style = WidgetTextStyles.mediumDarkest
-            )
-            Text(
-                text = " / $max",
-                style = WidgetTextStyles.normalDark
-            )
         }
     }
 
@@ -207,6 +211,21 @@ class GradesWidget : GlanceAppWidget() {
             provider = ImageProvider(R.drawable.ic_lock),
             contentDescription = LocalContext.current.getString(R.string.locked),
             colorFilter = ColorFilter.tint(WidgetColors.textDark)
+        )
+    }
+
+    @Composable
+    private fun ClickHandlerBox(
+        modifier: GlanceModifier = GlanceModifier,
+        content: @Composable () -> Unit
+    ) {
+        Box(
+            modifier = modifier.clickable(
+                actionStartActivity(
+                    Intent(ContextKeeper.appContext, LoginActivity::class.java)
+                )
+            ),
+            content = content
         )
     }
 
@@ -280,6 +299,17 @@ class GradesWidget : GlanceAppWidget() {
         AndroidThreeTen.init(LocalContext.current)
         Content(
             getPreviewSampleData()
+        )
+    }
+
+    @OptIn(ExperimentalGlancePreviewApi::class)
+    @Preview(widthDp = 250, heightDp = 200)
+    @Composable
+    private fun GradesWidgetErrorPreview() {
+        ContextKeeper.appContext = LocalContext.current
+        AndroidThreeTen.init(LocalContext.current)
+        Content(
+            GradesWidgetUiState(WidgetState.Error)
         )
     }
 }

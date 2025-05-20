@@ -255,6 +255,7 @@
         <activity
             android:name=".widget.grades.courseselector.CourseSelectorActivity"
             android:theme="@style/CanvasMaterialTheme_Default"
+            android:excludeFromRecents="true"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />

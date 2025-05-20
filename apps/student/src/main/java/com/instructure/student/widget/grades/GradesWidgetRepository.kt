@@ -34,8 +34,11 @@ class GradesWidgetRepository(
             .depaginate { nextUrl -> coursesApi.next(nextUrl, restParams) }
             .dataOrNull.orEmpty()
 
-        return courses
-            .filter { it.isFavorite && it.isCurrentEnrolment() && !it.isInvited() }
-            .ifEmpty { courses }
+        val validCourses = courses
+            .filter { it.isCurrentEnrolment() && !it.isInvited() }
+
+        return validCourses
+            .filter { it.isFavorite }
+            .ifEmpty { validCourses }
     }
 }
