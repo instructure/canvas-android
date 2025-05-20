@@ -291,7 +291,7 @@
     <string name="Todo">Lista de Tarefas</string>
     <string name="todoFilter">Filtrar cursos</string>
     <string name="filterByEllipsis">Filtrar por...</string>
-    <string name="favoritedCoursesLabel">Cursos Favoritos</string>
+    <string name="favoriteCoursesLabel">Cursos Favoritos</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">Evento foi excluído com sucesso</string>
     <string name="timeIconDescription">Ícone de tempo</string>

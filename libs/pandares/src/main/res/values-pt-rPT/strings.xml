@@ -291,7 +291,7 @@
     <string name="Todo">A Fazer</string>
     <string name="todoFilter">Filtrar Disciplinas</string>
     <string name="filterByEllipsis">Filtrar por&#8230;</string>
-    <string name="favoritedCoursesLabel">Disciplinas Favoritas</string>
+    <string name="favoriteCoursesLabel">Disciplinas Favoritas</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">O Evento foi apagado com sucesso</string>
     <string name="timeIconDescription">Ícone Hora</string>

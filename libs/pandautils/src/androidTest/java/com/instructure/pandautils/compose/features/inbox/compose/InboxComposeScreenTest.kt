@@ -180,10 +180,10 @@ class InboxComposeScreenTest {
             .assertIsDisplayed()
             .assertHasClickAction()
 
-        composeTestRule.onNode(hasText("r2"))
+        composeTestRule.onNode(hasText("r2"), true)
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+        composeTestRule.onNode(hasTestTag("removeButton"), true)
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -285,10 +285,10 @@ class InboxComposeScreenTest {
             .assertIsDisplayed()
             .assert(isNotEnabled())
 
-        composeTestRule.onNode(hasText("r2"))
+        composeTestRule.onNode(hasText("r2"), true)
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+        composeTestRule.onNode(hasTestTag("removeButton"), true)
             .assertIsDisplayed()
             .assert(isNotEnabled())
 
@@ -354,7 +354,7 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("r2"))
             .assertIsNotDisplayed()
 
-        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+        composeTestRule.onNode(hasTestTag("removeButton"))
             .assertIsNotDisplayed()
 
         composeTestRule.onNode(hasText("Send individual message to each recipient"))

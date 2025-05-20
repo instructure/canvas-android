@@ -291,7 +291,7 @@
     <string name="Todo">Verkefni</string>
     <string name="todoFilter">Sía námskeið</string>
     <string name="filterByEllipsis">Sía eftir&#8230;</string>
-    <string name="favoritedCoursesLabel">Uppáhalds námskeið</string>
+    <string name="favoriteCoursesLabel">Uppáhalds námskeið</string>
     <string name="Event">Viðburður</string>
     <string name="eventSuccessfulDeletion">Viðburði var eytt</string>
     <string name="timeIconDescription">Tímatákn</string>

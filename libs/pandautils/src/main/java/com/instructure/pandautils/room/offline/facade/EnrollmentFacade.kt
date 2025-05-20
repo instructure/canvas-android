@@ -17,8 +17,6 @@
 
 package com.instructure.pandautils.room.offline.facade
 
-import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.pandautils.room.offline.daos.EnrollmentDao
 import com.instructure.pandautils.room.offline.daos.GradesDao
@@ -57,6 +55,21 @@ class EnrollmentFacade(
 
     suspend fun getEnrollmentsByCourseId(id: Long): List<Enrollment> {
         val enrollmentEntities = enrollmentDao.findByCourseId(id)
+        return enrollmentEntities.map { enrollmentEntity ->
+            val gradesEntity = gradesDao.findByEnrollmentId(enrollmentEntity.id)
+            val observedUserEntity = enrollmentEntity.observedUserId?.let { userDao.findById(it) }
+            val userEntity = userDao.findById(enrollmentEntity.userId)
+
+            enrollmentEntity.toApiModel(
+                grades = gradesEntity?.toApiModel(),
+                observedUser = observedUserEntity?.toApiModel(),
+                user = userEntity?.toApiModel()
+            )
+        }
+    }
+
+    suspend fun getEnrollmentsForUserByCourseId(courseId: Long, userId: Long): List<Enrollment> {
+        val enrollmentEntities = enrollmentDao.findByCourseIdAndUserId(courseId, userId)
         return enrollmentEntities.map { enrollmentEntity ->
             val gradesEntity = gradesDao.findByEnrollmentId(enrollmentEntity.id)
             val observedUserEntity = enrollmentEntity.observedUserId?.let { userDao.findById(it) }

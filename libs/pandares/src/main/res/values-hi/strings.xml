@@ -291,7 +291,7 @@
     <string name="Todo">करने के लिए</string>
     <string name="todoFilter">पाठ्यक्रम फ़िल्टर करें</string>
     <string name="filterByEllipsis">इसके अनुसार फ़िल्टर करें...</string>
-    <string name="favoritedCoursesLabel">पसंदीदा किए गए पाठ्यक्रम</string>
+    <string name="favoriteCoursesLabel">पसंदीदा किए गए पाठ्यक्रम</string>
     <string name="Event">घटना</string>
     <string name="eventSuccessfulDeletion">घटना सफलतापूर्वक मिटाई गई थी</string>
     <string name="timeIconDescription">समय आइकन</string>

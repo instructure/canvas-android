@@ -291,7 +291,7 @@
     <string name="Todo">Harus Dilakukan</string>
     <string name="todoFilter">Filter Kursus</string>
     <string name="filterByEllipsis">Filter menurut...</string>
-    <string name="favoritedCoursesLabel">Kursus Difavoritkan</string>
+    <string name="favoriteCoursesLabel">Kursus Difavoritkan</string>
     <string name="Event">Acara</string>
     <string name="eventSuccessfulDeletion">Acara berhasil dihapus</string>
     <string name="timeIconDescription">Ikon Waktu</string>

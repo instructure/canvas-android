@@ -286,7 +286,7 @@
     <string name="Todo">待办事项</string>
     <string name="todoFilter">过滤课程</string>
     <string name="filterByEllipsis">过滤条件...</string>
-    <string name="favoritedCoursesLabel">收藏的课程</string>
+    <string name="favoriteCoursesLabel">收藏的课程</string>
     <string name="Event">活动</string>
     <string name="eventSuccessfulDeletion">事件已成功删除</string>
     <string name="timeIconDescription">时间图标</string>
