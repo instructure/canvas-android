@@ -28,6 +28,7 @@ import com.instructure.horizon.features.aiassistant.chat.AiAssistChatScreen
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatViewModel
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardScreen
+import com.instructure.horizon.features.aiassistant.main.AiAssistMainScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
 
 @Composable
@@ -37,14 +38,18 @@ fun AiAssistNavigation(
     aiContext: AiAssistContext,
     modifier: Modifier = Modifier
 ) {
+    navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", aiContext)
+
     NavHost(
         navController,
-        startDestination = AiAssistRoute.AiAssistChat.route,
+        startDestination = AiAssistRoute.AiAssistMain.route,
         modifier = modifier
     ) {
+        composable(AiAssistRoute.AiAssistMain.route) {
+            AiAssistMainScreen(navController, aiContext, onDismiss)
+        }
         composable(AiAssistRoute.AiAssistChat.route) {
             val viewModel: AiAssistChatViewModel = hiltViewModel()
-            viewModel.updateContext(aiContext)
             val state by viewModel.uiState.collectAsState()
             AiAssistChatScreen(navController, onDismiss, state)
         }

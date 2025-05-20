@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.aiassistant.navigation
 
 sealed class AiAssistRoute(val route: String) {
+    data object AiAssistMain: AiAssistRoute("main")
     data object AiAssistChat: AiAssistRoute("chat")
     data object AiAssistQuiz: AiAssistRoute("quiz")
     data object AiAssistFlashcard: AiAssistRoute("flashcard")

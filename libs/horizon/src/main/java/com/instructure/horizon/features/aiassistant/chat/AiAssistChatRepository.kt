@@ -20,19 +20,16 @@ import com.instructure.canvasapi2.managers.CedarApiManager
 import com.instructure.canvasapi2.managers.DocumentSource
 import com.instructure.canvasapi2.managers.PineApiManager
 import com.instructure.cedar.type.DocumentBlock
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
 import com.instructure.pine.type.MessageInput
-import com.instructure.pine.type.Role
 import javax.inject.Inject
 import kotlin.io.encoding.Base64
 import kotlin.io.encoding.ExperimentalEncodingApi
 
+@OptIn(ExperimentalEncodingApi::class)
 class AiAssistChatRepository @Inject constructor(
     private val cedarApi: CedarApiManager,
     private val pineApi: PineApiManager
 ) {
-    @OptIn(ExperimentalEncodingApi::class)
     suspend fun answerPrompt(prompt: String, contextString: String? = null): String {
         val document = contextString?.let {
             DocumentBlock(
@@ -44,21 +41,37 @@ class AiAssistChatRepository @Inject constructor(
     }
 
     suspend fun answerPrompt(
-        messages: List<AiAssistMessage>,
+        messages: List<MessageInput>,
         context: Map<String, String>
     ): String {
         return pineApi.queryDocument(
-            messages.map {
-                MessageInput(
-                    role = when (it.role) {
-                        is AiAssistMessageRole.User -> Role.User
-                        is AiAssistMessageRole.Assistant -> Role.Assistant
-                    },
-                    text = it.message
-                )
-            },
+            messages,
             DocumentSource.canvas,
             context
+        )
+    }
+
+    suspend fun summarizePrompt(contextString: String, numberOfParagraphs: Int = 1): String {
+        return cedarApi.summarizeContent(contextString, numberOfParagraphs).joinToString("\n")
+    }
+
+    suspend fun tellMeMorePrompt(contextString: String): String {
+        return cedarApi.answerPrompt(
+            prompt = "Give key takeaways from this content in 3 bullet points; don't use any information besides the provided content.",
+            documentBlock = DocumentBlock(
+                format = "txt",
+                base64Source = Base64.encode(contextString.toByteArray())
+            )
+        )
+    }
+
+    suspend fun generateKeyTakeaways(contextString: String): String {
+        return cedarApi.answerPrompt(
+            prompt = "In 1-2 paragraphs, tell me more about this content.",
+            documentBlock = DocumentBlock(
+                format = "txt",
+                base64Source = Base64.encode(contextString.toByteArray())
+            )
         )
     }
 }

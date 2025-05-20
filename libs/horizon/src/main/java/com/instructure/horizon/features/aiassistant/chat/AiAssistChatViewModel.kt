@@ -16,13 +16,20 @@
  */
 package com.instructure.horizon.features.aiassistant.chat
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
+import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
+import com.instructure.pine.type.MessageInput
+import com.instructure.pine.type.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,19 +38,66 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AiAssistChatViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: AiAssistChatRepository,
+    savedStateHandle: SavedStateHandle
 ): ViewModel() {
+    private val aiContext = savedStateHandle["aiContext"] ?: AiAssistContext(chatHistory = listOf(
+        AiAssistMessage(
+            role = AiAssistMessageRole.User,
+            prompt = AiAssistMessagePrompt.Custom("ASD")
+        )
+    ))
+
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
         onInputTextChanged = ::onTextInputChanged,
         onInputTextSubmitted = ::onTextInputSubmitted,
+        aiContext = aiContext,
     ))
     val uiState = _uiState.asStateFlow()
 
-    fun updateContext(aiContext: AiAssistContext) {
-        _uiState.update {
-            it.copy(
-                aiContext = aiContext,
-            )
+    init {
+        aiContext.chatHistory.lastOrNull()?.let { message ->
+            executeExistingPrompt(message.prompt)
+        }
+    }
+
+    private fun executeExistingPrompt(prompt: AiAssistMessagePrompt) {
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(isLoading = true,)
+            }
+
+            val response = when(prompt) {
+                is AiAssistMessagePrompt.Custom -> {
+                    answerPrompt(prompt.message)
+                }
+                is AiAssistMessagePrompt.Summarize -> {
+                    repository.summarizePrompt(
+                        contextString = aiContext.contextString.orEmpty(),
+                    )
+                }
+                is AiAssistMessagePrompt.TellMeMore -> {
+                    repository.tellMeMorePrompt(
+                        contextString = aiContext.contextString.orEmpty(),
+                    )
+                }
+                is AiAssistMessagePrompt.KeyTakeAway -> {
+                    repository.generateKeyTakeaways(
+                        contextString = aiContext.contextString.orEmpty(),
+                    )
+                }
+            }
+
+            _uiState.update {
+                it.copy(
+                    messages = it.messages + AiAssistMessage(
+                        prompt = AiAssistMessagePrompt.Custom(response),
+                        role = AiAssistMessageRole.Assistant,
+                    ),
+                    isLoading = false
+                )
+            }
         }
     }
 
@@ -62,7 +116,7 @@ class AiAssistChatViewModel @Inject constructor(
                 it.copy(
                     inputTextValue = TextFieldValue(""),
                     messages = it.messages + AiAssistMessage(
-                        message = it.inputTextValue.text,
+                        prompt = AiAssistMessagePrompt.Custom(it.inputTextValue.text),
                         role = AiAssistMessageRole.User,
                     ),
                     isLoading = true,
@@ -74,7 +128,7 @@ class AiAssistChatViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     messages = it.messages + AiAssistMessage(
-                        message = response,
+                        prompt = AiAssistMessagePrompt.Custom(response),
                         role = AiAssistMessageRole.Assistant,
                     ),
                     isLoading = false,
@@ -86,7 +140,16 @@ class AiAssistChatViewModel @Inject constructor(
     private suspend fun answerPrompt(prompt: String): String {
         return if (uiState.value.aiContext.contextSources.isNotEmpty()) {
             repository.answerPrompt(
-                messages = uiState.value.messages,
+                messages = uiState.value.messages.map {
+                    MessageInput(
+                        role = if (it.role is AiAssistMessageRole.User) {
+                            Role.User
+                        } else {
+                            Role.Assistant
+                        },
+                        text = it.prompt.toDisplayText(context)
+                    )
+                },
                 context = uiState.value.aiContext.contextSources
             )
         } else {

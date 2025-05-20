@@ -7,6 +7,7 @@ plugins {
     id("dagger.hilt.android.plugin")
     kotlin("plugin.serialization") version "2.1.20"
 }
+apply(plugin = "kotlin-parcelize")
 
 android {
     namespace = "com.instructure.horizon"

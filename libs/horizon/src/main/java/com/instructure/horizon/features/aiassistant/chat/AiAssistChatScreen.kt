@@ -25,12 +25,14 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistUserTextBlock
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
+import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.molecules.Spinner
 
@@ -47,6 +49,7 @@ fun AiAssistChatScreen(
         onInputTextChanged = { state.onInputTextChanged(it) },
         onInputTextSubmitted = { state.onInputTextSubmitted() },
     ) { modifier ->
+        val context = LocalContext.current
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
@@ -59,13 +62,13 @@ fun AiAssistChatScreen(
                         is AiAssistMessageRole.User -> {
                             Spacer(modifier = Modifier.weight(1f))
                             AiAssistUserTextBlock(
-                                text = message.message,
+                                text = message.prompt.toDisplayText(context),
                                 modifier = Modifier.padding(start = 24.dp)
                             )
                         }
 
                         is AiAssistMessageRole.Assistant -> AiAssistResponseTextBlock(
-                            text = message.message,
+                            text = message.prompt.toDisplayText(context),
                             modifier = Modifier.padding(end = 24.dp)
                         )
                     }
