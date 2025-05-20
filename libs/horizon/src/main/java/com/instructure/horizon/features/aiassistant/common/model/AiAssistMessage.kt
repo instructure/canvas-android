@@ -4,34 +4,44 @@ import android.content.Context
 import android.os.Parcelable
 import com.instructure.horizon.R
 import kotlinx.parcelize.Parcelize
+import kotlinx.serialization.Serializable
 
+@Serializable
 @Parcelize
 data class AiAssistMessage(
     val prompt: AiAssistMessagePrompt,
     val role: AiAssistMessageRole,
 ): Parcelable
 
+@Serializable
 @Parcelize
 sealed class AiAssistMessagePrompt: Parcelable {
 
+    @Serializable
     @Parcelize
     data object Summarize: AiAssistMessagePrompt()
 
+    @Serializable
     @Parcelize
     data object TellMeMore: AiAssistMessagePrompt()
 
+    @Serializable
     @Parcelize
     data object KeyTakeAway: AiAssistMessagePrompt()
 
+    @Serializable
     @Parcelize
     data class Custom(val message: String): AiAssistMessagePrompt()
 }
 
+@Serializable
 @Parcelize
 sealed class AiAssistMessageRole: Parcelable {
+    @Serializable
     @Parcelize
     data object User: AiAssistMessageRole()
 
+    @Serializable
     @Parcelize
     data object Assistant: AiAssistMessageRole()
 }

@@ -16,9 +16,20 @@
  */
 package com.instructure.horizon.features.aiassistant.navigation
 
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import kotlinx.serialization.Serializable
+
+@Serializable
 sealed class AiAssistRoute(val route: String) {
+    @Serializable
     data object AiAssistMain: AiAssistRoute("main")
-    data object AiAssistChat: AiAssistRoute("chat")
-    data object AiAssistQuiz: AiAssistRoute("quiz")
-    data object AiAssistFlashcard: AiAssistRoute("flashcard")
+
+    @Serializable
+    data class AiAssistChat(val aiContext: AiAssistContext): AiAssistRoute("chat")
+
+    @Serializable
+    data class AiAssistQuiz(val aiContext: AiAssistContext): AiAssistRoute("quiz")
+
+    @Serializable
+    data class AiAssistFlashcard(val aiContext: AiAssistContext): AiAssistRoute("flashcard")
 }

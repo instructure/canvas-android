@@ -17,11 +17,11 @@
 package com.instructure.horizon.features.aiassistant.chat
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
@@ -42,24 +42,21 @@ class AiAssistChatViewModel @Inject constructor(
     private val repository: AiAssistChatRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val aiContext = savedStateHandle["aiContext"] ?: AiAssistContext(chatHistory = listOf(
-        AiAssistMessage(
-            role = AiAssistMessageRole.User,
-            prompt = AiAssistMessagePrompt.Custom("ASD")
-        )
-    ))
+//    private val aiContext: AiAssistContext
 
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
         onInputTextChanged = ::onTextInputChanged,
         onInputTextSubmitted = ::onTextInputSubmitted,
-        aiContext = aiContext,
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
-        aiContext.chatHistory.lastOrNull()?.let { message ->
-            executeExistingPrompt(message.prompt)
-        }
+        val result = savedStateHandle.get<String>("aiContext")
+        Log.d("AiAssistChatViewModel", "aiContext: ${result}")
+//        aiContext = savedStateHandle.toRoute<AiAssistRoute.AiAssistChat>().aiContext
+//        aiContext.chatHistory.lastOrNull()?.let { message ->
+//            executeExistingPrompt(message.prompt)
+//        }
     }
 
     private fun executeExistingPrompt(prompt: AiAssistMessagePrompt) {
@@ -74,17 +71,17 @@ class AiAssistChatViewModel @Inject constructor(
                 }
                 is AiAssistMessagePrompt.Summarize -> {
                     repository.summarizePrompt(
-                        contextString = aiContext.contextString.orEmpty(),
+                        contextString = uiState.value.aiContext.contextString.orEmpty(),
                     )
                 }
                 is AiAssistMessagePrompt.TellMeMore -> {
                     repository.tellMeMorePrompt(
-                        contextString = aiContext.contextString.orEmpty(),
+                        contextString = uiState.value.aiContext.contextString.orEmpty(),
                     )
                 }
                 is AiAssistMessagePrompt.KeyTakeAway -> {
                     repository.generateKeyTakeaways(
-                        contextString = aiContext.contextString.orEmpty(),
+                        contextString = uiState.value.aiContext.contextString.orEmpty(),
                     )
                 }
             }

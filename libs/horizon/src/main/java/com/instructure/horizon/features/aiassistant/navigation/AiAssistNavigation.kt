@@ -16,12 +16,15 @@
  */
 package com.instructure.horizon.features.aiassistant.navigation
 
+import android.net.Uri
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatScreen
@@ -30,6 +33,8 @@ import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardScreen
 import com.instructure.horizon.features.aiassistant.main.AiAssistMainScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
+import kotlinx.serialization.json.Json
+import kotlin.reflect.typeOf
 
 @Composable
 fun AiAssistNavigation(
@@ -38,8 +43,6 @@ fun AiAssistNavigation(
     aiContext: AiAssistContext,
     modifier: Modifier = Modifier
 ) {
-    navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", aiContext)
-
     NavHost(
         navController,
         startDestination = AiAssistRoute.AiAssistMain.route,
@@ -48,18 +51,46 @@ fun AiAssistNavigation(
         composable(AiAssistRoute.AiAssistMain.route) {
             AiAssistMainScreen(navController, aiContext, onDismiss)
         }
-        composable(AiAssistRoute.AiAssistChat.route) {
+        composable<AiAssistRoute.AiAssistChat>(
+            typeMap = mapOf(
+                typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
+            )
+        ) {
             val viewModel: AiAssistChatViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
             AiAssistChatScreen(navController, onDismiss, state)
         }
 
-        composable(AiAssistRoute.AiAssistQuiz.route) {
+        composable<AiAssistRoute.AiAssistQuiz>(
+            typeMap = mapOf(
+                typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
+            )
+        ) {
             AiAssistQuizScreen(navController, onDismiss)
         }
 
-        composable(AiAssistRoute.AiAssistFlashcard.route) {
+        composable<AiAssistRoute.AiAssistFlashcard>(
+            typeMap = mapOf(
+                typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
+            )
+        ) {
             AiAssistFlashcardScreen(navController, onDismiss)
         }
     }
+}
+
+inline fun <reified T> navTypeOf(
+    isNullableAllowed: Boolean = false,
+    json: Json = Json,
+) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
+    override fun get(bundle: Bundle, key: String): T? =
+        bundle.getString(key)?.let(json::decodeFromString)
+
+    override fun parseValue(value: String): T = json.decodeFromString(Uri.decode(value))
+
+    override fun serializeAsValue(value: T): String = Uri.encode(json.encodeToString(value))
+
+    override fun put(bundle: Bundle, key: String, value: T) =
+        bundle.putString(key, json.encodeToString(value))
+
 }

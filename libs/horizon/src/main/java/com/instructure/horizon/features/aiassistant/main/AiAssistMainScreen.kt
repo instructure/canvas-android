@@ -59,7 +59,7 @@ fun AiAssistMainScreen(
                 )
             )
             navController.currentBackStackEntry?.savedStateHandle?.set("aiContext", newContext)
-            navController.navigate(AiAssistRoute.AiAssistChat.route)
+            navController.navigate(AiAssistRoute.AiAssistChat(newContext))
        }
     ) { modifier ->
         LazyColumn(
@@ -77,7 +77,7 @@ fun AiAssistMainScreen(
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_QuizMe),
                         onClick = {
-                            navController.navigate(AiAssistRoute.AiAssistQuiz.route)
+                            navController.navigate(AiAssistRoute.AiAssistQuiz(aiContext))
                         }
                     )
                 }
@@ -96,7 +96,7 @@ fun AiAssistMainScreen(
                         text = stringResource(R.string.ai_summarize),
                         onClick = {
                             navController.navigate(
-                                AiAssistRoute.AiAssistChat.route
+                                AiAssistRoute.AiAssistChat(newContext)
                             )
                         }
                     )
@@ -116,7 +116,7 @@ fun AiAssistMainScreen(
                         text = stringResource(R.string.ai_giveMeKeyTakeaways),
                         onClick = {
                             navController.navigate(
-                                AiAssistRoute.AiAssistChat.route
+                                AiAssistRoute.AiAssistChat(newContext)
                             )
                         }
                     )
@@ -136,7 +136,7 @@ fun AiAssistMainScreen(
                         text = stringResource(R.string.ai_tellMeMore),
                         onClick = {
                             navController.navigate(
-                                AiAssistRoute.AiAssistChat.route
+                                AiAssistRoute.AiAssistChat(newContext)
                             )
                         }
                     )
@@ -145,7 +145,7 @@ fun AiAssistMainScreen(
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_generateFlashcards),
                         onClick = {
-                            navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
+                            navController.navigate(AiAssistRoute.AiAssistFlashcard(aiContext))
                         }
                     )
                 }
