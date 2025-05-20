@@ -291,7 +291,7 @@
     <string name="Todo">Hei mahi</string>
     <string name="todoFilter">Ngā Akoranga Tātari</string>
     <string name="filterByEllipsis">Tātari ma....</string>
-    <string name="favoritedCoursesLabel">Ngā akoranga tino pai</string>
+    <string name="favoriteCoursesLabel">Ngā akoranga tino pai</string>
     <string name="Event">Tauwhāinga</string>
     <string name="eventSuccessfulDeletion">I momoho te muku Tauwhāinga</string>
     <string name="timeIconDescription">Te Wā Icon</string>

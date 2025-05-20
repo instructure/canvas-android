@@ -310,7 +310,7 @@
     <string name="Todo">قائمة مهام</string>
     <string name="todoFilter">تصفية المساقات</string>
     <string name="filterByEllipsis">التصفية حسب...</string>
-    <string name="favoritedCoursesLabel">المساقات المفضلة</string>
+    <string name="favoriteCoursesLabel">المساقات المفضلة</string>
     <string name="Event">الحدث</string>
     <string name="eventSuccessfulDeletion">تم حذف الحدث بنجاح</string>
     <string name="timeIconDescription">أيقونة الوقت</string>

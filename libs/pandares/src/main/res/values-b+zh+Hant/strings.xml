@@ -286,7 +286,7 @@
     <string name="Todo">待辦事項</string>
     <string name="todoFilter">篩選課程</string>
     <string name="filterByEllipsis">篩選條件為...</string>
-    <string name="favoritedCoursesLabel">已標記為最喜愛的課程</string>
+    <string name="favoriteCoursesLabel">已標記為最喜愛的課程</string>
     <string name="Event">活動</string>
     <string name="eventSuccessfulDeletion">活動已成功刪除</string>
     <string name="timeIconDescription">時間圖示</string>

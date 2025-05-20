@@ -291,7 +291,7 @@
     <string name="Todo">สิ่งที่ต้องดำเนินการ</string>
     <string name="todoFilter">กรองบทเรียน</string>
     <string name="filterByEllipsis">กรองจาก...</string>
-    <string name="favoritedCoursesLabel">บทเรียนที่เป็นรายการโปรด</string>
+    <string name="favoriteCoursesLabel">บทเรียนที่เป็นรายการโปรด</string>
     <string name="Event">กิจกรรม</string>
     <string name="eventSuccessfulDeletion">ลบกิจกรรมเสร็จสิ้น</string>
     <string name="timeIconDescription">ไอคอนเวลา</string>
