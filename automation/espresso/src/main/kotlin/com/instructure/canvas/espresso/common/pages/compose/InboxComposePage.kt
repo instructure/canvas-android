@@ -76,7 +76,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertRecipientSearchDisplayed() {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Search").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Search among Recipients").assertIsDisplayed()
     }
 
     fun assertIndividualSwitchState(isEnabled: Boolean) {

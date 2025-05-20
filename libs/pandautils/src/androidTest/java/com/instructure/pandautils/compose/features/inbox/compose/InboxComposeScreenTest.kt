@@ -141,7 +141,7 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("To"))
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasText("Search"))
+        composeTestRule.onNode(hasContentDescription("Search among Recipients"), true)
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -172,7 +172,7 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("To"))
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasText("Search"))
+        composeTestRule.onNode(hasContentDescription("Search among Recipients"), true)
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -398,6 +398,7 @@ class InboxComposeScreenTest {
         selectedContext: CanvasContext? = null,
         selectedRecipients: List<Recipient> = emptyList(),
         isInlineSearchEnabled: Boolean = true,
+        inlineSearchContentDescription: String = "Search among Recipients",
         sendIndividual: Boolean = false,
         subject: String = "",
         body: String = "",
@@ -408,7 +409,7 @@ class InboxComposeScreenTest {
         return InboxComposeUiState(
             selectContextUiState = SelectContextUiState(selectedCanvasContext = selectedContext),
             recipientPickerUiState = RecipientPickerUiState(selectedRecipients = selectedRecipients),
-            inlineRecipientSelectorState = MultipleValuesRowState(isSearchEnabled = isInlineSearchEnabled, selectedValues = selectedRecipients),
+            inlineRecipientSelectorState = MultipleValuesRowState(isSearchEnabled = isInlineSearchEnabled, selectedValues = selectedRecipients, searchFieldContentDescription = inlineSearchContentDescription),
             screenOption = InboxComposeScreenOptions.None,
             sendIndividual = sendIndividual,
             subject = TextFieldValue(subject),

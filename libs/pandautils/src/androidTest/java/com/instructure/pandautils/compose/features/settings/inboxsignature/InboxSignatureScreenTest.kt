@@ -20,6 +20,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertIsToggleable
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.text.input.TextFieldValue
@@ -83,6 +84,6 @@ class InboxSignatureScreenTest {
             InboxSignatureScreen(uiState, {}, {})
         }
         composeTestRule.onNodeWithText("UI tests are awesome!").assertDoesNotExist()
-        composeTestRule.onNodeWithText("Write your signature here").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Write your signature here").assertIsDisplayed()
     }
 }
