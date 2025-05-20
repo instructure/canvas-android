@@ -54,24 +54,4 @@ class AiAssistChatRepository @Inject constructor(
     suspend fun summarizePrompt(contextString: String, numberOfParagraphs: Int = 1): String {
         return cedarApi.summarizeContent(contextString, numberOfParagraphs).joinToString("\n")
     }
-
-    suspend fun tellMeMorePrompt(contextString: String): String {
-        return cedarApi.answerPrompt(
-            prompt = "Give key takeaways from this content in 3 bullet points; don't use any information besides the provided content.",
-            documentBlock = DocumentBlock(
-                format = "txt",
-                base64Source = Base64.encode(contextString.toByteArray())
-            )
-        )
-    }
-
-    suspend fun generateKeyTakeaways(contextString: String): String {
-        return cedarApi.answerPrompt(
-            prompt = "In 1-2 paragraphs, tell me more about this content.",
-            documentBlock = DocumentBlock(
-                format = "txt",
-                base64Source = Base64.encode(contextString.toByteArray())
-            )
-        )
-    }
 }

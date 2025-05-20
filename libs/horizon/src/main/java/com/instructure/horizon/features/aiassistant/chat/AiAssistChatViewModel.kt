@@ -75,12 +75,12 @@ class AiAssistChatViewModel @Inject constructor(
                     )
                 }
                 is AiAssistMessagePrompt.TellMeMore -> {
-                    repository.tellMeMorePrompt(
+                    tellMeMorePrompt(
                         contextString = uiState.value.aiContext.contextString.orEmpty(),
                     )
                 }
                 is AiAssistMessagePrompt.KeyTakeAway -> {
-                    repository.generateKeyTakeaways(
+                    generateKeyTakeaways(
                         contextString = uiState.value.aiContext.contextString.orEmpty(),
                     )
                 }
@@ -152,5 +152,19 @@ class AiAssistChatViewModel @Inject constructor(
         } else {
             repository.answerPrompt(prompt, uiState.value.aiContext.contextString)
         }
+    }
+
+    suspend fun tellMeMorePrompt(contextString: String): String {
+        return repository.answerPrompt(
+            prompt = "In 1-2 paragraphs, tell me more about this content.",
+            contextString = contextString
+        )
+    }
+
+    suspend fun generateKeyTakeaways(contextString: String): String {
+        return repository.answerPrompt(
+            prompt = "Give key takeaways from this content in 3 bullet points; don't use any information besides the provided content.",
+            contextString = contextString
+        )
     }
 }
