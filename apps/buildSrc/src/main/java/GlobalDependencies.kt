@@ -128,6 +128,7 @@ object Libs {
     const val VIEW_MODE_SAVED_STATE = "androidx.lifecycle:lifecycle-viewmodel-savedstate:${Versions.LIFECYCLE}"
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
+    const val COMPOSE_NAVIGATION = "androidx.navigation:navigation-compose:2.8.9"
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"
@@ -191,6 +192,8 @@ object Libs {
     const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0-alpha12"
     const val COMPOSE_ADAPTIVE = "androidx.compose.material3.adaptive:adaptive"
     const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
+    const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.2.0"
+    const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.6"
 
     // Glance
     const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"

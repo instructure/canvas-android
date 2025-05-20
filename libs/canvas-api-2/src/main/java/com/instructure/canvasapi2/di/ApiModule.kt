@@ -8,6 +8,7 @@ import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
+import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
@@ -404,6 +405,11 @@ interface CanvasAuthenticatorEntryPoint {
     @Singleton
     fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
         return TokenRefresher(context, loginRouter, eventBus)
+    }
+
+    @Provides
+    fun provideCanvaDocApi(): CanvaDocsAPI.CanvaDocsInterFace {
+        return RestBuilder().build(CanvaDocsAPI.CanvaDocsInterFace::class.java, RestParams())
     }
 
     @Provides

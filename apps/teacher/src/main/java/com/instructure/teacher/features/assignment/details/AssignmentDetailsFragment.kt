@@ -67,7 +67,7 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.router.RouteMatcher

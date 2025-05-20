@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvasapi2.managers
+package com.instructure.canvasapi2.managers.graphql
 
 import com.instructure.canvasapi2.AssignmentDetailsQuery
 import com.instructure.canvasapi2.QLClientConfig

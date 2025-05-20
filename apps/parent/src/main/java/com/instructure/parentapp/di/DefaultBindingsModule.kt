@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
+import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -114,6 +115,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideAppInfo(): PandataInfo.AppKey {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideSpeedGraderRouter(): SpeedGraderContentRouter {
         throw NotImplementedError()
     }
 }

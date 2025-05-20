@@ -37,6 +37,8 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -98,7 +100,7 @@ class SubmissionListFragment : BaseCanvasFragment() {
     private fun handleActions(action: SubmissionListViewModelAction) {
         when (action) {
             is SubmissionListViewModelAction.RouteToSubmission -> {
-                val bundle = SpeedGraderActivity.makeBundle(
+                val bundle = SpeedGraderFragment.makeBundle(
                     action.courseId,
                     action.assignmentId,
                     action.selectedIdx,
