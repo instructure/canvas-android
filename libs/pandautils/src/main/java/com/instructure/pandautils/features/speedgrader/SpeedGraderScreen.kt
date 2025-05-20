@@ -51,6 +51,10 @@ fun SpeedGraderScreen(
         Log.d("SpeedGraderScreen", "viewPagerEnabled: $viewPagerEnabled")
     }
 
+    LaunchedEffect(Unit) {
+        pagerState.scrollToPage(uiState.selectedItem)
+    }
+
     Scaffold(
         topBar = {
             CanvasAppBar(

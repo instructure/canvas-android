@@ -1,5 +1,20 @@
 query SubmissionContent($userId: ID!, $assignmentId: ID!) {
     submission(userId: $userId, assignmentId: $assignmentId) {
+        groupId
+        state
+        userId
+        _id
+        attempt
+        body
+        createdAt
+        id
+        url
+        previewUrl
+        submissionType
+        statusTag
+        status
+        submissionStatus
+        cachedDueDate
         attachment {
             contentType
             mimeClass
@@ -27,19 +42,13 @@ query SubmissionContent($userId: ID!, $assignmentId: ID!) {
             url
             submissionPreviewUrl
         }
-        attempt
-        body
-        createdAt
-        id
-        url
-        previewUrl
-        submissionType
         assignment {
             submissionTypes
             htmlUrl
             anonymousGrading
             id
             courseId
+            dueAt
         }
         mediaObject {
             mediaType
@@ -47,9 +56,11 @@ query SubmissionContent($userId: ID!, $assignmentId: ID!) {
             title
             thumbnailUrl
         }
-        groupId
-        state
-        userId
-        _id
+        user {
+            avatarUrl
+            name
+            shortName
+            sortableName
+        }
     }
 }
