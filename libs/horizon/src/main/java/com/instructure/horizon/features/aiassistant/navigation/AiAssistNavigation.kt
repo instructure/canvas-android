@@ -77,7 +77,7 @@ fun AiAssistNavigation(
 val AiAssistNavigationTypeMap = mapOf(
     typeOf<AiAssistRoute.AiAssistChat>() to navTypeOf<AiAssistRoute.AiAssistChat>(isNullableAllowed = true),
     typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
-    typeOf<LinkedHashMap<String, String>>() to navTypeOf<LinkedHashMap<String, String>>(isNullableAllowed = true),
+    typeOf<Map<String, String>>() to navTypeOf<Map<String, String>>(isNullableAllowed = true),
     typeOf<List<AiAssistMessage>>() to navTypeOf<List<AiAssistMessage>>(isNullableAllowed = true),
 )
 
