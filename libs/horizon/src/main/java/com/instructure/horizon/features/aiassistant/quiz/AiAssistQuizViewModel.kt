@@ -59,7 +59,7 @@ class AiAssistQuizViewModel @Inject constructor(
                 it.copy(isLoading = true)
             }
 
-            val quiz = repository.generateQuiz(
+            val quiz = repository.generateCachedQuiz(
                 contextString = aiContext.contextString.orEmpty()
             )
 
@@ -96,7 +96,7 @@ class AiAssistQuizViewModel @Inject constructor(
                         } else if (index == selectedOptionIndex) {
                             option.copy(status = AiAssistQuizAnswerStatus.INCORRECT)
                         } else {
-                            option//.copy(status = AiAssistQuizAnswerStatus.INCORRECT)
+                            option
                         }
                     }
                 ),

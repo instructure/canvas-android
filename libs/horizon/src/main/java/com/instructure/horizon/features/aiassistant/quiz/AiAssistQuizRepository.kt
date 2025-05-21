@@ -28,4 +28,20 @@ class AiAssistQuizRepository @Inject constructor(
             contextString
         ).first()
     }
+
+    private val quizCacheSize: Int = 15
+    private var quizCache: MutableList<GeneratedQuiz> = mutableListOf()
+
+    suspend fun generateCachedQuiz(contextString: String): GeneratedQuiz {
+        if (quizCache.isEmpty()){
+            quizCache.addAll(
+                cedarApi.generateQuiz(
+                    contextString,
+                    numberOfQuestions = quizCacheSize
+                )
+            )
+        }
+
+        return quizCache.removeAt(0)
+    }
 }
