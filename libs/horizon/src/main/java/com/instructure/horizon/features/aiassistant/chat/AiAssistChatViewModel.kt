@@ -21,11 +21,13 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import androidx.navigation.toRoute
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
 import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
+import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigationTypeMap
+import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 import com.instructure.pine.type.MessageInput
 import com.instructure.pine.type.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +36,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.serialization.json.Json
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,7 +44,7 @@ class AiAssistChatViewModel @Inject constructor(
     private val repository: AiAssistChatRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val aiContext = Json.decodeFromString<AiAssistContext>(savedStateHandle.get<String>("aiContext").orEmpty())
+    private val aiContext = savedStateHandle.toRoute<AiAssistRoute.AiAssistChat>(AiAssistNavigationTypeMap).aiContext
 
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
         onInputTextChanged = ::onTextInputChanged,

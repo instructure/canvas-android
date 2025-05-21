@@ -30,6 +30,7 @@ import androidx.navigation.compose.composable
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatScreen
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatViewModel
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardScreen
 import com.instructure.horizon.features.aiassistant.main.AiAssistMainScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
@@ -52,9 +53,7 @@ fun AiAssistNavigation(
             AiAssistMainScreen(navController, aiContext, onDismiss)
         }
         composable<AiAssistRoute.AiAssistChat>(
-            typeMap = mapOf(
-                typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
-            )
+            typeMap = AiAssistNavigationTypeMap
         ) {
             val viewModel: AiAssistChatViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
@@ -62,24 +61,27 @@ fun AiAssistNavigation(
         }
 
         composable<AiAssistRoute.AiAssistQuiz>(
-            typeMap = mapOf(
-                typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
-            )
+            typeMap = AiAssistNavigationTypeMap
         ) {
             AiAssistQuizScreen(navController, onDismiss)
         }
 
         composable<AiAssistRoute.AiAssistFlashcard>(
-            typeMap = mapOf(
-                typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
-            )
+            typeMap = AiAssistNavigationTypeMap
         ) {
             AiAssistFlashcardScreen(navController, onDismiss)
         }
     }
 }
 
-inline fun <reified T> navTypeOf(
+val AiAssistNavigationTypeMap = mapOf(
+    typeOf<AiAssistRoute.AiAssistChat>() to navTypeOf<AiAssistRoute.AiAssistChat>(isNullableAllowed = true),
+    typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
+    typeOf<LinkedHashMap<String, String>>() to navTypeOf<LinkedHashMap<String, String>>(isNullableAllowed = true),
+    typeOf<List<AiAssistMessage>>() to navTypeOf<List<AiAssistMessage>>(isNullableAllowed = true),
+)
+
+private inline fun <reified T> navTypeOf(
     isNullableAllowed: Boolean = false,
     json: Json = Json,
 ) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
