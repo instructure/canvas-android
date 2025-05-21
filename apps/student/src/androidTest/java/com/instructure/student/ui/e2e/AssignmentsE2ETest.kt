@@ -1013,23 +1013,31 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on '${passFailAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${passFailAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(passFailAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding letter grade is displayed on it's details page and the score is not displayed.")
         assignmentDetailsPage.assertGradeDisplayed("Incomplete")
         assignmentDetailsPage.assertScoreNotDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on '${gpaScaleAssignment.name}' assignment and assert that the corresponding letter grade is displayed on it's details page. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${gpaScaleAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(gpaScaleAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding letter grade is displayed on it's details page and the score is not displayed.")
         assignmentDetailsPage.assertGradeDisplayed("F")
         assignmentDetailsPage.assertScoreNotDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(PREPARATION_TAG, "Update ${course.name} course's settings: Disable restriction for quantitative data.")
+        Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Disable restriction for quantitative data.")
         restrictQuantitativeDataMap["restrict_quantitative_data"] = false
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
-        Log.d(STEP_TAG, "Refresh the Assignment List Page. Assert that all the different types of assignments' grades" +
+        Log.d(ASSERTION_TAG, "Refresh the Assignment List Page. Assert that all the different types of assignments' grades" +
                 "has been shown as their original grade types, since the restriction has been turned off.")
         assignmentListPage.refreshAssignmentList()
         assignmentListPage.assertHasAssignment(pointsTextAssignment, "12/15")
@@ -1038,42 +1046,62 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
         assignmentListPage.assertHasAssignment(gpaScaleAssignment, "3.7/15 (F)")
 
-        Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(pointsTextAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding score is displayed on it's details page.")
         assignmentDetailsPage.assertScoreDisplayed("12")
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on '${percentageAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${percentageAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(percentageAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding score and grade is displayed on it's details page.")
         assignmentDetailsPage.assertScoreDisplayed("10")
         assignmentDetailsPage.assertGradeDisplayed("66.67%")
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on '${letterGradeAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${letterGradeAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(letterGradeAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding score and grade is displayed on it's details page.")
         assignmentDetailsPage.assertScoreDisplayed("11.4")
         assignmentDetailsPage.assertGradeDisplayed("C")
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on '${passFailAssignment.name}' assignment and assert that the corresponding grade is displayed on it's details page, and no score displayed since it's a pass/fail assignment. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${passFailAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(passFailAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding grade is displayed on it's details page, and no score displayed since it's a pass/fail assignment.")
         assignmentDetailsPage.assertGradeDisplayed("Incomplete")
         assignmentDetailsPage.assertScoreNotDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on '${gpaScaleAssignment.name}' assignment and assert that the corresponding grade and score is displayed on it's details page. Navigate back to Assignment List Page.")
+        Log.d(STEP_TAG, "Click on '${gpaScaleAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(gpaScaleAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding score and grade is displayed on it's details page.")
         assignmentDetailsPage.assertScoreDisplayed("3.7")
         assignmentDetailsPage.assertGradeDisplayed("F")
+
+        Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG, "Assert that the course grade is F, as it is converted to letter grade because the disability of the restriction has not propagated yet.")
+        Log.d(ASSERTION_TAG, "Assert that the course grade is F, as it is converted to letter grade because the disability of the restriction has not propagated yet.")
         dashboardPage.assertCourseGrade(course.name, "F")
 
-        Log.d(STEP_TAG, "Refresh the Dashboard page (to allow the disabled restriction to propagate). Assert that the course grade is 49.47%, since we can now show percentage and numeric data.")
+        Log.d(ASSERTION_TAG, "Refresh the Dashboard page (to allow the disabled restriction to propagate). Assert that the course grade is 49.47%, since we can now show percentage and numeric data.")
         dashboardPage.refresh()
         dashboardPage.assertCourseGrade(course.name, "49.47%")
     }
@@ -1103,7 +1131,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         restrictQuantitativeDataMap["restrict_quantitative_data"] = true
         CoursesApi.updateCourseSettings(course.id, restrictQuantitativeDataMap)
 
-        Log.d(STEP_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
+        Log.d(ASSERTION_TAG, "Refresh the Dashboard page. Assert that the course grade is B-, as it is converted to letter grade because of the restriction.")
         retryWithIncreasingDelay(times = 10, maxDelay = 4000) {
             dashboardPage.refresh()
             dashboardPage.assertCourseGrade(course.name, "B-")
@@ -1140,7 +1168,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectGrades()
 
-        Log.d(STEP_TAG, "Assert that the Total Grade is F and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is F and all of the assignment grades are displayed properly (so they have been converted to letter grade).")
         courseGradesPage.assertTotalGrade(ViewMatchers.withText("F"))
         courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "B-")
         courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "D")
@@ -1157,7 +1185,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         courseGradesPage.refresh() //First go to the top of the recycler view
         courseGradesPage.refresh() //Actual refresh
 
-        Log.d(STEP_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is 49.47% and all of the assignment grades are displayed properly. We now show numeric grades because restriction to quantitative data has been disabled.")
         courseGradesPage.assertTotalGrade(ViewMatchers.withText("49.47%"))
         courseGradesPage.assertAssignmentDisplayed(pointsTextAssignment.name, "12/15")
         courseGradesPage.assertAssignmentDisplayed(percentageAssignment.name, "66.67%")
