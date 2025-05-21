@@ -291,7 +291,7 @@
     <string name="Todo">To-do lijst</string>
     <string name="todoFilter">Cursussen filteren</string>
     <string name="filterByEllipsis">Filteren op...</string>
-    <string name="favoritedCoursesLabel">Favoriete cursussen</string>
+    <string name="favoriteCoursesLabel">Favoriete cursussen</string>
     <string name="Event">Gebeurtenis</string>
     <string name="eventSuccessfulDeletion">Evenement was succesvol verwijderd</string>
     <string name="timeIconDescription">Tijdpictogram</string>

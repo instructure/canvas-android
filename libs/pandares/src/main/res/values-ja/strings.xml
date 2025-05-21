@@ -286,7 +286,7 @@
     <string name="Todo">タスク</string>
     <string name="todoFilter">コースをフィルタする</string>
     <string name="filterByEllipsis">フィルタの基準</string>
-    <string name="favoritedCoursesLabel">お気に入りのコース</string>
+    <string name="favoriteCoursesLabel">お気に入りのコース</string>
     <string name="Event">イベント</string>
     <string name="eventSuccessfulDeletion">イベントが消去されました</string>
     <string name="timeIconDescription">時間のアイコン</string>

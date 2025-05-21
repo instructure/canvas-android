@@ -22,14 +22,13 @@ import androidx.compose.ui.test.assertIsOff
 import androidx.compose.ui.test.assertIsOn
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.hasAnyDescendant
-import androidx.compose.ui.test.hasContentDescription
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.isEnabled
 import androidx.compose.ui.test.isNotEnabled
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onAllNodesWithContentDescription
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onFirst
 import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
@@ -66,7 +65,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertRecipientSelected(recipientName: String) {
         composeTestRule.waitForIdle()
-        composeTestRule.onNode(hasTestTag("recipientChip").and(hasAnyDescendant(hasText(recipientName))))
+        composeTestRule.onNode(hasTestTag("recipientChip").and(hasAnyDescendant(hasText(recipientName))), true)
             .assertIsDisplayed()
     }
 
@@ -77,7 +76,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun assertRecipientSearchDisplayed() {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithText("Search").assertIsDisplayed()
+        composeTestRule.onNodeWithContentDescription("Search among Recipients").assertIsDisplayed()
     }
 
     fun assertIndividualSwitchState(isEnabled: Boolean) {
@@ -170,7 +169,7 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun pressRemoveRecipient(index: Int) {
         composeTestRule.waitForIdle()
-        composeTestRule.onAllNodes(hasContentDescription("Remove Recipient"))[index].performClick()
+        composeTestRule.onAllNodes(hasTestTag("removeButton"))[index].performClick()
     }
 
     fun pressIndividualSendSwitch() {
@@ -185,9 +184,8 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
 
     fun removeAllRecipients() {
         composeTestRule.waitForIdle()
-        val nodes = composeTestRule.onAllNodesWithContentDescription("Remove Recipient")
-        if (nodes.fetchSemanticsNodes().isNotEmpty()) {
-            nodes.onFirst().performClick()
+        while (composeTestRule.onAllNodesWithTag("removeButton", true).fetchSemanticsNodes().isNotEmpty()) {
+            composeTestRule.onAllNodesWithTag("removeButton", true).onFirst().performClick()
         }
     }
 }

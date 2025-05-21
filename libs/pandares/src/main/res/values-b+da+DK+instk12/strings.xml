@@ -291,7 +291,7 @@
     <string name="Todo">Opgaveliste</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Sorter efter &#8230;</string>
-    <string name="favoritedCoursesLabel">Foretrukne fag</string>
+    <string name="favoriteCoursesLabel">Foretrukne fag</string>
     <string name="Event">Begivenhed</string>
     <string name="eventSuccessfulDeletion">Begivenheden blev succefuldt slettet</string>
     <string name="timeIconDescription">Tidsikon</string>

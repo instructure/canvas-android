@@ -291,7 +291,7 @@
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Courses</string>
     <string name="filterByEllipsis">Filter by…</string>
-    <string name="favoritedCoursesLabel">Favorited Courses</string>
+    <string name="favoriteCoursesLabel">Favorite Courses</string>
     <string name="Event">Event</string>
     <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
     <string name="timeIconDescription">Time Icon</string>
@@ -2064,4 +2064,6 @@
     <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
     <string name="a11y_searchAssignments">Search Assignments</string>
     <string name="dueAssignmentListItem">Due %1$s</string>
+    <string name="a11y_searchAmongRecipients">Search among Recipients</string>
+    <string name="a11y_recipientIsRemoved">%1$s is removed</string>
 </resources>

@@ -291,7 +291,7 @@
     <string name="Todo">Việc Cần Làm</string>
     <string name="todoFilter">Lọc Khóa Học</string>
     <string name="filterByEllipsis">Lọc theo...</string>
-    <string name="favoritedCoursesLabel">Khóa Học Ưa Thích</string>
+    <string name="favoriteCoursesLabel">Khóa Học Ưa Thích</string>
     <string name="Event">Sự Kiện</string>
     <string name="eventSuccessfulDeletion">Đã xóa thành công sự kiện</string>
     <string name="timeIconDescription">Biểu Tượng Thời Gian</string>
