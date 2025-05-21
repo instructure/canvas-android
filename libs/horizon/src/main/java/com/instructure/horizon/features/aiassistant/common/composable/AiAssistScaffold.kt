@@ -29,9 +29,9 @@ import androidx.navigation.NavHostController
 fun AiAssistScaffold(
     navController: NavHostController,
     onDismiss: () -> Unit,
-    inputTextValue: TextFieldValue,
-    onInputTextChanged: (TextFieldValue) -> Unit,
-    onInputTextSubmitted: () -> Unit,
+    inputTextValue: TextFieldValue? = null,
+    onInputTextChanged: ((TextFieldValue) -> Unit)? = null,
+    onInputTextSubmitted: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable (Modifier) -> Unit,
 ) {
@@ -51,10 +51,12 @@ fun AiAssistScaffold(
 
         content(Modifier.weight(1f))
 
-        AiAssistInput(
-            value = inputTextValue,
-            onValueChange = { onInputTextChanged(it) },
-            onSubmitPressed = { onInputTextSubmitted() },
-        )
+        if (inputTextValue != null && onInputTextChanged != null && onInputTextSubmitted != null) {
+            AiAssistInput(
+                value = inputTextValue,
+                onValueChange = { onInputTextChanged(it) },
+                onSubmitPressed = { onInputTextSubmitted() },
+            )
+        }
     }
 }
