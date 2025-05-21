@@ -69,7 +69,7 @@ class AiAssistQuizViewModel @Inject constructor(
                     quizState = QuizState(
                         question = quiz.question,
                         answerIndex = quiz.result,
-                        options = quiz.options.mapIndexed { index, option ->
+                        options = quiz.options.map { option ->
                             QuizAnswerState(
                                 text = option,
                                 status = AiAssistQuizAnswerStatus.UNSELECTED
