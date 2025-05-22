@@ -213,10 +213,12 @@ class ToDoWidget : GlanceAppWidget() {
         LazyColumn(
             modifier = GlanceModifier.fillMaxSize()
         ) {
-            itemsIndexed(items = daysWithItems) { index, item ->
-                Column {
-                    DayItemContent(item.first, item.second)
-                    if (index != daysWithItems.lastIndex) {
+            daysWithItems.forEachIndexed { dayIndex, dayItem ->
+                itemsIndexed(items = dayItem.second) { index, item ->
+                    ListItemContent(item, index == 0)
+                }
+                if (dayIndex != daysWithItems.lastIndex) {
+                    item {
                         Box(
                             modifier = GlanceModifier.fillMaxWidth()
                                 .height(.5.dp)
@@ -229,81 +231,80 @@ class ToDoWidget : GlanceAppWidget() {
     }
 
     @Composable
-    private fun DayItemContent(day: LocalDate, items: List<WidgetPlannerItem>) {
-        Column(
-            modifier = GlanceModifier
-                .fillMaxWidth()
-                .padding(horizontal = 8.dp)
+    private fun ListItemContent(item: WidgetPlannerItem, showDay: Boolean) {
+        Row(
+            modifier = GlanceModifier.fillMaxWidth()
+                .padding(vertical = 8.dp)
+                .clickable(
+                    actionStartActivity(
+                        InterwebsToApplication.createIntent(
+                            LocalContext.current,
+                            Uri.parse("${ApiPrefs.fullDomain}/calendar/${item.date.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
+                        )
+                    )
+                )
         ) {
-            Row(
-                modifier = GlanceModifier
-                    .padding(vertical = 8.dp)
-                    .clickable(
-                        actionStartActivity(
-                            InterwebsToApplication.createIntent(
-                                LocalContext.current,
-                                Uri.parse("${ApiPrefs.fullDomain}/calendar/${day.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
-                            )
-                        )
-                    )
+            if (showDay) {
+                DayContent(item.date)
+            } else {
+                Spacer(modifier = GlanceModifier.width(40.dp))
+            }
+            Spacer(modifier = GlanceModifier.width(8.dp))
+            PlannerItemContent(item)
+        }
+    }
+
+    @Composable
+    private fun DayContent(day: LocalDate) {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = GlanceModifier.width(40.dp).padding(vertical = 2.dp)
+        ) {
+            val isToday = day == LocalDate.now()
+            val dayTextColor = if (isToday) {
+                ColorProvider(color = Color(color = ThemePrefs.brandColor))
+            } else {
+                WidgetColors.textDark
+            }
+            Text(
+                text = day.dayOfWeek.getDisplayName(
+                    org.threeten.bp.format.TextStyle.SHORT,
+                    Locale.getDefault()
+                ),
+                style = TextStyle(
+                    color = dayTextColor,
+                    fontSize = 12.sp
+                )
+            )
+            Box(
+                contentAlignment = Alignment.Center
             ) {
-                Column(
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    modifier = GlanceModifier.width(40.dp)
-                ) {
-                    val isToday = day == LocalDate.now()
-                    val dayTextColor = if (isToday) {
-                        ColorProvider(color = Color(color = ThemePrefs.brandColor))
-                    } else {
-                        WidgetColors.textDark
-                    }
-                    Text(
-                        text = day.dayOfWeek.getDisplayName(
-                            org.threeten.bp.format.TextStyle.SHORT,
-                            Locale.getDefault()
-                        ),
-                        style = TextStyle(
-                            color = dayTextColor,
-                            fontSize = 12.sp
-                        )
-                    )
-                    Box(
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(
-                            text = day.dayOfMonth.toString(),
-                            style = TextStyle(
-                                color = dayTextColor,
-                                fontSize = 12.sp,
-                                fontWeight = if (isToday) {
-                                    FontWeight.Bold
-                                } else {
-                                    FontWeight.Normal
-                                }
-                            )
-                        )
-                        if (isToday) {
-                            Image(
-                                provider = ImageProvider(resId = R.drawable.ic_circle_stroke),
-                                contentDescription = null,
-                                colorFilter = ColorFilter.tint(colorProvider = dayTextColor),
-                                modifier = GlanceModifier.size(32.dp)
-                            )
+                Text(
+                    text = day.dayOfMonth.toString(),
+                    style = TextStyle(
+                        color = dayTextColor,
+                        fontSize = 12.sp,
+                        fontWeight = if (isToday) {
+                            FontWeight.Bold
+                        } else {
+                            FontWeight.Normal
                         }
-                    }
-                }
-                Spacer(modifier = GlanceModifier.width(8.dp))
-                Column {
-                    items.forEachIndexed { index, item ->
-                        PlannerItemContent(item, index == items.lastIndex)
-                    }
+                    )
+                )
+                if (isToday) {
+                    Image(
+                        provider = ImageProvider(resId = R.drawable.ic_circle_stroke),
+                        contentDescription = null,
+                        colorFilter = ColorFilter.tint(colorProvider = dayTextColor),
+                        modifier = GlanceModifier.size(32.dp)
+                    )
                 }
             }
         }
     }
 
     @Composable
-    private fun PlannerItemContent(plannerItem: WidgetPlannerItem, lastItem: Boolean) {
+    private fun PlannerItemContent(plannerItem: WidgetPlannerItem) {
         Column(
             modifier = GlanceModifier
                 .fillMaxWidth()
@@ -315,7 +316,6 @@ class ToDoWidget : GlanceAppWidget() {
                         )
                     )
                 )
-                .padding(bottom = if (lastItem) 0.dp else 8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically
