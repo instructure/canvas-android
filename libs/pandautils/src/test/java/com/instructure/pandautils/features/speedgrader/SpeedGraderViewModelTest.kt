@@ -92,4 +92,34 @@ class SpeedGraderViewModelTest {
             SpeedGraderViewModel(savedStateHandle, repository)
         }
     }
+
+    @Test
+    fun `init sets selectedItem to 0 when it is missing`() {
+        val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
+        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
+        coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
+        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L, SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)))
+
+        viewModel = SpeedGraderViewModel(savedStateHandle, repository)
+
+        // Assert
+        val uiState = viewModel.uiState.value
+        assertEquals(0, uiState.selectedItem)
+    }
+
+    @Test
+    fun `init sets selectedItem to provided value`() {
+        val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
+        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
+        coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
+        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L, SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L), Const.SELECTED_ITEM to 2))
+
+        viewModel = SpeedGraderViewModel(savedStateHandle, repository)
+
+        // Assert
+        val uiState = viewModel.uiState.value
+        assertEquals(2, uiState.selectedItem)
+    }
 }

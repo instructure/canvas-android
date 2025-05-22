@@ -27,7 +27,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.QuizSubmission
+import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -55,14 +57,30 @@ class SpeedGraderContentViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         val submission = repository.getSubmission(assignmentId, studentId)
+        val user = submission.submission?.user
 
         val content = getContent(submission)
         _uiState.update {
             it.copy(
                 content = content,
                 assigneeId = submission.submission?.groupId?.toLongOrNull()
-                    ?: submission.submission?.userId?.toLongOrNull()
+                    ?: submission.submission?.userId?.toLongOrNull(),
+                userName = user?.name,
+                userUrl = user?.avatarUrl,
+                submissionState = getSubmissionStateLabel(submission.submission?.state),
+                dueDate = submission.submission?.assignment?.dueAt
             )
+        }
+    }
+
+    private fun getSubmissionStateLabel(submissionState: SubmissionState?): SubmissionStateLabel {
+        return when (submissionState) {
+            SubmissionState.submitted -> SubmissionStateLabel.SUBMITTED
+            SubmissionState.unsubmitted -> SubmissionStateLabel.NOT_SUBMITTED
+            SubmissionState.graded -> SubmissionStateLabel.GRADED
+            SubmissionState.ungraded -> SubmissionStateLabel.SUBMITTED
+            SubmissionState.pending_review -> SubmissionStateLabel.SUBMITTED
+            else -> SubmissionStateLabel.NONE
         }
     }
 
@@ -154,6 +172,7 @@ class SpeedGraderContentViewModel @Inject constructor(
 
         var type = attachment.contentType ?: return OtherAttachmentContent(
             Attachment(
+                contentType = attachment.contentType,
                 createdAt = attachment.createdAt,
                 displayName = attachment.displayName,
                 thumbnailUrl = thumbnailUrl,
