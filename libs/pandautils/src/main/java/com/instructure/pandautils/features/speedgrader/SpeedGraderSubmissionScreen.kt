@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.speedgrader
 
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -36,7 +35,8 @@ import com.instructure.pandautils.features.speedgrader.content.SpeedGraderConten
 @Composable
 fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
 
-    val horizontal = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
+    val horizontal =
+        currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
 
     if (horizontal) {
         HorizontalDraggableResizableLayout(
@@ -51,7 +51,13 @@ fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
                 }
             },
             rightContent = {
-                Text(text = "Right Content")
+                NavHost(
+                    navController = rememberNavController(),
+                    modifier = Modifier.fillMaxSize(),
+                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
+                ) {
+                    speedGraderBottomSheet()
+                }
             }
         )
     } else {
@@ -67,7 +73,13 @@ fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
                 }
             },
             bottomContent = {
-                Text(text = "Bottom Content")
+                NavHost(
+                    navController = rememberNavController(),
+                    modifier = Modifier.fillMaxSize(),
+                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
+                ) {
+                    speedGraderBottomSheet()
+                }
             }
         )
     }
@@ -100,5 +112,20 @@ private fun NavGraphBuilder.speedGraderContentScreen() {
         )
     ) {
         SpeedGraderContentScreen()
+    }
+}
+
+private fun NavGraphBuilder.speedGraderBottomSheet() {
+    composable(
+        route = "speedGraderBottomSheet/{assignmentId}/{submissionId}",
+        arguments = listOf(
+            navArgument("assignmentId") { type = NavType.LongType },
+            navArgument("submissionId") { type = NavType.LongType }
+        )
+    ) {
+        SpeedGraderBottomSheet(
+            assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
+            submissionId = it.arguments?.getLong("submissionId") ?: 0L
+        )
     }
 }

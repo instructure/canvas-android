@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
