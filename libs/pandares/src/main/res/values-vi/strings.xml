@@ -291,7 +291,7 @@
     <string name="Todo">Việc Cần Làm</string>
     <string name="todoFilter">Lọc Khóa Học</string>
     <string name="filterByEllipsis">Lọc theo...</string>
-    <string name="favoritedCoursesLabel">Khóa Học Ưa Thích</string>
+    <string name="favoriteCoursesLabel">Khóa Học Ưa Thích</string>
     <string name="Event">Sự Kiện</string>
     <string name="eventSuccessfulDeletion">Đã xóa thành công sự kiện</string>
     <string name="timeIconDescription">Biểu Tượng Thời Gian</string>
@@ -1777,7 +1777,6 @@
     <string name="screenTitleHelp">Trợ Giúp</string>
     <string name="screenTitleManageStudents">Quản Lý Sinh Viên</string>
     <string name="screenTitleSettings">Cài Đặt</string>
-    <string name="navigationDrawerSwitchUsers">Chuyển Người Dùng</string>
     <string name="navigationDrawerLogOut">Đăng Xuất</string>
     <string name="noStudentsError">Không Có Sinh Viên</string>
     <string name="noStudentsErrorDescription">Bạn đang không quan sát bất kỳ sinh viên nào.</string>

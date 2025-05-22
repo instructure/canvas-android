@@ -286,7 +286,7 @@
     <string name="Todo">タスク</string>
     <string name="todoFilter">コースをフィルタする</string>
     <string name="filterByEllipsis">フィルタの基準</string>
-    <string name="favoritedCoursesLabel">お気に入りのコース</string>
+    <string name="favoriteCoursesLabel">お気に入りのコース</string>
     <string name="Event">イベント</string>
     <string name="eventSuccessfulDeletion">イベントが消去されました</string>
     <string name="timeIconDescription">時間のアイコン</string>
@@ -1745,7 +1745,6 @@
     <string name="screenTitleHelp">ヘルプ</string>
     <string name="screenTitleManageStudents">受講者を管理する</string>
     <string name="screenTitleSettings">設定</string>
-    <string name="navigationDrawerSwitchUsers">ユーザーを切り替える</string>
     <string name="navigationDrawerLogOut">ログアウト</string>
     <string name="noStudentsError">受講者はいません</string>
     <string name="noStudentsErrorDescription">どの受講者もオブザーブしていません。</string>

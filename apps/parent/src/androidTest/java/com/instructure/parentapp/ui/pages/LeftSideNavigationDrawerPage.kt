@@ -60,7 +60,7 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
 
     fun clickSwitchUsers() {
         onViewWithId(R.id.nav_view).perform(ViewActions.swipeUp())
-        onViewWithText(R.string.navigationDrawerSwitchUsers).click()
+        onViewWithText(R.string.changeUser).click()
     }
 
     fun assertLogoutDialog() {

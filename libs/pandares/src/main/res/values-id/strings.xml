@@ -291,7 +291,7 @@
     <string name="Todo">Harus Dilakukan</string>
     <string name="todoFilter">Filter Kursus</string>
     <string name="filterByEllipsis">Filter menurut...</string>
-    <string name="favoritedCoursesLabel">Kursus Difavoritkan</string>
+    <string name="favoriteCoursesLabel">Kursus Difavoritkan</string>
     <string name="Event">Acara</string>
     <string name="eventSuccessfulDeletion">Acara berhasil dihapus</string>
     <string name="timeIconDescription">Ikon Waktu</string>
@@ -1779,7 +1779,6 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Kelola Siswa</string>
     <string name="screenTitleSettings">Pengaturan</string>
-    <string name="navigationDrawerSwitchUsers">Ganti Pengguna</string>
     <string name="navigationDrawerLogOut">Logout</string>
     <string name="noStudentsError">Tidak Ada Siswa</string>
     <string name="noStudentsErrorDescription">Anda tidak mengamati siswa manapun.</string>

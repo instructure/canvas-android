@@ -108,7 +108,7 @@ class ModulesE2ETest: StudentTest() {
         dashboardPage.selectCourse(course)
 
         Log.d(STEP_TAG,"Assert that there are no modules displayed yet because there are not published. Assert that the 'Modules' Tab is not displayed as well.")
-        courseBrowserPage.assertTitleCorrect(course)
+        courseBrowserPage.assertInitialBrowserTitle(course)
         courseBrowserPage.assertTabNotDisplayed("Modules")
 
         Log.d(STEP_TAG,"Click on 'Home' label and assert that the empty view is displayed on the Modules Page.")

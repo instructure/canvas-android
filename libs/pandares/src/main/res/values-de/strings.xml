@@ -291,7 +291,7 @@
     <string name="Todo">Zu erledigen</string>
     <string name="todoFilter">Kurse filtern</string>
     <string name="filterByEllipsis">Filtern nach ...</string>
-    <string name="favoritedCoursesLabel">Bevorzugte Kurse</string>
+    <string name="favoriteCoursesLabel">Bevorzugte Kurse</string>
     <string name="Event">Ereignis</string>
     <string name="eventSuccessfulDeletion">Das Ereignis wurde erfolgreich gelöscht</string>
     <string name="timeIconDescription">Zeitsymbol</string>
@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Hilfe</string>
     <string name="screenTitleManageStudents">Studierende verwalten</string>
     <string name="screenTitleSettings">Einstellungen</string>
-    <string name="navigationDrawerSwitchUsers">Benutzer*innen wechseln</string>
     <string name="navigationDrawerLogOut">Abmelden</string>
     <string name="noStudentsError">Keine Studierende</string>
     <string name="noStudentsErrorDescription">Sie beobachten keine Studierende*n.</string>

@@ -47,6 +47,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.isTraversalGroup
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -76,13 +81,15 @@ fun <T> MultipleValuesRow(
             .padding(start = 16.dp, end = 16.dp)
             .defaultMinSize(minHeight = 52.dp)
             .alpha(if (uiState.enabled) 1f else 0.5f)
+            .semantics { isTraversalGroup = true }
     ) {
         Column {
             Text(
                 text = label,
                 color = colorResource(id = R.color.textDarkest),
                 fontWeight = FontWeight.SemiBold,
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.semantics { traversalIndex = -1f }
             )
         }
         if (uiState.isLoading) {
@@ -123,6 +130,11 @@ fun <T> MultipleValuesRow(
                         modifier = Modifier
                             .padding(4.dp)
                             .fillMaxWidth()
+                            .semantics {
+                                uiState.searchFieldContentDescription?.let {
+                                    contentDescription = it
+                                }
+                            }
                     )
                     DropdownMenu(
                         expanded = uiState.isShowResults,
@@ -186,6 +198,7 @@ data class MultipleValuesRowState<T>(
     val selectedValues: List<T> = emptyList(),
     val enabled: Boolean = true,
     val isLoading: Boolean = false,
+    val searchFieldContentDescription: String? = null,
     val isSearchEnabled: Boolean = false,
     val isShowResults: Boolean = false,
     val searchQuery: TextFieldValue = TextFieldValue(""),

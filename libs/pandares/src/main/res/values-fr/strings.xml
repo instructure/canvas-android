@@ -291,7 +291,7 @@
     <string name="Todo">À faire</string>
     <string name="todoFilter">Filtrer les cours</string>
     <string name="filterByEllipsis">Filtrer par ....</string>
-    <string name="favoritedCoursesLabel">Cours favoris</string>
+    <string name="favoriteCoursesLabel">Cours favoris</string>
     <string name="Event">Événement</string>
     <string name="eventSuccessfulDeletion">L\'événement a été supprimé avec succès</string>
     <string name="timeIconDescription">Icône temps</string>
@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Aide</string>
     <string name="screenTitleManageStudents">Gérer les élèves</string>
     <string name="screenTitleSettings">Paramètres</string>
-    <string name="navigationDrawerSwitchUsers">Changer d\'utilisateurs</string>
     <string name="navigationDrawerLogOut">Se déconnecter</string>
     <string name="noStudentsError">Pas d\'étudiants</string>
     <string name="noStudentsErrorDescription">Vous n’observez aucun élève.</string>

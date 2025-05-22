@@ -226,6 +226,12 @@ class CourseBrowserE2ETest : StudentComposeTest() {
         smartSearchPage.assertGroupHeaderDisplayed(SmartSearchContentType.ANNOUNCEMENT)
         smartSearchPage.assertGroupHeaderDisplayed(SmartSearchContentType.ASSIGNMENT)
 
+        Log.d(ASSERTION_TAG, "Assert that all the 4 groups has 1 item and it displays by the counter.")
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.WIKI_PAGE)
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.DISCUSSION_TOPIC)
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.ANNOUNCEMENT)
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.ASSIGNMENT)
+
         Log.d(ASSERTION_TAG, "Assert that all the types of result items are displayed on the Smart Search Result page.")
         smartSearchPage.assertItemDisplayed(testPage.title, "Page")
         smartSearchPage.assertItemDisplayed(testAnnouncement.title, "Announcement")
