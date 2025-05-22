@@ -26,7 +26,6 @@ import org.threeten.bp.OffsetDateTime
 import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
-import org.threeten.bp.format.DateTimeParseException
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.format.DateTimeParseException
@@ -34,6 +33,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration
+import org.threeten.bp.format.DateTimeParseException as ThreeTenDateTimeParseException
 
 fun OffsetDateTime.getShortMonthAndDay(): String {
     // Get year if the year of the due date isn't the current year
@@ -136,7 +136,7 @@ fun Date.formatDayMonthYear(): String {
 fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {
     return try {
         LocalDate.parse(this, formatter)
-    } catch (e: DateTimeParseException) {
+    } catch (e: ThreeTenDateTimeParseException) {
         null
     }
 }
