@@ -55,7 +55,7 @@
             android:id="@+id/switch_users"
             android:contentDescription=""
             android:icon="@drawable/ic_user"
-            android:title="@string/navigationDrawerChangeUser" />
+            android:title="@string/changeUser" />
         <item
             android:id="@+id/log_out"
             android:contentDescription=""
