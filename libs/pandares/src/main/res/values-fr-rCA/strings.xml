@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Aide</string>
     <string name="screenTitleManageStudents">Gestion des participants</string>
     <string name="screenTitleSettings">Paramètres</string>
-    <string name="navigationDrawerSwitchUsers">Changer d’utilisateurs</string>
     <string name="navigationDrawerLogOut">Déconnexion</string>
     <string name="noStudentsError">Aucun étudiant</string>
     <string name="noStudentsErrorDescription">Vous n’observez aucun étudiant.</string>

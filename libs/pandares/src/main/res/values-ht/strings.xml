@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Èd</string>
     <string name="screenTitleManageStudents">Jere Elèv</string>
     <string name="screenTitleSettings">Paramèt</string>
-    <string name="navigationDrawerSwitchUsers">Chanje Itilizatè</string>
     <string name="navigationDrawerLogOut">Dekonekte</string>
     <string name="noStudentsError">Pa gen Elèv</string>
     <string name="noStudentsErrorDescription">Ou pa p obsève okenn elèv.</string>

@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Hilfe</string>
     <string name="screenTitleManageStudents">Studierende verwalten</string>
     <string name="screenTitleSettings">Einstellungen</string>
-    <string name="navigationDrawerSwitchUsers">Benutzer*innen wechseln</string>
     <string name="navigationDrawerLogOut">Abmelden</string>
     <string name="noStudentsError">Keine Studierende</string>
     <string name="noStudentsErrorDescription">Sie beobachten keine Studierende*n.</string>

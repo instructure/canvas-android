@@ -1777,7 +1777,6 @@
     <string name="screenTitleHelp">Hjelp</string>
     <string name="screenTitleManageStudents">Administrer elever</string>
     <string name="screenTitleSettings">Innstillinger</string>
-    <string name="navigationDrawerSwitchUsers">Bytt brukere</string>
     <string name="navigationDrawerLogOut">Logg Ut</string>
     <string name="noStudentsError">Ingen elever</string>
     <string name="noStudentsErrorDescription">Du har ingen elever under observasjon.</string>
