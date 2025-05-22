@@ -23,9 +23,7 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.toJson
-import com.instructure.student.widget.grades.GradesWidgetRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
@@ -39,10 +37,7 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget = GradesWidget()
 
     @Inject
-    lateinit var repository: GradesWidgetRepository
-
-    @Inject
-    lateinit var apiPrefs: ApiPrefs
+    lateinit var updater: GradesWidgetUpdater
 
     private val coroutineScope = MainScope()
 
@@ -51,15 +46,14 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
         coroutineScope.launch(Dispatchers.IO) {
-            val gradesWidgetUpdater = GradesWidgetUpdater(repository, apiPrefs)
             async {
-                gradesWidgetUpdater.uiState.collect {
+                updater.uiState.collect {
                     it.first?.let { glanceId ->
                         setState(context, it.second, glanceId)
                     }
                 }
             }
-            gradesWidgetUpdater.updateData(context, appWidgetIds.toList())
+            updater.updateData(context, appWidgetIds.toList())
         }
     }
 

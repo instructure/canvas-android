@@ -25,10 +25,8 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.util.StudentPrefs
-import com.instructure.student.widget.grades.GradesWidgetRepository
 import com.instructure.student.widget.grades.courseselector.CourseSelectorActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -43,10 +41,7 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
     override val glanceAppWidget = SingleGradeWidget()
 
     @Inject
-    lateinit var repository: GradesWidgetRepository
-
-    @Inject
-    lateinit var apiPrefs: ApiPrefs
+    lateinit var updater: SingleGradeWidgetUpdater
 
     private val coroutineScope = MainScope()
 
@@ -118,13 +113,12 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
         forceNetwork: Boolean = true
     ) {
         coroutineScope.launch(Dispatchers.IO) {
-            val singleGradeWidgetUpdater = SingleGradeWidgetUpdater(repository, apiPrefs)
             async {
-                singleGradeWidgetUpdater.events.collect { action ->
+                updater.events.collect { action ->
                     handleAction(context, action, widgetIds)
                 }
             }
-            singleGradeWidgetUpdater.updateData(context, widgetIds, showLoading, forceNetwork)
+            updater.updateData(context, widgetIds, showLoading, forceNetwork)
         }
     }
 

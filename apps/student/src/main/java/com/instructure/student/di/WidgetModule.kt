@@ -24,6 +24,9 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.widget.WidgetUpdater
+import com.instructure.student.widget.grades.GradesWidgetRepository
+import com.instructure.student.widget.grades.list.GradesWidgetUpdater
+import com.instructure.student.widget.grades.singleGrade.SingleGradeWidgetUpdater
 import com.instructure.student.widget.todo.ToDoWidgetRepository
 import com.instructure.student.widget.todo.ToDoWidgetUpdater
 import dagger.Module
@@ -63,5 +66,28 @@ class WidgetModule {
         apiPrefs: ApiPrefs
     ): ToDoWidgetUpdater {
         return ToDoWidgetUpdater(repository, apiPrefs)
+    }
+
+    @Provides
+    fun provideGradesWidgetRepository(
+        courseApi: CourseAPI.CoursesInterface
+    ): GradesWidgetRepository {
+        return GradesWidgetRepository(courseApi)
+    }
+
+    @Provides
+    fun provideGradesWidgetUpdater(
+        repository: GradesWidgetRepository,
+        apiPrefs: ApiPrefs
+    ): GradesWidgetUpdater {
+        return GradesWidgetUpdater(repository, apiPrefs)
+    }
+
+    @Provides
+    fun provideSingleGradeWidgetUpdater(
+        repository: GradesWidgetRepository,
+        apiPrefs: ApiPrefs
+    ): SingleGradeWidgetUpdater {
+        return SingleGradeWidgetUpdater(repository, apiPrefs)
     }
 }
