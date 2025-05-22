@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.SubmissionContentQuery
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionType
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -82,6 +83,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
         coEvery { submission.submissionType } returns SubmissionType.online_text_entry
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -106,6 +115,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { assignment.submissionTypes } returns listOf(SubmissionType.basic_lti_launch)
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -131,6 +148,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { assignment.htmlUrl } returns htmlUrl
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -156,6 +181,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { assignment.htmlUrl } returns null
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -176,6 +209,13 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.submissionType } returns null
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -196,6 +236,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { assignment.submissionTypes } returns listOf(SubmissionType.on_paper)
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -216,6 +264,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { assignment.submissionTypes } returns listOf(SubmissionType.none)
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -240,6 +296,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
         coEvery { submission.attachments } returns null
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -267,6 +331,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.userId } returns studentId.toString()
         coEvery { assignment.anonymousGrading } returns false
         coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -290,6 +362,13 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.previewUrl } returns previewUrl
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -314,6 +393,13 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.attempt } returns attempt
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -340,6 +426,13 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.submissionType } returns SubmissionType.external_tool
         coEvery { submission.groupId } returns null
         coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -373,6 +466,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.userId } returns studentId.toString()
         coEvery { assignment.courseId } returns courseId.toString()
         coEvery { attachment.submissionPreviewUrl } returns attachmentUrl
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { assignment.dueAt } returns null
 
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
@@ -382,5 +483,131 @@ class SpeedGraderContentViewModelTest {
         val content = viewModel.uiState.value.content as PdfContent
         assertEquals(attachmentUrl, content.url)
         assertEquals(studentId, viewModel.uiState.value.assigneeId)
+    }
+
+    @Test
+    fun `user data maps correctly`() = runTest {
+        val submissionData = mockk<SubmissionContentQuery.Data>()
+        val submission = mockk<SubmissionContentQuery.Submission>()
+
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { submission.assignment } returns null
+        coEvery { submission.submissionType } returns SubmissionType.on_paper
+        coEvery { submission.groupId } returns null
+        coEvery { submissionData.submission } returns submission
+        coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals("Test User", viewModel.uiState.value.userName)
+        assertEquals("https://example.com/avatar.png", viewModel.uiState.value.userUrl)
+    }
+
+    @Test
+    fun `fetchData updates uiState with SUBMITTED state`() = runTest {
+        val submissionData = mockk<SubmissionContentQuery.Data>()
+        val submission = mockk<SubmissionContentQuery.Submission>()
+
+        coEvery { submissionData.submission } returns submission
+        coEvery { submission.state } returns SubmissionState.submitted
+        coEvery { submission.assignment } returns null
+        coEvery { submission.submissionType } returns null
+        coEvery { submission.groupId } returns null
+        coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SubmissionStateLabel.SUBMITTED, viewModel.uiState.value.submissionState)
+    }
+
+    @Test
+    fun `fetchData updates uiState with NOT_SUBMITTED state`() = runTest {
+        val submissionData = mockk<SubmissionContentQuery.Data>()
+        val submission = mockk<SubmissionContentQuery.Submission>()
+
+        coEvery { submissionData.submission } returns submission
+        coEvery { submission.state } returns SubmissionState.unsubmitted
+        coEvery { submission.assignment } returns null
+        coEvery { submission.submissionType } returns null
+        coEvery { submission.groupId } returns null
+        coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SubmissionStateLabel.NOT_SUBMITTED, viewModel.uiState.value.submissionState)
+    }
+
+    @Test
+    fun `fetchData updates uiState with GRADED state`() = runTest {
+        val submissionData = mockk<SubmissionContentQuery.Data>()
+        val submission = mockk<SubmissionContentQuery.Submission>()
+
+        coEvery { submissionData.submission } returns submission
+        coEvery { submission.state } returns SubmissionState.graded
+        coEvery { submission.assignment } returns null
+        coEvery { submission.submissionType } returns null
+        coEvery { submission.groupId } returns null
+        coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SubmissionStateLabel.GRADED, viewModel.uiState.value.submissionState)
+    }
+
+    @Test
+    fun `fetchData updates uiState with NONE state when submission state is null`() = runTest {
+        val submissionData = mockk<SubmissionContentQuery.Data>()
+        val submission = mockk<SubmissionContentQuery.Submission>()
+
+        coEvery { submissionData.submission } returns submission
+        coEvery { submission.state } returns SubmissionState.UNKNOWN__
+        coEvery { submission.assignment } returns null
+        coEvery { submission.submissionType } returns null
+        coEvery { submission.groupId } returns null
+        coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
+        )
+
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SubmissionStateLabel.NONE, viewModel.uiState.value.submissionState)
     }
 }

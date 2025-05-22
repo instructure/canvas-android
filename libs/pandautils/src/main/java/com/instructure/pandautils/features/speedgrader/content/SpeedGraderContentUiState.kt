@@ -18,11 +18,17 @@
 import android.net.Uri
 import android.os.Parcelable
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 data class SpeedGraderContentUiState(
     val content: GradeableContent? = null,
-    val assigneeId: Long? = null
+    val assigneeId: Long? = null,
+    val userName: String? = null,
+    val userUrl: String? = null,
+    val submissionState: SubmissionStateLabel = SubmissionStateLabel.NONE,
+    val dueDate: Date? = null
 )
 
 @Parcelize
