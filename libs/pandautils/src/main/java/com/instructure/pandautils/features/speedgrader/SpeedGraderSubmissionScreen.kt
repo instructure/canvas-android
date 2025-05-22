@@ -16,11 +16,20 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.rememberSplineBasedDecay
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -28,10 +37,12 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
+import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.compose.composables.DraggableResizableLayout
 import com.instructure.pandautils.compose.composables.HorizontalDraggableResizableLayout
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
 
@@ -61,8 +72,38 @@ fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
             }
         )
     } else {
+        val density = LocalDensity.current
+        val defaultDecayAnimationSpec = rememberSplineBasedDecay<Float>()
+        val initialAnchor = AnchorPoints.TOP
+        val velocityThresholdDps = 125.dp
+        val positionalThresholdFraction = 0.5f
+        val snapAnimationSpec = spring<Float>(
+            stiffness = Spring.StiffnessMedium,
+            dampingRatio = Spring.DampingRatioNoBouncy
+        )
+        val confirmValueChange: (AnchorPoints) -> Boolean = { newAnchor ->
+            true
+        }
+
+        val velocityThresholdPx =
+            remember(velocityThresholdDps) { with(density) { velocityThresholdDps.toPx() } }
+
+        val anchoredDraggableState = remember(initialAnchor, confirmValueChange) {
+            AnchoredDraggableState(
+                initialValue = initialAnchor,
+                anchors = DraggableAnchors { },
+                positionalThreshold = { distance -> distance * positionalThresholdFraction },
+                velocityThreshold = { velocityThresholdPx },
+                snapAnimationSpec = snapAnimationSpec,
+                decayAnimationSpec = defaultDecayAnimationSpec,
+                confirmValueChange = confirmValueChange
+            )
+        }
         DraggableResizableLayout(
+            anchoredDraggableState = anchoredDraggableState,
             modifier = Modifier,
+            minTopHeightDp = 64.dp,
+            minBottomHeightDp = 96.dp,
             topContent = {
                 NavHost(
                     navController = rememberNavController(),
@@ -78,7 +119,7 @@ fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
                     modifier = Modifier.fillMaxSize(),
                     startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
                 ) {
-                    speedGraderBottomSheet()
+                    speedGraderBottomSheet(anchoredDraggableState)
                 }
             }
         )
@@ -115,7 +156,8 @@ private fun NavGraphBuilder.speedGraderContentScreen() {
     }
 }
 
-private fun NavGraphBuilder.speedGraderBottomSheet() {
+@OptIn(ExperimentalFoundationApi::class)
+private fun NavGraphBuilder.speedGraderBottomSheet(anchoredDraggableState: AnchoredDraggableState<AnchorPoints>? = null) {
     composable(
         route = "speedGraderBottomSheet/{assignmentId}/{submissionId}",
         arguments = listOf(
@@ -124,6 +166,7 @@ private fun NavGraphBuilder.speedGraderBottomSheet() {
         )
     ) {
         SpeedGraderBottomSheet(
+            anchoredDraggableState = anchoredDraggableState,
             assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
             submissionId = it.arguments?.getLong("submissionId") ?: 0L
         )

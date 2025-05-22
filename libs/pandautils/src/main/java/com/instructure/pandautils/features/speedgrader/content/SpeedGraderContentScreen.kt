@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
@@ -90,6 +91,7 @@ private fun UserHeader(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
+            .requiredHeight(64.dp)
             .fillMaxWidth()
             .padding(start = 22.dp, top = 12.dp, bottom = 12.dp, end = 22.dp)
     ) {

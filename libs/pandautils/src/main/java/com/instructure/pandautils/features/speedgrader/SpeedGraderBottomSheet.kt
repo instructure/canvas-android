@@ -17,22 +17,31 @@
 package com.instructure.pandautils.features.speedgrader
 
 import androidx.annotation.StringRes
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.gestures.AnchoredDraggableState
+import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Column
-import androidx.compose.material3.Tab
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.PrimaryTabRow
+import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -40,18 +49,28 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.features.speedgrader.details.SpeedGraderDetailsScreen
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradeScreen
+import kotlinx.coroutines.launch
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpeedGraderBottomSheet(assignmentId: Long, submissionId: Long) {
+fun SpeedGraderBottomSheet(
+    anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?,
+    assignmentId: Long,
+    submissionId: Long
+) {
 
     val navController = rememberNavController()
     val startDestination = SpeedGraderTab.GRADE
     var selectedTab by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
 
+    val coroutineScope = rememberCoroutineScope()
+    val haptic = LocalHapticFeedback.current
     Column {
         PrimaryTabRow(
+            modifier = Modifier.padding(horizontal = 16.dp),
             selectedTabIndex = selectedTab,
             containerColor = colorResource(R.color.backgroundLightest),
             contentColor = colorResource(R.color.textInfo),
@@ -66,9 +85,21 @@ fun SpeedGraderBottomSheet(assignmentId: Long, submissionId: Long) {
         ) {
             SpeedGraderTab.entries.forEach { tab ->
                 Tab(
-                    text = { Text(stringResource(id = tab.title)) },
+                    text = {
+                        Text(
+                            stringResource(id = tab.title),
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    },
                     selected = selectedTab == tab.ordinal,
                     onClick = {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        if (anchoredDraggableState?.currentValue == AnchorPoints.TOP) {
+                            coroutineScope.launch {
+                                anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
+                            }
+                        }
                         val route = tab.route.replace("{assignmentId}", assignmentId.toString())
                             .replace("{submissionId}", submissionId.toString())
                         navController.navigate(route) {
@@ -132,8 +163,9 @@ enum class SpeedGraderTab(
     ),
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Preview
 @Composable
 private fun SpeedGraderBottomSheetPreview() {
-    SpeedGraderBottomSheet(1L, 1L)
+    SpeedGraderBottomSheet(null, 1L, 1L)
 }
