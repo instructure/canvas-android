@@ -1791,7 +1791,6 @@
     <string name="screenTitleHelp">Cabhair</string>
     <string name="screenTitleManageStudents">Bainistigh Mic Léinn</string>
     <string name="screenTitleSettings">Socruithe</string>
-    <string name="navigationDrawerSwitchUsers">Malartaigh Úsáideoirí</string>
     <string name="navigationDrawerLogOut">Logáil Amach</string>
     <string name="noStudentsError">Níl Mic Léinn Ann</string>
     <string name="noStudentsErrorDescription">Níl tú ag breathnú ar mhac léinn ar bith.</string>

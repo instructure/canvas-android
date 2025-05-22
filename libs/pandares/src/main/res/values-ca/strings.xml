@@ -1777,7 +1777,6 @@
     <string name="screenTitleHelp">Ajuda</string>
     <string name="screenTitleManageStudents">Administra els estudiants</string>
     <string name="screenTitleSettings">Configuració</string>
-    <string name="navigationDrawerSwitchUsers">Canvia els usuaris</string>
     <string name="navigationDrawerLogOut">Tanca la sessió</string>
     <string name="noStudentsError">Cap estudiant</string>
     <string name="noStudentsErrorDescription">No esteu observant cap estudiant.</string>
