@@ -16,6 +16,9 @@
  */
 package com.instructure.pandautils.utils
 
+import android.content.Context
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.pandautils.R
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -24,9 +27,12 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeParseException
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Duration
 
 fun OffsetDateTime.getShortMonthAndDay(): String {
     // Get year if the year of the due date isn't the current year
@@ -86,8 +92,42 @@ fun Date.toLocalTime(): LocalTime {
     return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalTime()
 }
 
-fun Date.toFormattedString(): String = DateFormat.getDateTimeInstance(
-    DateFormat.MEDIUM,
-    DateFormat.SHORT,
-    Locale.getDefault()
-).format(this)
+fun Date.toFormattedString(
+    dateFormat: Int = DateFormat.MEDIUM,
+    timeFormat: Int = DateFormat.SHORT,
+    locale: Locale = Locale.getDefault()
+): String {
+    return DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).format(this)
+}
+
+fun String.formatIsoDuration(context: Context): String {
+    return try {
+        val duration = Duration.parse(this)
+        val hours = duration.inWholeHours.toInt()
+        val minutes = (duration.inWholeMinutes % 60).toInt()
+
+        val parts = mutableListOf<String>()
+        if (hours > 0) parts.add(context.resources.getQuantityString(R.plurals.durationHours, hours, hours))
+        if (minutes > 0) parts.add(context.resources.getQuantityString(R.plurals.durationMins, minutes, minutes))
+
+        if (parts.isEmpty()) "" else parts.joinToString(" and ")
+    } catch (e: DateTimeParseException) {
+        FirebaseCrashlytics.getInstance().recordException(e)
+        ""
+    }
+}
+
+fun Date.formatDayMonth(): String {
+    val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+    return formatter.format(this)
+}
+
+fun Date.format(pattern: String): String {
+    val formatter = SimpleDateFormat(pattern, Locale.getDefault())
+    return formatter.format(this)
+}
+
+fun Date.formatDayMonthYear(): String {
+    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+    return formatter.format(this)
+}

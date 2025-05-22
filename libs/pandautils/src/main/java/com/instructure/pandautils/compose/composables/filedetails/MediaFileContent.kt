@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.compose.composables.filedetails
 
+import android.annotation.SuppressLint
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -40,7 +41,7 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.onClick
 
-@UnstableApi
+@SuppressLint("UnsafeOptInUsageError")
 @Composable
 fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked: (String, String) -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
