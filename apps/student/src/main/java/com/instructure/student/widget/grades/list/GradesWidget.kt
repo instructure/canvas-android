@@ -151,7 +151,8 @@ class GradesWidget : GlanceAppWidget() {
                                 Color(item.courseColorLight),
                                 Color(item.courseColorDark)
                             )
-                        )
+                        ),
+                        maxLines = 2,
                     )
                     GradeLayout(item)
                 }

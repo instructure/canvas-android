@@ -12,7 +12,8 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.widget.grades.singleGrade
+ */
+package com.instructure.student.widget.grades.singleGrade
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -27,13 +28,12 @@ import androidx.glance.state.PreferencesGlanceStateDefinition
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.util.StudentPrefs
-import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.GradesWidgetRepository
 import com.instructure.student.widget.grades.courseselector.CourseSelectorActivity
-import com.instructure.student.widget.grades.toWidgetCourseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -90,83 +90,42 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
         }
     }
 
+    private suspend fun handleAction(context: Context, action: SingleGradeWidgetAction, widgetIds: List<Int>) {
+        when (action) {
+            is SingleGradeWidgetAction.UpdateAllState -> {
+                for (widgetId in widgetIds) {
+                    val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
+                    setState(
+                        context,
+                        action.state,
+                        glanceId
+                    )
+                }
+            }
+
+            is SingleGradeWidgetAction.UpdateState -> {
+                setState(context, action.state, action.glanceId)
+            }
+
+            SingleGradeWidgetAction.UpdateUi -> glanceAppWidget.updateAll(context)
+        }
+    }
+
     private fun updateData(
         context: Context,
         widgetIds: List<Int>,
         showLoading: Boolean = false,
         forceNetwork: Boolean = true
     ) {
-        if (widgetIds.isEmpty()) {
-            return
-        }
         coroutineScope.launch(Dispatchers.IO) {
-            showLoadingIfNeeded(showLoading, context, widgetIds)
-
-            val user = apiPrefs.user
-            if (user == null) {
-                setAllNotLoggedIn(context, widgetIds)
-                return@launch
-            }
-
-            val courses = repository.getCoursesWithGradingScheme(forceNetwork)
-
-            for (widgetId in widgetIds) {
-                val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
-                try {
-                    if (courses.isEmpty()) {
-                        setState(context, SingleGradeWidgetUiState(WidgetState.Error), glanceId)
-                        glanceAppWidget.update(context, glanceId)
-                        continue
-                    }
-                    val courseId = StudentPrefs.getLong(
-                        CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId,
-                        -1
-                    )
-                    val course = courses.find { it.id == courseId }
-                    if (course != null) {
-                        setState(
-                            context,
-                            SingleGradeWidgetUiState(
-                                WidgetState.Content,
-                                course.toWidgetCourseItem()
-                            ),
-                            glanceId
-                        )
-                    } else {
-                        setState(context, SingleGradeWidgetUiState(WidgetState.Empty), glanceId)
-                    }
-                } catch (e: Exception) {
-                    setState(context, SingleGradeWidgetUiState(WidgetState.Error), glanceId)
+            val singleGradeWidgetUpdater = SingleGradeWidgetUpdater(repository, apiPrefs)
+            async {
+                singleGradeWidgetUpdater.events.collect { action ->
+                    handleAction(context, action, widgetIds)
                 }
-                glanceAppWidget.update(context, glanceId)
             }
+            singleGradeWidgetUpdater.updateData(context, widgetIds, showLoading, forceNetwork)
         }
-    }
-
-    private suspend fun showLoadingIfNeeded(show: Boolean, context: Context, widgetIds: List<Int>) {
-        if (show) {
-            for (widgetId in widgetIds) {
-                val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
-                setState(
-                    context,
-                    SingleGradeWidgetUiState(WidgetState.Loading),
-                    glanceId
-                )
-                glanceAppWidget.update(context, glanceId)
-            }
-        }
-    }
-
-    private suspend fun setAllNotLoggedIn(context: Context, widgetIds: List<Int>) {
-        for (widgetId in widgetIds) {
-            val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
-            setState(
-                context,
-                SingleGradeWidgetUiState(WidgetState.NotLoggedIn),
-                glanceId
-            )
-        }
-        glanceAppWidget.updateAll(context)
     }
 
     companion object {

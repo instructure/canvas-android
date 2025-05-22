@@ -15,6 +15,7 @@
  */
 package com.instructure.student.widget.grades.singleGrade
 
+import androidx.glance.GlanceId
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.WidgetCourseItem
 
@@ -22,4 +23,10 @@ class SingleGradeWidgetUiState(
     val state: WidgetState,
     val course: WidgetCourseItem? = null
 )
+
+sealed class SingleGradeWidgetAction {
+    data class UpdateState(val glanceId: GlanceId, val state: SingleGradeWidgetUiState): SingleGradeWidgetAction()
+    data class UpdateAllState(val state: SingleGradeWidgetUiState): SingleGradeWidgetAction()
+    data object UpdateUi: SingleGradeWidgetAction()
+}
 

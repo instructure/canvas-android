@@ -20,19 +20,16 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.glance.GlanceId
-import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
-import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.toJson
-import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.GradesWidgetRepository
-import com.instructure.student.widget.grades.toWidgetCourseItem
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -53,7 +50,17 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)
-        updateData(context, appWidgetIds.toList())
+        coroutineScope.launch(Dispatchers.IO) {
+            val gradesWidgetUpdater = GradesWidgetUpdater(repository, apiPrefs)
+            async {
+                gradesWidgetUpdater.uiState.collect {
+                    it.first?.let { glanceId ->
+                        setState(context, it.second, glanceId)
+                    }
+                }
+            }
+            gradesWidgetUpdater.updateData(context, appWidgetIds.toList())
+        }
     }
 
     private suspend fun setState(context: Context, state: GradesWidgetUiState, glanceId: GlanceId) {
@@ -62,51 +69,7 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
                 this[gradesWidgetUiStateKey] = state.toJson()
             }
         }
-    }
-
-    private fun updateData(context: Context, widgetIds: List<Int>) {
-        coroutineScope.launch(Dispatchers.IO) {
-            val user = apiPrefs.user
-            if (user == null) {
-                setAllNotLoggedIn(context, widgetIds)
-                return@launch
-            }
-
-            for (widgetId in widgetIds) {
-                val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
-
-                try {
-                    val courses = repository.getCoursesWithGradingScheme(true)
-                    if (courses.isEmpty()) {
-                        setState(context, GradesWidgetUiState(WidgetState.Empty), glanceId)
-                        continue
-                    }
-                    setState(
-                        context,
-                        GradesWidgetUiState(
-                            WidgetState.Content,
-                            courses.map { it.toWidgetCourseItem() }),
-                        glanceId
-                    )
-                } catch (e: Exception) {
-                    setState(context, GradesWidgetUiState(WidgetState.Error), glanceId)
-                }
-
-                glanceAppWidget.update(context, glanceId)
-            }
-        }
-    }
-
-    private suspend fun setAllNotLoggedIn(context: Context, widgetIds: List<Int>) {
-        for (widgetId in widgetIds) {
-            val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
-            setState(
-                context,
-                GradesWidgetUiState(WidgetState.NotLoggedIn),
-                glanceId
-            )
-        }
-        glanceAppWidget.updateAll(context)
+        glanceAppWidget.update(context, glanceId)
     }
 
     companion object {

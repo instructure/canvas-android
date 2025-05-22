@@ -26,5 +26,5 @@
     android:widgetCategory="keyguard|home_screen"
     android:initialLayout="@layout/widget_homescreen"
     android:initialKeyguardLayout="@layout/widget_homescreen"
-    android:previewImage="@drawable/widget_preview_grades_light"
+    android:previewImage="@drawable/widget_preview_grades"
     android:label="@string/grades"/>
