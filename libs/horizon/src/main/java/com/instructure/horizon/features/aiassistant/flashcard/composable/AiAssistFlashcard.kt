@@ -20,14 +20,18 @@ import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
@@ -42,7 +46,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
 @Composable
-fun AiAssistFlashCard(
+fun AiAssistFlashcard(
     question: String,
     answer: String,
     isFlippedToAnswer: Boolean,
@@ -58,7 +62,10 @@ fun AiAssistFlashCard(
 
     val cardModifier = modifier
         .fillMaxSize()
-        .clickable { onClick() }
+        .clickable(
+            indication = null,
+            interactionSource = remember { MutableInteractionSource() }
+        ) { onClick() }
         .graphicsLayer {
             rotationY = flipAnimation
             cameraDistance = zAxisDistance
@@ -86,6 +93,7 @@ private fun QuestionContent(
 ) {
     Column(
         modifier = modifier
+            .verticalScroll(rememberScrollState())
             .clip(HorizonCornerRadius.level2)
             .background(Color.White.copy(alpha = 0.1f))
             .padding(24.dp)
@@ -121,6 +129,7 @@ private fun AnswerContent(
 ) {
     Column(
         modifier = modifier
+            .verticalScroll(rememberScrollState())
             .clip(HorizonCornerRadius.level2)
             .background(HorizonColors.Surface.cardPrimary())
             .padding(24.dp)
@@ -152,19 +161,19 @@ private fun AnswerContent(
 @Composable
 @Preview
 private fun AiAssistFlashCardQuestionPreview() {
-    AiAssistFlashCard(
+    AiAssistFlashcard(
         question = "What is the capital of France?",
         answer = "Paris",
         isFlippedToAnswer = false,
         onClick = {},
-        modifier = Modifier.padding(16.dp)
+//        modifier = Modifier.padding(16.dp)
     )
 }
 
 @Composable
 @Preview
 private fun AiAssistFlashCardAnswerPreview() {
-    AiAssistFlashCard(
+    AiAssistFlashcard(
         question = "What is the capital of France?",
         answer = "Paris",
         isFlippedToAnswer = true,

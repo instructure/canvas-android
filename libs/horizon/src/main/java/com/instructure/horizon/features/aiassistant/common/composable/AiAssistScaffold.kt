@@ -29,16 +29,16 @@ import androidx.navigation.NavHostController
 fun AiAssistScaffold(
     navController: NavHostController,
     onDismiss: () -> Unit,
-    inputTextValue: TextFieldValue,
-    onInputTextChanged: (TextFieldValue) -> Unit,
-    onInputTextSubmitted: () -> Unit,
+    inputTextValue: TextFieldValue? = null,
+    onInputTextChanged: ((TextFieldValue) -> Unit)? = null,
+    onInputTextSubmitted: (() -> Unit)? = null,
     modifier: Modifier = Modifier,
     content: @Composable (Modifier) -> Unit,
 ) {
     Column(
         modifier = modifier
             .fillMaxSize()
-            .padding(24.dp)
+            .padding(vertical = 24.dp)
     ){
         AiAssistToolbar(
             onDismissPressed = { onDismiss() },
@@ -46,15 +46,19 @@ fun AiAssistScaffold(
                 { navController.popBackStack() }
             } else {
                 null
-            }
+            },
+            modifier = Modifier.padding(horizontal = 24.dp)
         )
 
-        content(Modifier.weight(1f))
+        content(Modifier.weight(1f).padding(horizontal = 24.dp))
 
-        AiAssistInput(
-            value = inputTextValue,
-            onValueChange = { onInputTextChanged(it) },
-            onSubmitPressed = { onInputTextSubmitted() },
-        )
+        if (inputTextValue != null && onInputTextChanged != null && onInputTextSubmitted != null) {
+            AiAssistInput(
+                value = inputTextValue,
+                onValueChange = { onInputTextChanged(it) },
+                onSubmitPressed = { onInputTextSubmitted() },
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
+        }
     }
 }

@@ -32,6 +32,7 @@ import com.instructure.horizon.features.aiassistant.chat.AiAssistChatViewModel
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardScreen
+import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardViewModel
 import com.instructure.horizon.features.aiassistant.main.AiAssistMainScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
 import kotlinx.serialization.json.Json
@@ -69,7 +70,9 @@ fun AiAssistNavigation(
         composable<AiAssistRoute.AiAssistFlashcard>(
             typeMap = AiAssistNavigationTypeMap
         ) {
-            AiAssistFlashcardScreen(navController, onDismiss)
+            val viewModel: AiAssistFlashcardViewModel = hiltViewModel()
+            val state by viewModel.uiState.collectAsState()
+            AiAssistFlashcardScreen(navController, state, onDismiss)
         }
     }
 }
