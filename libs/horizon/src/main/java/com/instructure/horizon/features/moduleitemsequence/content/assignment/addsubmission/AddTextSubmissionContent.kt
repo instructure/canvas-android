@@ -25,6 +25,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionTypeUiState
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
+import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun AddTextSubmissionContent(
@@ -40,6 +41,8 @@ fun AddTextSubmissionContent(
             .padding(horizontal = 16.dp),
         onRceFocused = onRceFocused,
         onTextChangeListener = uiState.onTextChanged,
-        rceControlsPosition = RceControlsPosition.BOTTOM
+        rceControlsPosition = RceControlsPosition.BOTTOM,
+        rceDialogThemeColor = ThemePrefs.brandColor,
+        rceDialogButtonColor = ThemePrefs.brandColor
     )
 }

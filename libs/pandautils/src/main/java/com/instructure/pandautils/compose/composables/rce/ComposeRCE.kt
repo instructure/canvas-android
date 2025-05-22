@@ -64,7 +64,9 @@ fun ComposeRCE(
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
     onTextChangeListener: (String) -> Unit,
     onRceFocused: () -> Unit = {},
-    rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP
+    rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP,
+    rceDialogThemeColor: Int = ThemePrefs.brandColor,
+    rceDialogButtonColor: Int = ThemePrefs.textButtonColor,
 ) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
@@ -148,8 +150,8 @@ fun ComposeRCE(
         rceTextEditor.getSelectedText {
             RCEInsertDialog.newInstance(
                 context.getString(R.string.rce_insertLink),
-                ThemePrefs.brandColor,
-                ThemePrefs.textButtonColor,
+                rceDialogThemeColor,
+                rceDialogButtonColor,
                 true,
                 it
             )
