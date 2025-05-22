@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -33,6 +34,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.toLocalDate
+import com.instructure.pandautils.utils.toLocalDateOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
@@ -62,10 +64,12 @@ class CalendarViewModel @Inject constructor(
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
     private val calendarStateMapper: CalendarStateMapper,
-    private val calendarSharedEvents: CalendarSharedEvents
+    private val calendarSharedEvents: CalendarSharedEvents,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var selectedDay = LocalDate.now(clock)
+    private val initialSelectedDayString = savedStateHandle.get<String>(CalendarFragment.SELECTED_DAY)
+    private var selectedDay = initialSelectedDayString?.toLocalDateOrNull() ?: LocalDate.now(clock)
 
     // Helper fields to handle page change animations when a day in a different month is selected
     private var pendingSelectedDay: LocalDate? = null

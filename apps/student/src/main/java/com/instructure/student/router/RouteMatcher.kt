@@ -334,6 +334,7 @@ object RouteMatcher : BaseRouteMatcher() {
         )
 
         // Calendar
+        routes.add(Route("/calendar/:${CalendarFragment.SELECTED_DAY}", CalendarFragment::class.java))
         routes.add(Route("/calendar", CalendarFragment::class.java))
         routes.add(Route("/:${EventFragment.CONTEXT_TYPE}/:${EventFragment.CONTEXT_ID}/calendar_events/:${EventFragment.SCHEDULE_ITEM_ID}", EventFragment::class.java))
 

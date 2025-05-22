@@ -291,7 +291,7 @@
     <string name="Todo">Hei mahi</string>
     <string name="todoFilter">Ngā Akoranga Tātari</string>
     <string name="filterByEllipsis">Tātari ma....</string>
-    <string name="favoritedCoursesLabel">Ngā akoranga tino pai</string>
+    <string name="favoriteCoursesLabel">Ngā akoranga tino pai</string>
     <string name="Event">Tauwhāinga</string>
     <string name="eventSuccessfulDeletion">I momoho te muku Tauwhāinga</string>
     <string name="timeIconDescription">Te Wā Icon</string>
@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Āwhina</string>
     <string name="screenTitleManageStudents">Whakahaere ngā ākonga</string>
     <string name="screenTitleSettings">Ngā Tautuhinga</string>
-    <string name="navigationDrawerSwitchUsers">Whakakā ngā Kaiwhakamahi</string>
     <string name="navigationDrawerLogOut">Takiputa</string>
     <string name="noStudentsError">Kāore he ākonga</string>
     <string name="noStudentsErrorDescription">Kaore koe e tirotiro ana ētahi ākonga.</string>

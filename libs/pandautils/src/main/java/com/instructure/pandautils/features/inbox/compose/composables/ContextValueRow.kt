@@ -38,6 +38,9 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -67,6 +70,9 @@ fun ContextValueRow(
             .padding(top = 8.dp, bottom = 8.dp)
             .alpha(if (enabled) 1f else 0.5f)
             .testTag("contextValueRow")
+            .semantics {
+                role = Role.Button
+            }
     ) {
         Text(
             text = label,

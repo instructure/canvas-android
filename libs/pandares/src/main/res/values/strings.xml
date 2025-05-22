@@ -291,7 +291,7 @@
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Courses</string>
     <string name="filterByEllipsis">Filter by…</string>
-    <string name="favoritedCoursesLabel">Favorited Courses</string>
+    <string name="favoriteCoursesLabel">Favorite Courses</string>
     <string name="Event">Event</string>
     <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
     <string name="timeIconDescription">Time Icon</string>
@@ -1793,7 +1793,6 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Manage Students</string>
     <string name="screenTitleSettings">Settings</string>
-    <string name="navigationDrawerSwitchUsers">Switch Users</string>
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
@@ -2066,6 +2065,8 @@
     <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
     <string name="a11y_searchAssignments">Search Assignments</string>
     <string name="dueAssignmentListItem">Due %1$s</string>
+    <string name="a11y_searchAmongRecipients">Search among Recipients</string>
+    <string name="a11y_recipientIsRemoved">%1$s is removed</string>
 
     <string name="widgetDueDate">Due at %1$s</string>
     <string name="widgetFromTo">%1$s to %2$s</string>
@@ -2082,4 +2083,6 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
     <string name="selectCourse">Select Course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+    <string name="a11y_widgetToDoOpenToDoList">Open To Do list screen</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Create new To Do</string>
 </resources>

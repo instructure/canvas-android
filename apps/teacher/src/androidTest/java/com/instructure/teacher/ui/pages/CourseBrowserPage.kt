@@ -34,6 +34,7 @@ import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
@@ -186,7 +187,7 @@ class CourseBrowserPage : BasePage() {
      * @throws AssertionError if the course title is not displayed or does not match the expected title.
      */
     fun assertCourseTitle(courseTitle: String) {
-        onView(withId(R.id.courseBrowserTitle) + withText(courseTitle)).assertDisplayed()
+        waitForView(withId(R.id.courseBrowserTitle) + withText(courseTitle)).assertDisplayed()
     }
 
     /**

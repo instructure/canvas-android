@@ -301,7 +301,7 @@
     <string name="Todo">Задачи</string>
     <string name="todoFilter">Фильтровать курсы</string>
     <string name="filterByEllipsis">Фильтровать по&#8230;</string>
-    <string name="favoritedCoursesLabel">Избранные курсы</string>
+    <string name="favoriteCoursesLabel">Избранные курсы</string>
     <string name="Event">Событие</string>
     <string name="eventSuccessfulDeletion">Мероприятие было успешно удалено</string>
     <string name="timeIconDescription">Значок времени</string>
@@ -1838,7 +1838,6 @@
     <string name="screenTitleHelp">Справка</string>
     <string name="screenTitleManageStudents">Управление учащимися</string>
     <string name="screenTitleSettings">Настройки</string>
-    <string name="navigationDrawerSwitchUsers">Сменить пользователя</string>
     <string name="navigationDrawerLogOut">Выйти</string>
     <string name="noStudentsError">Учащиеся отсутствуют</string>
     <string name="noStudentsErrorDescription">Вы не наблюдаете ни за одним учащимся.</string>

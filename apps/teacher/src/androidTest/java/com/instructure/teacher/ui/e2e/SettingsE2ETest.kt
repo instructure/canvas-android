@@ -63,28 +63,28 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG,"Enter domain: 'mobileqa.beta.instructure.com'.")
+        Log.d(STEP_TAG, "Enter domain: 'mobileqa.beta.instructure.com'.")
         loginFindSchoolPage.enterDomain("mobileqa.beta.instructure.com")
 
-        Log.d(PREPARATION_TAG,"Enroll '${BuildConfig.PRONOUN_TEACHER_TEST_USER}' teacher to '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Enroll '${BuildConfig.PRONOUN_TEACHER_TEST_USER}' teacher to '${course.name}' course.")
         val pronounTeacherId: Long = 12594806
         EnrollmentsApi.enrollUserAsTeacher(course.id, pronounTeacherId)
 
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
         Log.d(STEP_TAG, "Log in with the dedicated teacher for testing the pronouns.")
         loginSignInPage.loginAs(BuildConfig.PRONOUN_TEACHER_TEST_USER, BuildConfig.PRONOUN_TEACHER_TEST_PASSWORD)
         dashboardPage.waitForRender()
 
-        Log.d(PREPARATION_TAG,"Seed an email from the '${student.name}' student to Pronoun Teacher.")
+        Log.d(PREPARATION_TAG, "Seed an email from the '${student.name}' student to Pronoun Teacher.")
         ConversationsApi.createConversation(student.token, listOf(pronounTeacherId.toString()))[0]
 
         Log.d(STEP_TAG, "Open the Left Side Menu.")
         dashboardPage.openLeftSideMenu()
 
         val testPronoun = "(He/Him)"
-        Log.d(STEP_TAG, "Assert that the corresponding user info, so does the 'Pronoun Teacher (He/Him)' as username and 'pronounteacher@gmail.com' as user email are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the corresponding user info, so does the 'Pronoun Teacher (He/Him)' as username and 'pronounteacher@gmail.com' as user email are displayed.")
         leftSideNavigationDrawerPage.assertUserInfo("Pronoun Teacher $testPronoun", "pronounteacher@gmail.com")
 
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
@@ -92,9 +92,11 @@ class SettingsE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
         settingsPage.clickOnSettingsItem("Profile Settings")
+
+        Log.d(ASSERTION_TAG, "Assert that the Profile Settings Page is displayed correctly.")
         profileSettingsPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the '$testPronoun' pronouns are displayed on the Profile Settings Page.")
+        Log.d(ASSERTION_TAG, "Assert that the '$testPronoun' pronouns are displayed on the Profile Settings Page.")
         profileSettingsPage.assertPronouns(testPronoun)
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard Page.")
@@ -103,15 +105,17 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Select '${course.name}' course and open 'People' tab.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.openPeopleTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the People List Page is displayed correctly.")
         peopleListPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the '$testPronoun' pronouns are displayed next to the 'Pronoun Teacher' user's name.")
+        Log.d(ASSERTION_TAG, "Assert that the '$testPronoun' pronouns are displayed next to the 'Pronoun Teacher' user's name.")
         peopleListPage.assertPersonPronouns("Pronoun Teacher", testPronoun)
 
         Log.d(STEP_TAG, "Click on the 'Pronoun Teacher' user.")
         peopleListPage.clickPerson("Pronoun Teacher $testPronoun")
 
-        Log.d(STEP_TAG, "Assert that the Person Context Page also displays the '$testPronoun' pronouns besides all the corresponding information about the user.")
+        Log.d(ASSERTION_TAG, "Assert that the Person Context Page also displays the '$testPronoun' pronouns besides all the corresponding information about the user.")
         personContextPage.assertDisplaysCourseInfo(course)
         personContextPage.assertSectionNameView(PersonContextPage.UserRole.TEACHER)
         personContextPage.assertPersonPronouns(testPronoun)
@@ -124,8 +128,10 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Open the Left Side Menu.")
         dashboardPage.openLeftSideMenu()
 
-        Log.d(STEP_TAG, "Click on 'Change User' menu and assert on the Login Landing Page that the '$testPronoun' pronouns are displayed besides the 'Pronoun Teacher' user's name.")
+        Log.d(STEP_TAG, "Click on 'Change User' menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
+
+        Log.d(ASSERTION_TAG, "Assert on the Login Landing Page that the '$testPronoun' pronouns are displayed besides the 'Pronoun Teacher' user's name.")
         loginLandingPage.assertPreviousLoginUserDisplayed("Pronoun Teacher $testPronoun")
     }
 
@@ -147,6 +153,8 @@ class SettingsE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Open Profile Settings Page.")
         settingsPage.clickOnSettingsItem("Profile Settings")
+
+        Log.d(ASSERTION_TAG, "Assert that the Profile Settings Page is displayed correctly.")
         profileSettingsPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on Edit Pencil Icon on the toolbar.")
@@ -157,7 +165,7 @@ class SettingsE2ETest : TeacherComposeTest() {
         editProfileSettingsPage.editUserName(newUserName)
         editProfileSettingsPage.clickOnSave()
 
-        Log.d(STEP_TAG, "Assert that the username has been changed to '$newUserName' on the Profile Settings Page.")
+        Log.d(ASSERTION_TAG, "Assert that the username has been changed to '$newUserName' on the Profile Settings Page.")
         try {
             Log.d(STEP_TAG, "Check if the user has landed on Settings Page. If yes, navigate back to Profile Settings Page.")
             //Sometimes in Bitrise it's working different than locally, because in Bitrise sometimes the user has been navigated to Settings Page after saving a new name,
@@ -166,7 +174,7 @@ class SettingsE2ETest : TeacherComposeTest() {
             Log.d(STEP_TAG, "Did not throw the user back to the Settings Page, so the scenario can be continued.")
         }
 
-        Log.d(STEP_TAG, "Assert that the Profile Settings Page is displayed and the username is '$newUserName'.")
+        Log.d(ASSERTION_TAG, "Assert that the Profile Settings Page is displayed and the username is '$newUserName'.")
         profileSettingsPage.assertPageObjects()
         profileSettingsPage.assertUserNameIs(newUserName)
 
@@ -182,13 +190,13 @@ class SettingsE2ETest : TeacherComposeTest() {
             Log.d(STEP_TAG, "Press back button (without saving). The goal is to navigate back to the Profile Settings Page.")
             Espresso.pressBack()
 
-            Log.d(STEP_TAG, "Assert that the username value remained '$newUserName'.")
+            Log.d(ASSERTION_TAG, "Assert that the username value remained '$newUserName'.")
             profileSettingsPage.assertUserNameIs(newUserName)
         } catch (e: NoMatchingViewException) {
             Log.d(STEP_TAG, "Press back button (without saving). The goal is to navigate back to the Profile Settings Page.")
             Espresso.pressBack()
 
-            Log.d(STEP_TAG, "Assert that the username value remained '$newUserName'.")
+            Log.d(ASSERTION_TAG, "Assert that the username value remained '$newUserName'.")
             profileSettingsPage.assertUserNameIs(newUserName)
         }
     }
@@ -210,27 +218,33 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
-        Log.d(STEP_TAG,"Select Dark App Theme.")
+        Log.d(STEP_TAG, "Select Dark App Theme.")
         settingsPage.selectAppTheme(AppTheme.DARK)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Courses' label has the proper text color (which is used in Dark mode).")
         dashboardPage.assertCourseLabelTextColor("#FFFFFFFF")
 
-        Log.d(STEP_TAG,"Select '${course.name}' course and assert on the Course Browser Page that the tabs has the proper text color (which is used in Dark mode).")
+        Log.d(STEP_TAG, "Select '${course.name}' course.")
         dashboardPage.openCourse(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the tabs has the proper text color (which is used in Dark mode).")
         courseBrowserPage.assertTabLabelTextColor("Announcements","#FFFFFFFF")
         courseBrowserPage.assertTabLabelTextColor("Assignments","#FFFFFFFF")
 
-        Log.d(STEP_TAG,"Navigate to Settings Page and open App Theme Settings again.")
+        Log.d(STEP_TAG, "Navigate to Settings Page and open App Theme Settings again.")
         Espresso.pressBack()
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
-        Log.d(STEP_TAG,"Select Light App Theme.")
+        Log.d(STEP_TAG, "Select Light App Theme.")
         settingsPage.selectAppTheme(AppTheme.LIGHT)
 
-        Log.d(STEP_TAG,"Navigate back to Dashboard. Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
+        Log.d(STEP_TAG, "Navigate back to Dashboard.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Courses' label has the proper text color (which is used in Light mode).")
         dashboardPage.assertCourseLabelTextColor("#FF273540")
     }
 
@@ -247,11 +261,13 @@ class SettingsE2ETest : TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to User Settings Page.")
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
-        Log.d(STEP_TAG,"Open Legal Page and assert that all the corresponding buttons are displayed.")
+        Log.d(STEP_TAG, "Open Legal Page.")
         settingsPage.clickOnSettingsItem("Legal")
+
+        Log.d(ASSERTION_TAG, "Assert that all the corresponding buttons are displayed.")
         legalPage.assertPageObjects()
     }
 
@@ -271,20 +287,22 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate to Settings Page on the left-side menu.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
-        Log.d(STEP_TAG, "Click on 'About' link to open About Page. Assert that About Page has opened.")
+        Log.d(STEP_TAG, "Click on 'About' link to open About Page.")
         settingsPage.clickOnSettingsItem("About")
+
+        Log.d(ASSERTION_TAG, "Assert that About Page has opened.")
         aboutPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Check that domain is equal to: '${teacher.domain}' (teacher's domain).")
+        Log.d(STEP_TAG, "Check that domain is equal to: '${teacher.domain}' (teacher's domain).")
         aboutPage.domainIs(teacher.domain)
 
-        Log.d(STEP_TAG,"Check that Login ID is equal to: '${teacher.loginId}' (teacher's Login ID).")
+        Log.d(STEP_TAG, "Check that Login ID is equal to: '${teacher.loginId}' (teacher's Login ID).")
         aboutPage.loginIdIs(teacher.loginId)
 
-        Log.d(STEP_TAG,"Check that e-mail is equal to: '${teacher.loginId}' (teacher's Login ID).")
+        Log.d(STEP_TAG, "Check that e-mail is equal to: '${teacher.loginId}' (teacher's Login ID).")
         aboutPage.emailIs(teacher.loginId)
 
-        Log.d(STEP_TAG,"Assert that the Instructure company logo has been displayed on the About page.")
+        Log.d(ASSERTION_TAG, "Assert that the Instructure company logo has been displayed on the About page.")
         aboutPage.assertInstructureLogoDisplayed()
     }
 
@@ -301,13 +319,13 @@ class SettingsE2ETest : TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to User Settings Page.")
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
-        Log.d(STEP_TAG,"Open Legal Page and assert that all the corresponding buttons are displayed.")
+        Log.d(STEP_TAG, "Open Legal Page and assert that all the corresponding buttons are displayed.")
         settingsPage.clickOnSettingsItem("Rate on the Play Store")
 
-        Log.d(STEP_TAG,"Assert that the five starts are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the five starts are displayed.")
         settingsPage.assertFiveStarRatingDisplayed()
     }
 
@@ -325,34 +343,34 @@ class SettingsE2ETest : TeacherComposeTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to User Settings Page.")
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
         leftSideNavigationDrawerPage.clickSettingsMenu()
 
-        Log.d(PREPARATION_TAG,"Capture the initial remote config values.")
+        Log.d(PREPARATION_TAG, "Capture the initial remote config values.")
         val initialValues = mutableMapOf<String, String?>()
         RemoteConfigParam.values().forEach { param -> initialValues[param.rc_name] = RemoteConfigUtils.getString(param) }
 
-        Log.d(STEP_TAG,"Navigate to Remote Config Params Page.")
+        Log.d(STEP_TAG, "Navigate to Remote Config Params Page.")
         settingsPage.clickOnSettingsItem("Remote Config Params")
 
-        Log.d(STEP_TAG,"Click on each EditText, which brings up the soft keyboard, then dismiss it.")
+        Log.d(STEP_TAG, "Click on each EditText, which brings up the soft keyboard, then dismiss it.")
         RemoteConfigParam.values().forEach { param ->
 
-            Log.d(STEP_TAG,"Bring up the soft keyboard and dismiss it.")
+            Log.d(STEP_TAG, "Bring up the soft keyboard and dismiss it.")
             remoteConfigSettingsPage.clickRemoteConfigParamValue(param)
             Espresso.closeSoftKeyboard()
 
-            Log.d(STEP_TAG,"Clear focus from EditText.")
+            Log.d(STEP_TAG, "Clear focus from EditText.")
             remoteConfigSettingsPage.clearRemoteConfigParamValueFocus(param)
         }
 
-        Log.d(STEP_TAG,"Navigate back to Settings Page.")
+        Log.d(STEP_TAG, "Navigate back to Settings Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Navigate to Remote Config Params page again.")
+        Log.d(STEP_TAG, "Navigate to Remote Config Params page again.")
         settingsPage.clickOnSettingsItem("Remote Config Params")
 
-        Log.d(STEP_TAG,"Assert that all fields have maintained their initial value.")
+        Log.d(ASSERTION_TAG, "Assert that all fields have maintained their initial value.")
         RemoteConfigParam.values().forEach { param ->
             remoteConfigSettingsPage.verifyRemoteConfigParamValue(param, initialValues.get(param.rc_name)!!)
         }
@@ -441,7 +459,6 @@ class SettingsE2ETest : TeacherComposeTest() {
         inboxSignatureSettingsPage.assertSignatureEnabledState(false)
 
         val signatureText = "President of AC Milan\nVice President of Ferencvaros"
-
         Log.d(STEP_TAG, "Turn on the 'Inbox Signature' and set the inbox signature text to: '$signatureText'. Save the changes.")
         inboxSignatureSettingsPage.toggleSignatureEnabledState()
         inboxSignatureSettingsPage.changeSignatureText(signatureText)
@@ -466,10 +483,10 @@ class SettingsE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Navigate back to the Dashboard.")
         ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Open Inbox.")
+        Log.d(STEP_TAG, "Open Inbox.")
         dashboardPage.openInbox()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
 
         Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is displayed by default when the user opens the Compose New Message Page.")

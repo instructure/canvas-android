@@ -20,8 +20,10 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.api.SeedApi
@@ -31,6 +33,7 @@ import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.dataseeding.model.EnrollmentTypes.TEACHER_ENROLLMENT
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
+import com.instructure.espresso.withIdlingResourceDisabled
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
@@ -202,6 +205,45 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG,"Log out with '${parent.name}' parent.")
         leftSideNavigationDrawerPage.logout()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.ACCESS_TOKEN_EXPIRATION)
+    fun testTokenExpirationForcedLogoutThenLogBackE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 2, teachers = 1, courses = 1)
+        val student1 = data.studentsList[0]
+        val course = data.coursesList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student1.name}', login id: '${student1.loginId}'.")
+        loginWithUser(student1)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+
+        Log.d(PREPARATION_TAG, "Delete the '${student1.name}' student's (valid) access token which has been created by the login mechanism.")
+        UserApi.deleteToken(ApiPrefs.accessToken)
+
+        withIdlingResourceDisabled {
+
+            Log.d(STEP_TAG, "Try to make some action with expired (deleted) token, for example, select '${course.name}' course on the Dashboard Page.")
+            dashboardPage.selectCourse(course)
+
+            Log.d(ASSERTION_TAG, "Assert that the 'Login Required' dialog is displayed because the session (aka. access token) is expired/deleted, so we drop out the user when any action has been made.")
+            dashboardPage.assertLoginRequiredDialog()
+
+            Log.d(STEP_TAG, "Click on the 'LOG IN' button on the 'Login Required' dialog.")
+            dashboardPage.clickLogInOnLoginRequiredDialog()
+
+            Log.d(STEP_TAG, "Log back with the SAME user: '${student1.name}', login id: '${student1.loginId}'.")
+            loginSignInPage.loginAs(student1)
+
+            Log.d(ASSERTION_TAG, "Assert that the Course Browser Page will be displayed and loaded correctly because that was the 'target' page of the last action which before dropping the user out.")
+            courseBrowserPage.assertPageObjects()
+            courseBrowserPage.assertInitialBrowserTitle(course)
+        }
     }
 
     @E2E

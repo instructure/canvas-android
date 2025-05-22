@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.models.Term
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.CourseDao
 import com.instructure.pandautils.room.offline.daos.CourseGradingPeriodDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
@@ -41,8 +43,8 @@ import com.instructure.pandautils.room.offline.entities.TermEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Test
 
 class CourseFacadeTest {
@@ -55,6 +57,7 @@ class CourseFacadeTest {
     private val tabDao: TabDao = mockk(relaxed = true)
     private val enrollmentFacade: EnrollmentFacade = mockk(relaxed = true)
     private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private val facade = CourseFacade(
         termDao,
@@ -64,7 +67,8 @@ class CourseFacadeTest {
         sectionDao,
         tabDao,
         enrollmentFacade,
-        courseSettingsDao
+        courseSettingsDao,
+        apiPrefs
     )
 
     @Test
@@ -107,7 +111,7 @@ class CourseFacadeTest {
         val course = Course(id = courseId, term = term)
         val courseEntity = CourseEntity(course)
         val termEntity = TermEntity(term)
-        val enrollments = listOf(Enrollment(id = 1L, role = Enrollment.EnrollmentType.Student))
+        val enrollments = listOf(Enrollment(id = 1L, userId = 1L, role = Enrollment.EnrollmentType.Student))
         val section = Section(courseId = courseId, students = null)
         val sectionEntities = listOf(SectionEntity(section, courseId))
         val gradingPeriod = GradingPeriod(id = 1L, title = "Grading period")
@@ -119,22 +123,23 @@ class CourseFacadeTest {
 
         coEvery { courseDao.findById(courseId) } returns courseEntity
         coEvery { termDao.findById(any()) } returns termEntity
-        coEvery { enrollmentFacade.getEnrollmentsByCourseId(courseId) } returns enrollments
+        coEvery { enrollmentFacade.getEnrollmentsForUserByCourseId(courseId, any()) } returns enrollments
         coEvery { sectionDao.findByCourseId(courseId) } returns sectionEntities
         coEvery { courseGradingPeriodDao.findByCourseId(courseId) } returns courseGradingPeriodEntities
         coEvery { gradingPeriodDao.findById(any()) } returns gradingPeriodEntity
         coEvery { tabDao.findByCourseId(courseId) } returns tabEntities
         coEvery { courseSettingsDao.findByCourseId(courseId) } returns CourseSettingsEntity(courseSettings, courseId)
+        coEvery { apiPrefs.user } returns User(1L)
 
         val result = facade.getCourseById(courseId)!!
 
-        Assert.assertEquals(courseId, result.id)
-        Assert.assertEquals(term, result.term)
-        Assert.assertEquals(enrollments, result.enrollments)
-        Assert.assertEquals(section, result.sections.first())
-        Assert.assertEquals(gradingPeriod, result.gradingPeriods?.first())
-        Assert.assertEquals(tab, result.tabs?.first())
-        Assert.assertEquals(courseSettings, result.settings)
+        assertEquals(courseId, result.id)
+        assertEquals(term, result.term)
+        assertEquals(enrollments, result.enrollments)
+        assertEquals(section, result.sections.first())
+        assertEquals(gradingPeriod, result.gradingPeriods?.first())
+        assertEquals(tab, result.tabs?.first())
+        assertEquals(courseSettings, result.settings)
     }
 
     @Test
@@ -144,7 +149,7 @@ class CourseFacadeTest {
         val course = Course(id = courseId, term = term)
         val courseEntity = CourseEntity(course)
         val termEntity = TermEntity(term)
-        val enrollments = listOf(Enrollment(id = 1L, role = Enrollment.EnrollmentType.Student))
+        val enrollments = listOf(Enrollment(id = 1L, userId = 1L, role = Enrollment.EnrollmentType.Student))
         val section = Section(courseId = courseId, students = null)
         val sectionEntities = listOf(SectionEntity(section, courseId))
         val gradingPeriod = GradingPeriod(id = 1L, title = "Grading period")
@@ -156,23 +161,24 @@ class CourseFacadeTest {
 
         coEvery { courseDao.findAll() } returns listOf(courseEntity)
         coEvery { termDao.findById(any()) } returns termEntity
-        coEvery { enrollmentFacade.getEnrollmentsByCourseId(courseId) } returns enrollments
+        coEvery { enrollmentFacade.getEnrollmentsForUserByCourseId(courseId, any()) } returns enrollments
         coEvery { sectionDao.findByCourseId(courseId) } returns sectionEntities
         coEvery { courseGradingPeriodDao.findByCourseId(courseId) } returns courseGradingPeriodEntities
         coEvery { gradingPeriodDao.findById(any()) } returns gradingPeriodEntity
         coEvery { tabDao.findByCourseId(courseId) } returns tabEntities
         coEvery { courseSettingsDao.findByCourseId(courseId) } returns CourseSettingsEntity(courseSettings, courseId)
+        coEvery { apiPrefs.user } returns User(1L)
 
         val result = facade.getAllCourses()
 
-        Assert.assertEquals(1, result.size)
-        Assert.assertEquals(courseId, result.first().id)
-        Assert.assertEquals(term, result.first().term)
-        Assert.assertEquals(enrollments, result.first().enrollments)
-        Assert.assertEquals(section, result.first().sections.first())
-        Assert.assertEquals(gradingPeriod, result.first().gradingPeriods?.first())
-        Assert.assertEquals(tab, result.first().tabs?.first())
-        Assert.assertEquals(courseSettings, result.first().settings)
+        assertEquals(1, result.size)
+        assertEquals(courseId, result.first().id)
+        assertEquals(term, result.first().term)
+        assertEquals(enrollments, result.first().enrollments)
+        assertEquals(section, result.first().sections.first())
+        assertEquals(gradingPeriod, result.first().gradingPeriods?.first())
+        assertEquals(tab, result.first().tabs?.first())
+        assertEquals(courseSettings, result.first().settings)
     }
 
     @Test
@@ -188,7 +194,7 @@ class CourseFacadeTest {
 
         val result = facade.getGradingPeriodsByCourseId(1L)
 
-        Assert.assertEquals(gradingPeriods.size, result.size)
-        Assert.assertEquals(gradingPeriods, result)
+        assertEquals(gradingPeriods.size, result.size)
+        assertEquals(gradingPeriods, result)
     }
 }
