@@ -1784,7 +1784,6 @@
     <string name="screenTitleHelp">मदद</string>
     <string name="screenTitleManageStudents">छात्र प्रबंधित करें</string>
     <string name="screenTitleSettings">सेटिंग्स</string>
-    <string name="navigationDrawerChangeUser">उपयोगकर्ता स्विच करें</string>
     <string name="navigationDrawerLogOut">लॉग आउट करें</string>
     <string name="noStudentsError">कोई छात्र नहीं</string>
     <string name="noStudentsErrorDescription">आप किसी भी छात्र की समीक्षा नहीं कर रहे हैं।</string>

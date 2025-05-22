@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Ohje</string>
     <string name="screenTitleManageStudents">Hallitse opiskelijoita</string>
     <string name="screenTitleSettings">Asetukset</string>
-    <string name="navigationDrawerChangeUser">Vaihda käyttäjiä</string>
     <string name="navigationDrawerLogOut">Kirjaudu ulos</string>
     <string name="noStudentsError">Ei opiskelijoita</string>
     <string name="noStudentsErrorDescription">Et tarkkaile yhtään opiskelijaa.</string>

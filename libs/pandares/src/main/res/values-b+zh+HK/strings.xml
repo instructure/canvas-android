@@ -1745,7 +1745,6 @@
     <string name="screenTitleHelp">支援</string>
     <string name="screenTitleManageStudents">管理學生</string>
     <string name="screenTitleSettings">設定</string>
-    <string name="navigationDrawerChangeUser">切換使用者</string>
     <string name="navigationDrawerLogOut">登出</string>
     <string name="noStudentsError">無學生</string>
     <string name="noStudentsErrorDescription">您未正在觀察任何學生。</string>

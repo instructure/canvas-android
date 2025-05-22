@@ -1745,7 +1745,6 @@
     <string name="screenTitleHelp">ヘルプ</string>
     <string name="screenTitleManageStudents">受講者を管理する</string>
     <string name="screenTitleSettings">設定</string>
-    <string name="navigationDrawerChangeUser">ユーザーを切り替える</string>
     <string name="navigationDrawerLogOut">ログアウト</string>
     <string name="noStudentsError">受講者はいません</string>
     <string name="noStudentsErrorDescription">どの受講者もオブザーブしていません。</string>

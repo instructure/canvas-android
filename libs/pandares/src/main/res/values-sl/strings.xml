@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Pomoč</string>
     <string name="screenTitleManageStudents">Uredi študente</string>
     <string name="screenTitleSettings">Nastavitve</string>
-    <string name="navigationDrawerChangeUser">Preklopi uporabnika</string>
     <string name="navigationDrawerLogOut">Odjava</string>
     <string name="noStudentsError">Ni študentov</string>
     <string name="noStudentsErrorDescription">Ne opazujete nobenega študenta.</string>

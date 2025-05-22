@@ -1838,7 +1838,6 @@
     <string name="screenTitleHelp">Справка</string>
     <string name="screenTitleManageStudents">Управление учащимися</string>
     <string name="screenTitleSettings">Настройки</string>
-    <string name="navigationDrawerChangeUser">Сменить пользователя</string>
     <string name="navigationDrawerLogOut">Выйти</string>
     <string name="noStudentsError">Учащиеся отсутствуют</string>
     <string name="noStudentsErrorDescription">Вы не наблюдаете ни за одним учащимся.</string>

@@ -1777,7 +1777,6 @@
     <string name="screenTitleHelp">Trợ Giúp</string>
     <string name="screenTitleManageStudents">Quản Lý Sinh Viên</string>
     <string name="screenTitleSettings">Cài Đặt</string>
-    <string name="navigationDrawerChangeUser">Chuyển Người Dùng</string>
     <string name="navigationDrawerLogOut">Đăng Xuất</string>
     <string name="noStudentsError">Không Có Sinh Viên</string>
     <string name="noStudentsErrorDescription">Bạn đang không quan sát bất kỳ sinh viên nào.</string>

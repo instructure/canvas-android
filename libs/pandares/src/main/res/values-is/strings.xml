@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Hjálp</string>
     <string name="screenTitleManageStudents">Stjórna nemendum</string>
     <string name="screenTitleSettings">Stillingar</string>
-    <string name="navigationDrawerChangeUser">Skipta um notendur</string>
     <string name="navigationDrawerLogOut">Útskráning</string>
     <string name="noStudentsError">Engir nemendur</string>
     <string name="noStudentsErrorDescription">Þú fylgist ekki með neinum nemendum.</string>

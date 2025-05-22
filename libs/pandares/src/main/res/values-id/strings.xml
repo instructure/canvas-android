@@ -1779,7 +1779,6 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Kelola Siswa</string>
     <string name="screenTitleSettings">Pengaturan</string>
-    <string name="navigationDrawerChangeUser">Ganti Pengguna</string>
     <string name="navigationDrawerLogOut">Logout</string>
     <string name="noStudentsError">Tidak Ada Siswa</string>
     <string name="noStudentsErrorDescription">Anda tidak mengamati siswa manapun.</string>
