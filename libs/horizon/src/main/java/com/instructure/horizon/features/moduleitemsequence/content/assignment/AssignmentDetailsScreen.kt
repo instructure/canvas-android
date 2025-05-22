@@ -331,7 +331,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
         }
         HorizonSpace(SpaceSize.SPACE_16)
         Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
-            val alpha = if (uiState.submitEnabled && !uiState.submissionInProgress) 1f else 0.5f
+            val alpha = if (uiState.submitEnabled || uiState.submissionInProgress) 1f else 0.5f
             Box(
                 contentAlignment = Alignment.CenterEnd,
                 modifier = Modifier
@@ -355,7 +355,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                 } else {
                     Button(
                         label = stringResource(R.string.assignmentDetails_submitAssignment),
-                        color = ButtonColor.Institution,
+                        color = ButtonColor.Custom(backgroundColor = Color.Transparent, contentColor = HorizonColors.Text.surfaceColored()),
                         onClick = uiState.onSubmissionButtonClicked,
                         enabled = uiState.submitEnabled
                     )
