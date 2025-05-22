@@ -22,8 +22,10 @@ import android.webkit.URLUtil
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -48,6 +50,11 @@ import instructure.rceditor.RCEInsertDialog
 import instructure.rceditor.RCETextEditor
 import jp.wasabeef.richeditor.RichEditor
 
+enum class RceControlsPosition {
+    TOP,
+    BOTTOM
+}
+
 @Composable
 fun ComposeRCE(
     html: String,
@@ -57,6 +64,7 @@ fun ComposeRCE(
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
     onTextChangeListener: (String) -> Unit,
     onRceFocused: () -> Unit = {},
+    rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP
 ) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
@@ -193,26 +201,28 @@ fun ComposeRCE(
     }
 
     Column(modifier = modifier) {
-        if (showControls) {
-            RCEControls(rceState, onActionClick = {
-                when (it) {
-                    RCEAction.BOLD -> postUpdateState { rceTextEditor.setBold() }
-                    RCEAction.ITALIC -> postUpdateState { rceTextEditor.setItalic() }
-                    RCEAction.UNDERLINE -> postUpdateState { rceTextEditor.setUnderline() }
-                    RCEAction.NUMBERED_LIST -> postUpdateState { rceTextEditor.setNumbers() }
-                    RCEAction.BULLETED_LIST -> postUpdateState { rceTextEditor.setBullets() }
-                    RCEAction.COLOR_PICKER -> rceState =
-                        rceState.copy(colorPicker = !rceState.colorPicker)
+        val onActionClick = { action: RCEAction ->
+            when (action) {
+                RCEAction.BOLD -> postUpdateState { rceTextEditor.setBold() }
+                RCEAction.ITALIC -> postUpdateState { rceTextEditor.setItalic() }
+                RCEAction.UNDERLINE -> postUpdateState { rceTextEditor.setUnderline() }
+                RCEAction.NUMBERED_LIST -> postUpdateState { rceTextEditor.setNumbers() }
+                RCEAction.BULLETED_LIST -> postUpdateState { rceTextEditor.setBullets() }
+                RCEAction.COLOR_PICKER -> rceState =
+                    rceState.copy(colorPicker = !rceState.colorPicker)
 
-                    RCEAction.UNDO -> postUpdateState { rceTextEditor.undo() }
-                    RCEAction.REDO -> postUpdateState { rceTextEditor.redo() }
-                    RCEAction.INSERT_LINK -> insertLink()
-                    RCEAction.INSERT_IMAGE -> insertPhoto()
-                }
-            }, onColorClick = {
-                rceState = rceState.copy(colorPicker = false)
-                postUpdateState { rceTextEditor.setTextColor(ContextCompat.getColor(context, it)) }
-            })
+                RCEAction.UNDO -> postUpdateState { rceTextEditor.undo() }
+                RCEAction.REDO -> postUpdateState { rceTextEditor.redo() }
+                RCEAction.INSERT_LINK -> insertLink()
+                RCEAction.INSERT_IMAGE -> insertPhoto()
+            }
+        }
+        val onColorClick = { color: Int ->
+            rceState = rceState.copy(colorPicker = false)
+            postUpdateState { rceTextEditor.setTextColor(ContextCompat.getColor(context, color)) }
+        }
+        if (showControls && rceControlsPosition == RceControlsPosition.TOP) {
+            RCEControls(rceState, onActionClick = onActionClick, onColorClick = onColorClick)
         }
 
         AndroidView(
@@ -229,6 +239,10 @@ fun ComposeRCE(
                 rceTextEditor = it
             }
         )
-    }
 
+        if (showControls && rceControlsPosition == RceControlsPosition.BOTTOM) {
+            Spacer(Modifier.size(8.dp))
+            RCEControls(rceState, onActionClick = onActionClick, onColorClick = onColorClick)
+        }
+    }
 }

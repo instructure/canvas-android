@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionTypeUiState
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
+import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 
 @Composable
 fun AddTextSubmissionContent(
@@ -38,6 +39,7 @@ fun AddTextSubmissionContent(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         onRceFocused = onRceFocused,
-        onTextChangeListener = uiState.onTextChanged
+        onTextChangeListener = uiState.onTextChanged,
+        rceControlsPosition = RceControlsPosition.BOTTOM
     )
 }
