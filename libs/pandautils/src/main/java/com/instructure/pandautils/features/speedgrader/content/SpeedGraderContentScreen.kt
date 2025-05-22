@@ -25,8 +25,8 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.material.Icon
-import androidx.compose.material.Text
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -114,14 +114,13 @@ private fun UserHeader(
                         modifier = Modifier
                             .padding(top = 4.dp)
                     )
-
-                    VerticalDivider(
-                        modifier = Modifier
-                            .padding(horizontal = 8.dp)
-                            .height(16.dp),
-                        color = colorResource(id = R.color.borderMedium),
-                    )
                     if (dueDate != null) {
+                        VerticalDivider(
+                            modifier = Modifier
+                                .padding(horizontal = 8.dp)
+                                .height(16.dp),
+                            color = colorResource(id = R.color.borderMedium),
+                        )
                         Text(
                             DateHelper.getDateAtTimeString(
                                 LocalContext.current,
