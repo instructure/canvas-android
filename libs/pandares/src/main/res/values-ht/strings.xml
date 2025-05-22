@@ -291,7 +291,7 @@
     <string name="Todo">Pou Fè</string>
     <string name="todoFilter">Filtè Kou</string>
     <string name="filterByEllipsis">Filtre pa</string>
-    <string name="favoritedCoursesLabel">Kou Prefere</string>
+    <string name="favoriteCoursesLabel">Kou Prefere</string>
     <string name="Event">Aktivite</string>
     <string name="eventSuccessfulDeletion">Aktivite efase kòrèkteman</string>
     <string name="timeIconDescription">Ikòn Lè</string>

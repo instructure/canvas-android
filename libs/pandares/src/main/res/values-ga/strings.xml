@@ -291,7 +291,7 @@
     <string name="Todo">Le Déanamh</string>
     <string name="todoFilter">Scag Cúrsaí</string>
     <string name="filterByEllipsis">Scag de réir&#8230;</string>
-    <string name="favoritedCoursesLabel">Cúrsaí Curtha i gCeanáin</string>
+    <string name="favoriteCoursesLabel">Cúrsaí Curtha i gCeanáin</string>
     <string name="Event">Imeacht</string>
     <string name="eventSuccessfulDeletion">Scriosadh an t-imeacht go rathúil</string>
     <string name="timeIconDescription">Deilbhín Ama</string>

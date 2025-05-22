@@ -291,7 +291,7 @@
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Subjects</string>
     <string name="filterByEllipsis">Filter by&#8230;</string>
-    <string name="favoritedCoursesLabel">Favourited Subjects</string>
+    <string name="favoriteCoursesLabel">Favourited Subjects</string>
     <string name="Event">Event</string>
     <string name="eventSuccessfulDeletion">Event successfully deleted</string>
     <string name="timeIconDescription">Time Icon</string>

@@ -291,7 +291,7 @@
     <string name="Todo">Čakajoča opravila</string>
     <string name="todoFilter">Filtriraj predmete</string>
     <string name="filterByEllipsis">Filtriraj po ...</string>
-    <string name="favoritedCoursesLabel">Priljubljeni predmeti</string>
+    <string name="favoriteCoursesLabel">Priljubljeni predmeti</string>
     <string name="Event">Dogodek</string>
     <string name="eventSuccessfulDeletion">Dogodek je bil uspešno izbrisan.</string>
     <string name="timeIconDescription">Ikona časa</string>

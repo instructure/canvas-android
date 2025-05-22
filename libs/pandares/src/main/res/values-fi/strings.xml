@@ -291,7 +291,7 @@
     <string name="Todo">Tehtävä</string>
     <string name="todoFilter">Suodata kursseja</string>
     <string name="filterByEllipsis">Suodatustapa...</string>
-    <string name="favoritedCoursesLabel">Suosikiksi merkitys kurssit</string>
+    <string name="favoriteCoursesLabel">Suosikiksi merkitys kurssit</string>
     <string name="Event">Tapahtuma</string>
     <string name="eventSuccessfulDeletion">Tapahtuman poisto onnistui</string>
     <string name="timeIconDescription">Ajan kuvake</string>

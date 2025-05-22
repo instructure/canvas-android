@@ -291,7 +291,7 @@
     <string name="Todo">Por hacer</string>
     <string name="todoFilter">Filtrar los cursos</string>
     <string name="filterByEllipsis">Filtrar por ...</string>
-    <string name="favoritedCoursesLabel">Cursos favoritos</string>
+    <string name="favoriteCoursesLabel">Cursos favoritos</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">El evento fue borrado exitosamente</string>
     <string name="timeIconDescription">Icono de horario</string>

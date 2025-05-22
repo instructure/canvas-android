@@ -301,7 +301,7 @@
     <string name="Todo">Lista zadań</string>
     <string name="todoFilter">Filtruj kursy</string>
     <string name="filterByEllipsis">Filtruj wg...</string>
-    <string name="favoritedCoursesLabel">Ulubione kursy</string>
+    <string name="favoriteCoursesLabel">Ulubione kursy</string>
     <string name="Event">Wydarzenie</string>
     <string name="eventSuccessfulDeletion">Wydarzenie zostało pomyślnie usunięte</string>
     <string name="timeIconDescription">Ikona godziny</string>
