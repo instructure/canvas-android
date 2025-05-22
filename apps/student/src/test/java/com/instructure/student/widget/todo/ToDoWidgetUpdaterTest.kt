@@ -65,6 +65,7 @@ class ToDoWidgetUpdaterTest {
         every { DateHelper.getPreferredTimeFormat(any()) } returns SimpleDateFormat("HH:mm", Locale.getDefault())
         every { context.getString(R.string.widgetDueDate, any()) } answers { "Due at ${secondArg<Array<Any>>()[0]}" }
         every { context.getString(R.string.userCalendarToDo) } returns "To Do"
+        every { context.getString(R.string.widgetAllDay) } returns "All day"
     }
 
     @After
@@ -125,7 +126,8 @@ class ToDoWidgetUpdaterTest {
             userId = 1,
             startAt = createDate(2025, 5, 21, 12),
             endAt = createDate(2025, 5, 21, 12),
-            contextName = "Context Name"
+            contextName = "Context Name",
+            allDay = true
         )
 
         coEvery { repository.getFavouriteCourses(any()) } returns listOf(Course(1, courseCode = "CODE"))
@@ -158,7 +160,7 @@ class ToDoWidgetUpdaterTest {
                     apiPrefs.user.color,
                     "Context Name",
                     "Plannable 1",
-                    "12:00",
+                    "All day",
                     "/users/1/calendar_events/1"
                 )
             )
@@ -175,7 +177,8 @@ class ToDoWidgetUpdaterTest {
         userId: Long? = null,
         startAt: Date? = null,
         endAt: Date? = null,
-        contextName: String? = null
+        contextName: String? = null,
+        allDay: Boolean = false
     ): PlannerItem {
         val plannable = Plannable(
             id = plannableId,
@@ -190,7 +193,7 @@ class ToDoWidgetUpdaterTest {
             startAt = startAt,
             endAt = endAt,
             details = null,
-            allDay = null
+            allDay = allDay
         )
         return PlannerItem(
             courseId = courseId,
