@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.util.Calendar
 
 @Parcelize
 data class ModuleItem(
@@ -48,12 +49,17 @@ data class ModuleItem(
     var masteryPaths: MasteryPath? = null,
     @SerializedName("quiz_lti")
     var quizLti: Boolean = false,
+    @SerializedName("estimated_duration")
+    val estimatedDuration: String? = null,
     // When we display the "Choose Assignment Group" when an assignment uses Mastery Paths we create a new row to display.
     // We still need the module item id to select the assignment group that we want, but if we use the same id as the root
     // module item both items wouldn't display (because they would have the same id at that point).
     var masteryPathsItemId: Long = 0 // Helper variable
 ) : CanvasModel<ModuleItem>() {
     override val comparisonString get() = title
+
+    val overDue: Boolean
+        get() = moduleDetails?.dueDate?.before(Calendar.getInstance().time) ?: false
 
     enum class Type {
         Assignment, Discussion, File, Page, SubHeader, Quiz, ExternalUrl, ExternalTool, Locked, ChooseAssignmentGroup

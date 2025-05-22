@@ -1,0 +1,15 @@
+mutation UpdateNote($id: String!, $input: UpdateNoteInput!) {
+  updateNote(id: $id, input: $input) {
+      id
+      rootAccountUuid
+      userId
+      courseId
+      objectId
+      objectType
+      userText
+      reaction
+      highlightData
+      createdAt
+      updatedAt
+  }
+}
