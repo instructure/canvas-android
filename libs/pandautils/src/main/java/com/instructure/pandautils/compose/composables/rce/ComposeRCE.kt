@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.MediaUploadUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getFragmentActivity
@@ -52,8 +53,10 @@ fun ComposeRCE(
     html: String,
     modifier: Modifier = Modifier,
     hint: String = "",
+    fixedHeightInDp: Int? = null,
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
-    onTextChangeListener: (String) -> Unit
+    onTextChangeListener: (String) -> Unit,
+    onRceFocused: () -> Unit = {},
 ) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
@@ -63,7 +66,11 @@ fun ComposeRCE(
 
     val context = LocalContext.current
     var rceTextEditor = RCETextEditor(context).apply {
-        setEditorHeight(280.dp.value.toInt().toPx)
+        if (fixedHeightInDp != null) {
+            setEditorHeight(fixedHeightInDp.dp.value.toInt().toPx)
+        } else {
+            disallowInterceptTouchEvents = false
+        }
         isNestedScrollingEnabled = true
         setOnTextChangeListener {
             onTextChangeListener(it)
@@ -73,6 +80,7 @@ fun ComposeRCE(
             if (!focused) {
                 focusEditor()
                 focused = true
+                onRceFocused()
             }
             showControls = true
             val typeSet = text.split(",").toSet()
@@ -210,7 +218,9 @@ fun ComposeRCE(
         AndroidView(
             modifier = Modifier
                 .nestedScroll(rememberNestedScrollInteropConnection())
-                .height(280.dp)
+                .conditional(fixedHeightInDp != null) {
+                    height(fixedHeightInDp!!.dp)
+                }
                 .padding(top = 8.dp),
             factory = {
                 rceTextEditor

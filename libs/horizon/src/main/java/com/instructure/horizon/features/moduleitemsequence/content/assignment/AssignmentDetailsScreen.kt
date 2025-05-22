@@ -39,6 +39,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -86,6 +89,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.views.JSInterface
+import kotlinx.coroutines.delay
 
 @Composable
 fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
@@ -171,6 +175,17 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                 .clip(HorizonCornerRadius.level5)
                 .background(HorizonColors.Surface.cardPrimary())
         ) {
+
+            var rceFocused by remember { mutableStateOf(false) }
+
+            LaunchedEffect(rceFocused) {
+                if (rceFocused) {
+                    val scrollValue = scrollState.value
+                    delay(500)
+                    scrollState.scrollTo(scrollValue)
+                }
+            }
+
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -225,7 +240,7 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     SubmissionDetailsContent(uiState.submissionDetailsUiState)
                 }
                 if (uiState.showAddSubmission) {
-                    AddSubmissionContent(uiState.addSubmissionUiState)
+                    AddSubmissionContent(uiState.addSubmissionUiState, onRceFocused = { rceFocused = true })
                 }
                 HorizonSpace(SpaceSize.SPACE_48)
             }
@@ -271,7 +286,7 @@ fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier)
 }
 
 @Composable
-fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Modifier = Modifier) {
+fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Modifier = Modifier, onRceFocused: () -> Unit = {}) {
     if (uiState.submissionTypes.size > 1) {
         Text(stringResource(R.string.assignmentDetails_selectSubmissionType), style = HorizonTypography.h3)
         HorizonSpace(SpaceSize.SPACE_16)
@@ -288,7 +303,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
     if (uiState.submissionTypes.isNotEmpty()) {
         when (val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]) {
             is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
-            is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType)
+            is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
         }
         HorizonSpace(SpaceSize.SPACE_24)
         Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {

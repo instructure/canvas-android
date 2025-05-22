@@ -29,6 +29,7 @@ import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 fun AddTextSubmissionContent(
     uiState: AddSubmissionTypeUiState.Text,
     modifier: Modifier = Modifier,
+    onRceFocused: () -> Unit = {},
 ) {
     ComposeRCE(
         html = uiState.text,
@@ -36,6 +37,7 @@ fun AddTextSubmissionContent(
         modifier = modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
+        onRceFocused = onRceFocused,
         onTextChangeListener = uiState.onTextChanged
     )
 }
