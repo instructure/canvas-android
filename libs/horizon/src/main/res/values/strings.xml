@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?><!--
+  ~ Copyright (C) 2025 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+<resources>
+    <string name="horizon">Horizon</string>
+    <string name="bottomNav_home">Home</string>
+    <string name="bottomNav_learn">Learn</string>
+    <string name="bottomNav_skillspace">Skillspace</string>
+    <string name="bottomNav_account">Account</string>
+    <string name="bottomNav_aiAssist">AI assist</string>
+    <string name="progressBar_percent">%1$s\%%</string>
+    <string name="dashboard_resumeLearning">Resume Learning</string>
+    <string name="learningObject_assignment">Assignment</string>
+    <string name="learningObject_File">File</string>
+    <string name="learningObject_externalLink">External Link</string>
+    <string name="learningObject_externalTool">External Tool</string>
+    <string name="learningObject_page">Page</string>
+    <string name="learningObject_assessment">Assessment</string>
+    <string name="learningobject_dueDate">Due %1$s</string>
+    <string name="learningobject_pastDue">Past Due %1$s</string>
+    <string name="learningObject_pillStatusInProgress">In Progress</string>
+    <string name="learningObject_pillStatusCompleted">Completed</string>
+    <string name="learningObject_pillStatusNotStarted">Not Started</string>
+    <string name="loadingStateWrapper_errorOccurred">An error occurred</string>
+    <string name="tag_dismiss">Dismiss</string>
+    <string name="fileDrop_uploadFile">Upload File</string>
+    <string name="fileDrop_acceptFileTypes">Accepted file types: %1$s</string>
+    <string name="fileDropSheet_uploadFile">Upload File</string>
+    <string name="fileDropSheet_choosePhotoOrVideo">Choose Photo or Video</string>
+    <string name="fileDropSheet_takePhotoOrVideo">Take Photo or Video</string>
+    <string name="fileDropSheet_chooseFile">Choose File</string>
+    <string name="avatar_contentDescription">Avatar</string>
+    <string name="requiredMark">" *"</string>
+    <string name="optionalMark">" (optional)"</string>
+    <string name="a11y_increaseValue">Increase Value</string>
+    <string name="a11y_decreaseValue">Decrease Value</string>
+    <string name="learningObjectStatus_optional">Optional</string>
+    <string name="learningObjectStatus_required">Required</string>
+    <string name="learningObjectStatus_viewed">Viewed</string>
+    <string name="learningObjectStatus_submitted">Submitted</string>
+    <string name="moduleStatus_notStarted">Not started</string>
+    <string name="moduleStatus_inProgress">In Progress</string>
+    <string name="moduleStatus_completed">Completed</string>
+    <string name="moduleStatus_locked">Locked</string>
+    <plurals name="moduleHeader_itemCount">
+        <item quantity="one">%1$d Item</item>
+        <item quantity="other">%1$d Items</item>
+    </plurals>
+    <string name="moduleHeader_pastDue">%1$d Past Due</string>
+    <string name="a11y_institutionLogoContentDescription">Institution logo</string>
+    <string name="myProgress">My Progress</string>
+    <string name="overview">Overview</string>
+    <string name="scores">Scores</string>
+    <string name="notes">Notes</string>
+    <string name="assignmentName">Assignment Name</string>
+    <string name="dueDate">Due Date</string>
+    <string name="scoresItemassignmentName">Name: %1$s</string>
+    <string name="scoresItemDueDate">Date: %1$s</string>
+    <string name="noDueDate">No Due Date</string>
+    <string name="scoresItemStatus">Status:</string>
+    <string name="scoresItemResult">Result: %1$s/%2$s</string>
+    <string name="noFeedback">-</string>
+    <string name="sortBy">Sort By</string>
+    <string name="assignmentGroupWeights">Assignment Group Weights</string>
+    <string name="weightPercentageValue">Weight: %1$s\%%</string>
+    <string name="averageScoreHeader">Average Score: %1$s\%%</string>
+    <string name="failedToLoadScores">Failed to load Scores</string>
+    <string name="failedToLoadPrgress">Failed to load Progress</string>
+    <string name="modulePager_dueDate">Due %1$s</string>
+    <plurals name="modulePager_pointsPossible">
+        <item quantity="one">%d Point Possible</item>
+        <item quantity="other">%d Points Possible</item>
+    </plurals>
+    <string name="modulePager_overdue">Overdue</string>
+    <string name="modulePager_locked">This content is locked.</string>
+    <string name="learningObject_locked">Locked Content</string>
+    <string name="moduleProgressScreen_title">My Progress</string>
+    <string name="moduleProgressScreen_error">Failed to load learning objects.</string>
+    <plurals name="moduleItemCard_pointsPossible">
+        <item quantity="one">%d pt</item>
+        <item quantity="other">%d pts</item>
+    </plurals>
+    <string name="notSubmittedStatusLabel">Not Submitted</string>
+    <string name="submittedStatusLabel">Submitted</string>
+    <string name="gradedStatusLabel">Graded</string>
+    <string name="excusedStatusLabel">Excused</string>
+    <string name="missingStatusLabel">Missing</string>
+    <string name="lateStatusLabel">Late</string>
+    <string name="moduleWillUnlockExplanation">Will unlock on %1$s</string>
+    <string name="prerequisiteExplanation">Prerequisite: %1$s</string>
+    <string name="a11y_selectedCourse">Selected</string>
+    <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
+    <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
+    <string name="failedToLoadAccount">Failed to load Account</string>
+    <string name="accountSettingsHeading">Settings</string>
+    <string name="accountProfileLabel">Profile</string>
+    <string name="accountPasswordLabel">Password</string>
+    <string name="accountNotificationsLabel">Notifications</string>
+    <string name="accountCalendarFeedLabel">Calendar Feed</string>
+    <string name="accountAdvancedLabel">Advanced</string>
+    <string name="accountSupportHeading">Support</string>
+    <string name="accountGiveFeedbackLabel">Give Feedback</string>
+    <string name="accountBetaCommunityLabel">Beta Community</string>
+    <string name="accountFullNameLabel">Full Name</string>
+    <string name="a11yNavigateBack">Navigate back</string>
+    <string name="accountDisplayNameLabel">Display Name</string>
+    <string name="accountEmailLabel">Email</string>
+    <string name="accountEmailHelperText">Email can only be changed by your institution.</string>
+    <string name="accountEmailErrorMessage">Email must be filled out.</string>
+    <string name="accountDisplayNameErrorMessage">Display Name must be filled out.</string>
+    <string name="accountFullNameErrorMessage">Full Name must be filled out.</string>
+    <string name="accountProfileErrorMessage">Failed to Load Profile data</string>
+    <string name="accountProfileSaveChangesLabel">Save Changes</string>
+    <string name="accountProfileUpdated">User profile successfully updated</string>
+    <string name="accountProfileFailedToUpdate">Failed to update user profile</string>
+    <string name="modulePager_markAsDone">Mark as Done</string>
+    <string name="modulePager_done">Done</string>
+    <string name="accountNoticifationsFailedToLoadMessage">Failed to load Notification Settings</string>
+    <string name="accountNotificationsAnnouncementsAndMessagesHeader">Announcements and Messages</string>
+    <string name="accountNotificationsAnnouncementsAndMessagesDescription">Get a notification anytime you receive a course announcement or a new message.</string>
+    <string name="accountNotificationsDueDatesHeader">Assignment due dates</string>
+    <string name="accountNotificationsDueDatesDescription">Get a notification anytime an assignment’s due date is added or changed.</string>
+    <string name="accountNotificationsScoresHeader">Scores</string>
+    <string name="accountNotificationsScoresDescription">Get a notification anytime an assignment is scored or the score is changed, and anytime the score weight is changed.</string>
+    <string name="accountNotificationsTitle">Notifications</string>
+    <string name="accountNotificationEmailToggleLabel">E-mail</string>
+    <string name="accountNotificationPushToggleLabel">Push notification</string>
+    <string name="accountNotificationsFailedToUpdate">Failed to update notification preference</string>
+    <string name="moduleItemCompleteAllItems">Complete all items</string>
+    <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
+    <string name="accountCalendarFeedErrorMessage">Failed to load calendar feed</string>
+    <string name="accountCalendarFeedTitle">Calendar Feed</string>
+    <string name="accountAdvancedFailedToLoadMessage">Failed to load Advanced Settings</string>
+    <string name="accountAdvancedTitle">Advanced</string>
+    <string name="accountAdvancedFailedToUpdateMessage">Failed to update Advanced Settings</string>
+    <string name="accountAdvancedTimeZoneSelectPlaceHolder">Select your time zone</string>
+    <string name="accountAdvancedtimeZoneSelectLabel">Time Zone</string>
+    <string name="accountAdvancedSaveChangesLabel">Save Changes</string>
+    <string name="accountCalendarFeedSelectLabel">Subscribe to Calendar</string>
+    <string name="accountCalendarFeedSeelctPlaceholder">Select your calendar</string>
+    <string name="accountCalendarFeedCopyLinkButtonLabel">Copy Link</string>
+    <string name="accountCalendarFeedCopiedLinkMessage">Link copied</string>
+    <string name="accountNotificationsDisabledNotificationsMessage">Push notifications are currently disabled. To turn on, you will need to enable in Android Settings.</string>
+    <string name="accountNotificationsEnableNotificationButtonLabel">Enable Android Notifications</string>
+    <string name="externalTool_openInANewTab">Open in a New Tab</string>
+    <string name="notificationsTitle">Notifications</string>
+    <string name="notificationsEmptyMessage">No notification activity yet.</string>
+    <string name="notificationsFailedToRefresh">Failed to refresh notifications</string>
+    <string name="notificationsFailedToLoad">Failed to load Notifications</string>
+    <string name="notificationsScoredItemTitle">%1$s\'s score is now available</string>
+    <string name="notificationsAssignmentScoredCategoryLabel">Assignment Scored</string>
+    <string name="notificationsDueDateChangedCategoryLabel">Due Date Changed</string>
+    <string name="notificationsScoringWeightChangedCategoryLabel">Scoring Weight Changed</string>
+    <string name="notificationsAnnouncementFromCetegoryLabel">Announcement from %1$s</string>
+    <string name="notificationsScoreWeightChangedTitle">%1$s\'s score weight was changed</string>
+    <string name="notificationsDueOnTitle">%1$s is due on %2$s</string>
+    <string name="accountAdvancedUpdatedMessage">Advanced settings successfully updated</string>
+    <string name="accountLogOutLabel">Log Out</string>
+    <string name="fileDetails_downloadFile">Download File</string>
+    <string name="fileDetails_openWith">Open with</string>
+    <string name="fileDetails_downloadError">File couldn’t be downloaded.</string>
+    <string name="aiAssistToolbarTitle">Assist</string>
+    <string name="aiAssistDismissContentDescription">Dismiss Assist</string>
+    <string name="a11y_aiAssistPositiveFeedback">Rate Assist with positive feedback</string>
+    <string name="a11y_aiAssistNegativeFeedback">Rate Assist with negative feedback</string>
+    <string name="aiAssistEnterAPromptLabel">Enter a prompt</string>
+    <string name="aiAssistSubmitPrompt">Submit prompt</string>
+    <string name="aiAssistCheckAnswerLabel">Check Answer</string>
+    <string name="aiAssistRegenerateLabel">Regenerate</string>
+    <string name="aiAssistQuizRateRegenrateLabel">Regenerate</string>
+    <string name="aiAssistPageLabel">%1$s of %2$s</string>
+    <string name="a11y_aiAssistPaginationNextPage">Next Page</string>
+    <string name="a11y_aiAssistPaginationPreviousPage">Previous Page</string>
+    <string name="aiAssistFeedbackAcknowledgementMessage">By submitting this report, you agree to share your current conversation to Instructure for improvements.</string>
+    <string name="aiAssistFeedbackSubmitLabel">Submit</string>
+    <string name="aiAssistFeedbackMessageLabel">Enter Your Feedback</string>
+    <string name="aiAssistFeedbackMessage">What was the issue with this response?</string>
+    <string name="aiAssistFeedbackTitle">Feedback</string>
+    <string name="a11y_dismiss">Dismiss</string>
+    <string name="aiAssistFeedbackInappropriateOrOffensive">Inappropriate or offensive</string>
+    <string name="aiAssistFeedbackinaccurate">Inaccurate</string>
+    <string name="aiAssistFeedbackExposedPersonalInformation">Exposed personal information</string>
+    <string name="aiAsistFlashcardQuestionTitle">Question</string>
+    <string name="aiAsistFlashcardAnswerTitle">Answer</string>
+    <string name="aiAssistFlashcardTapToFlip">Tap to flip</string>
+    <string name="a11y_selected">Selected</string>
+    <string name="a11y_correct">Correct</string>
+    <string name="a11y_incorrect">Incorrect</string>
+    <string name="assignmentDetails_instructions">Instructions</string>
+    <string name="modulePager_unlimitedAttempts">Unlimited Attempts Allowed</string>
+    <plurals name="modulePager_numberOfAttemtps">
+        <item quantity="one">%d Attempt Allowed</item>
+        <item quantity="other">%d Attempts Allowed</item>
+    </plurals>
+    <string name="assignmentDetails_newAttempt">New Attempt</string>
+    <string name="assignmentDetails_textSubmission">Your Text Submission</string>
+    <string name="assignmentDetails_fileSubmission">Your Uploaded Submission</string>
+    <string name="assignmentDetilas_submissionTypeText">Text</string>
+    <string name="assignmentDetilas_submissionTypeFileUpload">File Upload</string>
+    <string name="assignmentDetails_selectSubmissionType">Select a Submission Type</string>
+    <string name="assignmentDetails_tools">Tools</string>
+    <string name="assignmentDetails_attemptHistory">Attempt History</string>
+    <string name="assignmentDetails_comments">Comments</string>
+</resources>
