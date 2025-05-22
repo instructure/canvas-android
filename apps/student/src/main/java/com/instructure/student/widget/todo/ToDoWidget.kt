@@ -136,39 +136,43 @@ class ToDoWidget : GlanceAppWidget() {
                     )
                 )
             )
-            if (
-                state != WidgetState.Loading &&
-                state != WidgetState.NotLoggedIn
-            ) {
-                WidgetFloatingActionButton(
-                    alignment = Alignment.BottomEnd,
-                    imageRes = if (state == WidgetState.Error) {
-                        R.drawable.ic_refresh_lined
-                    } else {
-                        R.drawable.ic_add_lined
-                    },
-                    contentDescriptionRes = if (state == WidgetState.Error) {
-                        R.string.a11y_refresh
-                    } else {
-                        R.string.a11y_widgetToDoCreateNewToDo
-                    },
-                    backgroundColor = ColorProvider(
-                        color = Color(color = ThemePrefs.buttonColor)
-                    ),
-                    tintColor = ColorProvider(
-                        color = Color(color = ThemePrefs.buttonTextColor)
-                    ),
-                    onClickAction = if (state == WidgetState.Error) {
-                        actionRunCallback<ToDoWidgetRefreshCallback>()
-                    } else {
-                        actionStartActivity(
+            when (state) {
+                WidgetState.Error -> {
+                    WidgetFloatingActionButton(
+                        alignment = Alignment.BottomEnd,
+                        imageRes = R.drawable.ic_refresh_lined,
+                        contentDescriptionRes = R.string.a11y_refresh,
+                        backgroundColor = ColorProvider(
+                            color = Color(color = ThemePrefs.buttonColor)
+                        ),
+                        tintColor = ColorProvider(
+                            color = Color(color = ThemePrefs.buttonTextColor)
+                        ),
+                        onClickAction = actionRunCallback<ToDoWidgetRefreshCallback>()
+                    )
+                }
+
+                WidgetState.Content, WidgetState.Empty -> {
+                    WidgetFloatingActionButton(
+                        alignment = Alignment.BottomEnd,
+                        imageRes = R.drawable.ic_add_lined,
+                        contentDescriptionRes = R.string.a11y_widgetToDoCreateNewToDo,
+                        backgroundColor = ColorProvider(
+                            color = Color(color = ThemePrefs.buttonColor)
+                        ),
+                        tintColor = ColorProvider(
+                            color = Color(color = ThemePrefs.buttonTextColor)
+                        ),
+                        onClickAction = actionStartActivity(
                             InterwebsToApplication.createIntent(
                                 LocalContext.current,
                                 Uri.parse("${ApiPrefs.fullDomain}/todos/new")
                             )
                         )
-                    }
-                )
+                    )
+                }
+
+                else -> {}
             }
         }
     }
@@ -210,13 +214,22 @@ class ToDoWidget : GlanceAppWidget() {
             modifier = GlanceModifier.fillMaxSize()
         ) {
             itemsIndexed(items = daysWithItems) { index, item ->
-                DayItemContent(item.first, item.second, index == daysWithItems.lastIndex)
+                Column {
+                    DayItemContent(item.first, item.second)
+                    if (index != daysWithItems.lastIndex) {
+                        Box(
+                            modifier = GlanceModifier.fillMaxWidth()
+                                .height(.5.dp)
+                                .background(WidgetColors.borderMedium)
+                        ) {}
+                    }
+                }
             }
         }
     }
 
     @Composable
-    private fun DayItemContent(day: LocalDate, items: List<WidgetPlannerItem>, lastItem: Boolean) {
+    private fun DayItemContent(day: LocalDate, items: List<WidgetPlannerItem>) {
         Column(
             modifier = GlanceModifier
                 .fillMaxWidth()
@@ -282,25 +295,15 @@ class ToDoWidget : GlanceAppWidget() {
                 Spacer(modifier = GlanceModifier.width(8.dp))
                 Column {
                     items.forEachIndexed { index, item ->
-                        PlannerItemContent(item)
-                        if (index != items.lastIndex) {
-                            Spacer(modifier = GlanceModifier.height(8.dp))
-                        }
+                        PlannerItemContent(item, index == items.lastIndex)
                     }
                 }
-            }
-            if (!lastItem) {
-                Box(
-                    modifier = GlanceModifier.fillMaxWidth()
-                        .height(.5.dp)
-                        .background(WidgetColors.borderMedium)
-                ) {}
             }
         }
     }
 
     @Composable
-    private fun PlannerItemContent(plannerItem: WidgetPlannerItem) {
+    private fun PlannerItemContent(plannerItem: WidgetPlannerItem, lastItem: Boolean) {
         Column(
             modifier = GlanceModifier
                 .fillMaxWidth()
@@ -312,6 +315,7 @@ class ToDoWidget : GlanceAppWidget() {
                         )
                     )
                 )
+                .padding(bottom = if (lastItem) 0.dp else 8.dp)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically

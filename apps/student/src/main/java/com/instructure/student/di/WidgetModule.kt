@@ -22,8 +22,10 @@ import android.content.Context
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.widget.WidgetUpdater
 import com.instructure.student.widget.todo.ToDoWidgetRepository
+import com.instructure.student.widget.todo.ToDoWidgetUpdater
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -53,5 +55,13 @@ class WidgetModule {
         groupApi: GroupAPI.GroupInterface
     ): ToDoWidgetRepository {
         return ToDoWidgetRepository(plannerApi, coursesApi, groupApi)
+    }
+
+    @Provides
+    fun provideToDoWidgetUpdater(
+        repository: ToDoWidgetRepository,
+        apiPrefs: ApiPrefs
+    ): ToDoWidgetUpdater {
+        return ToDoWidgetUpdater(repository, apiPrefs)
     }
 }
