@@ -74,7 +74,8 @@ data class AddSubmissionUiState(
     val showSubmissionConfirmation: Boolean = false,
     val onDismissSubmissionConfirmation: () -> Unit = {},
     val onSubmitAssignment: () -> Unit = {},
-    val submissionInProgress: Boolean = false
+    val submissionInProgress: Boolean = false,
+    val submitEnabled: Boolean = false,
 )
 
 sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {

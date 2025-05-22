@@ -127,7 +127,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                         submissions = submissions,
                         currentSubmissionAttempt = initialAttempt
                     ),
-                    addSubmissionUiState = it.addSubmissionUiState.copy(submissionTypes = submissionTypes),
+                    addSubmissionUiState = it.addSubmissionUiState.copy(submissionTypes = submissionTypes, submitEnabled = text.isNotEmpty()),
                     showSubmissionDetails = lastActualSubmission != null,
                     showAddSubmission = lastActualSubmission == null,
                 )
@@ -242,9 +242,11 @@ class AssignmentDetailsViewModel @Inject constructor(
                 if (text.replace("<br>", "").isNotBlank()) {
                     submissionHelper.saveDraft(CanvasContext.emptyCourseContext(id = courseId), assignmentId, assignmentName, text)
                     updateDraftText(Date())
+                    updateSubmissionEnabled(true)
                 } else {
                     createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
                     updateDraftText()
+                    updateSubmissionEnabled(false)
                 }
             }
         }
@@ -418,6 +420,16 @@ class AssignmentDetailsViewModel @Inject constructor(
             it.copy(
                 addSubmissionUiState = it.addSubmissionUiState.copy(
                     showSubmissionConfirmation = false
+                )
+            )
+        }
+    }
+
+    private fun updateSubmissionEnabled(enabled: Boolean) {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    submitEnabled = enabled
                 )
             )
         }

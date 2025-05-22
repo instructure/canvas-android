@@ -18,6 +18,7 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.view.ViewGroup
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -306,24 +307,35 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
             is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
         }
         HorizonSpace(SpaceSize.SPACE_24)
-        Row(horizontalArrangement = Arrangement.End, verticalAlignment = Alignment.CenterVertically, modifier = Modifier.fillMaxWidth()) {
-            Text(uiState.draftDateString, style = HorizonTypography.p1, color = HorizonColors.Text.timestamp())
-            Button(
-                label = stringResource(R.string.assignmentDetails_deleteDraft),
-                color = ButtonColor.Custom(
-                    backgroundColor = HorizonColors.Surface.pageSecondary(),
-                    contentColor = HorizonColors.Text.error()
-                ),
-                onClick = uiState.onDeleteDraftClicked,
-                iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-            )
+        AnimatedVisibility(visible = uiState.draftDateString.isNotEmpty()) {
+            Row(
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    uiState.draftDateString,
+                    style = HorizonTypography.p1,
+                    color = HorizonColors.Text.timestamp()
+                )
+                Button(
+                    label = stringResource(R.string.assignmentDetails_deleteDraft),
+                    color = ButtonColor.Custom(
+                        backgroundColor = HorizonColors.Surface.pageSecondary(),
+                        contentColor = HorizonColors.Text.error()
+                    ),
+                    onClick = uiState.onDeleteDraftClicked,
+                    iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                )
+            }
         }
         HorizonSpace(SpaceSize.SPACE_16)
         Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
+            val alpha = if (uiState.submitEnabled && !uiState.submissionInProgress) 1f else 0.5f
             Box(
                 contentAlignment = Alignment.CenterEnd,
                 modifier = Modifier
-                    .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                    .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
                     .animateContentSize()
             ) {
                 if (uiState.submissionInProgress) {
@@ -344,7 +356,8 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                     Button(
                         label = stringResource(R.string.assignmentDetails_submitAssignment),
                         color = ButtonColor.Institution,
-                        onClick = uiState.onSubmissionButtonClicked
+                        onClick = uiState.onSubmissionButtonClicked,
+                        enabled = uiState.submitEnabled
                     )
                 }
             }
