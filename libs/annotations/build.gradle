@@ -106,7 +106,6 @@ dependencies {
     api project(path: ':pandares')
 
     api Libs.PSPDFKIT
-    implementation Libs.DISK_LRU_CACHE
 
     androidTestImplementation Libs.JUNIT
     testImplementation Libs.JUNIT

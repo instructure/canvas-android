@@ -22,7 +22,6 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.DiscussionTopicsApi
@@ -36,6 +35,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class DiscussionsE2ETest: StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -43,7 +43,6 @@ class DiscussionsE2ETest: StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E)
-    @Stub("There is a known issue with the API on beta, so this would always fail. Remove stubbing when VICE-4849 is done.")
     fun testDiscussionsE2E() {
 
         Log.d(PREPARATION_TAG,"Seeding data.")
@@ -149,5 +148,4 @@ class DiscussionsE2ETest: StudentTest() {
         val currentDate = getDateInCanvasFormat()
         discussionListPage.assertDueDate(topic1.title, currentDate)
     }
-
 }

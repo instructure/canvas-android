@@ -211,7 +211,9 @@ class ToDoWidget : GlanceAppWidget() {
         daysWithItems: List<Pair<LocalDate, List<WidgetPlannerItem>>>
     ) {
         LazyColumn(
-            modifier = GlanceModifier.fillMaxSize()
+            modifier = GlanceModifier
+                .fillMaxSize()
+                .padding(horizontal = 8.dp)
         ) {
             daysWithItems.forEachIndexed { dayIndex, dayItem ->
                 itemsIndexed(items = dayItem.second) { index, item ->
@@ -220,7 +222,8 @@ class ToDoWidget : GlanceAppWidget() {
                 if (dayIndex != daysWithItems.lastIndex) {
                     item {
                         Box(
-                            modifier = GlanceModifier.fillMaxWidth()
+                            modifier = GlanceModifier
+                                .fillMaxWidth()
                                 .height(.5.dp)
                                 .background(WidgetColors.borderMedium)
                         ) {}
@@ -233,7 +236,8 @@ class ToDoWidget : GlanceAppWidget() {
     @Composable
     private fun ListItemContent(item: WidgetPlannerItem, showDay: Boolean) {
         Row(
-            modifier = GlanceModifier.fillMaxWidth()
+            modifier = GlanceModifier
+                .fillMaxWidth()
                 .padding(vertical = 8.dp)
                 .clickable(
                     actionStartActivity(
@@ -258,7 +262,9 @@ class ToDoWidget : GlanceAppWidget() {
     private fun DayContent(day: LocalDate) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = GlanceModifier.width(40.dp).padding(vertical = 2.dp)
+            modifier = GlanceModifier
+                .width(40.dp)
+                .padding(vertical = 2.dp)
         ) {
             val isToday = day == LocalDate.now()
             val dayTextColor = if (isToday) {
