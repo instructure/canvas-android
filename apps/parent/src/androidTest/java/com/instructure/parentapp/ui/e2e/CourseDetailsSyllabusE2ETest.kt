@@ -41,7 +41,7 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
-    
+
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE_DETAILS, TestCategory.E2E, SecondaryFeatureCategory.SYLLABUS)
@@ -73,7 +73,7 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
         coursesPage.clickCourseItem(course.name)
 
-        Log.d(STEP_TAG,"Navigate to Syllabus Page.")
+        Log.d(STEP_TAG, "Navigate to Syllabus Page.")
         courseDetailsPage.selectTab("SYLLABUS")
 
         Log.d(ASSERTION_TAG, "Assert that the 'SYLLABUS' tab has been selected.")
@@ -85,8 +85,7 @@ class CourseDetailsSyllabusE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click the '${assignment.name}' assignment's link within the syllabus body.")
         syllabusPage.clickLink("assignmentLink")
 
-        Log.d(STEP_TAG, "Assert that the Assignment Details Page is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
     }
-
 }

@@ -56,22 +56,22 @@ class CourseListE2ETest : ParentComposeTest() {
         val student2 = data.studentsList[1]
         val teacher = data.teachersList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
         Thread.sleep(5000) // Allow the submission seeding to propagate
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignment.name}' with 13 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 13 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "13")
 
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -87,8 +87,10 @@ class CourseListE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that by default the selected student is that the one is the first ordered by 'sortableName'.")
         dashboardPage.assertSelectedStudent(selectedShortName)
 
-        Log.d(STEP_TAG, "Open the student selector and make sure that '${student.name}' student will be selected.")
+        Log.d(STEP_TAG, "Open the student selector.")
         dashboardPage.openStudentSelector()
+
+        Log.d(ASSERTION_TAG, "Assert that '${student.name}' student will be selected.")
         dashboardPage.assertAddStudentDisplayed()
 
         val otherStudentName = if (selectedShortName == student.shortName) {
@@ -116,14 +118,16 @@ class CourseListE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the course has its course code.")
         coursesPage.assertCourseCodeTextDisplayed(course.name, course.courseCode)
 
-        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the details of the course has opened.")
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Navigate back to the course list page of the selected student.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
     }
