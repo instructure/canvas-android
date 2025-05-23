@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.aiassistant.quiz
+package com.instructure.horizon.features.aiassistant.quiz.composable
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,8 +26,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.horizon.R
-import com.instructure.horizon.features.aiassistant.common.AiAssistFeedback
-import com.instructure.horizon.features.aiassistant.common.AiAssistFeedbackType
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistFeedback
+import com.instructure.horizon.features.aiassistant.common.composable.AiAssistFeedbackType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography

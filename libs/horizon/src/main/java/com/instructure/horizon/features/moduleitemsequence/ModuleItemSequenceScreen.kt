@@ -73,6 +73,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
@@ -128,9 +129,17 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onNextClick = uiState.onNextClick,
             onPreviousClick = uiState.onPreviousClick,
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+            onAiAssistClick = { uiState.updateShowAiAssist(true) }
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
+            if (uiState.showAiAssist) {
+                AiAssistantScreen(
+                    aiContext = uiState.aiContext,
+                    mainNavController = navController,
+                    onDismiss = { uiState.updateShowAiAssist(false) },
+                )
+            }
             ModuleItemSequenceContent(uiState = uiState, navController = navController, onBackPressed = {
                 navController.popBackStack()
             })
@@ -153,7 +162,10 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
                 shape = HorizonCornerRadius.level6,
                 clip = false
             )
-            .background(color = HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level6)
+            .background(
+                color = HorizonColors.Surface.pagePrimary(),
+                shape = HorizonCornerRadius.level6
+            )
             .animateContentSize()
     ) {
         if (markAsDoneState.isLoading) {
@@ -266,7 +278,8 @@ private fun ModuleItemSequenceContent(
                         moduleItemUiState,
                         scrollState = contentScrollState,
                         uiState.openAssignmentTools,
-                        uiState.assignmentToolsOpened
+                        uiState.assignmentToolsOpened,
+                        uiState.updateAiContextString
                     )
                 }
             }
@@ -350,7 +363,10 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
+                .background(
+                    color = HorizonColors.Surface.pageSecondary(),
+                    shape = HorizonCornerRadius.level5
+                )
         ) {
             content(page)
         }
@@ -363,13 +379,17 @@ private fun ModuleItemContentScreen(
     scrollState: ScrollState,
     openAssignmentTools: Boolean,
     assignmentToolsOpened: () -> Unit,
+    updateAiContext: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
         Box(
             modifier = modifier
                 .fillMaxSize()
-                .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5),
+                .background(
+                    color = HorizonColors.Surface.pageSecondary(),
+                    shape = HorizonCornerRadius.level5
+                ),
             contentAlignment = Alignment.Center
         ) {
             Spinner()
@@ -383,7 +403,9 @@ private fun ModuleItemContentScreen(
             moduleItemUiState.moduleItemContent is ModuleItemContent.File ||
             moduleItemUiState.moduleItemContent is ModuleItemContent.Assignment
         ) {
-            NavHost(rememberNavController(), startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
+            val navController = rememberNavController()
+
+            NavHost(navController, startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
                 composable(
                     route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
                         navArgument(Const.COURSE_ID) { type = NavType.LongType },
@@ -391,6 +413,7 @@ private fun ModuleItemContentScreen(
                     )) {
                     val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
+                    updateAiContext(uiState.instructions)
                     LaunchedEffect(openAssignmentTools) {
                         if (openAssignmentTools) {
                             viewModel.openAssignmentTools()
@@ -409,6 +432,7 @@ private fun ModuleItemContentScreen(
                     )) {
                     val viewModel = hiltViewModel<PageDetailsViewModel>()
                     val uiState by viewModel.uiState.collectAsState()
+                    updateAiContext(uiState.pageHtmlContent.orEmpty())
                     PageDetailsContentScreen(
                         uiState = uiState,
                         scrollState = scrollState
@@ -478,6 +502,7 @@ private fun ModuleItemSequenceBottomBar(
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
+    onAiAssistClick: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
@@ -489,7 +514,12 @@ private fun ModuleItemSequenceBottomBar(
                 onClick = onPreviousClick
             )
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
-                IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, elevation = HorizonElevation.level4)
+                IconButton(
+                    iconRes = R.drawable.ai,
+                    color = IconButtonColor.AI,
+                    elevation = HorizonElevation.level4,
+                    onClick = onAiAssistClick,
+                )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
                     color = IconButtonColor.INVERSE,

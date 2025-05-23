@@ -23,7 +23,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
@@ -35,7 +34,6 @@ import kotlinx.serialization.Serializable
 @Serializable
 sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
-    data object AiAssistant : MainNavigationRoute("ai")
     data object Notification : MainNavigationRoute("notification")
 
     @Serializable
@@ -57,9 +55,6 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
     ) {
         composable(MainNavigationRoute.Home.route) {
             HomeScreen(navController, hiltViewModel<HomeViewModel>())
-        }
-        composable(MainNavigationRoute.AiAssistant.route) {
-            AiAssistantScreen(navController)
         }
         composable<MainNavigationRoute.ModuleItemSequence> {
             val viewModel = hiltViewModel<ModuleItemSequenceViewModel>()
