@@ -39,6 +39,8 @@ class RCETextEditor @JvmOverloads constructor(
         setEditorFontColor(context.getColor(R.color.rce_defaultTextColor))
     }
 
+    var disallowInterceptTouchEvents: Boolean = true
+
     fun applyHtml(contents: String, title: String = "") {
         super.setHtml(formatHTML(contents, title))
         loadCSS("rce_style.css")
@@ -78,7 +80,7 @@ class RCETextEditor @JvmOverloads constructor(
 
     @SuppressLint("ClickableViewAccessibility")
     override fun onTouchEvent(event: MotionEvent): Boolean {
-        requestDisallowInterceptTouchEvent(true)
+        requestDisallowInterceptTouchEvent(disallowInterceptTouchEvents)
         return super.onTouchEvent(event)
     }
 

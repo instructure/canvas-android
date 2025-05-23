@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.room.entities
+package com.instructure.pandautils.room.studentdb.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
@@ -22,20 +22,22 @@ import androidx.room.PrimaryKey
 @Entity(
     foreignKeys = [
         ForeignKey(
-            entity = CreatePendingSubmissionCommentEntity::class,
+            entity = CreateSubmissionEntity::class,
             parentColumns = ["id"],
-            childColumns = ["pendingCommentId"],
+            childColumns = ["dbSubmissionId"],
             onDelete = ForeignKey.CASCADE
         )
     ]
 )
-data class CreateSubmissionCommentFileEntity(
+data class CreateFileSubmissionEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val pendingCommentId: Long,
+    val dbSubmissionId: Long,
     val attachmentId: Long? = null,
-    val name: String,
-    val size: Long,
-    val contentType: String,
-    val fullPath: String
+    val name: String? = null,
+    val size: Long? = null,
+    val contentType: String? = null,
+    val fullPath: String? = null,
+    val error: String? = null,
+    val errorFlag: Boolean = false,
 )

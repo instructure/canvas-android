@@ -1,5 +1,7 @@
 package com.instructure.pandautils.di
 
+import android.content.Context
+import androidx.room.Room
 import com.instructure.pandautils.room.appdatabase.AppDatabase
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
@@ -14,9 +16,16 @@ import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
 import com.instructure.pandautils.room.calendar.CalendarFilterDatabase
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.room.studentdb.studentDbMigrations
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
 
@@ -94,5 +103,38 @@ class DatabaseModule {
     @Singleton
     fun provideAssignmentListSelectedFiltersEntityDao(appDatabase: AppDatabase): AssignmentListSelectedFiltersEntityDao {
         return appDatabase.assignmentListSelectedFiltersEntityDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentDb(@ApplicationContext context: Context): StudentDb {
+        return Room.databaseBuilder(context, StudentDb::class.java, "student.db")
+            .addMigrations(*studentDbMigrations)
+            .fallbackToDestructiveMigration()
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateSubmissionDao(studentDb: StudentDb): CreateSubmissionDao {
+        return studentDb.submissionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateFileSubmissionDao(studentDb: StudentDb): CreateFileSubmissionDao {
+        return studentDb.fileSubmissionDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreatePendingSubmissionCommentDao(studentDb: StudentDb): CreatePendingSubmissionCommentDao {
+        return studentDb.pendingSubmissionCommentDao()
+    }
+
+    @Provides
+    @Singleton
+    fun provideCreateSubmissionCommentFileDao(studentDb: StudentDb): CreateSubmissionCommentFileDao {
+        return studentDb.submissionCommentFileDao()
     }
 }

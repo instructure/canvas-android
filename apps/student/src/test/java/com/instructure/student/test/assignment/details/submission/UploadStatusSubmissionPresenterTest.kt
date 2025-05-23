@@ -26,7 +26,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.file.UploadSt
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadListItemViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionViewState
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadVisibilities
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

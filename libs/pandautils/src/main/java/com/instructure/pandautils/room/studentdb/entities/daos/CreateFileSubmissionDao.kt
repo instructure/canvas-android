@@ -12,12 +12,12 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.room.entities.daos
+ */package com.instructure.pandautils.room.studentdb.entities.daos
 
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.Query
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 
 @Dao
 interface CreateFileSubmissionDao {

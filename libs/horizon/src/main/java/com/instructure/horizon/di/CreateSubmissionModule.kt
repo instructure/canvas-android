@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,11 +12,12 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.di
+ */
+package com.instructure.horizon.di
 
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.student.mobius.common.ui.SubmissionHelper
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
 import com.instructure.pandautils.room.studentdb.StudentDb
 import dagger.Module
 import dagger.Provides
@@ -32,7 +33,7 @@ class CreateSubmissionModule {
         studentDb: StudentDb,
         apiPrefs: ApiPrefs,
         workManager: WorkManager
-    ): SubmissionHelper {
-        return SubmissionHelper(studentDb, apiPrefs, workManager)
+    ): HorizonSubmissionHelper {
+        return HorizonSubmissionHelper(studentDb, apiPrefs, workManager)
     }
 }

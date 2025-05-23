@@ -130,7 +130,9 @@ fun Button(
             colors = ButtonDefaults.buttonColors().copy(
                 containerColor = buttonBackgroundColor,
                 contentColor = color.contentColor,
-                disabledContainerColor = buttonBackgroundColor.copy(alpha = 0.5f),
+                disabledContainerColor = if (buttonBackgroundColor == Color.Transparent) buttonBackgroundColor else buttonBackgroundColor.copy(
+                    alpha = 0.5f
+                ),
                 disabledContentColor = color.contentColor
             ),
         ) {

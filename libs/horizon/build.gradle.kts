@@ -65,6 +65,8 @@ dependencies {
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)
     kapt(Libs.HILT_COMPILER)
+    implementation(Libs.HILT_ANDROIDX_WORK)
+    kapt(Libs.HILT_ANDROIDX_COMPILER)
 
     implementation(Libs.ANDROIDX_ANNOTATION)
     implementation(Libs.ANDROIDX_APPCOMPAT)

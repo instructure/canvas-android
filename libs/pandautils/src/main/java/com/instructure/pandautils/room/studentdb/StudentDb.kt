@@ -13,20 +13,20 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.room
+package com.instructure.pandautils.room.studentdb
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import com.instructure.pandautils.room.common.Converters
-import com.instructure.student.room.entities.CreateSubmissionEntity
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
-import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
-import com.instructure.student.room.entities.CreateSubmissionCommentFileEntity
-import com.instructure.student.room.entities.daos.CreateSubmissionDao
-import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
-import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
-import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionCommentFileEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
 
 @Database(
     version = 5,
