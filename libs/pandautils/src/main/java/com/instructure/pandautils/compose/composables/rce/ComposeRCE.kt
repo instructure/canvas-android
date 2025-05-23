@@ -110,10 +110,12 @@ fun ComposeRCE(
                 MediaUploadUtils.uploadRceImageJob(
                     imageUri,
                     canvasContext,
-                    context.getFragmentActivity()
+                    context.getFragmentActivity(),
+                    rceDialogButtonColor
                 ) { imageUrl ->
                     MediaUploadUtils.showAltTextDialog(
                         context.getFragmentActivity(),
+                        buttonColor = rceDialogButtonColor,
                         onPositiveClick = { altText ->
                             rceTextEditor.insertImage(imageUrl, altText)
                         },
@@ -131,10 +133,12 @@ fun ComposeRCE(
                     MediaUploadUtils.uploadRceImageJob(
                         imageUri,
                         canvasContext,
-                        context.getFragmentActivity()
+                        context.getFragmentActivity(),
+                        rceDialogButtonColor
                     ) { imageUrl ->
                         MediaUploadUtils.showAltTextDialog(
                             context.getFragmentActivity(),
+                            buttonColor = rceDialogButtonColor,
                             onPositiveClick = { altText ->
                                 rceTextEditor.insertImage(imageUrl, altText)
                             },
