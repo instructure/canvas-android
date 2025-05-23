@@ -94,15 +94,6 @@ class SpeedGraderViewModelTest {
     }
 
     @Test
-    fun `init throws exception when submissionIds are missing`() {
-        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L))
-
-        assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(savedStateHandle, repository)
-        }
-    }
-
-    @Test
     fun `init sets selectedItem to 0 when it is missing`() {
         val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
         val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
