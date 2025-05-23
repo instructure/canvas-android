@@ -20,6 +20,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigationTypeMap
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
@@ -27,7 +29,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -54,7 +55,7 @@ class AiAssistQuizViewModel @Inject constructor(
     }
 
     fun generateNewQuiz() {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(isLoading = true)
             }
@@ -80,6 +81,8 @@ class AiAssistQuizViewModel @Inject constructor(
                     isChecked = false
                 )
             }
+        } catch {
+            // Error handling
         }
     }
 

@@ -21,10 +21,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswer
+import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizFooter
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -83,4 +87,56 @@ fun AiAssistQuizScreen(
             }
         }
     }
+}
+
+@Composable
+@Preview
+private fun AiAssistQuizScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = AiAssistQuizUiState(
+        isLoading = true,
+        quizState = null,
+        isChecked = false,
+        setSelectedIndex = {},
+        checkQuiz = {},
+        regenerateQuiz = {}
+    )
+
+    AiAssistQuizScreen(
+        navController = NavHostController(context = LocalContext.current),
+        state = state,
+        onDismiss = {}
+    )
+}
+
+@Composable
+@Preview
+private fun AiAssistQuizScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = AiAssistQuizUiState(
+        isLoading = false,
+        quizState = QuizState(
+            question = "What is the capital of France?",
+            answerIndex = 1,
+            options = listOf(
+                QuizAnswerState("Berlin", AiAssistQuizAnswerStatus.UNSELECTED),
+                QuizAnswerState("Paris", AiAssistQuizAnswerStatus.CORRECT),
+                QuizAnswerState("Madrid", AiAssistQuizAnswerStatus.INCORRECT),
+                QuizAnswerState("Rome", AiAssistQuizAnswerStatus.SELECTED)
+            ),
+            selectedOptionIndex = null
+        ),
+        isChecked = true,
+        setSelectedIndex = {},
+        checkQuiz = {},
+        regenerateQuiz = {}
+    )
+
+    AiAssistQuizScreen(
+        navController = NavHostController(context = LocalContext.current),
+        state = state,
+        onDismiss = {}
+    )
 }

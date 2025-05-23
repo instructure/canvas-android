@@ -26,11 +26,16 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistUserTextBlock
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
 import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -88,4 +93,30 @@ fun AiAssistChatScreen(
             }
         }
     }
+}
+
+@Composable
+@Preview
+private fun AssistChatScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = AiAssistChatUiState(
+        messages = listOf(
+            AiAssistMessage(
+                prompt = AiAssistMessagePrompt.Custom("Hello"),
+                role = AiAssistMessageRole.User,
+            ),
+            AiAssistMessage(
+                prompt = AiAssistMessagePrompt.Custom("Hi there! How can I assist you today?"),
+                role = AiAssistMessageRole.Assistant,
+            )
+        ),
+        inputTextValue = TextFieldValue("Hi,"),
+        isLoading = true
+    )
+
+    AiAssistChatScreen(
+        navController = NavHostController(LocalContext.current),
+        onDismiss = {},
+        state = state
+    )
 }
