@@ -12,9 +12,9 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.widget.grades.singleGrade
+ */
+package com.instructure.student.widget.grades.singleGrade
 
-import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -28,14 +28,14 @@ import kotlinx.coroutines.flow.receiveAsFlow
 
 class SingleGradeWidgetUpdater(
     private val repository: GradesWidgetRepository,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val glanceAppWidgetManager: GlanceAppWidgetManager
 ) {
 
     private val _events = Channel<SingleGradeWidgetAction>()
     val events = _events.receiveAsFlow()
 
     suspend fun updateData(
-        context: Context,
         widgetIds: List<Int>,
         showLoading: Boolean = false,
         forceNetwork: Boolean = true
@@ -59,7 +59,7 @@ class SingleGradeWidgetUpdater(
             }
 
             for (widgetId in widgetIds) {
-                glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
+                glanceId = glanceAppWidgetManager.getGlanceIdBy(widgetId)
                 val courseId = StudentPrefs.getLong(
                     CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId,
                     -1
@@ -70,7 +70,7 @@ class SingleGradeWidgetUpdater(
                         SingleGradeWidgetAction.UpdateState(
                             glanceId, SingleGradeWidgetUiState(
                                 WidgetState.Content,
-                                course.toWidgetCourseItem()
+                                course.toWidgetCourseItem(apiPrefs)
                             )
                         )
                     )
@@ -84,7 +84,6 @@ class SingleGradeWidgetUpdater(
                 }
             }
         } catch (e: Exception) {
-            e.printStackTrace()
             glanceId?.let {
                 _events.send(
                     SingleGradeWidgetAction.UpdateState(
@@ -92,7 +91,14 @@ class SingleGradeWidgetUpdater(
                         SingleGradeWidgetUiState(WidgetState.Error)
                     )
                 )
+            } ?: run {
+                _events.send(
+                    SingleGradeWidgetAction.UpdateAllState(
+                        SingleGradeWidgetUiState(WidgetState.Error)
+                    )
+                )
             }
+            e.printStackTrace()
         } finally {
             _events.send(SingleGradeWidgetAction.UpdateUi)
         }

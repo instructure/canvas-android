@@ -14,7 +14,6 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-
 package com.instructure.student.widget.grades
 
 import com.instructure.canvasapi2.apis.CourseAPI

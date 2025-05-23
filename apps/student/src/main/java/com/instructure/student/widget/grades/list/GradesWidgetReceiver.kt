@@ -13,7 +13,6 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-
 package com.instructure.student.widget.grades.list
 
 import android.appwidget.AppWidgetManager
@@ -53,7 +52,7 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
                     }
                 }
             }
-            updater.updateData(context, appWidgetIds.toList())
+            updater.updateData(appWidgetIds.toList())
         }
     }
 

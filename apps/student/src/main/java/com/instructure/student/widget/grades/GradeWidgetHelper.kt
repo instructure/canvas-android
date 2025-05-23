@@ -21,7 +21,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 
-internal fun Course.toWidgetCourseItem(): WidgetCourseItem {
+internal fun Course.toWidgetCourseItem(apiPrefs: ApiPrefs): WidgetCourseItem {
     val themedColor = ColorKeeper.getOrGenerateColor(this)
     return WidgetCourseItem(
         name,
@@ -30,7 +30,7 @@ internal fun Course.toWidgetCourseItem(): WidgetCourseItem {
         getGradeText(),
         themedColor.light,
         themedColor.dark,
-        getUrl()
+        getUrl(apiPrefs)
     )
 }
 
@@ -59,10 +59,9 @@ private fun Course.isLocked(): Boolean {
     return courseGrade == null || courseGrade.isLocked
 }
 
-private fun Course.getUrl(): String {
-    val domain = ApiPrefs.fullDomain
+private fun Course.getUrl(apiPrefs: ApiPrefs): String {
+    val domain = apiPrefs.fullDomain
 
-    //Construct URL to route to grades page
     val courseUrl = Const.COURSE_URL + id
     return domain + courseUrl + Const.GRADE_URL
 }

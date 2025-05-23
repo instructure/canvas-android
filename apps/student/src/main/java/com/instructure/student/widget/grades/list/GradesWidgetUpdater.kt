@@ -12,9 +12,9 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.student.widget.grades.list
+ */
+package com.instructure.student.widget.grades.list
 
-import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -26,7 +26,8 @@ import kotlinx.coroutines.flow.asStateFlow
 
 class GradesWidgetUpdater(
     private val repository: GradesWidgetRepository,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val glanceAppWidgetManager: GlanceAppWidgetManager
 ) {
 
     private val _uiState = MutableStateFlow<Pair<GlanceId?, GradesWidgetUiState>>(
@@ -37,9 +38,9 @@ class GradesWidgetUpdater(
     )
     val uiState = _uiState.asStateFlow()
 
-    suspend fun updateData(context: Context, widgetIds: List<Int>) {
+    suspend fun updateData(widgetIds: List<Int>) {
         for (widgetId in widgetIds) {
-            val glanceId = GlanceAppWidgetManager(context).getGlanceIdBy(widgetId)
+            val glanceId = glanceAppWidgetManager.getGlanceIdBy(widgetId)
             val user = apiPrefs.user
             if (user == null) {
                 _uiState.emit(Pair(glanceId, GradesWidgetUiState(WidgetState.NotLoggedIn)))
@@ -57,7 +58,7 @@ class GradesWidgetUpdater(
                         glanceId,
                         GradesWidgetUiState(
                             WidgetState.Content,
-                            courses.map { it.toWidgetCourseItem() }
+                            courses.map { it.toWidgetCourseItem(apiPrefs) }
                         )
                     )
                 )

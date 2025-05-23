@@ -29,4 +29,3 @@ sealed class SingleGradeWidgetAction {
     data class UpdateAllState(val state: SingleGradeWidgetUiState): SingleGradeWidgetAction()
     data object UpdateUi: SingleGradeWidgetAction()
 }
-

@@ -19,6 +19,7 @@ package com.instructure.student.di
 
 import android.appwidget.AppWidgetManager
 import android.content.Context
+import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
@@ -44,6 +45,13 @@ class WidgetModule {
         @ApplicationContext context: Context
     ): AppWidgetManager {
         return AppWidgetManager.getInstance(context)
+    }
+
+    @Provides
+    fun provideGlanceAppWidgetManager(
+        @ApplicationContext context: Context
+    ): GlanceAppWidgetManager {
+        return GlanceAppWidgetManager(context)
     }
 
     @Provides
@@ -78,16 +86,18 @@ class WidgetModule {
     @Provides
     fun provideGradesWidgetUpdater(
         repository: GradesWidgetRepository,
-        apiPrefs: ApiPrefs
+        apiPrefs: ApiPrefs,
+        glanceAppWidgetManager: GlanceAppWidgetManager
     ): GradesWidgetUpdater {
-        return GradesWidgetUpdater(repository, apiPrefs)
+        return GradesWidgetUpdater(repository, apiPrefs, glanceAppWidgetManager)
     }
 
     @Provides
     fun provideSingleGradeWidgetUpdater(
         repository: GradesWidgetRepository,
-        apiPrefs: ApiPrefs
+        apiPrefs: ApiPrefs,
+        glanceAppWidgetManager: GlanceAppWidgetManager
     ): SingleGradeWidgetUpdater {
-        return SingleGradeWidgetUpdater(repository, apiPrefs)
+        return SingleGradeWidgetUpdater(repository, apiPrefs, glanceAppWidgetManager)
     }
 }

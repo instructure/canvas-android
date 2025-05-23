@@ -118,7 +118,7 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
                     handleAction(context, action, widgetIds)
                 }
             }
-            updater.updateData(context, widgetIds, showLoading, forceNetwork)
+            updater.updateData(widgetIds, showLoading, forceNetwork)
         }
     }
 
