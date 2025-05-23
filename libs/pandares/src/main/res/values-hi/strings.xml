@@ -291,7 +291,7 @@
     <string name="Todo">करने के लिए</string>
     <string name="todoFilter">पाठ्यक्रम फ़िल्टर करें</string>
     <string name="filterByEllipsis">इसके अनुसार फ़िल्टर करें...</string>
-    <string name="favoritedCoursesLabel">पसंदीदा किए गए पाठ्यक्रम</string>
+    <string name="favoriteCoursesLabel">पसंदीदा किए गए पाठ्यक्रम</string>
     <string name="Event">घटना</string>
     <string name="eventSuccessfulDeletion">घटना सफलतापूर्वक मिटाई गई थी</string>
     <string name="timeIconDescription">समय आइकन</string>
@@ -1784,7 +1784,6 @@
     <string name="screenTitleHelp">मदद</string>
     <string name="screenTitleManageStudents">छात्र प्रबंधित करें</string>
     <string name="screenTitleSettings">सेटिंग्स</string>
-    <string name="navigationDrawerSwitchUsers">उपयोगकर्ता स्विच करें</string>
     <string name="navigationDrawerLogOut">लॉग आउट करें</string>
     <string name="noStudentsError">कोई छात्र नहीं</string>
     <string name="noStudentsErrorDescription">आप किसी भी छात्र की समीक्षा नहीं कर रहे हैं।</string>

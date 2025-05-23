@@ -185,7 +185,7 @@ class RatingDialog : BaseCanvasDialogFragment() {
         var versionCode = 0
         try {
             pInfo = requireActivity().packageManager.getPackageInfo(requireActivity().packageName, 0)
-            versionName = pInfo.versionName.orEmpty()
+            versionName = pInfo.versionName ?: ""
             versionCode = pInfo.versionCode
         } catch (e: PackageManager.NameNotFoundException) {
             Logger.d(e.message)

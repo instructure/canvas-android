@@ -33,6 +33,7 @@ import androidx.core.net.toUri
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.media3.common.util.UnstableApi
 import androidx.media3.ui.PlayerView
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.ExoAgent
@@ -104,6 +105,7 @@ fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked:
     )
 }
 
+@UnstableApi
 @Composable
 @Preview
 fun MediaFileContentPreview() {

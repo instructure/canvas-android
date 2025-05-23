@@ -291,7 +291,7 @@
     <string name="Todo">Tareas pendientes</string>
     <string name="todoFilter">Filtrar las asignaturas</string>
     <string name="filterByEllipsis">Filtrar por...</string>
-    <string name="favoritedCoursesLabel">Asignaturas favoritas</string>
+    <string name="favoriteCoursesLabel">Asignaturas favoritas</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">Se ha eliminado el evento</string>
     <string name="timeIconDescription">Icono de horario</string>
@@ -1778,7 +1778,6 @@
     <string name="screenTitleHelp">Ayuda</string>
     <string name="screenTitleManageStudents">Administrar estudiantes</string>
     <string name="screenTitleSettings">Configuraciones</string>
-    <string name="navigationDrawerSwitchUsers">Cambiar usuarios</string>
     <string name="navigationDrawerLogOut">Cerrar sesión</string>
     <string name="noStudentsError">No hay estudiantes</string>
     <string name="noStudentsErrorDescription">No estás observando a ningún estudiante.</string>

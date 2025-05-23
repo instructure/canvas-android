@@ -286,7 +286,7 @@
     <string name="Todo">待办事项</string>
     <string name="todoFilter">过滤课程</string>
     <string name="filterByEllipsis">过滤条件...</string>
-    <string name="favoritedCoursesLabel">收藏的课程</string>
+    <string name="favoriteCoursesLabel">收藏的课程</string>
     <string name="Event">活动</string>
     <string name="eventSuccessfulDeletion">事件已成功删除</string>
     <string name="timeIconDescription">时间图标</string>
@@ -1745,7 +1745,6 @@
     <string name="screenTitleHelp">帮助</string>
     <string name="screenTitleManageStudents">管理学生</string>
     <string name="screenTitleSettings">设置</string>
-    <string name="navigationDrawerSwitchUsers">转换用户</string>
     <string name="navigationDrawerLogOut">注销</string>
     <string name="noStudentsError">没有学生</string>
     <string name="noStudentsErrorDescription">您未观察任何学生。</string>

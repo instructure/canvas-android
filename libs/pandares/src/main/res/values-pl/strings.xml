@@ -301,7 +301,7 @@
     <string name="Todo">Lista zadań</string>
     <string name="todoFilter">Filtruj kursy</string>
     <string name="filterByEllipsis">Filtruj wg...</string>
-    <string name="favoritedCoursesLabel">Ulubione kursy</string>
+    <string name="favoriteCoursesLabel">Ulubione kursy</string>
     <string name="Event">Wydarzenie</string>
     <string name="eventSuccessfulDeletion">Wydarzenie zostało pomyślnie usunięte</string>
     <string name="timeIconDescription">Ikona godziny</string>
@@ -1838,7 +1838,6 @@
     <string name="screenTitleHelp">Pomoc</string>
     <string name="screenTitleManageStudents">Zarządzaj uczestnikami</string>
     <string name="screenTitleSettings">Ustawienia</string>
-    <string name="navigationDrawerSwitchUsers">Przełącz użytkownika</string>
     <string name="navigationDrawerLogOut">Wyloguj</string>
     <string name="noStudentsError">Brak uczestników</string>
     <string name="noStudentsErrorDescription">Nie obserwujesz żadnych uczestników.</string>

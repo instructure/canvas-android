@@ -22,6 +22,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
@@ -35,7 +37,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -61,7 +62,7 @@ class AiAssistChatViewModel @Inject constructor(
     }
 
     private fun executeExistingPrompt(prompt: AiAssistMessagePrompt) {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(isLoading = true,)
             }
@@ -96,6 +97,8 @@ class AiAssistChatViewModel @Inject constructor(
                     isLoading = false
                 )
             }
+        } catch {
+            // Error handling
         }
     }
 
@@ -108,7 +111,7 @@ class AiAssistChatViewModel @Inject constructor(
     }
 
     private fun onTextInputSubmitted() {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             val prompt = _uiState.value.inputTextValue.text
             _uiState.update {
                 it.copy(
@@ -132,6 +135,8 @@ class AiAssistChatViewModel @Inject constructor(
                     isLoading = false,
                 )
             }
+        } catch {
+            // Error handling
         }
     }
 
@@ -155,14 +160,14 @@ class AiAssistChatViewModel @Inject constructor(
         }
     }
 
-    suspend fun tellMeMorePrompt(contextString: String): String {
+    private suspend fun tellMeMorePrompt(contextString: String): String {
         return repository.answerPrompt(
             prompt = "In 1-2 paragraphs, tell me more about this content.",
             contextString = contextString
         )
     }
 
-    suspend fun generateKeyTakeaways(contextString: String): String {
+    private suspend fun generateKeyTakeaways(contextString: String): String {
         return repository.answerPrompt(
             prompt = "Give key takeaways from this content in 3 bullet points; don't use any information besides the provided content.",
             contextString = contextString
