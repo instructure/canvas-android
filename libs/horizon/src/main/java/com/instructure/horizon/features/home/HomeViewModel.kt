@@ -38,7 +38,7 @@ class HomeViewModel @Inject constructor(
     private val localeUtils: LocaleUtils
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(HomeUiState())
+    private val _uiState = MutableStateFlow(HomeUiState(updateShowAiAssist = ::updateShowAiAssist))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -53,6 +53,10 @@ class HomeViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(initialDataLoading = false) }
         }
+    }
+
+    private fun updateShowAiAssist(showAiAssist: Boolean) {
+        _uiState.update { it.copy(showAiAssist = showAiAssist) }
     }
 
     private fun saveUserInfo(user: User) {

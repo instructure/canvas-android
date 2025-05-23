@@ -291,7 +291,7 @@
     <string name="Todo">Tasgau i’w Gwneud</string>
     <string name="todoFilter">Hidlo Cyrsiau</string>
     <string name="filterByEllipsis">Hidlo yn ôl&#8230;</string>
-    <string name="favoritedCoursesLabel">Cyrsiau wedi’u hoffi</string>
+    <string name="favoriteCoursesLabel">Cyrsiau wedi’u hoffi</string>
     <string name="Event">Digwyddiad</string>
     <string name="eventSuccessfulDeletion">Wedi llwyddo i ddileu digwyddiad</string>
     <string name="timeIconDescription">Eicon Amser</string>
@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Rheoli Myfyrwyr</string>
     <string name="screenTitleSettings">Gosodiadau</string>
-    <string name="navigationDrawerSwitchUsers">Newid Defnyddwyr</string>
     <string name="navigationDrawerLogOut">Allgofnodi</string>
     <string name="noStudentsError">Dim Myfyrwyr</string>
     <string name="noStudentsErrorDescription">Dydych chi ddim yn arsyllu unrhyw fyfyrwyr.</string>

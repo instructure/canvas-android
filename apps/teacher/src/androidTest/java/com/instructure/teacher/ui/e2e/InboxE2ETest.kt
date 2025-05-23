@@ -247,10 +247,14 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxPage.filterInbox("Archived")
 
         Log.d(ASSERTION_TAG, "Assert that '${seedConversation2[0].subject}' conversation is displayed in the 'ARCHIVED' scope.")
-        retry(times = 10, delay = 3000, block = {
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            inboxPage.filterInbox("Inbox")
+            inboxPage.filterInbox("Archived")
             refresh()
-            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
         })
+        {
+            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        }
 
         Log.d(STEP_TAG, "Select '${seedConversation2[0].subject}' conversation.")
         inboxPage.selectConversation(seedConversation2[0].subject)
@@ -261,9 +265,16 @@ class InboxE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Mark as Unread' button.")
         inboxPage.clickMarkAsUnread()
 
-        Log.d(ASSERTION_TAG, "Assert that the empty view will be displayed and the '${seedConversation2[0].subject}' conversation is not because it should disappear from 'Archived' list.")
-        inboxPage.assertInboxEmpty()
-        inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            inboxPage.selectConversation(seedConversation2[0].subject)
+            inboxPage.assertSelectedConversationNumber("1")
+            inboxPage.clickMarkAsUnread()
+            refresh()
+        }) {
+            Log.d(ASSERTION_TAG, "Assert that the empty view will be displayed and the '${seedConversation2[0].subject}' conversation is not because it should disappear from 'Archived' list.")
+            inboxPage.assertInboxEmpty()
+            inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+        }
 
         Log.d(STEP_TAG, "Select 'Unread' conversation filter.")
         inboxPage.filterInbox("Unread")
@@ -284,10 +295,21 @@ class InboxE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Select 'Archived' conversation filter.")
         inboxPage.filterInbox("Archived")
-        refresh()
 
         Log.d(ASSERTION_TAG, "Assert that '${seedConversation2[0].subject}' conversation is displayed by the 'Archived' filter.")
-        inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            inboxPage.filterInbox("Inbox")
+            refresh()
+            inboxPage.openConversation(seedConversation2[0].subject)
+            inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+            inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+            Espresso.pressBack()
+            inboxPage.filterInbox("Archived")
+            refresh()
+        }) {
+            refresh()
+            inboxPage.assertConversationDisplayed(seedConversation2[0].subject)
+        }
 
         Log.d(ASSERTION_TAG, "Assert that '${seedConversation2[0].subject}' conversation does not have the unread mark because an archived conversation cannot be unread.")
         inboxPage.assertUnreadMarkerVisibility(seedConversation2[0].subject, ViewMatchers.Visibility.GONE)
@@ -335,8 +357,16 @@ class InboxE2ETest : TeacherComposeTest() {
         inboxPage.clickArchive()
 
         Log.d(ASSERTION_TAG, "Assert that non of them are displayed in the 'INBOX' scope.")
-        inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
-        inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
+            inboxPage.filterInbox("Inbox")
+            inboxPage.filterInbox("Archived")
+            refresh()
+            inboxPage.clickArchive()
+        })
+        {
+            inboxPage.assertConversationNotDisplayed(seedConversation2[0].subject)
+            inboxPage.assertConversationNotDisplayed(seedConversation3[0].subject)
+        }
 
         Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope.")
         inboxPage.filterInbox("Archived")

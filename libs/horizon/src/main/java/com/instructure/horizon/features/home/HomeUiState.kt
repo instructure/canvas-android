@@ -17,4 +17,9 @@ package com.instructure.horizon.features.home
 
 import com.instructure.canvasapi2.models.CanvasTheme
 
-data class HomeUiState(val initialDataLoading: Boolean = true, val theme: CanvasTheme? = null)
+data class HomeUiState(
+    val initialDataLoading: Boolean = true,
+    val theme: CanvasTheme? = null,
+    val showAiAssist: Boolean = false,
+    val updateShowAiAssist: (Boolean) -> Unit,
+)

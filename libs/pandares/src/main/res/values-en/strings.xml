@@ -291,7 +291,7 @@
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Courses</string>
     <string name="filterByEllipsis">Filter by…</string>
-    <string name="favoritedCoursesLabel">Favorited Courses</string>
+    <string name="favoriteCoursesLabel">Favorited Courses</string>
     <string name="Event">Event</string>
     <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
     <string name="timeIconDescription">Time Icon</string>
@@ -1792,7 +1792,6 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Manage Students</string>
     <string name="screenTitleSettings">Settings</string>
-    <string name="navigationDrawerSwitchUsers">Switch Users</string>
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
