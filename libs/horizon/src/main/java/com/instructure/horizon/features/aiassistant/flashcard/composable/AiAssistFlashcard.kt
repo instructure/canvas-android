@@ -166,7 +166,6 @@ private fun AiAssistFlashCardQuestionPreview() {
         answer = "Paris",
         isFlippedToAnswer = false,
         onClick = {},
-//        modifier = Modifier.padding(16.dp)
     )
 }
 
