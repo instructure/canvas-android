@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material.Divider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -229,6 +230,7 @@ fun ComposeRCE(
         }
         if (showControls && rceControlsPosition == RceControlsPosition.TOP) {
             RCEControls(rceState, onActionClick = onActionClick, onColorClick = onColorClick)
+            Divider()
         }
 
         AndroidView(
@@ -248,6 +250,7 @@ fun ComposeRCE(
 
         if (showControls && rceControlsPosition == RceControlsPosition.BOTTOM) {
             Spacer(Modifier.size(8.dp))
+            Divider()
             RCEControls(rceState, onActionClick = onActionClick, onColorClick = onColorClick)
         }
     }
