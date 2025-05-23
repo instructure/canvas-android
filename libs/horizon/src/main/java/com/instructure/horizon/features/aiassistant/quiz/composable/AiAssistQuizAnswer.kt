@@ -17,9 +17,13 @@
 package com.instructure.horizon.features.aiassistant.quiz.composable
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -56,6 +60,7 @@ fun AiAssistQuizAnswer(
     AnimatedContent(
         status,
         label = "AiAssistQuizAnswer",
+        transitionSpec = { fadeIn() togetherWith fadeOut() } ,
     ){ status ->
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -88,7 +93,7 @@ fun AiAssistQuizAnswer(
             )
 
             when (status) {
-                AiAssistQuizAnswerStatus.UNSELECTED -> {}
+                AiAssistQuizAnswerStatus.UNSELECTED -> Box(modifier = Modifier.size(20.dp))
                 AiAssistQuizAnswerStatus.SELECTED -> Icon(
                     painter = painterResource(R.drawable.check),
                     contentDescription = stringResource(R.string.a11y_selected),
