@@ -20,13 +20,14 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigationTypeMap
 import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -49,7 +50,7 @@ class AiAssistFlashcardViewModel @Inject constructor(
     }
 
     private fun generateNewFlashcards() {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(isLoading = true)
             }
@@ -68,6 +69,8 @@ class AiAssistFlashcardViewModel @Inject constructor(
                     },
                 )
             }
+        } catch {
+            // Handle error
         }
     }
 

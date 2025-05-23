@@ -29,8 +29,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistPagination
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.flashcard.composable.AiAssistFlashcard
@@ -101,4 +104,45 @@ fun AiAssistFlashcardScreen(
             }
         }
     }
+}
+
+@Composable
+@Preview
+private fun AiAssistFlashCardScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = AiAssistFlashcardUiState(
+        isLoading = true,
+        flashcardList = emptyList(),
+        onFlashcardClicked = {},
+        updateCurrentCardIndex = {}
+    )
+
+    AiAssistFlashcardScreen(
+        navController = NavHostController(ContextKeeper.appContext),
+        state = state,
+        onDismiss = {}
+    )
+}
+
+@Composable
+@Preview
+private fun AiAssistFlashCardScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = AiAssistFlashcardUiState(
+        isLoading = false,
+        flashcardList = listOf(
+            FlashcardState("What is the capital of France?", "Paris", false),
+            FlashcardState("What is the capital of Germany?", "Berlin", false)
+        ),
+        onFlashcardClicked = {},
+        updateCurrentCardIndex = {}
+    )
+
+    AiAssistFlashcardScreen(
+        navController = NavHostController(ContextKeeper.appContext),
+        state = state,
+        onDismiss = {}
+    )
 }
