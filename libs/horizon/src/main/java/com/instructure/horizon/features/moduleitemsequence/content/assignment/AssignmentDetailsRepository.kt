@@ -27,7 +27,7 @@ class AssignmentDetailsRepository @Inject constructor(
 ) {
 
     suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
-        val params = RestParams(isForceReadFromNetwork = true) // TODO
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
     }
 
