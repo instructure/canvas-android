@@ -322,7 +322,7 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
         goToInboxCompose(data)
         composeTestRule.waitForIdle()
 
-        inboxComposePage.pressBackButton()
+        inboxComposePage.clickOnCloseButton()
         inboxPage.assertInboxEmpty()
     }
 
@@ -334,7 +334,7 @@ abstract class InboxComposeInteractionTest : CanvasComposeTest() {
 
         inboxComposePage.typeBody("Test Body")
 
-        inboxComposePage.pressBackButton()
+        inboxComposePage.clickOnCloseButton()
         inboxComposePage.assertAlertDialog()
     }
 
