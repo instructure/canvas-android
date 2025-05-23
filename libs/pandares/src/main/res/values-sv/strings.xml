@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Hjälp</string>
     <string name="screenTitleManageStudents">Hantera studenter</string>
     <string name="screenTitleSettings">Inställningar</string>
-    <string name="navigationDrawerSwitchUsers">Växla användare</string>
     <string name="navigationDrawerLogOut">Logga ut</string>
     <string name="noStudentsError">Inga studenter</string>
     <string name="noStudentsErrorDescription">Du observerar inga studenter.</string>

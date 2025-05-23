@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Hjælp</string>
     <string name="screenTitleManageStudents">Administrer studerende</string>
     <string name="screenTitleSettings">Indstillinger</string>
-    <string name="navigationDrawerSwitchUsers">Skift brugere</string>
     <string name="navigationDrawerLogOut">Log ud</string>
     <string name="noStudentsError">Ingen studerende</string>
     <string name="noStudentsErrorDescription">Du observerer ikke nogen studerende.</string>

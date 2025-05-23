@@ -1776,7 +1776,6 @@
     <string name="screenTitleHelp">Guida</string>
     <string name="screenTitleManageStudents">Gestisci studenti</string>
     <string name="screenTitleSettings">Impostazioni</string>
-    <string name="navigationDrawerSwitchUsers">Cambia studenti</string>
     <string name="navigationDrawerLogOut">Disconnetti</string>
     <string name="noStudentsError">Nessuno studente</string>
     <string name="noStudentsErrorDescription">Non stati monitorando alcuno studente.</string>
