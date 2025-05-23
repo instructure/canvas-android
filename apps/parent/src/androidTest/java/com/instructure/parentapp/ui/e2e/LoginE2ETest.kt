@@ -107,7 +107,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -126,7 +126,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Previous Logins' section is displayed and both the '${parent.name}' and '${parent2.name}' parents are displayed on the previous login list.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -147,7 +147,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed. Assert that '${parent2.name}' parent is displayed but '${parent.name}' parent is not displayed within the previous logins list (as it was removed before).")
         loginLandingPage.assertDisplaysPreviousLogins()

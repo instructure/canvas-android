@@ -321,7 +321,7 @@ class SettingsE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the Left Side Navigation Drawer menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(STEP_TAG, "Click on the 'Find another school' button.")
         loginLandingPage.clickFindAnotherSchoolButton()
@@ -409,7 +409,7 @@ class SettingsE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the Left Side Navigation Drawer menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(STEP_TAG, "Login with user : '${parent.name}', login id: '${parent.loginId}' with 'one-click' login by selecting it from the 'Previous Logins' section.")
         loginLandingPage.loginWithPreviousUser(parent)
