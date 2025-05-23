@@ -158,7 +158,6 @@ class SingleGradeWidget : GlanceAppWidget() {
                 } else {
                     WideContent(it)
                 }
-
             }
         }
     }
