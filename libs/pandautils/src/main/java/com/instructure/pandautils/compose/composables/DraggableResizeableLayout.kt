@@ -252,7 +252,7 @@ fun DraggableResizableLayout(
 
                                     AnchorPoints.MIDDLE -> {
                                         coroutineScope.launch {
-                                            anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
+                                            anchoredDraggableState.animateTo(AnchorPoints.TOP)
                                         }
                                     }
 
@@ -269,8 +269,8 @@ fun DraggableResizableLayout(
                                     contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
                                     modifier = Modifier.rotate(
                                         when (anchoredDraggableState.currentValue) {
-                                            AnchorPoints.BOTTOM -> 90f
-                                            else -> 270f
+                                            AnchorPoints.TOP -> 270f
+                                            else -> 90f
                                         }
                                     )
                                 )

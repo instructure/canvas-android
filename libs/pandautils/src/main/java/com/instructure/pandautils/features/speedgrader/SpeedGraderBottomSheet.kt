@@ -22,10 +22,12 @@ import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.animateTo
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.material3.PrimaryTabRow
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -48,6 +50,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.features.speedgrader.details.SpeedGraderDetailsScreen
@@ -62,6 +65,9 @@ fun SpeedGraderBottomSheet(
     submissionId: Long
 ) {
 
+    val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val horizontal = windowClass != WindowWidthSizeClass.COMPACT
+
     val navController = rememberNavController()
     val startDestination = SpeedGraderTab.GRADE
     var selectedTab by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
@@ -70,7 +76,9 @@ fun SpeedGraderBottomSheet(
     val haptic = LocalHapticFeedback.current
     Column {
         PrimaryTabRow(
-            modifier = Modifier.padding(horizontal = 16.dp),
+            modifier = Modifier
+                .padding(horizontal = if (horizontal) 0.dp else 16.dp, vertical = 9.dp)
+                .requiredHeight(64.dp),
             selectedTabIndex = selectedTab,
             containerColor = colorResource(R.color.backgroundLightest),
             contentColor = colorResource(R.color.textInfo),

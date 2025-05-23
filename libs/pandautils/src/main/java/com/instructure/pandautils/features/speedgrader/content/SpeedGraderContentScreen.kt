@@ -20,7 +20,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -28,11 +27,16 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
+import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -46,6 +50,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.compose.AndroidFragment
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
@@ -56,7 +61,10 @@ import dagger.hilt.android.EarlyEntryPoints
 import java.util.Date
 
 @Composable
-fun SpeedGraderContentScreen() {
+fun SpeedGraderContentScreen(
+    expanded: Boolean,
+    onExpandClick: (() -> Unit)?
+) {
 
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -69,7 +77,14 @@ fun SpeedGraderContentScreen() {
     }
 
     Column {
-        UserHeader(uiState.userUrl, uiState.userName, uiState.submissionState, uiState.dueDate)
+        UserHeader(
+            uiState.userUrl,
+            uiState.userName,
+            uiState.submissionState,
+            uiState.dueDate,
+            expanded,
+            onExpandClick
+        )
         CanvasDivider()
         uiState.content?.let {
             val route = router.getRouteForContent(it)
@@ -87,8 +102,13 @@ private fun UserHeader(
     userUrl: String?,
     userName: String?,
     submissionStatus: SubmissionStateLabel,
-    dueDate: Date?
+    dueDate: Date?,
+    expanded: Boolean,
+    onExpandClick: (() -> Unit)?
 ) {
+
+    val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val horizontal = windowClass != WindowWidthSizeClass.COMPACT
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -137,6 +157,24 @@ private fun UserHeader(
                 }
             }
         }
+        if (horizontal) {
+            var expandedState by remember { mutableStateOf(expanded) }
+            Spacer(modifier = Modifier.weight(1f))
+            IconButton(
+                onClick = {
+                    expandedState = !expandedState
+                    onExpandClick?.invoke()
+                },
+                modifier = Modifier
+                    .padding(start = 8.dp)
+            ) {
+                Icon(
+                    painter = painterResource(id = if (expandedState) R.drawable.ic_collapse_bottomsheet else R.drawable.ic_expand_bottomsheet),
+                    contentDescription = stringResource(if (expandedState) R.string.content_description_collapse_content else R.string.content_description_expand_content),
+                    tint = colorResource(id = R.color.textInfo),
+                )
+            }
+        }
     }
 }
 
@@ -172,6 +210,8 @@ fun UserHeaderPreview() {
         userUrl = null,
         userName = "John Doe",
         dueDate = Date(),
-        submissionStatus = SubmissionStateLabel.GRADED
+        submissionStatus = SubmissionStateLabel.GRADED,
+        expanded = false,
+        onExpandClick = null
     )
 }
