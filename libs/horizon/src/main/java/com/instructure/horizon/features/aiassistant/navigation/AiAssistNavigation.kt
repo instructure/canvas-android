@@ -18,6 +18,8 @@ package com.instructure.horizon.features.aiassistant.navigation
 
 import android.net.Uri
 import android.os.Bundle
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -35,6 +37,7 @@ import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardS
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardViewModel
 import com.instructure.horizon.features.aiassistant.main.AiAssistMainScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
+import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizViewModel
 import kotlinx.serialization.json.Json
 import kotlin.reflect.typeOf
 
@@ -48,6 +51,10 @@ fun AiAssistNavigation(
     NavHost(
         navController,
         startDestination = AiAssistRoute.AiAssistMain.route,
+        enterTransition = { slideInHorizontally(initialOffsetX = { it }) },
+        exitTransition = { slideOutHorizontally(targetOffsetX = { -it }) },
+        popEnterTransition = { slideInHorizontally(initialOffsetX = { -it }) },
+        popExitTransition = { slideOutHorizontally(targetOffsetX = { it }) },
         modifier = modifier
     ) {
         composable(AiAssistRoute.AiAssistMain.route) {
@@ -64,7 +71,9 @@ fun AiAssistNavigation(
         composable<AiAssistRoute.AiAssistQuiz>(
             typeMap = AiAssistNavigationTypeMap
         ) {
-            AiAssistQuizScreen(navController, onDismiss)
+            val viewModel: AiAssistQuizViewModel = hiltViewModel()
+            val state by viewModel.uiState.collectAsState()
+            AiAssistQuizScreen(navController, state, onDismiss)
         }
 
         composable<AiAssistRoute.AiAssistFlashcard>(
@@ -79,6 +88,8 @@ fun AiAssistNavigation(
 
 val AiAssistNavigationTypeMap = mapOf(
     typeOf<AiAssistRoute.AiAssistChat>() to navTypeOf<AiAssistRoute.AiAssistChat>(isNullableAllowed = true),
+    typeOf<AiAssistRoute.AiAssistQuiz>() to navTypeOf<AiAssistRoute.AiAssistQuiz>(isNullableAllowed = true),
+    typeOf<AiAssistRoute.AiAssistFlashcard>() to navTypeOf<AiAssistRoute.AiAssistFlashcard>(isNullableAllowed = true),
     typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
     typeOf<Map<String, String>>() to navTypeOf<Map<String, String>>(isNullableAllowed = true),
     typeOf<List<AiAssistMessage>>() to navTypeOf<List<AiAssistMessage>>(isNullableAllowed = true),
