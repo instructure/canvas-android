@@ -329,6 +329,11 @@ dependencies {
 
     implementation Libs.NAVIGATION_FRAGMENT
     implementation Libs.NAVIGATION_KTX
+
+    implementation Libs.GLANCE
+    implementation Libs.GLANCE_PREVIEW
+    implementation Libs.GLANCE_APPWIDGET
+    implementation Libs.GLANCE_APPWIDGET_PREVIEW
 }
 
 // Comment out this line if the reporting logic starts going wonky.

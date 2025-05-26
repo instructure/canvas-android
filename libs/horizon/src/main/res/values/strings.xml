@@ -214,4 +214,10 @@
     <string name="assignmentDetails_tools">Tools</string>
     <string name="assignmentDetails_attemptHistory">Attempt History</string>
     <string name="assignmentDetails_comments">Comments</string>
+    <string name="ai_HowCanIHelpYou">How can I help you?</string>
+    <string name="ai_QuizMe">Quiz me on this material</string>
+    <string name="ai_summarize">Summarize this material</string>
+    <string name="ai_giveMeKeyTakeaways">Give me key takeaways</string>
+    <string name="ai_tellMeMore">Tell me more about this topic</string>
+    <string name="ai_generateFlashcards">Generate some study flashcards</string>
 </resources>

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.aiassistant.common
+package com.instructure.horizon.features.aiassistant.common.composable
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row

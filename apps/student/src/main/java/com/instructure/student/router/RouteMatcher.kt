@@ -45,6 +45,7 @@ import com.instructure.pandautils.features.assignments.details.AssignmentDetails
 import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendar.CalendarFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
 import com.instructure.pandautils.features.calendartodo.details.ToDoFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
@@ -87,6 +88,7 @@ import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.fragment.ProfileSettingsFragment
 import com.instructure.student.fragment.StudioWebViewFragment
+import com.instructure.student.fragment.ToDoListFragment
 import com.instructure.student.fragment.UnsupportedFeatureFragment
 import com.instructure.student.fragment.UnsupportedTabFragment
 import com.instructure.student.fragment.ViewHtmlFragment
@@ -332,11 +334,16 @@ object RouteMatcher : BaseRouteMatcher() {
         )
 
         // Calendar
+        routes.add(Route("/calendar/:${CalendarFragment.SELECTED_DAY}", CalendarFragment::class.java))
         routes.add(Route("/calendar", CalendarFragment::class.java))
         routes.add(Route("/:${EventFragment.CONTEXT_TYPE}/:${EventFragment.CONTEXT_ID}/calendar_events/:${EventFragment.SCHEDULE_ITEM_ID}", EventFragment::class.java))
 
         // To Do
+        routes.add(Route("/todos/new", CreateUpdateToDoFragment::class.java))
         routes.add(Route("/todos/:${ToDoFragment.PLANNABLE_ID}", ToDoFragment::class.java))
+
+        // To Do List
+        routes.add(Route("/todolist", ToDoListFragment::class.java).copy(canvasContext = ApiPrefs.user))
 
         // Syllabus
         routes.add(Route(courseOrGroup("/:${RouterParams.COURSE_ID}/assignments/syllabus"), SyllabusRepositoryFragment::class.java))

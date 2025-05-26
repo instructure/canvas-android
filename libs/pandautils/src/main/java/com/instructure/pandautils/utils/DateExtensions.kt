@@ -33,6 +33,7 @@ import java.util.Calendar
 import java.util.Date
 import java.util.Locale
 import kotlin.time.Duration
+import org.threeten.bp.format.DateTimeParseException as ThreeTenDateTimeParseException
 
 fun OffsetDateTime.getShortMonthAndDay(): String {
     // Get year if the year of the due date isn't the current year
@@ -130,4 +131,12 @@ fun Date.format(pattern: String): String {
 fun Date.formatDayMonthYear(): String {
     val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
     return formatter.format(this)
+}
+
+fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {
+    return try {
+        LocalDate.parse(this, formatter)
+    } catch (e: ThreeTenDateTimeParseException) {
+        null
+    }
 }

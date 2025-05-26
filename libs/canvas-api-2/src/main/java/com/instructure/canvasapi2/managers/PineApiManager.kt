@@ -24,7 +24,6 @@ import com.instructure.pine.UpsertDocumentMutation
 import com.instructure.pine.type.DocumentUpsertInput
 import com.instructure.pine.type.MessageInput
 import com.instructure.pine.type.RagQueryInput
-import org.json.JSONObject
 import javax.inject.Inject
 
 enum class DocumentSource(val apiValue: String) {
@@ -50,7 +49,7 @@ class PineApiManager @Inject constructor(
                 source = source.apiValue,
                 sourceType = type.apiValue,
                 sourceId = id,
-                metadata = JSONObject(metadata).toString(),
+                metadata = metadata,
                 text = text,
             )
         )
@@ -68,7 +67,7 @@ class PineApiManager @Inject constructor(
             RagQueryInput(
                 messages = messages,
                 source = source.apiValue,
-                metadata = JSONObject(metadata).toString(),
+                metadata = metadata,
             )
         )
         val result = QLClientConfig

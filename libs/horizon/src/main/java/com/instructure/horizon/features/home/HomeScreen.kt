@@ -46,19 +46,20 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.AiAssistantScreen
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.navelements.SelectableNavigationItem
-import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 
 data class BottomNavItem(
-    val route: String,
+    val route: String?,
     @StringRes val label: Int,
     @DrawableRes val icon: Int,
     @DrawableRes val selectedIcon: Int
@@ -67,7 +68,7 @@ data class BottomNavItem(
 private val bottomNavItems = listOf(
     BottomNavItem(HomeNavigationRoute.Dashboard.route, R.string.bottomNav_home, R.drawable.home, R.drawable.home_filled),
     BottomNavItem(HomeNavigationRoute.Learn.route, R.string.bottomNav_learn, R.drawable.book_2, R.drawable.book_2_filled),
-    BottomNavItem(MainNavigationRoute.AiAssistant.route, R.string.bottomNav_aiAssist, R.drawable.ai, R.drawable.ai_filled),
+    BottomNavItem(null, R.string.bottomNav_aiAssist, R.drawable.ai, R.drawable.ai_filled),
     BottomNavItem(HomeNavigationRoute.Skillspace.route, R.string.bottomNav_skillspace, R.drawable.hub, R.drawable.hub_filled),
     BottomNavItem(
         HomeNavigationRoute.Account.route,
@@ -94,10 +95,13 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
         if (uiState.initialDataLoading) {
             Spinner(modifier = Modifier.fillMaxSize())
         } else {
+            if (uiState.showAiAssist) {
+                AiAssistantScreen(AiAssistContext(), navController, { uiState.updateShowAiAssist(false) })
+            }
             HomeNavigation(navController, parentNavController, Modifier.padding(padding))
         }
     }, containerColor = HorizonColors.Surface.pagePrimary(), bottomBar = {
-        BottomNavigationBar(navController, currentDestination, parentNavController)
+        BottomNavigationBar(navController, currentDestination, parentNavController, { uiState.updateShowAiAssist(it) })
     })
 }
 
@@ -106,16 +110,16 @@ private fun BottomNavigationBar(
     homeNavController: NavController,
     currentDestination: NavDestination?,
     mainNavController: NavHostController,
+    updateShowAiAssist: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Surface(shadowElevation = HorizonElevation.level5) {
         NavigationBar(containerColor = HorizonColors.Surface.pageSecondary(), modifier = modifier) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
-                if (item.route == MainNavigationRoute.AiAssistant.route) {
+                if (item.route == null) {
                     AiAssistantItem(item, onClick = {
-                        // This will be changed later because in this case we don't have the current screen in the background
-                        mainNavController.navigate(item.route)
+                        updateShowAiAssist(true)
                     })
                 } else {
                     SelectableNavigationItem(item, selected, onClick = {
