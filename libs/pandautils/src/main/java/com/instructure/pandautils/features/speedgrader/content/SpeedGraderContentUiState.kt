@@ -15,8 +15,10 @@
  *
  */package com.instructure.pandautils.features.speedgrader.content
 
+import android.graphics.Color
 import android.net.Uri
 import android.os.Parcelable
+import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import kotlinx.parcelize.Parcelize
@@ -28,16 +30,17 @@ data class SpeedGraderContentUiState(
     val userName: String? = null,
     val userUrl: String? = null,
     val submissionState: SubmissionStateLabel = SubmissionStateLabel.NONE,
-    val dueDate: Date? = null
+    val dueDate: Date? = null,
+    val attachmentSelectorUiState: SelectorUiState = SelectorUiState()
 )
 
 @Parcelize
 sealed class GradeableContent : Parcelable
-object NoSubmissionContent : GradeableContent()
-object NoneContent : GradeableContent()
+data object NoSubmissionContent : GradeableContent()
+data object NoneContent : GradeableContent()
 class ExternalToolContent(val url: String) : GradeableContent()
-object OnPaperContent : GradeableContent()
-object UnsupportedContent : GradeableContent()
+data object OnPaperContent : GradeableContent()
+data object UnsupportedContent : GradeableContent()
 class OtherAttachmentContent(val attachment: Attachment) : GradeableContent()
 class PdfContent(
     val url: String,
@@ -49,7 +52,7 @@ class ImageContent(val url: String, val contentType: String) : GradeableContent(
 class UrlContent(val url: String, val previewUrl: String?) : GradeableContent()
 class DiscussionContent(val previewUrl: String?) : GradeableContent()
 class StudentAnnotationContent(val submissionId: Long, val attempt: Long) : GradeableContent()
-object AnonymousSubmissionContent : GradeableContent()
+data object AnonymousSubmissionContent : GradeableContent()
 
 class QuizContent(
     val courseId: Long,
@@ -65,3 +68,15 @@ class MediaContent(
     val thumbnailUrl: String? = null,
     val displayName: String? = null
 ) : GradeableContent()
+
+data class SelectorItem(
+    val id: Long,
+    val title: String
+)
+
+data class SelectorUiState(
+    @ColorInt val color: Int = Color.GREEN,
+    val items: List<SelectorItem> = emptyList(),
+    val selectedItemId: Long? = null,
+    val onItemSelected: (Long) -> Unit = {}
+)

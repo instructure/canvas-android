@@ -45,6 +45,7 @@ query SubmissionContent($userId: ID!, $assignmentId: ID!) {
             url
         }
         attachments {
+            _id
             contentType
             mimeClass
             createdAt

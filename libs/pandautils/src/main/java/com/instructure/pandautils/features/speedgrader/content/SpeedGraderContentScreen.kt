@@ -16,29 +16,47 @@
  */
 package com.instructure.pandautils.features.speedgrader.content
 
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -55,27 +73,52 @@ import java.util.Date
 
 @Composable
 fun SpeedGraderContentScreen() {
-
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
     val context = LocalContext.current.applicationContext
 
     val router: SpeedGraderContentRouter by lazy {
-        EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java)
-            .speedGraderContentRouter()
+        EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java).speedGraderContentRouter()
     }
 
-    Column {
-        UserHeader(uiState.userUrl, uiState.userName, uiState.submissionState, uiState.dueDate)
-        CanvasDivider()
-        uiState.content?.let {
-            val route = router.getRouteForContent(it)
-            AndroidFragment(
-                clazz = route.clazz,
-                arguments = route.bundle,
-                modifier = Modifier.fillMaxSize()
+    SpeedGraderContentScreen(uiState, router)
+}
+
+@Composable
+private fun SpeedGraderContentScreen(
+    uiState: SpeedGraderContentUiState,
+    router: SpeedGraderContentRouter
+) {
+    Scaffold(
+        containerColor = colorResource(id = R.color.backgroundLightest),
+        modifier = Modifier.fillMaxSize()
+    ) {
+        Column(Modifier.padding(it)) {
+            UserHeader(
+                userUrl = uiState.userUrl,
+                userName = uiState.userName,
+                submissionStatus = uiState.submissionState,
+                dueDate = uiState.dueDate
             )
+            CanvasDivider()
+            if (uiState.attachmentSelectorUiState.items.isNotEmpty()) {
+                SelectorContent(
+                    attemptSelectorUiState = SelectorUiState(),
+                    attachmentSelectorUiState = uiState.attachmentSelectorUiState
+                )
+                CanvasDivider()
+            }
+            uiState.content?.let { content ->
+                key(content) {
+                    val route = router.getRouteForContent(content)
+                    AndroidFragment(
+                        clazz = route.clazz,
+                        arguments = route.bundle,
+                        modifier = Modifier.fillMaxSize()
+                    )
+                }
+            }
         }
     }
 }
@@ -162,7 +205,149 @@ private fun SubmissionStatus(
     }
 }
 
-@Preview
+@Composable
+private fun SelectorContent(
+    attemptSelectorUiState: SelectorUiState,
+    attachmentSelectorUiState: SelectorUiState,
+    modifier: Modifier = Modifier
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(44.dp)
+    ) {
+        if (attemptSelectorUiState.items.isNotEmpty()) {
+            Selector(
+                selectorUiState = attemptSelectorUiState,
+                modifier = Modifier.weight(1f)
+            )
+        }
+        if (attemptSelectorUiState.items.isNotEmpty() && attachmentSelectorUiState.items.isNotEmpty()) {
+            VerticalDivider(modifier = Modifier.padding(vertical = 8.dp))
+        }
+        if (attachmentSelectorUiState.items.isNotEmpty()) {
+            Selector(
+                selectorUiState = attachmentSelectorUiState,
+                modifier = Modifier.weight(1f)
+            )
+        }
+    }
+}
+
+@Composable
+private fun Selector(
+    selectorUiState: SelectorUiState,
+    modifier: Modifier = Modifier
+) {
+    val haptic = LocalHapticFeedback.current
+    var expanded by remember { mutableStateOf(false) }
+    val color = Color(color = selectorUiState.color)
+
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center,
+        modifier = modifier
+            .fillMaxWidth()
+            .clickable {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                expanded = true
+            }
+            .padding(8.dp)
+    ) {
+        Box(
+            modifier = Modifier
+                .padding(start = 8.dp)
+                .size(18.dp),
+            contentAlignment = Alignment.TopEnd
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_reset_history),
+                contentDescription = null,
+                modifier = Modifier.size(28.dp),
+                tint = color
+            )
+            Box(
+                modifier = Modifier
+                    .offset(x = 10.dp, y = (-6).dp)
+                    .size(16.dp)
+                    .border(1.dp, colorResource(R.color.textLightest), CircleShape)
+                    .background(color, CircleShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = selectorUiState.items.size.toString(),
+                    color = colorResource(id = R.color.textLightest),
+                    fontSize = 10.sp,
+                    fontWeight = FontWeight.Bold
+                )
+            }
+        }
+        Spacer(modifier = Modifier.width(18.dp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
+        ) {
+            Text(
+                text = selectorUiState.items.find { it.id == selectorUiState.selectedItemId }?.title.orEmpty(),
+                color = color,
+                fontSize = 16.sp,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.weight(1f)
+            )
+            Spacer(modifier = Modifier.width(4.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_arrow_down),
+                contentDescription = null,
+                tint = color
+            )
+        }
+    }
+
+    DropdownMenu(
+        expanded = expanded,
+        onDismissRequest = {
+            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            expanded = false
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(colorResource(R.color.backgroundLightest))
+    ) {
+        selectorUiState.items.forEach { item ->
+            DropdownMenuItem(
+                onClick = {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    selectorUiState.onItemSelected(item.id)
+                    expanded = false
+                },
+                text = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text(
+                            text = item.title,
+                            fontSize = 16.sp,
+                            color = colorResource(R.color.textDarkest),
+                            maxLines = 2,
+                            overflow = TextOverflow.Ellipsis,
+                            modifier = Modifier.weight(1f)
+                        )
+                        if (item.id == selectorUiState.selectedItemId) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.ic_checkmark_lined),
+                                contentDescription = null,
+                                tint = colorResource(R.color.textDarkest),
+                                modifier = Modifier.padding(start = 8.dp)
+                            )
+                        }
+                    }
+                }
+            )
+        }
+    }
+}
+
+@Preview(showBackground = true)
 @Composable
 fun UserHeaderPreview() {
     UserHeader(
@@ -171,4 +356,53 @@ fun UserHeaderPreview() {
         dueDate = Date(),
         submissionStatus = SubmissionStateLabel.GRADED
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun SelectorContentPreview() {
+    SelectorContent(
+        attemptSelectorUiState = SelectorUiState(
+            items = listOf(
+                SelectorItem(1, "Attempt 1")
+            ),
+            selectedItemId = 1,
+            color = android.graphics.Color.BLUE
+        ),
+        attachmentSelectorUiState = SelectorUiState(
+            items = listOf(
+                SelectorItem(1, "Attachment 1"),
+                SelectorItem(2, "Attachment 2"),
+                SelectorItem(3, "Attachment 3")
+            ),
+            selectedItemId = 1,
+            color = android.graphics.Color.BLUE
+        )
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SpeedGraderContentScreenPreview() {
+    val uiState = SpeedGraderContentUiState(
+        userUrl = null,
+        userName = "John Doe",
+        submissionState = SubmissionStateLabel.GRADED,
+        dueDate = Date(),
+        attachmentSelectorUiState = SelectorUiState(
+            color = android.graphics.Color.RED,
+            items = listOf(
+                SelectorItem(1, "Item 1"),
+                SelectorItem(2, "Item 2"),
+                SelectorItem(3, "Item 3")
+            ),
+            selectedItemId = 2
+        )
+    )
+
+    SpeedGraderContentScreen(uiState = uiState, router = object : SpeedGraderContentRouter {
+        override fun getRouteForContent(content: GradeableContent): SpeedGraderContentRoute {
+            throw NotImplementedError("No need for Preview")
+        }
+    })
 }
