@@ -1,11 +1,9 @@
 package com.instructure.student.di
 
-import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.espresso.fakes.FakeEnabledTabs
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.util.StudentLogoutHelper
-import com.instructure.student.widget.grades.GradesWidgetRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -27,12 +25,5 @@ class TestApplicationModule {
     @Singleton
     fun provideEnabledTabs(): EnabledTabs {
         return FakeEnabledTabs()
-    }
-
-    @Provides
-    fun provideGradesWidgetRepository(
-        courseApi: CourseAPI.CoursesInterface
-    ): GradesWidgetRepository {
-        return GradesWidgetRepository(courseApi)
     }
 }
