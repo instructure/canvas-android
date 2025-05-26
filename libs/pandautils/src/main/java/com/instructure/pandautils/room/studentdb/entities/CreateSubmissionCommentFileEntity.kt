@@ -13,29 +13,29 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.student.room.entities
+package com.instructure.pandautils.room.studentdb.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.instructure.canvasapi2.models.CanvasContext
-import java.util.Date
 
-@Entity
-data class CreateSubmissionEntity(
+@Entity(
+    foreignKeys = [
+        ForeignKey(
+            entity = CreatePendingSubmissionCommentEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["pendingCommentId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
+)
+data class CreateSubmissionCommentFileEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0L,
-    val submissionEntry: String? = null,
-    val lastActivityDate: Date? = null,
-    val assignmentName: String? = null,
-    val assignmentId: Long,
-    val canvasContext: CanvasContext,
-    val submissionType: String,
-    val errorFlag: Boolean = false,
-    val assignmentGroupCategoryId: Long? = null,
-    val userId: Long,
-    val currentFile: Long = 0L,
-    val fileCount: Int = 0,
-    val progress: Float? = null,
-    val annotatableAttachmentId: Long? = null,
-    val isDraft: Boolean = false
+    val pendingCommentId: Long,
+    val attachmentId: Long? = null,
+    val name: String,
+    val size: Long,
+    val contentType: String,
+    val fullPath: String
 )
