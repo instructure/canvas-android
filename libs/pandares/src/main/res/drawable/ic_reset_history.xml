@@ -1,12 +1,28 @@
+<!--
+  ~ Copyright (C) 2025 - present Instructure, Inc.
+  ~
+  ~     Licensed under the Apache License, Version 2.0 (the "License");
+  ~     you may not use this file except in compliance with the License.
+  ~     You may obtain a copy of the License at
+  ~
+  ~     http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~     Unless required by applicable law or agreed to in writing, software
+  ~     distributed under the License is distributed on an "AS IS" BASIS,
+  ~     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~     See the License for the specific language governing permissions and
+  ~     limitations under the License.
+  ~
+  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="24dp"
     android:viewportWidth="24"
     android:viewportHeight="24">
-  <path
-      android:pathData="M15.018,21.534C20.275,19.869 23.197,14.239 21.532,8.983C19.868,3.727 14.238,0.801 8.982,2.468C6.46,3.267 4.4,5 3.176,7.302V4.355H2V9.061H6.705V7.884H4.197C5.275,5.837 7.101,4.299 9.336,3.591C13.972,2.122 18.942,4.7 20.411,9.338C21.879,13.977 19.301,18.945 14.664,20.413C10.025,21.877 5.057,19.302 3.588,14.665L2.467,15.02C3.814,19.276 7.762,22.002 12.006,22.002C13.004,22.002 14.018,21.851 15.018,21.534Z"
-      android:fillColor="#273540"/>
-  <path
-      android:pathData="M12.588,11.706V6.118H11.412V12.294L16.353,16L17,15.137V15.015L12.588,11.706Z"
-      android:fillColor="#273540"/>
+    <path
+        android:fillColor="#273540"
+        android:pathData="M15.018,21.534C20.275,19.869 23.197,14.239 21.532,8.983C19.868,3.727 14.238,0.801 8.982,2.468C6.46,3.267 4.4,5 3.176,7.302V4.355H2V9.061H6.705V7.884H4.197C5.275,5.837 7.101,4.299 9.336,3.591C13.972,2.122 18.942,4.7 20.411,9.338C21.879,13.977 19.301,18.945 14.664,20.413C10.025,21.877 5.057,19.302 3.588,14.665L2.467,15.02C3.814,19.276 7.762,22.002 12.006,22.002C13.004,22.002 14.018,21.851 15.018,21.534Z" />
+    <path
+        android:fillColor="#273540"
+        android:pathData="M12.588,11.706V6.118H11.412V12.294L16.353,16L17,15.137V15.015L12.588,11.706Z" />
 </vector>
