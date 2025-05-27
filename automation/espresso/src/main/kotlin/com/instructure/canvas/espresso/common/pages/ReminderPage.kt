@@ -16,7 +16,10 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
+import android.view.KeyEvent
 import android.widget.DatePicker
+import android.widget.EditText
+import android.widget.ImageButton
 import android.widget.TimePicker
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasContentDescription
@@ -30,12 +33,18 @@ import androidx.compose.ui.test.performClick
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.pressKey
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.PickerActions
 import androidx.test.espresso.matcher.RootMatchers.isDialog
+import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
+import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.isRoot
 import androidx.test.espresso.matcher.ViewMatchers.withClassName
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.withIndex
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.scrollTo
@@ -119,4 +128,28 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
 
         onView(withId(android.R.id.button1)).perform(click())
     }
+
+    fun selectTime(){
+        onView(withIndex(isAssignableFrom(ImageButton::class.java), 0))
+            .perform(click())
+
+        onView(withIndex(isAssignableFrom(EditText::class.java), 0))
+            .perform(click())
+        onView(isRoot()).perform(pressKey(KeyEvent.KEYCODE_0))
+
+        onView(withIndex(isAssignableFrom(EditText::class.java), 1))
+            .perform(click())
+        onView(isRoot()).perform(pressKey(KeyEvent.KEYCODE_0))
+
+        onView(withText("OK"))
+            .inRoot(isDialog())
+            .perform(click())
+    }
+
+    fun assertInvalidTimeShown() {
+        onView(withText("Enter a valid time"))
+            .inRoot(isDialog())
+            .check(matches(isDisplayed()))
+    }
+
 }
