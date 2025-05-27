@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.NoteObjectType
 import com.instructure.canvasapi2.managers.NoteReaction
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.redwood.QueryNotesQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -36,22 +37,33 @@ class NotebookViewModel @Inject constructor(
     private val repository: NotebookRepository,
 ): ViewModel() {
     private var cursorId: String? = null
+    private var pageInfo: QueryNotesQuery.PageInfo? = null
 
-    private val _uiState = MutableStateFlow(NotebookUiState())
+    private val _uiState = MutableStateFlow(NotebookUiState(
+        loadPreviousPage = ::getPreviousPage,
+        loadNextPage = ::getNextPage,
+    ))
     val uiState = _uiState.asStateFlow()
 
     init {
         loadData()
     }
 
-    private fun loadData() {
+    private fun loadData(
+        after: String? = null,
+        before: String? = null
+    ) {
         viewModelScope.launch {
             _uiState.update {
                 it.copy(isLoading = true)
             }
 
-            val notesResponse = repository.getNotes()
-            cursorId = notesResponse.pageInfo.startCursor
+            val notesResponse = repository.getNotes(
+                after = after,
+                before = before,
+            )
+            cursorId = notesResponse.edges?.firstOrNull()?.cursor
+            pageInfo = notesResponse.pageInfo
 
             val notes = notesResponse.edges?.map { edge ->
                 val note = edge.node
@@ -98,5 +110,13 @@ class NotebookViewModel @Inject constructor(
                 )
             }
         }
+    }
+
+    private fun getNextPage() {
+        loadData(after = pageInfo?.endCursor)
+    }
+
+    private fun getPreviousPage() {
+        loadData(before = pageInfo?.startCursor)
     }
 }

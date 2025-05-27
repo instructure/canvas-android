@@ -26,8 +26,22 @@ import javax.inject.Inject
 class NotebookRepository @Inject constructor(
     private val redwoodApiManager: RedwoodApiManager,
 ) {
-    suspend fun getNotes(): QueryNotesQuery.Notes {
-        return redwoodApiManager.getNotes(firstN = 1)
+    suspend fun getNotes(
+        after: String? = null,
+        before: String? = null
+    ): QueryNotesQuery.Notes {
+        return if (before != null) {
+            redwoodApiManager.getNotes(
+                lastN = 1,
+                before = before,
+            )
+        } else {
+            redwoodApiManager.getNotes(
+                firstN = 1,
+                after = after,
+            )
+        }
+
     }
 
     fun parseHighlightedData(highlightData: Any?): NoteHighlightedData? {

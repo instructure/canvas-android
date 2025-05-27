@@ -19,7 +19,6 @@ package com.instructure.canvasapi2.managers
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
-import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.NoteFilterInput
 import com.instructure.redwood.type.OrderByInput
@@ -80,16 +79,16 @@ class RedwoodApiManager @Inject constructor(
         filter: NoteFilterInput? = null,
         firstN: Int? = null,
         lastN: Int? = null,
-        after: Date? = null,
-        before: Date? = null,
+        after: String? = null,
+        before: String? = null,
         orderBy: OrderByInput? = null,
     ): QueryNotesQuery.Notes {
         val query = QueryNotesQuery(
             filter = Optional.presentIfNotNull(filter),
             first = Optional.presentIfNotNull(firstN?.toDouble()),
             last = Optional.presentIfNotNull(lastN?.toDouble()),
-            after = Optional.presentIfNotNull(after?.toApiString()),
-            before = Optional.presentIfNotNull(before?.toApiString()),
+            after = Optional.presentIfNotNull(after),
+            before = Optional.presentIfNotNull(before),
             orderBy = Optional.presentIfNotNull(orderBy),
         )
         val result = QLClientConfig
