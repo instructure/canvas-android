@@ -84,14 +84,16 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, modifier: M
         uri?.let { uiState.onFileAdded(it) }
     }
 
+    val onGalleryClick: () -> Unit = {
+        showBottomSheet = false
+        filePickerLauncher.launch("image/*")
+    }
+
     if (showBottomSheet) {
         FileDropBottomSheet(
             onDismiss = { showBottomSheet = false }, callbacks = FileDropBottomSheetCallbacks(
-                onChoosePhoto = {
-                    showBottomSheet = false
-                    filePickerLauncher.launch("image/*")
-                },
-                onTakePhoto = onCameraClick,
+                onChoosePhoto = if (uiState.galleryPickerAllowed) onGalleryClick else null,
+                onTakePhoto = if (uiState.cameraAllowed) onCameraClick else null,
                 onUploadFile = {
                     showBottomSheet = false
                     filePickerLauncher.launch("*/*")

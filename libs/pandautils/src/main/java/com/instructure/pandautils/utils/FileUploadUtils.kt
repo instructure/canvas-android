@@ -205,7 +205,7 @@ object FileUploadUtils {
         }
     }
 
-    private fun getFileExtensionFromMimeType(mimeType: String?): String {
+    fun getFileExtensionFromMimeType(mimeType: String?): String {
         val mime = MimeTypeMap.getSingleton()
         return mime.getExtensionFromMimeType(mimeType) ?: return ""
     }
