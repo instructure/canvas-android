@@ -16,12 +16,14 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.content.Context
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -29,11 +31,13 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.getFileName
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -54,6 +58,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val submissionHelper: HorizonSubmissionHelper,
     private val apiPrefs: ApiPrefs,
     private val createSubmissionDao: CreateSubmissionDao,
+    private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -111,7 +116,11 @@ class AssignmentDetailsViewModel @Inject constructor(
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
                 when (it) {
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged)
-                    Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File("")
+                    Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File(
+                        allowedTypes = assignment.allowedExtensions,
+                        onFileAdded = ::onFileAdded
+                    )
+
                     else -> null
                 }
             }
@@ -127,7 +136,10 @@ class AssignmentDetailsViewModel @Inject constructor(
                         submissions = submissions,
                         currentSubmissionAttempt = initialAttempt
                     ),
-                    addSubmissionUiState = it.addSubmissionUiState.copy(submissionTypes = submissionTypes, submitEnabled = text.isNotEmpty()),
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionTypes = submissionTypes,
+                        submitEnabled = text.isNotEmpty()
+                    ),
                     showSubmissionDetails = lastActualSubmission != null,
                     showAddSubmission = lastActualSubmission == null,
                 )
@@ -284,15 +296,21 @@ class AssignmentDetailsViewModel @Inject constructor(
                 text = selectedSubmissionType.text,
                 assignmentName = assignmentName
             )
-            viewModelScope.launch {
-                createSubmissionDao.findSubmissionByAssignmentIdFlow(assignmentId, apiPrefs.user?.id.orDefault()).collect { entity ->
-                    if (entity != null) {
-                        updateSubmissionProgress(entity)
-                    }
+        } else if (selectedSubmissionType is AddSubmissionTypeUiState.File) {
+            submissionHelper.startFileSubmission(
+                canvasContext = CanvasContext.emptyCourseContext(id = courseId),
+                assignmentId = assignmentId,
+                assignmentName = assignmentName,
+                files = ArrayList(selectedSubmissionType.files.mapNotNull { it.uri?.let { uri -> getUriContents(uri) } })
+            )
+        }
+
+        viewModelScope.launch {
+            createSubmissionDao.findSubmissionByAssignmentIdFlow(assignmentId, apiPrefs.user?.id.orDefault()).collect { entity ->
+                if (entity != null) {
+                    updateSubmissionProgress(entity)
                 }
             }
-        } else if (selectedSubmissionType is AddSubmissionTypeUiState.File) {
-
         }
     }
 
@@ -302,6 +320,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         if (progress == 100.0f) {
             updateAssignment()
             onTextSubmissionChanged("")
+            deleteAllFiles()
             _uiState.update {
                 it.copy(
                     showSubmissionDetails = true,
@@ -433,5 +452,79 @@ class AssignmentDetailsViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun onFileAdded(uri: Uri) {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    submissionTypes = it.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
+                        if (index == it.addSubmissionUiState.selectedSubmissionTypeIndex && submissionType is AddSubmissionTypeUiState.File) {
+                            submissionType.copy(
+                                files = submissionType.files + AddSubmissionFileUiState(
+                                    name = fileUploadUtilsHelper.getFileNameWithDefault(uri), uri = uri, onDeleteClicked = { deleteFile(uri) })
+                            )
+                        } else {
+                            submissionType
+                        }
+                    }
+                )
+            )
+        }
+
+        val addSubmissionUiState = _uiState.value.addSubmissionUiState
+        val hasFiles = addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
+                (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
+        updateSubmissionEnabled(hasFiles)
+    }
+
+    private fun deleteFile(uri: Uri) {
+        _uiState.update { uiState ->
+            uiState.copy(
+                addSubmissionUiState = uiState.addSubmissionUiState.copy(
+                    submissionTypes = uiState.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
+                        if (index == uiState.addSubmissionUiState.selectedSubmissionTypeIndex && submissionType is AddSubmissionTypeUiState.File) {
+                            submissionType.copy(
+                                files = submissionType.files.filterNot { it.uri == uri }
+                            )
+                        } else {
+                            submissionType
+                        }
+                    }
+                )
+            )
+        }
+
+        val addSubmissionUiState = _uiState.value.addSubmissionUiState
+        val hasFiles = addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
+                (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
+        updateSubmissionEnabled(hasFiles)
+    }
+
+    private fun deleteAllFiles() {
+        _uiState.update { uiState ->
+            uiState.copy(
+                addSubmissionUiState = uiState.addSubmissionUiState.copy(
+                    submissionTypes = uiState.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
+                        if (index == uiState.addSubmissionUiState.selectedSubmissionTypeIndex && submissionType is AddSubmissionTypeUiState.File) {
+                            submissionType.copy(
+                                files = emptyList()
+                            )
+                        } else {
+                            submissionType
+                        }
+                    }
+                )
+            )
+        }
+
+        updateSubmissionEnabled(false)
+    }
+
+    private fun getUriContents(fileUri: Uri): FileSubmitObject? {
+        val mimeType = fileUploadUtilsHelper.getFileMimeType(fileUri)
+        val fileName = fileUploadUtilsHelper.getFileNameWithDefault(fileUri)
+
+        return fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(fileUri, fileName, mimeType)
     }
 }

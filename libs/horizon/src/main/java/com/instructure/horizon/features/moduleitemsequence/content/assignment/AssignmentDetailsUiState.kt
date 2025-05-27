@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
+import android.net.Uri
 import androidx.annotation.StringRes
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
@@ -84,8 +85,18 @@ sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
         val onTextChanged: (String) -> Unit = {},
     ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
 
-    data class File(val fileName: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
+    data class File(
+        val allowedTypes: List<String> = emptyList(),
+        val files: List<AddSubmissionFileUiState> = emptyList(),
+        val onFileAdded: (Uri) -> Unit = {},
+    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
 }
+
+data class AddSubmissionFileUiState(
+    val name: String = "",
+    val uri: Uri? = null,
+    val onDeleteClicked: () -> Unit = {},
+)
 
 data class ToolsBottomSheetUiState(
     val show: Boolean = false,

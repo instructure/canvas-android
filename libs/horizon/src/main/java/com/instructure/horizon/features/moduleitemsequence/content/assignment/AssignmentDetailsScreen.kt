@@ -57,6 +57,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddFileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddTextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
@@ -303,7 +304,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
     }
     if (uiState.submissionTypes.isNotEmpty()) {
         when (val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]) {
-            is AddSubmissionTypeUiState.File -> Text(text = "File Submission") // TODO Submission ticket
+            is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(uiState = selectedSubmissionType)
             is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
         }
         HorizonSpace(SpaceSize.SPACE_24)
@@ -401,7 +402,7 @@ fun AssignmentDetailsScreenAddSubmissionPreview() {
                 draftDateString = "Saved at 2023-10-01",
                 submissionTypes = listOf(
                     AddSubmissionTypeUiState.Text(""),
-                    AddSubmissionTypeUiState.File("File Name")
+                    AddSubmissionTypeUiState.File()
                 ),
             ),
             showAddSubmission = true
