@@ -42,6 +42,7 @@ class NotebookViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
+        onFilterSelected = ::onFilterSelected
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -61,6 +62,7 @@ class NotebookViewModel @Inject constructor(
             val notesResponse = repository.getNotes(
                 after = after,
                 before = before,
+                filterType = uiState.value.selectedFilter
             )
             cursorId = notesResponse.edges?.firstOrNull()?.cursor
             pageInfo = notesResponse.pageInfo
@@ -118,5 +120,12 @@ class NotebookViewModel @Inject constructor(
 
     private fun getPreviousPage() {
         loadData(before = pageInfo?.startCursor)
+    }
+
+    private fun onFilterSelected(newFilter: NotebookType?) {
+        _uiState.update { currentState ->
+            currentState.copy(selectedFilter = newFilter)
+        }
+        loadData()
     }
 }

@@ -16,11 +16,14 @@
  */
 package com.instructure.horizon.features.notebook
 
+import com.apollographql.apollo.api.Optional
 import com.google.gson.Gson
 import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.pandautils.utils.toJson
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.type.NoteFilterInput
 import javax.inject.Inject
 
 class NotebookRepository @Inject constructor(
@@ -28,17 +31,25 @@ class NotebookRepository @Inject constructor(
 ) {
     suspend fun getNotes(
         after: String? = null,
-        before: String? = null
+        before: String? = null,
+        filterType: NotebookType? = null
     ): QueryNotesQuery.Notes {
+        val filterInput = when (filterType) {
+            NotebookType.Important -> NoteFilterInput(reactions = Optional.present(listOf(filterType.name)))
+            NotebookType.Confusing -> NoteFilterInput(reactions = Optional.present(listOf(filterType.name)))
+            null -> null
+        }
         return if (before != null) {
             redwoodApiManager.getNotes(
                 lastN = 1,
                 before = before,
+                filter = filterInput
             )
         } else {
             redwoodApiManager.getNotes(
                 firstN = 1,
                 after = after,
+                filter = filterInput
             )
         }
 
