@@ -28,15 +28,9 @@ import java.util.Date
 import javax.inject.Inject
 
 enum class NoteObjectType(val value: String) {
-    ASSIGNMENT("assignment"),
-    ANNOUNCEMENT("announcement"),
-    DISCUSSION_TOPIC("discussion_topic"),
-    QUIZ("quiz"),
-    PAGE("page"),
-    SYLLABUS("syllabus"),
-    SYLLABUS_ENTRY("syllabus_entry"),
-    COURSE("course"),
-    USER("user");
+    Assignment("Assignment"),
+    Quiz("Quiz"),
+    PAGE("Page");
 
     companion object {
         fun fromValue(value: String): NoteObjectType? {
@@ -46,8 +40,8 @@ enum class NoteObjectType(val value: String) {
 }
 
 enum class NoteReaction(val value: String) {
-    LIKE("like"),
-    HELPFUL("helpful");
+    Important("Important"),
+    Confusing("Confusing");
 
     companion object {
         fun fromValue(value: String): NoteReaction? {
@@ -68,12 +62,12 @@ data class Note(
     val userId: String,
     val courseId: String,
     val objectId: String,
-    val objectType: NoteObjectType,
+    val objectType: NoteObjectType?,
     val userText: String,
     val reactions: List<NoteReaction>,
     val highlightedData: NoteHighlightedData?,
-    val createdAt: Date,
-    val updatedAt: Date,
+    val createdAt: Date?,
+    val updatedAt: Date?,
 )
 
 class RedwoodApiManager @Inject constructor(
@@ -97,20 +91,20 @@ class RedwoodApiManager @Inject constructor(
         )
         val result = QLClientConfig
             .enqueueQuery(query, block = redwoodClient.createClientConfigBlock())
-            .dataAssertNoErrors.notes
-            .nodes?.map {
+            .dataAssertNoErrors.notes.edges?.map { edge ->
+                val note = edge.node
                 Note(
-                    id = it.id,
-                    rootAccountUuid = it.rootAccountUuid,
-                    userId = it.userId,
-                    courseId = it.courseId,
-                    objectId = it.objectId,
-                    objectType = NoteObjectType.fromValue(it.objectType) ?: NoteObjectType.COURSE,
-                    userText = it.userText ?: "",
-                    reactions = it.reaction?.mapNotNull { reaction -> NoteReaction.fromValue(reaction) } ?: emptyList(),
-                    highlightedData = parseHighlightedData(it.highlightData),
-                    createdAt = it.createdAt,
-                    updatedAt = it.updatedAt
+                    id = note.id,
+                    rootAccountUuid = note.rootAccountUuid,
+                    userId = note.userId,
+                    courseId = note.courseId,
+                    objectId = note.objectId,
+                    objectType = NoteObjectType.fromValue(note.objectType),
+                    userText = note.userText ?: "",
+                    reactions = note.reaction?.mapNotNull { reaction -> NoteReaction.fromValue(reaction) } ?: emptyList(),
+                    highlightedData = parseHighlightedData(note.highlightData),
+                    createdAt = note.createdAt,
+                    updatedAt = note.updatedAt
                 )
             }.orEmpty()
 
