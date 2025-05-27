@@ -16,11 +16,15 @@
  */
 package com.instructure.horizon.features.notebook.common.composable
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -52,5 +56,9 @@ fun NotebookAppBar(
                 onClick = navigateBack,
             )
         },
+        colors = TopAppBarDefaults.topAppBarColors().copy(
+            containerColor = HorizonColors.Surface.pagePrimary()
+        ),
+        modifier = Modifier.padding(horizontal = 24.dp)
     )
 }

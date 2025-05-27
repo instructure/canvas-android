@@ -17,7 +17,6 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
-import com.google.gson.Gson
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import com.instructure.canvasapi2.utils.toApiString
@@ -51,12 +50,16 @@ enum class NoteReaction(val value: String) {
 }
 
 data class NoteHighlightedData(
-    val start: Int,
-    val end: Int,
-    val color: String
+    val selectedText: String,
+    val textPosition: NoteHighlightedDataTextPosition
 )
 
-data class Note(
+data class NoteHighlightedDataTextPosition(
+    val start: Int,
+    val end: Int
+)
+
+data class NoteItem(
     val id: String,
     val rootAccountUuid: String,
     val userId: String,
@@ -80,7 +83,7 @@ class RedwoodApiManager @Inject constructor(
         after: Date? = null,
         before: Date? = null,
         orderBy: OrderByInput? = null,
-    ): List<Note> {
+    ): QueryNotesQuery.Notes {
         val query = QueryNotesQuery(
             filter = Optional.presentIfNotNull(filter),
             first = Optional.presentIfNotNull(firstN?.toDouble()),
@@ -91,32 +94,7 @@ class RedwoodApiManager @Inject constructor(
         )
         val result = QLClientConfig
             .enqueueQuery(query, block = redwoodClient.createClientConfigBlock())
-            .dataAssertNoErrors.notes.edges?.map { edge ->
-                val note = edge.node
-                Note(
-                    id = note.id,
-                    rootAccountUuid = note.rootAccountUuid,
-                    userId = note.userId,
-                    courseId = note.courseId,
-                    objectId = note.objectId,
-                    objectType = NoteObjectType.fromValue(note.objectType),
-                    userText = note.userText ?: "",
-                    reactions = note.reaction?.mapNotNull { reaction -> NoteReaction.fromValue(reaction) } ?: emptyList(),
-                    highlightedData = parseHighlightedData(note.highlightData),
-                    createdAt = note.createdAt,
-                    updatedAt = note.updatedAt
-                )
-            }.orEmpty()
-
-        return result
-    }
-
-    private fun parseHighlightedData(highlightData: Any?): NoteHighlightedData? {
-        val result = try {
-            Gson().fromJson(highlightData.toString(), NoteHighlightedData::class.java)
-        } catch (e: Exception) {
-            null
-        }
+            .dataAssertNoErrors.notes
 
         return result
     }

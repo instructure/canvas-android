@@ -20,7 +20,12 @@ import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 
 data class NotebookUiState(
+    val isLoading: Boolean = true,
     val selectedFilter: NotebookType? = null,
     val onFilterSelected: (NotebookType?) -> Unit = {},
-    val noteItems: List<Note> = emptyList(),
+    val notes: List<Note> = emptyList(),
+    val hasPreviousPage: Boolean = false,
+    val hasNextPage: Boolean = false,
+    val loadPreviousPage: () -> Unit = {},
+    val loadNextPage: () -> Unit = {},
 )

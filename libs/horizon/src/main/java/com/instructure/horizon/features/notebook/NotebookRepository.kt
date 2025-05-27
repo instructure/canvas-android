@@ -16,14 +16,27 @@
  */
 package com.instructure.horizon.features.notebook
 
-import com.instructure.canvasapi2.managers.Note
+import com.google.gson.Gson
+import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.pandautils.utils.toJson
+import com.instructure.redwood.QueryNotesQuery
 import javax.inject.Inject
 
 class NotebookRepository @Inject constructor(
     private val redwoodApiManager: RedwoodApiManager,
 ) {
-    suspend fun getNotes(): List<Note> {
+    suspend fun getNotes(): QueryNotesQuery.Notes {
         return redwoodApiManager.getNotes(firstN = 1)
+    }
+
+    fun parseHighlightedData(highlightData: Any?): NoteHighlightedData? {
+        val result = try {
+            Gson().fromJson(highlightData?.toJson(), NoteHighlightedData::class.java)
+        } catch (e: Exception) {
+            null
+        }
+
+        return result
     }
 }

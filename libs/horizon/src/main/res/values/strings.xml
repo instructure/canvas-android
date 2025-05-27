@@ -240,4 +240,5 @@
     <string name="notebookTypeImportant">Important</string>
     <string name="notebookTitle">Notebook</string>
     <string name="notebookFilterLabel">Filter</string>
+    <string name="notebookNotesLabel">Notes</string>
 </resources>
