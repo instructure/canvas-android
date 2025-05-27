@@ -213,7 +213,7 @@ fun DraggableResizableLayout(
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(color = colorResource(R.color.backgroundLightest)),
+                                .background(color = colorResource(R.color.backgroundLightestElevated)),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
                             if (anchoredDraggableState.currentValue == AnchorPoints.BOTTOM) {
@@ -279,7 +279,7 @@ fun DraggableResizableLayout(
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
-                                .background(color = colorResource(R.color.backgroundLightest))
+                                .background(color = colorResource(R.color.backgroundLightestElevated))
                         ) {
                             bottomContent(anchoredDraggableState.currentValue)
                         }

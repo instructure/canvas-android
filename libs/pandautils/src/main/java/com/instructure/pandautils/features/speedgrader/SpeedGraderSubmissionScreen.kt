@@ -42,7 +42,7 @@ import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.compose.composables.DraggableResizableLayout
-import com.instructure.pandautils.compose.composables.HorizontalDraggableResizableLayout
+import com.instructure.pandautils.compose.composables.HorizontalDraggableResizeableLayout
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -57,7 +57,7 @@ fun SpeedGraderSubmissionScreen(
 
     if (horizontal) {
         var expanded by remember { mutableStateOf(false) }
-        HorizontalDraggableResizableLayout(
+        HorizontalDraggableResizeableLayout(
             modifier = Modifier,
             leftContent = {
                 NavHost(

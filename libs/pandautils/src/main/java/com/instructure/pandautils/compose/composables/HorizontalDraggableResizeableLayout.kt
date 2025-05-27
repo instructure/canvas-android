@@ -48,7 +48,7 @@ import kotlin.math.max
 import kotlin.math.min
 
 @Composable
-fun HorizontalDraggableResizableLayout(
+fun HorizontalDraggableResizeableLayout(
     modifier: Modifier = Modifier,
     leftContent: @Composable () -> Unit,
     rightContent: @Composable () -> Unit,
@@ -62,7 +62,6 @@ fun HorizontalDraggableResizableLayout(
 
     var nonExpandedLeftPaneWidthPx by remember { mutableFloatStateOf(0f) }
     var currentTargetLeftPanePx by remember { mutableFloatStateOf(0f) }
-
 
     LaunchedEffect(totalWidthPx, minLeftRatio, minRightRatio, fixedSplit) {
         if (totalWidthPx > 0f) {
@@ -164,12 +163,11 @@ fun HorizontalDraggableResizableLayout(
     }
 }
 
-
 @Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
-fun HorizontalDraggableResizableLayoutPreview() {
+private fun HorizontalDraggableResizableLayoutPreview() {
     val expanded by remember { mutableStateOf(false) }
-    HorizontalDraggableResizableLayout(
+    HorizontalDraggableResizeableLayout(
         modifier = Modifier.fillMaxSize(),
         leftContent = {
             Box(modifier = Modifier.fillMaxSize().background(color = Color.Red)) {
@@ -187,8 +185,8 @@ fun HorizontalDraggableResizableLayoutPreview() {
 
 @Preview(showBackground = true, device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
-fun HorizontalDraggableResizableLayoutPreviewInitiallyExpanded() {
-    HorizontalDraggableResizableLayout(
+private fun HorizontalDraggableResizableLayoutPreviewInitiallyExpanded() {
+    HorizontalDraggableResizeableLayout(
         modifier = Modifier.fillMaxSize(),
         leftContent = {
             Box(modifier = Modifier.fillMaxSize().background(color = Color.Red)) {
@@ -206,9 +204,9 @@ fun HorizontalDraggableResizableLayoutPreviewInitiallyExpanded() {
 
 @Preview(showBackground = true, device = "spec:width=400dp,height=800dp,dpi=240")
 @Composable
-fun HorizontalDraggableResizableLayoutPreviewPhone() {
+private fun HorizontalDraggableResizableLayoutPreviewPhone() {
     val expanded by remember { mutableStateOf(false) }
-    HorizontalDraggableResizableLayout(
+    HorizontalDraggableResizeableLayout(
         modifier = Modifier.fillMaxSize(),
         leftContent = {
             Box(modifier = Modifier.fillMaxSize().background(color = Color.Red)) {

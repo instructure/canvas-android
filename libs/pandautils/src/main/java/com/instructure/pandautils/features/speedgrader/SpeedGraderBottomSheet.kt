@@ -80,7 +80,7 @@ fun SpeedGraderBottomSheet(
                 .padding(horizontal = if (horizontal) 0.dp else 16.dp, vertical = 9.dp)
                 .requiredHeight(64.dp),
             selectedTabIndex = selectedTab,
-            containerColor = colorResource(R.color.backgroundLightest),
+            containerColor = colorResource(R.color.backgroundLightestElevated),
             contentColor = colorResource(R.color.textInfo),
             indicator = {
                 TabRowDefaults.PrimaryIndicator(
@@ -128,7 +128,7 @@ fun SpeedGraderBottomSheet(
 }
 
 @Composable
-fun SpeedGraderBottomSheetNavHost(
+private fun SpeedGraderBottomSheetNavHost(
     navController: NavHostController,
     startDestination: String,
     modifier: Modifier = Modifier
