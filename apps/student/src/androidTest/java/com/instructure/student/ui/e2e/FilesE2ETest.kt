@@ -220,7 +220,7 @@ class FilesE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Rename '${discussionAttachmentFile.name}' file to: '$newFileName'.")
         fileListPage.renameFile(discussionAttachmentFile.name, newFileName)
 
-        Log.d(ASSERTION_TAG, "Assert that the file is displayed with it's new file name: '$newFileName'.")
+        Log.d(ASSERTION_TAG, "Assert that the file is displayed with its new file name: '$newFileName'.")
         fileListPage.assertItemDisplayed(newFileName)
 
         Log.d(STEP_TAG, "Delete '$newFileName' file.")

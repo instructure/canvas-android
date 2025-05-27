@@ -276,7 +276,7 @@ class SettingsE2ETest : StudentComposeTest() {
             Log.d(STEP_TAG, "Dismiss the soft keyboard.")
             Espresso.closeSoftKeyboard() //we need to do this to make this test work. TODO: investigate
 
-            Log.d(STEP_TAG, "Clear remote config parameter valu: '${param.name}'.")
+            Log.d(STEP_TAG, "Clear remote config parameter value: '${param.name}'.")
             remoteConfigSettingsPage.clearRemoteConfigParamValueFocus(param) //we need to clear it because otherwise it would be flaky.
         }
 
