@@ -91,13 +91,13 @@ class SpeedGraderContentViewModel @Inject constructor(
                 submissionState = getSubmissionStateLabel(submission.submission?.state),
                 dueDate = submission.submission?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
-                    color = CanvasContext.emptyCourseContext(
-                        submission.submission?.assignment?.courseId?.toLong().orDefault()
-                    ).color,
                     items = attachments,
                     selectedItemId = attachments.firstOrNull()?.id,
                     onItemSelected = ::onAttachmentSelected
                 ),
+                courseColor = CanvasContext.emptyCourseContext(
+                    submission.submission?.assignment?.courseId?.toLong().orDefault()
+                ).color
             )
         }
     }

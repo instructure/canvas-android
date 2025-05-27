@@ -31,7 +31,8 @@ data class SpeedGraderContentUiState(
     val userUrl: String? = null,
     val submissionState: SubmissionStateLabel = SubmissionStateLabel.NONE,
     val dueDate: Date? = null,
-    val attachmentSelectorUiState: SelectorUiState = SelectorUiState()
+    val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
+    @ColorInt val courseColor: Int = Color.GREEN
 )
 
 @Parcelize
@@ -75,7 +76,6 @@ data class SelectorItem(
 )
 
 data class SelectorUiState(
-    @ColorInt val color: Int = Color.GREEN,
     val items: List<SelectorItem> = emptyList(),
     val selectedItemId: Long? = null,
     val onItemSelected: (Long) -> Unit = {}

@@ -89,7 +89,12 @@ fun SpeedGraderContentScreen(
         EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java).speedGraderContentRouter()
     }
 
-    SpeedGraderContentScreen(uiState, router)
+    SpeedGraderContentScreen(
+        uiState = uiState,
+        router = router,
+        expanded = expanded,
+        onExpandClick = onExpandClick
+    )
 }
 
 @Composable
@@ -110,13 +115,15 @@ private fun SpeedGraderContentScreen(
                 submissionStatus = uiState.submissionState,
                 dueDate = uiState.dueDate,
                 expanded = expanded,
-                onExpandClick = onExpandClick
+                onExpandClick = onExpandClick,
+                courseColor = Color(uiState.courseColor)
             )
             CanvasDivider()
             if (uiState.attachmentSelectorUiState.items.isNotEmpty()) {
                 SelectorContent(
                     attemptSelectorUiState = SelectorUiState(),
-                    attachmentSelectorUiState = uiState.attachmentSelectorUiState
+                    attachmentSelectorUiState = uiState.attachmentSelectorUiState,
+                    courseColor = Color(uiState.courseColor)
                 )
                 CanvasDivider()
             }
@@ -141,11 +148,12 @@ private fun UserHeader(
     submissionStatus: SubmissionStateLabel,
     dueDate: Date?,
     expanded: Boolean,
-    onExpandClick: (() -> Unit)?
+    onExpandClick: (() -> Unit)?,
+    courseColor: Color,
 ) {
-
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
+
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
@@ -208,7 +216,7 @@ private fun UserHeader(
                 Icon(
                     painter = painterResource(id = if (expandedState) R.drawable.ic_collapse_bottomsheet else R.drawable.ic_expand_bottomsheet),
                     contentDescription = stringResource(if (expandedState) R.string.content_description_collapse_content else R.string.content_description_expand_content),
-                    tint = colorResource(id = R.color.textInfo),
+                    tint = courseColor,
                 )
             }
         }
@@ -244,6 +252,7 @@ private fun SubmissionStatus(
 private fun SelectorContent(
     attemptSelectorUiState: SelectorUiState,
     attachmentSelectorUiState: SelectorUiState,
+    courseColor: Color,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -255,6 +264,7 @@ private fun SelectorContent(
         if (attemptSelectorUiState.items.isNotEmpty()) {
             Selector(
                 selectorUiState = attemptSelectorUiState,
+                color = courseColor,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -264,6 +274,7 @@ private fun SelectorContent(
         if (attachmentSelectorUiState.items.isNotEmpty()) {
             Selector(
                 selectorUiState = attachmentSelectorUiState,
+                color = courseColor,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -273,11 +284,11 @@ private fun SelectorContent(
 @Composable
 private fun Selector(
     selectorUiState: SelectorUiState,
+    color: Color,
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
     var expanded by remember { mutableStateOf(false) }
-    val color = Color(color = selectorUiState.color)
 
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -391,7 +402,8 @@ fun UserHeaderPreview() {
         dueDate = Date(),
         submissionStatus = SubmissionStateLabel.GRADED,
         expanded = false,
-        onExpandClick = null
+        onExpandClick = null,
+        courseColor = Color(color = android.graphics.Color.BLUE)
     )
 }
 
@@ -403,8 +415,7 @@ fun SelectorContentPreview() {
             items = listOf(
                 SelectorItem(1, "Attempt 1")
             ),
-            selectedItemId = 1,
-            color = android.graphics.Color.BLUE
+            selectedItemId = 1
         ),
         attachmentSelectorUiState = SelectorUiState(
             items = listOf(
@@ -412,9 +423,9 @@ fun SelectorContentPreview() {
                 SelectorItem(2, "Attachment 2"),
                 SelectorItem(3, "Attachment 3")
             ),
-            selectedItemId = 1,
-            color = android.graphics.Color.BLUE
-        )
+            selectedItemId = 1
+        ),
+        courseColor = Color(color = android.graphics.Color.BLUE)
     )
 }
 
@@ -427,19 +438,24 @@ private fun SpeedGraderContentScreenPreview() {
         submissionState = SubmissionStateLabel.GRADED,
         dueDate = Date(),
         attachmentSelectorUiState = SelectorUiState(
-            color = android.graphics.Color.RED,
             items = listOf(
                 SelectorItem(1, "Item 1"),
                 SelectorItem(2, "Item 2"),
                 SelectorItem(3, "Item 3")
             ),
             selectedItemId = 2
-        )
+        ),
+        courseColor = android.graphics.Color.RED
     )
 
-    SpeedGraderContentScreen(uiState = uiState, router = object : SpeedGraderContentRouter {
-        override fun getRouteForContent(content: GradeableContent): SpeedGraderContentRoute {
-            throw NotImplementedError("No need for Preview")
-        }
-    })
+    SpeedGraderContentScreen(
+        uiState = uiState,
+        router = object : SpeedGraderContentRouter {
+            override fun getRouteForContent(content: GradeableContent): SpeedGraderContentRoute {
+                throw NotImplementedError("No need for Preview")
+            }
+        },
+        expanded = false,
+        onExpandClick = {}
+    )
 }
