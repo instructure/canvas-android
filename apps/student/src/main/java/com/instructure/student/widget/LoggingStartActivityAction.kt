@@ -36,6 +36,7 @@ class LoggingStartActivityAction : ActionCallback {
             )
         }
     }
+
     override suspend fun onAction(
         context: Context,
         glanceId: GlanceId,
