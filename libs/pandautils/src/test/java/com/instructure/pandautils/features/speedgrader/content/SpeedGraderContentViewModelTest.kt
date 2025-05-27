@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.SubmissionContentQuery
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionType
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -48,15 +49,34 @@ class SpeedGraderContentViewModelTest {
     private val courseId = 789L
     private val groupId = 987L
 
+    private val submissionData = mockk<SubmissionContentQuery.Data>(relaxed = true)
+    private val submission = mockk<SubmissionContentQuery.Submission>(relaxed = true)
+    private val assignment = mockk<SubmissionContentQuery.Assignment>(relaxed = true)
+
     @Before
     fun setup() {
+        ContextKeeper.appContext = mockk(relaxed = true)
         Dispatchers.setMain(testDispatcher)
+
         repository = mockk(relaxed = true)
+
         savedStateHandle = SavedStateHandle(
             mapOf(
                 SpeedGraderContentViewModel.ASSIGNMENT_ID_KEY to assignmentId,
                 SpeedGraderContentViewModel.STUDENT_ID_KEY to studentId
             )
+        )
+
+        coEvery { submissionData.submission } returns submission
+        coEvery { submission.assignment } returns assignment
+        coEvery { assignment.courseId } returns courseId.toString()
+        coEvery { submission.userId } returns studentId.toString()
+        coEvery { submission.groupId } returns null
+        coEvery { submission.user } returns SubmissionContentQuery.User(
+            name = "Test User",
+            avatarUrl = "https://example.com/avatar.png",
+            shortName = "TU",
+            sortableName = "Test User"
         )
     }
 
@@ -71,27 +91,10 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with TextContent for ONLINE_TEXT_ENTRY submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
         val submissionBody = "This is a text submission."
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.online_text_entry)
         coEvery { submission.body } returns submissionBody
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
         coEvery { submission.submissionType } returns SubmissionType.online_text_entry
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -103,27 +106,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with ExternalToolContent for BASIC_LTI_LAUNCH with empty url when both preview and html urls are null`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
-
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { submission.submissionType } returns SubmissionType.basic_lti_launch
-        coEvery { submission.previewUrl } returns null
-        coEvery { assignment.htmlUrl } returns null
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.basic_lti_launch)
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -135,28 +118,10 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with ExternalToolContent for BASIC_LTI_LAUNCH with htmlUrl when previewUrl is null`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
         val htmlUrl = "https://example.com/html"
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { submission.submissionType } returns SubmissionType.basic_lti_launch
-        coEvery { submission.previewUrl } returns null
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.basic_lti_launch)
         coEvery { assignment.htmlUrl } returns htmlUrl
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -168,28 +133,10 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with ExternalToolContent for BASIC_LTI_LAUNCH with previewUrl`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
         val previewUrl = "https://example.com/preview"
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { submission.submissionType } returns SubmissionType.basic_lti_launch
         coEvery { submission.previewUrl } returns previewUrl
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.basic_lti_launch)
-        coEvery { assignment.htmlUrl } returns null
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -201,22 +148,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with NoSubmissionContent when submissionType is null`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns null
         coEvery { submission.submissionType } returns null
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -227,24 +159,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with OnPaperContent for ON_PAPER submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
-
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { assignment.submissionTypes } returns listOf(SubmissionType.on_paper)
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -255,24 +170,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with NoneContent for NONE submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
-
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { assignment.submissionTypes } returns listOf(SubmissionType.none)
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -283,28 +181,10 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with UrlContent for ONLINE_URL submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
         val url = "https://example.com/submission"
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { submission.submissionType } returns SubmissionType.online_url
         coEvery { submission.url } returns url
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.online_url)
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.attachments } returns null
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -316,30 +196,10 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with QuizContent for ONLINE_QUIZ submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
         val previewUrl = "https://example.com/quiz"
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { submission.submissionType } returns SubmissionType.online_quiz
         coEvery { submission.previewUrl } returns previewUrl
-        coEvery { assignment.courseId } returns courseId.toString()
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.online_quiz)
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { assignment.anonymousGrading } returns false
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -352,24 +212,10 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with DiscussionContent for DISCUSSION_TOPIC submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
         val previewUrl = "https://example.com/discussion"
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns null
         coEvery { submission.submissionType } returns SubmissionType.discussion_topic
         coEvery { submission.previewUrl } returns previewUrl
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -381,32 +227,16 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with StudentAnnotationContent for STUDENT_ANNOTATION submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
         val submissionId = 1234L
         val attempt = 1
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns null
         coEvery { submission.submissionType } returns SubmissionType.student_annotation
         coEvery { submission._id } returns submissionId.toString()
         coEvery { submission.attempt } returns attempt
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
-
         coEvery { repository.createCanvaDocSession(any(), any()) } returns CanvaDocSessionResponseBody(
             canvadocsSessionUrl = "https://example.com/canvadocs"
         )
-
 
         createViewModel()
 
@@ -418,22 +248,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with UnsupportedContent for unsupported submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns null
         coEvery { submission.submissionType } returns SubmissionType.external_tool
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -444,65 +259,23 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with AttachmentContent for ONLINE_UPLOAD submission type`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-        val assignment = mockk<SubmissionContentQuery.Assignment>()
-        val attachment = mockk<SubmissionContentQuery.Attachment1>()
-        val attachmentUrl = "https://example.com/file.pdf"
-        val attachmentThumbnailUrl = "https://example.com/thumbnail.jpg"
-        val attachmentDisplayName = "file.pdf"
-        val attachmentContentType = "application/pdf"
+        val url = "https://example.com/file.pdf"
 
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.assignment } returns assignment
         coEvery { submission.submissionType } returns SubmissionType.online_upload
-        coEvery { submission.attachments } returns listOf(attachment)
-        coEvery { assignment.submissionTypes } returns listOf(SubmissionType.online_upload)
-        coEvery { attachment.url } returns attachmentUrl
-        coEvery { attachment.thumbnailUrl } returns attachmentThumbnailUrl
-        coEvery { attachment.title } returns attachmentDisplayName
-        coEvery { attachment.contentType } returns attachmentContentType
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { assignment.courseId } returns courseId.toString()
-        coEvery { attachment.submissionPreviewUrl } returns attachmentUrl
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { assignment.dueAt } returns null
-
+        coEvery { submission.attachments } returns listOf(mockAttachment(url = url))
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
 
         assert(viewModel.uiState.value.content is PdfContent)
         val content = viewModel.uiState.value.content as PdfContent
-        assertEquals(attachmentUrl, content.url)
+        assertEquals(url, content.url)
         assertEquals(studentId, viewModel.uiState.value.assigneeId)
     }
 
     @Test
     fun `user data maps correctly`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { submission.assignment } returns null
         coEvery { submission.submissionType } returns SubmissionType.on_paper
-        coEvery { submission.groupId } returns null
-        coEvery { submissionData.submission } returns submission
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -513,22 +286,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with SUBMITTED state`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submissionData.submission } returns submission
         coEvery { submission.state } returns SubmissionState.submitted
-        coEvery { submission.assignment } returns null
-        coEvery { submission.submissionType } returns null
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -538,22 +296,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with NOT_SUBMITTED state`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submissionData.submission } returns submission
         coEvery { submission.state } returns SubmissionState.unsubmitted
-        coEvery { submission.assignment } returns null
-        coEvery { submission.submissionType } returns null
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -563,22 +306,7 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with GRADED state`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submissionData.submission } returns submission
         coEvery { submission.state } returns SubmissionState.graded
-        coEvery { submission.assignment } returns null
-        coEvery { submission.submissionType } returns null
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
@@ -588,26 +316,60 @@ class SpeedGraderContentViewModelTest {
 
     @Test
     fun `fetchData updates uiState with NONE state when submission state is null`() = runTest {
-        val submissionData = mockk<SubmissionContentQuery.Data>()
-        val submission = mockk<SubmissionContentQuery.Submission>()
-
-        coEvery { submissionData.submission } returns submission
         coEvery { submission.state } returns SubmissionState.UNKNOWN__
-        coEvery { submission.assignment } returns null
-        coEvery { submission.submissionType } returns null
-        coEvery { submission.groupId } returns null
-        coEvery { submission.userId } returns studentId.toString()
-        coEvery { submission.user } returns SubmissionContentQuery.User(
-            name = "Test User",
-            avatarUrl = "https://example.com/avatar.png",
-            shortName = "TU",
-            sortableName = "Test User"
-        )
-
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
 
         createViewModel()
 
         assertEquals(SubmissionStateLabel.NONE, viewModel.uiState.value.submissionState)
     }
+
+    @Test
+    fun `fetchData updates uiState with attachments`() = runTest {
+        coEvery { submission.attachments } returns listOf(mockAttachment(id = "10"), mockAttachment(id = "20"))
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(10L, viewModel.uiState.value.attachmentSelectorUiState.selectedItemId)
+        assertEquals(
+            listOf(SelectorItem(10, "file_10.pdf"), SelectorItem(20, "file_20.pdf")),
+            viewModel.uiState.value.attachmentSelectorUiState.items
+        )
+    }
+
+    @Test
+    fun `Selecting an attachment updates uiState with content and selected attachment id`() = runTest {
+        coEvery { submission.submissionType } returns SubmissionType.online_upload
+        coEvery { submission.attachments } returns listOf(mockAttachment(id = "10"), mockAttachment(id = "20"))
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        val content = viewModel.uiState.value.content as PdfContent
+        assertEquals("https://example.com/file_10.pdf", content.url)
+        assertEquals(10L, viewModel.uiState.value.attachmentSelectorUiState.selectedItemId)
+
+        viewModel.uiState.value.attachmentSelectorUiState.onItemSelected(20)
+
+        val newContent = viewModel.uiState.value.content as PdfContent
+        assertEquals("https://example.com/file_20.pdf", newContent.url)
+        assertEquals(20L, viewModel.uiState.value.attachmentSelectorUiState.selectedItemId)
+    }
+}
+
+private fun mockAttachment(
+    id: String = "1",
+    url: String = "https://example.com/file_$id.pdf",
+    thumbnailUrl: String = "https://example.com/thumbnail_$id.jpg",
+    displayName: String = "file_$id.pdf",
+    contentType: String = "application/pdf"
+): SubmissionContentQuery.Attachment1 {
+    val attachment = mockk<SubmissionContentQuery.Attachment1>(relaxed = true)
+    coEvery { attachment._id } returns id
+    coEvery { attachment.url } returns url
+    coEvery { attachment.thumbnailUrl } returns thumbnailUrl
+    coEvery { attachment.displayName } returns displayName
+    coEvery { attachment.contentType } returns contentType
+    return attachment
 }

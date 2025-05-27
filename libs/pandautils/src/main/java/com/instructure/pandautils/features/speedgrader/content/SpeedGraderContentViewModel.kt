@@ -26,10 +26,13 @@ import com.instructure.canvasapi2.SubmissionContentQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -57,9 +60,27 @@ class SpeedGraderContentViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         val submission = repository.getSubmission(assignmentId, studentId)
+
         val user = submission.submission?.user
 
-        val content = getContent(submission)
+        val attachments = submission.submission?.attachments.orEmpty().map { attachment ->
+            SelectorItem(attachment._id.toLong(), attachment.displayName.orEmpty())
+        }
+
+        val content = getContent(submission, attachments.firstOrNull()?.id)
+
+        fun onAttachmentSelected(attachmentId: Long) {
+            viewModelScope.launch {
+                val newContent = getContent(submission, attachmentId)
+                _uiState.update {
+                    it.copy(
+                        content = newContent,
+                        attachmentSelectorUiState = it.attachmentSelectorUiState.copy(selectedItemId = attachmentId)
+                    )
+                }
+            }
+        }
+
         _uiState.update {
             it.copy(
                 content = content,
@@ -68,7 +89,15 @@ class SpeedGraderContentViewModel @Inject constructor(
                 userName = user?.name,
                 userUrl = user?.avatarUrl,
                 submissionState = getSubmissionStateLabel(submission.submission?.state),
-                dueDate = submission.submission?.assignment?.dueAt
+                dueDate = submission.submission?.assignment?.dueAt,
+                attachmentSelectorUiState = SelectorUiState(
+                    items = attachments,
+                    selectedItemId = attachments.firstOrNull()?.id,
+                    onItemSelected = ::onAttachmentSelected
+                ),
+                courseColor = CanvasContext.emptyCourseContext(
+                    submission.submission?.assignment?.courseId?.toLong().orDefault()
+                ).color
             )
         }
     }
@@ -84,7 +113,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getContent(submissionData: SubmissionContentQuery.Data): GradeableContent {
+    private suspend fun getContent(submissionData: SubmissionContentQuery.Data, selectedAttachmentId: Long?): GradeableContent {
         val submission = submissionData.submission
         return when {
             SubmissionType.NONE.apiString in (submission?.assignment?.submissionTypes
@@ -115,7 +144,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 } ?: UnsupportedContent
 
                 // File uploads
-                SubmissionType.ONLINE_UPLOAD -> submission.attachments?.firstOrNull()?.let {
+                SubmissionType.ONLINE_UPLOAD -> submission.attachments?.find { it._id.toLong() == selectedAttachmentId }?.let {
                     getAttachmentContent(
                         it,
                         submission.assignment?.courseId?.toLong(),
@@ -164,15 +193,13 @@ class SpeedGraderContentViewModel @Inject constructor(
             repository.getSingleSubmission(courseId, assignmentId, studentId)
         }
 
-        val thumbnailUrl = submission?.attachments?.firstOrNull()?.thumbnailUrl
-            ?: attachment.thumbnailUrl.orEmpty()
-        val url = submission?.attachments?.firstOrNull()?.url ?: attachment.url.orEmpty()
-        val previewUrl = submission?.attachments?.firstOrNull()?.previewUrl
-            ?: attachment.submissionPreviewUrl.orEmpty()
+        val attachmentWithVerifiers = submission?.attachments?.firstOrNull { it.id == attachment._id.toLongOrNull() }
+        val thumbnailUrl = attachmentWithVerifiers?.thumbnailUrl ?: attachment.thumbnailUrl.orEmpty()
+        val url = attachmentWithVerifiers?.url ?: attachment.url.orEmpty()
+        val previewUrl = attachmentWithVerifiers?.previewUrl ?: attachment.submissionPreviewUrl.orEmpty()
 
         var type = attachment.contentType ?: return OtherAttachmentContent(
             Attachment(
-                contentType = attachment.contentType,
                 createdAt = attachment.createdAt,
                 displayName = attachment.displayName,
                 thumbnailUrl = thumbnailUrl,

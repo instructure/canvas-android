@@ -51,7 +51,6 @@ fun SpeedGraderSubmissionScreen(
     assignmentId: Long,
     submissionId: Long
 ) {
-
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
 
