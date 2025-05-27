@@ -22,18 +22,27 @@ import androidx.work.WorkerParameters
 import androidx.work.hasKeyWithValueOfType
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.pandautils.features.submission.SubmissionWorkerAction
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.withContext
 import java.io.UnsupportedEncodingException
 import java.net.URLEncoder
@@ -44,7 +53,9 @@ class HorizonSubmissionWorker @AssistedInject constructor(
     @Assisted workerParameters: WorkerParameters,
     private val createSubmissionDao: CreateSubmissionDao,
     private val apiPrefs: ApiPrefs,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val createFileSubmissionDao: CreateFileSubmissionDao,
+    private val fileUploadManager: FileUploadManager
 ) : CoroutineWorker(context, workerParameters) {
 
     override suspend fun doWork(): Result {
@@ -63,6 +74,7 @@ class HorizonSubmissionWorker @AssistedInject constructor(
 
             return when (SubmissionWorkerAction.valueOf(action)) {
                 SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
+                SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
                 else -> {
                     Result.failure()
                 }
@@ -111,5 +123,144 @@ class HorizonSubmissionWorker @AssistedInject constructor(
             createSubmissionDao.setSubmissionError(true, submission.id)
             Result.failure()
         }
+    }
+
+    private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {
+        val (completed, pending) = createFileSubmissionDao
+            .findFilesForSubmissionId(submission.id).partition { it.attachmentId != null }
+        val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending)
+            ?: return Result.failure() // Cancel submitting if any of the files failed to upload
+
+        val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
+        val params = RestParams(
+            canvasContext = submission.canvasContext,
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
+        )
+        val result = submissionApi.postSubmissionAttachments(
+            submission.canvasContext.id,
+            submission.assignmentId,
+            Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+            attachmentIds,
+            params
+        )
+
+        return result.dataOrNull?.let {
+            createSubmissionDao.updateProgress(100.0, submission.id)
+            delay(1000)
+            deleteSubmissionsForAssignment(submission.assignmentId)
+            Result.success()
+        } ?: run {
+            createSubmissionDao.updateProgress(0.0, submission.id)
+            delay(1000)
+            createSubmissionDao.setSubmissionError(true, submission.id)
+            Result.failure()
+        }
+    }
+
+    private fun uploadFiles(
+        submission: CreateSubmissionEntity,
+        completedAttachmentCount: Int,
+        attachments: List<CreateFileSubmissionEntity>
+    ): List<Long>? {
+        val attachmentIds = ArrayList<Long>(attachments.size)
+
+        attachments.forEachIndexed { index, pendingAttachment ->
+            if (pendingAttachment.name == null || pendingAttachment.size == null || pendingAttachment.contentType == null || pendingAttachment.fullPath == null) {
+                return null
+            }
+            updateFileProgress(submission.id, 0f, index, attachments.size, completedAttachmentCount)
+
+            // Upload config setup
+            val fso = FileSubmitObject(
+                pendingAttachment.name.orEmpty(),
+                pendingAttachment.size.orDefault(),
+                pendingAttachment.contentType.orEmpty(),
+                pendingAttachment.fullPath.orEmpty()
+            )
+            val config = FileUploadConfig.forSubmission(
+                    fso,
+                    submission.canvasContext.id,
+                    submission.assignmentId
+                )
+
+            // Perform upload
+            fileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
+                override fun onProgressUpdated(progressPercent: Float, length: Long): Boolean {
+                    runBlocking { createSubmissionDao.findSubmissionById(submission.id) }
+                        ?: return false // Stop uploading and don't show error if submission was deleted,
+
+                    updateFileProgress(
+                        submission.id,
+                        progressPercent,
+                        index,
+                        attachments.size,
+                        completedAttachmentCount
+                    )
+                    return true
+                }
+            }, RestParams(shouldIgnoreToken = true, disableFileVerifiers = false)).onSuccess { attachment ->
+                updateFileProgress(
+                    submission.id,
+                    1.0f,
+                    index,
+                    attachments.size,
+                    completedAttachmentCount
+                )
+                runBlocking {
+                    createFileSubmissionDao
+                        .setFileAttachmentIdAndError(
+                            attachment.id,
+                            false,
+                            null,
+                            pendingAttachment.id
+                        )
+                }
+
+                attachmentIds.add(attachment.id)
+            }.onFailure {
+                runBlocking {
+//                    handleFileError(submission, index, attachments, it?.message)
+                }
+                return null
+            }
+        }
+        return attachmentIds
+    }
+
+    private fun updateFileProgress(
+        dbSubmissionId: Long,
+        uploaded: Float,
+        fileIndex: Int,
+        fileCount: Int,
+        completedAttachmentCount: Int
+    ) {
+        // Set initial progress
+        runBlocking {
+            createSubmissionDao.updateProgress(
+                currentFile = (completedAttachmentCount + fileIndex).toLong(),
+                fileCount = (completedAttachmentCount + fileCount).toLong(),
+                progress = uploaded.toDouble(),
+                id = dbSubmissionId
+            )
+        }
+    }
+
+    private suspend fun deleteSubmissionsForAssignment(
+        id: Long,
+        files: List<FileSubmitObject> = emptyList()
+    ) {
+        createSubmissionDao.findSubmissionsByAssignmentId(id, apiPrefs.user!!.id)
+            .forEach { submission ->
+                createFileSubmissionDao.findFilesForSubmissionId(submission.id).forEach { file ->
+                    // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
+                    if (!files.any { it.fullPath == file.fullPath } && createFileSubmissionDao
+                            .findFilesForPath(file.id, file.fullPath).isEmpty()) {
+                        FileUploadUtils.deleteTempFile(file.fullPath)
+                    }
+                }
+                createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
+            }
+        createSubmissionDao.deleteSubmissionsForAssignmentId(id, apiPrefs.user!!.id)
     }
 }

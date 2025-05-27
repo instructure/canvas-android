@@ -99,12 +99,14 @@ fun FileDrop(
                 onClick = onUploadClick
             )
             HorizonSpace(SpaceSize.SPACE_16)
-            val acceptedFileTypesText = acceptedFileTypes.joinToString(", ")
-            Text(
-                text = stringResource(R.string.fileDrop_acceptFileTypes, acceptedFileTypesText),
-                style = HorizonTypography.p2,
-                textAlign = TextAlign.Center
-            )
+            if (acceptedFileTypes.isNotEmpty()) {
+                val acceptedFileTypesText = acceptedFileTypes.joinToString(", ")
+                Text(
+                    text = stringResource(R.string.fileDrop_acceptFileTypes, acceptedFileTypesText),
+                    style = HorizonTypography.p2,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
         fileItems()
     }
@@ -114,27 +116,27 @@ sealed class FileDropItemState(
     open val fileName: String,
     val actionIconRes: Int,
     open val onActionClick: () -> Unit = {},
-    open val onClick: () -> Unit = {}
+    open val onClick: (() -> Unit)? = null
 ) {
-    data class Success(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
+    data class Success(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: (() -> Unit)? = null) :
         FileDropItemState(fileName, actionIconRes = R.drawable.delete)
 
     data class InProgress(
         override val fileName: String,
         val progress: Float? = null,
         override val onActionClick: () -> Unit = {},
-        override val onClick: () -> Unit = {}
+        override val onClick: (() -> Unit)? = null
     ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.close)
 
     data class NoLongerEditable(
         override val fileName: String,
         override val onActionClick: () -> Unit = {},
-        override val onClick: () -> Unit = {}
+        override val onClick: (() -> Unit)? = null
     ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.download)
 
-    data class Error(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
+    data class Error(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: (() -> Unit)? = null) :
         FileDropItemState(fileName, actionIconRes = R.drawable.refresh)
 
 }
@@ -155,7 +157,9 @@ fun FileDropItem(
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level3)
                 .conditional(hasBorder) { border(HorizonBorder.level1(borderColor), shape = HorizonCornerRadius.level3) }
                 .clip(HorizonCornerRadius.level3)
-                .clickable { state.onClick() }
+                .conditional(state.onClick != null) {
+                    clickable { state.onClick?.invoke() }
+                }
                 .padding(16.dp)
         ) {
             AnimatedContent(state) { targetState ->
