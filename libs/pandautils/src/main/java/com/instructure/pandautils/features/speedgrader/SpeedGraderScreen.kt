@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
-import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -46,7 +45,6 @@ fun SpeedGraderScreen(
 
     val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size })
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
-
 
     LaunchedEffect(Unit) {
         pagerState.scrollToPage(uiState.selectedItem)
