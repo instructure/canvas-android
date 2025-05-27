@@ -17,6 +17,7 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
+import com.google.gson.Gson
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import com.instructure.canvasapi2.utils.toApiString
@@ -25,6 +26,55 @@ import com.instructure.redwood.type.NoteFilterInput
 import com.instructure.redwood.type.OrderByInput
 import java.util.Date
 import javax.inject.Inject
+
+enum class NoteObjectType(val value: String) {
+    ASSIGNMENT("assignment"),
+    ANNOUNCEMENT("announcement"),
+    DISCUSSION_TOPIC("discussion_topic"),
+    QUIZ("quiz"),
+    PAGE("page"),
+    SYLLABUS("syllabus"),
+    SYLLABUS_ENTRY("syllabus_entry"),
+    COURSE("course"),
+    USER("user");
+
+    companion object {
+        fun fromValue(value: String): NoteObjectType? {
+            return values().find { it.value == value }
+        }
+    }
+}
+
+enum class NoteReaction(val value: String) {
+    LIKE("like"),
+    HELPFUL("helpful");
+
+    companion object {
+        fun fromValue(value: String): NoteReaction? {
+            return values().find { it.value == value }
+        }
+    }
+}
+
+data class NoteHighlightedData(
+    val start: Int,
+    val end: Int,
+    val color: String
+)
+
+data class Note(
+    val id: String,
+    val rootAccountUuid: String,
+    val userId: String,
+    val courseId: String,
+    val objectId: String,
+    val objectType: NoteObjectType,
+    val userText: String,
+    val reactions: List<NoteReaction>,
+    val highlightedData: NoteHighlightedData?,
+    val createdAt: Date,
+    val updatedAt: Date,
+)
 
 class RedwoodApiManager @Inject constructor(
     private val redwoodClient: RedwoodGraphQLClientConfig,
@@ -36,7 +86,7 @@ class RedwoodApiManager @Inject constructor(
         after: Date? = null,
         before: Date? = null,
         orderBy: OrderByInput? = null,
-    ): QueryNotesQuery.Notes {
+    ): List<Note> {
         val query = QueryNotesQuery(
             filter = Optional.presentIfNotNull(filter),
             first = Optional.presentIfNotNull(firstN?.toDouble()),
@@ -48,6 +98,31 @@ class RedwoodApiManager @Inject constructor(
         val result = QLClientConfig
             .enqueueQuery(query, block = redwoodClient.createClientConfigBlock())
             .dataAssertNoErrors.notes
+            .nodes?.map {
+                Note(
+                    id = it.id,
+                    rootAccountUuid = it.rootAccountUuid,
+                    userId = it.userId,
+                    courseId = it.courseId,
+                    objectId = it.objectId,
+                    objectType = NoteObjectType.fromValue(it.objectType) ?: NoteObjectType.COURSE,
+                    userText = it.userText ?: "",
+                    reactions = it.reaction?.mapNotNull { reaction -> NoteReaction.fromValue(reaction) } ?: emptyList(),
+                    highlightedData = parseHighlightedData(it.highlightData),
+                    createdAt = it.createdAt,
+                    updatedAt = it.updatedAt
+                )
+            }.orEmpty()
+
+        return result
+    }
+
+    private fun parseHighlightedData(highlightData: Any?): NoteHighlightedData? {
+        val result = try {
+            Gson().fromJson(highlightData.toString(), NoteHighlightedData::class.java)
+        } catch (e: Exception) {
+            null
+        }
 
         return result
     }
