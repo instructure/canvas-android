@@ -23,7 +23,7 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

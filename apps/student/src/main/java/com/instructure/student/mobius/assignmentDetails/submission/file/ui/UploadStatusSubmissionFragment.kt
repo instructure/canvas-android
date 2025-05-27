@@ -24,8 +24,8 @@ import com.instructure.student.mobius.assignmentDetails.submission.file.UploadSt
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.common.LiveDataSource
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.spotify.mobius.EventSource
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject

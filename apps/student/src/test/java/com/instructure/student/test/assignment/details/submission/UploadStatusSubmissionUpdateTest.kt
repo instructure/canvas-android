@@ -20,7 +20,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.file.UploadSt
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionEvent
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionUpdate
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 import com.instructure.student.test.util.matchesFirstEffects
 import com.spotify.mobius.test.FirstMatchers
 import com.spotify.mobius.test.InitSpec
