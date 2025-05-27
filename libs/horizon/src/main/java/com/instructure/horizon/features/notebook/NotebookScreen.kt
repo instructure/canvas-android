@@ -31,8 +31,8 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
@@ -47,6 +47,7 @@ import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -170,13 +171,16 @@ private fun NoteContent(
 ) {
     Column(
         modifier = Modifier
-            .clip(HorizonCornerRadius.level2)
-            .background(HorizonColors.PrimitivesWhite.white10())
-//            .shadow(
-//                elevation = HorizonElevation.level4,
-//                shape = HorizonCornerRadius.level2
-//            )
             .fillMaxWidth()
+            .shadow(
+                elevation = HorizonElevation.level4,
+                shape = HorizonCornerRadius.level2,
+                clip = true
+            )
+            .background(
+                color = HorizonColors.PrimitivesWhite.white10(),
+                shape = HorizonCornerRadius.level2,
+            )
             .clickable { onClick() }
     ) {
         Column(
