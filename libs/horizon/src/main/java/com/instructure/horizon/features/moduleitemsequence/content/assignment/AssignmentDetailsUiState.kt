@@ -87,6 +87,8 @@ sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
 
     data class File(
         val allowedTypes: List<String> = emptyList(),
+        val cameraAllowed: Boolean = false,
+        val galleryPickerAllowed: Boolean = false,
         val files: List<AddSubmissionFileUiState> = emptyList(),
         val onFileAdded: (Uri) -> Unit = {},
     ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)

@@ -33,8 +33,8 @@ import com.instructure.horizon.horizonui.molecules.ActionBottomSheet
 import com.instructure.horizon.horizonui.molecules.BottomSheetActionState
 
 data class FileDropBottomSheetCallbacks(
-    val onChoosePhoto: () -> Unit = {},
-    val onTakePhoto: () -> Unit = {},
+    val onChoosePhoto: (() -> Unit)? = null,
+    val onTakePhoto: (() -> Unit)? = null,
     val onUploadFile: () -> Unit = {}
 )
 
@@ -45,24 +45,37 @@ fun FileDropBottomSheet(
     callbacks: FileDropBottomSheetCallbacks = FileDropBottomSheetCallbacks(),
     onDismiss: () -> Unit = {}
 ) {
+
     ActionBottomSheet(
-        title = stringResource(R.string.fileDropSheet_uploadFile), actions = listOf(
-            BottomSheetActionState(
-                label = stringResource(R.string.fileDropSheet_choosePhotoOrVideo),
-                iconRes = R.drawable.image,
-                onClick = callbacks.onChoosePhoto
-            ),
-            BottomSheetActionState(
-                label = stringResource(R.string.fileDropSheet_takePhotoOrVideo),
-                iconRes = R.drawable.camera,
-                onClick = callbacks.onTakePhoto
-            ),
-            BottomSheetActionState(
-                label = stringResource(R.string.fileDropSheet_uploadFile),
-                iconRes = R.drawable.folder,
-                onClick = callbacks.onUploadFile
+        title = stringResource(R.string.fileDropSheet_uploadFile), actions = buildList {
+            if (callbacks.onChoosePhoto != null) {
+                add(
+                    BottomSheetActionState(
+                        label = stringResource(R.string.fileDropSheet_choosePhotoOrVideo),
+                        iconRes = R.drawable.image,
+                        onClick = callbacks.onChoosePhoto
+                    )
+                )
+            }
+
+            if (callbacks.onTakePhoto != null) {
+                add(
+                    BottomSheetActionState(
+                        label = stringResource(R.string.fileDropSheet_takePhotoOrVideo),
+                        iconRes = R.drawable.camera,
+                        onClick = callbacks.onTakePhoto
+                    )
+                )
+            }
+
+            add(
+                BottomSheetActionState(
+                    label = stringResource(R.string.fileDropSheet_uploadFile),
+                    iconRes = R.drawable.folder,
+                    onClick = callbacks.onUploadFile
+                )
             )
-        ), sheetState = sheetState, onDismiss = onDismiss, modifier = modifier
+        }, sheetState = sheetState, onDismiss = onDismiss, modifier = modifier
     )
 }
 
@@ -71,4 +84,18 @@ fun FileDropBottomSheet(
 fun FileDropBottomSheetPreview() {
     ContextKeeper.appContext = LocalContext.current
     FileDropBottomSheet(sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded))
+}
+
+@Composable
+@Preview
+fun FileDropBottomSheetAllItemsPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    FileDropBottomSheet(
+        sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded),
+        callbacks = FileDropBottomSheetCallbacks(
+            onChoosePhoto = {},
+            onTakePhoto = {},
+            onUploadFile = {}
+        )
+    )
 }

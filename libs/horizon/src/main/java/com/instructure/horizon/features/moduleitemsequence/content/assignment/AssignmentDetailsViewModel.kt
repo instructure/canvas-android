@@ -37,7 +37,6 @@ import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionD
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.format
-import com.instructure.pandautils.utils.getFileName
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -65,6 +64,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val assignmentId = savedStateHandle[ModuleItemContent.Assignment.ASSIGNMENT_ID] ?: -1L
     private val courseId = savedStateHandle[Const.COURSE_ID] ?: -1L
     private var assignmentName: String = ""
+
+    private var assignment: Assignment? = null
 
     private val _uiState =
         MutableStateFlow(
@@ -96,6 +97,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
             val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
+            this@AssignmentDetailsViewModel.assignment = assignment
             assignmentName = assignment.name.orEmpty()
             val lastActualSubmission = assignment.lastActualSubmission
             val submissions = if (lastActualSubmission != null) {
@@ -118,6 +120,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged)
                     Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File(
                         allowedTypes = assignment.allowedExtensions,
+                        cameraAllowed = assignment.allowedExtensions.isEmpty() || assignment.allowedExtensions.contains("jpg"),
+                        galleryPickerAllowed = galleryPickerAllowed(assignment.allowedExtensions),
                         onFileAdded = ::onFileAdded
                     )
 
@@ -147,6 +151,14 @@ class AssignmentDetailsViewModel @Inject constructor(
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         }
+    }
+
+    private fun galleryPickerAllowed(allowedExtensions: List<String>): Boolean {
+        val mediaExtensions = setOf(
+            "jpg", "jpeg", "png", "gif", "bmp", "webp", "heic", "heif", "tif", "tiff", "raw", "svg", "ico", "mp4", "mkv", "avi",
+            "mov", "webm", "flv", "3gp", "3g2", "wmv", "mpeg", "mpg", "m4v", "ts", "mts"
+        )
+        return allowedExtensions.isEmpty() || allowedExtensions.any { mediaExtensions.contains(it) }
     }
 
     private fun mapSubmissions(submissions: List<Submission>): List<SubmissionUiState> {
@@ -455,27 +467,46 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     private fun onFileAdded(uri: Uri) {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    submissionTypes = it.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
-                        if (index == it.addSubmissionUiState.selectedSubmissionTypeIndex && submissionType is AddSubmissionTypeUiState.File) {
-                            submissionType.copy(
-                                files = submissionType.files + AddSubmissionFileUiState(
-                                    name = fileUploadUtilsHelper.getFileNameWithDefault(uri), uri = uri, onDeleteClicked = { deleteFile(uri) })
-                            )
-                        } else {
-                            submissionType
+        val extension = fileUploadUtilsHelper.getFileExtension(uri)
+        val allowedExtensions = assignment?.allowedExtensions.orEmpty()
+        if (allowedExtensions.isEmpty() || allowedExtensions.contains(extension)) {
+            _uiState.update {
+                it.copy(
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionTypes = it.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
+                            if (index == it.addSubmissionUiState.selectedSubmissionTypeIndex && submissionType is AddSubmissionTypeUiState.File) {
+                                submissionType.copy(
+                                    files = submissionType.files + AddSubmissionFileUiState(
+                                        name = fileUploadUtilsHelper.getFileNameWithDefault(uri),
+                                        uri = uri,
+                                        onDeleteClicked = { deleteFile(uri) })
+                                )
+                            } else {
+                                submissionType
+                            }
                         }
-                    }
+                    )
                 )
-            )
-        }
+            }
 
-        val addSubmissionUiState = _uiState.value.addSubmissionUiState
-        val hasFiles = addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
-                (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
-        updateSubmissionEnabled(hasFiles)
+            val addSubmissionUiState = _uiState.value.addSubmissionUiState
+            val hasFiles =
+                addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
+                        (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
+            updateSubmissionEnabled(hasFiles)
+        } else {
+            _uiState.update {
+                it.copy(
+                    loadingState = it.loadingState.copy(
+                        errorSnackbar = context.getString(R.string.assignmentDetails_fileTypeNotSupported),
+                        onErrorSnackbarDismiss = {
+                            _uiState.update { uiState ->
+                                uiState.copy(loadingState = uiState.loadingState.copy(errorSnackbar = null))
+                            }
+                        })
+                )
+            }
+        }
     }
 
     private fun deleteFile(uri: Uri) {
@@ -496,8 +527,9 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
 
         val addSubmissionUiState = _uiState.value.addSubmissionUiState
-        val hasFiles = addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
-                (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
+        val hasFiles =
+            addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
+                    (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
         updateSubmissionEnabled(hasFiles)
     }
 
