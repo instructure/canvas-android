@@ -2087,4 +2087,8 @@
     <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
 
+    <string name="speedGraderGradeTabTitle">Grade &amp; Rubric</string>
+    <string name="speedGraderDetailsTabTitle">Details</string>
+    <string name="a11y_contentDescription_expandPanel">Expand panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
 </resources>
