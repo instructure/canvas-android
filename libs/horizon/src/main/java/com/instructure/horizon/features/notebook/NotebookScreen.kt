@@ -304,6 +304,7 @@ private fun NotesPager(
 private fun NotebookScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = NotebookUiState(
+        isLoading = false,
         selectedFilter = NotebookType.Important,
         notes = listOf(
             Note(
