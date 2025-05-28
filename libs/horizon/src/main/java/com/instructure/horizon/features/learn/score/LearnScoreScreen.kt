@@ -18,6 +18,7 @@ package com.instructure.horizon.features.learn.score
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -47,6 +48,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -68,12 +70,18 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.model.AssignmentStatus
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.formatDayMonthYear
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnScoreScreen(courseId: Long, modifier: Modifier = Modifier, viewModel: LearnScoreViewModel = hiltViewModel()) {
+fun LearnScoreScreen(
+    courseId: Long,
+    mainNavController: NavHostController,
+    modifier: Modifier = Modifier,
+    viewModel: LearnScoreViewModel = hiltViewModel()
+) {
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(courseId) {
@@ -83,6 +91,8 @@ fun LearnScoreScreen(courseId: Long, modifier: Modifier = Modifier, viewModel: L
     LoadingStateWrapper(state.screenState) {
         LearnScoreContent(
             state,
+            courseId,
+            mainNavController,
             { viewModel.updateSelectedSortOption(it) },
             modifier
         )
@@ -92,6 +102,8 @@ fun LearnScoreScreen(courseId: Long, modifier: Modifier = Modifier, viewModel: L
 @Composable
 private fun LearnScoreContent(
     state: LearnScoreUiState,
+    courseId: Long,
+    mainNavController: NavHostController,
     onSelectedSortOptionChanged: (LearnScoreSortOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -122,9 +134,21 @@ private fun LearnScoreContent(
 
         item {
             Column {
-                AssignmentsContent(state, onSelectedSortOptionChanged = {
-                    onSelectedSortOptionChanged(it)
-                })
+                AssignmentsContent(
+                    state = state,
+                    navigateToAssignment = { assignmentId ->
+                        mainNavController.navigate(
+                            MainNavigationRoute.ModuleItemSequence(
+                                courseId = courseId,
+                                moduleItemAssetType = "Assignment",
+                                moduleItemAssetId = assignmentId.toString()
+                            )
+                        )
+                    },
+                    onSelectedSortOptionChanged = {
+                        onSelectedSortOptionChanged(it)
+                    }
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
             }
@@ -135,6 +159,7 @@ private fun LearnScoreContent(
 @Composable
 private fun AssignmentsContent(
     state: LearnScoreUiState,
+    navigateToAssignment: (Long) -> Unit,
     onSelectedSortOptionChanged: (LearnScoreSortOption) -> Unit,
 ) {
     Box(
@@ -178,7 +203,9 @@ private fun AssignmentsContent(
                 Column {
                     assignments.forEach { assignment ->
                         Column {
-                            AssignmentItem(assignment)
+                            AssignmentItem(assignment) {
+                                navigateToAssignment(assignment.assignmentId)
+                            }
 
                             if (assignment != state.sortedAssignments.last()) {
                                 HorizontalDivider(
@@ -195,9 +222,13 @@ private fun AssignmentsContent(
 }
 
 @Composable
-private fun AssignmentItem(assignment: AssignmentScoreItem) {
+private fun AssignmentItem(
+    assignment: AssignmentScoreItem,
+    onClick: () -> Unit
+) {
     Column(
         modifier = Modifier
+            .clickable { onClick() }
             .padding(vertical = 16.dp)
             .padding(horizontal = 24.dp)
             .fillMaxWidth()
@@ -375,6 +406,8 @@ fun LearnScoreContentPreview() {
             sortedAssignments = assignmentGroups.flatMap { it.assignments.map { AssignmentScoreItem(it) } },
             selectedSortOption = LearnScoreSortOption.DueDate
         ),
+        1L,
+        NavHostController(LocalContext.current),
         onSelectedSortOptionChanged = {}
     )
 }
