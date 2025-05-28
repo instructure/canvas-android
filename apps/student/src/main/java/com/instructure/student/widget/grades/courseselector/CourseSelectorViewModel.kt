@@ -41,7 +41,7 @@ class CourseSelectorViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val courses = repository.getCoursesWithGradingScheme(true)
+                val courses = repository.getCoursesWithGradingScheme(forceNetwork = true)
                 if (courses.isEmpty()) {
                     _uiState.update { it.copy(state = ScreenState.Empty) }
                 } else {

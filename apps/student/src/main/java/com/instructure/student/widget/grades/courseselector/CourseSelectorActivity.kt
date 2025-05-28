@@ -21,33 +21,21 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandares.R
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.student.R
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater.updateWidgets
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,7 +73,7 @@ class CourseSelectorActivity : BaseCanvasActivity() {
                 },
                 content = { paddingValues ->
                     when (uiState.state) {
-                        ScreenState.Content -> Content(uiState, paddingValues)
+                        ScreenState.Content -> CourseSelectorContentScreen(uiState, paddingValues, ::courseSelected)
                         ScreenState.Empty -> EmptyContent(
                             emptyMessage = stringResource(R.string.edit_dashboard_empty_title),
                             imageRes = R.drawable.ic_panda_nocourses,
@@ -99,32 +87,6 @@ class CourseSelectorActivity : BaseCanvasActivity() {
                     }
                 }
             )
-        }
-    }
-
-    @Composable
-    private fun Content(uiState: CourseSelectorUiState, paddingValues: PaddingValues) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(R.color.backgroundLightest))
-                .padding(paddingValues)
-        ) {
-            items(uiState.courses) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            courseSelected(it)
-                        }
-                        .padding(16.dp),
-                    text = it.name,
-                    style = MaterialTheme.typography.body1.copy(
-                        color = colorResource(R.color.textDarkest),
-                    )
-                )
-                HorizontalDivider(thickness = 1.dp)
-            }
         }
     }
 

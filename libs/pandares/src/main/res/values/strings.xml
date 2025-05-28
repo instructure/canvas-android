@@ -2084,7 +2084,7 @@
     <string name="widgetGradesNotLoggedInSubtitle">To see your grades, please log in to your account in the app. It\'ll just take a sec!</string>
     <string name="widgetSingleGradeErrorSubtitle">We\'re having trouble showing your grades right now.</string>
     <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
-    <string name="selectCourse">Select Course</string>
+    <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
 
 </resources>

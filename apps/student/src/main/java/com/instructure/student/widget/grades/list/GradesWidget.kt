@@ -69,11 +69,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 
 class GradesWidget : GlanceAppWidget() {
 
-    companion object {
-        private val NARROW = DpSize(100.dp, 110.dp)
-        private val WIDE = DpSize(250.dp, 110.dp)
-    }
-
     override val sizeMode = SizeMode.Responsive(
         setOf(
             NARROW,
@@ -105,17 +100,17 @@ class GradesWidget : GlanceAppWidget() {
 
                 WidgetState.Error, WidgetState.Empty -> ClickHandlerBox {
                     Error(
-                        imageRes = com.instructure.student.R.drawable.ic_panda_notsupported,
-                        titleRes = com.instructure.student.R.string.widgetErrorTitle,
-                        subtitleRes = com.instructure.student.R.string.widgetGradesErrorSubtitle
+                        imageRes = R.drawable.ic_panda_notsupported,
+                        titleRes = R.string.widgetErrorTitle,
+                        subtitleRes = R.string.widgetGradesErrorSubtitle
                     )
                 }
 
                 WidgetState.NotLoggedIn -> ClickHandlerBox {
                     Error(
-                        imageRes = com.instructure.student.R.drawable.ic_smart_search_empty,
-                        titleRes = com.instructure.student.R.string.widgetNotLoggedInTitle,
-                        subtitleRes = com.instructure.student.R.string.widgetGradesNotLoggedInSubtitle
+                        imageRes = R.drawable.ic_smart_search_empty,
+                        titleRes = R.string.widgetNotLoggedInTitle,
+                        subtitleRes = R.string.widgetGradesNotLoggedInSubtitle
                     )
                 }
 
@@ -165,16 +160,15 @@ class GradesWidget : GlanceAppWidget() {
         widgetCourseItem: WidgetCourseItem,
         modifier: GlanceModifier = GlanceModifier
     ) {
-        widgetCourseItem.gradeText?.let {
-            if (widgetCourseItem.isLocked) {
-                LockIcon(modifier)
-            } else if (it == "") {
-                NoGradesLabel(modifier)
-            } else {
-                TextLabel(label = it, modifier = modifier)
-            }
+        if (widgetCourseItem.isLocked) {
+            LockIcon(modifier)
+        } else if (widgetCourseItem.gradeText.isNullOrBlank()) {
+            NoGradesLabel(modifier)
+        } else {
+            TextLabel(label = widgetCourseItem.gradeText, modifier = modifier)
         }
     }
+
 
     @Composable
     private fun TextLabel(
@@ -230,57 +224,6 @@ class GradesWidget : GlanceAppWidget() {
         )
     }
 
-    private fun getPreviewSampleData() = GradesWidgetUiState(
-        state = WidgetState.Content,
-        courses = listOf(
-            WidgetCourseItem(
-                name = "Biology 101",
-                courseCode = "BIO 101",
-                isLocked = false,
-                gradeText = "82%",
-                courseColorLight = 0xFF2573DF.toInt(),
-                courseColorDark = 0xFF2573DF.toInt(),
-                ""
-            ),
-            WidgetCourseItem(
-                name = "Mathematics 904 2024/25",
-                courseCode = "MAT 904",
-                isLocked = false,
-                gradeText = "Good",
-                courseColorLight = 0xFF9E58BD.toInt(),
-                courseColorDark = 0xFF9E58BD.toInt(),
-                ""
-            ),
-            WidgetCourseItem(
-                name = "Music Test Course something longer than a line or two for sh...",
-                courseCode = "MTC",
-                isLocked = false,
-                gradeText = "A+",
-                courseColorLight = 0xFF197EAB.toInt(),
-                courseColorDark = 0xFF197EAB.toInt(),
-                ""
-            ),
-            WidgetCourseItem(
-                name = "English Literature 101",
-                courseCode = "EL 101",
-                isLocked = true,
-                gradeText = "",
-                courseColorLight = 0xFF27872B.toInt(),
-                courseColorDark = 0xFF27872B.toInt(),
-                ""
-            ),
-            WidgetCourseItem(
-                name = "General Astrology",
-                courseCode = "GA",
-                isLocked = false,
-                gradeText = "",
-                courseColorLight = 0xFF00828E.toInt(),
-                courseColorDark = 0xFF00828E.toInt(),
-                ""
-            ),
-        )
-    )
-
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview(widthDp = 250, heightDp = 200)
     @Composable
@@ -288,7 +231,56 @@ class GradesWidget : GlanceAppWidget() {
         ContextKeeper.appContext = LocalContext.current
         AndroidThreeTen.init(LocalContext.current)
         Content(
-            getPreviewSampleData()
+            GradesWidgetUiState(
+                state = WidgetState.Content,
+                courses = listOf(
+                    WidgetCourseItem(
+                        name = "Biology 101",
+                        courseCode = "BIO 101",
+                        isLocked = false,
+                        gradeText = "82%",
+                        courseColorLight = 0xFF2573DF.toInt(),
+                        courseColorDark = 0xFF2573DF.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "Mathematics 904 2024/25",
+                        courseCode = "MAT 904",
+                        isLocked = false,
+                        gradeText = "Good",
+                        courseColorLight = 0xFF9E58BD.toInt(),
+                        courseColorDark = 0xFF9E58BD.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "Music Test Course something longer than a line or two for sh...",
+                        courseCode = "MTC",
+                        isLocked = false,
+                        gradeText = "A+",
+                        courseColorLight = 0xFF197EAB.toInt(),
+                        courseColorDark = 0xFF197EAB.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "English Literature 101",
+                        courseCode = "EL 101",
+                        isLocked = true,
+                        gradeText = "",
+                        courseColorLight = 0xFF27872B.toInt(),
+                        courseColorDark = 0xFF27872B.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "General Astrology",
+                        courseCode = "GA",
+                        isLocked = false,
+                        gradeText = "",
+                        courseColorLight = 0xFF00828E.toInt(),
+                        courseColorDark = 0xFF00828E.toInt(),
+                        ""
+                    ),
+                )
+            )
         )
     }
 
@@ -299,7 +291,56 @@ class GradesWidget : GlanceAppWidget() {
         ContextKeeper.appContext = LocalContext.current
         AndroidThreeTen.init(LocalContext.current)
         Content(
-            getPreviewSampleData()
+            GradesWidgetUiState(
+                state = WidgetState.Content,
+                courses = listOf(
+                    WidgetCourseItem(
+                        name = "Biology 101",
+                        courseCode = "BIO 101",
+                        isLocked = false,
+                        gradeText = "82%",
+                        courseColorLight = 0xFF2573DF.toInt(),
+                        courseColorDark = 0xFF2573DF.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "Mathematics 904 2024/25",
+                        courseCode = "MAT 904",
+                        isLocked = false,
+                        gradeText = "Good",
+                        courseColorLight = 0xFF9E58BD.toInt(),
+                        courseColorDark = 0xFF9E58BD.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "Music Test Course something longer than a line or two for sh...",
+                        courseCode = "MTC",
+                        isLocked = false,
+                        gradeText = "A+",
+                        courseColorLight = 0xFF197EAB.toInt(),
+                        courseColorDark = 0xFF197EAB.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "English Literature 101",
+                        courseCode = "EL 101",
+                        isLocked = true,
+                        gradeText = "",
+                        courseColorLight = 0xFF27872B.toInt(),
+                        courseColorDark = 0xFF27872B.toInt(),
+                        ""
+                    ),
+                    WidgetCourseItem(
+                        name = "General Astrology",
+                        courseCode = "GA",
+                        isLocked = false,
+                        gradeText = "",
+                        courseColorLight = 0xFF00828E.toInt(),
+                        courseColorDark = 0xFF00828E.toInt(),
+                        ""
+                    ),
+                )
+            )
         )
     }
 
@@ -312,5 +353,10 @@ class GradesWidget : GlanceAppWidget() {
         Content(
             GradesWidgetUiState(WidgetState.Error)
         )
+    }
+
+    companion object {
+        private val NARROW = DpSize(100.dp, 110.dp)
+        private val WIDE = DpSize(250.dp, 110.dp)
     }
 }
