@@ -29,6 +29,8 @@ import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScr
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
 import com.instructure.horizon.features.notebook.NotebookScreen
 import com.instructure.horizon.features.notebook.NotebookViewModel
+import com.instructure.horizon.features.notebook.add.AddNoteScreen
+import com.instructure.horizon.features.notebook.add.AddNoteViewModel
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
 import kotlinx.serialization.Serializable
@@ -38,6 +40,16 @@ sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
     data object Notification : MainNavigationRoute("notification")
     data object Notebook : MainNavigationRoute("notebook")
+
+    @Serializable
+    data class AddNotebook(
+        val courseId: String,
+        val objectType: String,
+        val objectId: String,
+        val highlightedTextStart: Int,
+        val highlightedTextEnd: Int,
+        val highlightedText: String,
+    ): MainNavigationRoute("add_notebook")
 
     @Serializable
     data class ModuleItemSequence(
@@ -73,6 +85,11 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             val viewModel = hiltViewModel<NotebookViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             NotebookScreen(navController, uiState)
+        }
+        composable<MainNavigationRoute.AddNotebook> {
+            val viewModel = hiltViewModel<AddNoteViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            AddNoteScreen(navController, uiState)
         }
     }
 }

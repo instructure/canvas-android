@@ -19,7 +19,9 @@ package com.instructure.canvasapi2.managers
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
+import com.instructure.redwood.CreateNoteMutation
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.type.CreateNoteInput
 import com.instructure.redwood.type.NoteFilterInput
 import com.instructure.redwood.type.OrderByInput
 import java.util.Date
@@ -96,5 +98,34 @@ class RedwoodApiManager @Inject constructor(
             .dataAssertNoErrors.notes
 
         return result
+    }
+
+    suspend fun createNote(
+        courseId: String,
+        objectId: String,
+        objectType: String,
+        userText: String?,
+        notebookType: String?,
+        highlightData: NoteHighlightedData? = null
+    ) {
+        val reaction = if (notebookType == null) {
+            Optional.absent()
+        } else {
+            Optional.present(listOf(notebookType))
+        }
+        val mutation = CreateNoteMutation(
+            CreateNoteInput(
+                courseId = courseId,
+                objectId = objectId,
+                objectType = objectType,
+                userText = Optional.presentIfNotNull(userText),
+                reaction = reaction,
+                highlightData = Optional.presentIfNotNull(highlightData)
+            )
+        )
+
+        QLClientConfig
+            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+            .dataAssertNoErrors
     }
 }

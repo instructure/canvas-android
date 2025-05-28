@@ -27,21 +27,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Scaffold
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.managers.NoteObjectType
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.composable.NotebookAppBar
+import com.instructure.horizon.features.notebook.common.composable.NotebookHighlightedText
 import com.instructure.horizon.features.notebook.common.composable.NotebookPill
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.Note
@@ -58,6 +59,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.format
+import java.util.Date
 
 @Composable
 fun NotebookScreen(
@@ -65,7 +67,7 @@ fun NotebookScreen(
     state: NotebookUiState,
 ) {
     Scaffold(
-        backgroundColor = HorizonColors.Surface.pagePrimary(),
+        containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
     ) { padding ->
         LazyColumn(
@@ -218,23 +220,9 @@ private fun NoteContent(
 
             HorizonSpace(SpaceSize.SPACE_16)
 
-            val lineColor = colorResource(note.type.color)
-            Text(
+            NotebookHighlightedText(
                 text = note.highlightedText,
-                style = HorizonTypography.p1,
-                color = HorizonColors.Text.body(),
-                modifier = Modifier
-                    .background(colorResource(note.type.color).copy(alpha = 0.2f))
-                    .drawBehind {
-                        val strokeWidthPx = 1.dp.toPx()
-                        val verticalOffset = size.height - 2.sp.toPx()
-                        drawLine(
-                            color = lineColor,
-                            strokeWidth = strokeWidthPx,
-                            start = Offset(0f, verticalOffset),
-                            end = Offset(size.width, verticalOffset)
-                        )
-                    }
+                type = note.type,
             )
 
             HorizonSpace(SpaceSize.SPACE_16)
@@ -309,4 +297,40 @@ private fun NotesPager(
             enabled = canNavigateForward && !isLoading
         )
     }
+}
+
+@Composable
+@Preview
+private fun NotebookScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = NotebookUiState(
+        selectedFilter = NotebookType.Important,
+        notes = listOf(
+            Note(
+                id = "1",
+                courseId = 123L,
+                objectId = "456",
+                objectType = NoteObjectType.PAGE,
+                userText = "This is a note about an assignment.",
+                highlightedText = "Important part of the assignment.",
+                updatedAt = Date(),
+                type = NotebookType.Important
+            ),
+            Note(
+                id = "2",
+                courseId = 123L,
+                objectId = "789",
+                objectType = NoteObjectType.PAGE,
+                userText = "This is a note about another assignment.",
+                highlightedText = "Confusing part of the assignment.",
+                updatedAt = Date(),
+                type = NotebookType.Confusing
+            )
+        ),
+    )
+
+    NotebookScreen(
+        mainNavController = NavHostController(LocalContext.current),
+        state = state
+    )
 }
