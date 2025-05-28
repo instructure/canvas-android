@@ -115,28 +115,36 @@ fun FileDrop(
 sealed class FileDropItemState(
     open val fileName: String,
     val actionIconRes: Int,
-    open val onActionClick: () -> Unit = {},
+    open val onActionClick: (() -> Unit)? = null,
     open val onClick: (() -> Unit)? = null
 ) {
-    data class Success(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: (() -> Unit)? = null) :
+    data class Success(
+        override val fileName: String,
+        override val onActionClick: (() -> Unit)? = null,
+        override val onClick: (() -> Unit)? = null
+    ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.delete)
 
     data class InProgress(
         override val fileName: String,
         val progress: Float? = null,
-        override val onActionClick: () -> Unit = {},
+        override val onActionClick: (() -> Unit)? = null,
         override val onClick: (() -> Unit)? = null
     ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.close)
 
     data class NoLongerEditable(
         override val fileName: String,
-        override val onActionClick: () -> Unit = {},
+        override val onActionClick: (() -> Unit)? = null,
         override val onClick: (() -> Unit)? = null
     ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.download)
 
-    data class Error(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: (() -> Unit)? = null) :
+    data class Error(
+        override val fileName: String,
+        override val onActionClick: (() -> Unit)? = null,
+        override val onClick: (() -> Unit)? = null
+    ) :
         FileDropItemState(fileName, actionIconRes = R.drawable.refresh)
 
 }
@@ -198,12 +206,14 @@ fun FileDropItem(
             }
             Text(text = state.fileName, style = HorizonTypography.p1, modifier = Modifier.weight(1f))
             HorizonSpace(SpaceSize.SPACE_8)
-            IconButton(
-                iconRes = state.actionIconRes,
-                size = IconButtonSize.SMALL,
-                color = IconButtonColor.INVERSE,
-                onClick = state.onActionClick
-            )
+            state.onActionClick?.let {
+                IconButton(
+                    iconRes = state.actionIconRes,
+                    size = IconButtonSize.SMALL,
+                    color = IconButtonColor.INVERSE,
+                    onClick = it
+                )
+            }
         }
     }
 }

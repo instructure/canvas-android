@@ -128,7 +128,7 @@ class HorizonSubmissionWorker @AssistedInject constructor(
     private suspend fun uploadFileSubmission(submission: CreateSubmissionEntity): Result {
         val (completed, pending) = createFileSubmissionDao
             .findFilesForSubmissionId(submission.id).partition { it.attachmentId != null }
-        val uploadedAttachmentIds = uploadFiles(submission, completed.size, pending)
+        val uploadedAttachmentIds = uploadFiles(submission, pending)
             ?: return Result.failure() // Cancel submitting if any of the files failed to upload
 
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
@@ -158,9 +158,8 @@ class HorizonSubmissionWorker @AssistedInject constructor(
         }
     }
 
-    private fun uploadFiles(
+    private suspend fun uploadFiles(
         submission: CreateSubmissionEntity,
-        completedAttachmentCount: Int,
         attachments: List<CreateFileSubmissionEntity>
     ): List<Long>? {
         val attachmentIds = ArrayList<Long>(attachments.size)
@@ -169,7 +168,6 @@ class HorizonSubmissionWorker @AssistedInject constructor(
             if (pendingAttachment.name == null || pendingAttachment.size == null || pendingAttachment.contentType == null || pendingAttachment.fullPath == null) {
                 return null
             }
-            updateFileProgress(submission.id, 0f, index, attachments.size, completedAttachmentCount)
 
             // Upload config setup
             val fso = FileSubmitObject(
@@ -190,24 +188,9 @@ class HorizonSubmissionWorker @AssistedInject constructor(
                     runBlocking { createSubmissionDao.findSubmissionById(submission.id) }
                         ?: return false // Stop uploading and don't show error if submission was deleted,
 
-                    updateFileProgress(
-                        submission.id,
-                        progressPercent,
-                        index,
-                        attachments.size,
-                        completedAttachmentCount
-                    )
                     return true
                 }
             }, RestParams(shouldIgnoreToken = true, disableFileVerifiers = false)).onSuccess { attachment ->
-                updateFileProgress(
-                    submission.id,
-                    1.0f,
-                    index,
-                    attachments.size,
-                    completedAttachmentCount
-                )
-                runBlocking {
                     createFileSubmissionDao
                         .setFileAttachmentIdAndError(
                             attachment.id,
@@ -215,35 +198,14 @@ class HorizonSubmissionWorker @AssistedInject constructor(
                             null,
                             pendingAttachment.id
                         )
-                }
 
                 attachmentIds.add(attachment.id)
             }.onFailure {
-                runBlocking {
 //                    handleFileError(submission, index, attachments, it?.message)
-                }
                 return null
             }
         }
         return attachmentIds
-    }
-
-    private fun updateFileProgress(
-        dbSubmissionId: Long,
-        uploaded: Float,
-        fileIndex: Int,
-        fileCount: Int,
-        completedAttachmentCount: Int
-    ) {
-        // Set initial progress
-        runBlocking {
-            createSubmissionDao.updateProgress(
-                currentFile = (completedAttachmentCount + fileIndex).toLong(),
-                fileCount = (completedAttachmentCount + fileCount).toLong(),
-                progress = uploaded.toDouble(),
-                id = dbSubmissionId
-            )
-        }
     }
 
     private suspend fun deleteSubmissionsForAssignment(

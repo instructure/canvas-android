@@ -43,7 +43,7 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, modifier: Modifier = Modifier) {
+fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionInProgress: Boolean, modifier: Modifier = Modifier) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -103,7 +103,12 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, modifier: M
     }
     FileDrop(uiState.allowedTypes, fileItems = {
         uiState.files.forEach {
-            FileDropItem(state = FileDropItemState.Success(it.name, onActionClick = it.onDeleteClicked))
+            val state = if (submissionInProgress) {
+                FileDropItemState.InProgress(it.name)
+            } else {
+                FileDropItemState.Success(it.name, onActionClick = it.onDeleteClicked)
+            }
+            FileDropItem(state = state)
         }
     }, onUploadClick = {
         showBottomSheet = true
