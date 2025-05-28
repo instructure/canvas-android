@@ -177,10 +177,10 @@ class HorizonSubmissionWorker @AssistedInject constructor(
                 pendingAttachment.fullPath.orEmpty()
             )
             val config = FileUploadConfig.forSubmission(
-                    fso,
-                    submission.canvasContext.id,
-                    submission.assignmentId
-                )
+                fso,
+                submission.canvasContext.id,
+                submission.assignmentId
+            )
 
             // Perform upload
             fileUploadManager.uploadFile(config, object : ProgressRequestUpdateListener {
@@ -191,21 +191,41 @@ class HorizonSubmissionWorker @AssistedInject constructor(
                     return true
                 }
             }, RestParams(shouldIgnoreToken = true, disableFileVerifiers = false)).onSuccess { attachment ->
-                    createFileSubmissionDao
-                        .setFileAttachmentIdAndError(
-                            attachment.id,
-                            false,
-                            null,
-                            pendingAttachment.id
-                        )
+                createFileSubmissionDao
+                    .setFileAttachmentIdAndError(
+                        attachment.id,
+                        false,
+                        null,
+                        pendingAttachment.id
+                    )
 
                 attachmentIds.add(attachment.id)
             }.onFailure {
-//                    handleFileError(submission, index, attachments, it?.message)
+                handleFileError(submission, index, attachments, it?.message)
                 return null
             }
         }
         return attachmentIds
+    }
+
+    private suspend fun handleFileError(
+        submission: CreateSubmissionEntity,
+        completedCount: Int,
+        attachments: List<CreateFileSubmissionEntity>,
+        errorMessage: String?
+    ) {
+        if (createSubmissionDao.findSubmissionById(submission.id) == null) {
+            return // Not an error if the submission was deleted, it was canceled
+        }
+
+        createSubmissionDao.setSubmissionError(true, submission.id)
+
+        // Set all files that haven't been completed yet to error
+        attachments.forEachIndexed { index, file ->
+            if (index >= completedCount) {
+                createFileSubmissionDao.setFileError(true, errorMessage, file.id)
+            }
+        }
     }
 
     private suspend fun deleteSubmissionsForAssignment(
