@@ -43,75 +43,83 @@ class PagesE2ETest: StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testPagesE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed an UNPUBLISHED page for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed an UNPUBLISHED page for '${course.name}' course.")
         val pageUnpublished = PagesApi.createCoursePage(course.id, teacher.token, published = false)
 
-        Log.d(PREPARATION_TAG,"Seed a PUBLISHED page for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed a PUBLISHED page for '${course.name}' course.")
         val pagePublished = PagesApi.createCoursePage(course.id, teacher.token, editingRoles = "teachers,students", body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
-        Log.d(PREPARATION_TAG,"Seed a PUBLISHED, but NOT editable page for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed a PUBLISHED, but NOT editable page for '${course.name}' course.")
         val pageNotEditable = PagesApi.createCoursePage(course.id, teacher.token, body = "<h1 id=\"header1\">Regular Page Text</h1>")
 
-        Log.d(PREPARATION_TAG,"Seed a PUBLISHED, FRONT page for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed a PUBLISHED, FRONT page for '${course.name}' course.")
         val pagePublishedFront = PagesApi.createCoursePage(course.id, teacher.token, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select '${course.name}' course and navigate to Modules Page.")
+        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to Modules Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectPages()
 
-        Log.d(STEP_TAG,"Assert that '${pagePublishedFront.title}' published front page is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pagePublishedFront.title}' published front page is displayed.")
         pageListPage.assertFrontPageDisplayed(pagePublishedFront)
 
-        Log.d(STEP_TAG,"Assert that '${pagePublished.title}' published page is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pagePublished.title}' published page is displayed.")
         pageListPage.assertRegularPageDisplayed(pagePublished)
 
-        Log.d(STEP_TAG,"Assert that '${pageUnpublished.title}' unpublished page is NOT displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pageUnpublished.title}' unpublished page is NOT displayed.")
         pageListPage.assertPageNotDisplayed(pageUnpublished)
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${pagePublishedFront.title}', the page's name to the search input field.")
         pageListPage.searchable.clickOnSearchButton()
         pageListPage.searchable.typeToSearchBar(pagePublishedFront.title)
 
-        Log.d(STEP_TAG,"Assert that '${pagePublished.title}' published page is NOT displayed and there is only one page (the front page) is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pagePublished.title}' published page is NOT displayed and there is only one page (the front page) is displayed.")
         pageListPage.assertPageNotDisplayed(pagePublished)
         pageListPage.assertPageListItemCount(1)
 
         Log.d(STEP_TAG, "Click on clear search icon (X).")
         pageListPage.searchable.clickOnClearSearchButton()
 
-        Log.d(STEP_TAG,"Assert that '${pagePublishedFront.title}' published front page is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pagePublishedFront.title}' published front page is displayed.")
         pageListPage.assertFrontPageDisplayed(pagePublishedFront)
 
-        Log.d(STEP_TAG,"Assert that '${pagePublished.title}' published page is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pagePublished.title}' published page is displayed.")
         pageListPage.assertRegularPageDisplayed(pagePublished)
 
-        Log.d(STEP_TAG,"Assert that '${pageUnpublished.title}' unpublished page is NOT displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${pageUnpublished.title}' unpublished page is NOT displayed.")
         pageListPage.assertPageNotDisplayed(pageUnpublished)
 
-        Log.d(STEP_TAG,"Open '${pagePublishedFront.title}' page. Assert that it is really a front (published) page via web view assertions.")
+        Log.d(STEP_TAG, "Open '${pagePublishedFront.title}' page.")
         pageListPage.selectFrontPage(pagePublishedFront)
+
+        Log.d(ASSERTION_TAG, "Assert that it is really a front (published) page via web view assertions.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
 
-        Log.d(STEP_TAG,"Navigate back to Pages page.")
+        Log.d(STEP_TAG, "Navigate back to Pages page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Select '${pageNotEditable.title}' page. Assert that it is not editable as a student, then navigate back to Page List page.")
+        Log.d(STEP_TAG, "Select '${pageNotEditable.title}' page.")
         pageListPage.selectRegularPage(pageNotEditable)
+
+        Log.d(ASSERTION_TAG, "Assert that it is not editable as a student.")
         canvasWebViewPage.assertDoesNotEditable()
+
+        Log.d(STEP_TAG, "Navigate back to Page List page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Open '${pagePublished.title}' page. Assert that it is really a regular published page via web view assertions.")
+        Log.d(STEP_TAG, "Open '${pagePublished.title}' page.")
         pageListPage.selectRegularPage(pagePublished)
+
+        Log.d(ASSERTION_TAG, "Assert that it is really a regular published page via web view assertions.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Regular Page Text"))
 
         Log.d(STEP_TAG, "Click on the 'Pencil' icon and edit the body. Click on 'Save' button.")
@@ -119,7 +127,7 @@ class PagesE2ETest: StudentTest() {
         canvasWebViewPage.typeInRCEEditor("<h1 id=\"header1\">Page Text Mod</h1>")
         canvasWebViewPage.clickOnSave()
 
-        Log.d(STEP_TAG, "Assert that the new, edited text is displayed in the page body.")
+        Log.d(ASSERTION_TAG, "Assert that the new, edited text is displayed in the page body.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Page Text Mod"))
 
         Log.d(STEP_TAG, "Navigate back to Page List page. Select '${pagePublishedFront.title}' front page.")
@@ -131,7 +139,8 @@ class PagesE2ETest: StudentTest() {
         canvasWebViewPage.typeInRCEEditor("<h1 id=\"header1\">Front Page Text Mod</h1>")
         canvasWebViewPage.clickOnSave()
 
-        Log.d(STEP_TAG, "Assert that the new, edited text is displayed in the page body.")
+        Log.d(ASSERTION_TAG, "Assert that the new, edited text is displayed in the page body.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text Mod"))
     }
+
 }

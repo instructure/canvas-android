@@ -48,7 +48,7 @@ class OfflineFilesE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.FILES, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineFilesE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
@@ -65,14 +65,14 @@ class OfflineFilesE2ETest : StudentTest() {
         Log.d(PREPARATION_TAG, "Create a (text) file within the '${courseTestFolder.name}' folder of the '${course.name}' course.")
         val courseTestFolderTextFile = uploadTextFile(courseTestFolder.id, token = teacher.token, fileUploadType = FileUploadType.COURSE_FILE)
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
         dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
 
-        Log.d(STEP_TAG, "Assert that the '${course.name}' course's checkbox state is 'Unchecked'.")
+        Log.d(ASSERTION_TAG, "Assert that the '${course.name}' course's checkbox state is 'Unchecked'.")
         manageOfflineContentPage.assertCheckedStateOfItem(course.name, MaterialCheckBox.STATE_UNCHECKED)
 
         Log.d(STEP_TAG, "Expand the course. Select the 'Files' of '${course.name}' course for sync. Click on the 'Sync' button.")
@@ -80,7 +80,7 @@ class OfflineFilesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Files")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -95,24 +95,28 @@ class OfflineFilesE2ETest : StudentTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectFiles()
 
-        Log.d(STEP_TAG, "Assert that under the 'Files' tab there are 2 items, a folder and a file which has been seeded recently, and there is 1 item within the folder.")
+        Log.d(ASSERTION_TAG, "Assert that under the 'Files' tab there are 2 items, a folder and a file which has been seeded recently, and there is 1 item within the folder.")
         fileListPage.assertFileListCount(2)
         fileListPage.assertFolderSize(courseTestFolder.name, 1)
 
-        Log.d(STEP_TAG, "Assert that the folder's name is '${courseTestFolder.name}' and the file's name is '${rootFolderTestTextFile.fileName}'.")
+        Log.d(ASSERTION_TAG, "Assert that the folder's name is '${courseTestFolder.name}' and the file's name is '${rootFolderTestTextFile.fileName}'.")
         fileListPage.assertItemDisplayed(rootFolderTestTextFile.fileName)
         fileListPage.assertItemDisplayed(courseTestFolder.name)
 
-        Log.d(STEP_TAG, "Open '${courseTestFolder.name}' folder and assert that the '${courseTestFolderTextFile.fileName}' file is displayed within it. Navigate back to File List Page.")
+        Log.d(STEP_TAG, "Open '${courseTestFolder.name}' folder.")
         fileListPage.selectItem(courseTestFolder.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${courseTestFolderTextFile.fileName}' file is displayed within it.")
         fileListPage.assertItemDisplayed(courseTestFolderTextFile.fileName)
+
+        Log.d(STEP_TAG, "Navigate back to File List Page.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${rootFolderTestTextFile.fileName}', the file's name to the search input field.")
         fileListPage.searchable.clickOnSearchButton()
         fileListPage.searchable.typeToSearchBar(rootFolderTestTextFile.fileName)
 
-        Log.d(STEP_TAG, "Assert that only 1 file matches for the search text, and it is '${rootFolderTestTextFile.fileName}', and no directories has been shown in the result.")
+        Log.d(ASSERTION_TAG, "Assert that only 1 file matches for the search text, and it is '${rootFolderTestTextFile.fileName}', and no directories has been shown in the result.")
         fileListPage.assertSearchResultCount(1)
         fileListPage.assertSearchItemDisplayed(rootFolderTestTextFile.fileName)
         fileListPage.assertItemNotDisplayed(testCourseFolderName)

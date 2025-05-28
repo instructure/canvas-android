@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
@@ -46,7 +47,7 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ANNOUNCEMENTS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineAnnouncementsE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
@@ -55,7 +56,7 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
 
         val lockedAnnouncement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token, locked = true)
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -69,7 +70,7 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -79,61 +80,79 @@ class OfflineAnnouncementsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
+        refresh()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
         Log.d(STEP_TAG, "Select '${course.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAnnouncements()
 
-        Log.d(STEP_TAG,"Assert that '${announcement.title}' announcement is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${announcement.title}' announcement is displayed.")
         announcementListPage.assertTopicDisplayed(announcement.title)
 
-        Log.d(STEP_TAG, "Assert that '${lockedAnnouncement.title}' announcement is really locked so that the 'locked' icon is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${lockedAnnouncement.title}' announcement is really locked so that the 'locked' icon is displayed.")
         announcementListPage.assertAnnouncementLocked(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG, "Select '${lockedAnnouncement.title}' announcement and assert if we are landing on the Discussion Details Page.")
+        Log.d(STEP_TAG, "Select '${lockedAnnouncement.title}' announcement.")
         announcementListPage.selectTopic(lockedAnnouncement.title)
+
+        Log.d(ASSERTION_TAG, "Assert if we are landing on the Discussion Details Page.")
         nativeDiscussionDetailsPage.assertTitleText(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG, "Assert that the 'Reply' button is not available on a locked announcement. Navigate back to Announcement List Page.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Reply' button is not available on a locked announcement.")
         nativeDiscussionDetailsPage.assertReplyButtonNotDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to Announcement List page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Select '${announcement.title}' announcement and assert if we are landing on the Discussion Details Page.")
+        Log.d(STEP_TAG,"Select '${announcement.title}' announcement.")
         announcementListPage.selectTopic(announcement.title)
+
+        Log.d(ASSERTION_TAG, "Assert if we are landing on the Discussion Details Page.")
         nativeDiscussionDetailsPage.assertTitleText(announcement.title)
 
-        Log.d(STEP_TAG, "Click on the 'Reply' button and assert that the 'No Internet Connection' dialog has displayed. Dismiss the dialog.")
+        Log.d(STEP_TAG, "Click on the 'Reply' button.")
         nativeDiscussionDetailsPage.clickReply()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog has displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG,"Navigate back to Announcement List page. Click on Search button and type '${announcement.title}' to the search input field.")
+        Log.d(STEP_TAG, "Navigate back to Announcement List page. Click on Search button and type '${announcement.title}' to the search input field.")
         Espresso.pressBack()
         announcementListPage.searchable.clickOnSearchButton()
         announcementListPage.searchable.typeToSearchBar(announcement.title)
 
-        Log.d(STEP_TAG,"Assert that only the matching announcement is displayed on the Discussion List Page.")
+        Log.d(ASSERTION_TAG, "Assert that only the matching announcement is displayed on the Discussion List Page.")
         announcementListPage.pullToUpdate()
         announcementListPage.assertTopicDisplayed(announcement.title)
         announcementListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG,"Clear search input field value and assert if all the announcements are displayed again on the Discussion List Page.")
+        Log.d(STEP_TAG, "Clear search input field value.")
         announcementListPage.searchable.clickOnClearSearchButton()
         announcementListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
+
+        Log.d(ASSERTION_TAG, "Assert if all the announcements are displayed again on the Discussion List Page.")
         announcementListPage.assertTopicDisplayed(announcement.title)
 
-        Log.d(STEP_TAG,"Type the '${announcement.title}' announcement's title as search value to the search input field. Assert the the '${announcement.title}' announcement, but only that displayed as result.")
+        Log.d(STEP_TAG, "Type the '${announcement.title}' announcement's title as search value to the search input field.")
         announcementListPage.searchable.typeToSearchBar(announcement.title)
+
         sleep(3000) //We need this wait here to let make sure the search process has finished.
+
+        Log.d(ASSERTION_TAG, "Assert the the '${announcement.title}' announcement, but only that displayed as result.")
         announcementListPage.assertTopicDisplayed(announcement.title)
         announcementListPage.assertTopicNotDisplayed(lockedAnnouncement.title)
 
-        Log.d(STEP_TAG,"Clear search input field value and assert if both the announcements are displayed again on the Announcement List Page.")
+        Log.d(STEP_TAG, "Clear search input field value.")
         announcementListPage.searchable.clickOnClearSearchButton()
         announcementListPage.waitForDiscussionTopicToDisplay(lockedAnnouncement.title)
+
+        Log.d(ASSERTION_TAG, "Assert if both the announcements are displayed again on the Announcement List Page.")
         announcementListPage.assertTopicDisplayed(announcement.title)
       }
 

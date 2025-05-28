@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertNoInternetConnectionDialog
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertOfflineIndicator
@@ -46,11 +47,11 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LEFT_SIDE_MENU, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineLeftSideMenuUnavailableFunctionsE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -60,40 +61,57 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
+        refresh()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         assertOfflineIndicator()
 
         Log.d(STEP_TAG, "Open Left Side Menu by clicking on the 'hamburger/kebab icon' on the Dashboard Page.")
         dashboardPage.openLeftSideMenu()
 
-        Log.d(STEP_TAG, "Assert that the offline indicator is displayed below the user info within the header.")
+        Log.d(ASSERTION_TAG, "Assert that the offline indicator is displayed below the user info within the header.")
         leftSideNavigationDrawerPage.assertOfflineIndicatorDisplayed()
 
-        Log.d(STEP_TAG, "Assert that the 'Files, Bookmarks, Studio, Color Overlay, Help' menus are disabled in offline mode.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Files, Bookmarks, Studio, Color Overlay, Help' menus are disabled in offline mode.")
         leftSideNavigationDrawerPage.assertOfflineDisabledMenus(0.5f)
 
-        Log.d(STEP_TAG, "Assert that the 'Settings, Show Grades, Change User, Log Out' menus are enabled in offline mode because they are supported.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Settings, Show Grades, Change User, Log Out' menus are enabled in offline mode because they are supported.")
         leftSideNavigationDrawerPage.assertOfflineEnabledMenus(1.0f)
 
-        Log.d(STEP_TAG, "Click on 'Files' menu and assert that the 'No Internet Connection' dialog is popping-up. Dismiss it.")
+        Log.d(STEP_TAG, "Click on 'Files' menu.")
         leftSideNavigationDrawerPage.clickFilesMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is popping-up.")
         assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Click on 'Bookmarks' menu and assert that the 'No Internet Connection' dialog is popping-up. Dismiss it.")
+        Log.d(STEP_TAG, "Click on 'Bookmarks' menu.")
         leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is popping-up.")
         assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Click on 'Studio' menu and assert that the 'No Internet Connection' dialog is popping-up. Dismiss it.")
+        Log.d(STEP_TAG, "Click on 'Studio' menu.")
         leftSideNavigationDrawerPage.clickStudioMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is popping-up.")
         assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Click on 'Help' menu and assert that the 'No Internet Connection' dialog is popping-up. Dismiss it.")
+        Log.d(STEP_TAG, "Click on 'Help' menu.")
         leftSideNavigationDrawerPage.clickHelpMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is popping-up.")
         assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         dismissNoInternetConnectionDialog()
     }
 

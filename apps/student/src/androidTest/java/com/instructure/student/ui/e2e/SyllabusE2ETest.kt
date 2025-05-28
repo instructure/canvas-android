@@ -51,29 +51,34 @@ class SyllabusE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG,"Wait for the Dashboard Page to be rendered. Select '${course.name}' course.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select '${course.name}' course.")
         dashboardPage.waitForRender()
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to Syllabus Page. Assert that the syllabus body string is displayed, and there are no tabs yet, and the toolbar subtitle is the '${course.name}' course name.")
+        Log.d(STEP_TAG, "Navigate to Syllabus Page.")
         courseBrowserPage.selectSyllabus()
+
+        Log.d(ASSERTION_TAG, "Assert that the syllabus body string is displayed, and there are no tabs yet, and the toolbar subtitle is the '${course.name}' course name.")
         syllabusPage.assertNoTabs()
         syllabusPage.assertSyllabusBody("this is the syllabus body")
         syllabusPage.assertToolbarCourseTitle(course.name)
 
-        Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, submissionTypes = listOf(SubmissionType.ON_PAPER), withDescription = true, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601)
 
-        Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course.")
         val quiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601)
 
-        Log.d(STEP_TAG,"Refresh the page. Navigate to 'Summary' tab. Assert that all of the items, so '${assignment.name}' assignment and '${quiz.title}' quiz are displayed.")
+        Log.d(STEP_TAG, "Refresh the page. Navigate to 'Summary' tab.")
         syllabusPage.refresh()
         syllabusPage.selectSummaryTab()
+
+        Log.d(ASSERTION_TAG, "Assert that all of the items, so '${assignment.name}' assignment and '${quiz.title}' quiz are displayed.")
         syllabusPage.assertItemDisplayed(assignment.name)
         syllabusPage.assertItemDisplayed(quiz.title)
     }
+
 }
