@@ -2066,6 +2066,7 @@
     <string name="dueAssignmentListItem">Due %1$s</string>
     <string name="speedGraderGradeTabTitle"><![CDATA[Grade & Rubric]]></string>
     <string name="speedGraderDetailsTabTitle">Details</string>
+    <string name="speedGraderCommentsTabTitle">Comments</string>
     <string name="a11y_contentDescription_expandPanel">Expand panel</string>
     <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
 </resources>

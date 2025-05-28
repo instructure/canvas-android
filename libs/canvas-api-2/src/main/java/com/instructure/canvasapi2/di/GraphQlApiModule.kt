@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManagerImpl
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.StudentContextManagerImpl
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManagerImpl
 import dagger.Module
@@ -62,5 +64,10 @@ class GraphQlApiModule {
     @Provides
     fun provideSubmissionContentManager(): SubmissionContentManager {
         return SubmissionContentManagerImpl()
+    }
+
+    @Provides
+    fun provideSubmissionCommentManager(): SubmissionCommentsManager {
+        return SubmissionCommentsManagerImpl()
     }
 }

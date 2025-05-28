@@ -176,7 +176,7 @@ class SubmissionListViewModel @Inject constructor(
 
     private fun getSubmissionUiState(submission: GradeableStudentSubmission): SubmissionUiState {
         return SubmissionUiState(
-            submissionId = submission.id,
+            submissionId = submission.submission?.id ?: submission.id,
             userName = submission.assignee.name,
             isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent ?: false,
             avatarUrl = if (submission.assignee is StudentAssignee) (submission.assignee as StudentAssignee).student.avatarUrl else null,

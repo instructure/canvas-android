@@ -50,7 +50,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.AnchorPoints
-import com.instructure.pandautils.features.speedgrader.details.SpeedGraderDetailsScreen
+import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentsScreen
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradeScreen
 import kotlinx.coroutines.launch
 
@@ -147,7 +147,7 @@ fun SpeedGraderBottomSheetNavHost(
                 navArgument("submissionId") { type = NavType.LongType }
             )
         ) {
-            SpeedGraderDetailsScreen()
+            SpeedGraderCommentsScreen()
         }
     }
 }
@@ -159,7 +159,7 @@ enum class SpeedGraderTab(
     GRADE("speedGraderGrade/{assignmentId}/{submissionId}", R.string.speedGraderGradeTabTitle),
     DETAILS(
         "speedGraderDetails/{assignmentId}/{submissionId}",
-        R.string.speedGraderDetailsTabTitle
+        R.string.speedGraderCommentsTabTitle
     ),
 }
 
