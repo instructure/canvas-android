@@ -141,7 +141,7 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
             .perform(click())
         onView(isRoot()).perform(pressKey(KeyEvent.KEYCODE_0))
 
-        onView(withText("OK"))
+        onView(withText(R.string.ok))
             .inRoot(isDialog())
             .perform(click())
     }
