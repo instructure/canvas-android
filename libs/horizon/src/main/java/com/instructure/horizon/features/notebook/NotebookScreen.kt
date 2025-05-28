@@ -19,6 +19,7 @@ package com.instructure.horizon.features.notebook
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -55,6 +56,7 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.format
 
 @Composable
@@ -94,23 +96,41 @@ fun NotebookScreen(
                 item {
                     LoadingContent()
                 }
+            } else if (state.notes.isEmpty()) {
+                item {
+                    EmptyContent()
+                }
             } else {
                 items(state.notes) { note ->
-                    NoteContent(note, {})
+                    Column {
+                        NoteContent(note) {
+                            mainNavController.navigate(
+                                MainNavigationRoute.ModuleItemSequence(
+                                    courseId = note.courseId,
+                                    moduleItemAssetType = note.objectType.value,
+                                    moduleItemAssetId = note.objectId,
+                                )
+                            )
+                        }
+
+                        if (state.notes.lastOrNull() != note) {
+                            HorizonSpace(SpaceSize.SPACE_12)
+                        }
+                    }
                 }
-            }
 
-            item {
-                Column {
-                    HorizonSpace(SpaceSize.SPACE_24)
+                item {
+                    Column {
+                        HorizonSpace(SpaceSize.SPACE_24)
 
-                    NotesPager(
-                        canNavigateBack = state.hasPreviousPage,
-                        canNavigateForward = state.hasNextPage,
-                        isLoading = state.isLoading,
-                        onNavigateBack = state.loadPreviousPage,
-                        onNavigateForward = state.loadNextPage
-                    )
+                        NotesPager(
+                            canNavigateBack = state.hasPreviousPage,
+                            canNavigateForward = state.hasNextPage,
+                            isLoading = state.isLoading,
+                            onNavigateBack = state.loadPreviousPage,
+                            onNavigateForward = state.loadNextPage
+                        )
+                    }
                 }
             }
         }
@@ -158,9 +178,11 @@ private fun LoadingContent() {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
     ) {
-        Spinner()
+        Spinner(color = HorizonColors.Surface.inversePrimary())
     }
 }
 
@@ -229,6 +251,31 @@ private fun NoteContent(
 
             NotebookPill(note.type)
         }
+    }
+}
+
+@Composable
+private fun EmptyContent() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .shadow(
+                elevation = HorizonElevation.level4,
+                shape = HorizonCornerRadius.level2,
+                clip = true
+            )
+            .background(
+                color = HorizonColors.PrimitivesWhite.white10(),
+                shape = HorizonCornerRadius.level2,
+            )
+    ) {
+        Text(
+            text = stringResource(R.string.notebookEmptyContentMessage),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.body(),
+            modifier = Modifier.padding(vertical = 40.dp, horizontal = 36.dp)
+        )
     }
 }
 

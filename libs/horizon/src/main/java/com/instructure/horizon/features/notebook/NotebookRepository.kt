@@ -32,6 +32,7 @@ class NotebookRepository @Inject constructor(
     suspend fun getNotes(
         after: String? = null,
         before: String? = null,
+        itemCount: Int = 3,
         filterType: NotebookType? = null
     ): QueryNotesQuery.Notes {
         val filterInput = when (filterType) {
@@ -41,13 +42,13 @@ class NotebookRepository @Inject constructor(
         }
         return if (before != null) {
             redwoodApiManager.getNotes(
-                lastN = 1,
+                lastN = itemCount,
                 before = before,
                 filter = filterInput
             )
         } else {
             redwoodApiManager.getNotes(
-                firstN = 1,
+                firstN = itemCount,
                 after = after,
                 filter = filterInput
             )
