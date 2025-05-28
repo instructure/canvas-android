@@ -22,6 +22,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -162,6 +163,7 @@ fun FileDropItem(
             verticalAlignment = Alignment.CenterVertically,
             modifier = modifier
                 .fillMaxWidth()
+                .defaultMinSize(minHeight = 64.dp)
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level3)
                 .conditional(hasBorder) { border(HorizonBorder.level1(borderColor), shape = HorizonCornerRadius.level3) }
                 .clip(HorizonCornerRadius.level3)

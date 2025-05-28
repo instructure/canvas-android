@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 enum class SpaceSize(val value: Int) {
     SPACE_2(2),
     SPACE_4(4),
+    SPACE_6(6),
     SPACE_8(8),
     SPACE_10(10),
     SPACE_12(12),

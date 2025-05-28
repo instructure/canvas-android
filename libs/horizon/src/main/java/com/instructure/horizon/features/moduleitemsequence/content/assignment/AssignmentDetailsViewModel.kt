@@ -295,7 +295,8 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showSubmissionConfirmation = false
+                    showSubmissionConfirmation = false,
+                    errorMessage = null
                 )
             )
         }
@@ -329,7 +330,16 @@ class AssignmentDetailsViewModel @Inject constructor(
     private suspend fun updateSubmissionProgress(entity: CreateSubmissionEntity) {
         val progress = entity.progress ?: 0f
         val showProgress = progress > 0f && progress < 100.0
-        if (progress == 100.0f) {
+        if (entity.errorFlag) {
+            _uiState.update {
+                it.copy(
+                    addSubmissionUiState = it.addSubmissionUiState.copy(
+                        submissionInProgress = false,
+                        errorMessage = context.getString(R.string.assignmentDetails_submissionError)
+                    )
+                )
+            }
+        } else if (progress == 100.0f) {
             updateAssignment()
             onTextSubmissionChanged("")
             deleteAllFiles()
