@@ -360,6 +360,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private suspend fun updateAssignment() {
         val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
+        this.assignment = assignment
         val lastActualSubmission = assignment.lastActualSubmission
         val submissions = if (lastActualSubmission != null) {
             mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())

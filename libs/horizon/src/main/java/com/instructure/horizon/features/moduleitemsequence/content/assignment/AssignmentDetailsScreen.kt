@@ -304,7 +304,11 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
     }
     if (uiState.submissionTypes.isNotEmpty()) {
         when (val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]) {
-            is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(uiState = selectedSubmissionType)
+            is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
+                uiState = selectedSubmissionType,
+                submissionInProgress = uiState.submissionInProgress
+            )
+
             is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
         }
         HorizonSpace(SpaceSize.SPACE_24)
