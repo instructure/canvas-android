@@ -27,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -56,6 +57,7 @@ fun NotebookTypeSelect(
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         modifier = modifier
+            .clip(HorizonCornerRadius.level2)
             .border(
                 HorizonBorder.level1(color = borderColor),
                 HorizonCornerRadius.level2

@@ -20,13 +20,12 @@ import androidx.compose.foundation.background
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -38,25 +37,38 @@ fun NotebookHighlightedText(
     text: String,
     type: NotebookType?,
 ) {
+    var lineCount = 1
+    val lineList = mutableListOf<Float>()
     val lineColor = type?.color?.let { colorResource(type.color) }
     Text(
         text = text,
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
+        onTextLayout = { textLayoutResult ->
+            lineCount = textLayoutResult.lineCount
+            for(i in 0 until  lineCount) {
+                lineList.add(textLayoutResult.getLineRight(i))
+            }
+        },
         modifier = Modifier
             .conditional(lineColor != null) {
                 background(lineColor!!.copy(alpha = 0.2f))
             }
-            .drawBehind {
+            .drawWithContent {
                 if (lineColor != null) {
-                    val strokeWidthPx = 1.dp.toPx()
-                    val verticalOffset = size.height - 2.sp.toPx()
-                    drawLine(
-                        color = lineColor,
-                        strokeWidth = strokeWidthPx,
-                        start = Offset(0f, verticalOffset),
-                        end = Offset(size.width, verticalOffset)
-                    )
+                    drawContent()
+                    val strokeWidth = 1.dp.toPx()
+                    val lineHeight = size.height / lineCount
+                    for (i in 1..lineCount) {
+                        val verticalOffset = i * lineHeight - strokeWidth
+
+                        drawLine(
+                            color = lineColor,
+                            strokeWidth = strokeWidth,
+                            start = Offset(0f, verticalOffset),
+                            end = Offset(lineList[i - 1], verticalOffset)
+                        )
+                    }
                 }
             }
     )
@@ -78,6 +90,16 @@ private fun NotebookHighlightedTextConfusingPreview() {
     ContextKeeper.appContext = LocalContext.current
     NotebookHighlightedText(
         text = "This is a confusing note",
+        type = NotebookType.Confusing
+    )
+}
+
+@Composable
+@Preview
+private fun NotebookHighlightedMultilineTextConfusingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    NotebookHighlightedText(
+        text = "This is a confusing note\nthat spans multiple lines\n and a short",
         type = NotebookType.Confusing
     )
 }
