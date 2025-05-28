@@ -117,7 +117,8 @@ fun AddNoteScreen(
                     required = InputLabelRequired.Optional,
                     value = state.userComment,
                     onValueChange = state.onUserCommentChanged,
-                )
+                ),
+                minLines = 5
             )
 
             HorizonSpace(SpaceSize.SPACE_16)
