@@ -48,6 +48,7 @@ import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 
@@ -113,6 +114,7 @@ fun AddNoteScreen(
             TextArea(
                 state = TextAreaState(
                     label = stringResource(R.string.addNoteAddANoteLabel),
+                    required = InputLabelRequired.Optional,
                     value = state.userComment,
                     onValueChange = state.onUserCommentChanged,
                 )

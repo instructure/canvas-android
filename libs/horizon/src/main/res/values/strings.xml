@@ -244,6 +244,6 @@
     <string name="notebookEmptyContentMessage">This is where all your notes, taken directly within your learning objects, are stored and organized. It\'s your personal hub for keeping track of key insights, important excerpts, and reflections as you learn. Dive in to review or expand on your notes anytime!</string>
     <string name="addNoteHighlightlabel">Highlight</string>
     <string name="addNoteLabelLabel">Label</string>
-    <string name="addNoteAddANoteLabel">Add a Note (Optional)</string>
+    <string name="addNoteAddANoteLabel">Add a Note</string>
     <string name="addNoteSaveLabel">Save</string>
 </resources>
