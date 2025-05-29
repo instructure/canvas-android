@@ -165,7 +165,15 @@ class FileSubmissionContentViewModel @Inject constructor(
                 displayName
             )
 
-            contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
+            contentType.startsWith("image") -> {
+                val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
+                tempFile?.let {
+                    FilePreviewUiState.Image(
+                        displayName = displayName,
+                        file = it
+                    )
+                } ?: FilePreviewUiState.NoPreview
+            }
 
             contentType.startsWith("text") -> {
                 val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)

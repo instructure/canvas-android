@@ -21,21 +21,22 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.tooling.preview.Preview
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
+import java.io.File
 
 @Composable
 fun ImageFileContent(
-    imageUrl: String,
+    file: File,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
     loadingIndicator: @Composable () -> Unit = {},
 ) {
+
     GlideImage(
-        model = imageUrl,
+        model = file,
         contentDescription = contentDescription,
         modifier = modifier,
         contentScale = contentScale,
@@ -43,14 +44,5 @@ fun ImageFileContent(
         loading = placeholder {
             loadingIndicator()
         }
-    )
-}
-
-@Preview
-@Composable
-fun ImageFileContentPreview() {
-    ImageFileContent(
-        imageUrl = "https://www.instructure.com/themes/custom/themekit/logo.svg",
-        contentDescription = "Instructure Logo"
     )
 }

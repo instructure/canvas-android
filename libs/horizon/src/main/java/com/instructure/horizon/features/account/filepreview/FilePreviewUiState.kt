@@ -15,6 +15,8 @@
  */
 package com.instructure.horizon.features.account.filepreview
 
+import java.io.File
+
 sealed class FilePreviewUiState {
     data class Pdf(
         val url: String,
@@ -29,7 +31,7 @@ sealed class FilePreviewUiState {
 
     data class Image(
         val displayName: String,
-        val url: String,
+        val file: File,
     ) : FilePreviewUiState()
 
     data class WebView(

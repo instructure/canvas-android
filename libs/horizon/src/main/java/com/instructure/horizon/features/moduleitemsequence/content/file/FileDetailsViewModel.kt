@@ -28,11 +28,14 @@ import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,6 +44,7 @@ class FileDetailsViewModel @Inject constructor(
     private val fileDetailsRepository: FileDetailsRepository,
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
+    private val fileCache: FileCache,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -129,7 +133,7 @@ class FileDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(filePathToOpen = null) }
     }
 
-    private fun getFilePreview(file: FileFolder, authUrl: String): FilePreviewUiState {
+    private suspend fun getFilePreview(file: FileFolder, authUrl: String): FilePreviewUiState {
         val url = file.url.orEmpty()
         val displayName = file.displayName.orEmpty()
         val contentType = file.contentType.orEmpty()
@@ -145,7 +149,15 @@ class FileDetailsViewModel @Inject constructor(
                 displayName
             )
 
-            contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
+            contentType.startsWith("image") -> {
+                val tempFile: File? = fileCache.awaitFileDownload(url)
+                tempFile?.let {
+                    FilePreviewUiState.Image(
+                        displayName = displayName,
+                        file = it
+                    )
+                } ?: FilePreviewUiState.NoPreview
+            }
 
             else -> FilePreviewUiState.WebView("$authUrl&preview=1")
         }
