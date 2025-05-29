@@ -20,12 +20,13 @@ import android.content.Intent
 import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.HorizonActivity
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.tasks.LogoutTask
-import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.activity.NavigationActivity
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentLoginNavigation(
@@ -44,10 +45,17 @@ class StudentLoginNavigation(
 
         CookieManager.getInstance().flush()
 
-        val intent = Intent(activity, NavigationActivity.startActivityClass)
+        // TODO temporary solution until we can get a flag about the CLX experience
+        val intent = Intent(activity, HorizonActivity::class.java)
         activity.intent?.extras?.let { extras ->
             intent.putExtras(extras)
         }
         return intent
+
+        //val intent = Intent(activity, NavigationActivity.startActivityClass)
+        //activity.intent?.extras?.let { extras ->
+        //    intent.putExtras(extras)
+        //}
+        //return intent
     }
 }
