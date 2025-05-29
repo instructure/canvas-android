@@ -58,7 +58,7 @@ class LeftSideNavigationDrawerPage: BasePage(R.id.drawer_layout) {
         onViewWithText(android.R.string.ok).click()
     }
 
-    fun clickSwitchUsers() {
+    fun clickChangeUser() {
         onViewWithId(R.id.nav_view).perform(ViewActions.swipeUp())
         onViewWithText(R.string.changeUser).click()
     }
