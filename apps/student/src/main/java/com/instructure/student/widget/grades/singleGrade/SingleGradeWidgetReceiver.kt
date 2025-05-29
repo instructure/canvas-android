@@ -25,6 +25,8 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.grades.courseselector.CourseSelectorActivity
@@ -52,7 +54,13 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
         updateData(context, appWidgetIds.toList())
     }
 
+    override fun onEnabled(context: Context?) {
+        Analytics.logEvent(AnalyticsEventConstants.WIDGET_SINGLE_GRADE_WIDGET_ADDED)
+        super.onEnabled(context)
+    }
+
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        Analytics.logEvent(AnalyticsEventConstants.WIDGET_SINGLE_GRADE_WIDGET_DELETED)
         for (widgetId in appWidgetIds) {
             StudentPrefs.remove(CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId)
         }

@@ -22,6 +22,8 @@ import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.toJson
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +41,16 @@ class GradesWidgetReceiver : GlanceAppWidgetReceiver() {
     lateinit var updater: GradesWidgetUpdater
 
     private val coroutineScope = MainScope()
+
+    override fun onEnabled(context: Context?) {
+        Analytics.logEvent(AnalyticsEventConstants.WIDGET_GRADES_WIDGET_ADDED)
+        super.onEnabled(context)
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        Analytics.logEvent(AnalyticsEventConstants.WIDGET_GRADES_WIDGET_DELETED)
+        super.onDeleted(context, appWidgetIds)
+    }
 
     override fun onUpdate(
         context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray

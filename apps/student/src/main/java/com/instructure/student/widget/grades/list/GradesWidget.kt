@@ -35,7 +35,7 @@ import androidx.glance.LocalSize
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.SizeMode
-import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.items
 import androidx.glance.appwidget.provideContent
@@ -54,11 +54,13 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.unit.ColorProvider
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.widget.LoggingStartActivityAction
 import com.instructure.student.widget.glance.Error
 import com.instructure.student.widget.glance.Loading
 import com.instructure.student.widget.glance.WidgetColors
@@ -129,10 +131,13 @@ class GradesWidget : GlanceAppWidget() {
                     modifier = GlanceModifier.fillMaxSize()
                         .padding(8.dp, 8.dp)
                         .clickable(
-                            actionStartActivity(
-                                InterwebsToApplication.createIntent(
-                                    ContextKeeper.appContext,
-                                    Uri.parse(item.url)
+                            actionRunCallback<LoggingStartActivityAction>(
+                                LoggingStartActivityAction.createActionParams(
+                                    InterwebsToApplication.createIntent(
+                                        ContextKeeper.appContext,
+                                        Uri.parse(item.url)
+                                    ),
+                                    AnalyticsEventConstants.WIDGET_GRADES_OPEN_ITEM_ACTION
                                 )
                             )
                         ),
@@ -215,10 +220,14 @@ class GradesWidget : GlanceAppWidget() {
         content: @Composable () -> Unit
     ) {
         Box(
-            modifier = modifier.clickable(
-                actionStartActivity(
-                    Intent(ContextKeeper.appContext, LoginActivity::class.java)
-                )
+            modifier = modifier
+                .clickable(
+                    actionRunCallback<LoggingStartActivityAction>(
+                        LoggingStartActivityAction.createActionParams(
+                            Intent(ContextKeeper.appContext, LoginActivity::class.java),
+                            AnalyticsEventConstants.WIDGET_GRADES_OPEN_APP_ACTION
+                        )
+                    )
             ),
             content = content
         )

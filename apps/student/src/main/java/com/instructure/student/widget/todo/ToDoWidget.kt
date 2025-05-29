@@ -36,7 +36,6 @@ import androidx.glance.action.Action
 import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.action.actionRunCallback
-import androidx.glance.appwidget.action.actionStartActivity
 import androidx.glance.appwidget.cornerRadius
 import androidx.glance.appwidget.lazy.LazyColumn
 import androidx.glance.appwidget.lazy.itemsIndexed
@@ -61,12 +60,14 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextStyle
 import androidx.glance.unit.ColorProvider
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.student.R
 import com.instructure.student.activity.InterwebsToApplication
+import com.instructure.student.widget.LoggingStartActivityAction
 import com.instructure.student.widget.glance.Error
 import com.instructure.student.widget.glance.Loading
 import com.instructure.student.widget.glance.WidgetColors
@@ -129,10 +130,14 @@ class ToDoWidget : GlanceAppWidget() {
                 contentDescriptionRes = R.string.a11y_widgetToDoOpenToDoList,
                 backgroundColor = WidgetColors.textDanger,
                 tintColor = WidgetColors.textLightest,
-                onClickAction = actionStartActivity(
-                    InterwebsToApplication.createIntent(
-                        LocalContext.current,
-                        Uri.parse("${ApiPrefs.fullDomain}/todolist")
+                onClickAction =
+                actionRunCallback<LoggingStartActivityAction>(
+                    LoggingStartActivityAction.createActionParams(
+                        InterwebsToApplication.createIntent(
+                            LocalContext.current,
+                            Uri.parse("${ApiPrefs.fullDomain}/todolist")
+                        ),
+                        AnalyticsEventConstants.WIDGET_TODO_OPEN_TODOS_ACTION
                     )
                 )
             )
@@ -163,10 +168,14 @@ class ToDoWidget : GlanceAppWidget() {
                         tintColor = ColorProvider(
                             color = Color(color = ThemePrefs.buttonTextColor)
                         ),
-                        onClickAction = actionStartActivity(
-                            InterwebsToApplication.createIntent(
-                                LocalContext.current,
-                                Uri.parse("${ApiPrefs.fullDomain}/todos/new")
+                        onClickAction =
+                        actionRunCallback<LoggingStartActivityAction>(
+                            LoggingStartActivityAction.createActionParams(
+                                InterwebsToApplication.createIntent(
+                                    LocalContext.current,
+                                    Uri.parse("${ApiPrefs.fullDomain}/todos/new")
+                                ),
+                                AnalyticsEventConstants.WIDGET_TODO_CREATE_ACTION
                             )
                         )
                     )
@@ -240,10 +249,13 @@ class ToDoWidget : GlanceAppWidget() {
                 .fillMaxWidth()
                 .padding(vertical = 8.dp)
                 .clickable(
-                    actionStartActivity(
-                        InterwebsToApplication.createIntent(
-                            LocalContext.current,
-                            Uri.parse("${ApiPrefs.fullDomain}/calendar/${item.date.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
+                    actionRunCallback<LoggingStartActivityAction>(
+                        LoggingStartActivityAction.createActionParams(
+                            InterwebsToApplication.createIntent(
+                                LocalContext.current,
+                                Uri.parse("${ApiPrefs.fullDomain}/calendar/${item.date.format(DateTimeFormatter.ISO_LOCAL_DATE)}")
+                            ),
+                            AnalyticsEventConstants.WIDGET_TODO_OPEN_ITEM_ACTION
                         )
                     )
                 )
@@ -315,10 +327,13 @@ class ToDoWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxWidth()
                 .clickable(
-                    actionStartActivity(
-                        InterwebsToApplication.createIntent(
-                            LocalContext.current,
-                            Uri.parse(plannerItem.url)
+                    actionRunCallback<LoggingStartActivityAction>(
+                        LoggingStartActivityAction.createActionParams(
+                            InterwebsToApplication.createIntent(
+                                LocalContext.current,
+                                Uri.parse(plannerItem.url)
+                            ),
+                            AnalyticsEventConstants.WIDGET_TODO_OPEN_ITEM_ACTION
                         )
                     )
                 )
