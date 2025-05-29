@@ -13,71 +13,67 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 #
-
 query SubmissionContent($userId: ID!, $assignmentId: ID!) {
     submission(userId: $userId, assignmentId: $assignmentId) {
-        groupId
-        state
-        userId
         _id
-        attempt
-        body
+        userId
+        ...SubmissionFields
+        submissionHistoriesConnection(filter: {}) {
+            edges {
+                node {
+                    ...SubmissionFields
+                }
+            }
+        }
+    }
+}
+
+fragment SubmissionFields on SubmissionInterface {
+    groupId
+    state
+    attempt
+    body
+    url
+    previewUrl
+    submissionType
+    statusTag
+    status
+    submissionStatus
+    cachedDueDate
+    submittedAt
+    attachments {
+        _id
+        contentType
+        mimeClass
         createdAt
+        displayName
         id
+        size
+        thumbnailUrl
+        title
+        type
+        updatedAt
         url
-        previewUrl
-        submissionType
-        statusTag
-        status
-        submissionStatus
-        cachedDueDate
-        attachment {
-            contentType
-            mimeClass
-            createdAt
-            displayName
-            id
-            size
-            thumbnailUrl
-            title
-            type
-            updatedAt
-            url
-        }
-        attachments {
-            _id
-            contentType
-            mimeClass
-            createdAt
-            displayName
-            id
-            size
-            thumbnailUrl
-            title
-            type
-            updatedAt
-            url
-            submissionPreviewUrl
-        }
-        assignment {
-            submissionTypes
-            htmlUrl
-            anonymousGrading
-            id
-            courseId
-            dueAt
-        }
-        mediaObject {
-            mediaType
-            mediaDownloadUrl
-            title
-            thumbnailUrl
-        }
-        user {
-            avatarUrl
-            name
-            shortName
-            sortableName
-        }
+        submissionPreviewUrl
+    }
+    mediaObject {
+        mediaType
+        mediaDownloadUrl
+        title
+        thumbnailUrl
+    }
+    user {
+        avatarUrl
+        name
+        shortName
+        sortableName
+    }
+    assignment {
+        submissionTypes
+        htmlUrl
+        anonymousGrading
+        id
+        courseId
+        dueAt
     }
 }
