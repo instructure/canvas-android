@@ -71,11 +71,6 @@ import com.jakewharton.threetenabp.AndroidThreeTen
 
 class GradesWidget : GlanceAppWidget() {
 
-    companion object {
-        private val NARROW = DpSize(100.dp, 110.dp)
-        private val WIDE = DpSize(250.dp, 110.dp)
-    }
-
     override val sizeMode = SizeMode.Responsive(
         setOf(
             NARROW,

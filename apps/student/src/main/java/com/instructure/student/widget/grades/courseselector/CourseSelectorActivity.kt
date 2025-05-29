@@ -21,25 +21,13 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Course
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
@@ -99,32 +87,6 @@ class CourseSelectorActivity : BaseCanvasActivity() {
                     }
                 }
             )
-        }
-    }
-
-    @Composable
-    private fun Content(uiState: CourseSelectorUiState, paddingValues: PaddingValues) {
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(colorResource(R.color.backgroundLightest))
-                .padding(paddingValues)
-        ) {
-            items(uiState.courses) {
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clickable {
-                            courseSelected(it)
-                        }
-                        .padding(16.dp),
-                    text = it.name,
-                    style = MaterialTheme.typography.body1.copy(
-                        color = colorResource(R.color.textDarkest),
-                    )
-                )
-                HorizontalDivider(thickness = 1.dp)
-            }
         }
     }
 
