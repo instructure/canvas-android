@@ -18,13 +18,15 @@
 
 <appwidget-provider
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:minWidth="200dp"
-    android:minResizeWidth="120dp"
-    android:minHeight="110dp"
+    android:minWidth="100dp"
+    android:minHeight="70dp"
+    android:maxResizeWidth="100dp"
+    android:minResizeWidth="60dp"
+    android:configure="com.instructure.student.widget.grades.courseselector.CourseSelectorActivity"
     android:updatePeriodMillis="1800000"
-    android:resizeMode="horizontal|vertical"
+    android:resizeMode="horizontal"
     android:widgetCategory="keyguard|home_screen"
     android:initialLayout="@layout/widget_homescreen"
     android:initialKeyguardLayout="@layout/widget_homescreen"
-    android:previewImage="@drawable/widget_preview_grades"
+    android:previewImage="@drawable/widget_preview_single_grade"
     android:label="@string/grades"/>
