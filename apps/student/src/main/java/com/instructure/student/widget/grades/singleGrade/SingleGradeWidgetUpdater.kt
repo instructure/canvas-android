@@ -98,7 +98,6 @@ class SingleGradeWidgetUpdater(
                     )
                 )
             }
-            e.printStackTrace()
         } finally {
             _events.send(SingleGradeWidgetAction.UpdateUi)
         }

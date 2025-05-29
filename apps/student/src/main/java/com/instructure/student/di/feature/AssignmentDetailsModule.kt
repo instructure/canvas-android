@@ -40,7 +40,7 @@ import com.instructure.student.features.assignments.details.StudentAssignmentDet
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
+import com.instructure.pandautils.room.studentdb.StudentDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

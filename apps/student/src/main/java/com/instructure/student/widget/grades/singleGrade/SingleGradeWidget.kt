@@ -112,16 +112,16 @@ class SingleGradeWidget : GlanceAppWidget() {
                 WidgetState.Loading -> Loading()
 
                 WidgetState.Error -> SingleGradeError(
-                    imageRes = com.instructure.student.R.drawable.ic_panda_notsupported,
-                    titleRes = com.instructure.student.R.string.widgetErrorTitle,
-                    subtitleRes = com.instructure.student.R.string.widgetSingleGradeErrorSubtitle
+                    imageRes = R.drawable.ic_panda_notsupported,
+                    titleRes = R.string.widgetErrorTitle,
+                    subtitleRes = R.string.widgetSingleGradeErrorSubtitle
                 )
 
                 WidgetState.Empty -> {
                     glanceId?.let {
                         SingleGradeEmpty(
-                            imageRes = com.instructure.student.R.drawable.ic_smart_search_empty,
-                            titleRes = com.instructure.student.R.string.selectCourse,
+                            imageRes = R.drawable.ic_smart_search_empty,
+                            titleRes = R.string.widgetSingleGradeSelectCourse,
                             it
                         )
                     }
@@ -129,9 +129,9 @@ class SingleGradeWidget : GlanceAppWidget() {
                 }
 
                 WidgetState.NotLoggedIn -> SingleGradeError(
-                    imageRes = com.instructure.student.R.drawable.ic_smart_search_empty,
-                    titleRes = com.instructure.student.R.string.widgetNotLoggedInTitle,
-                    subtitleRes = com.instructure.student.R.string.widgetSingleGradeNotLoggedInSubtitle
+                    imageRes = R.drawable.ic_smart_search_empty,
+                    titleRes = R.string.widgetNotLoggedInTitle,
+                    subtitleRes = R.string.widgetSingleGradeNotLoggedInSubtitle
                 )
 
                 WidgetState.Content -> CourseContent(state.course)
@@ -178,7 +178,7 @@ class SingleGradeWidget : GlanceAppWidget() {
     private fun NarrowContent(courseItem: WidgetCourseItem) {
         Column(
             modifier = GlanceModifier.fillMaxSize()
-                .padding(top = 12.dp, bottom = 12.dp, start = 4.dp, end = 4.dp),
+                .padding(horizontal = 4.dp, vertical = 12.dp),
             horizontalAlignment = Alignment.Horizontal.CenterHorizontally
         ) {
             Row(
@@ -229,12 +229,12 @@ class SingleGradeWidget : GlanceAppWidget() {
                 Image(
                     modifier = GlanceModifier.size(24.dp),
                     provider = ImageProvider(R.drawable.ic_canvas_logo),
-                    contentDescription = "",
+                    contentDescription = null,
                 )
 
                 Text(
                     modifier = GlanceModifier.padding(start = 4.dp),
-                    text = "Grades",
+                    text = LocalContext.current.getString(R.string.grades),
                     style = WidgetTextStyles.mediumDarkest.copy(
                         fontSize = 16.sp
                     )
@@ -396,20 +396,6 @@ class SingleGradeWidget : GlanceAppWidget() {
         )
     }
 
-    private fun getPreviewSampleData() = SingleGradeWidgetUiState(
-        state = WidgetState.Content,
-        course =
-        WidgetCourseItem(
-            name = "Biology 101",
-            courseCode = "BIO 101",
-            isLocked = false,
-            gradeText = "82%",
-            courseColorLight = 0xFF2573DF.toInt(),
-            courseColorDark = 0xFF2573DF.toInt(),
-            ""
-        )
-    )
-
     @OptIn(ExperimentalGlancePreviewApi::class)
     @Preview(widthDp = 140, heightDp = 100)
     @Composable
@@ -417,7 +403,19 @@ class SingleGradeWidget : GlanceAppWidget() {
         ContextKeeper.appContext = LocalContext.current
         AndroidThreeTen.init(LocalContext.current)
         Content(
-            getPreviewSampleData()
+            SingleGradeWidgetUiState(
+                state = WidgetState.Content,
+                course =
+                WidgetCourseItem(
+                    name = "Biology 101",
+                    courseCode = "BIO 101",
+                    isLocked = false,
+                    gradeText = "82%",
+                    courseColorLight = 0xFF2573DF.toInt(),
+                    courseColorDark = 0xFF2573DF.toInt(),
+                    ""
+                )
+            )
         )
     }
 
@@ -428,7 +426,19 @@ class SingleGradeWidget : GlanceAppWidget() {
         ContextKeeper.appContext = LocalContext.current
         AndroidThreeTen.init(LocalContext.current)
         Content(
-            getPreviewSampleData()
+            SingleGradeWidgetUiState(
+                state = WidgetState.Content,
+                course =
+                WidgetCourseItem(
+                    name = "Biology 101",
+                    courseCode = "BIO 101",
+                    isLocked = false,
+                    gradeText = "82%",
+                    courseColorLight = 0xFF2573DF.toInt(),
+                    courseColorDark = 0xFF2573DF.toInt(),
+                    ""
+                )
+            )
         )
     }
 

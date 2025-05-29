@@ -41,13 +41,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.models.Course
-import com.instructure.pandares.R
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.student.R
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.WidgetUpdater.updateWidgets
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,7 +85,7 @@ class CourseSelectorActivity : BaseCanvasActivity() {
                 },
                 content = { paddingValues ->
                     when (uiState.state) {
-                        ScreenState.Content -> Content(uiState, paddingValues)
+                        ScreenState.Content -> CourseSelectorContentScreen(uiState, paddingValues, ::courseSelected)
                         ScreenState.Empty -> EmptyContent(
                             emptyMessage = stringResource(R.string.edit_dashboard_empty_title),
                             imageRes = R.drawable.ic_panda_nocourses,

@@ -19,7 +19,7 @@ package com.instructure.student.mobius.assignmentDetails.submissionDetails.drawe
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
 import java.util.Date
 
 data class SubmissionCommentsViewState(
