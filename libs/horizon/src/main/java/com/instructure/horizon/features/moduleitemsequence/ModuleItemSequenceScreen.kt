@@ -502,18 +502,24 @@ private fun ModuleItemSequenceBottomBar(
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
-    onAiAssistClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAiAssistClick: () -> Unit = {}
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
-        Row(modifier = modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
+        Box(modifier = modifier.fillMaxWidth().padding(horizontal = 24.dp, vertical = 16.dp)) {
             if (showPreviousButton) IconButton(
                 iconRes = R.drawable.chevron_left,
                 color = IconButtonColor.INVERSE,
                 elevation = HorizonElevation.level4,
-                onClick = onPreviousClick
+                onClick = onPreviousClick,
+                modifier = Modifier.align(Alignment.CenterStart)
             )
-            Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 92.dp)
+                    .align(Alignment.Center),
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+            ) {
                 IconButton(
                     iconRes = R.drawable.ai,
                     color = IconButtonColor.AI,
@@ -536,7 +542,8 @@ private fun ModuleItemSequenceBottomBar(
                 iconRes = R.drawable.chevron_right,
                 color = IconButtonColor.INVERSE,
                 elevation = HorizonElevation.level4,
-                onClick = onNextClick
+                onClick = onNextClick,
+                modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
     }
