@@ -107,7 +107,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                     onItemSelected = { onAttemptSelected(submission, submissionHistory, it) }
                 ),
                 courseColor = CanvasContext.emptyCourseContext(
-                    submissionFields?.assignment?.courseId?.toLong().orDefault()
+                    submissionFields?.assignment?.courseId?.toLongOrNull().orDefault()
                 ).color
             )
         }
