@@ -42,6 +42,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -65,13 +66,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.compose.AndroidFragment
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.utils.drawableId
+import com.instructure.pandautils.utils.getFragmentActivity
 import dagger.hilt.android.EarlyEntryPoints
 import java.util.Date
 
@@ -80,6 +84,8 @@ fun SpeedGraderContentScreen(
     expanded: Boolean,
     onExpandClick: (() -> Unit)?
 ) {
+    val activity = LocalContext.current.getFragmentActivity()
+    val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -87,6 +93,10 @@ fun SpeedGraderContentScreen(
 
     val router: SpeedGraderContentRouter by lazy {
         EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java).speedGraderContentRouter()
+    }
+
+    LaunchedEffect(uiState.attemptSelectorUiState.selectedItemId) {
+        speedGraderSharedViewModel.setSelectedAttemptId(uiState.attemptSelectorUiState.selectedItemId)
     }
 
     SpeedGraderContentScreen(
@@ -119,9 +129,9 @@ private fun SpeedGraderContentScreen(
                 courseColor = Color(uiState.courseColor)
             )
             CanvasDivider()
-            if (uiState.attachmentSelectorUiState.items.isNotEmpty()) {
+            if (uiState.attemptSelectorUiState.items.size > 1 || uiState.attachmentSelectorUiState.items.isNotEmpty()) {
                 SelectorContent(
-                    attemptSelectorUiState = SelectorUiState(),
+                    attemptSelectorUiState = uiState.attemptSelectorUiState,
                     attachmentSelectorUiState = uiState.attachmentSelectorUiState,
                     courseColor = Color(uiState.courseColor)
                 )
@@ -261,17 +271,19 @@ private fun SelectorContent(
             .fillMaxWidth()
             .height(44.dp)
     ) {
-        if (attemptSelectorUiState.items.isNotEmpty()) {
+        val showAttemptSelector = attemptSelectorUiState.items.size > 1
+        val showAttachmentSelector = attachmentSelectorUiState.items.isNotEmpty()
+        if (showAttemptSelector) {
             Selector(
                 selectorUiState = attemptSelectorUiState,
                 color = courseColor,
                 modifier = Modifier.weight(1f)
             )
         }
-        if (attemptSelectorUiState.items.isNotEmpty() && attachmentSelectorUiState.items.isNotEmpty()) {
+        if (showAttemptSelector && showAttachmentSelector) {
             VerticalDivider(modifier = Modifier.padding(vertical = 8.dp))
         }
-        if (attachmentSelectorUiState.items.isNotEmpty()) {
+        if (showAttachmentSelector) {
             Selector(
                 selectorUiState = attachmentSelectorUiState,
                 color = courseColor,
@@ -364,20 +376,32 @@ private fun Selector(
         selectorUiState.items.forEach { item ->
             DropdownMenuItem(
                 onClick = {
+                    if (item.id != selectorUiState.selectedItemId) {
+                        selectorUiState.onItemSelected(item.id)
+                    }
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    selectorUiState.onItemSelected(item.id)
                     expanded = false
                 },
                 text = {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        Text(
-                            text = item.title,
-                            fontSize = 16.sp,
-                            color = colorResource(R.color.textDarkest),
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
-                            modifier = Modifier.weight(1f)
-                        )
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = item.title,
+                                fontSize = 16.sp,
+                                color = colorResource(R.color.textDarkest),
+                                maxLines = 2,
+                                overflow = TextOverflow.Ellipsis
+                            )
+                            item.subtitle?.let {
+                                Text(
+                                    text = it,
+                                    fontSize = 14.sp,
+                                    color = colorResource(R.color.textDark),
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis
+                                )
+                            }
+                        }
                         if (item.id == selectorUiState.selectedItemId) {
                             Icon(
                                 painter = painterResource(id = R.drawable.ic_checkmark_lined),

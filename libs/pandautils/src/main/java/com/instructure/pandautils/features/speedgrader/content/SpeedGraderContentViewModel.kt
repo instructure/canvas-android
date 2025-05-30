@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader.content
 
+import android.content.res.Resources
 import android.net.Uri
 import android.webkit.MimeTypeMap
 import androidx.compose.ui.util.fastMap
@@ -23,6 +24,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
@@ -30,6 +32,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.utils.validOrNull
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
@@ -38,12 +41,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.DateFormat
+import java.util.Date
+import java.util.Locale
 import javax.inject.Inject
 
 @HiltViewModel
 class SpeedGraderContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: SpeedGraderContentRepository
+    private val repository: SpeedGraderContentRepository,
+    private val resources: Resources
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderContentUiState())
@@ -60,43 +67,47 @@ class SpeedGraderContentViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         val submission = repository.getSubmission(assignmentId, studentId)
+        val submissionFields = submission.submission?.submissionFields
 
-        val user = submission.submission?.user
+        val user = submissionFields?.user
 
-        val attachments = submission.submission?.attachments.orEmpty().map { attachment ->
-            SelectorItem(attachment._id.toLong(), attachment.displayName.orEmpty())
-        }
-
-        val content = getContent(submission, attachments.firstOrNull()?.id)
-
-        fun onAttachmentSelected(attachmentId: Long) {
-            viewModelScope.launch {
-                val newContent = getContent(submission, attachmentId)
-                _uiState.update {
-                    it.copy(
-                        content = newContent,
-                        attachmentSelectorUiState = it.attachmentSelectorUiState.copy(selectedItemId = attachmentId)
-                    )
-                }
+        val submissionHistory = submission.submission?.submissionHistoriesConnection?.edges
+            .orEmpty()
+            .sortedByDescending {
+                it?.node?.submissionFields?.attempt
             }
-        }
 
-        _uiState.update {
-            it.copy(
-                content = content,
-                assigneeId = submission.submission?.groupId?.toLongOrNull()
+        val attempts = mapAttempts(submissionHistory)
+
+        val attachments = mapAttachments(submissionHistory.firstOrNull()?.node)
+
+        val initialContent = getContent(
+            submission,
+            submissionHistory.firstOrNull()?.node?.submissionFields?.attempt,
+            attachments.firstOrNull()?.id
+        )
+
+        _uiState.update { state ->
+            state.copy(
+                content = initialContent,
+                assigneeId = submissionFields?.groupId?.toLongOrNull()
                     ?: submission.submission?.userId?.toLongOrNull(),
                 userName = user?.name,
                 userUrl = user?.avatarUrl,
-                submissionState = getSubmissionStateLabel(submission.submission?.state),
-                dueDate = submission.submission?.assignment?.dueAt,
+                submissionState = getSubmissionStateLabel(submissionFields?.state),
+                dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
                     items = attachments,
                     selectedItemId = attachments.firstOrNull()?.id,
-                    onItemSelected = ::onAttachmentSelected
+                    onItemSelected = { onAttachmentSelected(submission, it) }
+                ),
+                attemptSelectorUiState = SelectorUiState(
+                    items = attempts,
+                    selectedItemId = attempts.firstOrNull()?.id,
+                    onItemSelected = { onAttemptSelected(submission, submissionHistory, it) }
                 ),
                 courseColor = CanvasContext.emptyCourseContext(
-                    submission.submission?.assignment?.courseId?.toLong().orDefault()
+                    submissionFields?.assignment?.courseId?.toLongOrNull().orDefault()
                 ).color
             )
         }
@@ -113,29 +124,37 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getContent(submissionData: SubmissionContentQuery.Data, selectedAttachmentId: Long?): GradeableContent {
+    private suspend fun getContent(
+        submissionData: SubmissionContentQuery.Data,
+        selectedAttempt: Int?,
+        selectedAttachmentId: Long?
+    ): GradeableContent {
         val submission = submissionData.submission
+        val submissionFields = submissionData.submission?.submissionHistoriesConnection?.edges?.find {
+            it?.node?.submissionFields?.attempt == selectedAttempt
+        }?.node?.submissionFields
+
         return when {
-            SubmissionType.NONE.apiString in (submission?.assignment?.submissionTypes
+            SubmissionType.NONE.apiString in (submissionFields?.assignment?.submissionTypes
                 ?: emptyList()).fastMap { it.rawValue } -> NoneContent
 
-            SubmissionType.ON_PAPER.apiString in (submission?.assignment?.submissionTypes
+            SubmissionType.ON_PAPER.apiString in (submissionFields?.assignment?.submissionTypes
                 ?: emptyList()).fastMap { it.rawValue } -> OnPaperContent
 
-            submission?.submissionType == null -> NoSubmissionContent
-            else -> when (Assignment.getSubmissionTypeFromAPIString(submission.submissionType?.rawValue.orEmpty())) {
+            submissionFields?.submissionType == null -> NoSubmissionContent
+            else -> when (Assignment.getSubmissionTypeFromAPIString(submissionFields.submissionType?.rawValue.orEmpty())) {
 
                 // LTI submission
                 SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
-                    submission.previewUrl.validOrNull()
-                        ?: submission.assignment?.htmlUrl.validOrNull().orEmpty()
+                    submissionFields.previewUrl.validOrNull()
+                        ?: submissionFields.assignment?.htmlUrl.validOrNull().orEmpty()
                 )
 
                 // Text submission
-                SubmissionType.ONLINE_TEXT_ENTRY -> TextContent(submission.body ?: "")
+                SubmissionType.ONLINE_TEXT_ENTRY -> TextContent(submissionFields.body ?: "")
 
                 // Media submission
-                SubmissionType.MEDIA_RECORDING -> submission.mediaObject?.let {
+                SubmissionType.MEDIA_RECORDING -> submissionFields.mediaObject?.let {
                     MediaContent(
                         uri = Uri.parse(it.mediaDownloadUrl),
                         contentType = it.mediaType?.rawValue ?: "",
@@ -144,33 +163,33 @@ class SpeedGraderContentViewModel @Inject constructor(
                 } ?: UnsupportedContent
 
                 // File uploads
-                SubmissionType.ONLINE_UPLOAD -> submission.attachments?.find { it._id.toLong() == selectedAttachmentId }?.let {
+                SubmissionType.ONLINE_UPLOAD -> submissionFields.attachments?.find { it._id.toLong() == selectedAttachmentId }?.let {
                     getAttachmentContent(
                         it,
-                        submission.assignment?.courseId?.toLong(),
-                        (submission.groupId ?: submission.userId)?.toLong()
+                        submissionFields.assignment?.courseId?.toLong(),
+                        (submissionFields.groupId ?: submission?.userId)?.toLong()
                     )
                 } ?: UnsupportedContent
 
                 // URL Submission
                 SubmissionType.ONLINE_URL -> UrlContent(
-                    submission.url.orEmpty(),
-                    submission.attachments?.firstOrNull()?.url
+                    submissionFields.url.orEmpty(),
+                    submissionFields.attachments?.firstOrNull()?.url
                 )
 
                 // Quiz Submission
-                SubmissionType.ONLINE_QUIZ -> handleQuizSubmissionType(submission)
+                SubmissionType.ONLINE_QUIZ -> handleQuizSubmissionType(submissionFields)
 
                 // Discussion Submission
-                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submission.previewUrl)
+                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submissionFields.previewUrl)
 
                 SubmissionType.STUDENT_ANNOTATION -> {
                     try {
-                        val canvaDocSession = repository.createCanvaDocSession(submission._id, submission.attempt.toString())
+                        val canvaDocSession = repository.createCanvaDocSession(submission?._id.orEmpty(), submissionFields.attempt.toString())
                         PdfContent(
                             canvaDocSession.canvadocsSessionUrl.orEmpty(),
-                            submission.assignment?.courseId?.toLong(),
-                            (submission.groupId ?: submission.userId)?.toLong()
+                            submissionFields.assignment?.courseId?.toLong(),
+                            (submissionFields.groupId ?: submission?.userId)?.toLong()
                         )
                     } catch (e: Exception) {
                         UnsupportedContent
@@ -184,7 +203,7 @@ class SpeedGraderContentViewModel @Inject constructor(
     }
 
     private suspend fun getAttachmentContent(
-        attachment: SubmissionContentQuery.Attachment1,
+        attachment: SubmissionFields.Attachment,
         courseId: Long?,
         assigneeId: Long?
     ): GradeableContent {
@@ -249,7 +268,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private fun handleQuizSubmissionType(submission: SubmissionContentQuery.Submission): GradeableContent {
+    private fun handleQuizSubmissionType(submission: SubmissionFields): GradeableContent {
         val assignment = submission.assignment ?: return UnsupportedContent
         return if (submission.assignment?.anonymousGrading == true) {
             AnonymousSubmissionContent
@@ -260,6 +279,59 @@ class SpeedGraderContentViewModel @Inject constructor(
                 studentId,
                 submission.previewUrl.orEmpty(),
                 QuizSubmission.parseWorkflowState(submission.state.rawValue) == QuizSubmission.WorkflowState.PENDING_REVIEW
+            )
+        }
+    }
+
+    private fun getFormattedAttemptDate(date: Date): String {
+        val datePart = DateFormat.getDateInstance(DateFormat.MEDIUM, Locale.getDefault()).format(date)
+        val timePart = DateFormat.getTimeInstance(DateFormat.SHORT, Locale.getDefault()).format(date)
+        return "$datePart, $timePart"
+    }
+
+    private fun mapAttempts(submissionHistory: List<SubmissionContentQuery.Edge?>) = submissionHistory.mapNotNull { edge ->
+        edge?.node?.submissionFields?.let { attempt ->
+            SelectorItem(
+                attempt.attempt.toLong(),
+                resources.getString(R.string.attempt, attempt.attempt),
+                attempt.submittedAt?.let { getFormattedAttemptDate(it) }
+            )
+        }
+    }
+
+    private fun onAttemptSelected(
+        submission: SubmissionContentQuery.Data,
+        submissionHistory: List<SubmissionContentQuery.Edge?>,
+        attemptId: Long
+    ) = viewModelScope.launch {
+        val selectedSubmission = submissionHistory.find { it?.node?.submissionFields?.attempt == attemptId.toInt() }
+        val newAttachments = mapAttachments(selectedSubmission?.node)
+        val newContent = getContent(submission, attemptId.toInt(), newAttachments.firstOrNull()?.id)
+        _uiState.update {
+            it.copy(
+                content = newContent,
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(selectedItemId = attemptId),
+                attachmentSelectorUiState = it.attachmentSelectorUiState.copy(
+                    items = newAttachments,
+                    selectedItemId = newAttachments.firstOrNull()?.id
+                )
+            )
+        }
+    }
+
+    private fun mapAttachments(submissionNode: SubmissionContentQuery.Node?) = submissionNode?.submissionFields?.attachments
+        .orEmpty()
+        .map { SelectorItem(it._id.toLong(), it.displayName.orEmpty()) }
+
+    private fun onAttachmentSelected(
+        submission: SubmissionContentQuery.Data,
+        attachmentId: Long
+    ) = viewModelScope.launch {
+        val newContent = getContent(submission, uiState.value.attemptSelectorUiState.selectedItemId?.toInt(), attachmentId)
+        _uiState.update {
+            it.copy(
+                content = newContent,
+                attachmentSelectorUiState = it.attachmentSelectorUiState.copy(selectedItemId = attachmentId)
             )
         }
     }

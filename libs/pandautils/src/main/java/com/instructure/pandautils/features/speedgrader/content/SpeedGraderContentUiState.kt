@@ -32,6 +32,7 @@ data class SpeedGraderContentUiState(
     val submissionState: SubmissionStateLabel = SubmissionStateLabel.NONE,
     val dueDate: Date? = null,
     val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
+    val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
     @ColorInt val courseColor: Int = Color.GREEN
 )
 
@@ -72,7 +73,8 @@ class MediaContent(
 
 data class SelectorItem(
     val id: Long,
-    val title: String
+    val title: String,
+    val subtitle: String? = null
 )
 
 data class SelectorUiState(
