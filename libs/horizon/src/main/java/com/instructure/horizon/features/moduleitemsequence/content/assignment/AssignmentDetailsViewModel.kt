@@ -33,6 +33,7 @@ import com.instructure.horizon.features.moduleitemsequence.content.assignment.su
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
@@ -57,6 +58,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val submissionHelper: HorizonSubmissionHelper,
     private val apiPrefs: ApiPrefs,
     private val createSubmissionDao: CreateSubmissionDao,
+    private val createFileSubmissionDao: CreateFileSubmissionDao,
     private val fileUploadUtilsHelper: FileUploadUtilsHelper,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
@@ -66,6 +68,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     private var assignmentName: String = ""
 
     private var assignment: Assignment? = null
+
+    private var files: MutableList<FileSubmitObject> = mutableListOf()
 
     private val _uiState =
         MutableStateFlow(
@@ -107,12 +111,25 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
             val initialAttempt = lastActualSubmission?.attempt ?: -1L
 
-            val text = withContext(Dispatchers.IO) {
-                val draft = createSubmissionDao.findDraftSubmissionByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-                draft?.lastActivityDate?.let {
-                    updateDraftText(it)
-                }
-                draft?.submissionEntry.orEmpty()
+            val draft = withContext(Dispatchers.IO) {
+                createSubmissionDao.findDraftSubmissionByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+            }
+
+            draft?.lastActivityDate?.let {
+                updateDraftText(it)
+            }
+            val text = draft?.submissionEntry.orEmpty()
+            val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
+            this@AssignmentDetailsViewModel.files.addAll(files.map {
+                FileSubmitObject(name = it.name.orEmpty(), fullPath = it.fullPath.orEmpty(), contentType = it.contentType.orEmpty(), size = it.size.orDefault())
+            })
+
+            val fileUiStates = files.map { file ->
+                AddSubmissionFileUiState(
+                    name = file.name.orEmpty(),
+                    path = file.fullPath,
+                    onDeleteClicked = { deleteFile(file.fullPath) }
+                )
             }
 
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
@@ -122,7 +139,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                         allowedTypes = assignment.allowedExtensions,
                         cameraAllowed = assignment.allowedExtensions.isEmpty() || assignment.allowedExtensions.contains("jpg"),
                         galleryPickerAllowed = galleryPickerAllowed(assignment.allowedExtensions),
-                        onFileAdded = ::onFileAdded
+                        onFileAdded = ::onFileAdded,
+                        files = fileUiStates
                     )
 
                     else -> null
@@ -142,7 +160,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     ),
                     addSubmissionUiState = it.addSubmissionUiState.copy(
                         submissionTypes = submissionTypes,
-                        submitEnabled = text.isNotEmpty()
+                        submitEnabled = text.isNotEmpty() || files.isNotEmpty()
                     ),
                     showSubmissionDetails = lastActualSubmission != null,
                     showAddSubmission = lastActualSubmission == null,
@@ -314,7 +332,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                 canvasContext = CanvasContext.emptyCourseContext(id = courseId),
                 assignmentId = assignmentId,
                 assignmentName = assignmentName,
-                files = ArrayList(selectedSubmissionType.files.mapNotNull { it.uri?.let { uri -> getUriContents(uri) } })
+                files = ArrayList(files)
             )
         }
 
@@ -342,7 +360,6 @@ class AssignmentDetailsViewModel @Inject constructor(
         } else if (progress == 100.0f) {
             updateAssignment()
             onTextSubmissionChanged("")
-            deleteAllFiles()
             _uiState.update {
                 it.copy(
                     showSubmissionDetails = true,
@@ -355,7 +372,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     )
                 )
             }
-        } else {
+        } else if (progress > 0f) {
             _uiState.update {
                 it.copy(
                     addSubmissionUiState = it.addSubmissionUiState.copy(
@@ -444,6 +461,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 )
             }
             onTextSubmissionChanged("")
+            deleteAllFiles()
+            updateDraftText()
         }
     }
 
@@ -479,6 +498,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun onFileAdded(uri: Uri) {
         val extension = fileUploadUtilsHelper.getFileExtension(uri)
+        val fso = getUriContents(uri)
         val allowedExtensions = assignment?.allowedExtensions.orEmpty()
         if (allowedExtensions.isEmpty() || allowedExtensions.contains(extension)) {
             _uiState.update {
@@ -489,8 +509,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                                 submissionType.copy(
                                     files = submissionType.files + AddSubmissionFileUiState(
                                         name = fileUploadUtilsHelper.getFileNameWithDefault(uri),
-                                        uri = uri,
-                                        onDeleteClicked = { deleteFile(uri) })
+                                        path = fso?.fullPath,
+                                        onDeleteClicked = { deleteFile(fso?.fullPath) })
                                 )
                             } else {
                                 submissionType
@@ -500,11 +520,23 @@ class AssignmentDetailsViewModel @Inject constructor(
                 )
             }
 
+            if (fso != null) files.add(fso)
+
             val addSubmissionUiState = _uiState.value.addSubmissionUiState
             val hasFiles =
                 addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
                         (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
             updateSubmissionEnabled(hasFiles)
+
+            viewModelScope.launch {
+                submissionHelper.saveDraftWithFiles(
+                    CanvasContext.emptyCourseContext(id = courseId),
+                    assignmentId,
+                    assignmentName,
+                    files
+                )
+            }
+            updateDraftText(Date())
         } else {
             _uiState.update {
                 it.copy(
@@ -520,14 +552,14 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteFile(uri: Uri) {
+    private fun deleteFile(path: String?) {
         _uiState.update { uiState ->
             uiState.copy(
                 addSubmissionUiState = uiState.addSubmissionUiState.copy(
                     submissionTypes = uiState.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
                         if (index == uiState.addSubmissionUiState.selectedSubmissionTypeIndex && submissionType is AddSubmissionTypeUiState.File) {
                             submissionType.copy(
-                                files = submissionType.files.filterNot { it.uri == uri }
+                                files = submissionType.files.filterNot { it.path == path }
                             )
                         } else {
                             submissionType
@@ -542,9 +574,29 @@ class AssignmentDetailsViewModel @Inject constructor(
             addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
                     (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
         updateSubmissionEnabled(hasFiles)
+
+        files.removeIf { it.fullPath == path }
+
+        if (hasFiles) {
+            viewModelScope.launch {
+                submissionHelper.saveDraftWithFiles(
+                    CanvasContext.emptyCourseContext(id = courseId),
+                    assignmentId,
+                    assignmentName,
+                    files
+                )
+            }
+            updateDraftText(Date())
+        } else {
+            viewModelScope.launch {
+                createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+            }
+            updateDraftText()
+        }
     }
 
     private fun deleteAllFiles() {
+        files.clear()
         _uiState.update { uiState ->
             uiState.copy(
                 addSubmissionUiState = uiState.addSubmissionUiState.copy(

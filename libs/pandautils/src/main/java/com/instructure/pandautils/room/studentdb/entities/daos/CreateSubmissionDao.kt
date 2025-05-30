@@ -40,6 +40,9 @@ interface CreateSubmissionDao {
     @Query("UPDATE CreateSubmissionEntity SET errorFlag = :error WHERE id = :id")
     suspend fun setSubmissionError(error: Boolean, id: Long)
 
+    @Query("UPDATE CreateSubmissionEntity SET isDraft = :isDraft WHERE id = :id")
+    suspend fun setDraft(id: Long, isDraft: Boolean)
+
     @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId")
     suspend fun findSubmissionsByAssignmentId(
         assignmentId: Long,

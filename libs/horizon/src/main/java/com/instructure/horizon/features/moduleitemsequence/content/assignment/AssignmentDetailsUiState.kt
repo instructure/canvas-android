@@ -97,7 +97,7 @@ sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
 
 data class AddSubmissionFileUiState(
     val name: String = "",
-    val uri: Uri? = null,
+    val path: String? = null,
     val onDeleteClicked: () -> Unit = {},
 )
 

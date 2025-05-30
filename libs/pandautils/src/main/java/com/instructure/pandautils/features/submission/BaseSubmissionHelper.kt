@@ -85,6 +85,39 @@ abstract class BaseSubmissionHelper(
         }
     }
 
+    suspend fun saveDraftWithFiles(
+        canvasContext: CanvasContext,
+        assignmentId: Long,
+        assignmentName: String?,
+        files: List<FileSubmitObject>
+    ): Long {
+        return insertDraft(assignmentId) {
+            val entity = CreateSubmissionEntity(
+                assignmentName = assignmentName,
+                assignmentId = assignmentId,
+                canvasContext = canvasContext,
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+                userId = getUserId(),
+                lastActivityDate = Date(),
+                isDraft = true,
+                fileCount = files.size
+            )
+            it.submissionDao().insert(entity).also { rowId ->
+                val dbSubmissionId = it.submissionDao().findSubmissionByRowId(rowId)?.id ?: return@insertDraft
+                val fileEntities = files.map { file ->
+                    CreateFileSubmissionEntity(
+                        dbSubmissionId = dbSubmissionId,
+                        name = file.name,
+                        size = file.size,
+                        contentType = file.contentType,
+                        fullPath = file.fullPath
+                    )
+                }
+                it.fileSubmissionDao().insertAll(fileEntities)
+            }
+        }
+    }
+
     fun startUrlSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,
@@ -127,7 +160,8 @@ abstract class BaseSubmissionHelper(
                     canvasContext = canvasContext,
                     submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
                     userId = getUserId(),
-                    lastActivityDate = Date()
+                    lastActivityDate = Date(),
+                    fileCount = files.size
                 )
                 it.submissionDao().insert(entity)
             }
