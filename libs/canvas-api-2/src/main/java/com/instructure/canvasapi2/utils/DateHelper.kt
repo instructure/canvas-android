@@ -38,6 +38,14 @@ object DateHelper {
         }
     }
 
+    fun speedGraderDateStringToDate(dateString: String?): Date? {
+        return try {
+            SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US).parse(dateString)
+        } catch (e: Exception) {
+            null
+        }
+    }
+
     /**
      * Date Format Standards for Android
      * SHORT: 12/31/2000 or 1/3/2000

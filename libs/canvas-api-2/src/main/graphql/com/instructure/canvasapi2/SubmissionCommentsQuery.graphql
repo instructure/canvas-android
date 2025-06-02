@@ -25,22 +25,28 @@ query SubmissionCommentsQuery($submissionId: ID!) {
                         name
                         email
                         avatarUrl
+                        pronouns
                     }
                     mediaObject {
                         _id
                         mediaDownloadUrl
+                        title
+                        mediaType
                     }
                     comment
                     mediaCommentId
                     createdAt
-                    updatedAt
                     canReply
                     draft
                     attempt
                     attachments {
+                        id
                         contentType
                         createdAt
                         displayName
+                        size
+                        thumbnailUrl
+                        url
                     }
                 }
             }

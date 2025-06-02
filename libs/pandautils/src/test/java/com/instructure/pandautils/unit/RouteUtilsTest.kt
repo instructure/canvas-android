@@ -20,6 +20,7 @@ package com.instructure.pandautils.unit
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.RouteUtils
@@ -41,6 +42,13 @@ class RouteUtilsTest : Assert() {
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
         every { ApiPrefs.fullDomain } returns "https://domain.instructure.com"
+    }
+
+    @Test
+    fun `date`() {
+        val string = "Wed May 28 00:00:38 GMT+02:00 2025"
+        val date = DateHelper.speedGraderDateStringToDate(string)
+        assertNotNull(date)
     }
 
     @Test

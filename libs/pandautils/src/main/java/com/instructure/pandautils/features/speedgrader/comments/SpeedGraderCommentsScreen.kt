@@ -30,6 +30,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.SpeedGraderCommentSection
 
 @Composable
 fun SpeedGraderCommentsScreen() {
@@ -42,22 +43,5 @@ fun SpeedGraderCommentsScreen() {
 
     val context = LocalContext.current.applicationContext
 
-    LazyColumn(
-        modifier = Modifier.background(colorResource(id = R.color.backgroundLightest))
-    ) {
-        item {
-            Text(
-                text = "SpeedGrader Comments Screen",
-                modifier = Modifier.padding(16.dp),
-                color = colorResource(id = R.color.textDarkest)
-            )
-        }
-        items(uiState.comments) { comment ->
-            Text(
-                text = comment.content,
-                modifier = Modifier.padding(16.dp),
-                color = colorResource(id = R.color.textDarkest)
-            )
-        }
-    }
+    SpeedGraderCommentSection(uiState.comments)
 }

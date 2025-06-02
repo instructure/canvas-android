@@ -9,15 +9,22 @@ data class SpeedGraderCommentsUiState(
 )
 
 data class SpeedGraderComment(
-    val id: String,
-    val authorName: String,
-    val authorId: String,
-    val content: String,
-    val createdAt: String,
+    val id: String = "",
+    val authorName: String = "",
+    val authorId: String = "",
+    val authorAvatarUrl: String = "",
+    val content: String = "",
+    val createdAt: String = "",
+    val isOwnComment: Boolean = false,
     val attachments: List<SpeedGraderCommentAttachment> = emptyList()
 )
 
 data class SpeedGraderCommentAttachment(
-    val displayName: String,
-    val contentType: String
+    val id: String = "",
+    val displayName: String = "",
+    val contentType: String = "",
+    val size: String = "",
+    val url: String = "",
+    val thumbnailUrl: String? = null,
+    val createdAt: String = "",
 )

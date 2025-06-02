@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.speedgrader.comments
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +30,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SpeedGraderCommentsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val speedGraderCommentsRepository: SpeedGraderCommentsRepository
+    private val speedGraderCommentsRepository: SpeedGraderCommentsRepository,
+    private val apiPrefs: ApiPrefs
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderCommentsUiState())
@@ -54,12 +56,20 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                                 id = it.mediaCommentId ?: "",
                                 authorName = it.author?.name ?: "Unknown",
                                 authorId = it.author?._id ?: "",
+                                authorAvatarUrl = it.author?.avatarUrl ?: "",
                                 content = it.comment ?: "",
                                 createdAt = it.createdAt.toString(),
+                                isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id,
                                 attachments = it.attachments?.map { attachment ->
                                     SpeedGraderCommentAttachment(
+                                        id = attachment.id,
+                                        url = attachment.url ?: "",
+                                        thumbnailUrl = attachment.thumbnailUrl ?: "",
+                                        createdAt = attachment.createdAt.toString(),
                                         displayName = attachment.displayName ?: "",
-                                        contentType = attachment.contentType ?: ""
+                                        contentType = attachment.contentType ?: "",
+                                        size = attachment.toString(),
+
                                     )
                                 } ?: emptyList()
                             )
