@@ -26,6 +26,7 @@ import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.espresso.getDateInCanvasFormat
 import com.instructure.student.R
@@ -52,39 +53,39 @@ class OfflineDiscussionsE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineDiscussionsE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed a discussion topic for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed a discussion topic for '${course.name}' course.")
         val discussion1 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seed another discussion topic for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed another discussion topic for '${course.name}' course.")
         val discussion2 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Seed an entry ('main reply') for the '${course.name}' course's '${discussion1.title}' discussion topic.")
+        Log.d(PREPARATION_TAG, "Seed an entry ('main reply') for the '${course.name}' course's '${discussion1.title}' discussion topic.")
         DiscussionTopicsApi.createEntryToDiscussionTopic(student.token, course.id, discussion1.id, "My reply")
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG,"Wait for the Dashboard Page to be rendered.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
 
         Log.d(STEP_TAG, "Select '${course.name}' course and navigate to Discussion List page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectDiscussions()
 
-        Log.d(STEP_TAG,"Select '$discussion1' discussion topic and assert that there is no reply on the details page as well.")
+        Log.d(STEP_TAG, "Select '$discussion1' discussion topic and assert that there is no reply on the details page as well.")
         discussionListPage.selectTopic(discussion1.title)
 
-        Log.d(STEP_TAG, "Assert that the 'Reply' button is displayed on the Discussion Details (Web view) Page.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Reply' button is displayed on the Discussion Details (Web view) Page.")
         discussionDetailsPage.waitForReplyButton()
         discussionDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG,"Assert the the previously sent reply 'My reply', is displayed on the (online) details page.")
+        Log.d(ASSERTION_TAG, "Assert the the previously sent reply 'My reply', is displayed on the (online) details page.")
         discussionDetailsPage.assertEntryDisplayed("My reply")
 
         Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
@@ -100,7 +101,7 @@ class OfflineDiscussionsE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Discussions")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -110,66 +111,83 @@ class OfflineDiscussionsE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
+        refresh()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
         Log.d(STEP_TAG, "Select '${course.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to Discussion List Page.")
+        Log.d(STEP_TAG, "Navigate to Discussion List Page.")
         courseBrowserPage.selectDiscussions()
 
-        Log.d(STEP_TAG, "Assert that both the '${discussion1.title}' and '${discussion2.title}' discussion are displayed on the Discussion List page.")
+        Log.d(ASSERTION_TAG, "Assert that both the '${discussion1.title}' and '${discussion2.title}' discussion are displayed on the Discussion List page.")
         discussionListPage.assertTopicDisplayed(discussion1.title)
         discussionListPage.assertTopicDisplayed(discussion2.title)
 
-        Log.d(STEP_TAG,"Refresh the page. Assert that the previously sent reply has been counted, and there are no unread replies.")
+        Log.d(ASSERTION_TAG, "Assert that the previously sent reply has been counted, and there are no unread replies.")
         discussionListPage.assertReplyCount(discussion1.title, 1)
         discussionListPage.assertUnreadReplyCount(discussion1.title, 0)
 
-        Log.d(STEP_TAG, "Assert that the due date is the current date (in the expected format).")
         val currentDate = getDateInCanvasFormat()
+        Log.d(ASSERTION_TAG, "Assert that the due date is the current date (in the expected format).")
         discussionListPage.assertDueDate(discussion1.title, currentDate)
 
         Log.d(STEP_TAG, "Click on the Search (magnifying glass) icon and the '${discussion1.title}' discussion's title into the search input field.")
         discussionListPage.searchable.clickOnSearchButton()
         discussionListPage.searchable.typeToSearchBar(discussion1.title)
 
-        Log.d(STEP_TAG, "Assert that only the '${discussion1.title}' discussion displayed as a search result and the other, '${discussion2.title}' discussion has not displayed.")
+        Log.d(ASSERTION_TAG, "Assert that only the '${discussion1.title}' discussion displayed as a search result and the other, '${discussion2.title}' discussion has not displayed.")
         discussionListPage.assertTopicDisplayed(discussion1.title)
         discussionListPage.assertTopicNotDisplayed(discussion2.title)
 
-        Log.d(STEP_TAG, "Click on the 'Clear Search' (X) icon and assert that both of the discussion should be displayed again.")
+        Log.d(STEP_TAG, "Click on the 'Clear Search' (X) icon.")
         discussionListPage.searchable.clickOnClearSearchButton()
         discussionListPage.waitForDiscussionTopicToDisplay(discussion2.title)
+
+        Log.d(ASSERTION_TAG, "Assert that both of the discussion should be displayed again.")
         discussionListPage.assertTopicDisplayed(discussion1.title)
 
-        Log.d(STEP_TAG,"Select '${discussion1.title}' discussion and assert if the corresponding discussion title is displayed.")
+        Log.d(STEP_TAG, "Select '${discussion1.title}' discussion.")
         discussionListPage.selectTopic(discussion1.title)
+
+        Log.d(ASSERTION_TAG, "Assert if the corresponding discussion title is displayed.")
         nativeDiscussionDetailsPage.assertTitleText(discussion1.title)
 
-        Log.d(STEP_TAG, "Try to click on the (main) 'Reply' button and assert that the 'No Internet Connection' dialog has displayed. Dismiss the dialog.")
+        Log.d(STEP_TAG, "Try to click on the (main) 'Reply' button.")
         nativeDiscussionDetailsPage.clickReply()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog has displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Try to click on the (inner) 'Reply' button (so try to 'reply to a reply') and assert that the 'No Internet Connection' dialog has displayed. Dismiss the dialog.")
+        Log.d(STEP_TAG, "Try to click on the (inner) 'Reply' button (so try to 'reply to a reply').")
         nativeDiscussionDetailsPage.clickOnInnerReply()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog has displayed.")
         OfflineTestUtils.assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         OfflineTestUtils.dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG,"Navigate back to Discussion List Page.")
+        Log.d(STEP_TAG, "Navigate back to Discussion List Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Select '${discussion2.title}' discussion and assert if the Discussion Details page is displayed and there is no reply for the discussion yet.")
+        Log.d(STEP_TAG, "Select '${discussion2.title}' discussion.")
         discussionListPage.selectTopic(discussion2.title)
+
+        Log.d(ASSERTION_TAG, "Assert if the Discussion Details page is displayed and there is no reply for the discussion yet.")
         nativeDiscussionDetailsPage.assertTitleText(discussion2.title)
         nativeDiscussionDetailsPage.assertNoRepliesDisplayed()
 
-        Log.d(STEP_TAG, "Try to click on 'Add Bookmark' overflow menu and assert that the 'Functionality unavailable while offline' toast message is displayed.")
+        Log.d(STEP_TAG, "Try to click on 'Add Bookmark' overflow menu.")
         openOverflowMenu()
         nativeDiscussionDetailsPage.clickOnAddBookmarkMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Functionality unavailable while offline' toast message is displayed.")
         checkToastText(R.string.notAvailableOffline, activityRule.activity)
     }
 
