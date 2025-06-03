@@ -64,6 +64,24 @@ class JSTextSelectionInterface(
             `;
             document.head.appendChild(style);
             
+            function getXPathForNode(node, root = document.body) {
+                if (node === root) return '';
+                if (!node || !node.parentNode) return null;
+
+                const parts = [];
+                while (node && node !== root) {
+                    const parent = node.parentNode;
+                    if (!parent) break;
+
+                    const siblings = Array.from(parent.childNodes).filter(n => n.nodeName === node.nodeName);
+                    const index = siblings.indexOf(node) + 1; // XPath is 1-based
+                    const nodeName = node.nodeType === Node.TEXT_NODE ? 'text()' : node.nodeName.toLowerCase();
+                    parts.unshift(`${'$'}{nodeName}[${'$'}{index}]`);
+                    node = parent;
+                }
+
+                return parts.join('/');
+            }
             function getFirstTextNode(node) {
                 if (node.nodeType === Node.TEXT_NODE) return node;
                 for (const child of node.childNodes) {
@@ -116,7 +134,12 @@ class JSTextSelectionInterface(
                 range.surroundContents(span);
             }
             javascript:(function() { document.addEventListener("selectionchange", () => {
-              ${JS_INTERFACE_NAME}.onTextSelected(document.getSelection().toString());
+                const range = document.getSelection().getRangeAt(0);
+                const startContainer = getXPathForNode(range.startContainer);
+                const endContainer = getXPathForNode(range.endContainer);
+                const startOffset = range.startOffset;
+                const endOffset = range.endOffset;
+                ${JS_INTERFACE_NAME}.onTextSelected(document.getSelection().toString(), startContainer, startOffset, endContainer, endOffset);
             })})();
         """.trimIndent()
 

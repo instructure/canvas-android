@@ -81,7 +81,7 @@ fun PageDetailsContentScreen(
                             addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
                         }
                         addTextSelectionInterface(
-                            onTextSelect = { Log.d("PageDetailsContentScreen", "Text selected: $it") },
+                            onTextSelect = {text, startContainer, startOffset, endContainer, endOffset -> Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset") },
                             onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") }
                         )
                     },
@@ -92,7 +92,7 @@ fun PageDetailsContentScreen(
                     webViewCallbacks = ComposeWebViewCallbacks(
                         onPageFinished = { webView, _ ->
                             webView.addTextSelectionInterface(
-                                onTextSelect = { Log.d("PageDetailsContentScreen", "Text selected: $it") },
+                                onTextSelect = {text, startContainer, startOffset, endContainer, endOffset -> Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset") },
                                 onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") }
                             )
 
