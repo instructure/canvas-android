@@ -94,7 +94,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.views.JSInterface
-import kotlinx.coroutines.delay
 
 @Composable
 fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
@@ -182,14 +181,6 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         ) {
 
             var rceFocused by remember { mutableStateOf(false) }
-
-            LaunchedEffect(rceFocused) {
-                if (rceFocused) {
-                    val scrollValue = scrollState.value
-                    delay(500)
-                    scrollState.scrollTo(scrollValue)
-                }
-            }
 
             Column(
                 modifier = Modifier
