@@ -78,9 +78,6 @@ class AssignmentDetailsViewModel @Inject constructor(
                 addSubmissionUiState = AddSubmissionUiState(
                     onSubmissionTypeSelected = ::submissionTypeSelected,
                     onSubmissionButtonClicked = ::showSubmissionConfirmation,
-                    onDeleteDraftClicked = ::deleteDraftClicked,
-                    onDismissDeleteDraftConfirmation = ::deleteDraftDismissed,
-                    onDraftDeleted = ::deleteDraftSubmission,
                     onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
                     onSubmitAssignment = ::sendSubmission
                 ),
@@ -111,39 +108,55 @@ class AssignmentDetailsViewModel @Inject constructor(
             }
             val initialAttempt = lastActualSubmission?.attempt ?: -1L
 
-            val draft = withContext(Dispatchers.IO) {
-                createSubmissionDao.findDraftSubmissionByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-            }
-
-            draft?.lastActivityDate?.let {
-                updateDraftText(it)
-            }
-            val text = draft?.submissionEntry.orEmpty()
-            val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
-            this@AssignmentDetailsViewModel.files.addAll(files.map {
-                FileSubmitObject(name = it.name.orEmpty(), fullPath = it.fullPath.orEmpty(), contentType = it.contentType.orEmpty(), size = it.size.orDefault())
-            })
-
-            val fileUiStates = files.map { file ->
-                AddSubmissionFileUiState(
-                    name = file.name.orEmpty(),
-                    path = file.fullPath,
-                    onDeleteClicked = { deleteFile(file.fullPath) }
-                )
-            }
-
             val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
-                when (it) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged)
-                    Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File(
+                if (it != Assignment.SubmissionType.ONLINE_UPLOAD && it != Assignment.SubmissionType.ONLINE_TEXT_ENTRY) return@mapNotNull null
+
+                val draft = withContext(Dispatchers.IO) {
+                    createSubmissionDao.findDraftSubmissionByAssignmentIdAndType(
+                        assignmentId,
+                        apiPrefs.user?.id.orDefault(),
+                        it.apiString
+                    )
+                }
+
+                val draftDate = getDraftDateString(draft?.lastActivityDate)
+                val draftUiState = DraftUiState(
+                    draftDate,
+                    onDeleteDraftClicked = ::deleteDraftClicked,
+                    onDismissDeleteDraftConfirmation = ::deleteDraftDismissed,
+                    onDraftDeleted = ::deleteDraftSubmission
+                )
+
+                if (it == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
+                    val text = draft?.submissionEntry.orEmpty()
+                    AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged, draftUiState, text.isNotEmpty())
+                } else {
+                    val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
+                    this@AssignmentDetailsViewModel.files.addAll(files.map { file ->
+                        FileSubmitObject(
+                            name = file.name.orEmpty(),
+                            fullPath = file.fullPath.orEmpty(),
+                            contentType = file.contentType.orEmpty(),
+                            size = file.size.orDefault()
+                        )
+                    })
+
+                    val fileUiStates = files.map { file ->
+                        AddSubmissionFileUiState(
+                            name = file.name.orEmpty(),
+                            path = file.fullPath,
+                            onDeleteClicked = { deleteFile(file.fullPath) }
+                        )
+                    }
+                    AddSubmissionTypeUiState.File(
                         allowedTypes = assignment.allowedExtensions,
                         cameraAllowed = assignment.allowedExtensions.isEmpty() || assignment.allowedExtensions.contains("jpg"),
                         galleryPickerAllowed = galleryPickerAllowed(assignment.allowedExtensions),
                         onFileAdded = ::onFileAdded,
-                        files = fileUiStates
+                        files = fileUiStates,
+                        draftUiState = draftUiState,
+                        submitEnabled = fileUiStates.isNotEmpty()
                     )
-
-                    else -> null
                 }
             }
 
@@ -159,8 +172,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                         currentSubmissionAttempt = initialAttempt
                     ),
                     addSubmissionUiState = it.addSubmissionUiState.copy(
-                        submissionTypes = submissionTypes,
-                        submitEnabled = text.isNotEmpty() || files.isNotEmpty()
+                        submissionTypes = submissionTypes
                     ),
                     showSubmissionDetails = lastActualSubmission != null,
                     showAddSubmission = lastActualSubmission == null,
@@ -283,27 +295,42 @@ class AssignmentDetailsViewModel @Inject constructor(
                 // We need to replace the line breaks from the RCE because if we delete any text it will still leave a <br> tag in the RCE
                 if (text.replace("<br>", "").isNotBlank()) {
                     submissionHelper.saveDraft(CanvasContext.emptyCourseContext(id = courseId), assignmentId, assignmentName, text)
-                    updateDraftText(Date())
-                    updateSubmissionEnabled(true)
+                    updateDraftTextForSubmissionType(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, Date())
+                    updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, true)
                 } else {
-                    createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-                    updateDraftText()
-                    updateSubmissionEnabled(false)
+                    createSubmissionDao.deleteDraftByAssignmentIdAndType(
+                        assignmentId,
+                        apiPrefs.user?.id.orDefault(),
+                        Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString
+                    )
+                    updateDraftTextForSubmissionType(Assignment.SubmissionType.ONLINE_TEXT_ENTRY)
+                    updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_TEXT_ENTRY, false)
                 }
             }
         }
     }
 
-    private fun updateDraftText(date: Date? = null) {
-        val draftText = if (date == null) {
+    private fun getDraftDateString(date: Date? = null): String {
+        return if (date == null) {
             ""
         } else {
             context.getString(R.string.assignmentDetails_draftSaved, date.format("dd/MM, h:mm a"))
         }
+    }
+
+    private fun updateDraftTextForSubmissionType(submissionType: Assignment.SubmissionType, date: Date? = null) {
+        getDraftDateString(date)
+
         _uiState.update {
             it.copy(
                 addSubmissionUiState = it.addSubmissionUiState.copy(
-                    draftDateString = draftText
+                    submissionTypes = it.addSubmissionUiState.submissionTypes.map { submissionTypeUiState ->
+                        if (submissionTypeUiState.submissionType == submissionType) {
+                            submissionTypeUiState.copyWith(submissionTypeUiState.draftUiState.copy(draftDateString = getDraftDateString(date)))
+                        } else {
+                            submissionTypeUiState
+                        }
+                    }
                 )
             )
         }
@@ -325,19 +352,25 @@ class AssignmentDetailsViewModel @Inject constructor(
                 canvasContext = CanvasContext.emptyCourseContext(id = courseId),
                 assignmentId = assignmentId,
                 text = selectedSubmissionType.text,
-                assignmentName = assignmentName
+                assignmentName = assignmentName,
+                deleteBySubmissionTypeFilter = Assignment.SubmissionType.ONLINE_TEXT_ENTRY
             )
         } else if (selectedSubmissionType is AddSubmissionTypeUiState.File) {
             submissionHelper.startFileSubmission(
                 canvasContext = CanvasContext.emptyCourseContext(id = courseId),
                 assignmentId = assignmentId,
                 assignmentName = assignmentName,
-                files = ArrayList(files)
+                files = ArrayList(files),
+                deleteBySubmissionTypeFilter = Assignment.SubmissionType.ONLINE_UPLOAD
             )
         }
 
         viewModelScope.launch {
-            createSubmissionDao.findSubmissionByAssignmentIdFlow(assignmentId, apiPrefs.user?.id.orDefault()).collect { entity ->
+            createSubmissionDao.findSubmissionByAssignmentIdAndTypeFlow(
+                assignmentId,
+                apiPrefs.user?.id.orDefault(),
+                selectedSubmissionType.submissionType.apiString
+            ).collect { entity ->
                 if (entity != null) {
                     updateSubmissionProgress(entity)
                 }
@@ -430,39 +463,24 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteDraftClicked() {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showDeleteDraftConfirmation = true
-                )
-            )
-        }
+    private fun deleteDraftClicked(submissionType: Assignment.SubmissionType) {
+        updateShowDeleteDraftConfirmation(submissionType, true)
     }
 
-    private fun deleteDraftDismissed() {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showDeleteDraftConfirmation = false
-                )
-            )
-        }
+    private fun deleteDraftDismissed(submissionType: Assignment.SubmissionType) {
+        updateShowDeleteDraftConfirmation(submissionType, false)
     }
 
-    private fun deleteDraftSubmission() {
+    private fun deleteDraftSubmission(submissionType: Assignment.SubmissionType) {
         viewModelScope.launch {
-            createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-            _uiState.update {
-                it.copy(
-                    addSubmissionUiState = it.addSubmissionUiState.copy(
-                        showDeleteDraftConfirmation = false
-                    )
-                )
+            createSubmissionDao.deleteDraftByAssignmentIdAndType(assignmentId, apiPrefs.user?.id.orDefault(), submissionType.apiString)
+            updateShowDeleteDraftConfirmation(submissionType, false)
+            if (submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
+                onTextSubmissionChanged("")
+            } else if (submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
+                deleteAllFiles()
             }
-            onTextSubmissionChanged("")
-            deleteAllFiles()
-            updateDraftText()
+            updateDraftTextForSubmissionType(submissionType)
         }
     }
 
@@ -486,11 +504,33 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun updateSubmissionEnabled(enabled: Boolean) {
+    private fun updateSubmissionEnabled(submissionType: Assignment.SubmissionType, enabled: Boolean) {
         _uiState.update {
             it.copy(
                 addSubmissionUiState = it.addSubmissionUiState.copy(
-                    submitEnabled = enabled
+                    submissionTypes = it.addSubmissionUiState.submissionTypes.map { submissionTypeUiState ->
+                        if (submissionTypeUiState.submissionType == submissionType) {
+                            submissionTypeUiState.copyWith(submitEnabled = enabled)
+                        } else {
+                            submissionTypeUiState
+                        }
+                    }
+                )
+            )
+        }
+    }
+
+    private fun updateShowDeleteDraftConfirmation(submissionType: Assignment.SubmissionType, show: Boolean) {
+        _uiState.update {
+            it.copy(
+                addSubmissionUiState = it.addSubmissionUiState.copy(
+                    submissionTypes = it.addSubmissionUiState.submissionTypes.map { submissionTypeUiState ->
+                        if (submissionTypeUiState.submissionType == submissionType) {
+                            submissionTypeUiState.copyWith(submissionTypeUiState.draftUiState.copy(showDeleteDraftConfirmation = show))
+                        } else {
+                            submissionTypeUiState
+                        }
+                    }
                 )
             )
         }
@@ -526,7 +566,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             val hasFiles =
                 addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
                         (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
-            updateSubmissionEnabled(hasFiles)
+            updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_UPLOAD, hasFiles)
 
             viewModelScope.launch {
                 submissionHelper.saveDraftWithFiles(
@@ -536,7 +576,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     files
                 )
             }
-            updateDraftText(Date())
+            updateDraftTextForSubmissionType(Assignment.SubmissionType.ONLINE_UPLOAD, Date())
         } else {
             _uiState.update {
                 it.copy(
@@ -573,7 +613,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         val hasFiles =
             addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] is AddSubmissionTypeUiState.File &&
                     (addSubmissionUiState.submissionTypes[addSubmissionUiState.selectedSubmissionTypeIndex] as AddSubmissionTypeUiState.File).files.isNotEmpty()
-        updateSubmissionEnabled(hasFiles)
+        updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_UPLOAD, hasFiles)
 
         files.removeIf { it.fullPath == path }
 
@@ -586,12 +626,16 @@ class AssignmentDetailsViewModel @Inject constructor(
                     files
                 )
             }
-            updateDraftText(Date())
+            updateDraftTextForSubmissionType(Assignment.SubmissionType.ONLINE_UPLOAD, Date())
         } else {
             viewModelScope.launch {
-                createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
+                createSubmissionDao.deleteDraftByAssignmentIdAndType(
+                    assignmentId,
+                    apiPrefs.user?.id.orDefault(),
+                    Assignment.SubmissionType.ONLINE_UPLOAD.apiString
+                )
             }
-            updateDraftText()
+            updateDraftTextForSubmissionType(Assignment.SubmissionType.ONLINE_UPLOAD)
         }
     }
 
@@ -613,7 +657,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             )
         }
 
-        updateSubmissionEnabled(false)
+        updateSubmissionEnabled(Assignment.SubmissionType.ONLINE_UPLOAD, false)
     }
 
     private fun getUriContents(fileUri: Uri): FileSubmitObject? {

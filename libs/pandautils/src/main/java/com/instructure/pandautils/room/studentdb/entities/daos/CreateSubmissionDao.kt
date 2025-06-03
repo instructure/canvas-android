@@ -49,16 +49,24 @@ interface CreateSubmissionDao {
         userId: Long
     ): List<CreateSubmissionEntity>
 
+    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND submissionType = :submissionType")
+    suspend fun findSubmissionsByAssignmentIdAndType(
+        assignmentId: Long,
+        userId: Long,
+        submissionType: String
+    ): List<CreateSubmissionEntity>
+
     @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId LIMIT 1")
     fun findSubmissionByAssignmentIdLiveData(
         assignmentId: Long,
         userId: Long
     ): LiveData<CreateSubmissionEntity?>
 
-    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId LIMIT 1")
-    fun findSubmissionByAssignmentIdFlow(
+    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND submissionType = :submissionType LIMIT 1")
+    fun findSubmissionByAssignmentIdAndTypeFlow(
         assignmentId: Long,
-        userId: Long
+        userId: Long,
+        submissionType: String
     ): Flow<CreateSubmissionEntity?>
 
     @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId LIMIT 1")
@@ -67,14 +75,18 @@ interface CreateSubmissionDao {
         userId: Long
     ): LiveData<List<CreateSubmissionEntity>>
 
-    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND isDraft = 1 LIMIT 1")
-    fun findDraftSubmissionByAssignmentId(
+    @Query("SELECT * FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND isDraft = 1 AND submissionType = :submissionType LIMIT 1")
+    fun findDraftSubmissionByAssignmentIdAndType(
         assignmentId: Long,
-        userId: Long
+        userId: Long,
+        submissionType: String
     ): CreateSubmissionEntity?
 
     @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId")
     suspend fun deleteSubmissionsForAssignmentId(assignmentId: Long, userId: Long)
+
+    @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND submissionType = :submissionType")
+    suspend fun deleteSubmissionsForAssignmentIdAndType(assignmentId: Long, userId: Long, submissionType: String)
 
     @Query("UPDATE CreateSubmissionEntity SET currentFile = :currentFile, fileCount = :fileCount, progress = :progress WHERE id = :id")
     suspend fun updateProgress(currentFile: Long, fileCount: Long, progress: Double, id: Long)
@@ -90,4 +102,7 @@ interface CreateSubmissionDao {
 
     @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND isDraft = 1")
     suspend fun deleteDraftByAssignmentId(assignmentId: Long, userId: Long)
+
+    @Query("DELETE FROM CreateSubmissionEntity WHERE assignmentId = :assignmentId AND userId = :userId AND submissionType = :submissionType AND isDraft = 1")
+    suspend fun deleteDraftByAssignmentIdAndType(assignmentId: Long, userId: Long, submissionType: String)
 }

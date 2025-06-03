@@ -123,17 +123,27 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         )
     }
 
-    if (uiState.addSubmissionUiState.showDeleteDraftConfirmation) {
+    val selectedSubmissionType =
+        uiState.addSubmissionUiState.submissionTypes.getOrNull(uiState.addSubmissionUiState.selectedSubmissionTypeIndex)
+    if (selectedSubmissionType?.draftUiState?.showDeleteDraftConfirmation == true) {
         Modal(
             dialogState = ModalDialogState(
                 title = stringResource(R.string.assignmentDetails_deleteDraftTitle),
                 message = stringResource(R.string.assignmentDetails_deleteDraftMessage),
                 primaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftConfirm),
                 secondaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftCancel),
-                primaryButtonClick = uiState.addSubmissionUiState.onDraftDeleted,
-                secondaryButtonClick = uiState.addSubmissionUiState.onDismissDeleteDraftConfirmation
+                primaryButtonClick = { selectedSubmissionType.draftUiState.onDraftDeleted(selectedSubmissionType.submissionType) },
+                secondaryButtonClick = {
+                    selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation(
+                        selectedSubmissionType.submissionType
+                    )
+                }
             ),
-            onDismiss = uiState.addSubmissionUiState.onDismissDeleteDraftConfirmation
+            onDismiss = {
+                selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation(
+                    selectedSubmissionType.submissionType
+                )
+            }
         )
     }
 
@@ -297,7 +307,8 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
         HorizonSpace(SpaceSize.SPACE_24)
     }
     if (uiState.submissionTypes.isNotEmpty()) {
-        when (val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]) {
+        val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
+        when (selectedSubmissionType) {
             is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
                 uiState = selectedSubmissionType,
                 submissionInProgress = uiState.submissionInProgress
@@ -326,14 +337,14 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                 )
             }
         }
-        AnimatedVisibility(visible = uiState.draftDateString.isNotEmpty() && !uiState.submissionInProgress) {
+        AnimatedVisibility(visible = selectedSubmissionType.draftUiState.draftDateString.isNotEmpty() && !uiState.submissionInProgress) {
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    uiState.draftDateString,
+                    selectedSubmissionType.draftUiState.draftDateString,
                     style = HorizonTypography.p1,
                     color = HorizonColors.Text.timestamp()
                 )
@@ -343,14 +354,14 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                         backgroundColor = HorizonColors.Surface.pageSecondary(),
                         contentColor = HorizonColors.Text.error()
                     ),
-                    onClick = uiState.onDeleteDraftClicked,
+                    onClick = { selectedSubmissionType.draftUiState.onDeleteDraftClicked(selectedSubmissionType.submissionType) },
                     iconPosition = ButtonIconPosition.Start(R.drawable.delete),
                 )
             }
         }
         HorizonSpace(SpaceSize.SPACE_16)
         Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
-            val alpha = if (uiState.submitEnabled || uiState.submissionInProgress) 1f else 0.5f
+            val alpha = if (selectedSubmissionType.submitEnabled || uiState.submissionInProgress) 1f else 0.5f
             Box(
                 contentAlignment = Alignment.CenterEnd,
                 modifier = Modifier
@@ -376,7 +387,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                         label = stringResource(R.string.assignmentDetails_submitAssignment),
                         color = ButtonColor.Custom(backgroundColor = Color.Transparent, contentColor = HorizonColors.Text.surfaceColored()),
                         onClick = uiState.onSubmissionButtonClicked,
-                        enabled = uiState.submitEnabled
+                        enabled = selectedSubmissionType.submitEnabled
                     )
                 }
             }
@@ -417,9 +428,8 @@ fun AssignmentDetailsScreenAddSubmissionPreview() {
             instructions = "This is a test",
             ltiUrl = "",
             addSubmissionUiState = AddSubmissionUiState(
-                draftDateString = "Saved at 2023-10-01",
                 submissionTypes = listOf(
-                    AddSubmissionTypeUiState.File()
+                    AddSubmissionTypeUiState.File(draftUiState = DraftUiState(draftDateString = "Saved at 2023-10-01"))
                 ),
                 errorMessage = "Error occurred while submitting.",
             ),

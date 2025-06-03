@@ -17,6 +17,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.net.Uri
 import androidx.annotation.StringRes
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -67,24 +68,36 @@ data class AddSubmissionUiState(
     val selectedSubmissionTypeIndex: Int = 0,
     val onSubmissionTypeSelected: (Int) -> Unit = {},
     val onSubmissionButtonClicked: () -> Unit = {},
-    val draftDateString: String = "",
-    val onDeleteDraftClicked: () -> Unit = {},
-    val showDeleteDraftConfirmation: Boolean = false,
-    val onDismissDeleteDraftConfirmation: () -> Unit = {},
-    val onDraftDeleted: () -> Unit = {},
     val showSubmissionConfirmation: Boolean = false,
     val onDismissSubmissionConfirmation: () -> Unit = {},
     val onSubmitAssignment: () -> Unit = {},
     val submissionInProgress: Boolean = false,
-    val submitEnabled: Boolean = false,
     val errorMessage: String? = null,
 )
 
-sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
+sealed class AddSubmissionTypeUiState(
+    @StringRes val labelRes: Int,
+    val submissionType: Assignment.SubmissionType,
+    open val draftUiState: DraftUiState = DraftUiState(),
+    open val submitEnabled: Boolean = false,
+) {
+
+    abstract fun copyWith(
+        draftUiState: DraftUiState = this.draftUiState,
+        submitEnabled: Boolean = this.submitEnabled
+    ): AddSubmissionTypeUiState
+
     data class Text(
         val text: String = "",
         val onTextChanged: (String) -> Unit = {},
-    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
+        override val draftUiState: DraftUiState = DraftUiState(),
+        override val submitEnabled: Boolean = false
+    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText, Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
+        override fun copyWith(
+            draftUiState: DraftUiState,
+            submitEnabled: Boolean
+        ) = copy(draftUiState = draftUiState, submitEnabled = submitEnabled)
+    }
 
     data class File(
         val allowedTypes: List<String> = emptyList(),
@@ -92,13 +105,29 @@ sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
         val galleryPickerAllowed: Boolean = false,
         val files: List<AddSubmissionFileUiState> = emptyList(),
         val onFileAdded: (Uri) -> Unit = {},
-    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
+        override val draftUiState: DraftUiState = DraftUiState(),
+        override val submitEnabled: Boolean = false
+    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload, Assignment.SubmissionType.ONLINE_UPLOAD) {
+
+        override fun copyWith(
+            draftUiState: DraftUiState,
+            submitEnabled: Boolean
+        ) = copy(draftUiState = draftUiState, submitEnabled = submitEnabled)
+    }
 }
 
 data class AddSubmissionFileUiState(
     val name: String = "",
     val path: String? = null,
     val onDeleteClicked: () -> Unit = {},
+)
+
+data class DraftUiState(
+    val draftDateString: String = "",
+    val onDeleteDraftClicked: (Assignment.SubmissionType) -> Unit = {},
+    val showDeleteDraftConfirmation: Boolean = false,
+    val onDismissDeleteDraftConfirmation: (Assignment.SubmissionType) -> Unit = {},
+    val onDraftDeleted: (Assignment.SubmissionType) -> Unit = {},
 )
 
 data class ToolsBottomSheetUiState(

@@ -228,22 +228,4 @@ class HorizonSubmissionWorker @AssistedInject constructor(
             }
         }
     }
-
-    private suspend fun deleteSubmissionsForAssignment(
-        id: Long,
-        files: List<FileSubmitObject> = emptyList()
-    ) {
-        createSubmissionDao.findSubmissionsByAssignmentId(id, apiPrefs.user!!.id)
-            .forEach { submission ->
-                createFileSubmissionDao.findFilesForSubmissionId(submission.id).forEach { file ->
-                    // Delete the file for the old submission unless a new file or another database file depends on it (duplicate file being uploaded)
-                    if (!files.any { it.fullPath == file.fullPath } && createFileSubmissionDao
-                            .findFilesForPath(file.id, file.fullPath).isEmpty()) {
-                        FileUploadUtils.deleteTempFile(file.fullPath)
-                    }
-                }
-                createFileSubmissionDao.deleteFilesForSubmissionId(submission.id)
-            }
-        createSubmissionDao.deleteSubmissionsForAssignmentId(id, apiPrefs.user!!.id)
-    }
 }
