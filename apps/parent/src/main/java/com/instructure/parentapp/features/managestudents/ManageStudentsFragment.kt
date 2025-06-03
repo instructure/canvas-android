@@ -93,6 +93,8 @@ class ManageStudentsFragment : BaseCanvasFragment() {
                 viewModel.handleAction(ManageStudentsAction.Refresh)
                 context?.let { announceAccessibilityText(it, getString(R.string.unpairStudentSuccessfull)) }
             }
+
+            else -> {}
         }
     }
 
