@@ -23,6 +23,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.assertNoInternetConnectionDialog
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils.dismissNoInternetConnectionDialog
@@ -55,7 +56,7 @@ class OfflineLoginE2ETest : StudentTest() {
         loginWithUser(student1)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Assert that the Offline indicator is not displayed because we are in online mode yet.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline indicator is not displayed because we are in online mode yet.")
         dashboardPage.assertOfflineIndicatorNotDisplayed()
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
@@ -66,8 +67,9 @@ class OfflineLoginE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
+        refresh()
 
-        Log.d(STEP_TAG, "Assert that the Offline indicator is not displayed because we are in online mode yet.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline indicator is not displayed because we are in online mode yet.")
         dashboardPage.assertOfflineIndicatorNotDisplayed()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
@@ -77,26 +79,36 @@ class OfflineLoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
         leftSideNavigationDrawerPage.clickChangeUserMenu()
 
-        Log.d(STEP_TAG, "Assert that the previously logins has been displayed. Assert that '${student1.name}' and '${student2.name}' students are displayed within the previous login section.")
+        Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed. Assert that '${student1.name}' and '${student2.name}' students are displayed within the previous login section.")
         loginLandingPage.assertDisplaysPreviousLogins()
         loginLandingPage.assertPreviousLoginUserDisplayed(student1.name)
         loginLandingPage.assertPreviousLoginUserDisplayed(student2.name)
 
-        Log.d(STEP_TAG, "Try to click on the last saved school's button and assert that the 'No Internet Connection' dialog will be displayed. Dismiss the dialog.")
+        Log.d(STEP_TAG, "Try to click on the last saved school's button.")
         loginLandingPage.clickOnLastSavedSchoolButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is popping-up.")
         assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         dismissNoInternetConnectionDialog()
 
-        Log.d(STEP_TAG, "Try to click on the 'Find another school' button and assert that the 'No Internet Connection' dialog will be displayed. Dismiss the dialog.")
+        Log.d(STEP_TAG, "Try to click on the 'Find another school' button.")
         loginLandingPage.clickFindAnotherSchoolButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'No Internet Connection' dialog is popping-up.")
         assertNoInternetConnectionDialog()
+
+        Log.d(STEP_TAG, "Dismiss the 'No Internet Connection' dialog.")
         dismissNoInternetConnectionDialog()
 
         Log.d(STEP_TAG, "Login with the previous user, '${student1.name}', with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(student1)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
         dashboardPage.assertOfflineIndicatorDisplayed()
 
         Log.d(STEP_TAG, "Click on 'Change User' button on the left-side menu.")
@@ -105,8 +117,10 @@ class OfflineLoginE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Login with the previous user, '${student2.name}', with one click, by clicking on the user's name on the bottom.")
         loginLandingPage.loginWithPreviousUser(student2)
 
-        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered.")
         dashboardPage.waitForRender()
+
+        Log.d(ASSERTION_TAG, "Assert that the offline indicator is displayed to ensure we are in offline mode, and change user function is supported.")
         dashboardPage.assertOfflineIndicatorDisplayed()
     }
 
@@ -115,7 +129,7 @@ class OfflineLoginE2ETest : StudentTest() {
         sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
 
         if(lastSchoolSaved) {
-            Log.d(STEP_TAG,"Click 'Find Another School' button.")
+            Log.d(STEP_TAG, "Click 'Find Another School' button.")
             loginLandingPage.clickFindAnotherSchoolButton()
         }
         else {
@@ -123,10 +137,10 @@ class OfflineLoginE2ETest : StudentTest() {
             loginLandingPage.clickFindMySchoolButton()
         }
 
-        Log.d(STEP_TAG,"Enter domain: '${user.domain}'.")
+        Log.d(STEP_TAG, "Enter domain: '${user.domain}'.")
         loginFindSchoolPage.enterDomain(user.domain)
 
-        Log.d(STEP_TAG,"Click on 'Next' button on the Toolbar.")
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
         loginSignInPage.loginAs(user)
     }

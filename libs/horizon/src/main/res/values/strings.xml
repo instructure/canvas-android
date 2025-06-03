@@ -220,4 +220,20 @@
     <string name="ai_giveMeKeyTakeaways">Give me key takeaways</string>
     <string name="ai_tellMeMore">Tell me more about this topic</string>
     <string name="ai_generateFlashcards">Generate some study flashcards</string>
+    <string name="assignmentDetails_submitAssignment">Submit Assignment</string>
+    <string name="assignmentDetails_deleteDraft">Delete Draft</string>
+    <string name="assignmentDetails_textEntryHint">Add your text entry</string>
+    <string name="assignmentDetails_submissionSuccessTitle">Assignment Successfully Submitted!</string>
+    <string name="assignmentDetails_submissionSuccessSubtitle">We received your submission. You will be notified once it\'s been reviewed.</string>
+    <string name="assignmentDetails_submissionSuccessButton">View Submission</string>
+    <string name="assignmentDetails_attemptNumber">Attempt %1$d</string>
+    <string name="assignmentDetails_draftSaved">Saved at %1$s</string>
+    <string name="assignmentDetails_deleteDraftTitle">Delete Draft</string>
+    <string name="assignmentDetails_deleteDraftMessage">Once deleted, this draft cannot be recovered.</string>
+    <string name="assignmentDetails_deleteDraftCancel">Cancel</string>
+    <string name="assignmentDetails_deleteDraftConfirm">Delete Draft</string>
+    <string name="assignmentDetails_submissionConfirmationTitle">Confirm Submission</string>
+    <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
+    <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
+    <string name="assignmentDetails_submissionConfirmationConfirm">Submit Attempt</string>
 </resources>

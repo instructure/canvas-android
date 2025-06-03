@@ -51,14 +51,6 @@ android {
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
 
         testBuildType = "debug"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
-                )
-            }
-        }
     }
 
     bundle {
@@ -377,5 +369,4 @@ if (coverageEnabled) {
             xml.enabled  false
         }
     }
-
 }
