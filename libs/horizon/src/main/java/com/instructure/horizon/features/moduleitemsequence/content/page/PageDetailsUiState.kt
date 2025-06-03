@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
+import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class PageDetailsUiState(
@@ -23,4 +24,5 @@ data class PageDetailsUiState(
     val ltiButtonPressed: ((String) -> Unit)? = null,
     val urlToOpen: String? = null,
     val onUrlOpened: () -> Unit = {},
+    val notes: List<Note> = emptyList()
 )

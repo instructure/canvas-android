@@ -845,3 +845,23 @@ class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
         onLtiButtonPressed(ltiUrl)
     }
 }
+
+class JSTextSelectionInterface(
+    private val onTextSelect: (String) -> Unit,
+    private val onHighlightedTextClick: (String) -> Unit,
+) {
+
+    @JavascriptInterface
+    fun onTextSelected(text: String) {
+        onTextSelect(text)
+    }
+
+    @JavascriptInterface
+    fun onHighlightedTextClicked(noteId: String) {
+        onHighlightedTextClick(noteId)
+    }
+
+    companion object {
+        const val JS_INTERFACE_NAME = "TextSelectionInterface"
+    }
+}

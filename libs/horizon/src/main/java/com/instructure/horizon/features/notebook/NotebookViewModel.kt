@@ -18,10 +18,8 @@ package com.instructure.horizon.features.notebook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.NoteObjectType
-import com.instructure.canvasapi2.managers.NoteReaction
-import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.redwood.QueryNotesQuery
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -65,23 +63,7 @@ class NotebookViewModel @Inject constructor(
             cursorId = notesResponse.edges?.firstOrNull()?.cursor
             pageInfo = notesResponse.pageInfo
 
-            val notes = notesResponse.edges?.map { edge ->
-                val note = edge.node
-                Note(
-                    id = note.id,
-                    courseId = note.courseId.toLong(),
-                    objectId = note.objectId,
-                    objectType = NoteObjectType.fromValue(note.objectType)!!,
-                    userText = note.userText.orEmpty(),
-                    highlightedText = repository.parseHighlightedData(note.highlightData)?.selectedText.orEmpty(),
-                    updatedAt = note.updatedAt,
-                    type = when (note.reaction?.firstOrNull()) {
-                        NoteReaction.Important.value -> NotebookType.Important
-                        NoteReaction.Confusing.value -> NotebookType.Confusing
-                        else -> NotebookType.Important
-                    },
-                )
-            }.orEmpty()
+            val notes = notesResponse.mapToNotes()
 
             _uiState.update {
                 it.copy(

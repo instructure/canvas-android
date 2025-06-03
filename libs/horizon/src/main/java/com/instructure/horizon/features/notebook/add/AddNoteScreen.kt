@@ -143,7 +143,7 @@ private fun AddNoteScreenPreview() {
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",
-            textPosition = NoteHighlightedDataTextPosition(start = 0, end = 25)
+            range = NoteHighlightedDataTextPosition(startOffset = 0, endOffset = 25, startContainer = "text", endContainer = "text")
         ),
         userComment = TextFieldValue("This is an important part"),
         onUserCommentChanged = {},

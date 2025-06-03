@@ -54,10 +54,12 @@ class PageDetailsViewModel @Inject constructor(
             }
             val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
             val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty())
+            val notes = pageDetailsRepository.getNotes(courseId, pageDetails.id)
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
-                    pageHtmlContent = html
+                    pageHtmlContent = html,
+                    notes = notes
                 )
             }
             _uiState.update {

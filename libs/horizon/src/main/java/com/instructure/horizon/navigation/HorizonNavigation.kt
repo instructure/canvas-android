@@ -46,8 +46,10 @@ sealed class MainNavigationRoute(val route: String) {
         val courseId: String,
         val objectType: String,
         val objectId: String,
-        val highlightedTextStart: Int,
-        val highlightedTextEnd: Int,
+        val highlightedTextStartOffset: Int,
+        val highlightedTextEndOffset: Int,
+        val highlightedTextStartContainer: String,
+        val highlightedTextEndContainer: String,
         val highlightedText: String,
     ): MainNavigationRoute("add_notebook")
 

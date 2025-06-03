@@ -40,16 +40,20 @@ class AddNoteViewModel @Inject constructor(
     private val courseId: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().courseId
     private val objectType: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().objectType
     private val objectId: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().objectId
-    private val highlightedTextStartPosition: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStart
-    private val highlightedTextEndPosition: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEnd
+    private val highlightedTextStartOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartOffset
+    private val highlightedTextEndOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndOffset
+    private val highlightedTextStartContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartContainer
+    private val highlightedTextEndContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndContainer
     private val highlightedText: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedText
 
     private val _uiState = MutableStateFlow(AddNoteUiState(
         highlightedData = NoteHighlightedData(
             selectedText = highlightedText,
-            textPosition = NoteHighlightedDataTextPosition(
-                start = highlightedTextStartPosition,
-                end = highlightedTextEndPosition
+            range = NoteHighlightedDataTextPosition(
+                startOffset = highlightedTextStartOffset,
+                endOffset = highlightedTextEndOffset,
+                startContainer = highlightedTextStartContainer,
+                endContainer = highlightedTextEndContainer
             )
         ),
         onTypeChanged = ::onTypeChanged,

@@ -52,12 +52,14 @@ enum class NoteReaction(val value: String) {
 
 data class NoteHighlightedData(
     val selectedText: String,
-    val textPosition: NoteHighlightedDataTextPosition
+    val range: NoteHighlightedDataTextPosition
 )
 
 data class NoteHighlightedDataTextPosition(
-    val start: Int,
-    val end: Int
+    val startOffset: Int,
+    val endOffset: Int,
+    val startContainer: String,
+    val endContainer: String,
 )
 
 data class NoteItem(
