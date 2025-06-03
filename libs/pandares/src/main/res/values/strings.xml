@@ -907,6 +907,16 @@
         <item quantity="other">%s points</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pts</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pt</item>
+        <item quantity="other">\/ %.0f pts</item>
+    </plurals>
+
     <string name="timeLimit">Time Limit</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>
@@ -2068,4 +2078,5 @@
     <string name="speedGraderDetailsTabTitle">Details</string>
     <string name="a11y_contentDescription_expandPanel">Expand panel</string>
     <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
+    <string name="pointGradeHint">Write score here</string>
 </resources>

@@ -26,6 +26,8 @@ import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.StudentContextManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManagerImpl
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,5 +64,10 @@ class GraphQlApiModule {
     @Provides
     fun provideSubmissionContentManager(): SubmissionContentManager {
         return SubmissionContentManagerImpl()
+    }
+
+    @Provides
+    fun provideSubmissionGradeManager(): SubmissionGradeManager {
+        return SubmissionGradeManagerImpl()
     }
 }

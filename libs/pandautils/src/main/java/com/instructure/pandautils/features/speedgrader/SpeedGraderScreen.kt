@@ -16,6 +16,9 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -61,6 +64,8 @@ fun SpeedGraderScreen(
                 textColor = colorResource(id = R.color.textLightest),
             )
         },
+        modifier = Modifier.imePadding(),
+        contentWindowInsets = WindowInsets.ime
     ) { padding ->
         HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
             val submissionId = uiState.submissionIds[page]
