@@ -48,6 +48,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.traversalIndex
 import androidx.compose.ui.tooling.preview.Preview
@@ -142,6 +143,9 @@ fun CalendarScreen(
                         modifier = Modifier
                             .focusable()
                             .focusRequester(focusRequester)
+                            .semantics {
+                                heading()
+                            }
                     )
                     // This is needed to trigger accessibility focus on the calendar screen when the tab is selected
                     LaunchedEffect(key1 = triggerAccessibilityFocus, block = {
