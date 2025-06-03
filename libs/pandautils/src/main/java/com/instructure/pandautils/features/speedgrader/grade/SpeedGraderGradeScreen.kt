@@ -18,8 +18,17 @@ package com.instructure.pandautils.features.speedgrader.grade
 
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
+import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
 fun SpeedGraderGradeScreen() {
-    Text("SpeedGrader Grade Screen")
+    val activity = LocalContext.current.getFragmentActivity()
+    val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
+    val selectedAttemptId = speedGraderSharedViewModel.selectedAttemptId.collectAsStateWithLifecycle(null)
+
+    Text("SpeedGrader Grade Screen - Selected attempt id: ${selectedAttemptId.value}")
 }
