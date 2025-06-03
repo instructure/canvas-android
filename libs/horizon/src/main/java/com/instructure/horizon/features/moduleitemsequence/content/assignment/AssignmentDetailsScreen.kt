@@ -326,7 +326,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                 )
             }
         }
-        AnimatedVisibility(visible = uiState.draftDateString.isNotEmpty()) {
+        AnimatedVisibility(visible = uiState.draftDateString.isNotEmpty() && !uiState.submissionInProgress) {
             Row(
                 horizontalArrangement = Arrangement.End,
                 verticalAlignment = Alignment.CenterVertically,
