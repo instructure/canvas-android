@@ -28,6 +28,7 @@ import com.instructure.canvas.espresso.checkToastText
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -250,13 +251,12 @@ class SettingsE2ETest : ParentComposeTest() {
         val parent = data.parentsList[0]
         val parent2 = data.parentsList[1]
         val student = data.studentsList[0]
-        val DOMAIN = "mobileqa.beta"
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: '$DOMAIN.instructure.com.'")
-        loginFindSchoolPage.enterDomain(DOMAIN)
+        Log.d(STEP_TAG, "Enter domain: '${CanvasNetworkAdapter.canvasDomain}'")
+        loginFindSchoolPage.enterDomain(CanvasNetworkAdapter.canvasDomain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
@@ -304,7 +304,7 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
         inboxCoursePickerPage.selectCourseWithUser(course.name, student.shortName)
 
@@ -326,8 +326,8 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Find another school' button.")
         loginLandingPage.clickFindAnotherSchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: '$DOMAIN.instructure.com.'")
-        loginFindSchoolPage.enterDomain(DOMAIN)
+        Log.d(STEP_TAG, "Enter domain: '${CanvasNetworkAdapter.canvasDomain}'")
+        loginFindSchoolPage.enterDomain(CanvasNetworkAdapter.canvasDomain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
@@ -342,7 +342,7 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
         inboxCoursePickerPage.selectCourseWithUser(course.name, student.shortName)
 
@@ -420,7 +420,7 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open 'Inbox' menu.")
         leftSideNavigationDrawerPage.clickInbox()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
         inboxCoursePickerPage.selectCourseWithUser(course.name, student.shortName)
 

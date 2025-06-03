@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.dataseeding.api.ConversationsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.EnrollmentsApi
+import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.espresso.ViewUtils
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.student.BuildConfig
@@ -490,13 +491,12 @@ class SettingsE2ETest : StudentComposeTest() {
         val data = seedData(students = 2, courses = 1)
         val student = data.studentsList[0]
         val student2 = data.studentsList[1]
-        val DOMAIN = "mobileqa.beta"
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
         loginLandingPage.clickFindMySchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: '$DOMAIN.instructure.com.'")
-        loginFindSchoolPage.enterDomain(DOMAIN)
+        Log.d(STEP_TAG, "Enter domain: '${CanvasNetworkAdapter.canvasDomain}'")
+        loginFindSchoolPage.enterDomain(CanvasNetworkAdapter.canvasDomain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
@@ -538,7 +538,7 @@ class SettingsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to the Dashboard.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Open Inbox Page.")
+        Log.d(STEP_TAG, "Open Inbox Page.")
         dashboardPage.clickInboxTab()
 
         Log.d(STEP_TAG,"Click on 'New Message' button.")
@@ -556,8 +556,8 @@ class SettingsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the 'Find another school' button.")
         loginLandingPage.clickFindAnotherSchoolButton()
 
-        Log.d(STEP_TAG, "Enter domain: '$DOMAIN.instructure.com.'")
-        loginFindSchoolPage.enterDomain(DOMAIN)
+        Log.d(STEP_TAG, "Enter domain: '${CanvasNetworkAdapter.canvasDomain}'")
+        loginFindSchoolPage.enterDomain(CanvasNetworkAdapter.canvasDomain)
 
         Log.d(STEP_TAG, "Click on 'Next' button on the toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
@@ -566,10 +566,10 @@ class SettingsE2ETest : StudentComposeTest() {
         loginSignInPage.loginAs(student2)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open Inbox Page.")
+        Log.d(STEP_TAG, "Open Inbox Page.")
         dashboardPage.clickInboxTab()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
 
         Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is NOT displayed since it was set for another user.")
@@ -609,10 +609,10 @@ class SettingsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate back to the Dashboard.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG,"Open Inbox Page.")
+        Log.d(STEP_TAG, "Open Inbox Page.")
         dashboardPage.clickInboxTab()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
 
         Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature, '$secondSignatureText' text is displayed by default when the user opens the Compose New Message Page.")
@@ -627,10 +627,10 @@ class SettingsE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Login with user : '${student.name}', login id: '${student.loginId}' with 'one-click' login by selecting it from the 'Previous Logins' section.")
         loginLandingPage.loginWithPreviousUser(student)
 
-        Log.d(STEP_TAG,"Open Inbox Page.")
+        Log.d(STEP_TAG, "Open Inbox Page.")
         dashboardPage.clickInboxTab()
 
-        Log.d(STEP_TAG,"Click on 'New Message' button.")
+        Log.d(STEP_TAG, "Click on 'New Message' button.")
         inboxPage.pressNewMessageButton()
 
         Log.d(ASSERTION_TAG, "Assert that the previously set inbox signature text is displayed by default since we logged back with '${student.name}' student.")
