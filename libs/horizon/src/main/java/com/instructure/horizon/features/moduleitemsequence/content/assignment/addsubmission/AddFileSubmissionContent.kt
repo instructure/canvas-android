@@ -30,8 +30,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionFileUiState
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionTypeUiState
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDrop
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropBottomSheet
@@ -165,4 +168,22 @@ private fun takeVideoWithFileProvider(
     val uri = FileProvider.getUriForFile(context, authority, file)
     launcher.launch(uri)
     return uri
+}
+
+@Composable
+@Preview
+private fun AddFileSubmissionContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    AddFileSubmissionContent(
+        uiState = AddSubmissionTypeUiState.File(
+            cameraAllowed = true,
+            galleryPickerAllowed = true,
+            files = listOf(
+                AddSubmissionFileUiState(name = "file1.jpg", onDeleteClicked = {}),
+                AddSubmissionFileUiState(name = "file2.mp4", onDeleteClicked = {})
+            ),
+            onFileAdded = {}
+        ),
+        submissionInProgress = false
+    )
 }

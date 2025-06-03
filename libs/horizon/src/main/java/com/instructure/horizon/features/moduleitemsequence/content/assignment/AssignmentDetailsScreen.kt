@@ -132,18 +132,10 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                 message = stringResource(R.string.assignmentDetails_deleteDraftMessage),
                 primaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftConfirm),
                 secondaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftCancel),
-                primaryButtonClick = { selectedSubmissionType.draftUiState.onDraftDeleted(selectedSubmissionType.submissionType) },
-                secondaryButtonClick = {
-                    selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation(
-                        selectedSubmissionType.submissionType
-                    )
-                }
+                primaryButtonClick = selectedSubmissionType.draftUiState.onDraftDeleted,
+                secondaryButtonClick = selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation
             ),
-            onDismiss = {
-                selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation(
-                    selectedSubmissionType.submissionType
-                )
-            }
+            onDismiss = selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation
         )
     }
 
@@ -354,7 +346,7 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Mo
                         backgroundColor = HorizonColors.Surface.pageSecondary(),
                         contentColor = HorizonColors.Text.error()
                     ),
-                    onClick = { selectedSubmissionType.draftUiState.onDeleteDraftClicked(selectedSubmissionType.submissionType) },
+                    onClick = selectedSubmissionType.draftUiState.onDeleteDraftClicked,
                     iconPosition = ButtonIconPosition.Start(R.drawable.delete),
                 )
             }

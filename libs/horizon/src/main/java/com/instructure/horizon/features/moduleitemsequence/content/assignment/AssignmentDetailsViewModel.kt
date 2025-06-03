@@ -122,9 +122,9 @@ class AssignmentDetailsViewModel @Inject constructor(
                 val draftDate = getDraftDateString(draft?.lastActivityDate)
                 val draftUiState = DraftUiState(
                     draftDate,
-                    onDeleteDraftClicked = ::deleteDraftClicked,
-                    onDismissDeleteDraftConfirmation = ::deleteDraftDismissed,
-                    onDraftDeleted = ::deleteDraftSubmission
+                    onDeleteDraftClicked = { deleteDraftClicked(it) },
+                    onDismissDeleteDraftConfirmation = { deleteDraftDismissed(it) },
+                    onDraftDeleted = { deleteDraftSubmission(it) },
                 )
 
                 if (it == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {

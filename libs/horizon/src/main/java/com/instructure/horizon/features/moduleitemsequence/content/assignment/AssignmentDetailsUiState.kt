@@ -124,10 +124,10 @@ data class AddSubmissionFileUiState(
 
 data class DraftUiState(
     val draftDateString: String = "",
-    val onDeleteDraftClicked: (Assignment.SubmissionType) -> Unit = {},
+    val onDeleteDraftClicked: () -> Unit = {},
     val showDeleteDraftConfirmation: Boolean = false,
-    val onDismissDeleteDraftConfirmation: (Assignment.SubmissionType) -> Unit = {},
-    val onDraftDeleted: (Assignment.SubmissionType) -> Unit = {},
+    val onDismissDeleteDraftConfirmation: () -> Unit = {},
+    val onDraftDeleted: () -> Unit = {},
 )
 
 data class ToolsBottomSheetUiState(
