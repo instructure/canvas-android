@@ -40,7 +40,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
         ?: throw IllegalArgumentException("Missing studentId")
 
     private val _uiState =
-        MutableStateFlow(SpeedGraderGradingUiState(onScoreChange = this::onScoreChanged))
+        MutableStateFlow(SpeedGraderGradingUiState(onScoreChange = this::onScoreChanged, onPercentageChange = this::onPercentageChanged))
     val uiState = _uiState.asStateFlow()
 
     private lateinit var submissionId: String
@@ -98,5 +98,10 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun onPercentageChanged(percentage: Float?) {
+        val score = percentage?.let { (it / 100) * (_uiState.value.pointsPossible ?: 0.0) }
+        onScoreChanged(score?.toFloat())
     }
 }

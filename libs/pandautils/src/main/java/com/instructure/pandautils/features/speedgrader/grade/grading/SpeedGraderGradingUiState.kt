@@ -29,4 +29,5 @@ data class SpeedGraderGradingUiState(
     val pointsDeducted: Double? = null,
     val gradingType: GradingType? = null,
     val onScoreChange: (Float?) -> Unit,
+    val onPercentageChange: (Float?) -> Unit,
 )

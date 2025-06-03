@@ -2079,4 +2079,5 @@
     <string name="a11y_contentDescription_expandPanel">Expand panel</string>
     <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
     <string name="pointGradeHint">Write score here</string>
+    <string name="percentageGradeHint">Write percentage here</string>
 </resources>
