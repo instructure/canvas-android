@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.account.filepreview
 
+import android.net.Uri
 import java.io.File
 
 sealed class FilePreviewUiState {
@@ -23,7 +24,7 @@ sealed class FilePreviewUiState {
     ) : FilePreviewUiState()
 
     data class Media(
-        val url: String,
+        val uri: Uri,
         val thumbnailUrl: String,
         val contentType: String,
         val displayName: String

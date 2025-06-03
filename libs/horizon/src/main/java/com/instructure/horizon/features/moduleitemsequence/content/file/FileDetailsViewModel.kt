@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -142,12 +143,17 @@ class FileDetailsViewModel @Inject constructor(
         return when {
             contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
 
-            contentType.startsWith("video") || contentType.startsWith("audio") -> FilePreviewUiState.Media(
-                url,
-                thumbnailUrl,
-                contentType,
-                displayName
-            )
+            contentType.startsWith("video") || contentType.startsWith("audio") -> {
+                val tempFile: File? = fileCache.awaitFileDownload(url)
+                tempFile?.let {
+                    FilePreviewUiState.Media(
+                        Uri.fromFile(it),
+                        thumbnailUrl,
+                        contentType,
+                        displayName
+                    )
+                } ?: FilePreviewUiState.NoPreview
+            }
 
             contentType.startsWith("image") -> {
                 val tempFile: File? = fileCache.awaitFileDownload(url)

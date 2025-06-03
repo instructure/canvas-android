@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
@@ -138,13 +139,14 @@ class FileSubmissionContentViewModel @Inject constructor(
 
     private fun fileSelected(fileItem: FileItemUiState) {
         viewModelScope.tryLaunch {
+            _uiState.update { it.copy(filePreviewLoading = true) }
             val filePreview = getFilePreview(fileItem)
             _uiState.update {
-                it.copy(filePreview = filePreview)
+                it.copy(filePreview = filePreview, filePreviewLoading = false)
             }
         } catch {
             _uiState.update {
-                it.copy(filePreview = FilePreviewUiState.NoPreview)
+                it.copy(filePreview = FilePreviewUiState.NoPreview, filePreviewLoading = false)
             }
         }
     }
@@ -158,12 +160,17 @@ class FileSubmissionContentViewModel @Inject constructor(
         return when {
             contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
 
-            contentType.startsWith("video") || contentType.startsWith("audio") -> FilePreviewUiState.Media(
-                url,
-                thumbnailUrl,
-                contentType,
-                displayName
-            )
+            contentType.startsWith("video") || contentType.startsWith("audio") -> {
+                val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
+                tempFile?.let {
+                    FilePreviewUiState.Media(
+                        Uri.fromFile(it),
+                        thumbnailUrl,
+                        contentType,
+                        displayName
+                    )
+                } ?: FilePreviewUiState.NoPreview
+            }
 
             contentType.startsWith("image") -> {
                 val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
