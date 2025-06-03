@@ -177,7 +177,7 @@ class DashboardFragment : BaseCanvasFragment(), NavigationCallbacks {
                 context?.let { announceAccessibilityText(it, getString(R.string.unpairStudentSuccessfull)) }
             }
 
-            else -> {}
+            is AddStudentViewModelAction.UnpairStudentFailed -> {}
         }
     }
 
