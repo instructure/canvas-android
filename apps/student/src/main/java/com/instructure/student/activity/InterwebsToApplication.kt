@@ -26,20 +26,22 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import android.widget.Toast
-import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.AnalyticsParamConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.loginapi.login.util.QRLogin.performSSOLogin
 import com.instructure.loginapi.login.util.QRLogin.verifySSOLoginUri
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -47,7 +49,6 @@ import com.instructure.pandautils.utils.Utils.generateUserAgent
 import com.instructure.student.R
 import com.instructure.student.databinding.InterwebsToApplicationBinding
 import com.instructure.student.databinding.LoadingCanvasViewBinding
-import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.tasks.StudentLogoutTask
@@ -75,6 +76,9 @@ class InterwebsToApplication : BaseCanvasActivity() {
     @Inject
     lateinit var enabledTabs: EnabledTabs
 
+    @Inject
+    lateinit var analytics: Analytics
+
     private var loadingJob: Job? = null
 
     public override fun onCreate(savedInstanceState: Bundle?) {
@@ -98,6 +102,7 @@ class InterwebsToApplication : BaseCanvasActivity() {
             return
         }
 
+        logWidgetEvent()
         loadRoute(data, url!!)
     }
 
@@ -223,6 +228,12 @@ class InterwebsToApplication : BaseCanvasActivity() {
             Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
         } else {
             Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)
+        }
+    }
+
+    private fun logWidgetEvent() {
+        intent.getStringExtra(Const.WIDGET_EVENT)?.let {
+            PendoInitCallbackHandler.addEvent(it)
         }
     }
 

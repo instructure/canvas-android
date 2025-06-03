@@ -25,10 +25,10 @@ import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.appwidget.updateAll
 import androidx.glance.state.PreferencesGlanceStateDefinition
-import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.toJson
 import com.instructure.student.util.StudentPrefs
+import com.instructure.student.widget.WidgetLogger
 import com.instructure.student.widget.grades.courseselector.CourseSelectorActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
@@ -45,6 +45,9 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
     @Inject
     lateinit var updater: SingleGradeWidgetUpdater
 
+    @Inject
+    lateinit var widgetLogger: WidgetLogger
+
     private val coroutineScope = MainScope()
 
     override fun onUpdate(
@@ -55,12 +58,18 @@ class SingleGradeWidgetReceiver : GlanceAppWidgetReceiver() {
     }
 
     override fun onEnabled(context: Context?) {
-        Analytics.logEvent(AnalyticsEventConstants.WIDGET_SINGLE_GRADE_WIDGET_ADDED)
+        context?.let {
+            coroutineScope.launch(Dispatchers.IO) {
+                widgetLogger.logEvent(AnalyticsEventConstants.WIDGET_SINGLE_GRADE_WIDGET_ADDED, context)
+            }
+        }
         super.onEnabled(context)
     }
 
     override fun onDeleted(context: Context, appWidgetIds: IntArray) {
-        Analytics.logEvent(AnalyticsEventConstants.WIDGET_SINGLE_GRADE_WIDGET_DELETED)
+        coroutineScope.launch(Dispatchers.IO) {
+            widgetLogger.logEvent(AnalyticsEventConstants.WIDGET_SINGLE_GRADE_WIDGET_DELETED, context)
+        }
         for (widgetId in appWidgetIds) {
             StudentPrefs.remove(CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId)
         }

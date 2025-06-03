@@ -21,7 +21,7 @@ import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.action.actionParametersOf
 import androidx.glance.appwidget.action.ActionCallback
-import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.pandautils.utils.Const
 
 class LoggingStartActivityAction : ActionCallback {
 
@@ -42,11 +42,11 @@ class LoggingStartActivityAction : ActionCallback {
         glanceId: GlanceId,
         parameters: ActionParameters
     ) {
-        parameters[keyAnalyticsEvent]?.let { analyticsEvent ->
-            Analytics.logEvent(analyticsEvent)
-        }
         parameters[keyIntent]?.let {
             it.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+            parameters[keyAnalyticsEvent]?.let { analyticsEvent ->
+                it.putExtra(Const.WIDGET_EVENT, analyticsEvent)
+            }
             context.startActivity(it)
         }
     }

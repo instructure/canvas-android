@@ -38,6 +38,10 @@ object Analytics {
         Pendo.track(eventName, emptyMap())
     }
 
+    fun isSessionActive(): Boolean {
+        return !Pendo.getAccountId().isNullOrEmpty()
+    }
+
     fun setUserProperty(propertyName: String, propertyValue: String) {
 
     }
