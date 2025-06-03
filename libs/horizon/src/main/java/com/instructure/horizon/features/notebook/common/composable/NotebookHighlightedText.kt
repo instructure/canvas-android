@@ -36,6 +36,7 @@ import com.instructure.pandautils.compose.modifiers.conditional
 fun NotebookHighlightedText(
     text: String,
     type: NotebookType?,
+    modifier: Modifier = Modifier
 ) {
     var lineCount = 1
     val lineList = mutableListOf<Float>()
@@ -50,7 +51,7 @@ fun NotebookHighlightedText(
                 lineList.add(textLayoutResult.getLineRight(i))
             }
         },
-        modifier = Modifier
+        modifier = modifier
             .conditional(lineColor != null) {
                 background(lineColor!!.copy(alpha = 0.2f))
             }
