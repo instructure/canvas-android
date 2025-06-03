@@ -39,6 +39,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -50,13 +52,16 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.common.primitives.Floats.max
+import com.instructure.canvasapi2.type.GradingType
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.orDefault
+import java.text.DecimalFormat
+import kotlin.math.round
 import kotlin.math.roundToInt
-import com.instructure.pandautils.compose.CanvasTheme
 
 @Composable
 fun SpeedGraderGradingScreen() {
@@ -89,6 +94,10 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
         ) {
 
             when (uiState.gradingType) {
+                GradingType.percent -> {
+                    PercentageGradingTypeInput(uiState)
+                }
+
                 else -> {
                     PointGradingTypeInput(uiState)
                 }
@@ -99,7 +108,90 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
+private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val numberFormatter = DecimalFormat("0.#")
+    val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
+    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
+    var textFieldScore by remember { mutableStateOf(grade) }
+
+    val maxScore = 100f
+    val sliderState = rememberSliderState(
+        value = sliderDrivenScore.coerceAtLeast(0f),
+        valueRange = 0f..maxScore,
+    )
+
+    LaunchedEffect(textFieldScore) {
+        val scoreAsFloat = textFieldScore.toFloatOrNull()
+        if (scoreAsFloat != uiState.enteredScore) {
+            uiState.onPercentageChange(scoreAsFloat)
+        }
+    }
+
+    LaunchedEffect(grade) {
+        val newScore = grade.toFloatOrNull()
+        if (textFieldScore != newScore?.toString()) {
+            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
+        }
+        if (sliderDrivenScore != (newScore ?: 0f)) {
+            sliderDrivenScore = newScore ?: 0f
+            sliderState.value = (newScore ?: 0f).coerceAtLeast(0f)
+        }
+    }
+
+    LaunchedEffect(sliderState.value) {
+        val newScoreFromSlider = sliderState.value
+        if (sliderDrivenScore != newScoreFromSlider) {
+            sliderDrivenScore = round(newScoreFromSlider)
+            uiState.onPercentageChange(sliderDrivenScore)
+            textFieldScore = numberFormatter.format(sliderDrivenScore)
+        }
+    }
+
+    Column {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.grade),
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            BasicTextFieldWithHintDecoration(
+                modifier = Modifier
+                    .padding(end = 8.dp),
+                value = textFieldScore,
+                onValueChange = {
+                    textFieldScore = it
+                },
+                hint = stringResource(R.string.percentageGradeHint),
+                hintColor = colorResource(R.color.textPlaceholder),
+                textColor = LocalCourseColor.current,
+            )
+            Text(
+                text = "%",
+                fontSize = 16.sp,
+                color = colorResource(R.color.textPlaceholder),
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+
+        Slider(
+            modifier = Modifier.padding(top = 16.dp),
+            state = sliderState,
+            colors = SliderDefaults.colors(
+                thumbColor = LocalCourseColor.current,
+                activeTrackColor = LocalCourseColor.current,
+                inactiveTrackColor = LocalCourseColor.current.copy(alpha = 0.2f),
+                inactiveTickColor = LocalCourseColor.current
+            )
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val haptic = LocalHapticFeedback.current
     var sliderDrivenScore by remember { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
     var textFieldScore by remember { mutableStateOf(uiState.enteredScore?.toString() ?: "") }
 
@@ -136,6 +228,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     }
 
     LaunchedEffect(sliderState.value) {
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         val newScoreFromSlider = sliderState.value.roundToInt().toFloat()
         if (sliderDrivenScore != newScoreFromSlider) {
             sliderDrivenScore = newScoreFromSlider
@@ -184,7 +277,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
-        Slider(modifier = Modifier.padding(top = 16.dp), state = sliderState,
+        Slider(
+            modifier = Modifier.padding(top = 16.dp), state = sliderState,
             colors = SliderDefaults.colors(
                 thumbColor = LocalCourseColor.current,
                 activeTrackColor = LocalCourseColor.current,
@@ -206,10 +300,32 @@ private fun SpeedGraderGradingContentPreview() {
                 enteredScore = 15.0f,
                 grade = "A",
                 score = 15.0,
-                onScoreChange = {}
+                onScoreChange = {},
+                gradingType = GradingType.points,
+                onPercentageChange = {}
             )
         )
     }
 }
+
+@Preview
+@Composable
+private fun SpeedGraderGradingContentPercentagePreview() {
+    CanvasTheme(courseColor = Color.Blue) {
+        SpeedGraderGradingContent(
+            SpeedGraderGradingUiState(
+                pointsPossible = 20.0,
+                enteredGrade = "95.5%",
+                enteredScore = 18f,
+                grade = "A",
+                score = 15.0,
+                onScoreChange = {},
+                gradingType = GradingType.percent,
+                onPercentageChange = {}
+            )
+        )
+    }
+}
+
 
 
