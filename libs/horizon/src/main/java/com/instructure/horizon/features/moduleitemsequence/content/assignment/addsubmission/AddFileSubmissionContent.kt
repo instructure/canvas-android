@@ -48,33 +48,60 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
 
     val context = LocalContext.current
     val cameraPermission = Manifest.permission.CAMERA
-    var imageUri by remember {
+    var mediaUri by remember {
         mutableStateOf<Uri?>(null)
     }
-    val launcher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
+    val photoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
-            imageUri?.let {
+            mediaUri?.let {
                 uiState.onFileAdded(it)
             }
         }
     }
 
-    val permissionLauncher = rememberLauncherForActivityResult(
+    val photoPermissionLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission(),
         onResult = { isGranted ->
             if (isGranted) {
                 showBottomSheet = false
-                imageUri = takePictureWithFileProvider(context, launcher)
+                mediaUri = takePictureWithFileProvider(context, photoLauncher)
             }
         }
     )
 
-    val onCameraClick: () -> Unit = {
+    val onCameraPhotoClick: () -> Unit = {
         if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
             showBottomSheet = false
-            imageUri = takePictureWithFileProvider(context, launcher)
+            mediaUri = takePictureWithFileProvider(context, photoLauncher)
         } else {
-            permissionLauncher.launch(cameraPermission)
+            photoPermissionLauncher.launch(cameraPermission)
+        }
+    }
+
+    val videoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CaptureVideo()) { success ->
+        if (success) {
+            mediaUri?.let {
+                uiState.onFileAdded(it)
+            }
+        }
+    }
+
+    val videoPermissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission(),
+        onResult = { isGranted ->
+            if (isGranted) {
+                showBottomSheet = false
+                mediaUri = takeVideoWithFileProvider(context, videoLauncher)
+            }
+        }
+    )
+
+    val onCameraVideoClick: () -> Unit = {
+        if (ContextCompat.checkSelfPermission(context, cameraPermission) == PackageManager.PERMISSION_GRANTED) {
+            showBottomSheet = false
+            mediaUri = takeVideoWithFileProvider(context, videoLauncher)
+        } else {
+            videoPermissionLauncher.launch(cameraPermission)
         }
     }
 
@@ -93,7 +120,8 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
         FileDropBottomSheet(
             onDismiss = { showBottomSheet = false }, callbacks = FileDropBottomSheetCallbacks(
                 onChoosePhoto = if (uiState.galleryPickerAllowed) onGalleryClick else null,
-                onTakePhoto = if (uiState.cameraAllowed) onCameraClick else null,
+                onTakePhoto = if (uiState.cameraAllowed) onCameraPhotoClick else null,
+                onTakeVideo = if (uiState.cameraAllowed) onCameraVideoClick else null,
                 onUploadFile = {
                     showBottomSheet = false
                     filePickerLauncher.launch("*/*")
@@ -120,6 +148,18 @@ private fun takePictureWithFileProvider(
     launcher: ActivityResultLauncher<Uri>
 ): Uri {
     val fileName = "pic_${System.currentTimeMillis()}.jpg"
+    val file = File(context.externalCacheDir, fileName)
+    val authority = context.packageName + Const.FILE_PROVIDER_AUTHORITY
+    val uri = FileProvider.getUriForFile(context, authority, file)
+    launcher.launch(uri)
+    return uri
+}
+
+private fun takeVideoWithFileProvider(
+    context: Context,
+    launcher: ActivityResultLauncher<Uri>
+): Uri {
+    val fileName = "vid_${System.currentTimeMillis()}.mp4"
     val file = File(context.externalCacheDir, fileName)
     val authority = context.packageName + Const.FILE_PROVIDER_AUTHORITY
     val uri = FileProvider.getUriForFile(context, authority, file)

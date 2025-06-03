@@ -35,6 +35,7 @@ import com.instructure.horizon.horizonui.molecules.BottomSheetActionState
 data class FileDropBottomSheetCallbacks(
     val onChoosePhoto: (() -> Unit)? = null,
     val onTakePhoto: (() -> Unit)? = null,
+    val onTakeVideo: (() -> Unit)? = null,
     val onUploadFile: () -> Unit = {}
 )
 
@@ -61,9 +62,19 @@ fun FileDropBottomSheet(
             if (callbacks.onTakePhoto != null) {
                 add(
                     BottomSheetActionState(
-                        label = stringResource(R.string.fileDropSheet_takePhotoOrVideo),
+                        label = stringResource(R.string.fileDropSheet_takePhoto),
                         iconRes = R.drawable.camera,
                         onClick = callbacks.onTakePhoto
+                    )
+                )
+            }
+
+            if (callbacks.onTakeVideo != null) {
+                add(
+                    BottomSheetActionState(
+                        label = stringResource(R.string.fileDropSheet_takeVideo),
+                        iconRes = R.drawable.videocam,
+                        onClick = callbacks.onTakeVideo
                     )
                 )
             }
@@ -95,6 +106,7 @@ fun FileDropBottomSheetAllItemsPreview() {
         callbacks = FileDropBottomSheetCallbacks(
             onChoosePhoto = {},
             onTakePhoto = {},
+            onTakeVideo = {},
             onUploadFile = {}
         )
     )
