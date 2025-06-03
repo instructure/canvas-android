@@ -14,17 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader.grade
+package com.instructure.pandautils.features.speedgrader.grade.grading
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
+import com.instructure.canvasapi2.type.GradingType
 
-@Composable
-fun SpeedGraderGradeScreen() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        SpeedGraderGradingScreen()
-    }
-}
+data class SpeedGraderGradingUiState(
+    val loading: Boolean = true,
+    val pointsPossible: Double? = null,
+    val enteredGrade: String? = null,
+    val enteredScore: Float? = null,
+    val grade: String? = null,
+    val score: Double? = null,
+    val lateText: String? = null,
+    val pointsDeducted: Double? = null,
+    val gradingType: GradingType? = null,
+    val onScoreChange: (Float?) -> Unit,
+)

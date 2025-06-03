@@ -28,9 +28,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Card
@@ -74,8 +76,47 @@ fun DraggableResizableLayout(
     minTopHeightDp: Dp = 56.dp,
     initialAnchor: AnchorPoints = AnchorPoints.TOP,
 ) {
-    val coroutineScope = rememberCoroutineScope()
+
     val density = LocalDensity.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val imeInsets = WindowInsets.ime
+    val isKeyboardActuallyVisible by remember {
+        derivedStateOf { imeInsets.getBottom(density) > 0 }
+    }
+
+    var lastKeyboardInducedSnapTo by remember { mutableStateOf<AnchorPoints?>(null) }
+
+    LaunchedEffect(isKeyboardActuallyVisible, anchoredDraggableState.anchors) {
+        if (anchoredDraggableState.anchors.size == 0) {
+            return@LaunchedEffect
+        }
+
+        val currentTarget = anchoredDraggableState.targetValue
+
+        if (isKeyboardActuallyVisible) {
+            val targetAnchor = AnchorPoints.TOP
+            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor)) {
+                if (currentTarget != targetAnchor) {
+                    coroutineScope.launch {
+                        anchoredDraggableState.animateTo(targetAnchor)
+                        lastKeyboardInducedSnapTo = targetAnchor
+                    }
+                }
+            }
+        } else {
+            val targetAnchor = AnchorPoints.MIDDLE
+            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor)) {
+                if (currentTarget != targetAnchor) {
+                    coroutineScope.launch {
+                        anchoredDraggableState.animateTo(targetAnchor)
+                        lastKeyboardInducedSnapTo = targetAnchor
+                    }
+                }
+            }
+        }
+    }
+
     val minBottomHeightPx =
         remember(minBottomHeightDp) { with(density) { minBottomHeightDp.toPx() } }
     val minTopHeightPx = remember(minBottomHeightDp) { with(density) { minTopHeightDp.toPx() } }

@@ -13,18 +13,20 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */
-package com.instructure.pandautils.features.speedgrader.grade
+ */package com.instructure.pandautils.features.speedgrader.grade.grading
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-@Composable
-fun SpeedGraderGradeScreen() {
-    Column(modifier = Modifier.fillMaxSize()) {
-        SpeedGraderGradingScreen()
+@Module
+@InstallIn(ViewModelComponent::class)
+class SpeedGraderGradingModule {
+
+    @Provides
+    fun provideSpeedGraderGradingRepository(submissionGradeManager: SubmissionGradeManager): SpeedGraderGradingRepository {
+        return SpeedGraderGradingRepository(submissionGradeManager)
     }
 }
