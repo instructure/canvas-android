@@ -30,6 +30,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.features.notebook.common.js.JSTextSelectionInterface.Companion.addTextSelectionInterface
+import com.instructure.horizon.features.notebook.common.js.JSTextSelectionInterface.Companion.highlightNotes
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -42,7 +44,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.views.JSInterface
-import com.instructure.pandautils.views.JSTextSelectionInterface
 
 @Composable
 fun PageDetailsContentScreen(
@@ -79,17 +80,10 @@ fun PageDetailsContentScreen(
                         if (uiState.ltiButtonPressed != null) {
                             addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
                         }
-
-                        addJavascriptInterface(JSTextSelectionInterface(
-                            { Log.d("PageDetailsContentScreen", "Text selected: $it") },
-                            { Log.d("PageDetailsContentScreen", "Note clicked: $it") },
-                        ), JSTextSelectionInterface.JS_INTERFACE_NAME)
-
-                        evaluateJavascript("""
-                            javascript:(function() { document.addEventListener("selectionchange", () => {
-                              ${JSTextSelectionInterface.JS_INTERFACE_NAME}.onTextSelected(document.getSelection().toString());
-                            })})();
-                        """.trimIndent(), null)
+                        addTextSelectionInterface(
+                            onTextSelect = { Log.d("PageDetailsContentScreen", "Text selected: $it") },
+                            onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") }
+                        )
                     },
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
@@ -97,94 +91,12 @@ fun PageDetailsContentScreen(
                     ),
                     webViewCallbacks = ComposeWebViewCallbacks(
                         onPageFinished = { webView, _ ->
-                            webView.addJavascriptInterface(JSTextSelectionInterface(
-                                { Log.d("PageDetailsContentScreen", "Text selected: $it") },
-                                { Log.d("PageDetailsContentScreen", "Note clicked: $it") },
-                            ), JSTextSelectionInterface.JS_INTERFACE_NAME)
+                            webView.addTextSelectionInterface(
+                                onTextSelect = { Log.d("PageDetailsContentScreen", "Text selected: $it") },
+                                onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") }
+                            )
 
-                            webView.evaluateJavascript("""
-                                // Add CSS
-                                const style = document.createElement('style');
-                                style.textContent = `
-                                  .important-highlight {
-                                    background-color: rgba(0, 0, 255, 0.2);
-                                    text-decoration: underline;
-                                    text-decoration-color: rgba(0, 0, 255, 1);
-                                  }
-                                  .confusing-highlight {
-                                    background-color: rgba(255, 0, 0, 0.2);
-                                    text-decoration: underline;
-                                    text-decoration-color: rgba(255, 0, 0, 1);
-                                  }
-                                `;
-                                document.head.appendChild(style);
-                                
-                                function getFirstTextNode(node) {
-                                    if (node.nodeType === Node.TEXT_NODE) return node;
-                                    for (const child of node.childNodes) {
-                                        const result = getFirstTextNode(child);
-                                        if (result) return result;
-                                    }
-                                    return null;
-                                }
-                                function getTextNodeByXPath(path) {
-                                    const xpathResult = document.evaluate(
-                                        '/' + path,
-                                        document.body, // relative to <body>
-                                        null,
-                                        XPathResult.FIRST_ORDERED_NODE_TYPE,
-                                        null
-                                    );
-
-                                    let node = xpathResult.singleNodeValue;
-
-                                    // Ensure it's a Text node
-                                    if (!node) return null;
-
-                                    if (node.nodeType === Node.TEXT_NODE) {
-                                        return node;
-                                    }
-
-                                    // Find the first text descendant
-                                    return getFirstTextNode(node);
-                                }
-                                
-                                function highlightSelection(noteId, startOffset, startContainer, endOffset, endContainer, noteReactionString) {
-                                  const startNode = getTextNodeByXPath(startContainer);
-                                  const endNode = getTextNodeByXPath(endContainer);
-                                  const range = document.createRange();
-                                    
-                                  console.log(startNode.textContent.length);
-                                  console.log(endNode.textContent.length);
-                                  range.setStart(startNode, startOffset);
-                                  try {
-                                    range.setEnd(endNode, endOffset);
-                                  } catch (e) {
-                                    range.setEnd(startNode, startNode.textContent.length);
-                                  }
-                                  const span = document.createElement('span');
-                                  if (noteReactionString === 'Confusing') {
-                                  span.className = 'confusing-highlight';
-                                  } else if (noteReactionString === 'Important') {
-                                    span.className = 'important-highlight';
-                                  } else {
-                                    span.className = 'important-highlight';
-                                  }
-                                  span.onclick = function() { ${JSTextSelectionInterface.JS_INTERFACE_NAME}.onHighlightedTextClicked(noteId); };
-                                  
-                                  range.surroundContents(span);
-    
-                                }
-                                javascript:(function() { document.addEventListener("selectionchange", () => {
-                                  ${JSTextSelectionInterface.JS_INTERFACE_NAME}.onTextSelected(document.getSelection().toString());
-                                  //highlightSelection(document.getSelection().getRangeAt(0), "Important");
-                                  //document.getSelection().removeAllRanges();
-                                })})();
-                            """.trimIndent(), null)
-
-                            uiState.notes.forEach { note ->
-                                webView.evaluateJavascript("javascript:highlightSelection('${note.id}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}')", null)
-                            }
+                            webView.highlightNotes(uiState.notes)
                         }
                     )
                 )
