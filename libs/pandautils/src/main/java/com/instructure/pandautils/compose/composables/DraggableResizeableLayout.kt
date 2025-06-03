@@ -58,6 +58,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.utils.toDp
 import kotlinx.coroutines.launch
 
@@ -264,7 +265,7 @@ fun DraggableResizableLayout(
                                     }
                                 }) {
                                     Icon(
-                                        tint = colorResource(R.color.textInfo),
+                                        tint = LocalCourseColor.current,
                                         painter = painterResource(R.drawable.ic_collapse_bottomsheet),
                                         contentDescription = stringResource(R.string.a11y_contentDescription_collapsePanel),
                                     )
@@ -276,7 +277,7 @@ fun DraggableResizableLayout(
                                     }
                                 }) {
                                     Icon(
-                                        tint = colorResource(R.color.textInfo),
+                                        tint = LocalCourseColor.current,
                                         painter = painterResource(R.drawable.ic_expand_bottomsheet),
                                         contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
                                     )
@@ -306,7 +307,7 @@ fun DraggableResizableLayout(
                             }) {
                                 Icon(
                                     painter = painterResource(R.drawable.arrow_right),
-                                    tint = colorResource(R.color.textInfo),
+                                    tint = LocalCourseColor.current,
                                     contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
                                     modifier = Modifier.rotate(
                                         when (anchoredDraggableState.currentValue) {

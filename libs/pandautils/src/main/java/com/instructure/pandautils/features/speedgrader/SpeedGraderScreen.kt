@@ -28,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -37,6 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 
 @Composable
@@ -58,7 +58,7 @@ fun SpeedGraderScreen(
             CanvasAppBar(
                 title = uiState.assignmentName,
                 subtitle = uiState.courseName,
-                backgroundColor = Color(uiState.courseColor),
+                backgroundColor = LocalCourseColor.current,
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_back_arrow,
                 textColor = colorResource(id = R.color.textLightest),
