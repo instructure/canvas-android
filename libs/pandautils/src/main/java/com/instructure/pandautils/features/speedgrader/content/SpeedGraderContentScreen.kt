@@ -70,6 +70,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
@@ -126,14 +127,14 @@ private fun SpeedGraderContentScreen(
                 dueDate = uiState.dueDate,
                 expanded = expanded,
                 onExpandClick = onExpandClick,
-                courseColor = Color(uiState.courseColor)
+                courseColor = LocalCourseColor.current
             )
             CanvasDivider()
             if (uiState.attemptSelectorUiState.items.size > 1 || uiState.attachmentSelectorUiState.items.isNotEmpty()) {
                 SelectorContent(
                     attemptSelectorUiState = uiState.attemptSelectorUiState,
                     attachmentSelectorUiState = uiState.attachmentSelectorUiState,
-                    courseColor = Color(uiState.courseColor)
+                    courseColor = LocalCourseColor.current
                 )
                 CanvasDivider()
             }
@@ -468,8 +469,7 @@ private fun SpeedGraderContentScreenPreview() {
                 SelectorItem(3, "Item 3")
             ),
             selectedItemId = 2
-        ),
-        courseColor = android.graphics.Color.RED
+        )
     )
 
     SpeedGraderContentScreen(

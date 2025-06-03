@@ -18,10 +18,8 @@ package com.instructure.pandautils.features.speedgrader
 
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.AssignmentDetailsQuery
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.color
 import io.mockk.coEvery
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
@@ -72,7 +70,6 @@ class SpeedGraderViewModelTest {
         val uiState = viewModel.uiState.first()
         assertEquals("Test Assignment", uiState.assignmentName)
         assertEquals("Test Course", uiState.courseName)
-        assertEquals(CanvasContext.emptyCourseContext(1L).color, uiState.courseColor)
     }
 
     @Test

@@ -28,14 +28,11 @@ import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
-import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -105,10 +102,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                     items = attempts,
                     selectedItemId = attempts.firstOrNull()?.id,
                     onItemSelected = { onAttemptSelected(submission, submissionHistory, it) }
-                ),
-                courseColor = CanvasContext.emptyCourseContext(
-                    submissionFields?.assignment?.courseId?.toLongOrNull().orDefault()
-                ).color
+                )
             )
         }
     }

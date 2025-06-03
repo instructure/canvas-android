@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
@@ -52,6 +53,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.features.speedgrader.details.SpeedGraderDetailsScreen
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradeScreen
@@ -80,13 +83,13 @@ fun SpeedGraderBottomSheet(
                 .requiredHeight(64.dp),
             selectedTabIndex = selectedTab,
             containerColor = colorResource(R.color.backgroundLightestElevated),
-            contentColor = colorResource(R.color.textInfo),
+            contentColor = LocalCourseColor.current,
             indicator = {
                 TabRowDefaults.PrimaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(selectedTab, matchContentSize = false),
                     width = Dp.Unspecified,
                     height = 1.5.dp,
-                    color = colorResource(R.color.textInfo)
+                    color = LocalCourseColor.current
                 )
             }
         ) {
@@ -174,5 +177,7 @@ enum class SpeedGraderTab(
 @Preview
 @Composable
 private fun SpeedGraderBottomSheetPreview() {
-    SpeedGraderBottomSheet(null, 1L, 1L)
+    CanvasTheme(courseColor = Color.Blue) {
+        SpeedGraderBottomSheet(null, 1L, 1L)
+    }
 }
