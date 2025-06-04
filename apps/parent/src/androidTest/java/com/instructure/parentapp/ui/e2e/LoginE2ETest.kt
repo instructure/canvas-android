@@ -367,10 +367,13 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Delete' button on the 'Delete Student' dialog.")
         studentAlertSettingsPage.clickDeleteStudentButton()
+        composeTestRule.waitForIdle()
+
+        Thread.sleep(8000)
 
         Log.d(ASSERTION_TAG, "Assert that the previously deleted student is not displayed on the 'Manage Students' page anymore.")
         manageStudentsPage.assertStudentItemNotDisplayed(student.shortName)
-        //manageStudentsPage.assertNoStudentsDisplayed()
+        manageStudentsPage.assertNoStudentsDisplayed()
     }
 
 }
