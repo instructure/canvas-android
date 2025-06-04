@@ -44,6 +44,7 @@ query SubmissionCommentsQuery($submissionId: ID!) {
                         contentType
                         createdAt
                         displayName
+                        title
                         size
                         thumbnailUrl
                         url

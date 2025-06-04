@@ -21,6 +21,7 @@ data class SpeedGraderComment(
 
 data class SpeedGraderCommentAttachment(
     val id: String = "",
+    val title: String = "",
     val displayName: String = "",
     val contentType: String = "",
     val size: String = "",

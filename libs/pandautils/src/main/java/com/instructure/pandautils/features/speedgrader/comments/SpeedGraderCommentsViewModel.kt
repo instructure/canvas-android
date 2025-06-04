@@ -64,11 +64,12 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                                     SpeedGraderCommentAttachment(
                                         id = attachment.id,
                                         url = attachment.url ?: "",
-                                        thumbnailUrl = attachment.thumbnailUrl ?: "",
+                                        thumbnailUrl = attachment.thumbnailUrl,
                                         createdAt = attachment.createdAt.toString(),
+                                        title = attachment.title ?: "",
                                         displayName = attachment.displayName ?: "",
                                         contentType = attachment.contentType ?: "",
-                                        size = attachment.toString(),
+                                        size = attachment.size ?: "",
 
                                     )
                                 } ?: emptyList()

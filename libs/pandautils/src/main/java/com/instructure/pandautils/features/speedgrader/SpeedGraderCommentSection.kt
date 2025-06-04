@@ -19,7 +19,10 @@
 package com.instructure.pandautils.features.speedgrader
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,6 +36,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -41,8 +45,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -52,6 +58,7 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderComment
 import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentAttachment
+import com.instructure.pandautils.utils.iconRes
 
 
 @Composable
@@ -106,7 +113,7 @@ fun SpeedGraderOwnCommentItem(
                 .wrapContentWidth(Alignment.End)
                 .background(
                     color = colorResource(id = R.color.messageBackground),
-                    shape = RoundedCornerShape(size = 8.dp)
+                    shape = RoundedCornerShape(size = 16.dp)
                 )
                 .padding(8.dp),
             fontSize = 14.sp,
@@ -114,45 +121,128 @@ fun SpeedGraderOwnCommentItem(
             color = colorResource(id = R.color.textLightest),
             textAlign = TextAlign.Right
         )
-        SpeedGraderAttachmentComponent(attachments = comment.attachments)
+        SpeedGraderAttachmentsComponent(
+            attachments = comment.attachments,
+            gradingAnonymously = gradingAnonymously,
+            isOwn = true
+        )
     }
 }
 
 @Composable
-fun SpeedGraderAttachmentComponent(
+fun SpeedGraderAttachmentsComponent(
     attachments: List<SpeedGraderCommentAttachment>,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false
+    gradingAnonymously: Boolean = false,
+    onSelect: (SpeedGraderCommentAttachment) -> Unit = {},
+    isOwn: Boolean = false
 ) {
     if (attachments.isNotEmpty()) {
         Column(
             modifier = modifier
-                .fillMaxWidth()
-                .padding(top = 8.dp),
-            horizontalAlignment = Alignment.End
+                .fillMaxWidth(),
+            horizontalAlignment = if (isOwn) Alignment.End else Alignment.Start
         ) {
+            var itemModifier = Modifier
+                .padding(top = 4.dp)
+                .height(64.dp)
+                .border(
+                    width = 1.dp,
+                    color = colorResource(id = R.color.backgroundMedium),
+                    shape = RoundedCornerShape(size = 16.dp)
+                )
+            itemModifier = if (isOwn) {
+                itemModifier
+                    .fillMaxWidth(0.6f)
+            } else {
+                itemModifier
+                    .fillMaxWidth(0.7f)
+            }
             attachments.forEach { attachment ->
-                Row {
-                    // Circle image placeholder
-                    GlideImage(
-                        model = attachment.contentType,
-                        contentDescription = null,
-                        contentScale = ContentScale.Crop,
-                        modifier = Modifier
-                            .padding(end = 8.dp)
-                            .size(36.dp)
-                            .background(colorResource(id = R.color.backgroundLight))
-                    )
-                    Spacer(modifier = Modifier.width(8.dp))
-                }
-                Text(
-                    text = attachment.displayName,
-                    fontSize = 14.sp,
-                    lineHeight = 19.sp,
-                    color = colorResource(id = R.color.textDarkest),
-                    modifier = Modifier.padding(bottom = 4.dp)
+                SpeedGraderAttachmentComponent(
+                    attachment = attachment,
+                    modifier = itemModifier
+                        .clickable { onSelect(attachment) },
+
+                    gradingAnonymously = gradingAnonymously,
                 )
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+fun SpeedGraderAttachmentComponent(
+    attachment: SpeedGraderCommentAttachment,
+    modifier: Modifier = Modifier,
+    gradingAnonymously: Boolean = false,
+) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth(0.6f)
+            .height(64.dp)
+            .border(
+                width = 1.dp,
+                color = colorResource(id = R.color.backgroundMedium),
+                shape = RoundedCornerShape(size = 16.dp)
+            )
+    ) {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = Modifier
+                .size(56.dp)
+                .padding(start = 4.dp)
+                .background(
+                    colorResource(id = R.color.backgroundLight),
+                    shape = RoundedCornerShape(size = 12.dp)
+                )
+        ) {
+            if (attachment.thumbnailUrl != null) {
+                GlideImage(
+                    model = attachment.thumbnailUrl,
+                    contentDescription = null,
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .size(32.dp)
+                        .background(colorResource(id = R.color.backgroundLight))
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = attachment.iconRes),
+                    contentDescription = null,
+                    tint = colorResource(id = R.color.textDark),
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        }
+
+        Spacer(Modifier.width(8.dp))
+
+        Column(
+            modifier = Modifier
+                .weight(1f)
+        ) {
+            Text(
+                attachment.displayName,
+                color = colorResource(id = R.color.textDarkest),
+                fontSize = 14.sp,
+                lineHeight = 19.sp,
+                maxLines = 2,
+                fontWeight = FontWeight(600),
+                overflow = TextOverflow.Ellipsis
+            )
+
+            Spacer(Modifier.height(2.dp))
+
+            Text(
+                text = attachment.size,
+                color = colorResource(id = R.color.textDark),
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                fontWeight = FontWeight(400)
+            )
         }
     }
 }
@@ -165,7 +255,6 @@ fun SpeedGraderUserCommentItem(
     gradingAnonymously: Boolean = false
 ) {
     Row(modifier = modifier) {
-        // Circle image placeholder
         GlideImage(
             model = comment.authorAvatarUrl,
             contentDescription = null,
@@ -201,6 +290,11 @@ fun SpeedGraderUserCommentItem(
                 fontSize = 14.sp,
                 lineHeight = 19.sp,
                 color = colorResource(id = R.color.textDarkest)
+            )
+            SpeedGraderAttachmentsComponent(
+                attachments = comment.attachments,
+                gradingAnonymously = gradingAnonymously,
+                isOwn = false
             )
         }
     }
