@@ -16,7 +16,6 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
-import android.view.KeyEvent
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.ImageButton
@@ -129,17 +128,17 @@ class ReminderPage(private val composeTestRule: ComposeTestRule) {
         onView(withId(android.R.id.button1)).perform(click())
     }
 
-    fun selectTime(){
+    fun selectCustomTime(hour: Int, minute: Int) {
         onView(withIndex(isAssignableFrom(ImageButton::class.java), 0))
             .perform(click())
 
         onView(withIndex(isAssignableFrom(EditText::class.java), 0))
             .perform(click())
-        onView(isRoot()).perform(pressKey(KeyEvent.KEYCODE_0))
+        onView(isRoot()).perform(pressKey(hour))
 
         onView(withIndex(isAssignableFrom(EditText::class.java), 1))
             .perform(click())
-        onView(isRoot()).perform(pressKey(KeyEvent.KEYCODE_0))
+        onView(isRoot()).perform(pressKey(minute))
 
         onView(withText(R.string.ok))
             .inRoot(isDialog())

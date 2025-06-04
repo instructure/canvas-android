@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import android.util.Log
+import android.view.KeyEvent
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
@@ -166,7 +167,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         reminderPage.clickAddReminder()
         reminderPage.clickCustomReminderOption()
         reminderPage.selectDate(futureDate)
-        reminderPage.selectTime()
+        reminderPage.selectCustomTime(KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_0)
 
         Log.d(ASSERTION_TAG, "Assert that the 'Invalid time' error is shown when we typed '0' hour and '0' minutes for the custom reminder.")
         reminderPage.assertInvalidTimeShown()
