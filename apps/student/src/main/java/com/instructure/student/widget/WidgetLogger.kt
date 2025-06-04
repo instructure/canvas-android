@@ -37,6 +37,7 @@ import javax.inject.Inject
 class WidgetLogger @Inject constructor(
     private val userApi: UserAPI.UsersInterface,
     private val featureFlagProvider: FeatureFlagProvider,
+    private val featuresManager: FeaturesManager,
     private val analytics: Analytics
 ): PendoInitListener {
 
@@ -45,10 +46,10 @@ class WidgetLogger @Inject constructor(
 
     fun logEvent(event: String, context: Context) {
         loggingJob = coroutineScope.launch(Dispatchers.IO) {
-            if (!Analytics.isSessionActive()) {
+            if (!analytics.isSessionActive()) {
                 PendoInitCallbackHandler.addEvent(event)
                 val featureFlagsResult =
-                    FeaturesManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
+                    featuresManager.getEnvironmentFeatureFlagsAsync(true).await().dataOrNull
                 val sendUsageMetrics =
                     featureFlagsResult?.get(FeaturesManager.SEND_USAGE_METRICS) ?: false
                 if (sendUsageMetrics) {

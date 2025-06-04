@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -111,11 +112,13 @@ class WidgetModule {
     fun provideWidgetLogger(
         userApi: UserAPI.UsersInterface,
         featureFlagProvider: FeatureFlagProvider,
+        featuresManager: FeaturesManager,
         analytics: Analytics
     ): WidgetLogger {
         return WidgetLogger(
             userApi = userApi,
             featureFlagProvider = featureFlagProvider,
+            featuresManager = featuresManager,
             analytics = analytics
         )
     }

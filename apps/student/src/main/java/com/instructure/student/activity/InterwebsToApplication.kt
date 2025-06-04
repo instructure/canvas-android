@@ -225,9 +225,9 @@ class InterwebsToApplication : BaseCanvasActivity() {
             putString(AnalyticsParamConstants.DOMAIN_PARAM, domain)
         }
         if(isSuccess) {
-            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
+            analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_SUCCESS, bundle)
         } else {
-            Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)
+            analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_FAILURE, bundle)
         }
     }
 

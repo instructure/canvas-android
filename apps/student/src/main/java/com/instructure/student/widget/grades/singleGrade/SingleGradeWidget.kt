@@ -220,7 +220,7 @@ class SingleGradeWidget : GlanceAppWidget() {
     private fun WideContent(courseItem: WidgetCourseItem) {
         Column(
             modifier = GlanceModifier.fillMaxSize()
-                .padding(top = 12.dp, bottom = 18.dp, start = 8.dp, end = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 8.dp),
             horizontalAlignment = Alignment.Horizontal.Start
         ) {
             Row(
@@ -240,9 +240,9 @@ class SingleGradeWidget : GlanceAppWidget() {
                     )
                 )
             }
-            Spacer(modifier = GlanceModifier.defaultWeight())
+            Spacer(modifier = GlanceModifier.height(4.dp))
             Text(
-                modifier = GlanceModifier,
+                modifier = GlanceModifier.defaultWeight(),
                 text = courseItem.name,
                 style = WidgetTextStyles.mediumDarkest.copy(
                     color = androidx.glance.color.ColorProvider(
