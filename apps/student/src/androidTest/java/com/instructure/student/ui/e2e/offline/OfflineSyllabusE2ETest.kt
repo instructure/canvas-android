@@ -23,11 +23,13 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -74,8 +76,10 @@ class OfflineSyllabusE2ETest : StudentTest() {
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
         Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
-        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
-        device.waitForIdle()
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+            device.waitForIdle()
+        }
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
