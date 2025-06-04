@@ -369,5 +369,4 @@ if (coverageEnabled) {
             xml.enabled  false
         }
     }
-
 }

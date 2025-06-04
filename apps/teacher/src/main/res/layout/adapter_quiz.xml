@@ -1,5 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
-<!--
+<?xml version="1.0" encoding="utf-8"?><!--
   ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
@@ -14,82 +13,86 @@
   ~     You should have received a copy of the GNU General Public License
   ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
   -->
+<layout xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/quizLayout"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="?android:selectableItemBackground">
-
-    <View
-        android:id="@+id/publishedBar"
-        android:layout_width="3dp"
-        android:layout_height="match_parent"
-        android:layout_marginBottom="4dp"
-        android:layout_marginTop="4dp"
-        android:background="@color/backgroundSuccess"/>
-
-    <com.instructure.teacher.view.PublishedStatusIconView
-        android:id="@+id/quizIcon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="12dp"
-        tools:ignore="ContentDescription"/>
-
-    <LinearLayout
-        android:id="@+id/textContainer"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/quizLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="16dp"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="12dp"
-        android:orientation="vertical">
+        android:background="?android:selectableItemBackground"
+        app:accessibilityClassName='@{"android.widget.Button"}'>
 
-        <TextView
-            android:id="@+id/quizTitle"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:textSize="16sp"
-            tools:text="Beginning of the Biological Existence of Mankind in the Jungles of South Asia Hodor Hodor"/>
-
-        <TextView
-            android:id="@+id/dueDate"
-            style="@style/TextFont.Regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/due"
-            android:textColor="@color/textDark"
-            tools:text="Due April 1 at 11:59 PM"/>
-
-        <TextView
-            android:id="@+id/pointsAndQuestions"
-            style="@style/TextFont.Regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            tools:text="11 pts - 8 questions"/>
-
-        <TextView
-            android:id="@+id/ungradedCount"
-            style="@style/TextFont.Regular"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <View
+            android:id="@+id/publishedBar"
+            android:layout_width="3dp"
+            android:layout_height="match_parent"
             android:layout_marginTop="4dp"
-            android:background="@drawable/shape_ungraded_bubble"
-            android:paddingBottom="3dp"
-            android:paddingEnd="8dp"
-            android:paddingStart="8dp"
-            android:paddingTop="2dp"
-            android:textSize="11sp"
-            android:textColor="@color/textDarkest"
-            tools:text="3 ungraded"
-            tools:ignore="SmallSp" />
+            android:layout_marginBottom="4dp"
+            android:background="@color/backgroundSuccess" />
+
+        <com.instructure.teacher.view.PublishedStatusIconView
+            android:id="@+id/quizIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="12dp"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
+            android:id="@+id/textContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginEnd="16dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/quizTitle"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textSize="16sp"
+                tools:text="Beginning of the Biological Existence of Mankind in the Jungles of South Asia Hodor Hodor" />
+
+            <TextView
+                android:id="@+id/dueDate"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/due"
+                android:textColor="@color/textDark"
+                tools:text="Due April 1 at 11:59 PM" />
+
+            <TextView
+                android:id="@+id/pointsAndQuestions"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text="11 pts - 8 questions" />
+
+            <TextView
+                android:id="@+id/ungradedCount"
+                style="@style/TextFont.Regular"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/shape_ungraded_bubble"
+                android:paddingStart="8dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="3dp"
+                android:textColor="@color/textDarkest"
+                android:textSize="11sp"
+                tools:ignore="SmallSp"
+                tools:text="3 ungraded" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-</LinearLayout>
+</layout>

@@ -45,12 +45,12 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflineCourseBrowserPageUnavailableE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -62,7 +62,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Announcements")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -76,9 +76,10 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Select '${course.name}' course and open 'Announcements' menu.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG, "Assert that only the 'Announcements' tab is enabled because it is the only one which has been synced, and assert that all the other, previously synced tabs are disabled, because they weren't synced now.")
         var enabledTabs = arrayOf("Announcements")
         var disabledTabs = arrayOf("Discussions", "Grades", "People", "Syllabus", "BigBlueButton")
+        Log.d(ASSERTION_TAG, "Assert that only the 'Announcements' tab is enabled because it is the only one which has been synced," +
+                "and assert that all the other, previously synced tabs are disabled, because they weren't synced now.")
         assertTabsEnabled(courseBrowserPage, enabledTabs)
         assertTabsDisabled(courseBrowserPage, disabledTabs)
 
@@ -94,7 +95,7 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState(course.name)
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -107,9 +108,9 @@ class OfflineCourseBrowserE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Select '${course.name}' course.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG, "Assert that the 'Google Drive' and 'Collaborations' tabs are disabled because they aren't supported in offline mode, but the rest of the tabs are enabled because the whole course has been synced.")
         enabledTabs = arrayOf("Announcements", "Discussions", "Grades", "People", "Syllabus", "BigBlueButton")
         disabledTabs = arrayOf("Google Drive", "Collaborations")
+        Log.d(ASSERTION_TAG, "Assert that the 'Google Drive' and 'Collaborations' tabs are disabled because they aren't supported in offline mode, but the rest of the tabs are enabled because the whole course has been synced.")
         assertTabsEnabled(courseBrowserPage, enabledTabs)
         assertTabsDisabled(courseBrowserPage, disabledTabs)
     }
