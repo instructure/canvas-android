@@ -94,7 +94,7 @@ class ManageStudentsFragment : BaseCanvasFragment() {
                 context?.let { announceAccessibilityText(it, getString(R.string.unpairStudentSuccessfull)) }
             }
 
-            else -> {}
+            is AddStudentViewModelAction.UnpairStudentFailed -> {}
         }
     }
 
