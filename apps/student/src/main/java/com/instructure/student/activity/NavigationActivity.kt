@@ -174,6 +174,7 @@ private const val BOTTOM_SCREENS_BUNDLE_KEY = "bottomScreens"
 class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.OnMasqueradingSet,
     FullScreenInteractions, ActivityCompat.OnRequestPermissionsResultCallback by PermissionReceiver() {
 
+
     private val binding by viewBinding(ActivityNavigationBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
     private lateinit var canvasLoadingBinding: LoadingCanvasViewBinding
