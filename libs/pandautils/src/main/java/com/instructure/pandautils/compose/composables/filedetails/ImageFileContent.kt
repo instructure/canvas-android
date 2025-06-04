@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables.filedetails
 
+import android.net.Uri
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,11 +25,10 @@ import androidx.compose.ui.layout.ContentScale
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.bumptech.glide.integration.compose.placeholder
-import java.io.File
 
 @Composable
 fun ImageFileContent(
-    file: File,
+    uri: Uri,
     modifier: Modifier = Modifier,
     contentDescription: String? = null,
     contentScale: ContentScale = ContentScale.Fit,
@@ -36,7 +36,7 @@ fun ImageFileContent(
 ) {
 
     GlideImage(
-        model = file,
+        model = uri,
         contentDescription = contentDescription,
         modifier = modifier,
         contentScale = contentScale,

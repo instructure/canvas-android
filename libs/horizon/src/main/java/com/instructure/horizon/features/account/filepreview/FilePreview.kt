@@ -45,7 +45,7 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
     Box(modifier = modifier) {
         when (filePreviewUiState) {
             is FilePreviewUiState.Image -> ImageFileContent(
-                file = filePreviewUiState.file,
+                uri = filePreviewUiState.uri,
                 contentDescription = filePreviewUiState.displayName,
                 modifier = Modifier.fillMaxWidth(),
                 loadingIndicator = { Spinner(Modifier.fillMaxSize()) }

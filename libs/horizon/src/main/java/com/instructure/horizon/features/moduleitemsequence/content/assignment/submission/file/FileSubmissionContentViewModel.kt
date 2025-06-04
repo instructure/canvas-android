@@ -177,7 +177,7 @@ class FileSubmissionContentViewModel @Inject constructor(
                 tempFile?.let {
                     FilePreviewUiState.Image(
                         displayName = displayName,
-                        file = it
+                        uri = Uri.fromFile(it)
                     )
                 } ?: FilePreviewUiState.NoPreview
             }

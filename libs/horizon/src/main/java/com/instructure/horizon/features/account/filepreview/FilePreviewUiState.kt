@@ -16,7 +16,6 @@
 package com.instructure.horizon.features.account.filepreview
 
 import android.net.Uri
-import java.io.File
 
 sealed class FilePreviewUiState {
     data class Pdf(
@@ -32,7 +31,7 @@ sealed class FilePreviewUiState {
 
     data class Image(
         val displayName: String,
-        val file: File,
+        val uri: Uri,
     ) : FilePreviewUiState()
 
     data class WebView(
