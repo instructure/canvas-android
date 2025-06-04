@@ -20,12 +20,18 @@ import android.app.Activity
 import android.app.Instrumentation
 import android.content.Intent
 import android.net.Uri
+import android.provider.MediaStore
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.espresso.intent.Intents
+import androidx.test.espresso.intent.Intents.intending
+import androidx.test.espresso.intent.Intents.release
 import androidx.test.espresso.intent.matcher.IntentMatchers
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasAction
+import androidx.test.espresso.intent.matcher.IntentMatchers.hasExtraWithKey
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
+import androidx.test.rule.GrantPermissionRule
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
@@ -42,6 +48,7 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
+import org.hamcrest.Matchers.allOf
 import org.hamcrest.core.AllOf
 import org.junit.Before
 import org.junit.Rule
@@ -81,25 +88,117 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         activityResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
     }
 
+    @get:Rule
+    val permissionRule: GrantPermissionRule =
+        GrantPermissionRule.grant(android.Manifest.permission.CAMERA)
+
+
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_camera() {
+        val dataa = goToSubmissionPicker()
 
+        Intents.init()
+        try {
+            // 1. Kamera gomb megnyomása - app itt beállítja a tempCaptureUri-t
+            pickerSubmissionUploadPage.chooseCamera()
+
+            // 2. Lekéred az aktuális tempCaptureUri-t
+            val uri = Uri.parse(mockedFileName)
+
+            // 3. Fájlt létrehozod a megfelelő path-on
+            val file = File(uri.path!!)
+            if (!file.exists()) {
+                file.parentFile?.mkdirs()
+                file.createNewFile()
+            }
+
+            // 4. ActivityResult létrehozása
+            /*val resultData = Intent().apply {
+                data = uri
+                putExtra(MediaStore.EXTRA_OUTPUT, uri)
+                addFlags(
+                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
+                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                )
+                clipData = ClipData.newUri(activity.contentResolver, "Image", uri)
+            }*/
+
+
+            // 5. Stubolod az intentet
+            intending(allOf(
+                hasAction(MediaStore.ACTION_IMAGE_CAPTURE),
+                hasExtraWithKey(MediaStore.EXTRA_OUTPUT)
+            )).respondWith(activityResult)
+
+            // 6. Megvárod, hogy megjelenjen a Submit gomb
+            pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
+            // 7. Assertálod, hogy a feltöltött fájl megjelenik
+            pickerSubmissionUploadPage.assertFileDisplayed(file.name)
+
+        } finally {
+            release()
+        }
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_galleryPicker() {
+        val data = goToSubmissionPicker()
 
+        // Let's mock grabbing a file from our device
+        Intents.init()
+        try {
+            // Set up the "from device" mock result, then press the "device" icon
+            Intents.intending(
+                AllOf.allOf(
+                        IntentMatchers.hasAction(Intent.ACTION_PICK),
+                        IntentMatchers.hasType("image/*"),
+                        IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                )
+            ).respondWith(activityResult)
+            pickerSubmissionUploadPage.chooseGallery()
+        }
+        finally {
+            release()
+        }
+
+        // It's possible for the Submit button to wait a beat before appearing
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
+        pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_filePicker() {
+        val data = goToSubmissionPicker()
 
+        // Let's mock grabbing a file from our device
+        Intents.init()
+        try {
+            // Set up the "from device" mock result, then press the "device" icon
+            Intents.intending(
+                AllOf.allOf(
+                    IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                    IntentMatchers.hasType("*/*"),
+                    IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                )
+            ).respondWith(activityResult)
+            pickerSubmissionUploadPage.chooseDevice()
+        }
+        finally {
+            release()
+        }
+
+        // It's possible for the Submit button to wait a beat before appearing
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
+        pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
     }
 
     @Stub
@@ -129,7 +228,7 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
             pickerSubmissionUploadPage.chooseDevice()
         }
         finally {
-            Intents.release()
+            release()
         }
 
         // It's possible for the Submit button to wait a beat before appearing
