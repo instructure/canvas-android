@@ -134,6 +134,7 @@ class InitActivity : BasePresenterActivity<InitActivityPresenter, InitActivityVi
     InitActivityView, DashboardFragment.CourseBrowserCallback, InitActivityInteractions,
     MasqueradingDialog.OnMasqueradingSet, OnUnreadCountInvalidated {
 
+
     private val binding by viewBinding(ActivityInitBinding::inflate)
     private lateinit var navigationDrawerBinding: NavigationDrawerBinding
 
