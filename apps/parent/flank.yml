@@ -6,7 +6,6 @@ gcloud:
   app: ./apps/parent/build/outputs/apk/qa/debug/parent-qa-debug.apk
   test: ./apps/parent/build/outputs/apk/androidTest/qa/debug/parent-qa-debug-androidTest.apk
   results-bucket: android-parent
-  local-result-dir: results
   auto-google-login: true
   use-orchestrator: true
   performance-metrics: false
