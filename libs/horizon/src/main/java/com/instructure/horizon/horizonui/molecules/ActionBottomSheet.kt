@@ -85,7 +85,7 @@ fun ActionBottomSheet(
                         .align(Alignment.Center)
                 )
                 IconButton(
-                    iconRes = R.drawable.close, color = IconButtonColor.INVERSE,
+                    iconRes = R.drawable.close, color = IconButtonColor.Inverse,
                     onClick = {
                         localCoroutineScope.launch {
                             sheetState.hide()
