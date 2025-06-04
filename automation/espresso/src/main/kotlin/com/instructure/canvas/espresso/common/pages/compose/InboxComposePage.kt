@@ -142,9 +142,9 @@ class InboxComposePage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithTag("textFieldWithHeaderTextField").performTextReplacement(body)
     }
 
-    fun pressBackButton() {
+    fun clickOnCloseButton() {
         composeTestRule.waitForIdle()
-        composeTestRule.onNodeWithContentDescription("Close").performClick()
+        composeTestRule.onNodeWithContentDescription("Close").performClick() //This is the X button on the top-left corner.
     }
 
     fun pressExitConfirmationButton() {
