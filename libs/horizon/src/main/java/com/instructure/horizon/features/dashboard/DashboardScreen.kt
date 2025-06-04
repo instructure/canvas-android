@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -117,8 +118,11 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
     Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
         GlideImage(
             model = uiState.logoUrl,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .weight(1f)
+                .heightIn(max = 44.dp),
             contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
-            modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
