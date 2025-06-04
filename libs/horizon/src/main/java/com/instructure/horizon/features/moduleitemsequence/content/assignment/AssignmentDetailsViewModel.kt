@@ -480,6 +480,13 @@ class AssignmentDetailsViewModel @Inject constructor(
             } else if (submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
                 deleteAllFiles()
             }
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.assignmentDetails_draftDeleted), onSnackbarDismiss = {
+                    _uiState.update { uiState ->
+                        uiState.copy(loadingState = uiState.loadingState.copy(snackbarMessage = null))
+                    }
+                }))
+            }
             updateDraftTextForSubmissionType(submissionType)
         }
     }
@@ -581,10 +588,10 @@ class AssignmentDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(
-                        errorSnackbar = context.getString(R.string.assignmentDetails_fileTypeNotSupported),
-                        onErrorSnackbarDismiss = {
+                        snackbarMessage = context.getString(R.string.assignmentDetails_fileTypeNotSupported),
+                        onSnackbarDismiss = {
                             _uiState.update { uiState ->
-                                uiState.copy(loadingState = uiState.loadingState.copy(errorSnackbar = null))
+                                uiState.copy(loadingState = uiState.loadingState.copy(snackbarMessage = null))
                             }
                         })
                 )

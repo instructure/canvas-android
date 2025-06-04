@@ -371,7 +371,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         } catch {
             // TODO Handle error
             _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false, errorSnackbar = "Failed to reload items"))
+                it.copy(loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = "Failed to reload items"))
             }
         }
     }
