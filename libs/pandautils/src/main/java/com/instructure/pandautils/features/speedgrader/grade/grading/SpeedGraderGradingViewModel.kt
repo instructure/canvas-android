@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.speedgrader.grade.grading
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -40,7 +41,12 @@ class SpeedGraderGradingViewModel @Inject constructor(
         ?: throw IllegalArgumentException("Missing studentId")
 
     private val _uiState =
-        MutableStateFlow(SpeedGraderGradingUiState(onScoreChange = this::onScoreChanged, onPercentageChange = this::onPercentageChanged))
+        MutableStateFlow(
+            SpeedGraderGradingUiState(
+                onScoreChange = this::onScoreChanged,
+                onPercentageChange = this::onPercentageChanged
+            )
+        )
     val uiState = _uiState.asStateFlow()
 
     private lateinit var submissionId: String
@@ -68,7 +74,13 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     enteredScore = submission.enteredScore?.toFloat(),
                     pointsDeducted = submission.deductedPoints,
                     gradingType = submission.assignment?.gradingType,
-                    loading = false
+                    loading = false,
+                    letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
+                        LetterGrade(
+                            gradingStandard.baseValue.orDefault(),
+                            gradingStandard.letterGrade.orEmpty()
+                        )
+                    }.orEmpty()
                 )
             }
         }
