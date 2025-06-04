@@ -31,7 +31,7 @@ data class SpeedGraderContentUiState(
     val dueDate: Date? = null,
     val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
     val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
-)
+    )
 
 @Parcelize
 sealed class GradeableContent : Parcelable
