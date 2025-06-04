@@ -28,6 +28,12 @@ data class SpeedGraderGradingUiState(
     val lateText: String? = null,
     val pointsDeducted: Double? = null,
     val gradingType: GradingType? = null,
+    val letterGrades: List<LetterGrade> = emptyList(),
     val onScoreChange: (Float?) -> Unit,
     val onPercentageChange: (Float?) -> Unit,
+)
+
+data class LetterGrade(
+    val baseValue: Double,
+    val letterGrade: String
 )

@@ -57,7 +57,10 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
+import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.Dropdown
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.pandautils.utils.orDefault
 import java.text.DecimalFormat
 import kotlin.math.round
@@ -94,15 +97,108 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
         ) {
 
             when (uiState.gradingType) {
+                GradingType.letter_grade -> {
+                    LetterGradeGradingTypeInput(uiState)
+                }
+
+                GradingType.pass_fail -> {
+                    CompleteIncompleteGradingTypeInput(uiState)
+                }
+
                 GradingType.percent -> {
                     PercentageGradingTypeInput(uiState)
                 }
+
+                GradingType.not_graded -> {}
 
                 else -> {
                     PointGradingTypeInput(uiState)
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val haptic = LocalHapticFeedback.current
+
+    var selectedGrade by remember { mutableStateOf(uiState.enteredGrade ?: "No Grade") }
+
+    Column {
+        if (uiState.letterGrades.isNotEmpty()) {
+            Dropdown(
+                selectedIndex = uiState.letterGrades.indexOfFirst { it.letterGrade == selectedGrade },
+                options = uiState.letterGrades.map { it.letterGrade } + "No Grade",
+                onOptionSelected = {
+                    uiState.onPercentageChange(uiState.letterGrades[it - 1].baseValue.toFloat() * 100f)
+                }
+            )
+        }
+        PointGradingTypeInput(uiState)
+    }
+}
+
+
+@Composable
+private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val haptic = LocalHapticFeedback.current
+    var grade by remember { mutableStateOf(uiState.enteredGrade ?: "") }
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            Text(
+                stringResource(R.string.grade),
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(
+                    R.string.completeIncompleteGradeScore,
+                    uiState.enteredScore ?: 0f,
+                    uiState.pointsPossible.orDefault()
+                ),
+                fontSize = 16.sp,
+                color = colorResource(R.color.textPlaceholder),
+                modifier = Modifier.padding(start = 8.dp)
+            )
+        }
+        RadioButtonText(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.noGrade),
+            selected = grade.isBlank(),
+            color = LocalCourseColor.current,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+            }
+        )
+        CanvasDivider()
+        RadioButtonText(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.gradeComplete),
+            selected = grade == "complete",
+            color = LocalCourseColor.current,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                grade = "complete"
+                uiState.onScoreChange(uiState.pointsPossible?.toFloat() ?: 0f)
+            })
+        CanvasDivider()
+        RadioButtonText(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.gradeIncomplete),
+            selected = grade == "incomplete",
+            color = LocalCourseColor.current,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                grade = "incomplete"
+                uiState.onScoreChange(0f)
+            })
     }
 }
 
@@ -155,6 +251,16 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 color = colorResource(R.color.textDarkest),
                 fontSize = 16.sp
             )
+            Text(
+                text = pluralStringResource(
+                    R.plurals.percentGradeScore,
+                    uiState.pointsPossible.orDefault().roundToInt(),
+                    uiState.pointsPossible.orDefault()
+                ),
+                modifier = Modifier.padding(start = 8.dp),
+                color = colorResource(R.color.textDark),
+                fontSize = 16.sp
+            )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
@@ -170,8 +276,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Text(
                 text = "%",
                 fontSize = 16.sp,
-                color = colorResource(R.color.textPlaceholder),
-                modifier = Modifier.padding(start = 8.dp)
+                color = colorResource(R.color.textPlaceholder)
             )
         }
 
@@ -283,7 +388,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 thumbColor = LocalCourseColor.current,
                 activeTrackColor = LocalCourseColor.current,
                 inactiveTrackColor = LocalCourseColor.current.copy(alpha = 0.2f),
-                inactiveTickColor = LocalCourseColor.current
+                inactiveTickColor = LocalCourseColor.current,
+                activeTickColor = colorResource(R.color.textLightest)
             )
         )
     }
@@ -326,6 +432,52 @@ private fun SpeedGraderGradingContentPercentagePreview() {
         )
     }
 }
+
+@Preview
+@Composable
+private fun SpeedGraderGradingContentCompleteIncompletePreview() {
+    CanvasTheme(courseColor = Color.Green) {
+        SpeedGraderGradingContent(
+            SpeedGraderGradingUiState(
+                pointsPossible = 20.0,
+                enteredGrade = "incomplete",
+                enteredScore = 0f,
+                grade = "A",
+                score = 15.0,
+                onScoreChange = {},
+                gradingType = GradingType.pass_fail,
+                onPercentageChange = {}
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SpeedGraderGradingContentLetterGraderPreview() {
+    CanvasTheme(courseColor = Color.Red) {
+        SpeedGraderGradingContent(
+            SpeedGraderGradingUiState(
+                pointsPossible = 20.0,
+                enteredGrade = "incomplete",
+                enteredScore = 0f,
+                grade = "A",
+                score = 15.0,
+                onScoreChange = {},
+                gradingType = GradingType.letter_grade,
+                onPercentageChange = {},
+                letterGrades = listOf(
+                    LetterGrade(0.0, "F"),
+                    LetterGrade(0.6, "D"),
+                    LetterGrade(0.7, "C"),
+                    LetterGrade(0.8, "B"),
+                    LetterGrade(0.9, "A")
+                )
+            )
+        )
+    }
+}
+
 
 
 

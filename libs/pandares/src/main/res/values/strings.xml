@@ -2039,6 +2039,10 @@
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
     </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f pts)</item>
+    </plurals>
     <string name="noAssignments">No assignments</string>
     <string name="assignmentGroup">Assignment Group</string>
     <string name="assignmentType">Assignment Type</string>
@@ -2080,4 +2084,5 @@
     <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
     <string name="pointGradeHint">Write score here</string>
     <string name="percentageGradeHint">Write percentage here</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
 </resources>

@@ -303,6 +303,7 @@ private fun FilterItem(
 ) {
     RadioButtonText(
         modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 16.dp)
             .fillMaxWidth()
             .testTag("filterItem"),
         text = text,
