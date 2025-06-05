@@ -21,10 +21,15 @@ import android.database.sqlite.SQLiteConstraintException
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Section
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.entities.*
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import com.instructure.pandautils.room.offline.entities.CourseEntity
+import com.instructure.pandautils.room.offline.entities.EnrollmentEntity
+import com.instructure.pandautils.room.offline.entities.SectionEntity
+import com.instructure.pandautils.room.offline.entities.UserEntity
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runTest
 import org.junit.After
@@ -279,5 +284,23 @@ class EnrollmentDaoTest {
         val result = enrollmentDao.findByUserId(4L)
 
         Assert.assertEquals(expected, result)
+    }
+
+    @Test
+    fun testFindByCourseIdAndUserId() = runTest {
+        val entities = listOf(
+            EnrollmentEntity(Enrollment(id = 1, userId = 1, role = Enrollment.EnrollmentType.Observer), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 2, userId = 2, role = Enrollment.EnrollmentType.Student), 1, 1, 1),
+            EnrollmentEntity(Enrollment(id = 3, userId = 3, role = Enrollment.EnrollmentType.Teacher), 2, 1, 1),
+        )
+        entities.forEach {
+            enrollmentDao.insert(it)
+        }
+
+        val expected = entities[1]
+
+        val result = enrollmentDao.findByCourseIdAndUserId(1L, 2L)
+
+        Assert.assertEquals(expected, result.first())
     }
 }

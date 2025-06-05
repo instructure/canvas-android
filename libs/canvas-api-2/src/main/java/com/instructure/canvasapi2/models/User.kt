@@ -54,7 +54,10 @@ data class User(
         val calendar: UserCalendar? = null,
         val uuid: String? = null,
         @SerializedName("account_uuid")
-        val accountUuid: String? = null
+        val accountUuid: String? = null,
+        @SerializedName("time_zone")
+        val timeZone: String? = null,
+
 ) : CanvasContext() {
     override val comparisonString get() = name
     override val type get() = CanvasContext.Type.USER

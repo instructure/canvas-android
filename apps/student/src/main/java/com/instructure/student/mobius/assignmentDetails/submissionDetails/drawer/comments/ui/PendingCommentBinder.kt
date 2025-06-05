@@ -36,8 +36,8 @@ import com.instructure.student.R
 import com.instructure.student.databinding.AdapterSubmissionCommentPendingBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.ui.views.CommentDirection
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
 import kotlinx.coroutines.runBlocking
 
 class PendingCommentBinder(

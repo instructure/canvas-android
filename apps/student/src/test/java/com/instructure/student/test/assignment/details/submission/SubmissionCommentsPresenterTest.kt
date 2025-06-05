@@ -24,9 +24,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.CommentItemState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsPresenter
-import com.instructure.student.room.StudentDb
+import com.instructure.pandautils.room.studentdb.StudentDb
 import io.mockk.mockk
-import io.mockk.mockkStatic
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test

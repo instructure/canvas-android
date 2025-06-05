@@ -89,7 +89,7 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         dashboardPage.openLeftSideMenu()
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()

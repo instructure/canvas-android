@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -44,13 +45,13 @@ class OfflinePeopleE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PEOPLE, TestCategory.E2E, SecondaryFeatureCategory.OFFLINE_MODE)
     fun testOfflinePeopleE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1, announcements = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -64,7 +65,7 @@ class OfflinePeopleE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("People")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -74,8 +75,9 @@ class OfflinePeopleE2ETest : StudentTest() {
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()
+        refresh()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Dashboard Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
         Log.d(STEP_TAG, "Select '${course.name}' course and open 'People' menu.")
@@ -85,7 +87,7 @@ class OfflinePeopleE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Select '${teacher.name}' teacher.")
         peopleListPage.selectPerson(teacher)
 
-        Log.d(STEP_TAG, "Assert that the compose message icon is not displayed (GONE) because it is not supported in offline mode.")
+        Log.d(ASSERTION_TAG, "Assert that the compose message icon is not displayed (GONE) because it is not supported in offline mode.")
         personDetailsPage.assertComposeMessageIcon(ViewMatchers.Visibility.GONE)
     }
 

@@ -1,0 +1,15 @@
+mutation CreateNote($input: CreateNoteInput!) {
+  createNote(input: $input) {
+      id
+      rootAccountUuid
+      userId
+      courseId
+      objectId
+      objectType
+      userText
+      reaction
+      highlightData
+      createdAt
+      updatedAt
+  }
+}

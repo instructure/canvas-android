@@ -48,6 +48,11 @@ data class OAuthToken(
         val accessToken: String
 )
 
+data class ForwardURL(
+        @SerializedName("forward_url")
+        val forwardURL: String
+)
+
 /**
  * Type used when user creation api call returns; Use this
  * for everything thereafter

@@ -20,12 +20,31 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Account
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.BecomeUserPermission
+import com.instructure.canvasapi2.models.CanvasColor
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.CanvasFeatureFlag
+import com.instructure.canvasapi2.models.ColorChangeResponse
+import com.instructure.canvasapi2.models.DashboardPositions
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.PairingCode
+import com.instructure.canvasapi2.models.TermsOfService
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.models.UserSettings
 import com.instructure.canvasapi2.models.postmodels.CreateObserverPostBody
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
 
 object UserAPI {
@@ -93,6 +112,12 @@ object UserAPI {
 
         @PUT("users/self")
         fun updateUserShortName(@Query("user[short_name]") shortName: String, @Body body: String): Call<User>
+
+        @PUT("users/self")
+        suspend fun updateUserName(@Query("user[name]") name: String, @Query("user[short_name]") shortName: String, @Body body: String, @Tag params: RestParams): DataResult<User>
+
+        @PUT("users/self")
+        suspend fun updateUserTimeZone(@Query("user[time_zone]") timeZone: String, @Body body: String, @Tag params: RestParams): DataResult<User>
 
         @PUT("users/self")
         fun updateUserTermsOfUse(@Query("user[terms_of_use]") terms: Int = 1): Call<User>

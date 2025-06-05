@@ -100,7 +100,7 @@
     <string name="findMySchool">Tìm trường của tôi</string>
     <string name="loginWithQRCode">Mã QR</string>
     <string name="locateQRCode">Tìm Mã QR</string>
-    <string name="qrCodeExplanation">Bạn sẽ thấy mã QR trên trang web trong hồ sơ tài khoản của bạn. Hãy nhấp vào "Mã QR Để Đăng Nhập Trên Di Động" trong danh sách.</string>
+    <string name="qrCodeExplanation">Tìm mã QR trong hồ sơ tài khoản của bạn trên web tại \'QR để Đăng Nhập Trên Di Động\'.</string>
     <string name="qrCodeScanningPrompt">Quét mã QR từ Canvas để đăng nhập</string>
     <string name="loginWithQRCodeError">Đã xảy ra lỗi khi đăng nhập. Vui lòng tạo Mã QR khác rồi thử lại.</string>
     <string name="invalidQRCodeError">Vui lòng quét mã QR do Canvas tạo</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">Chúng tôi đã thực hiện một số thay đổi.</string>
     <string name="whatsNewText">Xem nội dung mới</string>
     <string name="findAnotherSchool">Tìm trường khác</string>
+    <string name="qrCodeDisabledExplanation">Nếu không có, tổ chức của bạn đã tắt tùy chọn này.</string>
 </resources>

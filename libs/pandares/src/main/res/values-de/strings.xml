@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Text der Signatur</string>
     <string name="due_dateTime">Fällig: %1$s, %2$s</string>
+    <string name="noDueDate">Kein Abgabetermin</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s muss benotet werden</string>
+    <string name="assignmentListTitle">Aufgabenliste</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d Punkt</item>
+        <item quantity="other">%d Punkte</item>
+    </plurals>
+    <string name="noAssignments">Keine Aufgaben</string>
+    <string name="assignmentGroup">Aufgabengruppe</string>
+    <string name="assignmentType">Aufgabentyp</string>
+    <string name="dueDate">Abgabetermin</string>
+    <string name="needsGrading">Muss benotet werden</string>
+    <string name="published">Veröffentlicht</string>
+    <string name="unpublished">Nicht veröffentlicht</string>
+    <string name="notYetSubmitted">Noch nicht abgegeben</string>
+    <string name="toBeGraded">Zur Benotung</string>
+    <string name="graded">Benotet</string>
+    <string name="other">Sonstige</string>
+    <string name="a11y_filterAssignments">Aufgabenliste filtern</string>
+    <string name="assignmentFilter">Aufgabenfilter</string>
+    <string name="groupedBy">Gruppiert nach</string>
+    <string name="gradingPeriod">Benotungszeitraum:</string>
+    <string name="gradingPeriodHeading">Benotungszeitraum</string>
+    <string name="gradePreferences">Präferenzen für Noten</string>
+    <string name="allAssignments">Alle Aufgaben</string>
+    <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Post-Richtlinie</string>
     <string name="late">Verspätet</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Filter für Abgaben</string>
     <string name="submissionMessageSubject">%1$s am %2$s</string>
     <string name="all">Alle</string>
+    <string name="loginRequired">Anmeldung erforderlich</string>
+    <string name="loginRequiredMessage">Aufgrund der Sicherheitsrichtlinien Ihrer Institution müssen Sie sich erneut anmelden. Sobald Sie angemeldet sind, können Sie nahtlos weiterarbeiten.</string>
+    <string name="login">Anmelden</string>
+    <string name="logout">Abmelden</string>
+    <string name="loginRefreshSameUserError">Sie müssen als derselbe/dieselbe Benutzer*in anmelden.</string>
+    <string name="errorLoadingAssignments">Beim Laden der Aufgaben ist ein Fehler aufgetreten.</string>
+    <string name="a11y_searchAssignments">Aufgaben suchen</string>
+    <string name="dueAssignmentListItem">Fällig am %1$s</string>
 </resources>

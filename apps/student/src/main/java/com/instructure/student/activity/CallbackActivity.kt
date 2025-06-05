@@ -62,6 +62,7 @@ import com.instructure.student.R
 import com.instructure.student.fragment.NotificationListFragment
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.util.StudentPrefs
+import com.instructure.student.widget.WidgetLogger
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import retrofit2.Call
@@ -83,6 +84,9 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
 
     @Inject
     lateinit var userApi: UserAPI.UsersInterface
+
+    @Inject
+    lateinit var widgetLogger: WidgetLogger
 
     private var loadInitialDataJob: Job? = null
 
@@ -187,6 +191,7 @@ abstract class CallbackActivity : ParentActivity(), OnUnreadCountInvalidated, No
         if (sendUsageMetrics) {
             val visitorData = mapOf("locale" to ApiPrefs.effectiveLocale)
             val accountData = mapOf("surveyOptOut" to featureFlagProvider.checkAccountSurveyNotificationsFlag())
+            widgetLogger.cancelLogging()
             Pendo.startSession(user?.uuid?.SHA256().orEmpty(), user?.accountUuid.orEmpty(), visitorData, accountData)
         } else {
             Pendo.endSession()

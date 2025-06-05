@@ -43,36 +43,40 @@ class UserGroupFilesE2ETest : StudentTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.DASHBOARD, TestCategory.E2E, secondaryFeature = SecondaryFeatureCategory.GROUPS_FILES)
     fun testUserGroupFileControlFlow() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         setupFileOnDevice("samplepdf.pdf")
 
-        Log.d(PREPARATION_TAG,"Seed some group info.")
+        Log.d(PREPARATION_TAG, "Seed some group info.")
         val groupCategory = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val groupCategory2 = GroupsApi.createCourseGroupCategory(data.coursesList[0].id, teacher.token)
         val group = GroupsApi.createGroup(groupCategory.id, teacher.token)
         val group2 = GroupsApi.createGroup(groupCategory2.id, teacher.token)
 
-        Log.d(PREPARATION_TAG,"Create group membership for ${student.name} student.")
+        Log.d(PREPARATION_TAG, "Create group membership for '${student.name}' student.")
         GroupsApi.createGroupMembership(group.id, student.id, teacher.token)
         GroupsApi.createGroupMembership(group2.id, student.id, teacher.token)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Assert that ${group.name} groups is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${group.name}' groups is displayed.")
         dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
         dashboardPage.assertDisplaysGroup(group2, data.coursesList[0])
 
-        Log.d(STEP_TAG, "Select '${group.name}' group and assert if the group title is correct on the Group Browser Page.")
+        Log.d(STEP_TAG, "Select '${group.name}' group.")
         dashboardPage.selectGroup(group)
+
+        Log.d(ASSERTION_TAG, "Assert if the group title is correct on the Group Browser Page.")
         groupBrowserPage.assertTitleCorrect(group)
 
-        Log.d(STEP_TAG, "Select 'Files' tab within the Group Browser Page and assert that the File List Page is displayed.")
+        Log.d(STEP_TAG, "Select 'Files' tab within the Group Browser Page.")
         groupBrowserPage.selectFiles()
+
+        Log.d(ASSERTION_TAG, "Assert that the File List Page is displayed correctly.")
         fileListPage.assertPageObjects()
 
         val testFolderName = "OneWordFolder"
@@ -81,7 +85,7 @@ class UserGroupFilesE2ETest : StudentTest() {
         fileListPage.clickCreateNewFolderButton()
         fileListPage.createNewFolder(testFolderName)
 
-        Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName' is displayed." +
+        Log.d(ASSERTION_TAG, "Assert that there is a folder called '$testFolderName' is displayed." +
                 "Assert that the '$testFolderName' folder's size is 0, because we just created it.")
         fileListPage.assertItemDisplayed(testFolderName)
         fileListPage.assertFolderSize(testFolderName, 0)
@@ -101,11 +105,13 @@ class UserGroupFilesE2ETest : StudentTest() {
         }
         fileChooserPage.clickUpload()
 
-        Log.d(STEP_TAG, "Assert that the file upload was successful.")
+        Log.d(ASSERTION_TAG, "Assert that the file upload was successful.")
         fileListPage.assertItemDisplayed("samplepdf.pdf")
 
-        Log.d(STEP_TAG, "Navigate back to File List Page. Assert that the '$testFolderName' folder's size is 1, because we just uploaded a file in it.")
+        Log.d(STEP_TAG, "Navigate back to File List Page.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the '$testFolderName' folder's size is 1, because we just uploaded a file in it.")
         fileListPage.assertFolderSize(testFolderName, 1)
 
         val testFolderName2 = "TwoWord Folder"
@@ -114,13 +120,15 @@ class UserGroupFilesE2ETest : StudentTest() {
         fileListPage.clickCreateNewFolderButton()
         fileListPage.createNewFolder(testFolderName2)
 
-        Log.d(STEP_TAG,"Assert that there is a folder called '$testFolderName2' is displayed." +
+        Log.d(ASSERTION_TAG, "Assert that there is a folder called '$testFolderName2' is displayed." +
                 "Assert that the '$testFolderName2' folder's size is 0, because we just created it.")
         fileListPage.assertItemDisplayed(testFolderName2)
         fileListPage.assertFolderSize(testFolderName2, 0)
 
-        Log.d(STEP_TAG, "Select '$testFolderName2' folder and assert that the empty view is displayed.")
+        Log.d(STEP_TAG, "Select '$testFolderName2' folder.")
         fileListPage.selectItem(testFolderName2)
+
+        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed.")
         fileListPage.assertViewEmpty()
     }
 

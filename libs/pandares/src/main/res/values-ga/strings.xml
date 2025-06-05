@@ -2020,6 +2020,33 @@
     <string name="inboxSignatureSwitchLabel">Síniú</string>
     <string name="inboxSignatureTextfieldHeader">Téacs sínithe</string>
     <string name="due_dateTime">Dlite: %1$s, %2$s</string>
+    <string name="noDueDate">Níl aon Dáta Dlite</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">Tá Marcáil de Dhíth uaidh seo: %1$s</string>
+    <string name="assignmentListTitle">Liosta tascanna</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d pointe</item>
+        <item quantity="other">%d pointe</item>
+    </plurals>
+    <string name="noAssignments">Gan tascanna</string>
+    <string name="assignmentGroup">grúpa taisc</string>
+    <string name="assignmentType">Cineál Taisc</string>
+    <string name="dueDate">Dáta dlite</string>
+    <string name="needsGrading">Marcáil de Dhíth</string>
+    <string name="published">Foilsithe</string>
+    <string name="unpublished">Neamhfhoilsithe</string>
+    <string name="notYetSubmitted">Níor Cuireadh Isteach É Go Fóill</string>
+    <string name="toBeGraded">Le Marcáil</string>
+    <string name="graded">Marcáilte</string>
+    <string name="other">Other</string>
+    <string name="a11y_filterAssignments">Scag Tascanna</string>
+    <string name="assignmentFilter">Scagaire Tasc</string>
+    <string name="groupedBy">Grúpáilte De Réir</string>
+    <string name="gradingPeriod">Tréimhse Marcála:</string>
+    <string name="gradingPeriodHeading">Tréimhse Mharcála</string>
+    <string name="gradePreferences">Sainroghanna Mairc</string>
+    <string name="allAssignments">Gach Tasc</string>
+    <string name="statusFilter">Scagaire Stádais</string>
     <string name="a11y_contentDescription_filter">Scag</string>
     <string name="a11y_contentDescription_postPolicy">Polasaí postála</string>
     <string name="late">Déanach</string>
@@ -2028,4 +2055,12 @@
     <string name="submissionFilter">Scagaire Uaslódála</string>
     <string name="submissionMessageSubject">%1$s ar %2$s</string>
     <string name="all">Gach</string>
+    <string name="loginRequired">Logáil isteach ag teastáil</string>
+    <string name="loginRequiredMessage">Ní mór duit logáil isteach arís mar gheall ar pholasaí slándála d\'institiúide. Nuair a bheidh tú logáilte isteach is féidir leat leanúint ar aghaidh ag obair gan stró.</string>
+    <string name="login">Logáil isteach</string>
+    <string name="logout">Logáil amach</string>
+    <string name="loginRefreshSameUserError">Ní mór duit logáil isteach leis an úsáideoir céanna.</string>
+    <string name="errorLoadingAssignments">Tharla earráid agus tascanna á lódáil</string>
+    <string name="a11y_searchAssignments">Cuardaigh Tascanna</string>
+    <string name="dueAssignmentListItem">Dlite %1$s</string>
 </resources>

@@ -109,7 +109,9 @@ internal fun ManageStudentsScreen(
                         buttonClick = {
                             actionHandler(ManageStudentsAction.Refresh)
                         },
-                        modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .verticalScroll(rememberScrollState())
                     )
                 } else {
                     StudentListContent(
@@ -206,7 +208,10 @@ private fun StudentListItem(
                 actionHandler(ManageStudentsAction.StudentTapped(uiState.studentId))
             }
             .padding(top = 16.dp, bottom = 16.dp, start = 16.dp)
-            .testTag("studentListItem"),
+            .testTag("studentListItem")
+            .semantics {
+                role = Role.Button
+            },
         verticalAlignment = Alignment.CenterVertically
     ) {
         UserAvatar(

@@ -17,8 +17,8 @@
 package com.instructure.teacher.fragments
 
 import android.os.Bundle
-import com.instructure.annotations.FileCaching.FileCache
-import com.instructure.annotations.awaitFileDownload
+import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.ApiPrefs

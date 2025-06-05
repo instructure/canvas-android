@@ -152,6 +152,7 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
+import com.instructure.student.widget.WidgetUpdater
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -405,6 +406,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
+
+        WidgetUpdater.updateWidgets()
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {

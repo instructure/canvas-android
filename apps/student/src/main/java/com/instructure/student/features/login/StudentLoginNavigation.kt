@@ -22,10 +22,10 @@ import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.student.tasks.StudentLogoutTask
 
 class StudentLoginNavigation(

@@ -99,7 +99,7 @@
     <string name="findMySchool">Найти мою школу</string>
     <string name="loginWithQRCode">QR-код</string>
     <string name="locateQRCode">Определить местонахождение кода QR</string>
-    <string name="qrCodeExplanation">QR-код находится в сети в профиле вашей учетной записи. Щелкните \'QR для входа с мобильного устройства\' в списке.</string>
+    <string name="qrCodeExplanation">Найдите QR-код в профиле своей учетной записи на веб-сайте в разделе \'QR для мобильного входа\'.</string>
     <string name="qrCodeScanningPrompt">Отсканируйте QR-код в Canvas для входа в систему</string>
     <string name="loginWithQRCodeError">Ошибка входа в систему. Сгенерируйте другой QR-код и попробуйте еще раз.</string>
     <string name="invalidQRCodeError">Отсканируйте QR-код, сгенерированный Canvas</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">Мы добавили несколько изменений.</string>
     <string name="whatsNewText">Посмотрите, что нового</string>
     <string name="findAnotherSchool">Найти другую школу</string>
+    <string name="qrCodeDisabledExplanation">Если его нет здесь, ваше учреждение отключило эту опцию.</string>
 </resources>

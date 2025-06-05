@@ -138,7 +138,7 @@ open class CourseBrowserPage : BasePage(R.id.courseBrowserPage) {
         onView(allOf(withId(R.id.courseBrowserTitle), isDisplayed())).assertHasText(course.originalName!!)
     }
 
-    fun assertTitleCorrect(course: CourseApiModel) {
+    fun assertInitialBrowserTitle(course: CourseApiModel) {
         initialBrowserTitle.assertHasText(course.name)
     }
 

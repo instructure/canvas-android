@@ -53,29 +53,29 @@ class NotificationsE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
     fun testNotificationsE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 2, teachers = 1, courses = 1, announcements = 1, discussions = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed an assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed an assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Seed a quiz for '${course.name}' course with some questions.")
+        Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course with some questions.")
         val quizQuestions = makeQuizQuestions()
 
-        Log.d(PREPARATION_TAG,"Create and publish a quiz with the previously seeded questions.")
+        Log.d(PREPARATION_TAG, "Create and publish a quiz with the previously seeded questions.")
         QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to 'Notifications' page via bottom-menu.")
+        Log.d(STEP_TAG, "Navigate to 'Notifications' page via bottom-menu.")
         dashboardPage.clickNotificationsTab()
 
-        Log.d(STEP_TAG,"Assert that there are some notifications on the Notifications Page. There should be 4 notification at this point, but sometimes the API does not work properly.")
+        Log.d(ASSERTION_TAG, "Assert that there are some notifications on the Notifications Page. There should be 4 notification at this point, but sometimes the API does not work properly.")
         var thereIsNotification = false
 
         run thereIsNotificationRepeat@ {
@@ -98,7 +98,7 @@ class NotificationsE2ETest : StudentTest() {
 
         try {
             notificationPage.assertNotificationCountIsGreaterThan(3) //"Soft assert", because API does not working consistently. Sometimes it simply does not create notifications about some events, even if we would wait enough to let it do that.
-            Log.d(STEP_TAG, "All four notifications are displayed.")
+            Log.d(ASSERTION_TAG, "All four notifications are displayed.")
         } catch (e: AssertionError) {
             println("API may not work properly, so not all the notifications can be seen on the screen.")
         }
@@ -113,7 +113,7 @@ class NotificationsE2ETest : StudentTest() {
                     Log.d(PREPARATION_TAG, "Grade the submission of '${student.name}' student for assignment: '${testAssignment.name}'.")
                     SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "13")
 
-                    Log.d(STEP_TAG, "Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
+                    Log.d(ASSERTION_TAG, "Refresh the Notifications Page. Assert that there is a notification about the submission grading appearing.")
                     sleep(3000) //Let the submission api do it's job
                     refresh()
                     notificationPage.assertHasGrade(testAssignment.name, "13")

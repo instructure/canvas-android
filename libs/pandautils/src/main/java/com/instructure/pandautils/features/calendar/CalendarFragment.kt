@@ -16,13 +16,22 @@
 package com.instructure.pandautils.features.calendar
 
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
 class CalendarFragment : BaseCalendarFragment() {
 
     companion object {
-        fun newInstance(route: Route) = CalendarFragment()
+        const val SELECTED_DAY = "selected_day"
+
+        fun newInstance(route: Route) = CalendarFragment().withArgs(
+            route.arguments.apply {
+                if (route.paramsHash.containsKey(SELECTED_DAY)) {
+                    putString(SELECTED_DAY, route.paramsHash[SELECTED_DAY])
+                }
+            }
+        )
 
         fun makeRoute() = Route(CalendarFragment::class.java, null)
     }

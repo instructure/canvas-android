@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2016 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
+
+<appwidget-provider
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:minWidth="100dp"
+    android:minHeight="70dp"
+    android:maxResizeWidth="100dp"
+    android:minResizeWidth="60dp"
+    android:configure="com.instructure.student.widget.grades.courseselector.CourseSelectorActivity"
+    android:updatePeriodMillis="1800000"
+    android:resizeMode="horizontal"
+    android:widgetCategory="keyguard|home_screen"
+    android:initialKeyguardLayout="@layout/widget_initial_layout"
+    android:initialLayout="@layout/widget_initial_layout"
+    android:previewImage="@drawable/widget_preview_single_grade"
+    android:label="@string/grades"/>

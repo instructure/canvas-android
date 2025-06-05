@@ -1974,6 +1974,32 @@
     <string name="inboxSignatureSwitchLabel">簽名</string>
     <string name="inboxSignatureTextfieldHeader">簽名文字</string>
     <string name="due_dateTime">截止日期：%1$s，%2$s</string>
+    <string name="noDueDate">無截止日期</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s 需要等級評分</string>
+    <string name="assignmentListTitle">作業淸單</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="other">%d 分</item>
+    </plurals>
+    <string name="noAssignments">無作業</string>
+    <string name="assignmentGroup">作業小組</string>
+    <string name="assignmentType">作業類型</string>
+    <string name="dueDate">截止日期</string>
+    <string name="needsGrading">需要等級評分</string>
+    <string name="published">已發佈</string>
+    <string name="unpublished">已取消發佈</string>
+    <string name="notYetSubmitted">尚未提交</string>
+    <string name="toBeGraded">待評分</string>
+    <string name="graded">已評分</string>
+    <string name="other">其他</string>
+    <string name="a11y_filterAssignments">篩選作業列表</string>
+    <string name="assignmentFilter">作業篩選</string>
+    <string name="groupedBy">分組依據</string>
+    <string name="gradingPeriod">評分期：</string>
+    <string name="gradingPeriodHeading">評分時段</string>
+    <string name="gradePreferences">評分偏好設定</string>
+    <string name="allAssignments">所有作業列表</string>
+    <string name="statusFilter">狀態篩選器</string>
     <string name="a11y_contentDescription_filter">篩選器</string>
     <string name="a11y_contentDescription_postPolicy">貼文政策</string>
     <string name="late">逾期</string>
@@ -1982,4 +2008,12 @@
     <string name="submissionFilter">提交項目篩選</string>
     <string name="submissionMessageSubject">%1$s 創建於 %2$s</string>
     <string name="all">全部</string>
+    <string name="loginRequired">需要登入</string>
+    <string name="loginRequiredMessage">由於您機構的安全政策，您需要重新登入。一登入後，您即可無縫繼續工作。</string>
+    <string name="login">登入</string>
+    <string name="logout">登出</string>
+    <string name="loginRefreshSameUserError">您必須使用同一個使用者登入。</string>
+    <string name="errorLoadingAssignments">載入作業時發生錯誤</string>
+    <string name="a11y_searchAssignments">搜尋作業</string>
+    <string name="dueAssignmentListItem">截止於 %1$s</string>
 </resources>

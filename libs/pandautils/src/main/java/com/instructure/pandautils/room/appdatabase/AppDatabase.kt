@@ -7,6 +7,7 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
@@ -17,6 +18,7 @@ import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
 import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
 import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
@@ -40,8 +42,9 @@ import com.instructure.pandautils.room.common.Converters
         DashboardFileUploadEntity::class,
         ReminderEntity::class,
         ModuleBulkProgressEntity::class,
-        AssignmentListSelectedFiltersEntity::class
-    ], version = 11
+        AssignmentListSelectedFiltersEntity::class,
+        FileDownloadProgressEntity::class
+    ], version = 12
 )
 @TypeConverters(Converters::class, AssignmentFilterConverter::class)
 abstract class AppDatabase : RoomDatabase() {
@@ -67,4 +70,6 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun moduleBulkProgressDao(): ModuleBulkProgressDao
 
     abstract fun assignmentListSelectedFiltersEntityDao(): AssignmentListSelectedFiltersEntityDao
+
+    abstract fun fileDownloadProgressDao(): FileDownloadProgressDao
 }

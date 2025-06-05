@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderLtiSubmissionBinding
+import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.view.ExternalToolContent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
@@ -64,7 +65,9 @@ class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
         binding.webView.enableAlgorithmicDarkening()
         binding.webView.setZoomSettings(false)
         binding.webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-            override fun openMediaFromWebView(mime: String, url: String, filename: String) = Unit
+            override fun openMediaFromWebView(mime: String, url: String, filename: String) {
+                RouteMatcher.openMedia(activity, url, filename)
+            }
 
             override fun onPageStartedCallback(webView: WebView, url: String) {
                 if (isAdded) binding.webViewProgress.setVisible()
@@ -72,19 +75,55 @@ class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
 
             override fun onPageFinishedCallback(webView: WebView, url: String) {
                 if (isAdded) binding.webViewProgress.setGone()
+                webView.evaluateJavascript(script, null)
             }
 
             override fun canRouteInternallyDelegate(url: String): Boolean = false
 
             override fun routeInternallyCallback(url: String) = Unit
         }
+
         lifecycleScope.launch {
-            val authenticatedUrl =
-                oAuthInterface.getAuthenticatedSession(url, RestParams()).dataOrNull?.sessionUrl
-                    ?: url
+            val authenticatedUrl = oAuthInterface.getAuthenticatedSession(
+                url,
+                RestParams()
+            ).dataOrNull
+                ?.sessionUrl
+                ?: url
+
             binding.webView.loadUrl(authenticatedUrl)
         }
     }
+
+    private val script = """
+        (function() {
+            function disableLinksOverlayPreviews() {
+                const spans = document.querySelectorAll('span.instructure_file_link_holder');
+                spans.forEach(elm => {
+                    const a1 = elm.querySelector("a.preview_in_overlay");
+                    const a2 = elm.querySelector("a.file_download_btn");
+                    if (a1 && a2) {
+                        const href1 = a1.getAttributeNode("href");
+                        const href2 = a2.getAttributeNode("href");
+                        if (href1 && href2) {
+                            href1.value = href2.value;
+                        }
+                        const class1 = a1.getAttributeNode("class");
+                        if (class1) {
+                            class1.value = class1.value.replace("preview_in_overlay", "no_preview");
+                        }
+                    }
+                });
+            }
+    
+            if (!window.__disableLinksObserverAdded) {
+                const observer = new MutationObserver(disableLinksOverlayPreviews);
+                observer.observe(document.body, { childList: true, subtree: true });
+                window.__disableLinksObserverAdded = true;
+                disableLinksOverlayPreviews();
+            }
+        })();
+    """
 
     companion object {
         fun newInstance(content: ExternalToolContent) = SpeedGraderLtiSubmissionFragment().apply {
@@ -92,4 +131,3 @@ class SpeedGraderLtiSubmissionFragment : BaseCanvasFragment() {
         }
     }
 }
-
