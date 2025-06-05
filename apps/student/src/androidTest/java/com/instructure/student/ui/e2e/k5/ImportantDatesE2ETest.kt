@@ -51,7 +51,7 @@ class ImportantDatesE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.IMPORTANT_DATES)
     fun importantDatesE2ETest() {
 
-        Log.d(PREPARATION_TAG,"Seeding data for K5 sub-account.")
+        Log.d(PREPARATION_TAG, "Seeding data for K5 sub-account.")
         val data = seedDataForK5(
             teachers = 1,
             students = 1,
@@ -66,54 +66,61 @@ class ImportantDatesE2ETest : StudentTest() {
         val elementaryCourse3 = data.coursesList[2]
         val elementaryCourse4 = data.coursesList[3]
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse1.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse1.name}' course.")
         val testAssignment1 = AssignmentsApi.createAssignment(elementaryCourse1.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 3.days.fromNow.iso8601, importantDate = true)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse2.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse2.name}' course.")
         val testAssignment2 = AssignmentsApi.createAssignment(elementaryCourse2.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 4.days.fromNow.iso8601, importantDate = true)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse3.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' IMPORTANT assignment for '${elementaryCourse3.name}' course.")
         val testAssignment3 = AssignmentsApi.createAssignment(elementaryCourse3.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 4.days.fromNow.iso8601, importantDate = true)
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' NOT IMPORTANT assignment for '${elementaryCourse4.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' NOT IMPORTANT assignment for '${elementaryCourse4.name}' course.")
         val testNotImportantAssignment = AssignmentsApi.createAssignment(elementaryCourse4.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 100.0, dueAt = 4.days.fromNow.iso8601, importantDate = false)
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Navigate to K5 Important Dates Page and assert it is loaded.")
+        Log.d(STEP_TAG, "Navigate to K5 Important Dates Page.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.IMPORTANT_DATES)
+
+        Log.d(ASSERTION_TAG, "Assert that the K5 Important Dates Page is displayed correctly.")
         importantDatesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the important date assignments are displayed and the 'not' important one, '${testNotImportantAssignment.name}' is not displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the important date assignments are displayed and the 'not' important one, '${testNotImportantAssignment.name}' is not displayed.")
         importantDatesPage.assertItemDisplayed(testAssignment1.name)
         importantDatesPage.assertItemDisplayed(testAssignment2.name)
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
         importantDatesPage.assertItemNotDisplayed(testNotImportantAssignment.name)
 
-        Log.d(STEP_TAG, "Assert that the count of the items (3) and the day strings are correct on the Important Dates page.")
+        Log.d(ASSERTION_TAG, "Assert that the count of the items (3) and the day strings are correct on the Important Dates page.")
         importantDatesPage.assertRecyclerViewItemCount(3)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment1.dueAt.toDate()))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment2.dueAt.toDate()))
 
-        Log.d(STEP_TAG, "Opening ${testAssignment1.name} important date assignment's event. Assert that the Assignment Details Page is displayed.")
+        Log.d(STEP_TAG, "Opening '${testAssignment1.name}' important date assignment's event.")
         importantDatesPage.clickImportantDatesItem(testAssignment1.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed.")
         assignmentDetailsPage.assertAssignmentTitle(testAssignment1.name)
 
         Log.d(STEP_TAG, "Navigate back to Important Dates page.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the Important Dates Page is displayed correctly.")
         importantDatesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Refresh the Important Dates page. Assert that the corresponding items" +
-                "(all the assignments, except '${testNotImportantAssignment.name}' named assignment) and their labels are still displayed after the refresh.")
+        Log.d(STEP_TAG, "Refresh the Important Dates page.")
         importantDatesPage.pullToRefresh()
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding items (all the assignments, except '${testNotImportantAssignment.name}' named assignment) and their labels are still displayed after the refresh.")
         importantDatesPage.assertItemDisplayed(testAssignment1.name)
         importantDatesPage.assertItemDisplayed(testAssignment2.name)
         importantDatesPage.assertItemDisplayed(testAssignment3.name)
         importantDatesPage.assertItemNotDisplayed(testNotImportantAssignment.name)
 
-        Log.d(STEP_TAG, "Assert that the count of the items (3) and the day strings are correct on the Important Dates page after the refresh.")
+        Log.d(ASSERTION_TAG, "Assert that the count of the items (3) and the day strings are correct on the Important Dates page after the refresh.")
         importantDatesPage.assertRecyclerViewItemCount(3)
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment1.dueAt.toDate()))
         importantDatesPage.assertDayTextIsDisplayed(generateDayString(testAssignment2.dueAt.toDate()))

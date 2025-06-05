@@ -61,13 +61,18 @@ class RCEInsertDialog : AppCompatDialogFragment() {
         val colorStateList = makeEditTextColorStateList(defaultColor, themeColor)
         altEditText = root.findViewById(R.id.altEditText)
         urlEditText = root.findViewById(R.id.urlEditText)
+        val linkInputLayout = root.findViewById<TextInputLayout>(R.id.link_input_layout)
+        linkInputLayout.setBoxStrokeColorStateList(colorStateList)
+        linkInputLayout.hintTextColor = colorStateList
+        val altInputLayout = root.findViewById<TextInputLayout>(R.id.alt_input_layout)
+        altInputLayout.setBoxStrokeColorStateList(colorStateList)
+        altInputLayout.hintTextColor = colorStateList
         altEditText.highlightColor = highlightColor
         urlEditText.highlightColor = highlightColor
         altEditText.supportBackgroundTintList = colorStateList
         urlEditText.supportBackgroundTintList = colorStateList
         if (linkText.isNotBlank()) {
             altEditText.setText(linkText)
-            val altInputLayout = root.findViewById<TextInputLayout>(R.id.alt_input_layout)
             altInputLayout.visibility = View.GONE
         }
         val dialog = builder.create()

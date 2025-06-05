@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Texte de signature</string>
     <string name="due_dateTime">À remettre le : %1$s, %2$s</string>
+    <string name="noDueDate">Pas de date limite</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Besoin d’évaluation</string>
+    <string name="assignmentListTitle">Liste des devoirs</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d points</item>
+    </plurals>
+    <string name="noAssignments">Pas de travail assigné</string>
+    <string name="assignmentGroup">Groupe de tâches</string>
+    <string name="assignmentType">Type de travail</string>
+    <string name="dueDate">Date limite</string>
+    <string name="needsGrading">Doit être noté</string>
+    <string name="published">Publié</string>
+    <string name="unpublished">Non publié</string>
+    <string name="notYetSubmitted">Pas encore soumis</string>
+    <string name="toBeGraded">À noter</string>
+    <string name="graded">Noté</string>
+    <string name="other">Autres</string>
+    <string name="a11y_filterAssignments">Filtrer les travaux</string>
+    <string name="assignmentFilter">Filtre des travaux</string>
+    <string name="groupedBy">Groupés par</string>
+    <string name="gradingPeriod">Période de notation :</string>
+    <string name="gradingPeriodHeading">Période de notation</string>
+    <string name="gradePreferences">Préférences de notation</string>
+    <string name="allAssignments">Tous les travaux</string>
+    <string name="statusFilter">Filtre d’état</string>
     <string name="a11y_contentDescription_filter">Filtre</string>
     <string name="a11y_contentDescription_postPolicy">Stratégie de publication</string>
     <string name="late">En retard</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Filtre des soumissions</string>
     <string name="submissionMessageSubject">%1$s sur %2$s</string>
     <string name="all">Tout</string>
+    <string name="loginRequired">Identification requise</string>
+    <string name="loginRequiredMessage">Vous devez vous reconnecter en raison de la politique de sécurité de votre établissement. Une fois connecté, vous pourrez continuer à travailler sans interruption.</string>
+    <string name="login">S’identifier</string>
+    <string name="logout">Déconnexion</string>
+    <string name="loginRefreshSameUserError">Vous devez vous connecter avec le même utilisateur.</string>
+    <string name="errorLoadingAssignments">Une erreur s’est produite lors du chargement des devoirs</string>
+    <string name="a11y_searchAssignments">Chercher des travaux assignés</string>
+    <string name="dueAssignmentListItem">À rendre le %1$s</string>
 </resources>

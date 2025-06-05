@@ -29,8 +29,8 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
+import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
-import org.junit.Assert
 import org.junit.Test
 
 class EnrollmentFacadeTest {
@@ -69,10 +69,10 @@ class EnrollmentFacadeTest {
 
         val result = facade.getEnrollmentsByCourseId(courseId)
 
-        Assert.assertEquals(grades, result.first().grades)
-        Assert.assertEquals(user, result.first().observedUser)
-        Assert.assertEquals(user, result.first().user)
-        Assert.assertEquals(enrollment, result.first())
+        assertEquals(grades, result.first().grades)
+        assertEquals(user, result.first().observedUser)
+        assertEquals(user, result.first().user)
+        assertEquals(enrollment, result.first())
     }
 
     @Test
@@ -90,11 +90,11 @@ class EnrollmentFacadeTest {
 
         val result = facade.getAllEnrollments()
 
-        Assert.assertEquals(1, result.size)
-        Assert.assertEquals(grades, result.first().grades)
-        Assert.assertEquals(user, result.first().observedUser)
-        Assert.assertEquals(user, result.first().user)
-        Assert.assertEquals(enrollment, result.first())
+        assertEquals(1, result.size)
+        assertEquals(grades, result.first().grades)
+        assertEquals(user, result.first().observedUser)
+        assertEquals(user, result.first().user)
+        assertEquals(enrollment, result.first())
     }
 
     @Test
@@ -121,10 +121,32 @@ class EnrollmentFacadeTest {
 
         val result = facade.getEnrollmentsByGradingPeriodId(gradingPeriodId)
 
-        Assert.assertEquals(1, result.size)
-        Assert.assertEquals(grades, result.first().grades)
-        Assert.assertEquals(user, result.first().observedUser)
-        Assert.assertEquals(user, result.first().user)
-        Assert.assertEquals(enrollment, result.first())
+        assertEquals(1, result.size)
+        assertEquals(grades, result.first().grades)
+        assertEquals(user, result.first().observedUser)
+        assertEquals(user, result.first().user)
+        assertEquals(enrollment, result.first())
+    }
+
+    @Test
+    fun `Calling getEnrollmentsForUserByCourseId should return enrollments by user id and course id`() = runTest {
+        val courseId = 1L
+        val userId = 2L
+        val grades = Grades(htmlUrl = "htmlUrl")
+        val user = User(id = userId, name = "User")
+        val enrollment = Enrollment(id = 1L, courseId = courseId, userId = userId, user = user, grades = grades, courseSectionId = 1L)
+
+        coEvery { enrollmentDao.findByCourseIdAndUserId(courseId, userId) } returns listOf(enrollment).map {
+            EnrollmentEntity(it, courseId, null, observedUserId = null)
+        }
+        coEvery { gradesDao.findByEnrollmentId(enrollment.id) } returns GradesEntity(grades, enrollment.id)
+        coEvery { userDao.findById(any()) } returns UserEntity(user)
+
+        val result = facade.getEnrollmentsForUserByCourseId(courseId, userId)
+
+        assertEquals(1, result.size)
+        assertEquals(grades, result.first().grades)
+        assertEquals(user, result.first().user)
+        assertEquals(enrollment, result.first())
     }
 }

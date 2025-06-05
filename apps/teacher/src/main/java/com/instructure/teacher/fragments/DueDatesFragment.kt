@@ -86,9 +86,9 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.textLightest))
     }
 
-    override fun showMenu(assignment: Assignment) {
-        binding.toolbar.setupMenu(R.menu.menu_edit_generic) {
-            if(APIHelper.hasNetworkConnection()) {
+    override fun showMenu(assignment: Assignment) = with(binding) {
+        toolbar.setupMenu(R.menu.menu_edit_generic) {
+            if (APIHelper.hasNetworkConnection()) {
                 when {
                     assignment.submissionTypesRaw.contains(Assignment.SubmissionType.ONLINE_QUIZ.apiString) -> {
                         val args = EditQuizDetailsFragment.makeBundle(assignment.quizId)
@@ -109,6 +109,7 @@ class DueDatesFragment : BaseSyncFragment<DueDateGroup, DueDatesPresenter, DueDa
                 NoInternetConnectionDialog.show(requireFragmentManager())
             }
         }
+        ViewStyler.themeToolbarColored(requireActivity(), toolbar, mCourse.color, requireContext().getColor(R.color.textLightest))
     }
 
     override fun onPresenterPrepared(presenter: DueDatesPresenter) {

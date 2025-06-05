@@ -64,7 +64,6 @@
     <string name="logout_no">Níl</string>
 
     <!--Smart Login-->
-
     <string name="loginNearYou">In aice leat</string>
     <string name="loginCanvasNetwork">Líonra Canvas</string>
     <string name="loginRightBehindYou">Díreach taobh thiar duit</string>
@@ -102,7 +101,7 @@
     <string name="findMySchool">Aimsigh mo scoil</string>
     <string name="loginWithQRCode">Cód MF</string>
     <string name="locateQRCode">Aimsigh Cód MF</string>
-    <string name="qrCodeExplanation">Gheobhaidh tú an cód MF ar an ngréasán i do phróifíl chuntais. Cliceáil \'MF le haghaidh Logáil Isteach Soghluaiste\' sa liosta.</string>
+    <string name="qrCodeExplanation">Aimsigh an cód MF i do phróifíl chuntais ar an ngréasán faoi \'MF le haghaidh Logáil Isteach Soghluaiste\'.</string>
     <string name="qrCodeScanningPrompt">Scan cód MF ó Canvas chun logáil isteach</string>
     <string name="loginWithQRCodeError">Tharla earráid agus logáil isteach. Gin Cód MF eile le do thoil agus bain triail eile as.</string>
     <string name="invalidQRCodeError">Scan cód MF ginte ag Canvas</string>
@@ -130,4 +129,5 @@
     <string name="weMadeChanges">Rinneamar roinnt athruithe.</string>
     <string name="whatsNewText">Féach ar an méid atá nua</string>
     <string name="findAnotherSchool">Aimsigh scoil eile</string>
+    <string name="qrCodeDisabledExplanation">Mura bhfuil sé ann, tá an rogha seo díchumasaithe ag d\'institiúid.</string>
 </resources>

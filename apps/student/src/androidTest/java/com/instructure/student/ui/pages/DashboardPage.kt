@@ -470,6 +470,14 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(withId(R.id.bottomNavigationHome)).click()
     }
 
+    fun assertLoginRequiredDialog() {
+        waitForViewWithText(R.string.loginRequired).assertDisplayed()
+    }
+
+    fun clickLogInOnLoginRequiredDialog() {
+        onView(withText("LOG IN")).click()
+    }
+
 }
 
 /**

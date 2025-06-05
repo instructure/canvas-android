@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Signaturtext</string>
     <string name="due_dateTime">Inlämningsdatum: %1$s, %2$s</string>
+    <string name="noDueDate">Inget inlämningsdatum</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s behöver bedömning</string>
+    <string name="assignmentListTitle">Uppgiftslista</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d poäng</item>
+        <item quantity="other">%d poäng</item>
+    </plurals>
+    <string name="noAssignments">Inga uppgifter</string>
+    <string name="assignmentGroup">Uppgiftsgrupp</string>
+    <string name="assignmentType">Uppgiftstyp</string>
+    <string name="dueDate">Inlämningsdatum</string>
+    <string name="needsGrading">Måste bedömas</string>
+    <string name="published">Publicerad</string>
+    <string name="unpublished">Ej offentliggjord</string>
+    <string name="notYetSubmitted">Ännu inte inlämnade</string>
+    <string name="toBeGraded">Ska bedömas</string>
+    <string name="graded">Har bedömts</string>
+    <string name="other">Annat</string>
+    <string name="a11y_filterAssignments">Filtrera uppgifter</string>
+    <string name="assignmentFilter">Uppgiftsfilter</string>
+    <string name="groupedBy">Grupperad av</string>
+    <string name="gradingPeriod">Bedömningsperiod:</string>
+    <string name="gradingPeriodHeading">Bedömningsperiod</string>
+    <string name="gradePreferences">Bedömningspreferenser</string>
+    <string name="allAssignments">Alla uppgifter</string>
+    <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filtrera</string>
     <string name="a11y_contentDescription_postPolicy">Publicera policy</string>
     <string name="late">Sen</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Inlämningsfilter</string>
     <string name="submissionMessageSubject">%1$s på %2$s</string>
     <string name="all">Alla</string>
+    <string name="loginRequired">Inloggning krävs</string>
+    <string name="loginRequiredMessage">Du måste logga in igen på grund av din institutions säkerhetspolicy. När du har loggat in igen kan du fortsätta arbeta utan avbrott.</string>
+    <string name="login">Logga in</string>
+    <string name="logout">Logga ut</string>
+    <string name="loginRefreshSameUserError">Du måste logga in med samma användarnamn.</string>
+    <string name="errorLoadingAssignments">Ett fel inträffade vid inläsning av uppgifter</string>
+    <string name="a11y_searchAssignments">Sök i uppgifter</string>
+    <string name="dueAssignmentListItem">Förfaller %1$s</string>
 </resources>

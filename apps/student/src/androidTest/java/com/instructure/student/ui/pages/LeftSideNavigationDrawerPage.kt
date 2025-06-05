@@ -25,6 +25,7 @@ import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.scrollTo
 import com.instructure.espresso.swipeDown
@@ -127,7 +128,8 @@ class LeftSideNavigationDrawerPage : BasePage() {
 
     fun assertUserLoggedIn(user: CanvasUserApiModel) {
         onView(hamburgerButtonMatcher).click()
-        onViewWithText(user.shortName).assertDisplayed()
+        sleep(2000)
+        waitForViewWithText(user.shortName).assertDisplayed()
         Espresso.pressBack()
     }
 

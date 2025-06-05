@@ -60,7 +60,7 @@ internal fun CourseDetailsWebViewScreen(
             .testTag("CourseDetailsWebViewScreen")
     ) {
         ComposeCanvasWebViewWrapper(
-            html = html,
+            content = html,
             onLtiButtonPressed = onLtiButtonPressed,
             applyOnWebView = applyOnWebView
         )

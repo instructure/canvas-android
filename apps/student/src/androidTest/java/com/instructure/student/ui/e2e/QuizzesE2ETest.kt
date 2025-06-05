@@ -71,29 +71,33 @@ class QuizzesE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seed a quiz for ${course.name} course.")
+        Log.d(PREPARATION_TAG, "Seed a quiz for '${course.name}' course.")
         val quizUnpublished = QuizzesApi.createQuiz(course.id, teacher.token, published = false)
 
-        Log.d(PREPARATION_TAG,"Seed another quiz for ${course.name} with some questions.")
+        Log.d(PREPARATION_TAG, "Seed another quiz for '${course.name}' with some questions.")
         val quizQuestions = makeQuizQuestions()
 
-        Log.d(PREPARATION_TAG,"Publish the previously seeded quiz.")
+        Log.d(PREPARATION_TAG, "Publish the previously seeded quiz.")
         val quizPublished = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, quizQuestions)
 
-        Log.d(STEP_TAG, "Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Select ${course.name} course.")
+        Log.d(STEP_TAG, "Select '${course.name}' course.")
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Navigate to Quizzes Page. Assert that ${quizPublished.title} published quiz is displayed and ${quizUnpublished.title} unpublished quiz has not displayed.")
+        Log.d(STEP_TAG, "Navigate to Quizzes Page.")
         courseBrowserPage.selectQuizzes()
+
+        Log.d(ASSERTION_TAG, "Assert that '${quizPublished.title}' published quiz is displayed and '${quizUnpublished.title}' unpublished quiz has not displayed.")
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizNotDisplayed(quizUnpublished)
 
-        Log.d(STEP_TAG,"Select ${quizPublished.title} quiz. Assert that the ${quizPublished.title} quiz title is displayed.")
+        Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
         quizListPage.selectQuiz(quizPublished)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz title is displayed.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(locatorType = Locator.ID, locatorValue = "quiz_title", textValue = quizPublished.title))
 
         // Launch the quiz
@@ -152,17 +156,17 @@ class QuizzesE2ETest: StudentTest() {
         }
 
         // Enter answers to questions.  Right now, only multiple-choice questions are supported.
-        Log.d(STEP_TAG,"Enter answers to the questions:")
+        Log.d(STEP_TAG, "Enter answers to the questions:")
         for(question in quizQuestions) {
-            Log.d(STEP_TAG,"Assert that the following question is displayed: ${question.questionText}.")
+            Log.d(ASSERTION_TAG, "Assert that the following question is displayed: '${question.questionText}'.")
             quizTakingPage.verifyQuestionDisplayed(question.id!!, question.questionText!!)
             if(question.questionType == "multiple_choice_question") {
-                Log.d(STEP_TAG,"Choosing an answer for the following question: ${question.questionText}.")
+                Log.d(STEP_TAG, "Choosing an answer for the following question: '${question.questionText}'.")
                 quizTakingPage.selectAnyAnswer(question.id!!) // Just choose any answer
             }
         }
 
-        Log.d(STEP_TAG,"Submit the ${quizPublished.title} quiz.")
+        Log.d(PREPARATION_TAG, "Submit the '${quizPublished.title}' quiz.")
         quizTakingPage.submitQuiz()
 
         // Interesting situation here.  If you wait long enough, the web page will update itself,
@@ -172,14 +176,14 @@ class QuizzesE2ETest: StudentTest() {
         //
         // Chosen strategy: pressBack() until you get to the quiz list page,
         // then reload the quiz details to get the latest info.
-        Log.d(STEP_TAG,"Navigate back to Quizzes Page.")
+        Log.d(STEP_TAG, "Navigate back to Quizzes Page.")
         while(!isElementDisplayed(R.id.quizListPage)) pressBack()
 
-        Log.d(STEP_TAG,"Select ${quizPublished.title} quiz.")
+        Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
         quizListPage.selectQuiz(quizPublished)
 
         sleep(5000)
-        Log.d(STEP_TAG,"Assert (on web) that the ${quizPublished.title} quiz now has a history.")
+        Log.d(ASSERTION_TAG, "Assert (on web) that the '${quizPublished.title}' quiz now has a history.")
         onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.ID, "quiz-submission-version-table"))
                 .withContextualElement(findElement(Locator.CLASS_NAME, "desc"))
@@ -190,14 +194,14 @@ class QuizzesE2ETest: StudentTest() {
                 .perform(webScrollIntoView())
                 .check(webMatches(getText(),containsString("LATEST")))
 
-        Log.d(STEP_TAG,"Navigate back to Course Browser Page.")
+        Log.d(STEP_TAG, "Navigate back to Course Browser Page.")
         ViewUtils.pressBackButton(2)
 
-        Log.d(STEP_TAG,"Navigate to Grades Page.")
+        Log.d(STEP_TAG, "Navigate to Grades Page.")
         courseBrowserPage.selectGrades()
         // For some reason, this quiz is resulting in a 10/10 grade, although with the weights assigned and
         // answers given it should be 5/10.  Let's just make sure that a "10" shows up.
-        Log.d(STEP_TAG,"Assert that the corresponding grade (10) is displayed for ${quizPublished.title} quiz.")
+        Log.d(ASSERTION_TAG, "Assert that the corresponding grade (10) is displayed for '${quizPublished.title}' quiz.")
         courseGradesPage.assertGradeDisplayed(withText(quizPublished.title), containsTextCaseInsensitive("10"))
 
     }

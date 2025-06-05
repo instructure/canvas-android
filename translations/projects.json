@@ -40,12 +40,5 @@
     "source_path": "libs/pandares/src/main/res/values/strings.xml",
     "resource_dir": "libs/pandares/src/main/res",
     "extension": "xml"
-  },
-  {
-    "name": "flutter-parent",
-    "source_path": "apps/flutter_parent/lib/l10n/res/intl_en.arb",
-    "resource_dir": "apps/flutter_parent/lib/l10n/res",
-    "flutter_dir": "apps/flutter_parent",
-    "extension": "arb"
   }
 ]

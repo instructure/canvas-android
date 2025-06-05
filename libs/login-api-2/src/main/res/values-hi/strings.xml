@@ -100,7 +100,7 @@
     <string name="findMySchool">मेरा स्कूल ढूंढें</string>
     <string name="loginWithQRCode">QR कोड</string>
     <string name="locateQRCode">QR कोड का पता लगाएं</string>
-    <string name="qrCodeExplanation">आपको वेब पर अपनी खाता प्रोफ़ाइल में QR कोड मिलेगा। सूची में \'मोबाइल लॉगिन के लिए QR\' पर क्लिक करें।</string>
+    <string name="qrCodeExplanation">\'मोबाइल लॉगिन के लिए QR\' के तहत वेब पर अपने खाता प्रोफ़ाइल में QR कोड ढूंढें।</string>
     <string name="qrCodeScanningPrompt">लॉग इन करने के लिए Canvas से QR कोड स्कैन करें</string>
     <string name="loginWithQRCodeError">लॉग इन करने में त्रुटि हुई। कृपया कोई अन्य QR कोड जेनरेट करें और फिर से कोशिश करें।</string>
     <string name="invalidQRCodeError">ककृपया Canvas द्वारा जेनरेट किए गए QR कोड को स्कैन करें</string>
@@ -128,4 +128,5 @@
     <string name="weMadeChanges">हमने कुछ बदलाव किए हैं।</string>
     <string name="whatsNewText">देखें, क्या नया है</string>
     <string name="findAnotherSchool">कोई अन्य स्कूल ढूंढें</string>
+    <string name="qrCodeDisabledExplanation">यदि यह मौजूद नहीं है, तो आपके संस्थान ने इस विकल्प को अक्षम कर दिया है।</string>
 </resources>

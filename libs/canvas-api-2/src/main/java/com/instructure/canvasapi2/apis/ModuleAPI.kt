@@ -19,12 +19,23 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.MasteryPathSelectResponse
+import com.instructure.canvasapi2.models.ModuleItem
+import com.instructure.canvasapi2.models.ModuleItemSequence
+import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.postmodels.BulkUpdateResponse
 import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
 object ModuleAPI {
 
@@ -45,13 +56,24 @@ object ModuleAPI {
         fun getFirstPageModulesWithItems(@Path("contextId") contextId: Long) : Call<List<ModuleObject>>
 
         @GET("{contextType}/{contextId}/modules?include[]=items&include[]=content_details")
-        suspend fun getFirstPageModulesWithItems(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<ModuleObject>>
+        suspend fun getFirstPageModulesWithItems(
+            @Path("contextType") contextType: String,
+            @Path("contextId") contextId: Long,
+            @Tag params: RestParams,
+            @Query("include[]") includes: List<String> = emptyList()
+        ): DataResult<List<ModuleObject>>
 
         @GET("{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
         fun getFirstPageModuleItems(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long) : Call<List<ModuleItem>>
 
         @GET("{contextType}/{contextId}/modules/{moduleId}/items?include[]=content_details&include[]=mastery_paths")
-        suspend fun getFirstPageModuleItems(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Tag params: RestParams) : DataResult<List<ModuleItem>>
+        suspend fun getFirstPageModuleItems(
+            @Path("contextType") contextType: String,
+            @Path("contextId") contextId: Long,
+            @Path("moduleId") moduleId: Long,
+            @Tag params: RestParams,
+            @Query("include[]") includes: List<String> = emptyList()
+        ): DataResult<List<ModuleItem>>
 
         @GET
         fun getNextPageModuleItemList(@Url nextURL: String) : Call<List<ModuleItem>>
@@ -83,8 +105,11 @@ object ModuleAPI {
         @GET("{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
         fun getModuleItem(@Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long) : Call<ModuleItem>
 
-        @GET("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details")
+        @GET("{contextType}/{contextId}/modules/{moduleId}/items/{itemId}?include[]=content_details&include[]=estimated_durations")
         suspend fun getModuleItem(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Path("itemId") itemId: Long, @Tag params: RestParams) : DataResult<ModuleItem>
+
+        @GET("{contextType}/{contextId}/modules/{moduleId}")
+        suspend fun getModuleObject(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("moduleId") moduleId: Long, @Tag params: RestParams) : DataResult<ModuleObject>
 
         @PUT("{contextType}/{contextId}/modules")
         suspend fun bulkUpdateModules(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Query("module_ids[]") moduleIds: List<Long>, @Query("event") event: String, @Query("skip_content_tags") skipContentTags: Boolean, @Query("async") async: Boolean, @Tag params: RestParams): DataResult<BulkUpdateResponse>

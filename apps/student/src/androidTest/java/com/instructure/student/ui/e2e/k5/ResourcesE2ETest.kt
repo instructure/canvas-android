@@ -44,7 +44,7 @@ class ResourcesE2ETest : StudentComposeTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.RESOURCES)
     fun resourcesE2ETest() {
 
-        Log.d(PREPARATION_TAG,"Seeding data for K5 sub-account.")
+        Log.d(PREPARATION_TAG, "Seeding data for K5 sub-account.")
         val syllabusBodyString = "this is the syllabus body..."
         val data = seedDataForK5(
             teachers = 1,
@@ -58,30 +58,38 @@ class ResourcesE2ETest : StudentComposeTest() {
         val teacher = data.teachersList[0]
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLoginElementary(student)
         elementaryDashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Navigate to K5 Resources Page and assert it is loaded.")
+        Log.d(STEP_TAG, "Navigate to K5 Resources Page.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.RESOURCES)
+
+        Log.d(ASSERTION_TAG, "Assert that the K5 Resources Page is displayed correctly.")
         resourcesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the important links, LTI tools and contacts are displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the important links, LTI tools and contacts are displayed.")
         assertElementaryResourcesPageInformation(teacher)
 
-        Log.d(STEP_TAG, "Click on the compose message icon next to a contact ('${teacher.name}' teacher), and verify if the new message page is displayed.")
+        Log.d(STEP_TAG, "Click on the compose message icon next to a contact ('${teacher.name}' teacher).")
         resourcesPage.openComposeMessage(teacher.shortName)
+
+        Log.d(ASSERTION_TAG, "Assert that the new message page is displayed.")
         assertNewMessagePageDisplayed()
 
-        Log.d(STEP_TAG, "Navigate back to K5 Resources Page and assert that is displayed.")
+        Log.d(STEP_TAG, "Navigate back to K5 Resources Page.")
         Espresso.pressBack()
+
+        Log.d(ASSERTION_TAG, "Assert that the K5 Resources Page is displayed correctly.")
         resourcesPage.assertPageObjects()
 
-        Log.d(STEP_TAG, "Assert that the important links, LTI tools and contacts are still displayed correctly, after the navigation.")
+        Log.d(ASSERTION_TAG, "Assert that the important links, LTI tools and contacts are still displayed correctly, after the navigation.")
         assertElementaryResourcesPageInformation(teacher)
 
-        Log.d(STEP_TAG, "Open an LTI tool (Google Drive), and verify if all the NON-homeroom courses are displayed within the 'Choose a Course' list.")
+        Log.d(STEP_TAG, "Open an LTI tool (Google Drive).")
         resourcesPage.openLtiApp("Google Drive")
+
+        Log.d(ASSERTION_TAG, "Assert if all the NON-homeroom courses are displayed within the 'Choose a Course' list.")
         nonHomeroomCourses.forEach {
             resourcesPage.assertCourseShown(it.name)
         }

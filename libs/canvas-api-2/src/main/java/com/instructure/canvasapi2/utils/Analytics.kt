@@ -38,6 +38,10 @@ object Analytics {
         Pendo.track(eventName, emptyMap())
     }
 
+    fun isSessionActive(): Boolean {
+        return !Pendo.getAccountId().isNullOrEmpty()
+    }
+
     fun setUserProperty(propertyName: String, propertyValue: String) {
 
     }
@@ -140,6 +144,22 @@ object AnalyticsEventConstants {
     const val REMINDER_ASSIGNMENT_CREATE = "reminder_assignment"
     const val REMINDER_EVENT_CREATE = "reminder_event"
     const val SUBMISSION_AND_RUBRIC_INTERACTION = "submission_and_rubric_interaction"
+
+    /* Widget */
+    const val WIDGET_TODO_WIDGET_ADDED = "widget_todo_added"
+    const val WIDGET_TODO_WIDGET_DELETED = "widget_todo_deleted"
+    const val WIDGET_TODO_CREATE_ACTION = "widget_todo_create_action"
+    const val WIDGET_TODO_OPEN_ITEM_ACTION = "widget_todo_open_item_action"
+    const val WIDGET_TODO_OPEN_TODOS_ACTION = "widget_todo_open_todos_action"
+    const val WIDGET_TODO_REFRESH_ACTION = "widget_todo_refresh_action"
+    const val WIDGET_GRADES_WIDGET_ADDED = "widget_grades_added"
+    const val WIDGET_GRADES_WIDGET_DELETED = "widget_grades_deleted"
+    const val WIDGET_GRADES_OPEN_ITEM_ACTION = "widget_grades_open_item_action"
+    const val WIDGET_GRADES_OPEN_APP_ACTION = "widget_grades_open_app_action"
+    const val WIDGET_SINGLE_GRADE_WIDGET_ADDED = "widget_single_grade_added"
+    const val WIDGET_SINGLE_GRADE_WIDGET_DELETED = "widget_single_grade_deleted"
+    const val WIDGET_SINGLE_GRADE_OPEN_ITEM_ACTION = "widget_single_grade_open_item_action"
+    const val WIDGET_SINGLE_GRADE_OPEN_APP_ACTION = "widget_single_grade_open_app_action"
 }
 
 /**

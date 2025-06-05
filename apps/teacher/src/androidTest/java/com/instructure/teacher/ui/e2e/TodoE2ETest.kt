@@ -56,7 +56,7 @@ class TodoE2ETest : TeacherTest() {
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignments = seedAssignments(courseId = course.id, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), teacherToken = teacher.token, pointsPossible = 15.0)
 
-        Log.d(PREPARATION_TAG,"Seed a submission for '${assignments[0].name}' assignment with '${student.name}' student.")
+        Log.d(PREPARATION_TAG, "Seed a submission for '${assignments[0].name}' assignment with '${student.name}' student.")
         seedAssignmentSubmission(
                 submissionSeeds = listOf(SubmissionsApi.SubmissionSeedInfo(
                         amount = 1,
@@ -67,20 +67,20 @@ class TodoE2ETest : TeacherTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to 'To Do' Page.")
+        Log.d(STEP_TAG, "Navigate to 'To Do' Page.")
         dashboardPage.openTodo()
         todoPage.waitForRender()
 
-        Log.d(STEP_TAG,"Assert that the previously seeded '${assignments[0].name}' assignment is displayed as a To Do element for the '${course.name}' course." +
+        Log.d(ASSERTION_TAG, "Assert that the previously seeded '${assignments[0].name}' assignment is displayed as a To Do element for the '${course.name}' course." +
                 "Assert that the '1 Needs Grading' text is under the corresponding assignment's details, and assert that the To Do element count is 1.")
         todoPage.assertTodoElementDetailsDisplayed(course.name)
         todoPage.assertNeedsGradingCountOfTodoElement(assignments[0].name, 1)
         todoPage.assertTodoElementCount(1)
 
-        Log.d(PREPARATION_TAG,"Grade the previously seeded submission for '${student.name}' student.")
+        Log.d(PREPARATION_TAG, "Grade the previously seeded submission for '${student.name}' student.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, assignments[0].id, student.id, postedGrade = "15")
 
-        Log.d(STEP_TAG,"Refresh the To Do Page. Assert that the empty view is displayed so that the To Do has disappeared because it has been graded.")
+        Log.d(ASSERTION_TAG, "Refresh the To Do Page. Assert that the empty view is displayed so that the To Do has disappeared because it has been graded.")
         todoPage.refresh()
         todoPage.assertEmptyView()
     }

@@ -65,7 +65,7 @@ class AlertSettingsViewModel @Inject constructor(
         }
     }
 
-    private fun handleAction(alertSettingsAction: AlertSettingsAction) {
+    fun handleAction(alertSettingsAction: AlertSettingsAction) {
         viewModelScope.launch {
             when (alertSettingsAction) {
                 is AlertSettingsAction.CreateThreshold -> {
@@ -111,29 +111,29 @@ class AlertSettingsViewModel @Inject constructor(
                     _uiState.update {
                         it.copy(isLoading = true)
                     }
-                    try {
-                        _events.send(
-                            AlertSettingsViewModelAction.UnpairStudent(
-                                alertSettingsAction.studentId
-                            )
+                    _events.send(
+                        AlertSettingsViewModelAction.UnpairStudent(
+                            alertSettingsAction.studentId
                         )
-                    } catch (e: Exception) {
-                        crashlytics.recordException(e)
-                        e.printStackTrace()
-                        _uiState.update {
-                            it.copy(isLoading = false)
-                        }
-                        _events.send(AlertSettingsViewModelAction.ShowSnackbar(
-                            message = R.string.generalUnexpectedError,
-                            actionCallback = {
-                                handleAction(alertSettingsAction)
-                            }
-                        ))
-                    }
+                    )
                 }
 
                 is AlertSettingsAction.ReloadAlertSettings -> {
                     loadAlertThresholds(true)
+                }
+
+                is AlertSettingsAction.UnpairStudentFailed -> {
+                    _uiState.update {
+                        it.copy(isLoading = false)
+                    }
+                    _events.send(
+                        AlertSettingsViewModelAction.ShowSnackbar(
+                            message = R.string.generalUnexpectedError,
+                            actionCallback = {
+                                handleAction(AlertSettingsAction.UnpairStudent(student.id))
+                            }
+                        )
+                    )
                 }
             }
         }
@@ -170,5 +170,4 @@ class AlertSettingsViewModel @Inject constructor(
     private suspend fun deleteAlertThreshold(thresholdId: Long) {
         repository.deleteAlertThreshold(thresholdId)
     }
-
 }

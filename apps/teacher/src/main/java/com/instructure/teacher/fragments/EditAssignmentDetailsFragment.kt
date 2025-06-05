@@ -383,7 +383,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 }
             }
 
-            v.setupOverride(index, dueDateGroup, editDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
+            v.setupOverride(index, dueDateGroup, true, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
                 val args = AssigneeListFragment.makeBundle(
                         editDateGroups,
                         index,
@@ -481,7 +481,7 @@ class EditAssignmentDetailsFragment : BaseFragment() {
                 saveButton?.setGone()
                 savingProgressBar.announceForAccessibility(getString(R.string.saving))
                 savingProgressBar.setVisible()
-                assignment = awaitApi { AssignmentManager.editAssignment(assignment.courseId, assignment.id, postData, it, false) }
+                assignment = awaitApi { AssignmentManager.editAssignment(assignment.courseId, assignment.id, postData, it, true) }
                 AssignmentUpdatedEvent(assignment.id).post() // Post bus event
                 toast(R.string.successfully_updated_assignment) // let the user know the assignment was saved
                 editAssignmentName.hideKeyboard() // close the keyboard

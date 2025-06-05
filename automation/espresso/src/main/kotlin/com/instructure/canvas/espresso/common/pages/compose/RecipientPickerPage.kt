@@ -6,7 +6,7 @@ import androidx.compose.ui.test.performClick
 
 class RecipientPickerPage(private val composeTestRule: ComposeTestRule) {
     fun pressLabel(label: String) {
-        composeTestRule.onNodeWithText(label).performClick()
+        composeTestRule.onNodeWithText(label, useUnmergedTree = true).performClick()
     }
 
     fun pressDone() {

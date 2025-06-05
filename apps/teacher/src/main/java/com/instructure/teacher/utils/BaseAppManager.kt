@@ -21,7 +21,7 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.instructure.annotations.FileCaching.FileCache
+import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.Logger

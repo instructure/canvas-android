@@ -17,7 +17,7 @@
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
+import com.instructure.pandautils.room.studentdb.StudentDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

@@ -39,52 +39,54 @@ class SyllabusE2ETest : TeacherTest() {
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Open '${course.name}' course and navigate to Syllabus Page.")
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to Syllabus Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openSyllabus()
 
-        Log.d(STEP_TAG,"Assert that empty view is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that empty view is displayed.")
         syllabusPage.assertEmptyView()
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
         val assignment = seedAssignments(courseId = course.id, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY), teacherToken = teacher.token, pointsPossible = 15.0, withDescription = true)
 
-        Log.d(PREPARATION_TAG,"Seed a quiz for the '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seed a quiz for the '${course.name}' course.")
         val quiz = seedQuizzes(courseId = course.id, withDescription = true, published = true, teacherToken = teacher.token, dueAt = 1.days.fromNow.iso8601)
 
-        Log.d(STEP_TAG,"Refresh the Syllabus page and assert that the '${assignment[0].name}' assignment and '${quiz.quizList[0].title}' quiz are displayed as syllabus items.")
+        Log.d(ASSERTION_TAG, "Refresh the Syllabus page and assert that the '${assignment[0].name}' assignment and '${quiz.quizList[0].title}' quiz are displayed as syllabus items.")
         syllabusPage.refresh()
         syllabusPage.assertItemDisplayed(assignment[0].name)
         syllabusPage.assertItemDisplayed(quiz.quizList[0].title)
 
-        Log.d(STEP_TAG,"Refresh the Syllabus page. Click on 'Pencil' (aka. 'Edit') icon.")
+        Log.d(STEP_TAG, "Refresh the Syllabus page. Click on 'Pencil' (aka. 'Edit') icon.")
         syllabusPage.refresh()
         syllabusPage.openEditSyllabus()
-        var syllabusBody = "Syllabus Body"
 
-        Log.d(STEP_TAG,"Edit syllabus description (aka. 'Syllabus Body') by adding new value to it: '$syllabusBody'. Click on 'Save'.")
+        var syllabusBody = "Syllabus Body"
+        Log.d(STEP_TAG, "Edit syllabus description (aka. 'Syllabus Body') by adding new value to it: '$syllabusBody'. Click on 'Save'.")
         editSyllabusPage.editSyllabusBody(syllabusBody)
         editSyllabusPage.saveSyllabusEdit()
 
-        Log.d(STEP_TAG,"Assert that the previously made modifications has been applied on the syllabus.")
+        Log.d(ASSERTION_TAG, "Assert that the previously made modifications has been applied on the syllabus.")
         syllabusPage.assertDisplaysSyllabus(syllabusBody = syllabusBody, shouldDisplayTabs = true)
 
-        Log.d(STEP_TAG,"Select 'Summary' Tab and assert that the '${assignment[0].name}' assignment and '${quiz.quizList[0].title}' quiz are displayed.")
+        Log.d(STEP_TAG, "Select 'Summary' Tab.")
         syllabusPage.selectSummaryTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment[0].name}' assignment and '${quiz.quizList[0].title}' quiz are displayed.")
         syllabusPage.assertItemDisplayed(assignment[0].name)
         syllabusPage.assertItemDisplayed(quiz.quizList[0].title)
 
-        Log.d(STEP_TAG,"Select 'Syllabus' Tab and click on 'Pencil' (aka. 'Edit') icon.")
+        Log.d(STEP_TAG, "Select 'Syllabus' Tab and click on 'Pencil' (aka. 'Edit') icon.")
         syllabusPage.selectSyllabusTab()
         syllabusBody = "Edited Syllabus Body"
         syllabusPage.openEditSyllabus()
 
-        Log.d(STEP_TAG,"Edit syllabus description (aka. 'Syllabus Body') by adding new value to it: '$syllabusBody'. Toggle 'Show course summary'. Click on 'Save'.")
+        Log.d(STEP_TAG, "Edit syllabus description (aka. 'Syllabus Body') by adding new value to it: '$syllabusBody'. Toggle 'Show course summary'. Click on 'Save'.")
         editSyllabusPage.editSyllabusBody(syllabusBody)
         editSyllabusPage.editSyllabusToggleShowSummary()
         editSyllabusPage.saveSyllabusEdit()
 
-        Log.d(STEP_TAG,"Assert that the previously made modifications has been applied on the syllabus.")
+        Log.d(ASSERTION_TAG, "Assert that the previously made modifications has been applied on the syllabus.")
         syllabusPage.assertDisplaysSyllabus(syllabusBody = syllabusBody, shouldDisplayTabs = false)
     }
 }

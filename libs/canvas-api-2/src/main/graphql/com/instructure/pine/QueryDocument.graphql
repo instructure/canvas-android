@@ -1,0 +1,5 @@
+mutation QueryDocument($input: RagQueryInput!) {
+    query(input: $input) {
+        response
+    }
+}

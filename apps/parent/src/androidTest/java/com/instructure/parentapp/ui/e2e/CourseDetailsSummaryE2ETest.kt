@@ -74,10 +74,10 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
             Date().toApiString()
         )
 
-        Log.d(PREPARATION_TAG,"Seed a published quiz because it should be displayed on the Summary Page.")
+        Log.d(PREPARATION_TAG, "Seed a published quiz because it should be displayed on the Summary Page.")
         val testPublishedQuiz = QuizzesApi.createAndPublishQuiz(course.id, teacher.token, listOf())
 
-        Log.d(PREPARATION_TAG, "Update ${course.name} course to set Syllabus as Home Page (with some syllabus body) and enable 'Show Course Summary' setting to make the Summary Tab displayed in the Parent app.")
+        Log.d(PREPARATION_TAG, "Update '${course.name}' course to set Syllabus as Home Page (with some syllabus body) and enable 'Show Course Summary' setting to make the Summary Tab displayed in the Parent app.")
         CoursesApi.updateCourse(course.id, UpdateCourse(syllabusBody = "Test syllabus body...", homePage = "syllabus", showSummary = 1))
 
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
@@ -87,13 +87,13 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         dashboardPage.waitForRender()
         coursesPage.clickCourseItem(course.name)
 
-        Log.d(STEP_TAG,"Navigate to Summary Page by selecting Summary Tab.")
+        Log.d(STEP_TAG, "Navigate to Summary Page by selecting Summary Tab.")
         courseDetailsPage.selectTab("SUMMARY")
 
         Log.d(ASSERTION_TAG, "Assert that the 'SUMMARY' tab has been selected.")
         courseDetailsPage.assertTabSelected("SUMMARY")
 
-        Log.d(STEP_TAG, "Assert that the' ${assignment.name}' assignment, '${testPublishedQuiz.title}' quiz and '${testCalendarEvent.title}' calendar event items are all displayed on the Summary Page. ")
+        Log.d(ASSERTION_TAG, "Assert that the' ${assignment.name}' assignment, '${testPublishedQuiz.title}' quiz and '${testCalendarEvent.title}' calendar event items are all displayed on the Summary Page. ")
         summaryPage.assertItemDisplayed(assignment.name)
         summaryPage.assertItemDisplayed(testCalendarEvent.title.orEmpty())
         summaryPage.assertItemDisplayed(testPublishedQuiz.title)
@@ -101,7 +101,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Select '${assignment.name}' (assignment) Summary item to navigate to the Assignment Details Page.")
         summaryPage.selectItem(assignment.name)
 
-        Log.d(STEP_TAG, "Assert that the Assignment Details Page is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is loaded successfully.")
         assignmentDetailsPage.assertAssignmentDetails(assignment)
 
         Log.d(STEP_TAG, "Navigate back to the Summary Page.")
@@ -110,7 +110,7 @@ class CourseDetailsSummaryE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Select '${testCalendarEvent.title}' Summary item (calendar event) to navigate to the Calendar Event Details Page.")
         summaryPage.selectItem(testCalendarEvent.title.orEmpty())
 
-        Log.d(STEP_TAG, "Assert that the Calendar Event Details Page is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Calendar Event Details Page is loaded successfully.")
         calendarEventDetailsPage.assertEventTitle(testCalendarEvent.title.orEmpty())
     }
 

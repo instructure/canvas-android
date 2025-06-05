@@ -16,14 +16,14 @@
  */
 package com.instructure.teacher.adapters
 
-import androidx.viewpager.widget.PagerAdapter
 import android.view.View
 import android.view.ViewGroup
+import androidx.viewpager.widget.PagerAdapter
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.teacher.view.SubmissionContentView
-import java.util.*
+import java.util.WeakHashMap
 
 class SubmissionContentAdapter(
         private val mAssignment: Assignment,
@@ -67,5 +67,9 @@ class SubmissionContentAdapter(
 
     fun updateAnnotations(position: Int) {
         mContentMap[position]?.updateAnnotations()
+    }
+
+    fun onPageSelected(previousPosition: Int, position: Int) {
+        mContentMap[previousPosition]?.pauseVideo()
     }
 }

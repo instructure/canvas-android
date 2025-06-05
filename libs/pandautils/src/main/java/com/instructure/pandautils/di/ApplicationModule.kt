@@ -37,9 +37,11 @@ import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.typeface.TypefaceBehavior
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.StorageUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
+import com.instructure.pandautils.utils.filecache.FileCache
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -174,5 +176,15 @@ class ApplicationModule {
     @Singleton
     fun provideLocalBroadcastManager(@ApplicationContext context: Context): LocalBroadcastManager {
         return LocalBroadcastManager.getInstance(context)
+    }
+
+    @Provides
+    fun provideLocaleUtils(): LocaleUtils {
+        return LocaleUtils
+    }
+
+    @Provides
+    fun provideFileCache(): FileCache {
+        return FileCache
     }
 }
