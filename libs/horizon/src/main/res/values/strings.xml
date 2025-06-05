@@ -236,4 +236,5 @@
     <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
     <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
     <string name="assignmentDetails_submissionConfirmationConfirm">Submit Attempt</string>
+    <string name="assessment_startQuiz">Start Quiz</string>
 </resources>
