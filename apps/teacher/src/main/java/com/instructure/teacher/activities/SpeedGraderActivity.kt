@@ -211,6 +211,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 adapter.updateAnnotations(position)
                 previousSelection = currentSelection
                 currentSelection = position
+                adapter.onPageSelected(previousSelection, currentSelection)
                 if (adapter.hasUnsavedChanges(previousSelection)) {
                     UnsavedChangesContinueDialog.show(supportFragmentManager) {
                         submissionContentPager.setCurrentItem(previousSelection, true)

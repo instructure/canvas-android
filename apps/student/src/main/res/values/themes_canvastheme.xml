@@ -45,6 +45,7 @@
         <item name="pspdf__annotationNoteHinterStyle">@style/AnnotationNoteHinter</item>
         <item name="pspdf__backgroundColor">@color/backgroundLight</item>
         <item name="android:datePickerStyle">@style/DatePickerStyle</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
     <style name="CanvasMaterialTheme_Default.Translucent">
@@ -57,6 +58,7 @@
         <item name="editTextStyle">@style/NoGifEditText</item>
         <item name="android:alertDialogTheme">@style/CanvasDialogTheme_Default</item>
         <item name="alertDialogTheme">@style/CanvasDialogTheme_Default</item>
+        <item name="android:windowOptOutEdgeToEdgeEnforcement">true</item>
     </style>
 
 </resources>

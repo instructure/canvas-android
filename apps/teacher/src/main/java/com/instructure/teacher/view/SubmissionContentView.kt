@@ -716,6 +716,10 @@ class SubmissionContentView(
         return supportFragmentManager.findFragmentById(containerId)
     }
 
+    fun pauseVideo() {
+        (getCurrentFragment() as? ViewMediaFragment)?.pauseVideo()
+    }
+
     override fun attachDocListener() {
         if (!(assignment.anonymousPeerReviews && assignment.isPeerReviews)) {
             // We don't need to do annotations if there are anonymous peer reviews

@@ -99,7 +99,7 @@
     <string name="findMySchool">Trouver mon école</string>
     <string name="loginWithQRCode">Code QR</string>
     <string name="locateQRCode">Trouvez le code QR</string>
-    <string name="qrCodeExplanation">Vous trouverez le code QR sur le Web dans votre profil de compte. Cliquez sur « \'QR for Mobile Login » (QR pour connexion mobile) dans la liste.</string>
+    <string name="qrCodeExplanation">Vous trouverez le code QR dans votre profil de compte sur le web sous « QR for Mobile Login ».</string>
     <string name="qrCodeScanningPrompt">Scannez un code QR depuis Canvas pour vous connecter</string>
     <string name="loginWithQRCodeError">Une erreur est survenue lors de la connexion. Veuillez générer un autre code QR et réessayer.</string>
     <string name="invalidQRCodeError">Veuillez scanner un code QR généré par Canvas</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">Nous avons fait quelques changements.</string>
     <string name="whatsNewText">Regardez ce qu\'il y a de nouveau</string>
     <string name="findAnotherSchool">Chercher un autre école</string>
+    <string name="qrCodeDisabledExplanation">Si ce n’est pas le cas, c’est que votre institution a désactivé cette option.</string>
 </resources>

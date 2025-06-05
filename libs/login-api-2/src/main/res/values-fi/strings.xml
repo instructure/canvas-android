@@ -101,7 +101,7 @@
     <string name="findMySchool">Etsi kouluni</string>
     <string name="loginWithQRCode">Viivakoodi</string>
     <string name="locateQRCode">Etsi viivakoodi</string>
-    <string name="qrCodeExplanation">Löydät viivakoodin verkosta tiliprofiilistasi. Saat mobiilikirjautumistunnuksesi napauttamalla luettelosta.</string>
+    <string name="qrCodeExplanation">Etsi viivakoodi tiliprofiilistasi verkossa kohdassa \'QR for Mobile Login\' (viivakoodi mobiilikirjautumista varten).</string>
     <string name="qrCodeScanningPrompt">Kirjaudu sisään skannaamalla viivakoodi Canvas-sovelluksesta</string>
     <string name="loginWithQRCodeError">Sisäänkirjautumisessa tapahtui virhe. Luo toinen viivakoodi ja yritä uudelleen.</string>
     <string name="invalidQRCodeError">Skannaa Canvasin luoma viivakoodi.</string>
@@ -128,4 +128,5 @@
     <string name="weMadeChanges">Olemme tehneet muutamia muutoksia.</string>
     <string name="whatsNewText">Mitä uutta</string>
     <string name="findAnotherSchool">Etsi muu koulu</string>
+    <string name="qrCodeDisabledExplanation">Jos sitä ei löydy, laitoksesi on poistanut tämän asetuksen pois käytöstä.</string>
 </resources>

@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.utils
 
+import android.app.Activity
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.appcompat.app.AlertDialog
@@ -40,4 +41,14 @@ fun Context.getFragmentActivity(): FragmentActivity {
     if (this is FragmentActivity) return this
     if (this is ContextWrapper) return this.baseContext.getFragmentActivity()
     else throw IllegalStateException("Not FragmentActivity context")
+}
+
+fun Context.getActivityOrNull(): Activity? {
+    var context = this
+    while (context is ContextWrapper) {
+        if (context is Activity) return context
+        context = context.baseContext
+    }
+
+    return null
 }

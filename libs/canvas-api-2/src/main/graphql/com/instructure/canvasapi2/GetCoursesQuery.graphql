@@ -1,0 +1,80 @@
+query GetCoursesQuery($id: ID!) {
+    legacyNode(_id: $id, type: User) {
+        ... on User {
+            enrollments(currentOnly: true) {
+                course {
+                    id: _id
+                    name
+                    image_download_url: imageUrl
+                    syllabus_body: syllabusBody
+                    account {
+                        name
+                    }
+                    usersConnection(filter: {userIds: [$id]}) {
+                        nodes {
+                            courseProgression {
+                                requirements {
+                                    completionPercentage
+                                }
+                                incompleteModulesConnection {
+                                    nodes {
+                                        module {
+                                            id: _id
+                                            name
+                                            position
+                                        }
+                                        incompleteItemsConnection {
+                                            nodes {
+                                                id: _id
+                                                url
+                                                content {
+                                                    ... on Assignment {
+                                                        id: _id
+                                                        name
+                                                        dueAt
+                                                        position
+                                                    }
+                                                    ... on Discussion {
+                                                        id: _id
+                                                        title
+                                                        position
+                                                    }
+                                                    ... on ExternalTool {
+                                                        id: _id
+                                                        name
+                                                    }
+                                                    ... on ExternalUrl {
+                                                        id: _id
+                                                        title
+                                                    }
+                                                    ... on File {
+                                                        id: _id
+                                                        displayName
+                                                    }
+                                                    ... on ModuleExternalTool {
+                                                        id: _id
+                                                        url
+                                                    }
+                                                    ... on Page {
+                                                        id: _id
+                                                        title
+                                                    }
+                                                    ... on Quiz {
+                                                        id: _id
+                                                    }
+                                                    ... on SubHeader {
+                                                        title
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

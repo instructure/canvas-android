@@ -84,6 +84,10 @@ class AlertSettingsFragment : BaseCanvasFragment() {
                 requireActivity().onBackPressed()
             }
 
+            is AddStudentViewModelAction.UnpairStudentFailed -> {
+                viewModel.handleAction(AlertSettingsAction.UnpairStudentFailed)
+            }
+
             else -> {}
         }
     }

@@ -253,6 +253,16 @@
         </activity>
 
         <activity
+            android:name=".widget.grades.courseselector.CourseSelectorActivity"
+            android:theme="@style/CanvasMaterialTheme_Default"
+            android:excludeFromRecents="true"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".activity.BookmarkShortcutActivity"
             android:icon="@drawable/ic_bookmark_shortcut"
             android:label="@string/student_app_name"
@@ -308,9 +318,9 @@
 
         <!-- To do widget -->
         <receiver
-            android:name=".widget.TodoWidgetProvider"
-            android:label="@string/todoWidgetTitleLong"
-            android:exported="false">
+            android:name=".widget.todo.ToDoWidgetReceiver"
+            android:exported="true"
+            android:label="@string/todoWidgetTitleLong">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
                 <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
@@ -320,33 +330,8 @@
 
             <meta-data
                 android:name="android.appwidget.provider"
-                android:resource="@xml/todo_widget_info"/>
+                android:resource="@xml/todo_widget_info" />
         </receiver>
-
-        <service
-            android:name=".widget.TodoViewWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
-
-        <!-- Grades Widget -->
-        <receiver
-            android:name=".widget.GradesWidgetProvider"
-            android:label="@string/gradesWidgetTitleLong"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
-                <action android:name="android.appwidget.action.APPWIDGET_ENABLED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DELETED" />
-                <action android:name="android.appwidget.action.APPWIDGET_DISABLED" />
-            </intent-filter>
-
-            <meta-data
-                android:name="android.appwidget.provider"
-                android:resource="@xml/grades_widget_info"/>
-        </receiver>
-
-        <service
-            android:name=".widget.GradesViewWidgetService"
-            android:permission="android.permission.BIND_REMOTEVIEWS"/>
 
         <!-- Notifications widget-->
         <receiver
@@ -368,6 +353,32 @@
         <service
             android:name=".widget.NotificationViewWidgetService"
             android:permission="android.permission.BIND_REMOTEVIEWS"/>
+
+        <!-- Grades widget-->
+        <receiver
+            android:name=".widget.grades.list.GradesWidgetReceiver"
+            android:label="@string/gradesWidgetTitleLong"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/grades_widget_info" />
+        </receiver>
+
+        <!-- Grade widget-->
+        <receiver
+            android:name=".widget.grades.singleGrade.SingleGradeWidgetReceiver"
+            android:label="@string/gradeWidgetTitleLong"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+            </intent-filter>
+            <meta-data
+                android:name="android.appwidget.provider"
+                android:resource="@xml/single_grade_widget_info" />
+        </receiver>
 
         <!-- End of Widget Items -->
 

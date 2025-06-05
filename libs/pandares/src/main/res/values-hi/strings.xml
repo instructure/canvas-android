@@ -2013,6 +2013,33 @@
     <string name="inboxSignatureSwitchLabel">हस्ताक्षर</string>
     <string name="inboxSignatureTextfieldHeader">हस्ताक्षर पाठ</string>
     <string name="due_dateTime">नियत: %1$s, %2$s</string>
+    <string name="noDueDate">कोई नियत तिथि नहीं</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s ग्रेडिंग की आवश्यकता है</string>
+    <string name="assignmentListTitle">असाइनमेंट सूची</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d पॉइंट</item>
+        <item quantity="other">%d पॉइंट्स</item>
+    </plurals>
+    <string name="noAssignments">कोई असाइनमेंट नहीं</string>
+    <string name="assignmentGroup">असाइनमेंट ग्रुप</string>
+    <string name="assignmentType">असाइनमेंट प्रकार</string>
+    <string name="dueDate">नियत तिथि</string>
+    <string name="needsGrading">ग्रेडिंग की आवश्यकता है</string>
+    <string name="published">प्रकाशित</string>
+    <string name="unpublished">अप्रकाशित</string>
+    <string name="notYetSubmitted">अभी तक सबमिट नहीं किया गया</string>
+    <string name="toBeGraded">ग्रेड किया जाना है</string>
+    <string name="graded">ग्रेड किए गए</string>
+    <string name="other">अन्य</string>
+    <string name="a11y_filterAssignments">असाइनमेंट फ़िल्टर करें</string>
+    <string name="assignmentFilter">असाइनमेट फ़िल्टर</string>
+    <string name="groupedBy">इसके अनुसार ग्रुप किया गया:</string>
+    <string name="gradingPeriod">ग्रेडिंग अवधि:</string>
+    <string name="gradingPeriodHeading">ग्रेडिंग अवधि</string>
+    <string name="gradePreferences">ग्रेड प्राथमिकताएं</string>
+    <string name="allAssignments">सभी असाइनमेंट</string>
+    <string name="statusFilter">स्थिति फ़िल्टर</string>
     <string name="a11y_contentDescription_filter">फ़िल्टर</string>
     <string name="a11y_contentDescription_postPolicy">पोस्ट नीति</string>
     <string name="late">विलंब</string>
@@ -2021,4 +2048,12 @@
     <string name="submissionFilter">सबमिशन फ़िल्टर</string>
     <string name="submissionMessageSubject">%1$s ने %2$s पर</string>
     <string name="all">सभी</string>
+    <string name="loginRequired">लॉगिन की आवश्यकता है</string>
+    <string name="loginRequiredMessage">आपको अपनी संस्था की सुरक्षा नीति के कारण फिर से लॉगिन करना होगा। एक बार लॉग इन करने के बाद, आप निर्बाध रूप से काम करना जारी रख सकते हैं।</string>
+    <string name="login">लॉगिन करें</string>
+    <string name="logout">लॉग आउट करें</string>
+    <string name="loginRefreshSameUserError">आपको उसी उपयोगकर्ता के साथ लॉगिन करना होगा।</string>
+    <string name="errorLoadingAssignments">असाइनमेंट लोड करते समय एक त्रुटि उत्पन्न हुई</string>
+    <string name="a11y_searchAssignments">असाइनमेंट खोजें</string>
+    <string name="dueAssignmentListItem">%1$s को नियत</string>
 </resources>

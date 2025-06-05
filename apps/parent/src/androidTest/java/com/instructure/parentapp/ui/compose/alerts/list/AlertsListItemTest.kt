@@ -82,6 +82,8 @@ class AlertsListItemTest {
             ), userColor = Color.BLUE, actionHandler = {})
         }
 
+        composeTestRule.waitForIdle()
+
         composeTestRule.onNodeWithText("Assignment Grade Above 90%").assertIsDisplayed()
         composeTestRule.onNodeWithText("Assignment Grade High title").assertIsDisplayed()
         composeTestRule.onNode(hasDrawable(R.drawable.ic_info)).assertIsDisplayed()
@@ -104,6 +106,8 @@ class AlertsListItemTest {
                 htmlUrl = null
             ), userColor = Color.BLUE, actionHandler = {})
         }
+
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithText("Assignment Grade Below 60%").assertIsDisplayed()
         composeTestRule.onNodeWithText("Assignment Grade Low title").assertIsDisplayed()
@@ -128,6 +132,8 @@ class AlertsListItemTest {
             ), userColor = Color.BLUE, actionHandler = {})
         }
 
+        composeTestRule.waitForIdle()
+
         composeTestRule.onNodeWithText("Course Grade Above 90%").assertIsDisplayed()
         composeTestRule.onNodeWithText("Course Grade High title").assertIsDisplayed()
         composeTestRule.onNode(hasDrawable(R.drawable.ic_info)).assertIsDisplayed()
@@ -150,6 +156,8 @@ class AlertsListItemTest {
                 htmlUrl = null
             ), userColor = Color.BLUE, actionHandler = {})
         }
+
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithText("Course Grade Below 60%").assertIsDisplayed()
         composeTestRule.onNodeWithText("Course Grade Low title").assertIsDisplayed()
@@ -174,6 +182,8 @@ class AlertsListItemTest {
             ), userColor = Color.BLUE, actionHandler = {})
         }
 
+        composeTestRule.waitForIdle()
+
         composeTestRule.onNodeWithText("Course Announcement").assertIsDisplayed()
         composeTestRule.onNodeWithText("Course Announcement title").assertIsDisplayed()
         composeTestRule.onNode(hasDrawable(R.drawable.ic_info)).assertIsDisplayed()
@@ -196,6 +206,8 @@ class AlertsListItemTest {
                 htmlUrl = null
             ), userColor = Color.BLUE, actionHandler = {})
         }
+
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithText("Global Announcement").assertIsDisplayed()
         composeTestRule.onNodeWithText("Global Announcement title").assertIsDisplayed()
@@ -220,6 +232,8 @@ class AlertsListItemTest {
             ), userColor = Color.BLUE, actionHandler = {})
         }
 
+        composeTestRule.waitForIdle()
+
         composeTestRule.onNodeWithText("Assignment missing").assertIsDisplayed()
         composeTestRule.onNodeWithText("Locked for User title").assertIsDisplayed()
         composeTestRule.onNode(hasDrawable(R.drawable.ic_lock_lined)).assertIsDisplayed()
@@ -242,6 +256,8 @@ class AlertsListItemTest {
                 htmlUrl = null
             ), userColor = Color.BLUE, actionHandler = {})
         }
+
+        composeTestRule.waitForIdle()
 
         composeTestRule.onNodeWithText("Global Announcement").assertIsDisplayed()
         composeTestRule.onNodeWithText("Global Announcement title").assertIsDisplayed()

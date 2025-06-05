@@ -32,6 +32,7 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -89,31 +90,31 @@ class AssignmentDetailsPageTest : TeacherComposeTest() {
     @Test
     fun displaysSubmissionTypeNone() {
         getToAssignmentDetailsPage(submissionTypes = listOf(SubmissionType.NONE))
-        assignmentDetailsPage.assertSubmissionTypeNone()
+        assignmentDetailsPage.assertSubmissionTypes(R.string.canvasAPI_none)
     }
 
     @Test
     fun displaysSubmissionTypeOnPaper() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ON_PAPER))
-        assignmentDetailsPage.assertSubmissionTypeOnPaper()
+        assignmentDetailsPage.assertSubmissionTypes(R.string.canvasAPI_onPaper)
     }
 
     @Test
     fun displaysSubmissionTypeOnlineTextEntry() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_TEXT_ENTRY))
-        assignmentDetailsPage.assertSubmissionTypeOnlineTextEntry()
+        assignmentDetailsPage.assertSubmissionTypes(R.string.canvasAPI_onlineTextEntry)
     }
 
     @Test
     fun displaysSubmissionTypeOnlineUrl() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_URL))
-        assignmentDetailsPage.assertSubmissionTypeOnlineUrl()
+        assignmentDetailsPage.assertSubmissionTypes(R.string.canvasAPI_onlineURL)
     }
 
     @Test
     fun displaysSubmissionTypeOnlineUpload() {
         getToAssignmentDetailsPage(submissionTypes = listOf(ONLINE_UPLOAD))
-        assignmentDetailsPage.assertSubmissionTypeOnlineUpload()
+        assignmentDetailsPage.assertSubmissionTypes(R.string.canvasAPI_onlineUpload)
     }
 
     @Test

@@ -1,0 +1,46 @@
+query QueryNotes($filter: NoteFilterInput, $first: Float, $last: Float, $after: String, $before: String, $orderBy: OrderByInput) {
+    notes(
+        filter: $filter,
+        first: $first,
+        last: $last,
+        after: $after,
+        before: $before,
+        orderBy: $orderBy
+    ) {
+        edges {
+            cursor
+            node {
+                id
+                rootAccountUuid
+                userId
+                courseId
+                objectId
+                objectType
+                userText
+                reaction
+                highlightData
+                createdAt
+                updatedAt
+            }
+        }
+        nodes {
+            id
+            rootAccountUuid
+            userId
+            courseId
+            objectId
+            objectType
+            userText
+            reaction
+            highlightData
+            createdAt
+            updatedAt
+        }
+        pageInfo {
+            hasNextPage
+            hasPreviousPage
+            startCursor
+            endCursor
+        }
+    }
+}

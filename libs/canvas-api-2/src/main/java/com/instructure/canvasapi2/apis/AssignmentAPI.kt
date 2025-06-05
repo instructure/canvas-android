@@ -20,11 +20,24 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.GradeableStudent
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.ObserveeAssignment
+import com.instructure.canvasapi2.models.ObserveeAssignmentGroup
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBodyWrapper
+import com.instructure.canvasapi2.models.postmodels.QuizAssignmentPostBodyWrapper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.GET
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 
 
 object AssignmentAPI {
@@ -129,6 +142,13 @@ object AssignmentAPI {
                 @Path("assignmentId") assignmentId: Long,
                 @Body body: AssignmentPostBodyWrapper): Call<Assignment>
 
+        @PUT("courses/{courseId}/assignments/{assignmentId}")
+        fun editQuizAssignment(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Body body: QuizAssignmentPostBodyWrapper
+        ): Call<Assignment>
+
         @GET("courses/{courseId}/assignments/{assignmentId}/gradeable_students")
         fun getFirstPageGradeableStudentsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<List<GradeableStudent>>
 
@@ -210,8 +230,8 @@ object AssignmentAPI {
         }
     }
 
-    fun editAssignmentAllowNullValues(courseId: Long, assignmentId: Long, body: AssignmentPostBodyWrapper, adapter: RestBuilder, callback: StatusCallback<Assignment>, params: RestParams) {
-        callback.addCall(adapter.build(AssignmentInterface::class.java, params).editAssignment(courseId, assignmentId, body)).enqueue(callback)
+    fun editQuizAssignment(courseId: Long, assignmentId: Long, body: QuizAssignmentPostBodyWrapper, adapter: RestBuilder, callback: StatusCallback<Assignment>, params: RestParams) {
+        callback.addCall(adapter.buildSerializeNulls(AssignmentInterface::class.java, params).editQuizAssignment(courseId, assignmentId, body)).enqueue(callback)
     }
 
     fun getFirstPageGradeableStudentsForAssignment(courseId: Long, assignmentId: Long, adapter: RestBuilder, callback: StatusCallback<List<GradeableStudent>>) {

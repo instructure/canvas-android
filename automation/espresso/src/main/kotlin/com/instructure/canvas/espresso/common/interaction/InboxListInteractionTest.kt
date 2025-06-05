@@ -245,7 +245,6 @@ abstract class InboxListInteractionTest : CanvasTest() {
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.INTERACTION)
     fun testInbox_swipeToReadUnread() {
         val data = createInitialData()
-        data.addConversations(userId = getLoggedInUser().id, messageBody = "Short body")
         val conversation = data.addConversation(
             senderId = getOtherUser().id,
             receiverIds = listOf(getLoggedInUser().id),

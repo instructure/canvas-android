@@ -20,6 +20,7 @@ import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA
@@ -149,6 +150,23 @@ fun retryWithIncreasingDelay(
         }
     }
     block()
+}
+
+fun withIdlingResourceDisabled(resourceName: String = "okhttp", block: () -> Unit) {
+    val registry = IdlingRegistry.getInstance()
+    val idlingResource = registry.resources.find { it.name == resourceName }
+
+    if (idlingResource != null) {
+        registry.unregister(idlingResource)
+    }
+
+    try {
+        block()
+    } finally {
+        if (idlingResource != null) {
+            registry.register(idlingResource)
+        }
+    }
 }
 
 fun extractInnerTextById(html: String, id: String): String? {

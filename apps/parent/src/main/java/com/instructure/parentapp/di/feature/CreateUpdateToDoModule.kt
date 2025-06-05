@@ -16,14 +16,11 @@
  */
 package com.instructure.parentapp.di.feature
 
-import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
-import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoBehavior
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
-import com.instructure.parentapp.features.calendarevent.ParentCreateUpdateEventRepository
 import com.instructure.parentapp.features.calendartodo.ParentCreateUpdateToDoRepository
 import com.instructure.parentapp.util.ParentPrefs
 import dagger.Module
@@ -43,5 +40,12 @@ class CreateUpdateToDoModule {
         @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
     ): CreateUpdateToDoRepository {
         return ParentCreateUpdateToDoRepository(coursesApi, parentPrefs, plannerApi)
+    }
+
+    @Provides
+    fun provideCreateUpdateToDoBehavior(): CreateUpdateToDoBehavior {
+        return object : CreateUpdateToDoBehavior {
+            override fun updateWidget() = Unit
+        }
     }
 }

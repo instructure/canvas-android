@@ -56,7 +56,7 @@ class AlertsE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -75,21 +75,24 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.enterThreshold("80")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
         dashboardPage.clickAlertsBottomMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the Alerts Page is empty.")
         alertsPage.assertEmptyState()
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test Assignment")
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignment.name}' with 18 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 18 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "18")
 
         Thread.sleep(5000) // Allow the grading to propagate
@@ -101,7 +104,7 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.assertAlertItemDisplayed("Assignment Grade Above 80")
         alertsPage.assertAlertItemDisplayed("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
-        Log.d(STEP_TAG, "Select the 'Assignment graded: 18 on Test Assignment in ${course.courseCode}' alert.")
+        Log.d(STEP_TAG, "Select the 'Assignment graded: 18 on Test Assignment in '${course.courseCode}' alert.")
         alertsPage.clickOnAlert("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
         Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed.")
@@ -120,23 +123,22 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.enterThreshold("20")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
-        Espresso.pressBack()
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignmentBelow = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test Assignment Below")
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignmentBelow.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignmentBelow.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignmentBelow.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignmentBelow.name}' with 1 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignmentBelow.name}' with 1 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignmentBelow.id, student.id, postedGrade = "1")
 
         Thread.sleep(5000) // Allow the grading to propagate
 
-        Log.d(STEP_TAG, "Refresh the Alerts Page")
-        Espresso.pressBack()
+        Log.d(STEP_TAG, "Navigate back to Alerts Page and refresh it.")
+        ViewUtils.pressBackButton(2)
         alertsPage.refresh()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Assignment Grade Below 20' alert is displayed.")
@@ -147,7 +149,7 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.dismissAlert("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
         alertsPage.dismissAlert("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
-        Log.d(ASSERTION_TAG, "Assert that the alerts are dismissed.")
+        Log.d(ASSERTION_TAG, "Assert that the alerts are dismissed and refresh the page.")
         alertsPage.refresh()
         alertsPage.assertEmptyState()
     }
@@ -164,7 +166,7 @@ class AlertsE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -184,22 +186,24 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.enterThreshold("80")
         studentAlertSettingsPage.tapThresholdSaveButton()
 
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
         dashboardPage.clickAlertsBottomMenu()
 
+        Log.d(ASSERTION_TAG, "Assert that the Alerts Page is empty.")
         alertsPage.assertEmptyState()
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test Assignment")
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignment.name}' with 18 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 18 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "18")
 
         Thread.sleep(5000) // Allow the grading to propagate
@@ -212,7 +216,6 @@ class AlertsE2ETest : ParentComposeTest() {
         alertsPage.assertAlertItemDisplayed("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
         val secondStudent = data.studentsList[1]
-
         Log.d(STEP_TAG, "Select student '${secondStudent.shortName}'.")
         dashboardPage.openStudentSelector()
         dashboardPage.selectStudent(secondStudent.shortName)
@@ -241,7 +244,7 @@ class AlertsE2ETest : ParentComposeTest() {
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG,"Login with user: ${parent.name}, login id: ${parent.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
         dashboardPage.waitForRender()
 
@@ -312,32 +315,35 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_HIGH, "Never")
         studentAlertSettingsPage.assertPercentageThreshold(AlertType.COURSE_GRADE_LOW, "Never")
 
+        Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
 
         Log.d(STEP_TAG, "Open the Alerts Page.")
         dashboardPage.clickAlertsBottomMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the Alerts Page is empty.")
         alertsPage.assertEmptyState()
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test Assignment")
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignment.name}' with 18 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 18 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "18")
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignmentBelow = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test Assignment Below")
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignmentBelow.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignmentBelow.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignmentBelow.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignmentBelow.name}' with 1 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignmentBelow.name}' with 1 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignmentBelow.id, student.id, postedGrade = "1")
 
         Thread.sleep(5000) // Allow the grading to propagate

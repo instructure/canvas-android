@@ -195,7 +195,7 @@ private fun AnnouncementDetailsSuccessScreen(
                 )
                 ComposeCanvasWebViewWrapper(
                     modifier = Modifier.padding(horizontal = 6.dp),
-                    html = message,
+                    content = message,
                     applyOnWebView = applyOnWebView
                 )
             }

@@ -64,5 +64,10 @@ val appDatabaseMigrations = arrayOf(
     },
 
     createMigration(10, 11) { database ->
-        database.execSQL("CREATE TABLE IF NOT EXISTS assignment_filter (selectedAssignmentFilters TEXT NOT NULL, selectedAssignmentStatusFilter TEXT, selectedGroupByOption TEXT NOT NULL, contextId INTEGER NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userDomain TEXT NOT NULL, userId INTEGER NOT NULL)")    }
+        database.execSQL("CREATE TABLE IF NOT EXISTS assignment_filter (selectedAssignmentFilters TEXT NOT NULL, selectedAssignmentStatusFilter TEXT, selectedGroupByOption TEXT NOT NULL, contextId INTEGER NOT NULL, id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, userDomain TEXT NOT NULL, userId INTEGER NOT NULL)")
+    },
+
+    createMigration(11, 12) { database ->
+        database.execSQL("CREATE TABLE IF NOT EXISTS FileDownloadProgressEntity (workerId TEXT NOT NULL, fileName TEXT NOT NULL, progress INTEGER NOT NULL, progressState TEXT NOT NULL, filePath TEXT NOT NULL, PRIMARY KEY(workerId))")
+    }
 )

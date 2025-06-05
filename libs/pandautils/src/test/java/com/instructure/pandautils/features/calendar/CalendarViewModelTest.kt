@@ -16,6 +16,7 @@
 package com.instructure.pandautils.features.calendar
 
 import android.content.Context
+import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -66,6 +67,7 @@ class CalendarViewModelTest {
     private val calendarPrefs: CalendarPrefs = mockk(relaxed = true)
     private val calendarStateMapper: CalendarStateMapper = mockk(relaxed = true)
     private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
 
@@ -134,6 +136,7 @@ class CalendarViewModelTest {
             filters = setOf("course_1", "course_2", "group_3", "group_4", "user_5")
         )
 
+        every { savedStateHandle.get<Any>(any()) } returns null
     }
 
     @After
@@ -1225,8 +1228,20 @@ class CalendarViewModelTest {
         assertFalse(viewModel.uiState.value.calendarUiState.todayTapped)
     }
 
+    @Test
+    fun `Selected day is parsed from saved state when valid date provided`() {
+        every { savedStateHandle.get<String>(CalendarFragment.SELECTED_DAY) } returns "2025-05-10"
+
+        initViewModel()
+
+        assertEquals(
+            LocalDate.of(2025, 5, 10),
+            viewModel.uiState.value.calendarUiState.selectedDay
+        )
+    }
+
     private fun initViewModel() {
-        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents)
+        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, savedStateHandle)
     }
 
     private fun createPlannerItem(

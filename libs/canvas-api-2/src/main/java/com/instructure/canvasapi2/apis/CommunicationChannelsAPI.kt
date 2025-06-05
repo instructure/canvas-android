@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CommunicationChannel
+import com.instructure.canvasapi2.utils.DataResult
 import okhttp3.ResponseBody
 import retrofit2.Call
 import retrofit2.Response
@@ -29,18 +30,28 @@ import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Tag
 
 object CommunicationChannelsAPI {
 
-    internal interface CommunicationChannelInterface {
+    interface CommunicationChannelInterface {
         @GET("users/{userId}/communication_channels")
         fun getCommunicationChannels(@Path("userId") userId: Long): Call<List<CommunicationChannel>>
+
+        @GET("users/{userId}/communication_channels")
+        suspend fun getCommunicationChannels(@Path("userId") userId: Long, @Tag params: RestParams): DataResult<List<CommunicationChannel>>
 
         @POST("users/self/communication_channels?communication_channel[type]=push")
         fun addPushCommunicationChannel(@Query("communication_channel[token]") registrationId: String): Call<ResponseBody>
 
+        @POST("users/self/communication_channels?communication_channel[type]=push")
+        suspend fun addPushCommunicationChannel(@Query("communication_channel[token]") registrationId: String, @Tag params: RestParams): DataResult<ResponseBody>
+
         @DELETE("users/self/communication_channels/push")
         fun deletePushCommunicationChannel(@Query("push_token") registrationId: String): Call<ResponseBody>
+
+        @DELETE("users/self/communication_channels/push")
+        suspend fun deletePushCommunicationChannel(@Query("push_token") registrationId: String, @Tag params: RestParams): DataResult<ResponseBody>
     }
 
     fun getCommunicationChannels(

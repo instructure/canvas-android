@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.AssignmentOverride
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.postmodels.AssignmentPostBody
 import com.instructure.canvasapi2.models.postmodels.OverrideBody
+import com.instructure.canvasapi2.models.postmodels.QuizAssignmentPostBody
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -44,7 +45,6 @@ import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.teacher.R
 import com.instructure.teacher.models.CoreDates
 import com.instructure.teacher.models.DueDateGroup
-import java.util.ArrayList
 import java.util.Calendar
 
 fun List<SubmissionType>?.getAssignmentIcon() = when {
@@ -354,3 +354,7 @@ fun getResForSubmission(submissionStatus: String?): Pair<Int, Int> {
         else -> Pair(-1, -1)
     }
 }
+
+fun AssignmentPostBody.toQuizAssignmentPostBody() = QuizAssignmentPostBody(
+    dueAt, notifyOfUpdate, unlockAt, lockAt, published, assignmentOverrides, isOnlyVisibleToOverrides
+)

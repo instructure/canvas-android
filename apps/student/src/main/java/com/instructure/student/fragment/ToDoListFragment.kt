@@ -33,12 +33,14 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -49,8 +51,6 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListTodoBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
-import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import com.instructure.student.router.RouteMatcher
 
@@ -198,7 +198,7 @@ class ToDoListFragment : ParentFragment() {
     }
 
     private fun showCourseFilterDialog() {
-        val choices = arrayOf(getString(R.string.favoritedCoursesLabel))
+        val choices = arrayOf(getString(R.string.favoriteCoursesLabel))
         var checkedItem = choices.indexOf(getString(recyclerAdapter?.getFilterMode()?.titleId ?: NoFilter.titleId))
 
         val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAccentDialogTheme)
@@ -249,6 +249,6 @@ class ToDoListFragment : ParentFragment() {
 }
 
 sealed class FilterMode(val titleId: Int)
-object FavoritedCourses : FilterMode(R.string.favoritedCoursesLabel)
+object FavoritedCourses : FilterMode(R.string.favoriteCoursesLabel)
 object NoFilter : FilterMode(R.string.allCourses)
 

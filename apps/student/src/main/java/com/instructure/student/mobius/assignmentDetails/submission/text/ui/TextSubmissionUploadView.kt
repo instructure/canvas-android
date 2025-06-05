@@ -119,7 +119,7 @@ class TextSubmissionUploadView(inflater: LayoutInflater, parent: ViewGroup) :
      */
     fun addImageToSubmission(uri: Uri, canvasContext: CanvasContext) {
         (context as? Activity)?.let { activity ->
-            MediaUploadUtils.uploadRceImageJob(uri, canvasContext, activity, ::insertImage)
+            MediaUploadUtils.uploadRceImageJob(uri, canvasContext, activity, insertImageCallback = ::insertImage)
         }
     }
 

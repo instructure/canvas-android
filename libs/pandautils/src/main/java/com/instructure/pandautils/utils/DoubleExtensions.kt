@@ -17,6 +17,7 @@
 package com.instructure.pandautils.utils
 
 import java.math.RoundingMode
+import java.text.DecimalFormat
 
 fun Double.toFormattedString(maxDecimals: Int? = 2): String {
     return if (this % 1 == 0.0) {
@@ -29,3 +30,9 @@ fun Double.toFormattedString(maxDecimals: Int? = 2): String {
         }
     }
 }
+
+val Double.stringValueWithoutTrailingZeros: String
+    get() {
+        val format = DecimalFormat("0.#")
+        return format.format(this)
+    }

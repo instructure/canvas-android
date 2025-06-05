@@ -99,7 +99,7 @@
     <string name="findMySchool">ابحث عن مدرستي</string>
     <string name="loginWithQRCode">رمز QR</string>
     <string name="locateQRCode">ابحث عن رمز QR</string>
-    <string name="qrCodeExplanation">ستجد رمز QR على الويب في ملف تعريف حسابك. انقر فوق "QR لتسجيل دخول الجوال" في  القائمة.</string>
+    <string name="qrCodeExplanation">ابحث عن رمز الاستجابة السريعة في ملف تعريف حسابك على الويب أسفل \'رمز الاستجابة السريعة لتسجيل الدخول على الأجهزة المحمولة\'.</string>
     <string name="qrCodeScanningPrompt">امسح رمز QR من Canvas لتسجيل الدخول</string>
     <string name="loginWithQRCodeError">حدث خطأ أثناء تسجيل الدخول. يرجى إنشاء رمز QR وإعادة المحاولة.</string>
     <string name="invalidQRCodeError">يرجى مسح رمز QR من إنشاء Canvas</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">لقد أجرينا بعض التغييرات.</string>
     <string name="whatsNewText">تعرف على الجديد.</string>
     <string name="findAnotherSchool">ابحث عن مدرسة أخرى</string>
+    <string name="qrCodeDisabledExplanation">وإذا لم يوجد، فإن مؤسستك التعليمية قامت بتعطيل هذا الخيار.</string>
 </resources>

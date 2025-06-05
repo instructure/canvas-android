@@ -17,7 +17,7 @@
 package com.instructure.canvasapi2.models.postmodels
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
+import java.util.Date
 
 /**
  * Editing an assignment requires us to use a GSON serializer that serializes null. Because of this, we need to
@@ -65,26 +65,46 @@ class AssignmentPostBody {
 class OverrideBody {
     @SerializedName("assignment_id")
     var assignmentId: Long? = null
-    
+
     @SerializedName("due_at")
     var dueAt: Date? = null
-    
+
     @SerializedName("unlock_at")
     var unlockAt: Date? = null
-    
+
     @SerializedName("lock_at")
     var lockAt: Date? = null
-    
+
     @SerializedName("student_ids")
     var studentIds: LongArray? = null
-    
+
     @SerializedName("course_section_id")
     var courseSectionId: Long? = null
-    
+
     @SerializedName("group_id")
     var groupId: Long? = null
 }
 
 class AssignmentPostBodyWrapper {
     var assignment: AssignmentPostBody? = null
+}
+
+data class QuizAssignmentPostBody(
+    @SerializedName("due_at")
+    val dueAt: String? = null,
+    @SerializedName("notify_of_update")
+    val notifyOfUpdate: Boolean? = null,
+    @SerializedName("unlock_at")
+    val unlockAt: String? = null,
+    @SerializedName("lock_at")
+    val lockAt: String? = null,
+    val published: Boolean? = null,
+    @SerializedName("assignment_overrides")
+    val assignmentOverrides: List<OverrideBody>? = null,
+    @SerializedName("only_visible_to_overrides")
+    val isOnlyVisibleToOverrides: Boolean? = null
+)
+
+class QuizAssignmentPostBodyWrapper {
+    var assignment: QuizAssignmentPostBody? = null
 }

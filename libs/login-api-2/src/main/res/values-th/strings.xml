@@ -100,7 +100,7 @@
     <string name="findMySchool">ค้นหาสถานศึกษาของฉัน</string>
     <string name="loginWithQRCode">รหัส QR</string>
     <string name="locateQRCode">ระบุตำแหน่งรหัส QR</string>
-    <string name="qrCodeExplanation">คุณจะพบรหัส QR ในเว็บจากโพรไฟล์บัญชีของคุณ คลิกที่ “QR สำหรับล็อกอินผ่านอุปกรณ์พกพา” จากรายการ</string>
+    <string name="qrCodeExplanation">ค้นหารหัส QR จากโพรไฟล์บัญชีผู้ใช้ของคุณทางเว็บจาก \'QR สำหรับล็อกอินผ่านอุปกรณ์พกพา\' (QR For Mobile Login)</string>
     <string name="qrCodeScanningPrompt">สแกนรหัส QR จาก Canvas เพื่อล็อกอิน</string>
     <string name="loginWithQRCodeError">มีข้อผิดพลาดในการล็อกอิน กรุณาจัดทำรหัส QR อื่นและลองใหม่อีกครั้ง</string>
     <string name="invalidQRCodeError">กรุณาสแกนรหัส QR ที่จัดทำโดย Canvas</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">เราทำการเปลี่ยนแปลงไว้เล็กน้อย</string>
     <string name="whatsNewText">ดูรายการใหม่</string>
     <string name="findAnotherSchool">ค้นหาสถานศึกษาอื่น</string>
+    <string name="qrCodeDisabledExplanation">หากไม่พบ แสดงว่าสถาบันของคุณปิดตัวเลือกนี้ไว้</string>
 </resources>

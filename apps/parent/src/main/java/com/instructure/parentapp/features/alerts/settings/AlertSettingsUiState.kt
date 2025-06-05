@@ -38,7 +38,7 @@ sealed class AlertSettingsAction {
     data class CreateThreshold(val alertType: AlertType, val threshold: String?) : AlertSettingsAction()
     data class DeleteThreshold(val alertType: AlertType) : AlertSettingsAction()
     data class UnpairStudent(val studentId: Long) : AlertSettingsAction()
-
+    data object UnpairStudentFailed : AlertSettingsAction()
     data object ReloadAlertSettings : AlertSettingsAction()
 }
 

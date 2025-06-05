@@ -15,15 +15,21 @@
  */
 package com.instructure.student.di.feature
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoBehavior
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
+import com.instructure.student.features.calendartodo.StudentCreateUpdateToDoBehavior
 import com.instructure.student.features.calendartodo.StudentCreateUpdateToDoRepository
+import com.instructure.student.widget.WidgetUpdater
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Named
 
 @Module
@@ -36,5 +42,14 @@ class CreateUpdateToDoModule {
         @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
     ): CreateUpdateToDoRepository {
         return StudentCreateUpdateToDoRepository(coursesApi, plannerApi)
+    }
+
+    @Provides
+    fun provideCreateUpdateToDoBehavior(
+        @ApplicationContext context: Context,
+        widgetUpdater: WidgetUpdater,
+        appWidgetManager: AppWidgetManager
+    ): CreateUpdateToDoBehavior {
+        return StudentCreateUpdateToDoBehavior(context, widgetUpdater, appWidgetManager)
     }
 }

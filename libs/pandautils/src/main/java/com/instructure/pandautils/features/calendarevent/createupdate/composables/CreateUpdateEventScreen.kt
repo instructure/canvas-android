@@ -523,13 +523,15 @@ private fun CreateUpdateEventContent(
                 ComposeRCE(
                     html = uiState.details,
                     hint = labelText.takeIf { isScreenReaderEnabled() }.orEmpty(),
+                    fixedHeightInDp = 280,
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp)
-                        .testTag("detailsComposeRCE")
-                ) {
-                    actionHandler(CreateUpdateEventAction.UpdateDetails(it))
-                }
+                        .testTag("detailsComposeRCE"),
+                    onTextChangeListener = {
+                        actionHandler(CreateUpdateEventAction.UpdateDetails(it))
+                    }
+                )
             }
         }
     }
