@@ -17,6 +17,7 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentTest
@@ -28,6 +29,7 @@ class LoginInteractionTest : StudentTest() {
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
+    @StubTablet
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testLogin_canFindSchool() {
