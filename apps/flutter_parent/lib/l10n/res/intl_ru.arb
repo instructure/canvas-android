@@ -1,0 +1,2753 @@
+﻿{
+  "@@last_modified": "2023-08-25T11:04:20.901151",
+  "alertsLabel": "Предупреждения",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "calendarLabel": "Календарь",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "coursesLabel": "Курсы",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Students": "Студенты отсутствуют",
+  "@No Students": {
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Коснитесь для отображения селектора студентов",
+  "@Tap to show student selector": {
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Коснитесь для связывания с новыми студентами",
+  "@Tap to pair with a new student": {
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to select this student": "Коснитесь для выбора этого студента",
+  "@Tap to select this student": {
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Manage Students": "Управление студентами",
+  "@Manage Students": {
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Help": "Справка",
+  "@Help": {
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Log Out": "Выйти",
+  "@Log Out": {
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Switch Users": "Сменить пользователя",
+  "@Switch Users": {
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "appVersion": "в. {version}",
+  "@appVersion": {
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Вы уверены, что вы хотите выйти?",
+  "@Are you sure you want to log out?": {
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Calendars": "Календари",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "nextMonth": "Следующий месяц: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Предыдущий месяц: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Начало на следующей неделе {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Начало на предыдущей неделе {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Месяц из {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "развернуть",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapse": "свернуть",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "pointsPossible": "можно получить {points} баллов",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} событие}other{{date}, {eventCount} события}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
+    }
+  },
+  "No Events Today!": "На сегодня события отсутствуют!",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "Похоже, что сегодня можно отдохнуть, расслабиться и набраться сил.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "Произошла ошибка при загрузке календаря ваших учащихся.",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Коснитесь, чтобы отправить в избранное курсы, которые вам хотелось бы видеть в календаре. Выберите до 10.",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "Вы можете выбрать только 10 календарей для отображения",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "Вы должны выбрать как минимум один календарь для отображения",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Planner Note": "Примечание планировщика",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Go to today": "Перейти к сегодня",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Previous Logins": "Предыдущие идентификаторы",
+  "@Previous Logins": {
+    "description": "Label for the list of previous user logins",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Логотип Canvas",
+  "@canvasLogoLabel": {
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findSchool": "Найти школу",
+  "@findSchool": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findAnotherSchool": "Найти другую школу",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Введите название школы или округа…",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "noDomainResults": "Невозможно найти школу, соответствующую \"{query}\"",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders_order": [
+      "query"
+    ],
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "Как найти мою школу или округ?",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasGuides": "Руководства Canvas",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasSupport": "Поддержка Canvas",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Попытайтесь выполнить поиск названия школы или округа, к которым вы пытаетесь получить доступ, например, «частная школа Смита» или «школа графства Смит». Также вы можете ввести название домена Canvas напрямую, например, «smith.instructure.com.»\n\nДля получения более подробной информации по поиску учетной записи учреждения Canvas вы можете посетить {canvasGuides}, обратиться в {canvasSupport} или в свою школу за поддержкой.",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders_order": [
+      "canvasGuides",
+      "canvasSupport"
+    ],
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Ой-ой!",
+  "@Uh oh!": {
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Мы не знаем точно, что произошло, но это нехорошо. Обратитесь к нам, если это происходит дальше.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Contact Support": "Связаться со службой поддержки",
+  "@Contact Support": {
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View error details": "Просмотр подробностей ошибки",
+  "@View error details": {
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Restart app": "Перезапуск приложения",
+  "@Restart app": {
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Application version": "Версия приложения",
+  "@Application version": {
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device model": "Модель устройства",
+  "@Device model": {
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Android OS version": "Версия ОС Android",
+  "@Android OS version": {
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full error message": "Полное сообщение об ошибке",
+  "@Full error message": {
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox": "Входящие",
+  "@Inbox": {
+    "description": "Title for the Inbox screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "Произошла ошибка при загрузке ваших сообщений из папки «Входящие».",
+  "@There was an error loading your inbox messages.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Subject": "Нет темы",
+  "@No Subject": {
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "Невозможно сделать выборку курсов. Проверьте подключение и попробуйте еще раз.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose a course to message": "Выбрать курс для сообщения",
+  "@Choose a course to message": {
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox Zero": "Входящие Ноль",
+  "@Inbox Zero": {
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You’re all caught up!": "Вы все нагнали!",
+  "@You’re all caught up!": {
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "Произошла ошибка при загрузке получателей для этого курса",
+  "@There was an error loading recipients for this course": {
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "Невозможно отправить сообщение. Проверьте подключение и попробуйте еще раз.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsaved changes": "Несохраненные изменения",
+  "@Unsaved changes": {
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Вы действительно хотите закрыть эту страницу? Ваше неотправленное сообщение будет потеряно.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "New message": "Новое сообщение",
+  "@New message": {
+    "description": "Title of the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add attachment": "Добавить вложение",
+  "@Add attachment": {
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send message": "Отправить сообщение",
+  "@Send message": {
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select recipients": "Выбрать получателей",
+  "@Select recipients": {
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No recipients selected": "Получатели не выбраны",
+  "@No recipients selected": {
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message subject": "Тема сообщения",
+  "@Message subject": {
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message": "Сообщение",
+  "@Message": {
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Recipients": "Получатели",
+  "@Recipients": {
+    "description": "Label for message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+{count}",
+  "@plusRecipientCount": {
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "Сбой. Коснитесь для просмотра опций.",
+  "@Failed. Tap for options.": {
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "courseForWhom": "для {studentShortName}",
+  "@courseForWhom": {
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
+    "placeholders_order": [
+      "studentShortName"
+    ],
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Касательно: {studentName}, {linkUrl}",
+  "@messageLinkPostscript": {
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "linkUrl"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "Произошла ошибка при загрузке этого обсуждения",
+  "@There was an error loading this conversation": {
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply": "Ответить",
+  "@Reply": {
+    "description": "Button label for replying to a conversation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply All": "Ответить на все",
+  "@Reply All": {
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unknown User": "Неизвестный пользователь",
+  "@Unknown User": {
+    "description": "Label used where the user name is not known",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "me": "меня",
+  "@me": {
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "authorToRecipient": "{authorName} до {recipientName}",
+  "@authorToRecipient": {
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "{howMany,plural, =1{{authorName} до 1 другое}other{{authorName} до {howMany} другие}}",
+  "@authorToNOthers": {
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} до {recipientName} и 1 другой}other{{authorName} до {recipientName} и {howMany} другие}}",
+  "@authorToRecipientAndNOthers": {
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Скачать",
+  "@Download": {
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open with another app": "Открыть с помощью другого приложения",
+  "@Open with another app": {
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "Нет установленных приложений, которые могут открыть этот файл",
+  "@There are no installed applications that can open this file": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsupported File": "Неподдерживаемый файл",
+  "@Unsupported File": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Этот файл не поддерживается и не может быть просмотрен в приложении",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to play this media file": "Невозможно воспроизвести этот медиафайл",
+  "@Unable to play this media file": {
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to load this image": "Невозможно скачать это изображение",
+  "@Unable to load this image": {
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading this file": "Произошла ошибка при загрузке этого файла",
+  "@There was an error loading this file": {
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Courses": "Курсы отсутствуют",
+  "@No Courses": {
+    "description": "Title for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "Курсы вашего студента пока еще не могут быть опубликованы.",
+  "@Your student’s courses might not be published yet.": {
+    "description": "Message for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student’s courses.": "Произошла ошибка при загрузке курсов ваших студентов.",
+  "@There was an error loading your student’s courses.": {
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Grade": "Нет оценки",
+  "@No Grade": {
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter by": "Фильтровать по",
+  "@Filter by": {
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grades": "Оценки",
+  "@Grades": {
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Syllabus": "Содержание курса",
+  "@Syllabus": {
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Front Page": "Первая страница",
+  "@Front Page": {
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Summary": "Сводные данные",
+  "@Summary": {
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this course": "Отправить сообщение об этом курсе",
+  "@Send a message about this course": {
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Total Grade": "Общая оценка",
+  "@Total Grade": {
+    "description": "Label for the total grade in the course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Graded": "С оценкой",
+  "@Graded": {
+    "description": "Label for assignments that have been graded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submitted": "Отправлено",
+  "@Submitted": {
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Submitted": "Не отправлено",
+  "@Not Submitted": {
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Late": "Поздно",
+  "@Late": {
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Missing": "Отсутствует",
+  "@Missing": {
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description": "Value representing no score for student submission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "All Grading Periods": "Все академические периоды",
+  "@All Grading Periods": {
+    "description": "Label for selecting all grading periods",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Assignments": "Задания отсутствуют",
+  "@No Assignments": {
+    "description": "Title for the no assignments message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Похоже, что в этом разделе пока что не было создано ни одного задания.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description": "Message for no assignments",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "Произошла ошибка при загрузке подробных сводных данных для этого курса.",
+  "@There was an error loading the summary details for this course.": {
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Summary": "Нет сводных данных",
+  "@No Summary": {
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Этот курс пока что не имеет никаких заданий или календарных событий.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "{score} из {pointsPossible} баллов",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Касательно: {studentName}, оценки",
+  "@gradesSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Касательно: {studentName}, содержание курса",
+  "@syllabusSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Касательно: {studentName}, первая страница",
+  "@frontPageSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Касательно: {studentName}, задание - {assignmentName}",
+  "@assignmentSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "assignmentName"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Касательно: {studentName}, событие - {eventTitle}",
+  "@eventSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "eventTitle"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "Нет доступной информации о странице.",
+  "@There is no page information available.": {
+    "description": "Description for when no page information is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment Details": "Сведения о задании",
+  "@Assignment Details": {
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "{points} баллов",
+  "@assignmentTotalPoints": {
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "{points} баллов",
+  "@assignmentTotalPointsAccessible": {
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Срок",
+  "@Due": {
+    "description": "Label for an assignment due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade": "Оценка",
+  "@Grade": {
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locked": "Заблокировано",
+  "@Locked": {
+    "description": "Label for when an assignment is locked",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "Это задание заблокировано модулем \"{moduleName}\".",
+  "@assignmentLockedModule": {
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
+    "placeholders_order": [
+      "moduleName"
+    ],
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Напомнить",
+  "@Remind Me": {
+    "description": "Label for the row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Задать дату и время уведомления об этом конкретном задании.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description": "Description for row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Вы будете уведомлены об этом задании…",
+  "@You will be notified about this assignment on…": {
+    "description": "Description for when a reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructions": "Инструкции",
+  "@Instructions": {
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Отправить сообщение об этом задании",
+  "@Send a message about this assignment": {
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Это приложение не авторизовано для использования.",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "Введенный сервер не авторизован для этого приложения.",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "Пользовательский агент для этого приложения не авторизован.",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "Мы не смогли проверить сервер для использования с этим приложением.",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders": "Оповещения",
+  "@Reminders": {
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Уведомления по напоминаниям о заданиях и календарных событиях",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders have changed!": "Напоминания изменились!",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Для обеспечения высокого качества обслуживания мы обновили порядок использования напоминаний. Добавить новые напоминания можно, просмотрев задание или событие календаря и нажав переключатель в разделе «Напоминание».\n\nСледует иметь в виду, что напоминания, созданные с помощью старых версий данного приложения, не будут совместимы с новыми изменениями, и их нужно будет создавать заново.",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not a parent?": "Не являетесь родителем?",
+  "@Not a parent?": {
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "Мы не смогли найти студентов, ассоциированных с этой учетной записью",
+  "@We couldn't find any students associated with this account": {
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "Вы студент или преподаватель?",
+  "@Are you a student or teacher?": {
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Одно из наших других приложений может подойти лучше. Прикоснитесь один раз для входа в Play Store.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Return to Login": "Вернуться к авторизации",
+  "@Return to Login": {
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "STUDENT": "СТУДЕНТ",
+  "@STUDENT": {
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TEACHER": "ПРЕПОДАВАТЕЛЬ",
+  "@TEACHER": {
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Student": "Студент Canvas",
+  "@Canvas Student": {
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Преподаватель Canvas",
+  "@Canvas Teacher": {
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Alerts": "Нет оповещений",
+  "@No Alerts": {
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "На данный момент оповещать не о чем.",
+  "@There’s nothing to be notified of yet.": {
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dismissAlertLabel": "Исключить {alertTitle}",
+  "@dismissAlertLabel": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
+    "placeholders_order": [
+      "alertTitle"
+    ],
+    "placeholders": {
+      "alertTitle": {}
+    }
+  },
+  "Course Announcement": "Объявление о курсе",
+  "@Course Announcement": {
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcement": "Объявление об учебном заведении",
+  "@Institution Announcement": {
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Оценка за задание выше {threshold}",
+  "@assignmentGradeAboveThreshold": {
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Оценка за задание ниже {threshold}",
+  "@assignmentGradeBelowThreshold": {
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Оценка за курс выше {threshold}",
+  "@courseGradeAboveThreshold": {
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Оценка за курс ниже {threshold}",
+  "@courseGradeBelowThreshold": {
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Настройки",
+  "@Settings": {
+    "description": "Title for the settings screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Theme": "Тема",
+  "@Theme": {
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Dark Mode": "Темный режим",
+  "@Dark Mode": {
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Light Mode": "Светлый режим",
+  "@Light Mode": {
+    "description": "Label for the button that enables light mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Высококонтрастный режим",
+  "@High Contrast Mode": {
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Использовать темную тему в веб-контенте",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Appearance": "Представление",
+  "@Appearance": {
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Successfully submitted!": "Успешно отправлено!",
+  "@Successfully submitted!": {
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "Это задание было отправлено {date} в {time} и ожидает оценки",
+  "@submissionStatusSuccessSubtitle": {
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "{howMany,plural, =1{Из 1 балла}other{Из {points} баллов}}",
+  "@outOfPoints": {
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
+    "placeholders_order": [
+      "points",
+      "howMany"
+    ],
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "По уважительной причине",
+  "@Excused": {
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Complete": "Завершить",
+  "@Complete": {
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incomplete": "Не завершено",
+  "@Incomplete": {
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "minus": "минус",
+  "@minus": {
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "latePenalty": "Снижение оценки за опоздание (-{pointsLost})",
+  "@latePenalty": {
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
+    "placeholders_order": [
+      "pointsLost"
+    ],
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Итоговая оценка: {grade}",
+  "@finalGrade": {
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
+    "placeholders_order": [
+      "grade"
+    ],
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Настройки оповещения",
+  "@Alert Settings": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Alert me when…": "Оповестить меня, когда…",
+  "@Alert me when…": {
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade below": "Оценка за курс ниже",
+  "@Course grade below": {
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade above": "Оценка за курс выше",
+  "@Course grade above": {
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment missing": "Задание отсутствует",
+  "@Assignment missing": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade below": "Оценка за задание ниже",
+  "@Assignment grade below": {
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade above": "Оценка за задание выше",
+  "@Assignment grade above": {
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course Announcements": "Объявления курса",
+  "@Course Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcements": "Объявления заведения",
+  "@Institution Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Never": "Никогда",
+  "@Never": {
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade percentage": "Процент оценок",
+  "@Grade percentage": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "Произошла ошибка при загрузке оповещений ваших студентов.",
+  "@There was an error loading your student's alerts.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Must be below 100": "Должно быть меньше 100",
+  "@Must be below 100": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Должно быть меньше {percentage}",
+  "@mustBeBelowN": {
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Должно быть больше {percentage}",
+  "@mustBeAboveN": {
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Select Student Color": "Выбрать цвет студента",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Electric, blue": "Электрик, синий",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Plum, Purple": "Слива, фиолетовый",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Барни, фуксия",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Малина, красный",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Fire, Orange": "Огонь, оранжевый",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Трилистник, зеленый",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "Произошла ошибка при сохранении вашего выбора. Попробуйте еще раз.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Изменить цвет для {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "Teacher": "Преподаватель",
+  "@Teacher": {
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Student": "Студент",
+  "@Student": {
+    "description": "Label for the Student enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TA": "TA",
+  "@TA": {
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Observer": "Наблюдатель",
+  "@Observer": {
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Camera": "Использование камеры",
+  "@Use Camera": {
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Upload File": "Загрузить файл",
+  "@Upload File": {
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Выбрать из галереи",
+  "@Choose from Gallery": {
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Preparing…": "Подготовка...",
+  "@Preparing…": {
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add student with…": "Добавить студента с…",
+  "@Add student with…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add Student": "Добавить студента",
+  "@Add Student": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You are not observing any students.": "Вы не наблюдаете ни за одни студентом.",
+  "@You are not observing any students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "Произошла ошибка при загрузке ваших студентов.",
+  "@There was an error loading your students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Pairing Code": "Код сопряжения",
+  "@Pairing Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can obtain a pairing code through the Canvas website": "Студенты могут получить код подключения на веб-сайте Canvas",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Введите предоставленный вам код сопряжения студентов. Если сопряжение не работает, срок его действия может закончиться",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Ваш код неверен, или истек срок его действия.",
+  "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Что-то пошло не так при попытке создания вашей учетной записи. Обратитесь в свою школу за помощью.",
+  "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR Code": "QR-код",
+  "@QR Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Студенты могут создать QR-код с помощью приложения Canvas Student на своем мобильном устройстве",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add new student": "Добавить нового студента",
+  "@Add new student": {
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select": "Выбрать",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I have a Canvas account": "У меня есть учетная запись Canvas",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "У меня нет учетной записи Canvas",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Create Account": "Создать учетную запись",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name": "Полное имя",
+  "@Full Name": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email Address": "Адрес электронной почты",
+  "@Email Address": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password": "Пароль",
+  "@Password": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name…": "Полное имя...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email…": "Электронная почта...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password…": "Пароль...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter full name": "Введите полное имя",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter an email address": "Введите адрес эл. почты",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Введите действительный адрес эл. почты",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password is required": "Требуется пароль",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "Пароль должен содержать не менее 8 символов",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "Нажимая «Создать учетную запись», вы соглашаетесь с {termsOfService} и признаете {privacyPolicy}",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders_order": [
+      "termsOfService",
+      "privacyPolicy"
+    ],
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "Условия предоставления услуг",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy": "Политика конфиденциальности",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Посмотреть политику конфиденциальности",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Already have an account? ": "Уже есть учетная запись? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Sign In": "Войти в систему",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Hide Password": "Скрыть пароль",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Show Password": "Показать пароль",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Ссылка на условия обслуживания",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Ссылка на политику конфиденциальности",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Event": "Событие",
+  "@Event": {
+    "description": "Title for the event details screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Date": "Дата",
+  "@Date": {
+    "description": "Label for the event date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Location": "Местоположение",
+  "@Location": {
+    "description": "Label for the location information",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Location Specified": "Местоположение не указано",
+  "@No Location Specified": {
+    "description": "Description for events that do not have a location",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "eventTime": "{startAt} - {endAt}",
+  "@eventTime": {
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
+    "placeholders_order": [
+      "startAt",
+      "endAt"
+    ],
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Задать дату и время уведомления об этом событии.",
+  "@Set a date and time to be notified of this event.": {
+    "description": "Description for row to set event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Вы будете уведомлены об этом событии…",
+  "@You will be notified about this event on…": {
+    "description": "Description for when an event reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Поделитесь своей любовью к приложению",
+  "@Share Your Love for the App": {
+    "description": "Label for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Расскажите нам о своих любимых моментах приложения",
+  "@Tell us about your favorite parts of the app": {
+    "description": "Description for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Legal": "Юридические вопросы",
+  "@Legal": {
+    "description": "Label for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Политика конфиденциальности, условия использования, открытый источник",
+  "@Privacy policy, terms of use, open source": {
+    "description": "Description for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Идея для приложения Canvas Родители [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description": "The subject for the email to request a feature",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "Следующая информация поможет нам лучше понять вашу идею:",
+  "@The following information will help us better understand your idea:": {
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain:": "Домен:",
+  "@Domain:": {
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID:": "Идентификатор пользователя:",
+  "@User ID:": {
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email:": "Эл. почта:",
+  "@Email:": {
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locale:": "Язык:",
+  "@Locale:": {
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Use": "Условия использования",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas на GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "Возникала проблема при загрузке условий использования",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device": "Устройство",
+  "@Device": {
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "OS Version": "Версия ОС",
+  "@OS Version": {
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version Number": "Номер версии",
+  "@Version Number": {
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Report A Problem": "Сообщить о проблеме",
+  "@Report A Problem": {
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Subject": "Тема",
+  "@Subject": {
+    "description": "Label used for Subject text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A subject is required.": "Необходима тема.",
+  "@A subject is required.": {
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An email address is required.": "Необходим адрес электронной почты.",
+  "@An email address is required.": {
+    "description": "Error shown when the email field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Description": "Описание",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A description is required.": "Требуется описание.",
+  "@A description is required.": {
+    "description": "Error shown when the description field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "How is this affecting you?": "Как это влияет на вас?",
+  "@How is this affecting you?": {
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "send": "отправить",
+  "@send": {
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Просто обычный вопрос, комментарий, идея, предложение...",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "Мне нужна помощь, но это не срочно.",
+  "@I need some help but it's not urgent.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Что-то не работает, но я могу обойтись без этого, чтобы получить то, что мне нужно сделать.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "Я не могу добиться своей цели, пока не услышу от вас ответа.",
+  "@I can't get things done until I hear back from you.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "ЧРЕЗВЫЧАЙНО КРИТИЧЕСКАЯ СИТУАЦИЯ!!",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Graded": "Оценка не выставлена",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Normal": "Процесс авторизации: Обычный",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Процесс авторизации: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Процесс авторизации: Администратор сайта",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Процесс авторизации: Пропустить проверку мобильного устройства",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Act As User": "Действовать как пользователь",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Перестать действовать как пользователь",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "actingAsUser": "Вы действуете как {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "«Действовать как пользователь» является по существу входом в систему в качестве этого пользователя без пароля. Вы сможете совершать любые действия, как если бы вы были этим пользователем, а для других пользователей это будет выглядеть так, как будто эти действия совершил этот пользователь. Тем не менее, в контрольных журналах записывается информация от том, что именно вы выполняли указанные действия от имени этого пользователя.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain": "Домен",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "Необходимо указать действительный домен",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID": "Идентификатор пользователя",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a user id": "Необходимо ввести идентификатор пользователя",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Произошла ошибка при попытке использования функции «Действовать как пользователь». Проверьте домен и идентификатор пользователя и повторите попытку.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Функция «Действовать как {userName}» будет отключена и вы вернетесь в свою исходную учетную запись.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Функция «Действовать как {userName}» будет отключена, и сеанс будет завершен.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "How are we doing?": "Как мы работаем?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Don't show again": "Не показывать снова",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "What can we do better?": "Что мы можем сделать лучше?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send Feedback": "Отправить оценку",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Предложения для Android - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} звезда}other{{position} звезд(-ы)}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders_order": [
+      "position"
+    ],
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
+  "Student Pairing": "Подключение студентов",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open Canvas Student": "Откройте Canvas Student",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Вам понадобится открыть приложение Canvas Student, чтобы продолжить. Перейдите в Главное меню > Настройки > Подключить к Observer и отсканируйте QR-код, который вы видите здесь.",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Снимок экрана, на котором показано расположение генерирования QR-кода для подключения в приложение Canvas Student",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Expired QR Code": "QR-код с истекшим сроком действия",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "У отсканированного вами QR-кода мог истечь срок действия. Обновите код на устройстве студента и попробуйте еще раз.",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "При добавлении студента произошла ошибка. Проверьте подключение и попробуйте еще раз.",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Invalid QR Code": "Неверный QR-код",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incorrect Domain": "Неверный домен",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Студент, которого вы пытаетесь добавить, относится к другому факультету. Выполните вход или создайте учетную запись на этом факультете, чтобы отсканировать этот код.",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Camera Permission": "Разрешение для камеры",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "Это приведет к отключению и удалению всех зачислений для этого студента из вашей учетной записи.",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Возникла проблема при удалении этого студента из вашей учетной записи. Проверьте подключение и попробуйте еще раз.",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Cancel": "Отменить",
+  "@Cancel": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "next": "Далее",
+  "@next": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Yes": "Да",
+  "@Yes": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No": "Нет",
+  "@No": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Retry": "Повторить",
+  "@Retry": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Delete": "Удалить",
+  "@Delete": {
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Done": "Готово",
+  "@Done": {
+    "description": "Label for general done/finished actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Refresh": "Обновить",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View Description": "Просмотреть описание",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "expanded": "в развернутом виде",
+  "@expanded": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapsed": "в свернутом виде",
+  "@collapsed": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "Произошла непредвиденная ошибка",
+  "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No description": "Описание отсутствует",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Launch External Tool": "Запуск внешнего инструмента",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "Взаимодействие на этой странице ограничено вашей организацией.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dateAtTime": "{date} в {time}",
+  "@dateAtTime": {
+    "description": "The string to format dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Срок выполнения {date} в {time}",
+  "@dueDateAtTime": {
+    "description": "The string to format due dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "Срок выполнения не задан",
+  "@No Due Date": {
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter": "Фильтровать",
+  "@Filter": {
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unread": "не прочитано",
+  "@unread": {
+    "description": "Label for things that are marked as unread",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unreadCount": "{count} непрочитанных",
+  "@unreadCount": {
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "{count}+",
+  "@badgeNumberPlus": {
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "Произошла ошибка при загрузке этого объявления",
+  "@There was an error loading this announcement": {
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Network error": "Ошибка сети",
+  "@Network error": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Under Construction": "В разработке",
+  "@Under Construction": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "В настоящее время мы разрабатываем эту функцию для более комфортного просмотра.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Кнопка запроса помощи по входу в систему",
+  "@Request Login Help Button": {
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help": "Запрос помощи со входом в систему",
+  "@Request Login Help": {
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "У меня проблема со входом в систему",
+  "@I'm having trouble logging in": {
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "Произошла ошибка при попытке открытия данной ссылки",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Мы не можем открыть данную ссылку, она может принадлежать учреждению, в систему которого вы в настоящее время не вошли.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Link Error": "Ошибка ссылки",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open In Browser": "Открыть в браузере",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "В профиле своей учетной записи вы найдете QR-код. Нажмите «QR для входа с мобильного устройства» в списке.",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locate QR Code": "Определить местонахождение кода QR",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "Отсканируйте QR-код, сгенерированный Canvas",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "Ошибка входа в систему. Сгенерируйте другой QR-код и попробуйте еще раз.",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "Снимок экрана с отображением места генерирования QR-кода в браузере",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR scanning requires camera access": "Для сканирования QR-кода необходим доступ к камере",
+  "@QR scanning requires camera access": {
+    "description": "placeholder for camera error for QR code scan",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The linked item is no longer available": "Связанная позиция более недоступна",
+  "@The linked item is no longer available": {
+    "description": "error message when the alert could no be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message sent": "Сообщение отправлено",
+  "@Message sent": {
+    "description": "confirmation message on the screen when the user succesfully sends a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Acceptable Use Policy": "Приемлемая политика использования",
+  "@Acceptable Use Policy": {
+    "description": "title for the acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submit": "Отправить",
+  "@Submit": {
+    "description": "submit button title for acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": "Вы либо новый пользователь, либо Политика допустимого использования изменились после того, как вы в последний раз приняли их. Согласитесь с Политикой допустимого использования, прежде чем продолжить.",
+  "@Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": {
+    "description": "acceptable use policy screen description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I agree to the Acceptable Use Policy.": "Я соглашаюсь с Политикой допустимого использования.",
+  "@I agree to the Acceptable Use Policy.": {
+    "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "О проекте",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "Приложение",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "Имя пользователя",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "Адрес электронной почты",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "Версия",
+  "@Version": {
+    "description": "Title for Version field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructure logo": "Логотип Instructure",
+  "@Instructure logo": {
+    "description": "Semantics label for the Instructure logo on the about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  }
+}

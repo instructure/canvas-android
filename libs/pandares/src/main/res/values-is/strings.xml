@@ -291,7 +291,7 @@
     <string name="Todo">Verkefni</string>
     <string name="todoFilter">Sía námskeið</string>
     <string name="filterByEllipsis">Sía eftir&#8230;</string>
-    <string name="favoriteCoursesLabel">Uppáhalds námskeið</string>
+    <string name="favoritedCoursesLabel">Uppáhalds námskeið</string>
     <string name="Event">Viðburður</string>
     <string name="eventSuccessfulDeletion">Viðburði var eytt</string>
     <string name="timeIconDescription">Tímatákn</string>
@@ -1776,6 +1776,7 @@
     <string name="screenTitleHelp">Hjálp</string>
     <string name="screenTitleManageStudents">Stjórna nemendum</string>
     <string name="screenTitleSettings">Stillingar</string>
+    <string name="navigationDrawerSwitchUsers">Skipta um notendur</string>
     <string name="navigationDrawerLogOut">Útskráning</string>
     <string name="noStudentsError">Engir nemendur</string>
     <string name="noStudentsErrorDescription">Þú fylgist ekki með neinum nemendum.</string>
@@ -2004,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Undirskrift</string>
     <string name="inboxSignatureTextfieldHeader">Texti undirskriftar</string>
     <string name="due_dateTime">Skil: %1$s, %2$s</string>
+    <string name="noDueDate">Enginn skiladagur</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Þarfnast einkunnargjafar</string>
+    <string name="assignmentListTitle">Verkefnalisti</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d punktur</item>
+        <item quantity="other">%d punktar</item>
+    </plurals>
+    <string name="noAssignments">Engin verkefni</string>
+    <string name="assignmentGroup">Verkefnahópur</string>
+    <string name="assignmentType">Gerð verkefnis</string>
+    <string name="dueDate">Skiladagur</string>
+    <string name="needsGrading">Þarfnast einkunnagjafar</string>
+    <string name="published">Birt</string>
+    <string name="unpublished">Falið</string>
+    <string name="notYetSubmitted">Ekki enn skilað</string>
+    <string name="toBeGraded">Bíður einkunnagjafar</string>
+    <string name="graded">Metið</string>
+    <string name="other">Annað</string>
+    <string name="a11y_filterAssignments">Sía verkefni</string>
+    <string name="assignmentFilter">Sía verkefnis</string>
+    <string name="groupedBy">Flokkað eftir</string>
+    <string name="gradingPeriod">Einkunnatímabil:</string>
+    <string name="gradingPeriodHeading">Einkunnatímabil</string>
+    <string name="gradePreferences">Kjörstillingar fyrir einkunnir</string>
+    <string name="allAssignments">Öll verkefni</string>
+    <string name="statusFilter">Stöðusía</string>
     <string name="a11y_contentDescription_filter">Sía</string>
     <string name="a11y_contentDescription_postPolicy">Birtingarstefna</string>
     <string name="late">Seint</string>
@@ -2012,4 +2040,12 @@
     <string name="submissionFilter">Innsendingarsía</string>
     <string name="submissionMessageSubject">%1$s á %2$s</string>
     <string name="all">Allt</string>
+    <string name="loginRequired">Þörf er á innskráningu</string>
+    <string name="loginRequiredMessage">Þú þarft að skrá þig aftur inn vegna öryggisstefnu stofnunar þinnar. Eftir innskráningu getur þú haldið vinnu áfram með einföldum hætti.</string>
+    <string name="login">Innskráning</string>
+    <string name="logout">Útskráning</string>
+    <string name="loginRefreshSameUserError">Þú verður að skrá þig inn með sama notanda.</string>
+    <string name="errorLoadingAssignments">Villa kom upp við að hlaða verkefnum</string>
+    <string name="a11y_searchAssignments">Leita í verkefnum</string>
+    <string name="dueAssignmentListItem">Skiladagur %1$s</string>
 </resources>

@@ -1,0 +1,2753 @@
+﻿{
+  "@@last_modified": "2023-08-25T11:04:20.901151",
+  "alertsLabel": "Avisos",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "calendarLabel": "Calendari",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "coursesLabel": "Assignatures",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Students": "Cap estudiant",
+  "@No Students": {
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Toqueu per mostrar el selector d'estudiants",
+  "@Tap to show student selector": {
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Toqueu per emparellar amb un estudiant nou",
+  "@Tap to pair with a new student": {
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to select this student": "Toqueu per seleccionar aquest estudiant",
+  "@Tap to select this student": {
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Manage Students": "Administra els estudiants",
+  "@Manage Students": {
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Help": "Ajuda",
+  "@Help": {
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Log Out": "Tanca la sessió",
+  "@Log Out": {
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Switch Users": "Canvia els usuaris",
+  "@Switch Users": {
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "appVersion": "versió {version}",
+  "@appVersion": {
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Segur que voleu tancar la sessió?",
+  "@Are you sure you want to log out?": {
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Calendars": "Calendaris",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "nextMonth": "El mes que ve: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "El mes passat: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "La setmana que ve a partir del {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "La setmana passada a partir del {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Mes de {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "desplega",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapse": "redueix",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} punts possibles",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} esdeveniment}other{{date}, {eventCount} esdeveniments}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
+    }
+  },
+  "No Events Today!": "Avui no hi ha cap esdeveniment.",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "Sembla un dia fabulós per descansar, relaxar-se i carregar piles.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "S'ha produït un error en carregar el vostre calendari de l'estudiant",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Toqueu per afegir als preferits les assignatures que voleu veure al Calendari. Seleccioneu-ne fins a 10.",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "Només podeu triar 10 calendaris perquè es mostrin",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "Heu de seleccionar com a mínim un calendari perquè es mostri",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Planner Note": "Nota del planificador",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Go to today": "Vés a avui",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Previous Logins": "Inicis de sessió anteriors",
+  "@Previous Logins": {
+    "description": "Label for the list of previous user logins",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Logotip del Canvas",
+  "@canvasLogoLabel": {
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findSchool": "Cerca una escola",
+  "@findSchool": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findAnotherSchool": "Cerca una altra escola",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Introduïu el nom de l'escola o el districte...",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "noDomainResults": "No s'han trobat escoles que coincideixin amb “{query}”",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders_order": [
+      "query"
+    ],
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "Com puc trobar la meva escola o districte?",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasGuides": "Guies del Canvas",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasSupport": "Assistència tècnica del Canvas",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Proveu de cercar pel nom de l'escola o districte al qual intenteu accedir, com ara “Escola Privada Smith” o “Escoles de la Regió d'Smith”. També podeu introduir un domini del Canvas directament, com ara “smith.instructure.com.”\n\nPer obtenir més informació sobre com cercar l'usuari del Canvas de la vostra institució, podeu consultar les {canvasGuides}, contactar amb l'{canvasSupport}, o posar-vos en contacte amb la vostra escola per obtenir assistència.",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders_order": [
+      "canvasGuides",
+      "canvasSupport"
+    ],
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Oh!",
+  "@Uh oh!": {
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "No estem segurs de què ha passat, però no ha sigut res bo. Poseu-vos en contacte amb nosaltres si us segueix passant.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Contact Support": "Contacta amb l'assistència tècnica",
+  "@Contact Support": {
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View error details": "Visualitza els detalls de l'error",
+  "@View error details": {
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Restart app": "Reinicia l'aplicació",
+  "@Restart app": {
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Application version": "Versió de l'aplicació",
+  "@Application version": {
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device model": "Model del dispositiu",
+  "@Device model": {
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Android OS version": "Versió del sistema operatiu Android",
+  "@Android OS version": {
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full error message": "Missatge d'error complet",
+  "@Full error message": {
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox": "Safata d'entrada",
+  "@Inbox": {
+    "description": "Title for the Inbox screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "S'ha produït un error en carregar els missatges de la vostra safata d'entrada.",
+  "@There was an error loading your inbox messages.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Subject": "Sense assumpte",
+  "@No Subject": {
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "No es poden obtenir les assignatures. Reviseu la connexió i torneu-ho a provar.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose a course to message": "Trieu una assignatura per enviar el missatge",
+  "@Choose a course to message": {
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox Zero": "Safata d'entrada buida",
+  "@Inbox Zero": {
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You’re all caught up!": "Esteu completament al dia!",
+  "@You’re all caught up!": {
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "S'ha produït un error en carregar els destinataris d'aquesta assignatura",
+  "@There was an error loading recipients for this course": {
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "No es pot enviar el missatge. Reviseu la connexió i torneu-ho a provar.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsaved changes": "Canvis no desats",
+  "@Unsaved changes": {
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Segur que voleu tancar aquesta pàgina? El vostre missatge no enviat es perdrà.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "New message": "Missatge nou",
+  "@New message": {
+    "description": "Title of the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add attachment": "Afegeix un fitxer adjunt",
+  "@Add attachment": {
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send message": "Send message",
+  "@Send message": {
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select recipients": "Selecciona els destinataris",
+  "@Select recipients": {
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No recipients selected": "Cap destinatari seleccionat",
+  "@No recipients selected": {
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message subject": "Assumpte del missatge",
+  "@Message subject": {
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message": "Missatge",
+  "@Message": {
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Recipients": "Destinataris",
+  "@Recipients": {
+    "description": "Label for message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+{count}",
+  "@plusRecipientCount": {
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "S'ha produït un error. Toqueu per veure les opcions.",
+  "@Failed. Tap for options.": {
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "courseForWhom": "per a {studentShortName}",
+  "@courseForWhom": {
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
+    "placeholders_order": [
+      "studentShortName"
+    ],
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Sobre: {studentName}, {linkUrl}",
+  "@messageLinkPostscript": {
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "linkUrl"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "S'ha produït un error en carregar aquesta conversa",
+  "@There was an error loading this conversation": {
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply": "Respon",
+  "@Reply": {
+    "description": "Button label for replying to a conversation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply All": "Respon a tots",
+  "@Reply All": {
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unknown User": "Usuari desconegut",
+  "@Unknown User": {
+    "description": "Label used where the user name is not known",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "me": "mi",
+  "@me": {
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "authorToRecipient": "De {authorName} a {recipientName}",
+  "@authorToRecipient": {
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "{howMany,plural, =1{{authorName} a 1 altre}other{{authorName} a {howMany} més}}",
+  "@authorToNOthers": {
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} a {recipientName} i 1 altre}other{{authorName} a {recipientName} i {howMany} més}}",
+  "@authorToRecipientAndNOthers": {
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Baixa",
+  "@Download": {
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open with another app": "Obre amb una altra aplicació",
+  "@Open with another app": {
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "No hi ha cap aplicació instal·lada que pugui obrir aquest fitxer",
+  "@There are no installed applications that can open this file": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsupported File": "Fitxer no admès",
+  "@Unsupported File": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Aquest fitxer no s'admet i no es pot visualitzar a través de l'aplicació",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to play this media file": "No es pot reproduir aquest fitxer multimèdia",
+  "@Unable to play this media file": {
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to load this image": "No es pot carregar aquesta imatge",
+  "@Unable to load this image": {
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading this file": "S'ha produït un error en carregar aquest fitxer",
+  "@There was an error loading this file": {
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Courses": "No hi ha cap assignatura",
+  "@No Courses": {
+    "description": "Title for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "És possible que encara no s'hagin publicat les vostres assignatures de l'estudiant.",
+  "@Your student’s courses might not be published yet.": {
+    "description": "Message for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student’s courses.": "S'ha produït un error en carregar les vostres assignatures de l'estudiant.",
+  "@There was an error loading your student’s courses.": {
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Grade": "Sense nota",
+  "@No Grade": {
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter by": "Filtra per",
+  "@Filter by": {
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grades": "Notes",
+  "@Grades": {
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Syllabus": "Temari",
+  "@Syllabus": {
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Front Page": "Pàgina frontal",
+  "@Front Page": {
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Summary": "Resum",
+  "@Summary": {
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this course": "Envia un missatge sobre aquesta assignatura",
+  "@Send a message about this course": {
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Total Grade": "Nota total",
+  "@Total Grade": {
+    "description": "Label for the total grade in the course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Graded": "Qualificat",
+  "@Graded": {
+    "description": "Label for assignments that have been graded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submitted": "Entregat",
+  "@Submitted": {
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Submitted": "No entregat",
+  "@Not Submitted": {
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Late": "Tardà",
+  "@Late": {
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Missing": "No presentat",
+  "@Missing": {
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description": "Value representing no score for student submission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "All Grading Periods": "Tots els períodes de qualificació",
+  "@All Grading Periods": {
+    "description": "Label for selecting all grading periods",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Assignments": "No hi ha cap activitat",
+  "@No Assignments": {
+    "description": "Title for the no assignments message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Sembla que en aquest espai encara no s'ha creat cap activitat.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description": "Message for no assignments",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "S'ha produït un error en carregar els detalls de resum d'aquesta assignatura.",
+  "@There was an error loading the summary details for this course.": {
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Summary": "Cap resum",
+  "@No Summary": {
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Aquesta assignatura encara no té cap activitat o esdeveniment al calendari.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "{score} de {pointsPossible} punts",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Sobre: {studentName}, notes",
+  "@gradesSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Sobre: {studentName}, temari",
+  "@syllabusSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Sobre: {studentName}, pàgina frontal",
+  "@frontPageSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Sobre: {studentName}, activitat - {assignmentName}",
+  "@assignmentSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "assignmentName"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Sobre: {studentName}, esdeveniment - {eventTitle}",
+  "@eventSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "eventTitle"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "No hi ha informació disponible sobre la pàgina.",
+  "@There is no page information available.": {
+    "description": "Description for when no page information is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment Details": "Detalls de l'activitat",
+  "@Assignment Details": {
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "{points} punts",
+  "@assignmentTotalPoints": {
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "{points} punts",
+  "@assignmentTotalPointsAccessible": {
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Data de lliurament",
+  "@Due": {
+    "description": "Label for an assignment due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade": "Nota",
+  "@Grade": {
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locked": "Bloquejat",
+  "@Locked": {
+    "description": "Label for when an assignment is locked",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "El contingut “{moduleName}” bloqueja aquesta activitat.",
+  "@assignmentLockedModule": {
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
+    "placeholders_order": [
+      "moduleName"
+    ],
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Recorda-m'ho",
+  "@Remind Me": {
+    "description": "Label for the row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Establiu una data i hora per rebre una notificació sobre aquesta activitat concreta.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description": "Description for row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Rebreu una notificació sobre aquesta activitat el...",
+  "@You will be notified about this assignment on…": {
+    "description": "Description for when a reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructions": "Instruccions",
+  "@Instructions": {
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Envia un missatge sobre aquesta activitat",
+  "@Send a message about this assignment": {
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Aquesta aplicació no té autorització perquè s'utilitzi.",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "El servidor que heu introduït no té autorització per a aquesta aplicació.",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "L'agent d'usuari per a aquesta aplicació no està autoritzat.",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "No hem pogut verificar si el servidor es pot utilitzar amb aquesta aplicació.",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders": "Recordatoris",
+  "@Reminders": {
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Notificacions de recordatoris sobre activitats i esdeveniments del calendari",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders have changed!": "Els recordatoris han canviat!",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Per tal de proporcionar-vos una millor experiència, hem actualitzat la manera com funcionen els recordatoris. Podeu afegir recordatoris nous en visualitzar una activitat o esdeveniment del calendari i tocant el botó a sota de la secció \"Recorda-m'ho\".\n\nTingueu en compte que els recordatoris creats amb les versions anteriors de l'aplicació no seran compatibles amb els nous canvis i els haureu de tornar a crear.",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not a parent?": "No sou un progenitor?",
+  "@Not a parent?": {
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "No hem trobat cap estudiant associat amb aquest usuari",
+  "@We couldn't find any students associated with this account": {
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "Sou un estudiant o professor?",
+  "@Are you a student or teacher?": {
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "És possible que alguna de les altres aplicacions nostres us sigui més útil. Toqueu-ne una per anar a Play Store.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Return to Login": "Torna a l'inici de sessió",
+  "@Return to Login": {
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "STUDENT": "ESTUDIANT",
+  "@STUDENT": {
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TEACHER": "PROFESSOR",
+  "@TEACHER": {
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas Student",
+  "@Canvas Student": {
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas Teacher",
+  "@Canvas Teacher": {
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Alerts": "Cap avís",
+  "@No Alerts": {
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "Encara no hi ha res que s'hagi de notificar.",
+  "@There’s nothing to be notified of yet.": {
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dismissAlertLabel": "Descarta {alertTitle}",
+  "@dismissAlertLabel": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
+    "placeholders_order": [
+      "alertTitle"
+    ],
+    "placeholders": {
+      "alertTitle": {}
+    }
+  },
+  "Course Announcement": "Anunci de l'assignatura",
+  "@Course Announcement": {
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcement": "Anunci de la institució",
+  "@Institution Announcement": {
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Nota de l'activitat per sobre de {threshold}",
+  "@assignmentGradeAboveThreshold": {
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Nota de l'activitat per sota de {threshold}",
+  "@assignmentGradeBelowThreshold": {
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Nota de l'assignatura per sobre de {threshold}",
+  "@courseGradeAboveThreshold": {
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Nota de l'assignatura per sota de {threshold}",
+  "@courseGradeBelowThreshold": {
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Configuració",
+  "@Settings": {
+    "description": "Title for the settings screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Theme": "Tema",
+  "@Theme": {
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Dark Mode": "Mode fosc",
+  "@Dark Mode": {
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Light Mode": "Mode clar",
+  "@Light Mode": {
+    "description": "Label for the button that enables light mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Mode de contrast alt",
+  "@High Contrast Mode": {
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Utilitza el tema fosc al contingut web",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Appearance": "Aspecte",
+  "@Appearance": {
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Successfully submitted!": "S'ha enviat correctament.",
+  "@Successfully submitted!": {
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "Aquesta activitat es va entregar el {date} a les {time} i està a l'espera de nota",
+  "@submissionStatusSuccessSubtitle": {
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "{howMany,plural, =1{D'1 punt}other{De {points} punts}}",
+  "@outOfPoints": {
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
+    "placeholders_order": [
+      "points",
+      "howMany"
+    ],
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Excusat",
+  "@Excused": {
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Complete": "Complet",
+  "@Complete": {
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incomplete": "Incomplet",
+  "@Incomplete": {
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "minus": "menys",
+  "@minus": {
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "latePenalty": "Sanció per endarreriment (-{pointsLost})",
+  "@latePenalty": {
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
+    "placeholders_order": [
+      "pointsLost"
+    ],
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Nota final: {grade}",
+  "@finalGrade": {
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
+    "placeholders_order": [
+      "grade"
+    ],
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Configuració de l'avís",
+  "@Alert Settings": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Alert me when…": "Avisa'm quan...",
+  "@Alert me when…": {
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade below": "Nota de l'assignatura per sota de",
+  "@Course grade below": {
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade above": "Nota de l'assignatura per sobre de",
+  "@Course grade above": {
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment missing": "Activitat no presentada",
+  "@Assignment missing": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade below": "Nota de l'activitat per sota de",
+  "@Assignment grade below": {
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade above": "Nota de l'activitat per sobre de",
+  "@Assignment grade above": {
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course Announcements": "Anuncis de l'assignatura",
+  "@Course Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcements": "Anuncis de la institució",
+  "@Institution Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Never": "Mai",
+  "@Never": {
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade percentage": "Percentatge de la nota",
+  "@Grade percentage": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "S'ha produït un error en carregar els vostres avisos de l'estudiant.",
+  "@There was an error loading your student's alerts.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Must be below 100": "Ha de ser inferior a 100",
+  "@Must be below 100": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Ha de ser inferior a {percentage}",
+  "@mustBeBelowN": {
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Ha de ser superior a {percentage}",
+  "@mustBeAboveN": {
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Select Student Color": "Selecciona el color de l’estudiant",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Electric, blue": "Elèctric, blau",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Plum, Purple": "Pruna, porpra",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Barney, fúcsia",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Gerd, vermell",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Fire, Orange": "Foc, taronja",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Trèvol, verd",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "S'ha produït un error en desar la vostra selecció. Torneu-ho a provar.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Canvia el color de {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "Teacher": "Professor",
+  "@Teacher": {
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Student": "Estudiant",
+  "@Student": {
+    "description": "Label for the Student enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TA": "Auxiliar de professor",
+  "@TA": {
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Observer": "Observador",
+  "@Observer": {
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Camera": "Utilitza la càmera",
+  "@Use Camera": {
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Upload File": "Penja el fitxer",
+  "@Upload File": {
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Tria de la galeria",
+  "@Choose from Gallery": {
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Preparing…": "S'està preparant...",
+  "@Preparing…": {
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add student with…": "Afegeix un estudiant amb...",
+  "@Add student with…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add Student": "Afegeix un estudiant",
+  "@Add Student": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You are not observing any students.": "No esteu observant cap estudiant.",
+  "@You are not observing any students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "S'ha produït un error en carregar els vostres estudiants.",
+  "@There was an error loading your students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Pairing Code": "Codi d'emparellament",
+  "@Pairing Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can obtain a pairing code through the Canvas website": "Els estudiants poden obtenir un codi d'emparellament a través del lloc web de Canvas",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Introduïu el codi d'emparellament d'estudiants que se us ha proporcionat. Si el codi d'emparellament no funciona, pot ser que hagi caducat",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "El vostre codi es incorrecte o ha caducat.",
+  "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Alguna cosa no ha anat bé en intentar crear el vostre usuari, poseu-vos en contacte amb la vostra escola per obtenir assistència.",
+  "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR Code": "Codi QR",
+  "@QR Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Al dispositiu mòbil, els estudiants poden crear un codi QR mitjançant l’aplicació Canvas Student",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add new student": "Afegeix un estudiant nou",
+  "@Add new student": {
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select": "Selecciona",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I have a Canvas account": "Tinc un usuari del Canvas",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "No tinc un usuari del Canvas",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Create Account": "Crea un usuari",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name": "Nom complet",
+  "@Full Name": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email Address": "Adreça electrònica",
+  "@Email Address": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password": "Contrasenya",
+  "@Password": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name…": "Nom complet...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email…": "Adreça electrònica...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password…": "Contrasenya...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter full name": "Introduïu un nom complet",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter an email address": "Introduïu una adreça electrònica",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Introduïu una adreça electrònica vàlida",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password is required": "La contrasenya és obligatòria",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "La contrasenya ha de tenir com a mínim 8 caràcters",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "En tocar \"Crea un usuari\", accepteu les {termsOfService} i reconeixeu la {privacyPolicy}.",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders_order": [
+      "termsOfService",
+      "privacyPolicy"
+    ],
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "Condicions de servei",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy": "Política de privacitat",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Visualitza la política de privacitat",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Already have an account? ": "Ja teniu un usuari? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Sign In": "Inicia la sessió",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Hide Password": "Amaga la contrasenya",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Show Password": "Mostra la contrasenya",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Enllaç a les Condicions de servei",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Enllaç a la Política de privacitat",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Event": "Esdeveniment",
+  "@Event": {
+    "description": "Title for the event details screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Date": "Data",
+  "@Date": {
+    "description": "Label for the event date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Location": "Ubicació",
+  "@Location": {
+    "description": "Label for the location information",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Location Specified": "No s'ha especificat cap ubicació",
+  "@No Location Specified": {
+    "description": "Description for events that do not have a location",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "eventTime": "{startAt} - {endAt}",
+  "@eventTime": {
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
+    "placeholders_order": [
+      "startAt",
+      "endAt"
+    ],
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Establiu una data i una hora per rebre una notificació sobre aquest esdeveniment.",
+  "@Set a date and time to be notified of this event.": {
+    "description": "Description for row to set event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Rebreu una notificació sobre aquest esdeveniment el...",
+  "@You will be notified about this event on…": {
+    "description": "Description for when an event reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Compartiu l'interès que us desperta l'aplicació",
+  "@Share Your Love for the App": {
+    "description": "Label for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Expliqueu-nos quines són les parts preferides de l'aplicació",
+  "@Tell us about your favorite parts of the app": {
+    "description": "Description for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Legal": "Jurídic",
+  "@Legal": {
+    "description": "Label for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Política de privacitat, condicions d'ús, font oberta",
+  "@Privacy policy, terms of use, open source": {
+    "description": "Description for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Idea per a l'aplicació Canvas Parent (Android)",
+  "@Idea for Canvas Parent App [Android]": {
+    "description": "The subject for the email to request a feature",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "La informació següent ens ajudarà a conèixer millor la vostra idea:",
+  "@The following information will help us better understand your idea:": {
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain:": "Domini:",
+  "@Domain:": {
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID:": "ID d’usuari:",
+  "@User ID:": {
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email:": "Adreça electrònica:",
+  "@Email:": {
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locale:": "Zona:",
+  "@Locale:": {
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Use": "Condicions d'ús",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas a GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "S'ha produït un problema en carregar les condicions d'ús",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device": "Dispositiu",
+  "@Device": {
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "OS Version": "Versió del sistema operatiu",
+  "@OS Version": {
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version Number": "Número de versió",
+  "@Version Number": {
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Report A Problem": "Informeu d'un problema",
+  "@Report A Problem": {
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Subject": "Assumpte",
+  "@Subject": {
+    "description": "Label used for Subject text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A subject is required.": "Cal un assumpte.",
+  "@A subject is required.": {
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An email address is required.": "Cal una adreça electrònica.",
+  "@An email address is required.": {
+    "description": "Error shown when the email field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Description": "Descripció",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A description is required.": "Cal una descripció.",
+  "@A description is required.": {
+    "description": "Error shown when the description field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "How is this affecting you?": "Com us afecta això?",
+  "@How is this affecting you?": {
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "send": "envia",
+  "@send": {
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Simplement una pregunta, un comentari, una idea, un suggeriment informal…",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "Necessito ajuda, però no és urgent.",
+  "@I need some help but it's not urgent.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Alguna cosa no funciona bé però per ara puc seguir treballant per tal d'acabar de fer allò que necessito.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "No podré fer res fins que em respongueu.",
+  "@I can't get things done until I hear back from you.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "EMERGÈNCIA DE CRÍTICA IMPORTÀNCIA!!",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Graded": "Sense nota",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Normal": "Flux d'inici de sessió: Normal",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Flux d'inici de sessió: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Flux d'inici de sessió: Administrador del lloc web",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Flux d'inici de sessió: Omet la verificació mòbil",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Act As User": "Actua com un usuari",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Deixa d'actuar com a usuari",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "actingAsUser": "Esteu fent de {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "“Actua com” vol dir bàsicament iniciar la sessió com aquest usuari sense una contrasenya. Podreu fer qualsevol acció com si fóssiu aquest usuari, i des del punt de vista dels altres usuaris, serà com si les hagués dut a terme aquest usuari. Tanmateix, els registres d'auditoria enregistren que heu sigut vós qui ha dut a terme les accions en nom de l'altre usuari.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain": "Domini",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "Heu d'introduir un domini vàlid",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID": "ID d’usuari",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a user id": "Heu d'introduir un ID d'usuari",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "S'ha produït un error en intentar actuar com a aquest usuari. Comproveu l'ID d'usuari i el domini i torneu-ho a provar.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Deixareu d'actuar com a {userName} i tornareu al vostre usuari original.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Deixareu d'actuar com a {userName} i es tancarà la vostra sessió.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "How are we doing?": "Com ho estem fem?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Don't show again": "No ho tornis a mostrar",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "What can we do better?": "Què podem fer millor?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send Feedback": "Envia els comentaris",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Suggeriments per a Android - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} estrella}other{{position} estrelles}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders_order": [
+      "position"
+    ],
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
+  "Student Pairing": "Emparellament de l'estudiant",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open Canvas Student": "Obriu Canvas Student",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Per continuar, haureu d'obrir l’aplicació Canvas Student de l’estudiant. Aneu a Menú principal > Configuració > Emparella amb l'observador i escanegeu el codi QR que s’hi mostra.",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Captura de pantalla en què es mostra la ubicació de la generació del codi QR d'emparellament a l'aplicació Canvas Student",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Expired QR Code": "Codi QR caducat",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "És possible que el codi QR que heu escanejat ja hagi caducat. Actualitzeu el codi al dispositiu de l’estudiant i torneu-ho a provar.",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "S'ha produït un error de xarxa en afegir aquest estudiant. Reviseu la connexió i torneu-ho a provar.",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Invalid QR Code": "Codi QR no vàlid",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incorrect Domain": "Domini incorrecte",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "L'estudiant que esteu provant d'afegir pertany a una altra escola. Inicieu la sessió o creeu un usuari amb aquesta escola per escanejar aquest codi.",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Camera Permission": "Permís per a la càmera",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "Amb aquesta acció es cancel·larà l’emparellament i se suprimiran del vostre usuari totes les inscripcions per a aquest estudiant.",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "S’ha produït un problema en suprimir aquest estudiant del vostre usuari. Reviseu la connexió i torneu-ho a provar.",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Cancel": "Cancel·la",
+  "@Cancel": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "next": "Següent",
+  "@next": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ok": "D'acord",
+  "@ok": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Yes": "Sí",
+  "@Yes": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No": "No",
+  "@No": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Retry": "Torna-ho a provar",
+  "@Retry": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Delete": "Suprimeix",
+  "@Delete": {
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Done": "Fet",
+  "@Done": {
+    "description": "Label for general done/finished actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Refresh": "Actualitza",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View Description": "Mostra la descripció",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "expanded": "desplegat",
+  "@expanded": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapsed": "reduït",
+  "@collapsed": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "S'ha produït un error inesperat",
+  "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No description": "Sense descripció",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Launch External Tool": "Inicieu l'eina externa",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "La vostra institució ha limitat les interaccions en aquesta pàgina.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dateAtTime": "{date} a les {time}",
+  "@dateAtTime": {
+    "description": "The string to format dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Venç el {date} a les {time}",
+  "@dueDateAtTime": {
+    "description": "The string to format due dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "Sense data de lliurament",
+  "@No Due Date": {
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter": "Filtre",
+  "@Filter": {
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unread": "sense llegir",
+  "@unread": {
+    "description": "Label for things that are marked as unread",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unreadCount": "{count} sense llegir",
+  "@unreadCount": {
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "{count}+",
+  "@badgeNumberPlus": {
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "S'ha produït un error en carregar aquest anunci",
+  "@There was an error loading this announcement": {
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Network error": "Error de xarxa",
+  "@Network error": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Under Construction": "En construcció",
+  "@Under Construction": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "Estem creant aquesta característica perquè pugueu gaudir de la visualització.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Botó Sol·liciteu ajuda per iniciar la sessió",
+  "@Request Login Help Button": {
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help": "Sol·liciteu ajuda per iniciar la sessió",
+  "@Request Login Help": {
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "Tinc problemes per iniciar la sessió",
+  "@I'm having trouble logging in": {
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "S'ha produït un error en provar de mostrar aquest enllaç",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "No podem mostrar aquest enllaç, pot ser que pertanyi a una institució en la que actualment no teniu la sessió iniciada.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Link Error": "Error d'enllaç",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open In Browser": "Obre'l al navegador",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Trobareu el codi QR a la web, al perfil del vostre usuari. Feu clic a \"QR per a inici de sessió mòbil\" a la llista.",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locate QR Code": "Localitzeu el codi QR",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "Escanegeu un codi QR generat pel Canvas",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "S'ha produït un error en iniciar la sessió. Genereu un altre codi QR i torneu-ho a provar.",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "Captura de pantalla que mostra la ubicació de la generació d'un codi QR al navegador",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR scanning requires camera access": "Per escanejar el codi QR, cal tenir accés a la càmera.",
+  "@QR scanning requires camera access": {
+    "description": "placeholder for camera error for QR code scan",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The linked item is no longer available": "L’element enllaçat ja no està disponible",
+  "@The linked item is no longer available": {
+    "description": "error message when the alert could no be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message sent": "Missatge enviat",
+  "@Message sent": {
+    "description": "confirmation message on the screen when the user succesfully sends a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Acceptable Use Policy": "Política d’ús acceptable",
+  "@Acceptable Use Policy": {
+    "description": "title for the acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submit": "Entrega",
+  "@Submit": {
+    "description": "submit button title for acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": "O bé sou un usuari nou o la política d’ús acceptable ha canviat des de la darrera vegada que la vau acceptar. Accepteu la política d’ús acceptable abans de continuar.",
+  "@Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": {
+    "description": "acceptable use policy screen description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I agree to the Acceptable Use Policy.": "Accepto la política d’ús acceptable.",
+  "@I agree to the Acceptable Use Policy.": {
+    "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "Quant a",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "Aplicació",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "ID d'inici de sessió",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "Correu electrònic",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "Versió",
+  "@Version": {
+    "description": "Title for Version field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructure logo": "Logotip de l’Instructure",
+  "@Instructure logo": {
+    "description": "Semantics label for the Instructure logo on the about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  }
+}

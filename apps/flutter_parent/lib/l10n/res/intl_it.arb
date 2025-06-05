@@ -1,0 +1,2753 @@
+﻿{
+  "@@last_modified": "2023-08-25T11:04:20.901151",
+  "alertsLabel": "Avvisi",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "calendarLabel": "Calendario",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "coursesLabel": "Corsi",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Students": "Nessuno studente",
+  "@No Students": {
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to show student selector": "Tocca per mostrare il selettore studente",
+  "@Tap to show student selector": {
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "Tocca per accoppiare con un nuovo studente",
+  "@Tap to pair with a new student": {
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to select this student": "Tocca per selezionare questo studente",
+  "@Tap to select this student": {
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Manage Students": "Gestisci studenti",
+  "@Manage Students": {
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Help": "Guida",
+  "@Help": {
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Log Out": "Disconnetti",
+  "@Log Out": {
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Switch Users": "Cambia studenti",
+  "@Switch Users": {
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "appVersion": "v. {version}",
+  "@appVersion": {
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "Disconnettersi?",
+  "@Are you sure you want to log out?": {
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Calendars": "Calendari",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "nextMonth": "Prossimo mese: {month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "Mese precedente: {month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "Prossima settimana a partire da {date}",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "Settimana precedente a partire da {date}",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "Mese di {month}",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "estendi",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapse": "comprimi",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "pointsPossible": "{points} punti possibili",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}, {eventCount} evento}other{{date}, {eventCount} eventi}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
+    }
+  },
+  "No Events Today!": "Nessun evento oggi!",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "Ottima occasione per riposarsi, rilassarsi e ricaricare le batterie.",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "Si è verificato un errore di caricamento del calendario del tuo studente",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "Tocca per mettere nei preferiti i corsi che vuoi vedere sul calendario. Seleziona fino a 10.",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "Puoi scegliere solo 10 calendari da visualizzare",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "Devi selezionare almeno un calendario da visualizzare",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Planner Note": "Nota agenda",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Go to today": "Vai a oggi",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Previous Logins": "Login precedenti",
+  "@Previous Logins": {
+    "description": "Label for the list of previous user logins",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Logo Canvas",
+  "@canvasLogoLabel": {
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findSchool": "Trova scuola",
+  "@findSchool": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findAnotherSchool": "Trova un’altra scuola",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "Inserisci nome scuola o distretto…",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "noDomainResults": "Impossibile trovare delle scuole corrispondenti a \"{query}\"",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders_order": [
+      "query"
+    ],
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "Come posso trovare la mia scuola o il mio distretto?",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasGuides": "Guide Canvas",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasSupport": "Assistenza Canvas",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "Prova a cercare il nome della scuola o del distretto a cui stai tentando di accedere, ad esempio “Scuola privata Rossi” o “Scuole statali Rossi”. Puoi anche entrare direttamente in un dominio Canvas, ad esempio “rossi.instructure.com.”\n\nPer ulteriori informazioni su come trovare l’account Canvas del tuo istituto, puoi visitare le {canvasGuides}, contattare l’{canvasSupport} o la scuola per assistenza.",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders_order": [
+      "canvasGuides",
+      "canvasSupport"
+    ],
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "Spiacenti.",
+  "@Uh oh!": {
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "Non siamo sicuri di cos’è successo, ma non è stata una cosa positiva. Contattaci se continua a succedere.",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Contact Support": "Contatta l’assistenza",
+  "@Contact Support": {
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View error details": "Visualizza dettagli errori",
+  "@View error details": {
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Restart app": "Riavvia app",
+  "@Restart app": {
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Application version": "Versione applicazione",
+  "@Application version": {
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device model": "Modello dispositivo",
+  "@Device model": {
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Android OS version": "Versione SO Android",
+  "@Android OS version": {
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full error message": "Messaggio di errore pieno",
+  "@Full error message": {
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox": "Posta in arrivo",
+  "@Inbox": {
+    "description": "Title for the Inbox screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "Si è verificato un errore durante il caricamento dei messaggi di posta in arrivo.",
+  "@There was an error loading your inbox messages.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Subject": "Nessun oggetto",
+  "@No Subject": {
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "Impossibile recuperare i corsi. Verifica la connessione e riprova.",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose a course to message": "Scegli un corso da messaggiare",
+  "@Choose a course to message": {
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox Zero": "Zero in posta in arrivo",
+  "@Inbox Zero": {
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You’re all caught up!": "Sei in pari!",
+  "@You’re all caught up!": {
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "Si è verificato un errore durante il caricamento dei destinatari per questo corso",
+  "@There was an error loading recipients for this course": {
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "Impossibile inviare il messaggio. Verifica la tua connessione e riprova.",
+  "@Unable to send message. Check your connection and try again.": {
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsaved changes": "Modifiche non salvate",
+  "@Unsaved changes": {
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "Vuoi chiudere questa pagina? Il messaggio non inviato andrà perso.",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "New message": "Nuovo messaggio",
+  "@New message": {
+    "description": "Title of the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add attachment": "Aggiungi allegato",
+  "@Add attachment": {
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send message": "Invia messaggio",
+  "@Send message": {
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select recipients": "Seleziona destinatari",
+  "@Select recipients": {
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No recipients selected": "Nessun destinatario selezionato",
+  "@No recipients selected": {
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message subject": "Oggetto del messaggio",
+  "@Message subject": {
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message": "Messaggio",
+  "@Message": {
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Recipients": "Destinatari",
+  "@Recipients": {
+    "description": "Label for message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+{count}",
+  "@plusRecipientCount": {
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "Non riuscito. Tocca per le opzioni.",
+  "@Failed. Tap for options.": {
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "courseForWhom": "per {studentShortName}",
+  "@courseForWhom": {
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
+    "placeholders_order": [
+      "studentShortName"
+    ],
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "Su: {studentName}, {linkUrl}",
+  "@messageLinkPostscript": {
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "linkUrl"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "Si è verificato un errore durante il caricamento di questa conversazione",
+  "@There was an error loading this conversation": {
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply": "Rispondi",
+  "@Reply": {
+    "description": "Button label for replying to a conversation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply All": "Rispondi a tutti",
+  "@Reply All": {
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unknown User": "Utente sconosciuto",
+  "@Unknown User": {
+    "description": "Label used where the user name is not known",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "me": "me",
+  "@me": {
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "authorToRecipient": "{authorName} a {recipientName}",
+  "@authorToRecipient": {
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "{howMany,plural, =1{{authorName} a 1 altro}other{{authorName} ad altri {howMany}}}",
+  "@authorToNOthers": {
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName} a {recipientName} e 1 altro}other{{authorName} a {recipientName} e altri {howMany}}}",
+  "@authorToRecipientAndNOthers": {
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "Download",
+  "@Download": {
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open with another app": "Apri con un’altra app",
+  "@Open with another app": {
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "Non ci sono applicazioni installate per aprire questo file",
+  "@There are no installed applications that can open this file": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsupported File": "File non supportato",
+  "@Unsupported File": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "Questo file non è supportato e non può essere visualizzato attraverso l’app",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to play this media file": "Impossibile riprodurre questo file multimediale",
+  "@Unable to play this media file": {
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to load this image": "Impossibile caricare questa immagine",
+  "@Unable to load this image": {
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading this file": "Si è verificato un errore durante il caricamento di questo file",
+  "@There was an error loading this file": {
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Courses": "Nessun corso",
+  "@No Courses": {
+    "description": "Title for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "I corsi dello studente potrebbero non essere stati ancora pubblicati.",
+  "@Your student’s courses might not be published yet.": {
+    "description": "Message for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student’s courses.": "Si è verificato un errore durante il caricamento dei corsi dello studente.",
+  "@There was an error loading your student’s courses.": {
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Grade": "Nessun voto",
+  "@No Grade": {
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter by": "Filtra per",
+  "@Filter by": {
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grades": "Voti",
+  "@Grades": {
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Syllabus": "Syllabus",
+  "@Syllabus": {
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Front Page": "Pagina iniziale",
+  "@Front Page": {
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Summary": "Riepilogo",
+  "@Summary": {
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this course": "Invia un messaggio su questo corso",
+  "@Send a message about this course": {
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Total Grade": "Voto totale",
+  "@Total Grade": {
+    "description": "Label for the total grade in the course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Graded": "Valutato",
+  "@Graded": {
+    "description": "Label for assignments that have been graded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submitted": "Inviato",
+  "@Submitted": {
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Submitted": "Non inviato",
+  "@Not Submitted": {
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Late": "In ritardo",
+  "@Late": {
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Missing": "Mancante",
+  "@Missing": {
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description": "Value representing no score for student submission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "All Grading Periods": "Tutti i periodi di valutazione",
+  "@All Grading Periods": {
+    "description": "Label for selecting all grading periods",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Assignments": "Nessun compito",
+  "@No Assignments": {
+    "description": "Title for the no assignments message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "Sembra che i compiti non siano ancora stati creati in questo spazio.",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description": "Message for no assignments",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "Si è verificato un errore durante il caricamento dei dettagli di riepilogo per questo corso.",
+  "@There was an error loading the summary details for this course.": {
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Summary": "Nessun riepilogo",
+  "@No Summary": {
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "Questo corso non ha ancora alcun compito o eventi di calendario.",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "{score} / {pointsPossible}",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "{score} su {pointsPossible} punti",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "Su: {studentName}, Voti",
+  "@gradesSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "Su: {studentName}, Syllabus",
+  "@syllabusSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "Su: {studentName}, Pagina iniziale",
+  "@frontPageSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "Su: {studentName}, Compito - {assignmentName}",
+  "@assignmentSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "assignmentName"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "Su: {studentName}, Evento - {eventTitle}",
+  "@eventSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "eventTitle"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "Non ci sono informazioni pagina disponibili.",
+  "@There is no page information available.": {
+    "description": "Description for when no page information is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment Details": "Dettagli compiti",
+  "@Assignment Details": {
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "{points} pt.",
+  "@assignmentTotalPoints": {
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "{points} punti",
+  "@assignmentTotalPointsAccessible": {
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "Scadenza",
+  "@Due": {
+    "description": "Label for an assignment due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade": "Voto",
+  "@Grade": {
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locked": "Bloccato",
+  "@Locked": {
+    "description": "Label for when an assignment is locked",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "Questo compito è bloccato dal modulo \"{moduleName}\".",
+  "@assignmentLockedModule": {
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
+    "placeholders_order": [
+      "moduleName"
+    ],
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "Promemoria",
+  "@Remind Me": {
+    "description": "Label for the row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "Imposta una data e un’ora per ricevere la notifica su questo compito specifico.",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description": "Description for row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "Riceverai una notifica su questo compito il…",
+  "@You will be notified about this assignment on…": {
+    "description": "Description for when a reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructions": "Istruzioni",
+  "@Instructions": {
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "Invia un messaggio su questo compito",
+  "@Send a message about this assignment": {
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "Questa app non è autorizzata per l’uso.",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "Il server in cui sei entrato non è autorizzato per questa app.",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "L’agente utente per questa app non è autorizzata.",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "Non siamo riusciti a verificare il server per l’uso con questa app.",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders": "Promemoria",
+  "@Reminders": {
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "Notifiche per i promemoria sui compiti e gli eventi di calendario",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders have changed!": "I promemoria sono cambiati!",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "Per fornirti un’esperienza migliore, abbiamo aggiornato il modo in cui funzionano i promemoria. Puoi aggiungere nuovi promemoria visualizzando un compito o un evento del calendario e toccando l’interruttore sotto la sezione \"Promemoria\".\n\nNon dimenticare che tutti i promemoria creati con le versioni precedenti di questa app non saranno compatibili con le nuove modifiche e sarà necessario ricrearli.",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not a parent?": "Non è principale?",
+  "@Not a parent?": {
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "Impossibile trovare alcuno studente associato con questo account",
+  "@We couldn't find any students associated with this account": {
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "Sei uno studente o un insegnante?",
+  "@Are you a student or teacher?": {
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "Una delle altre nostre app potrebbe essere la scelta migliore. Toccane una per visitare Play Store.",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Return to Login": "Torna alla pagina di login",
+  "@Return to Login": {
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "STUDENT": "STUDENTE",
+  "@STUDENT": {
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TEACHER": "INSEGNANTE",
+  "@TEACHER": {
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Student": "Studente Canvas",
+  "@Canvas Student": {
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Insegnante Canvas",
+  "@Canvas Teacher": {
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Alerts": "Nessun avviso",
+  "@No Alerts": {
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "Non c’è ancora nulla su cui ricevere delle notifiche.",
+  "@There’s nothing to be notified of yet.": {
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dismissAlertLabel": "Ignora {alertTitle}",
+  "@dismissAlertLabel": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
+    "placeholders_order": [
+      "alertTitle"
+    ],
+    "placeholders": {
+      "alertTitle": {}
+    }
+  },
+  "Course Announcement": "Annuncio corso",
+  "@Course Announcement": {
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcement": "Annuncio istituto",
+  "@Institution Announcement": {
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "Voto compito sopra {threshold}",
+  "@assignmentGradeAboveThreshold": {
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "Voto compito sotto {threshold}",
+  "@assignmentGradeBelowThreshold": {
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "Voto corso sopra {threshold}",
+  "@courseGradeAboveThreshold": {
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "Voto corso sotto {threshold}",
+  "@courseGradeBelowThreshold": {
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "Impostazioni",
+  "@Settings": {
+    "description": "Title for the settings screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Theme": "Tema",
+  "@Theme": {
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Dark Mode": "Modalità Scura",
+  "@Dark Mode": {
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Light Mode": "Modalità chiara",
+  "@Light Mode": {
+    "description": "Label for the button that enables light mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "High Contrast Mode": "Modalità alto contrasto",
+  "@High Contrast Mode": {
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "Usa tema scuro nel contenuto web",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Appearance": "Aspetto",
+  "@Appearance": {
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Successfully submitted!": "Inviato correttamente!",
+  "@Successfully submitted!": {
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "Questo compito è stato inviato il {date} alle {time} ed è in attesa della valutazione",
+  "@submissionStatusSuccessSubtitle": {
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "{howMany,plural, =1{Di 1 punto}other{Di {points} punti}}",
+  "@outOfPoints": {
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
+    "placeholders_order": [
+      "points",
+      "howMany"
+    ],
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "Giustificato",
+  "@Excused": {
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Complete": "Completa",
+  "@Complete": {
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incomplete": "Non completato",
+  "@Incomplete": {
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "minus": "meno",
+  "@minus": {
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "latePenalty": "Penale ritardo (-{pointsLost})",
+  "@latePenalty": {
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
+    "placeholders_order": [
+      "pointsLost"
+    ],
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "Voto finale: {grade}",
+  "@finalGrade": {
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
+    "placeholders_order": [
+      "grade"
+    ],
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "Impostazioni avviso",
+  "@Alert Settings": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Alert me when…": "Avvisami quando…",
+  "@Alert me when…": {
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade below": "Voto corso sotto",
+  "@Course grade below": {
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade above": "Voto corso sopra",
+  "@Course grade above": {
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment missing": "Compito mancante",
+  "@Assignment missing": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade below": "Voto compito sotto",
+  "@Assignment grade below": {
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade above": "Voto compito sopra",
+  "@Assignment grade above": {
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course Announcements": "Annunci corso",
+  "@Course Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcements": "Annunci istituto",
+  "@Institution Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Never": "Mai",
+  "@Never": {
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade percentage": "Percentuale voto",
+  "@Grade percentage": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "Si è verificato un errore durante il caricamento degli avvisi dello studente.",
+  "@There was an error loading your student's alerts.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Must be below 100": "Deve essere sotto 100",
+  "@Must be below 100": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "mustBeBelowN": "Deve essere sotto {percentage}",
+  "@mustBeBelowN": {
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "Deve essere sopra {percentage}",
+  "@mustBeAboveN": {
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Select Student Color": "Seleziona colore studente",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Electric, blue": "Elettrico, blu",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Plum, Purple": "Prugna, viola",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "Barney, fucsia",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Raspberry, Red": "Lampone, rosso",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Fire, Orange": "Fuoco, arancione",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Shamrock, Green": "Trifoglio, verde",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "Si è verificato un errore durante il salvataggio della selezione. Riprova.",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "Cambia colore per {studentName}",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "Teacher": "Insegnante",
+  "@Teacher": {
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Student": "Studente",
+  "@Student": {
+    "description": "Label for the Student enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TA": "Assistente",
+  "@TA": {
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Observer": "Osservatore",
+  "@Observer": {
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Camera": "Usa videocamera",
+  "@Use Camera": {
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Upload File": "Carica File",
+  "@Upload File": {
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose from Gallery": "Scegli da galleria",
+  "@Choose from Gallery": {
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Preparing…": "Preparazione in corso...",
+  "@Preparing…": {
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add student with…": "Aggiungi studente con…",
+  "@Add student with…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add Student": "Aggiungi studente",
+  "@Add Student": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You are not observing any students.": "Non stati monitorando alcuno studente.",
+  "@You are not observing any students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "Si è verificato un errore durante il caricamento dei tuoi studenti.",
+  "@There was an error loading your students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Pairing Code": "Codice accoppiamento",
+  "@Pairing Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can obtain a pairing code through the Canvas website": "Gli studenti possono ricevere un codice di abbinamento sul sito web Canvas",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "Inserisci il codice accoppiamento studente fornito. Se il codice accoppiamento non funziona, potrebbe essere scaduto",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "Il tuo codice non è corretto o è scaduto.",
+  "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "Si è verificato un errore durante il tentativo di creare il tuo account, contatta la scuola per assistenza.",
+  "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR Code": "Codice QR",
+  "@QR Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "Gli studenti possono creare un codice QR tramite l'applicazione Canvas Student sul loro dispositivo mobile",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add new student": "Aggiungi nuovo studente",
+  "@Add new student": {
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select": "Seleziona",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I have a Canvas account": "Ho un account Canvas",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "Non ho un account Canvas",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Create Account": "Crea account",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name": "Nome completo",
+  "@Full Name": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email Address": "Indirizzo e-mail",
+  "@Email Address": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password": "Password",
+  "@Password": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name…": "Nome completo...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email…": "E-mail...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password…": "Password...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter full name": "Inserisci il nome completo",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter an email address": "Inserisci un indirizzo e-mail",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "Inserisci un indirizzo e-mail valido",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password is required": "Password obbligatoria",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "La password deve contenere almeno 8 caratteri",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "Toccando “Crea account”, accetti i {termsOfService} e confermi l’{privacyPolicy}",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders_order": [
+      "termsOfService",
+      "privacyPolicy"
+    ],
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "Termini di servizio",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy": "Informativa sulla privacy",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "Visualizza informativa sulla privacy",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Already have an account? ": "Hai già un account? ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Sign In": "Accedi",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Hide Password": "Nascondi password",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Show Password": "Mostra password",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Service Link": "Link dei termini di servizio",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "Link dell’informativa sulla privacy",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Event": "Evento",
+  "@Event": {
+    "description": "Title for the event details screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Date": "Data",
+  "@Date": {
+    "description": "Label for the event date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Location": "Posizione",
+  "@Location": {
+    "description": "Label for the location information",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Location Specified": "Nessuna posizione specificata",
+  "@No Location Specified": {
+    "description": "Description for events that do not have a location",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "eventTime": "{startAt} - {endAt}",
+  "@eventTime": {
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
+    "placeholders_order": [
+      "startAt",
+      "endAt"
+    ],
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "Imposta una data e un’ora per ricevere la notifica su questo evento.",
+  "@Set a date and time to be notified of this event.": {
+    "description": "Description for row to set event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "Riceverai una notifica su questo evento il…",
+  "@You will be notified about this event on…": {
+    "description": "Description for when an event reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "Condividi cosa ti piace dell’app",
+  "@Share Your Love for the App": {
+    "description": "Label for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "Raccontaci quali sono le tue parti preferite dell’app",
+  "@Tell us about your favorite parts of the app": {
+    "description": "Description for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Legal": "Legale",
+  "@Legal": {
+    "description": "Label for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "Informativa sulla privacy, termini di utilizzo, open source",
+  "@Privacy policy, terms of use, open source": {
+    "description": "Description for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "Idea per l’app Canvas Parent [Android]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description": "The subject for the email to request a feature",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "Le seguenti informazioni ci aiutano a comprendere meglio la tua idea:",
+  "@The following information will help us better understand your idea:": {
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain:": "Dominio:",
+  "@Domain:": {
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID:": "ID utente:",
+  "@User ID:": {
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email:": "E-mail:",
+  "@Email:": {
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locale:": "Impostazioni internazionali:",
+  "@Locale:": {
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Use": "Termini di utilizzo",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "Canvas su GitHub",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "Si è verificato un problema durante il caricamento delle Condizioni d’uso",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device": "Dispositivo",
+  "@Device": {
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "OS Version": "Versione SO",
+  "@OS Version": {
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version Number": "Numero versione",
+  "@Version Number": {
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Report A Problem": "Segnala un problema",
+  "@Report A Problem": {
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Subject": "Oggetto",
+  "@Subject": {
+    "description": "Label used for Subject text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A subject is required.": "L’argomento è obbligatorio.",
+  "@A subject is required.": {
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An email address is required.": "L’indirizzo e-mail è obbligatorio.",
+  "@An email address is required.": {
+    "description": "Error shown when the email field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Description": "Descrizione",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A description is required.": "La descrizione è obbligatoria.",
+  "@A description is required.": {
+    "description": "Error shown when the description field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "How is this affecting you?": "Quali sono le ripercussioni per te?",
+  "@How is this affecting you?": {
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "send": "invia",
+  "@send": {
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "Solo una domanda casuale, un commento, un'idea, un suggerimento…",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "Ho bisogno di aiuto ma non è urgente.",
+  "@I need some help but it's not urgent.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "Si è verificato un problema ma posso aggirarlo e fare ciò che devo.",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "Non riesco a terminare il lavoro finché non ricevo una tua risposta.",
+  "@I can't get things done until I hear back from you.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "EMERGENZA CRITICA.",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Graded": "Non valutato",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Normal": "Flusso di login: Normale",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "Flusso di login: Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "Flusso di login: Amministratore del sito",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "Flusso di login: Salta verifica dispositivo mobile",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Act As User": "Agisci come utente",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Stop Acting as User": "Non agire più come utente",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "actingAsUser": "Stai agendo come {userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "\"Agisci come\" consiste sostanzialmente nell'effettuare l'accesso assumendo l'identità di questo utente senza inserire alcuna password. Potrai eseguire qualsiasi azione come se fossi questo utente e, dal punto di vista degli altri utenti, sarà come se queste azioni fossero state eseguite da questo utente. Tuttavia, i log di controllo registrano che sei stato tu a eseguire le azioni per conto di questo utente.",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain": "Dominio",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "Devi inserire un dominio valido",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID": "ID utente",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a user id": "Devi inserire un ID utente",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "Si è verificato un errore durante il tentativo di agire come questo utente. Controlla il dominio e l’ID utente e riprova.",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "Non agirai più come {userName} e tornerai al tuo account originale.",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "Non agirai più come {userName} e sarai disconnesso.",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "How are we doing?": "Come stiamo andando?",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Don't show again": "Non mostrarlo di nuovo",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "What can we do better?": "Cosa possiamo migliorare?",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send Feedback": "Invia feedback",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Suggerimenti per Android - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} stella}other{{position} stelle}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders_order": [
+      "position"
+    ],
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
+  "Student Pairing": "Abbinamento studente",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open Canvas Student": "Apri Canvas Student",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "Per continuare, devi aprire l'applicazione Canvas Student del tuo studente. Vai in Menu principale > Impostazioni > Abbina con l'Osservatore e scansiona il codice QR che vedi.",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "Schermata che mostra la posizione per la generazione del codice QR di abbinamento nell'applicazione Canvas Student",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Expired QR Code": "Codice QR scaduto",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "Il codice QR scansionato potrebbe essere scaduto. Aggiorna il codice sul dispositivo dello studente e riprova.",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "Durante l’aggiunta di questo studente, si è verificato un errore di rete. Verifica la tua connessione e riprova.",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Invalid QR Code": "Codice QR non valido",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incorrect Domain": "Dominio errato",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "Lo studente che stai cercando di aggiungere fa parte di un'altra scuola. Per scansionare il codice, accedi o crea un account per quella scuola.",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Camera Permission": "Autorizzazione della fotocamera",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "Quest’azione disassocierà e rimuoverà tutte le iscrizioni per questo studente dal tuo account.",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "Si è verificato un problema durante la rimozione di questo studente dall’account. Verifica la connessione e riprova.",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Cancel": "Annulla",
+  "@Cancel": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "next": "Successivo",
+  "@next": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ok": "OK",
+  "@ok": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Yes": "Sì",
+  "@Yes": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No": "No",
+  "@No": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Retry": "Riprova",
+  "@Retry": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Delete": "Elimina",
+  "@Delete": {
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Done": "Fatto",
+  "@Done": {
+    "description": "Label for general done/finished actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Refresh": "Aggiorna",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View Description": "Visualizza descrizione",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "expanded": "esteso",
+  "@expanded": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapsed": "compresso",
+  "@collapsed": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "Si verificato un errore imprevisto",
+  "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No description": "Nessuna descrizione",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Launch External Tool": "Avvia strumento esterno",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "Le interazioni su questa pagina sono limitate dal tuo istituto.",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dateAtTime": "Il {date} alle {time}",
+  "@dateAtTime": {
+    "description": "The string to format dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "Scade il {date} alle {time}",
+  "@dueDateAtTime": {
+    "description": "The string to format due dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "Nessuna data di scadenza",
+  "@No Due Date": {
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter": "Filtra",
+  "@Filter": {
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unread": "non letto",
+  "@unread": {
+    "description": "Label for things that are marked as unread",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unreadCount": "{count} non letto",
+  "@unreadCount": {
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "{count}+",
+  "@badgeNumberPlus": {
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "Si è verificato un errore durante il caricamento di questo annuncio",
+  "@There was an error loading this announcement": {
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Network error": "Errore di rete",
+  "@Network error": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Under Construction": "In costruzione",
+  "@Under Construction": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "Stiamo attualmente realizzando questa funzione che puoi visualizzare.",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help Button": "Pulsante Richiedi aiuto per login",
+  "@Request Login Help Button": {
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help": "Richiedi aiuto per login",
+  "@Request Login Help": {
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "Ho dei problemi di login",
+  "@I'm having trouble logging in": {
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "Si è verificato un errore durante il tentativo di visualizzare questo link",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "Impossibile visualizzare questo link, può appartenere ad un istituto a cui non sei attualmente connesso.",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Link Error": "Errore link",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open In Browser": "Apri nel browser",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "Troverai il codice QR sul web nel tuo profilo account. Fai clic su “QR per login da dispositivo mobile” nell’elenco.",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locate QR Code": "Individua codice QR",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "Acquisisci un codice QR generato da Canvas",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "Si è verificato un errore di login. Genera un altro codice QR e riprova.",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "Screenshot che mostra la posizione della generazione del codice QR nel browser",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR scanning requires camera access": "Per la scansione QR è necessario l’accesso alla fotocamera",
+  "@QR scanning requires camera access": {
+    "description": "placeholder for camera error for QR code scan",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The linked item is no longer available": "L'elemento collegato non è più disponibile",
+  "@The linked item is no longer available": {
+    "description": "error message when the alert could no be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message sent": "Messaggio inviato",
+  "@Message sent": {
+    "description": "confirmation message on the screen when the user succesfully sends a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Acceptable Use Policy": "Norme di utilizzo accettabile",
+  "@Acceptable Use Policy": {
+    "description": "title for the acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submit": "Invia",
+  "@Submit": {
+    "description": "submit button title for acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": "Sei un nuovo utente oppure le Norme di utilizzo accettabile sono cambiate dall'ultima volta in cui le hai accettate. Accetta le Norme di utilizzo accettabile prima di continuare.",
+  "@Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": {
+    "description": "acceptable use policy screen description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I agree to the Acceptable Use Policy.": "Accetto le Norme di utilizzo accettabile.",
+  "@I agree to the Acceptable Use Policy.": {
+    "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "Informazioni",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "App",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "ID di accesso",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "E-mail",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "Versione",
+  "@Version": {
+    "description": "Title for Version field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructure logo": "Logo Instructure",
+  "@Instructure logo": {
+    "description": "Semantics label for the Instructure logo on the about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  }
+}

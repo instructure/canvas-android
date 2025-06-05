@@ -1,0 +1,2753 @@
+﻿{
+  "@@last_modified": "2023-08-25T11:04:20.901151",
+  "alertsLabel": "警告",
+  "@alertsLabel": {
+    "description": "The label for the Alerts tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "calendarLabel": "日历",
+  "@calendarLabel": {
+    "description": "The label for the Calendar tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "coursesLabel": "课程",
+  "@coursesLabel": {
+    "description": "The label for the Courses tab",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Students": "没有学生",
+  "@No Students": {
+    "description": "Text for when an observer has no students they are observing",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to show student selector": "点击以显示学生选择器",
+  "@Tap to show student selector": {
+    "description": "Semantics label for the area that will show the student selector when tapped",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to pair with a new student": "点击以与新生配对",
+  "@Tap to pair with a new student": {
+    "description": "Semantics label for the add student button in the student selector",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to select this student": "点击以选择此学生",
+  "@Tap to select this student": {
+    "description": "Semantics label on individual students in the student switcher",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Manage Students": "管理学生",
+  "@Manage Students": {
+    "description": "Label text for the Manage Students nav drawer button as well as the title for the Manage Students screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Help": "帮助",
+  "@Help": {
+    "description": "Label text for the help nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Log Out": "注销",
+  "@Log Out": {
+    "description": "Label text for the Log Out nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Switch Users": "转换用户",
+  "@Switch Users": {
+    "description": "Label text for the Switch Users nav drawer button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "appVersion": "v. {version}",
+  "@appVersion": {
+    "description": "App version shown in the navigation drawer",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "Are you sure you want to log out?": "是否确定要登出？",
+  "@Are you sure you want to log out?": {
+    "description": "Confirmation message displayed when the user tries to log out",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Calendars": "日历",
+  "@Calendars": {
+    "description": "Label for button that lets users select which calendars to display",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "nextMonth": "下个月：{month}",
+  "@nextMonth": {
+    "description": "Label for the button that switches the calendar to the next month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "previousMonth": "上个月：{month}",
+  "@previousMonth": {
+    "description": "Label for the button that switches the calendar to the previous month",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "nextWeek": "下周，从{date}开始",
+  "@nextWeek": {
+    "description": "Label for the button that switches the calendar to the next week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "previousWeek": "上周，从{date}开始",
+  "@previousWeek": {
+    "description": "Label for the button that switches the calendar to the previous week",
+    "type": "text",
+    "placeholders_order": [
+      "date"
+    ],
+    "placeholders": {
+      "date": {}
+    }
+  },
+  "selectedMonthLabel": "{month}月",
+  "@selectedMonthLabel": {
+    "description": "Accessibility label for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [
+      "month"
+    ],
+    "placeholders": {
+      "month": {}
+    }
+  },
+  "expand": "展开",
+  "@expand": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapse": "折叠",
+  "@collapse": {
+    "description": "Accessibility label for the on-tap hint for the button that expands/collapses the month view",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "pointsPossible": "满分 {points}",
+  "@pointsPossible": {
+    "description": "Screen reader label used for the points possible for an assignment, quiz, etc.",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "calendarDaySemanticsLabel": "{eventCount,plural, =1{{date}、{eventCount} 个事件}other{{date}、{eventCount} 个事件}}",
+  "@calendarDaySemanticsLabel": {
+    "description": "Screen reader label used for calendar day, reads the date and count of events",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "eventCount"
+    ],
+    "placeholders": {
+      "date": {},
+      "eventCount": {}
+    }
+  },
+  "No Events Today!": "今天没有事件！",
+  "@No Events Today!": {
+    "description": "Title displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like a great day to rest, relax, and recharge.": "今天是休息放松的一天。",
+  "@It looks like a great day to rest, relax, and recharge.": {
+    "description": "Message displayed when there are no calendar events for the current day",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's calendar": "加载学生的日历时发生错误",
+  "@There was an error loading your student's calendar": {
+    "description": "Message displayed when calendar events could not be loaded for the current student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tap to favorite the courses you want to see on the Calendar. Select up to 10.": "点击以收藏您希望在日历中看到的课程。选择最多 10 个。",
+  "@Tap to favorite the courses you want to see on the Calendar. Select up to 10.": {
+    "description": "Description text on calendar filter screen.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You may only choose 10 calendars to display": "只能选择 10 个要显示的日历",
+  "@You may only choose 10 calendars to display": {
+    "description": "Error text when trying to select more than 10 calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must select at least one calendar to display": "必须选择至少 1 个要显示的日历",
+  "@You must select at least one calendar to display": {
+    "description": "Error text when trying to de-select all calendars",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Planner Note": "计划程序注释",
+  "@Planner Note": {
+    "description": "Label used for notes in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Go to today": "转至今天",
+  "@Go to today": {
+    "description": "Accessibility label used for the today button in the planner",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Previous Logins": "历史登录记录",
+  "@Previous Logins": {
+    "description": "Label for the list of previous user logins",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasLogoLabel": "Canvas徽标",
+  "@canvasLogoLabel": {
+    "description": "The semantics label for the Canvas logo",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findSchool": "查找学校",
+  "@findSchool": {
+    "description": "Text for the find-my-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "findAnotherSchool": "查找其他学校",
+  "@findAnotherSchool": {
+    "description": "Text for the find-another-school button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchInputHint": "输入学校名称或校区...",
+  "@domainSearchInputHint": {
+    "description": "Input hint for the text box on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "noDomainResults": "找不到与“{query}”匹配的学校",
+  "@noDomainResults": {
+    "description": "Message shown to users when the domain search query did not return any results",
+    "type": "text",
+    "placeholders_order": [
+      "query"
+    ],
+    "placeholders": {
+      "query": {}
+    }
+  },
+  "domainSearchHelpLabel": "如何查找我的学校或校区？",
+  "@domainSearchHelpLabel": {
+    "description": "Label for the help button on the domain search screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasGuides": "Canvas指南",
+  "@canvasGuides": {
+    "description": "Proper name for the Canvas Guides. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "canvasSupport": "Canvas支持",
+  "@canvasSupport": {
+    "description": "Proper name for Canvas Support. This will be used in the domainSearchHelpBody text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "domainSearchHelpBody": "尝试搜索您要访问的学校或校区的名称，例如“Smith Private School”或“Smith County Schools”。也可以直接输入Canvas域，例如“smith.instructure.com”。\n\n有关查找机构Canvas账户的更多信息，可访问{canvasGuides}、联系{canvasSupport}或您的学校寻求帮助。",
+  "@domainSearchHelpBody": {
+    "description": "The body text shown in the help dialog on the domain search screen",
+    "type": "text",
+    "placeholders_order": [
+      "canvasGuides",
+      "canvasSupport"
+    ],
+    "placeholders": {
+      "canvasGuides": {},
+      "canvasSupport": {}
+    }
+  },
+  "Uh oh!": "嗳哟！",
+  "@Uh oh!": {
+    "description": "Title of the screen that shows when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": "不知道发生了什么事情，但似乎不太妙。如果问题持续，请联系我们。",
+  "@We’re not sure what happened, but it wasn’t good. Contact us if this keeps happening.": {
+    "description": "Message shown when a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Contact Support": "联系支持",
+  "@Contact Support": {
+    "description": "Label for the button that allows users to contact support after a crash has occurred",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View error details": "查看错误详细信息",
+  "@View error details": {
+    "description": "Label for the button that allowed users to view crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Restart app": "重启应用程序",
+  "@Restart app": {
+    "description": "Label for the button that will restart the entire application",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Application version": "应用程序版本",
+  "@Application version": {
+    "description": "Label for the application version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device model": "设备型号",
+  "@Device model": {
+    "description": "Label for the device model displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Android OS version": "Android操作系统版本",
+  "@Android OS version": {
+    "description": "Label for the Android operating system version displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full error message": "完整的错误消息",
+  "@Full error message": {
+    "description": "Label for the full error message displayed in the crash details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox": "收件箱",
+  "@Inbox": {
+    "description": "Title for the Inbox screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your inbox messages.": "加载收件箱消息时发生错误。",
+  "@There was an error loading your inbox messages.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Subject": "无主题",
+  "@No Subject": {
+    "description": "Title used for inbox messages that have no subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to fetch courses. Please check your connection and try again.": "无法获取课程。请检查您的连接，然后再试一次。",
+  "@Unable to fetch courses. Please check your connection and try again.": {
+    "description": "Message shown when an error occured while loading courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose a course to message": "选择一个课程来发送讯息",
+  "@Choose a course to message": {
+    "description": "Header in the course list shown when the user is choosing which course to associate with a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Inbox Zero": "收件箱为零",
+  "@Inbox Zero": {
+    "description": "Title of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You’re all caught up!": "您全部跟上了！",
+  "@You’re all caught up!": {
+    "description": "Subtitle of the message shown when there are no inbox messages",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading recipients for this course": "加载此课程的收件人时发生错误。",
+  "@There was an error loading recipients for this course": {
+    "description": "Message shown when attempting to create a new message but the recipients list failed to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to send message. Check your connection and try again.": "无法发送消息。请检查您的网络连接并重试。",
+  "@Unable to send message. Check your connection and try again.": {
+    "description": "Message show when there was an error creating or sending a new message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsaved changes": "无法保存更改",
+  "@Unsaved changes": {
+    "description": "Title of the dialog shown when the user tries to leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you sure you wish to close this page? Your unsent message will be lost.": "是否确定要关闭此页面？未发送的消息将会丢失。",
+  "@Are you sure you wish to close this page? Your unsent message will be lost.": {
+    "description": "Body text of the dialog shown when the user tries leave with unsaved changes",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "New message": "新建消息",
+  "@New message": {
+    "description": "Title of the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add attachment": "添加附件",
+  "@Add attachment": {
+    "description": "Tooltip for the add-attachment button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send message": "发送消息",
+  "@Send message": {
+    "description": "Tooltip for the send-message button in the new-message screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select recipients": "选择收件人",
+  "@Select recipients": {
+    "description": "Tooltip for the button that allows users to select message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No recipients selected": "未选择收件人",
+  "@No recipients selected": {
+    "description": "Hint displayed when the user has not selected any message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message subject": "消息主题",
+  "@Message subject": {
+    "description": "Hint text displayed in the input field for the message subject",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message": "消息",
+  "@Message": {
+    "description": "Hint text displayed in the input field for the message body",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Recipients": "收件人",
+  "@Recipients": {
+    "description": "Label for message recipients",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "plusRecipientCount": "+{count}",
+  "@plusRecipientCount": {
+    "description": "Shows the number of recipients that are selected but not displayed on screen.",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {
+        "example": 5
+      }
+    }
+  },
+  "Failed. Tap for options.": "失败。点击以获取选项。",
+  "@Failed. Tap for options.": {
+    "description": "Short message shown on a message attachment when uploading has failed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "courseForWhom": "适用于{studentShortName}",
+  "@courseForWhom": {
+    "description": "Describes for whom a course is for (i.e. for Bill)",
+    "type": "text",
+    "placeholders_order": [
+      "studentShortName"
+    ],
+    "placeholders": {
+      "studentShortName": {}
+    }
+  },
+  "messageLinkPostscript": "事由：{studentName}，{linkUrl}",
+  "@messageLinkPostscript": {
+    "description": "A postscript appended to new messages that clarifies which student is the subject of the message and also includes a URL for the related Canvas component (course, assignment, event, etc).",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "linkUrl"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "linkUrl": {}
+    }
+  },
+  "There was an error loading this conversation": "加载此会话时发生错误",
+  "@There was an error loading this conversation": {
+    "description": "Message shown when a conversation fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply": "回复",
+  "@Reply": {
+    "description": "Button label for replying to a conversation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reply All": "回复所有人",
+  "@Reply All": {
+    "description": "Button label for replying to all conversation participants",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unknown User": "未知用户",
+  "@Unknown User": {
+    "description": "Label used where the user name is not known",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "me": "本人",
+  "@me": {
+    "description": "First-person pronoun (i.e. 'me') that will be used in message author info, e.g. 'Me to 4 others' or 'Jon Snow to me'",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "authorToRecipient": "{authorName} 至 {recipientName}",
+  "@authorToRecipient": {
+    "description": "Author info for a single-recipient message; includes both the author name and the recipient name.",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {}
+    }
+  },
+  "authorToNOthers": "{howMany,plural, =1{{authorName}至另外1个}other{{authorName}至另外{howMany}个}}",
+  "@authorToNOthers": {
+    "description": "Author info for a mutli-recipient message; includes the author name and the number of recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "howMany": {}
+    }
+  },
+  "authorToRecipientAndNOthers": "{howMany,plural, =1{{authorName}至{recipientName}和另外1个}other{{authorName}至{recipientName}和另外{howMany}个}}",
+  "@authorToRecipientAndNOthers": {
+    "description": "Author info for a multi-recipient message; includes the author name, one recipient name, and the number of other recipients",
+    "type": "text",
+    "placeholders_order": [
+      "authorName",
+      "recipientName",
+      "howMany"
+    ],
+    "placeholders": {
+      "authorName": {},
+      "recipientName": {},
+      "howMany": {}
+    }
+  },
+  "Download": "下载",
+  "@Download": {
+    "description": "Label for the button that will begin downloading a file",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open with another app": "使用其他应用程序打开",
+  "@Open with another app": {
+    "description": "Label for the button that will allow users to open a file with another app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There are no installed applications that can open this file": "未安装可以打开此文件的应用程序",
+  "@There are no installed applications that can open this file": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unsupported File": "不受支持的文件",
+  "@Unsupported File": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This file is unsupported and can’t be viewed through the app": "此文件不受支持，无法通过应用程序查看",
+  "@This file is unsupported and can’t be viewed through the app": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to play this media file": "无法播放此媒体文件",
+  "@Unable to play this media file": {
+    "description": "Message shown when audio or video media could not be played",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Unable to load this image": "无法加载此图片",
+  "@Unable to load this image": {
+    "description": "Message shown when an image file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading this file": "加载此文件时发生错误",
+  "@There was an error loading this file": {
+    "description": "Message shown when a file could not be loaded or displayed",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Courses": "没有课程",
+  "@No Courses": {
+    "description": "Title for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your student’s courses might not be published yet.": "学生的课程可能尚未发布。",
+  "@Your student’s courses might not be published yet.": {
+    "description": "Message for having no courses",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student’s courses.": "加载学生的课程时发生错误。",
+  "@There was an error loading your student’s courses.": {
+    "description": "Message displayed when the list of student courses could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Grade": "没有评分",
+  "@No Grade": {
+    "description": "Message shown when there is currently no grade available for a course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter by": "筛选条件",
+  "@Filter by": {
+    "description": "Title for list of terms to filter grades by",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grades": "评分",
+  "@Grades": {
+    "description": "Label for the \"Grades\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Syllabus": "教学大纲",
+  "@Syllabus": {
+    "description": "Label for the \"Syllabus\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Front Page": "首页",
+  "@Front Page": {
+    "description": "Label for the \"Front Page\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Summary": "摘要",
+  "@Summary": {
+    "description": "Label for the \"Summary\" tab in course details",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this course": "发送有关此课程的消息",
+  "@Send a message about this course": {
+    "description": "Accessibility hint for the course messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Total Grade": "总分",
+  "@Total Grade": {
+    "description": "Label for the total grade in the course",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Graded": "已评分",
+  "@Graded": {
+    "description": "Label for assignments that have been graded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submitted": "已提交",
+  "@Submitted": {
+    "description": "Label for assignments that have been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Submitted": "未提交",
+  "@Not Submitted": {
+    "description": "Label for assignments that have not been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Late": "迟交",
+  "@Late": {
+    "description": "Label for assignments that have been marked late or submitted late",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Missing": "未交",
+  "@Missing": {
+    "description": "Label for assignments that have been marked missing or are not submitted and past the due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "-": "-",
+  "@-": {
+    "description": "Value representing no score for student submission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "All Grading Periods": "所有评分周期",
+  "@All Grading Periods": {
+    "description": "Label for selecting all grading periods",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Assignments": "无作业",
+  "@No Assignments": {
+    "description": "Title for the no assignments message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "It looks like assignments haven't been created in this space yet.": "似乎尚未在此区域创建作业。",
+  "@It looks like assignments haven't been created in this space yet.": {
+    "description": "Message for no assignments",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading the summary details for this course.": "加载此课程的摘要详情时发生错误。",
+  "@There was an error loading the summary details for this course.": {
+    "description": "Message shown when the course summary could not be loaded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Summary": "无摘要",
+  "@No Summary": {
+    "description": "Title displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This course does not have any assignments or calendar events yet.": "此课程暂时没有任何作业或日历活动。",
+  "@This course does not have any assignments or calendar events yet.": {
+    "description": "Message displayed when there are no items in the course summary",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "gradeFormatScoreOutOfPointsPossible": "{score}/{pointsPossible}",
+  "@gradeFormatScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "contentDescriptionScoreOutOfPointsPossible": "得分 {score}，总分 {pointsPossible}",
+  "@contentDescriptionScoreOutOfPointsPossible": {
+    "description": "Formatted string for a student score out of the points possible",
+    "type": "text",
+    "placeholders_order": [
+      "score",
+      "pointsPossible"
+    ],
+    "placeholders": {
+      "score": {},
+      "pointsPossible": {}
+    }
+  },
+  "gradesSubjectMessage": "事由：{studentName}，评分",
+  "@gradesSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's grades",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "syllabusSubjectMessage": "事由：{studentName}，教学大纲",
+  "@syllabusSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course syllabus",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "frontPageSubjectMessage": "事由：{studentName}，首页",
+  "@frontPageSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a course front page",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "assignmentSubjectMessage": "事由：{studentName}，作业 - {assignmentName}",
+  "@assignmentSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a student's assignment",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "assignmentName"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "assignmentName": {}
+    }
+  },
+  "eventSubjectMessage": "事由：{studentName}，活动 - {eventTitle}",
+  "@eventSubjectMessage": {
+    "description": "The subject line for a message to a teacher regarding a calendar event",
+    "type": "text",
+    "placeholders_order": [
+      "studentName",
+      "eventTitle"
+    ],
+    "placeholders": {
+      "studentName": {},
+      "eventTitle": {}
+    }
+  },
+  "There is no page information available.": "没有可用的页面信息。",
+  "@There is no page information available.": {
+    "description": "Description for when no page information is available",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment Details": "作业详情",
+  "@Assignment Details": {
+    "description": "Title for the page that shows details for an assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentTotalPoints": "{points} 分",
+  "@assignmentTotalPoints": {
+    "description": "Label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "assignmentTotalPointsAccessible": "{points} 分",
+  "@assignmentTotalPointsAccessible": {
+    "description": "Screen reader label used for the total points the assignment is worth",
+    "type": "text",
+    "placeholders_order": [
+      "points"
+    ],
+    "placeholders": {
+      "points": {}
+    }
+  },
+  "Due": "截止",
+  "@Due": {
+    "description": "Label for an assignment due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade": "评分",
+  "@Grade": {
+    "description": "Label for the section that displays an assignment's grade",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locked": "已锁定",
+  "@Locked": {
+    "description": "Label for when an assignment is locked",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentLockedModule": "此作业已被模块“{moduleName}”锁定。",
+  "@assignmentLockedModule": {
+    "description": "The locked description when an assignment is locked by a module",
+    "type": "text",
+    "placeholders_order": [
+      "moduleName"
+    ],
+    "placeholders": {
+      "moduleName": {}
+    }
+  },
+  "Remind Me": "提醒我",
+  "@Remind Me": {
+    "description": "Label for the row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Set a date and time to be notified of this specific assignment.": "设定通知此特定作业的日期和时间。",
+  "@Set a date and time to be notified of this specific assignment.": {
+    "description": "Description for row to set reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this assignment on…": "您将在...收到有关此作业的通知",
+  "@You will be notified about this assignment on…": {
+    "description": "Description for when a reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructions": "说明",
+  "@Instructions": {
+    "description": "Label for the description of the assignment when it has quiz instructions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send a message about this assignment": "发送有关此作业的消息",
+  "@Send a message about this assignment": {
+    "description": "Accessibility hint for the assignment messaage floating action button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This app is not authorized for use.": "此程序没有被授权使用。",
+  "@This app is not authorized for use.": {
+    "description": "The error shown when the app being used is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The server you entered is not authorized for this app.": "您输入的服务器没有授权此应用程序。",
+  "@The server you entered is not authorized for this app.": {
+    "description": "The error shown when the desired login domain is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The user agent for this app is not authorized.": "此应用程序的用户代理未获得授权。",
+  "@The user agent for this app is not authorized.": {
+    "description": "The error shown when the user agent during verification is not verified by Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We were unable to verify the server for use with this app.": "我们无法验证此应用程序使用的服务器。",
+  "@We were unable to verify the server for use with this app.": {
+    "description": "The generic error shown when we are unable to verify with Canvas",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders": "提醒",
+  "@Reminders": {
+    "description": "Name of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Notifications for reminders about assignments and calendar events": "有关作业和日历活动的提醒通知",
+  "@Notifications for reminders about assignments and calendar events": {
+    "description": "Description of the system notification channel for assignment and event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Reminders have changed!": "提醒已更改！",
+  "@Reminders have changed!": {
+    "description": "Title of the dialog shown when the user needs to update their reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": "为了让您获得更好的体验，我们更新了提醒的工作模式。通过查看作业或日历事件然后点击“提醒我”部分下面的切换按钮，可以添加新提醒。\n\n请注意，使用原来的应用程序版本创建的任何提醒均无法在更改后的新版本中使用，因此需重新创建。",
+  "@In order to provide you with a better experience, we have updated how reminders work. You can add new reminders by viewing an assignment or calendar event and tapping the switch under the \"Remind Me\" section.\n\nBe aware that any reminders created with older versions of this app will not be compatible with the new changes and you will need to create them again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not a parent?": "不是家长？",
+  "@Not a parent?": {
+    "description": "Title for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We couldn't find any students associated with this account": "我们找不到任何与该账户关联的学生",
+  "@We couldn't find any students associated with this account": {
+    "description": "Subtitle for the screen that shows when the user is not observing any students",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Are you a student or teacher?": "您是学生还是教师？",
+  "@Are you a student or teacher?": {
+    "description": "Label for button that will show users the option to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "One of our other apps might be a better fit. Tap one to visit the Play Store.": "我们的其他应用可能更合适。单击可访问 Play Store。",
+  "@One of our other apps might be a better fit. Tap one to visit the Play Store.": {
+    "description": "Description of options to view other Canvas apps in the Play Store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Return to Login": "返回登录",
+  "@Return to Login": {
+    "description": "Label for the button that returns the user to the login screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "STUDENT": "学生",
+  "@STUDENT": {
+    "description": "The \"student\" portion of the \"Canvas Student\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TEACHER": "教师",
+  "@TEACHER": {
+    "description": "The \"teacher\" portion of the \"Canvas Teacher\" app name, in all caps. \"Canvas\" is excluded in this context as it will be displayed to the user as a wordmark image",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Student": "Canvas 学生",
+  "@Canvas Student": {
+    "description": "The name of the Canvas Student app. Only \"Student\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas Teacher": "Canvas 教师",
+  "@Canvas Teacher": {
+    "description": "The name of the Canvas Teacher app. Only \"Teacher\" should be translated as \"Canvas\" is a brand name in this context and should not be translated.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Alerts": "无警告",
+  "@No Alerts": {
+    "description": "The title for the empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There’s nothing to be notified of yet.": "暂时没有任何通知。",
+  "@There’s nothing to be notified of yet.": {
+    "description": "The empty message to show to users when there are no alerts for the student.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dismissAlertLabel": "拒绝 {alertTitle}",
+  "@dismissAlertLabel": {
+    "description": "Accessibility label to dismiss an alert",
+    "type": "text",
+    "placeholders_order": [
+      "alertTitle"
+    ],
+    "placeholders": {
+      "alertTitle": {}
+    }
+  },
+  "Course Announcement": "课程公告",
+  "@Course Announcement": {
+    "description": "Title for alerts when there is a course announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcement": "机构公告",
+  "@Institution Announcement": {
+    "description": "Title for alerts when there is an institution announcement",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "assignmentGradeAboveThreshold": "作业评分高于{threshold}",
+  "@assignmentGradeAboveThreshold": {
+    "description": "Title for alerts when an assignment grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "assignmentGradeBelowThreshold": "作业评分低于{threshold}",
+  "@assignmentGradeBelowThreshold": {
+    "description": "Title for alerts when an assignment grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeAboveThreshold": "课程评分高于{threshold}",
+  "@courseGradeAboveThreshold": {
+    "description": "Title for alerts when a course grade is above the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "courseGradeBelowThreshold": "课程评分低于{threshold}",
+  "@courseGradeBelowThreshold": {
+    "description": "Title for alerts when a course grade is below the threshold value",
+    "type": "text",
+    "placeholders_order": [
+      "threshold"
+    ],
+    "placeholders": {
+      "threshold": {}
+    }
+  },
+  "Settings": "设置",
+  "@Settings": {
+    "description": "Title for the settings screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Theme": "主题、话题",
+  "@Theme": {
+    "description": "Label for the light/dark theme section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Dark Mode": "暗模式",
+  "@Dark Mode": {
+    "description": "Label for the button that enables dark mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Light Mode": "亮模式",
+  "@Light Mode": {
+    "description": "Label for the button that enables light mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "High Contrast Mode": "高对比度模式",
+  "@High Contrast Mode": {
+    "description": "Label for the switch that toggles high contrast mode",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Dark Theme in Web Content": "在 Web 内容中使用深色主题",
+  "@Use Dark Theme in Web Content": {
+    "description": "Label for the switch that toggles dark mode for webviews",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Appearance": "外观",
+  "@Appearance": {
+    "description": "Label for the appearance section in the settings page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Successfully submitted!": "已成功提交。",
+  "@Successfully submitted!": {
+    "description": "Title displayed in the grade cell for an assignment that has been submitted",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "submissionStatusSuccessSubtitle": "此作业提交时间为{date}，{time}，正在等待评分",
+  "@submissionStatusSuccessSubtitle": {
+    "description": "Subtitle displayed in the grade cell for an assignment that has been submitted and is awaiting a grade",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "outOfPoints": "{howMany,plural, =1{共1分}other{共{points}分}}",
+  "@outOfPoints": {
+    "description": "Description for an assignment grade that has points without a current scoroe",
+    "type": "text",
+    "placeholders_order": [
+      "points",
+      "howMany"
+    ],
+    "placeholders": {
+      "points": {},
+      "howMany": {}
+    }
+  },
+  "Excused": "已免除",
+  "@Excused": {
+    "description": "Grading status for an assignment marked as excused",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Complete": "完成",
+  "@Complete": {
+    "description": "Grading status for an assignment marked as complete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incomplete": "未完成",
+  "@Incomplete": {
+    "description": "Grading status for an assignment marked as incomplete",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "minus": "负分",
+  "@minus": {
+    "description": "Screen reader-friendly replacement for the \"-\" character in letter grades like \"A-\"",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "latePenalty": "迟交罚分 (-{pointsLost})",
+  "@latePenalty": {
+    "description": "Text displayed when a late penalty has been applied to the assignment",
+    "type": "text",
+    "placeholders_order": [
+      "pointsLost"
+    ],
+    "placeholders": {
+      "pointsLost": {}
+    }
+  },
+  "finalGrade": "最终评分：{grade}",
+  "@finalGrade": {
+    "description": "Text that displays the final grade of an assignment",
+    "type": "text",
+    "placeholders_order": [
+      "grade"
+    ],
+    "placeholders": {
+      "grade": {}
+    }
+  },
+  "Alert Settings": "警告设置",
+  "@Alert Settings": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Alert me when…": "当...时警告我",
+  "@Alert me when…": {
+    "description": "Header for the screen where the observer chooses the thresholds that will determine when they receive alerts (e.g. when an assignment is graded below 70%)",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade below": "课程评分低于",
+  "@Course grade below": {
+    "description": "Label describing the threshold for when the course grade is below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course grade above": "课程评分高于",
+  "@Course grade above": {
+    "description": "Label describing the threshold for when the course grade is above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment missing": "缺少作业",
+  "@Assignment missing": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade below": "作业评分低于",
+  "@Assignment grade below": {
+    "description": "Label describing the threshold for when an assignment is graded below a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Assignment grade above": "作业评分高于",
+  "@Assignment grade above": {
+    "description": "Label describing the threshold for when an assignment is graded above a certain percentage",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Course Announcements": "课程公告",
+  "@Course Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Institution Announcements": "机构通告",
+  "@Institution Announcements": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Never": "从不",
+  "@Never": {
+    "description": "Indication that tells the user they will not receive alert notifications of a specific kind",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Grade percentage": "评分百分数",
+  "@Grade percentage": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your student's alerts.": "加载学生的警告时发生错误。",
+  "@There was an error loading your student's alerts.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Must be below 100": "必须低于100",
+  "@Must be below 100": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "mustBeBelowN": "必须低于{percentage}",
+  "@mustBeBelowN": {
+    "description": "Validation error to the user that they must choose a percentage below 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "mustBeAboveN": "必须高于{percentage}",
+  "@mustBeAboveN": {
+    "description": "Validation error to the user that they must choose a percentage above 'n'",
+    "type": "text",
+    "placeholders_order": [
+      "percentage"
+    ],
+    "placeholders": {
+      "percentage": {
+        "example": 5
+      }
+    }
+  },
+  "Select Student Color": "选择学生颜色",
+  "@Select Student Color": {
+    "description": "Title for screen that allows users to assign a color to a specific student",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Electric, blue": "蓝色",
+  "@Electric, blue": {
+    "description": "Name of the Electric (blue) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Plum, Purple": "紫色",
+  "@Plum, Purple": {
+    "description": "Name of the Plum (purple) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Barney, Fuschia": "粉红",
+  "@Barney, Fuschia": {
+    "description": "Name of the Barney (fuschia) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Raspberry, Red": "红色",
+  "@Raspberry, Red": {
+    "description": "Name of the Raspberry (red) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Fire, Orange": "橙色",
+  "@Fire, Orange": {
+    "description": "Name of the Fire (orange) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Shamrock, Green": "绿色",
+  "@Shamrock, Green": {
+    "description": "Name of the Shamrock (green) color",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred while saving your selection. Please try again.": "保存选择时发生错误。请重试。",
+  "@An error occurred while saving your selection. Please try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "changeStudentColorLabel": "更改 {studentName} 的颜色",
+  "@changeStudentColorLabel": {
+    "description": "Accessibility label for the button that lets users change the color associated with a specific student",
+    "type": "text",
+    "placeholders_order": [
+      "studentName"
+    ],
+    "placeholders": {
+      "studentName": {}
+    }
+  },
+  "Teacher": "教师",
+  "@Teacher": {
+    "description": "Label for the Teacher enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Student": "学生",
+  "@Student": {
+    "description": "Label for the Student enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "TA": "助教",
+  "@TA": {
+    "description": "Label for the Teaching Assistant enrollment type (also known as Teacher Aid or Education Assistant), reduced to a short acronym/initialism if appropriate.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Observer": "观察员",
+  "@Observer": {
+    "description": "Label for the Observer enrollment type",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Use Camera": "使用相机",
+  "@Use Camera": {
+    "description": "Label for the action item that lets the user capture a photo using the device camera",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Upload File": "上传文件",
+  "@Upload File": {
+    "description": "Label for the action item that lets the user upload a file from their device",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Choose from Gallery": "从图库中选择",
+  "@Choose from Gallery": {
+    "description": "Label for the action item that lets the user select a photo from their device gallery",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Preparing…": "正在准备...",
+  "@Preparing…": {
+    "description": "Message shown while a file is being prepared to attach to a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add student with…": "使用...添加学生",
+  "@Add student with…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add Student": "添加学生",
+  "@Add Student": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You are not observing any students.": "您未观察任何学生。",
+  "@You are not observing any students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error loading your students.": "加载学生时发生错误。",
+  "@There was an error loading your students.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Pairing Code": "配对码",
+  "@Pairing Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can obtain a pairing code through the Canvas website": "学生可以通过 Canvas 网站获得配对码",
+  "@Students can obtain a pairing code through the Canvas website": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": "输入提供给您的学生配对代码。如果配对代码无法使用，可能已过期",
+  "@Enter the student pairing code provided to you. If the pairing code doesn't work, it may have expired": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Your code is incorrect or expired.": "您的代码错误或已过期。",
+  "@Your code is incorrect or expired.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something went wrong trying to create your account, please reach out to your school for assistance.": "尝试创建帐户时遇到错误，请联系您的学校寻求帮助。",
+  "@Something went wrong trying to create your account, please reach out to your school for assistance.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR Code": "二维码",
+  "@QR Code": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Students can create a QR code using the Canvas Student app on their mobile device": "学生可以使用移动设备上的 Canvas 学生版应用程序创建二维码",
+  "@Students can create a QR code using the Canvas Student app on their mobile device": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Add new student": "添加新学生",
+  "@Add new student": {
+    "description": "Semantics label for the FAB on the Manage Students Screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Select": "选择",
+  "@Select": {
+    "description": "Hint text to tell the user to choose one of two options",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I have a Canvas account": "我有 Canvas 帐户",
+  "@I have a Canvas account": {
+    "description": "Option to select for users that have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I don't have a Canvas account": "我没有 Canvas 帐户",
+  "@I don't have a Canvas account": {
+    "description": "Option to select for users that don't have a canvas account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Create Account": "创建帐户",
+  "@Create Account": {
+    "description": "Button text for account creation confirmation",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name": "全名",
+  "@Full Name": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email Address": "电子邮件地址",
+  "@Email Address": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password": "密码",
+  "@Password": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Full Name…": "全名...",
+  "@Full Name…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email…": "电子邮件...",
+  "@Email…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password…": "密码...",
+  "@Password…": {
+    "description": "hint label for inside form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter full name": "请输入全名",
+  "@Please enter full name": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter an email address": "请输入电子邮件地址",
+  "@Please enter an email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please enter a valid email address": "请输入有效的电子邮件地址",
+  "@Please enter a valid email address": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password is required": "必须填写密码",
+  "@Password is required": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Password must contain at least 8 characters": "密码必须包含至少 8 个字符",
+  "@Password must contain at least 8 characters": {
+    "description": "Error message for form field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "qrCreateAccountTos": "点击“创建帐户”即表示，您同意{termsOfService}并确认{privacyPolicy}",
+  "@qrCreateAccountTos": {
+    "description": "The text show on the account creation screen",
+    "type": "text",
+    "placeholders_order": [
+      "termsOfService",
+      "privacyPolicy"
+    ],
+    "placeholders": {
+      "termsOfService": {},
+      "privacyPolicy": {}
+    }
+  },
+  "Terms of Service": "服务条款",
+  "@Terms of Service": {
+    "description": "Label for the Canvas Terms of Service agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy": "隐私政策",
+  "@Privacy Policy": {
+    "description": "Label for the Canvas Privacy Policy agreement. This will be used in the qrCreateAccountTos text and will be highlighted and clickable",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View the Privacy Policy": "查看隐私政策",
+  "@View the Privacy Policy": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Already have an account? ": "已经有一个帐户吗？ ",
+  "@Already have an account? ": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Sign In": "登录",
+  "@Sign In": {
+    "description": "Part of multiline text span, includes AccountSignIn1-2, in that order",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Hide Password": "隐藏密码",
+  "@Hide Password": {
+    "description": "content description for password hide button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Show Password": "显示密码",
+  "@Show Password": {
+    "description": "content description for password show button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Service Link": "服务条款链接",
+  "@Terms of Service Link": {
+    "description": "content description for terms of service link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy Policy Link": "隐私政策链接",
+  "@Privacy Policy Link": {
+    "description": "content description for privacy policy link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Event": "活动",
+  "@Event": {
+    "description": "Title for the event details screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Date": "日期",
+  "@Date": {
+    "description": "Label for the event date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Location": "位置",
+  "@Location": {
+    "description": "Label for the location information",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No Location Specified": "没有具体的位置",
+  "@No Location Specified": {
+    "description": "Description for events that do not have a location",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "eventTime": "{startAt} - {endAt}",
+  "@eventTime": {
+    "description": "The time the event is happening, example: \"2:00 pm - 4:00 pm\"",
+    "type": "text",
+    "placeholders_order": [
+      "startAt",
+      "endAt"
+    ],
+    "placeholders": {
+      "startAt": {},
+      "endAt": {}
+    }
+  },
+  "Set a date and time to be notified of this event.": "设定通知此活动的日期和时间。",
+  "@Set a date and time to be notified of this event.": {
+    "description": "Description for row to set event reminders",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You will be notified about this event on…": "您将在...收到有关此活动的通知",
+  "@You will be notified about this event on…": {
+    "description": "Description for when an event reminder is set",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Share Your Love for the App": "分享您所喜爱的应用程序",
+  "@Share Your Love for the App": {
+    "description": "Label for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Tell us about your favorite parts of the app": "告诉我们您最喜欢应用程序的部分",
+  "@Tell us about your favorite parts of the app": {
+    "description": "Description for option to open the app store",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Legal": "法律",
+  "@Legal": {
+    "description": "Label for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Privacy policy, terms of use, open source": "隐私政策、使用条款、开放源",
+  "@Privacy policy, terms of use, open source": {
+    "description": "Description for legal information option",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Idea for Canvas Parent App [Android]": "构想 Canvas 的[安卓版本]",
+  "@Idea for Canvas Parent App [Android]": {
+    "description": "The subject for the email to request a feature",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The following information will help us better understand your idea:": "下面的信息将帮助我们更好地了解您的想法：",
+  "@The following information will help us better understand your idea:": {
+    "description": "The header for the users information that is attached to a feature request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain:": "域：",
+  "@Domain:": {
+    "description": "The label for the Canvas domain of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID:": "用户 ID：",
+  "@User ID:": {
+    "description": "The label for the Canvas user ID of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email:": "电子邮箱：",
+  "@Email:": {
+    "description": "The label for the eamil of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locale:": "区域设置：",
+  "@Locale:": {
+    "description": "The label for the locale of the logged in user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Terms of Use": "使用条款",
+  "@Terms of Use": {
+    "description": "Label for the terms of use",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Canvas on GitHub": "GitHub上的Canvas",
+  "@Canvas on GitHub": {
+    "description": "Label for the button that opens the Canvas project on GitHub's website",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem loading the Terms of Use": "加载使用条款时发生错误",
+  "@There was a problem loading the Terms of Use": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Device": "设备",
+  "@Device": {
+    "description": "Label used for device manufacturer/model in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "OS Version": "操作系统版本",
+  "@OS Version": {
+    "description": "Label used for device operating system version in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version Number": "版本号",
+  "@Version Number": {
+    "description": "Label used for the app version number in the error report",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Report A Problem": "报告一个问题",
+  "@Report A Problem": {
+    "description": "Title used for generic dialog to report problems",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Subject": "主题",
+  "@Subject": {
+    "description": "Label used for Subject text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A subject is required.": "必须填写主题。",
+  "@A subject is required.": {
+    "description": "Error shown when the subject field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An email address is required.": "必须填写电子邮件地址。",
+  "@An email address is required.": {
+    "description": "Error shown when the email field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Description": "说明",
+  "@Description": {
+    "description": "Label used for Description text field",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A description is required.": "必须填写描述。",
+  "@A description is required.": {
+    "description": "Error shown when the description field is empty",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "How is this affecting you?": "这对您有什么影响？",
+  "@How is this affecting you?": {
+    "description": "Label used for the dropdown to select how severe the issue is",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "send": "发送",
+  "@send": {
+    "description": "Label used for send button when reporting a problem",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Just a casual question, comment, idea, suggestion…": "只是一个偶然问题、意见、想法、建议...",
+  "@Just a casual question, comment, idea, suggestion…": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I need some help but it's not urgent.": "我需要一些帮助，但不是迫切的。",
+  "@I need some help but it's not urgent.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Something's broken but I can work around it to get what I need done.": "系统出错了，但我可以解决它，并完成我所需要做的事。",
+  "@Something's broken but I can work around it to get what I need done.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I can't get things done until I hear back from you.": "我无法把事情做好，直到我听到您回来。",
+  "@I can't get things done until I hear back from you.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "EXTREME CRITICAL EMERGENCY!!": "非常紧急！",
+  "@EXTREME CRITICAL EMERGENCY!!": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Not Graded": "未评分",
+  "@Not Graded": {
+    "description": "Description for an assignment has not been graded.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Normal": "登录流程：正常",
+  "@Login flow: Normal": {
+    "description": "Description for the normal login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Canvas": "登录流程：Canvas",
+  "@Login flow: Canvas": {
+    "description": "Description for the Canvas login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Site Admin": "登录流程：网站管理员",
+  "@Login flow: Site Admin": {
+    "description": "Description for the Site Admin login flow",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login flow: Skip mobile verify": "登录流程：跳过移动设备验证",
+  "@Login flow: Skip mobile verify": {
+    "description": "Description for the login flow that skips domain verification for mobile",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Act As User": "临时代理用户",
+  "@Act As User": {
+    "description": "Label for the button that allows the user to act (masquerade) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Stop Acting as User": "停止临时代理用户",
+  "@Stop Acting as User": {
+    "description": "Label for the button that allows the user to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "actingAsUser": "您正在临时代理{userName}",
+  "@actingAsUser": {
+    "description": "Message shown while acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": "“临时代理”实际上已经登录，因为该用户没有密码。您能够像此用户一样执行任何操作，从另一位用户的角度来讲，这将视同由此用户执行这些操作。但是，审计日志记录您是代表该用户执行操作的人。",
+  "@\"Act as\" is essentially logging in as this user without a password. You will be able to take any action as if you were this user, and from other users' points of views, it will be as if this user performed them. However, audit logs record that you were the one who performed the actions on behalf of this user.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Domain": "域",
+  "@Domain": {
+    "description": "Text field hint for domain url input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a valid domain": "必须输入有效的域",
+  "@You must enter a valid domain": {
+    "description": "Message displayed for domain input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "User ID": "用户 ID",
+  "@User ID": {
+    "description": "Text field hint for user ID input",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You must enter a user id": "必须输入用户 ID",
+  "@You must enter a user id": {
+    "description": "Message displayed for user Id input error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error trying to act as this user. Please check the Domain and User ID and try again.": "尝试临时代理用户时发生错误。请检查域和用户 ID，然后再试一次。",
+  "@There was an error trying to act as this user. Please check the Domain and User ID and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "endMasqueradeMessage": "您将停止临时代理用户 {userName} 并返回您的原始帐户。",
+  "@endMasqueradeMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "endMasqueradeLogoutMessage": "您将停止临时代理用户 {userName} 并注销。",
+  "@endMasqueradeLogoutMessage": {
+    "description": "Confirmation message displayed when the user wants to stop acting (masquerading) as another user and will be logged out.",
+    "type": "text",
+    "placeholders_order": [
+      "userName"
+    ],
+    "placeholders": {
+      "userName": {}
+    }
+  },
+  "How are we doing?": "我们做得怎样？",
+  "@How are we doing?": {
+    "description": "Title for dialog asking user to rate the app out of 5 stars.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Don't show again": "不再显示",
+  "@Don't show again": {
+    "description": "Button to prevent the rating dialog from showing again.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "What can we do better?": "我们如何能做得更好？",
+  "@What can we do better?": {
+    "description": "Hint text for providing a comment with the rating.",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Send Feedback": "发送反馈",
+  "@Send Feedback": {
+    "description": "Button to send rating with feedback",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ratingDialogEmailSubject": "Android 版本建议 - Canvas Parent {version}",
+  "@ratingDialogEmailSubject": {
+    "description": "The subject for an email to provide feedback for CanvasParent.",
+    "type": "text",
+    "placeholders_order": [
+      "version"
+    ],
+    "placeholders": {
+      "version": {}
+    }
+  },
+  "starRating": "{position,plural, =1{{position} 星}other{{position} 星}}",
+  "@starRating": {
+    "description": "Accessibility label for the 1 stars to 5 stars rating",
+    "type": "text",
+    "placeholders_order": [
+      "position"
+    ],
+    "placeholders": {
+      "position": {
+        "example": 1
+      }
+    }
+  },
+  "Student Pairing": "学生配对",
+  "@Student Pairing": {
+    "description": "Title for the screen where users can pair to students using a QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open Canvas Student": "打开 Canvas 学生版",
+  "@Open Canvas Student": {
+    "description": "Title for QR pairing tutorial screen instructing users to open the Canvas Student app",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": "您需打开学生的 Canvas 学生版应用程序才能继续。转到“主菜单 > 设置 > 与旁听者配对”，扫描在其中看到的二维码。",
+  "@You'll need to open your student's Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.": {
+    "description": "Message explaining how QR code pairing works",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of pairing QR code generation in the Canvas Student app": "截图显示在 Canvas 学生版应用程序中生成配对二维码的位置",
+  "@Screenshot showing location of pairing QR code generation in the Canvas Student app": {
+    "description": "Content Description for qr pairing tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Expired QR Code": "失效的二维码",
+  "@Expired QR Code": {
+    "description": "Error title shown when the users scans a QR code that has expired",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The QR code you scanned may have expired. Refresh the code on the student's device and try again.": "您扫描的二维码已失效。刷新学生设备上的二维码并重试。",
+  "@The QR code you scanned may have expired. Refresh the code on the student's device and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "A network error occurred when adding this student. Check your connection and try again.": "添加此学生时发生网络错误。请检查您的网络连接并重试。",
+  "@A network error occurred when adding this student. Check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Invalid QR Code": "无效的二维码",
+  "@Invalid QR Code": {
+    "description": "Error title shown when the user scans an invalid QR code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Incorrect Domain": "错误的域",
+  "@Incorrect Domain": {
+    "description": "Error title shown when the users scane a QR code for a student that belongs to a different domain",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": "您尝试添加的学生属于不同的学校。使用该学校的帐户登录或创建帐户以扫描此二维码。",
+  "@The student you are trying to add belongs to a different school. Log in or create an account with that school to scan this code.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Camera Permission": "相机权限",
+  "@Camera Permission": {
+    "description": "Error title shown when the user wans to scan a QR code but has denied the camera permission",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "This will unpair and remove all enrollments for this student from your account.": "这样做将取消配对并从您的帐户中移除该学生的所有注册。",
+  "@This will unpair and remove all enrollments for this student from your account.": {
+    "description": "Confirmation message shown when the user tries to delete a student from their account",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was a problem removing this student from your account. Please check your connection and try again.": "从帐户中移除该学生时发生错误。请检查您的连接，然后再试一次。",
+  "@There was a problem removing this student from your account. Please check your connection and try again.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Cancel": "取消",
+  "@Cancel": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "next": "下一步",
+  "@next": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "ok": "确定",
+  "@ok": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Yes": "是",
+  "@Yes": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No": "否",
+  "@No": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Retry": "重试",
+  "@Retry": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Delete": "删除",
+  "@Delete": {
+    "description": "Label used for general delete/remove actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Done": "完成",
+  "@Done": {
+    "description": "Label for general done/finished actions",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Refresh": "刷新",
+  "@Refresh": {
+    "description": "Label for button to refresh data from the web",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "View Description": "查看说明",
+  "@View Description": {
+    "description": "Button to view the description for an event or assignment",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "expanded": "展开",
+  "@expanded": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "collapsed": "折叠",
+  "@collapsed": {
+    "description": "Description for the accessibility reader for list groups that are expanded",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An unexpected error occurred": "一个意料之外的错误发生了。",
+  "@An unexpected error occurred": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "No description": "无描述",
+  "@No description": {
+    "description": "Message used when the assignment has no description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Launch External Tool": "启动外部工具",
+  "@Launch External Tool": {
+    "description": "Button text added to webviews to let users open external tools in their browser",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Interactions on this page are limited by your institution.": "在此页面上的互动被您的机构限制。",
+  "@Interactions on this page are limited by your institution.": {
+    "description": "Message describing how the webview has limited access due to an instution setting",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "dateAtTime": "{date}，时间 {time}",
+  "@dateAtTime": {
+    "description": "The string to format dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "dueDateAtTime": "截止于 {date}，{time}",
+  "@dueDateAtTime": {
+    "description": "The string to format due dates",
+    "type": "text",
+    "placeholders_order": [
+      "date",
+      "time"
+    ],
+    "placeholders": {
+      "date": {},
+      "time": {}
+    }
+  },
+  "No Due Date": "无截止日期",
+  "@No Due Date": {
+    "description": "Label for assignments that do not have a due date",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Filter": "筛选器",
+  "@Filter": {
+    "description": "Label for buttons to filter what items are visible",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unread": "未读",
+  "@unread": {
+    "description": "Label for things that are marked as unread",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "unreadCount": "{count}未读",
+  "@unreadCount": {
+    "description": "Formatted string for when there are a number of unread items",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "badgeNumberPlus": "{count}+",
+  "@badgeNumberPlus": {
+    "description": "Formatted string for when too many items are being notified in a badge, generally something like: 99+",
+    "type": "text",
+    "placeholders_order": [
+      "count"
+    ],
+    "placeholders": {
+      "count": {}
+    }
+  },
+  "There was an error loading this announcement": "加载此公告时发生错误",
+  "@There was an error loading this announcement": {
+    "description": "Message shown when an announcement detail screen fails to load",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Network error": "网络错误",
+  "@Network error": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Under Construction": "正在建设中",
+  "@Under Construction": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are currently building this feature for your viewing pleasure.": "我们目前在构建此功能，以便为您提供愉悦的浏览体验。",
+  "@We are currently building this feature for your viewing pleasure.": {
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help Button": "请求登录帮助按钮",
+  "@Request Login Help Button": {
+    "description": "Accessibility hint for button that opens help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Request Login Help": "请求登录帮助",
+  "@Request Login Help": {
+    "description": "Title of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I'm having trouble logging in": "我在登录时遇到问题",
+  "@I'm having trouble logging in": {
+    "description": "Subject of help dialog for a login help request",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "An error occurred when trying to display this link": "尝试显示此链接时发生错误",
+  "@An error occurred when trying to display this link": {
+    "description": "Error message shown when a link can't be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "We are unable to display this link, it may belong to an institution you currently aren't logged in to.": "无法显示此链接，可能属于您目前未登录的机构。",
+  "@We are unable to display this link, it may belong to an institution you currently aren't logged in to.": {
+    "description": "Description for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Link Error": "链接错误",
+  "@Link Error": {
+    "description": "Title for error page shown when clicking a link",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Open In Browser": "在浏览器里打开",
+  "@Open In Browser": {
+    "description": "Text for button to open a link in the browswer",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": "在 Web 的帐户个人资料中可以找到二维码。点击列表中的“用于移动设备登录的二维码”。",
+  "@You'll find the QR code on the web in your account profile. Click 'QR for Mobile Login' in the list.": {
+    "description": "Text for qr login tutorial screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Locate QR Code": "查找二维码",
+  "@Locate QR Code": {
+    "description": "Text for qr login button",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Please scan a QR code generated by Canvas": "请扫描 Canvas 生成的二维码",
+  "@Please scan a QR code generated by Canvas": {
+    "description": "Text for qr login error with incorrect qr code",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "There was an error logging in. Please generate another QR Code and try again.": "登录时发生错误。请生成新的二维码并重试。",
+  "@There was an error logging in. Please generate another QR Code and try again.": {
+    "description": "Text for qr login error",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Screenshot showing location of QR code generation in browser": "在浏览器中显示二维码生成位置的截图",
+  "@Screenshot showing location of QR code generation in browser": {
+    "description": "Content Description for qr login tutorial screenshot",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "QR scanning requires camera access": "扫描二维码要求具有相机访问权限",
+  "@QR scanning requires camera access": {
+    "description": "placeholder for camera error for QR code scan",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "The linked item is no longer available": "链接项目不再可用",
+  "@The linked item is no longer available": {
+    "description": "error message when the alert could no be opened",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Message sent": "消息已发送",
+  "@Message sent": {
+    "description": "confirmation message on the screen when the user succesfully sends a message",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Acceptable Use Policy": "可接受的使用政策",
+  "@Acceptable Use Policy": {
+    "description": "title for the acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Submit": "提交",
+  "@Submit": {
+    "description": "submit button title for acceptable use policy screen",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": "您是新用户，或者自您上次同意可接受的使用政策后，该政策已更改。请同意“可接受的使用政策”后再继续。",
+  "@Either you're a new user or the Acceptable Use Policy has changed since you last agreed to it. Please agree to the Acceptable Use Policy before you continue.": {
+    "description": "acceptable use policy screen description",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "I agree to the Acceptable Use Policy.": "我同意“可接受的使用政策”。",
+  "@I agree to the Acceptable Use Policy.": {
+    "description": "acceptable use policy switch title",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "About": "关于",
+  "@About": {
+    "description": "Title for about menu item in settings",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "App": "应用程序",
+  "@App": {
+    "description": "Title for App field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Login ID": "登录 ID",
+  "@Login ID": {
+    "description": "Title for Login ID field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Email": "电子邮件",
+  "@Email": {
+    "description": "Title for Email field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Version": "版本",
+  "@Version": {
+    "description": "Title for Version field on about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  },
+  "Instructure logo": "Instructure 徽标",
+  "@Instructure logo": {
+    "description": "Semantics label for the Instructure logo on the about page",
+    "type": "text",
+    "placeholders_order": [],
+    "placeholders": {}
+  }
+}
