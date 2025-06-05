@@ -43,7 +43,9 @@ import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.pandautils.utils.FilePrefs
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -97,65 +99,55 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_camera() {
-        val dataa = goToSubmissionPicker()
+        goToSubmissionPicker()
 
         Intents.init()
         try {
-            // 1. Kamera gomb megnyomása - app itt beállítja a tempCaptureUri-t
-            pickerSubmissionUploadPage.chooseCamera()
-
-            // 2. Lekéred az aktuális tempCaptureUri-t
-            val uri = Uri.parse(mockedFileName)
-
-            // 3. Fájlt létrehozod a megfelelő path-on
-            val file = File(uri.path!!)
-            if (!file.exists()) {
-                file.parentFile?.mkdirs()
-                file.createNewFile()
-            }
-
-            // 4. ActivityResult létrehozása
-            /*val resultData = Intent().apply {
-                data = uri
-                putExtra(MediaStore.EXTRA_OUTPUT, uri)
-                addFlags(
-                    Intent.FLAG_GRANT_READ_URI_PERMISSION or
-                            Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                )
-                clipData = ClipData.newUri(activity.contentResolver, "Image", uri)
-            }*/
-
-
-            // 5. Stubolod az intentet
             intending(allOf(
                 hasAction(MediaStore.ACTION_IMAGE_CAPTURE),
                 hasExtraWithKey(MediaStore.EXTRA_OUTPUT)
-            )).respondWith(activityResult)
-
-            // 6. Megvárod, hogy megjelenjen a Submit gomb
-            pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
-
-            // 7. Assertálod, hogy a feltöltött fájl megjelenik
-            pickerSubmissionUploadPage.assertFileDisplayed(file.name)
-
+            )).respondWithFunction { intent ->
+                val outputUri = intent.extras?.get(MediaStore.EXTRA_OUTPUT) as? Uri
+                if (outputUri != null) {
+                    val context = getInstrumentation().targetContext
+                    val dir = context.externalCacheDir
+                    val sampleFile = File(dir, mockedFileName)
+                    if (outputUri.scheme == "file") {
+                        val destFile = File(outputUri.path!!)
+                        destFile.parentFile?.mkdirs()
+                        sampleFile.copyTo(destFile, overwrite = true)
+                    } else if (outputUri.scheme == "content") {
+                        context.contentResolver.openOutputStream(outputUri)?.use { outputStream ->
+                            sampleFile.inputStream().use { inputStream ->
+                                inputStream.copyTo(outputStream)
+                            }
+                        }
+                    }
+                }
+                Instrumentation.ActivityResult(Activity.RESULT_OK, Intent())
+            }
+            pickerSubmissionUploadPage.chooseCamera()
         } finally {
             release()
         }
+
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
+        val fileName = File(Uri.parse(FilePrefs.tempCaptureUri).path!!).name
+        pickerSubmissionUploadPage.assertFileDisplayed(fileName)
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_galleryPicker() {
-        val data = goToSubmissionPicker()
+        goToSubmissionPicker()
 
-        // Let's mock grabbing a file from our device
         Intents.init()
         try {
-            // Set up the "from device" mock result, then press the "device" icon
-            Intents.intending(
+            intending(
                 AllOf.allOf(
-                        IntentMatchers.hasAction(Intent.ACTION_PICK),
+                        hasAction(Intent.ACTION_PICK),
                         IntentMatchers.hasType("image/*"),
                         IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 )
@@ -166,7 +158,6 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
             release()
         }
 
-        // It's possible for the Submit button to wait a beat before appearing
         pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
 
         pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
@@ -176,15 +167,13 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_filePicker() {
-        val data = goToSubmissionPicker()
+        goToSubmissionPicker()
 
-        // Let's mock grabbing a file from our device
         Intents.init()
         try {
-            // Set up the "from device" mock result, then press the "device" icon
-            Intents.intending(
+            intending(
                 AllOf.allOf(
-                    IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                    hasAction(Intent.ACTION_GET_CONTENT),
                     IntentMatchers.hasType("*/*"),
                     IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                 )
@@ -195,7 +184,6 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
             release()
         }
 
-        // It's possible for the Submit button to wait a beat before appearing
         pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
 
         pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
@@ -204,23 +192,81 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testDeleteFile() {
+    fun testFab_scanner(){
+        goToSubmissionPicker()
 
+        Intents.init()
+        try {
+            val context = getInstrumentation().targetContext
+            val dir = context.externalCacheDir
+            val sampleFile = File(dir, mockedFileName)
+            val uri = Uri.fromFile(sampleFile)
+            val resultData = Intent().apply { data = uri }
+            val scannerResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
+
+            // Match the scanner activity intent (adjust the component name if needed)
+            intending(
+                IntentMatchers.hasComponent("com.instructure.student.features.documentscanning.DocumentScanningActivity")
+            ).respondWith(scannerResult)
+
+            pickerSubmissionUploadPage.chooseScanner()
+        } finally {
+            release()
+        }
+
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+
+        pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
+
+    }
+
+    @Stub
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
+    fun testDeleteFile() {
+        goToSubmissionPicker()
+
+        Intents.init()
+        try {
+            intending(
+                AllOf.allOf(
+                    hasAction(Intent.ACTION_GET_CONTENT),
+                    IntentMatchers.hasType("*/*"),
+                    IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                )
+            ).respondWith(activityResult)
+            pickerSubmissionUploadPage.chooseDevice()
+        }
+        finally {
+            release()
+        }
+
+        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
+        pickerSubmissionUploadPage.clickDeleteButton()
+        pickerSubmissionUploadPage.assertEmptyViewDisplayed()
     }
 
     @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testSubmit() {
-        val data = goToSubmissionPicker()
+        // Teszt izoláció: csak a file_upload mappákat és a FilePrefs-t töröljük, a sample.jpg-t nem
+        val context = getInstrumentation().targetContext
+        File(context.cacheDir, "file_upload").deleteRecursively()
+        File(context.externalCacheDir, "file_upload").deleteRecursively()
+        context.getSharedPreferences("FilePrefs", 0).edit().clear().commit()
+        // Biztosítsuk, hogy a sample.jpg ott legyen az externalCacheDir-ben
+        copyAssetFileToExternalCache(activityRule.activity, mockedFileName)
+
+        goToSubmissionPicker()
 
         // Let's mock grabbing a file from our device
         Intents.init()
         try {
             // Set up the "from device" mock result, then press the "device" icon
-            Intents.intending(
+            intending(
                     AllOf.allOf(
-                            IntentMatchers.hasAction(Intent.ACTION_GET_CONTENT),
+                            hasAction(Intent.ACTION_GET_CONTENT),
                             IntentMatchers.hasType("*/*"),
                             IntentMatchers.hasFlag(Intent.FLAG_GRANT_READ_URI_PERMISSION)
                     )
@@ -239,10 +285,14 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
 
         // The screen may go through several refactorings while the submission is being submitted,
         // which could potentially throw off our tests.  So wait until we get the "all clear".
+        refresh()
         assignmentDetailsPage.waitForSubmissionComplete()
 
+        composeTestRule.waitForIdle()
+        Thread.sleep(5000)
         // Should be back to assignment details page
         assignmentDetailsPage.goToSubmissionDetails()
+        //assignmentDetailsPage
         submissionDetailsPage.openFiles()
         submissionDetailsPage.assertFileDisplayed(mockedFileName)
         // The submission details screen will show "This media format is not supported" because
@@ -286,7 +336,7 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     }
 
     override fun enableAndConfigureAccessibilityChecks() {
-        extraAccessibilitySupressions = Matchers.allOf(
+        extraAccessibilitySupressions = allOf(
             AccessibilityCheckResultUtils.matchesCheck(
                 SpeakableTextPresentCheck::class.java
             ),
