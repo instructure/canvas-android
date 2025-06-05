@@ -23,7 +23,12 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.managers.FeaturesManager
+import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.student.widget.WidgetLogger
 import com.instructure.student.widget.WidgetUpdater
 import com.instructure.student.widget.grades.GradesWidgetRepository
 import com.instructure.student.widget.grades.list.GradesWidgetUpdater
@@ -35,6 +40,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -99,5 +105,21 @@ class WidgetModule {
         glanceAppWidgetManager: GlanceAppWidgetManager
     ): SingleGradeWidgetUpdater {
         return SingleGradeWidgetUpdater(repository, apiPrefs, glanceAppWidgetManager)
+    }
+
+    @Singleton
+    @Provides
+    fun provideWidgetLogger(
+        userApi: UserAPI.UsersInterface,
+        featureFlagProvider: FeatureFlagProvider,
+        featuresManager: FeaturesManager,
+        analytics: Analytics
+    ): WidgetLogger {
+        return WidgetLogger(
+            userApi = userApi,
+            featureFlagProvider = featureFlagProvider,
+            featuresManager = featuresManager,
+            analytics = analytics
+        )
     }
 }
