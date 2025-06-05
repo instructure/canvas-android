@@ -291,7 +291,7 @@
     <string name="Todo">Opgaveliste</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Sorter efter &#8230;</string>
-    <string name="favoriteCoursesLabel">Foretrukne fag</string>
+    <string name="favoritedCoursesLabel">Foretrukne fag</string>
     <string name="Event">Begivenhed</string>
     <string name="eventSuccessfulDeletion">Begivenheden blev succefuldt slettet</string>
     <string name="timeIconDescription">Tidsikon</string>
@@ -1776,6 +1776,7 @@
     <string name="screenTitleHelp">Hjælp</string>
     <string name="screenTitleManageStudents">Administrer elever</string>
     <string name="screenTitleSettings">Indstillinger</string>
+    <string name="navigationDrawerSwitchUsers">Skift brugere</string>
     <string name="navigationDrawerLogOut">Log ud</string>
     <string name="noStudentsError">Ingen elever</string>
     <string name="noStudentsErrorDescription">Du observerer ikke nogen elever.</string>
@@ -2004,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Signaturtekst</string>
     <string name="due_dateTime">Forfalder: %1$s, %2$s</string>
+    <string name="noDueDate">Ingen afleveringsdato</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Skal bedømmes</string>
+    <string name="assignmentListTitle">Opgaveliste</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d point</item>
+    </plurals>
+    <string name="noAssignments">Ingen opgaver</string>
+    <string name="assignmentGroup">Opgavegruppe</string>
+    <string name="assignmentType">Opgavetype</string>
+    <string name="dueDate">Afleveringsdato</string>
+    <string name="needsGrading">Mangler bedømmelse</string>
+    <string name="published">Offentliggjort</string>
+    <string name="unpublished">Ikke offentliggjort</string>
+    <string name="notYetSubmitted">Endnu ikke indsendt</string>
+    <string name="toBeGraded">Skal bedømmes</string>
+    <string name="graded">Bedømt</string>
+    <string name="other">Anden</string>
+    <string name="a11y_filterAssignments">Filtrer opgaver</string>
+    <string name="assignmentFilter">Opgavefilter</string>
+    <string name="groupedBy">Grupperet efter</string>
+    <string name="gradingPeriod">Vurderingsperiode:</string>
+    <string name="gradingPeriodHeading">Vurderingsperiode</string>
+    <string name="gradePreferences">Vurderingspræferencer</string>
+    <string name="allAssignments">Alle opgaver</string>
+    <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Politik for indlæg</string>
     <string name="late">Sen</string>
@@ -2012,4 +2040,12 @@
     <string name="submissionFilter">Afleveringsfilter</string>
     <string name="submissionMessageSubject">%1$s den %2$s</string>
     <string name="all">Alle</string>
+    <string name="loginRequired">Login påkrævet</string>
+    <string name="loginRequiredMessage">Du skal logge ind igen på grund af din institutions sikkerhedspolitik. Når du er logget ind kan du fortsætte med at arbejde uden problemer.</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="loginRefreshSameUserError">Du skal logge ind med samme bruger.</string>
+    <string name="errorLoadingAssignments">Der opstod en fejl under indlæsning af opgaver</string>
+    <string name="a11y_searchAssignments">Søg opgaver</string>
+    <string name="dueAssignmentListItem">Forfalder %1$s</string>
 </resources>

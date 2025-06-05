@@ -291,7 +291,7 @@
     <string name="Todo">Việc Cần Làm</string>
     <string name="todoFilter">Lọc Khóa Học</string>
     <string name="filterByEllipsis">Lọc theo...</string>
-    <string name="favoriteCoursesLabel">Khóa Học Ưa Thích</string>
+    <string name="favoritedCoursesLabel">Khóa Học Ưa Thích</string>
     <string name="Event">Sự Kiện</string>
     <string name="eventSuccessfulDeletion">Đã xóa thành công sự kiện</string>
     <string name="timeIconDescription">Biểu Tượng Thời Gian</string>
@@ -1777,6 +1777,7 @@
     <string name="screenTitleHelp">Trợ Giúp</string>
     <string name="screenTitleManageStudents">Quản Lý Sinh Viên</string>
     <string name="screenTitleSettings">Cài Đặt</string>
+    <string name="navigationDrawerSwitchUsers">Chuyển Người Dùng</string>
     <string name="navigationDrawerLogOut">Đăng Xuất</string>
     <string name="noStudentsError">Không Có Sinh Viên</string>
     <string name="noStudentsErrorDescription">Bạn đang không quan sát bất kỳ sinh viên nào.</string>
@@ -2005,6 +2006,33 @@
     <string name="inboxSignatureSwitchLabel">Chữ Ký</string>
     <string name="inboxSignatureTextfieldHeader">Văn bản chữ ký</string>
     <string name="due_dateTime">Hạn: %1$s, %2$s</string>
+    <string name="noDueDate">Không Có Ngày Đến Hạn</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Cần Chấm Điểm</string>
+    <string name="assignmentListTitle">Danh sách bài tập</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d điểm thành phần</item>
+        <item quantity="other">%d điểm</item>
+    </plurals>
+    <string name="noAssignments">Không có bài tập</string>
+    <string name="assignmentGroup">Nhóm Bài Tập</string>
+    <string name="assignmentType">Loại Bài Tập</string>
+    <string name="dueDate">Ngày Đến Hạn</string>
+    <string name="needsGrading">Cần Chấm Điểm</string>
+    <string name="published">Đã phát hành</string>
+    <string name="unpublished">Chưa Phát Hành</string>
+    <string name="notYetSubmitted">Chưa Nộp</string>
+    <string name="toBeGraded">Sẽ Được Chấm Điểm</string>
+    <string name="graded">Đã Chấm Điểm</string>
+    <string name="other">Khác</string>
+    <string name="a11y_filterAssignments">Lọc Bài Tập</string>
+    <string name="assignmentFilter">Bộ Lọc Bài Tập</string>
+    <string name="groupedBy">Được Nhóm Theo</string>
+    <string name="gradingPeriod">Khoảng Thời Gian Chấm Điểm:</string>
+    <string name="gradingPeriodHeading">Khoảng Thời Gian Chấm Điểm</string>
+    <string name="gradePreferences">Ưu Tiên Điểm</string>
+    <string name="allAssignments">Tất Cả Bài Tập</string>
+    <string name="statusFilter">Bộ Lọc Trạng Thái</string>
     <string name="a11y_contentDescription_filter">Lọc</string>
     <string name="a11y_contentDescription_postPolicy">Chính sách đăng bài</string>
     <string name="late">Trễ</string>
@@ -2013,4 +2041,12 @@
     <string name="submissionFilter">Bộ Lọc Bài Nộp</string>
     <string name="submissionMessageSubject">%1$s trên %2$s</string>
     <string name="all">Tất Cả</string>
+    <string name="loginRequired">Bắt buộc phải đăng nhập</string>
+    <string name="loginRequiredMessage">Bạn cần phải đăng nhập lại do chính sách bảo mật của tổ chức. Sau khi đăng nhập, bạn có thể tiếp tục làm việc liền mạch.</string>
+    <string name="login">Đăng nhập</string>
+    <string name="logout">Đăng Xuất</string>
+    <string name="loginRefreshSameUserError">Bạn phải đăng nhập bằng cùng một người dùng.</string>
+    <string name="errorLoadingAssignments">Đã xảy ra lỗi khi tải bài tập</string>
+    <string name="a11y_searchAssignments">Tìm Kiếm Bài Tập</string>
+    <string name="dueAssignmentListItem">Đến hạn vào %1$s</string>
 </resources>

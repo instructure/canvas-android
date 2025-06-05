@@ -286,7 +286,7 @@
     <string name="Todo">待办事项</string>
     <string name="todoFilter">过滤课程</string>
     <string name="filterByEllipsis">过滤条件...</string>
-    <string name="favoriteCoursesLabel">收藏的课程</string>
+    <string name="favoritedCoursesLabel">收藏的课程</string>
     <string name="Event">活动</string>
     <string name="eventSuccessfulDeletion">事件已成功删除</string>
     <string name="timeIconDescription">时间图标</string>
@@ -1745,6 +1745,7 @@
     <string name="screenTitleHelp">帮助</string>
     <string name="screenTitleManageStudents">管理学生</string>
     <string name="screenTitleSettings">设置</string>
+    <string name="navigationDrawerSwitchUsers">转换用户</string>
     <string name="navigationDrawerLogOut">注销</string>
     <string name="noStudentsError">没有学生</string>
     <string name="noStudentsErrorDescription">您未观察任何学生。</string>
@@ -1973,6 +1974,32 @@
     <string name="inboxSignatureSwitchLabel">签名</string>
     <string name="inboxSignatureTextfieldHeader">签名文本</string>
     <string name="due_dateTime">到期：%1$s，%2$s</string>
+    <string name="noDueDate">无截止日期</string>
+    <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
+    <string name="needsGradingCount">%1$s 需要评分</string>
+    <string name="assignmentListTitle">作业列表</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="other">%d 分</item>
+    </plurals>
+    <string name="noAssignments">无作业</string>
+    <string name="assignmentGroup">作业小组</string>
+    <string name="assignmentType">作业类型</string>
+    <string name="dueDate">截止日期</string>
+    <string name="needsGrading">需要评分</string>
+    <string name="published">已发布</string>
+    <string name="unpublished">未发布</string>
+    <string name="notYetSubmitted">尚未提交</string>
+    <string name="toBeGraded">尚未评分</string>
+    <string name="graded">已评分</string>
+    <string name="other">其他</string>
+    <string name="a11y_filterAssignments">筛选作业</string>
+    <string name="assignmentFilter">作业筛选器</string>
+    <string name="groupedBy">分组依据</string>
+    <string name="gradingPeriod">评分周期：</string>
+    <string name="gradingPeriodHeading">评分周期</string>
+    <string name="gradePreferences">评分首选项</string>
+    <string name="allAssignments">所有作业</string>
+    <string name="statusFilter">状态过滤器</string>
     <string name="a11y_contentDescription_filter">筛选器</string>
     <string name="a11y_contentDescription_postPolicy">发布政策</string>
     <string name="late">迟交</string>
@@ -1981,4 +2008,12 @@
     <string name="submissionFilter">提交项过滤器</string>
     <string name="submissionMessageSubject">%1$s 于 %2$s</string>
     <string name="all">全部</string>
+    <string name="loginRequired">要求登录</string>
+    <string name="loginRequiredMessage">根据贵机构的安全政策，您需要再次登录。登录后，您可以继续顺畅工作。</string>
+    <string name="login">登录</string>
+    <string name="logout">退出</string>
+    <string name="loginRefreshSameUserError">您必须以相同的用户身份登录。</string>
+    <string name="errorLoadingAssignments">加载作业时出错</string>
+    <string name="a11y_searchAssignments">搜索作业</string>
+    <string name="dueAssignmentListItem">截止日期%1$s</string>
 </resources>

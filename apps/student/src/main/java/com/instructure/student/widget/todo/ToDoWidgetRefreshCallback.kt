@@ -22,11 +22,14 @@ import android.content.Context
 import androidx.glance.GlanceId
 import androidx.glance.action.ActionParameters
 import androidx.glance.appwidget.action.ActionCallback
+import com.instructure.canvasapi2.utils.Analytics
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.student.widget.WidgetUpdater
 
 
 class ToDoWidgetRefreshCallback : ActionCallback {
     override suspend fun onAction(context: Context, glanceId: GlanceId, parameters: ActionParameters) {
+        Analytics.logEvent(AnalyticsEventConstants.WIDGET_TODO_REFRESH_ACTION)
         WidgetUpdater.getTodoWidgetUpdateIntent(AppWidgetManager.getInstance(context)).also { intent ->
             context.sendBroadcast(intent)
         }

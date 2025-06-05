@@ -291,7 +291,7 @@
     <string name="Todo">Å gjøre</string>
     <string name="todoFilter">Filtrer emner</string>
     <string name="filterByEllipsis">Filtrer etter &#8230;</string>
-    <string name="favoriteCoursesLabel">Emnefavoritter</string>
+    <string name="favoritedCoursesLabel">Emnefavoritter</string>
     <string name="Event">Hendelse</string>
     <string name="eventSuccessfulDeletion">Event ble vellykket slettet</string>
     <string name="timeIconDescription">Tids-ikon</string>
@@ -1777,6 +1777,7 @@
     <string name="screenTitleHelp">Hjelp</string>
     <string name="screenTitleManageStudents">Administrer studenter</string>
     <string name="screenTitleSettings">Innstillinger</string>
+    <string name="navigationDrawerSwitchUsers">Bytt brukere</string>
     <string name="navigationDrawerLogOut">Logg Ut</string>
     <string name="noStudentsError">Ingen studenter</string>
     <string name="noStudentsErrorDescription">Du har ingen studenter under observasjon.</string>
@@ -2005,6 +2006,33 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Signaturtekst</string>
     <string name="due_dateTime">Frist: %1$s, %2$s</string>
+    <string name="noDueDate">Ingen forfallsdato</string>
+    <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
+    <string name="needsGradingCount">%1$s trenger vurdering</string>
+    <string name="assignmentListTitle">Oppgaveliste</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d poeng</item>
+        <item quantity="other">%d poeng</item>
+    </plurals>
+    <string name="noAssignments">Ingen oppgaver</string>
+    <string name="assignmentGroup">Oppgavegruppe</string>
+    <string name="assignmentType">Oppgavetype</string>
+    <string name="dueDate">Forfallsdato</string>
+    <string name="needsGrading">Trenger vurdering</string>
+    <string name="published">Publisert</string>
+    <string name="unpublished">Upublisert</string>
+    <string name="notYetSubmitted">Foreløpig ikke levert</string>
+    <string name="toBeGraded">Skal vurderes</string>
+    <string name="graded">Vurdert</string>
+    <string name="other">Annet</string>
+    <string name="a11y_filterAssignments">Filtrer Oppgaver</string>
+    <string name="assignmentFilter">Oppgavefilter</string>
+    <string name="groupedBy">Gruppert av</string>
+    <string name="gradingPeriod">Vurderingsperiode:</string>
+    <string name="gradingPeriodHeading">Vurderingsperiode</string>
+    <string name="gradePreferences">Vurderingspreferanser</string>
+    <string name="allAssignments">Alle oppgaver</string>
+    <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Publiser retningslinjer</string>
     <string name="late">Sent</string>
@@ -2013,4 +2041,12 @@
     <string name="submissionFilter">Innleveringsfilter</string>
     <string name="submissionMessageSubject">%1$s I %2$s</string>
     <string name="all">Alle</string>
+    <string name="loginRequired">Innlogging kreves</string>
+    <string name="loginRequiredMessage">Du må logge inn igjen på grunn av institusjonens sikkerhetsregler. Når du har logget inn, kan du fortsette å jobbe sømløst.</string>
+    <string name="login">Innlogging</string>
+    <string name="logout">Logg ut</string>
+    <string name="loginRefreshSameUserError">Du må logge inn med samme bruker.</string>
+    <string name="errorLoadingAssignments">Det oppsto en feil under lasting av oppgaver</string>
+    <string name="a11y_searchAssignments">Oppgavesøk</string>
+    <string name="dueAssignmentListItem">Forfall: %1$s</string>
 </resources>
