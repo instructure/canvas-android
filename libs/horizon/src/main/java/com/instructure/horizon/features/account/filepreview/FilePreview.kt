@@ -45,18 +45,18 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
     Box(modifier = modifier) {
         when (filePreviewUiState) {
             is FilePreviewUiState.Image -> ImageFileContent(
-                imageUrl = filePreviewUiState.url,
+                uri = filePreviewUiState.uri,
                 contentDescription = filePreviewUiState.displayName,
                 modifier = Modifier.fillMaxWidth(),
                 loadingIndicator = { Spinner(Modifier.fillMaxSize()) }
             )
 
             is FilePreviewUiState.Media -> MediaFileContent(
-                mediaUrl = filePreviewUiState.url,
+                uri = filePreviewUiState.uri,
                 contentType = filePreviewUiState.contentType,
-                onFullScreenClicked = { url, contentType ->
+                onFullScreenClicked = { uri, contentType ->
                     val bundle = BaseViewMediaActivity.makeBundle(
-                        url,
+                        uri.toString(),
                         filePreviewUiState.thumbnailUrl,
                         contentType,
                         filePreviewUiState.displayName,

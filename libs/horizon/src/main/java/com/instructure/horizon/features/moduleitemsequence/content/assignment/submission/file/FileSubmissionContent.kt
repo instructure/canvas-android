@@ -41,6 +41,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
@@ -88,7 +89,11 @@ fun FileSubmissionContent(
                 )
             }
             HorizonSpace(SpaceSize.SPACE_8)
-            if (uiState.filePreview != null) {
+            if (uiState.filePreviewLoading) {
+                HorizonSpace(SpaceSize.SPACE_8)
+                Spinner(Modifier.fillMaxWidth())
+            }
+            if (uiState.filePreview != null && !uiState.filePreviewLoading) {
                 FilePreview(filePreviewUiState = uiState.filePreview, modifier = Modifier.fillMaxWidth().then(
                     if (uiState.filePreview is FilePreviewUiState.Text) Modifier.fillMaxHeight() else Modifier.heightIn(0.dp, 400.dp)
                 ))

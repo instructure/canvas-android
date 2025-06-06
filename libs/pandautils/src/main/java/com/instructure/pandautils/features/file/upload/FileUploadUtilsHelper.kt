@@ -34,6 +34,11 @@ class FileUploadUtilsHelper(
         return fileUploadUtils.getFileMimeType(contentResolver, fileUri)
     }
 
+    fun getFileExtension(fileUri: Uri): String {
+        val mimeType = fileUploadUtils.getFileMimeType(contentResolver, fileUri)
+        return fileUploadUtils.getFileExtensionFromMimeType(mimeType)
+    }
+
     fun getFileNameWithDefault(fileUri: Uri): String {
         return fileUploadUtils.getFileNameWithDefault(contentResolver, fileUri)
     }

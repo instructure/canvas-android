@@ -21,6 +21,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionTypeUiState
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
@@ -43,6 +44,7 @@ fun AddTextSubmissionContent(
         onTextChangeListener = uiState.onTextChanged,
         rceControlsPosition = RceControlsPosition.BOTTOM,
         rceDialogThemeColor = ThemePrefs.brandColor,
-        rceDialogButtonColor = ThemePrefs.brandColor
+        rceDialogButtonColor = ThemePrefs.brandColor,
+        fileUploadRestParams = RestParams(shouldIgnoreToken = true, disableFileVerifiers = false)
     )
 }

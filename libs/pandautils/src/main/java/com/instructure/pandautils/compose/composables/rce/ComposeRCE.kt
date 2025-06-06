@@ -40,6 +40,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.MediaUploadUtils
@@ -68,6 +69,7 @@ fun ComposeRCE(
     rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP,
     rceDialogThemeColor: Int = ThemePrefs.brandColor,
     rceDialogButtonColor: Int = ThemePrefs.textButtonColor,
+    fileUploadRestParams: RestParams = RestParams(),
 ) {
     var imageUri: Uri? by remember { mutableStateOf(null) }
     var rceState by remember { mutableStateOf(RCEState()) }
@@ -112,7 +114,8 @@ fun ComposeRCE(
                     imageUri,
                     canvasContext,
                     context.getFragmentActivity(),
-                    rceDialogButtonColor
+                    rceDialogButtonColor,
+                    fileUploadRestParams
                 ) { imageUrl ->
                     MediaUploadUtils.showAltTextDialog(
                         context.getFragmentActivity(),
@@ -135,7 +138,8 @@ fun ComposeRCE(
                         imageUri,
                         canvasContext,
                         context.getFragmentActivity(),
-                        rceDialogButtonColor
+                        rceDialogButtonColor,
+                        fileUploadRestParams
                     ) { imageUrl ->
                         MediaUploadUtils.showAltTextDialog(
                             context.getFragmentActivity(),

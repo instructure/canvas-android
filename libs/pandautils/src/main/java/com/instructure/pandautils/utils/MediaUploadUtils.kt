@@ -31,6 +31,7 @@ import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.managers.FileUploadConfig
@@ -190,6 +191,7 @@ object MediaUploadUtils {
         canvasContext: CanvasContext,
         activity: Activity,
         @ColorInt buttonColor: Int = ThemePrefs.textButtonColor,
+        fileUploadRestParams: RestParams = RestParams(),
         insertImageCallback: (imageUrl: String) -> Unit = {}
     ): WeaveCoroutine {
         val isTeacher = (canvasContext as? Course)?.isTeacher == true
@@ -228,7 +230,7 @@ object MediaUploadUtils {
                 }
 
                 // Perform file upload
-                FileUploadManager.uploadFile(uploadConfig).dataOrThrow
+                FileUploadManager.uploadFile(uploadConfig, fileUploadRestParams = fileUploadRestParams).dataOrThrow
             }
 
             // Grab the file data so we can get the URL we need to insert into the img tag

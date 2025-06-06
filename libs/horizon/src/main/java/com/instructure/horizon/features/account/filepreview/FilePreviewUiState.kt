@@ -15,13 +15,15 @@
  */
 package com.instructure.horizon.features.account.filepreview
 
+import android.net.Uri
+
 sealed class FilePreviewUiState {
     data class Pdf(
         val url: String,
     ) : FilePreviewUiState()
 
     data class Media(
-        val url: String,
+        val uri: Uri,
         val thumbnailUrl: String,
         val contentType: String,
         val displayName: String
@@ -29,7 +31,7 @@ sealed class FilePreviewUiState {
 
     data class Image(
         val displayName: String,
-        val url: String,
+        val uri: Uri,
     ) : FilePreviewUiState()
 
     data class WebView(

@@ -45,7 +45,7 @@ class AccountNotificationsViewModel @Inject constructor(
         updateNotificationItem = ::updateNotificationItem,
         screenState = LoadingState(
             isPullToRefreshEnabled = false,
-            onErrorSnackbarDismiss = ::dismissSnackbar
+            onSnackbarDismiss = ::dismissSnackbar
         )
     ))
     val uiState = _uiState.asStateFlow()
@@ -166,7 +166,7 @@ class AccountNotificationsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     screenState = it.screenState.copy(
-                        errorSnackbar = context.getString(R.string.accountNotificationsFailedToUpdate)
+                        snackbarMessage = context.getString(R.string.accountNotificationsFailedToUpdate)
                     )
                 )
             }
@@ -213,7 +213,7 @@ class AccountNotificationsViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 }

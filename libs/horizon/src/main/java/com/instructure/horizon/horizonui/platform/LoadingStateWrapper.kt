@@ -51,9 +51,9 @@ data class LoadingState(
     val isError: Boolean = false,
     val isPullToRefreshEnabled: Boolean = true,
     val errorMessage: String? = null,
-    val errorSnackbar: String? = null,
+    val snackbarMessage: String? = null,
     val onRefresh: () -> Unit = {},
-    val onErrorSnackbarDismiss: () -> Unit = {},
+    val onSnackbarDismiss: () -> Unit = {},
 )
 
 @ExperimentalMaterial3Api
@@ -67,11 +67,11 @@ fun LoadingStateWrapper(
     val state = rememberPullToRefreshState()
     val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(loadingState.errorSnackbar) {
-        if (loadingState.errorSnackbar != null) {
-            val result = snackbarHostState.showSnackbar(loadingState.errorSnackbar)
+    LaunchedEffect(loadingState.snackbarMessage) {
+        if (loadingState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(loadingState.snackbarMessage)
             if (result == SnackbarResult.Dismissed) {
-                loadingState.onErrorSnackbarDismiss()
+                loadingState.onSnackbarDismiss()
             }
         }
     }
