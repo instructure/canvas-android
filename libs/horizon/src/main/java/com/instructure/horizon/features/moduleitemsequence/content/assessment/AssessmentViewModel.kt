@@ -24,9 +24,11 @@ import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,7 +42,23 @@ class AssessmentViewModel @Inject constructor(
 
     private var assessmentUrl: String? = null
 
-    private val _uiState = MutableStateFlow(AssessmentUiState(onAssessmentClosed = ::onAssessmentClosed, onStartQuizClicked = ::onStartQuizClicked))
+    private val _uiState = MutableStateFlow(
+        AssessmentUiState(
+            onAssessmentClosed = ::onAssessmentClosed,
+            onStartQuizClicked = ::onStartQuizClicked,
+            onAssessmentCompletion = ::onAssessmentCompletion,
+            onAssessmentLoaded = ::onAssessmentLoaded
+        )
+    )
+
+    private fun onAssessmentCompletion() {
+        _uiState.update { it.copy(assessmentCompletionLoading = true) }
+        viewModelScope.launch {
+            delay(15000) // This is based on the iOS app, we need to add a loading delay so the quiz result would be processed correctly
+            _uiState.update { it.copy(assessmentCompletionLoading = false) }
+        }
+    }
+
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -69,7 +87,7 @@ class AssessmentViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             assessmentUrl?.let { url ->
                 val authenticatedUrl = repository.authenticateUrl(url)
-                _uiState.update { it.copy(urlToLoad = authenticatedUrl, assessmentLoading = false) }
+                _uiState.update { it.copy(urlToLoad = authenticatedUrl) }
             } ?: run {
                 _uiState.update { it.copy(assessmentLoading = false) }
             }
@@ -80,5 +98,9 @@ class AssessmentViewModel @Inject constructor(
 
     private fun onAssessmentClosed() {
         _uiState.update { it.copy(urlToLoad = null, showAssessmentDialog = false) }
+    }
+
+    private fun onAssessmentLoaded() {
+        _uiState.update { it.copy(assessmentLoading = false) }
     }
 }

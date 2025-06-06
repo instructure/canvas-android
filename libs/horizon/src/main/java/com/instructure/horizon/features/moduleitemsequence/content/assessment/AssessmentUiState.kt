@@ -23,6 +23,9 @@ data class AssessmentUiState(
     val assessmentName: String = "",
     val assessmentLoading: Boolean = false,
     val showAssessmentDialog: Boolean = false,
+    val assessmentCompletionLoading: Boolean = false,
+    val onAssessmentCompletion: () -> Unit = {},
     val onAssessmentClosed: () -> Unit = {},
-    val onStartQuizClicked: () -> Unit = {}
+    val onStartQuizClicked: () -> Unit = {},
+    val onAssessmentLoaded: () -> Unit = {}
 )

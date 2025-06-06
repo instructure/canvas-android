@@ -16,7 +16,9 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assessment
 
 import android.graphics.Color
+import android.os.Handler
 import android.view.ViewGroup
+import android.webkit.JavascriptInterface
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,13 +30,16 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.instructure.canvasapi2.models.LtiType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -49,11 +54,40 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.utils.getActivityOrNull
+
+private const val JS_BRIDGE_NAME = "QuizJsBridge"
+private const val QUIZ_SUBMITTED_MESSAGE = "quiz.submitted"
+
+private val removeReturnButtonCss = """
+    a[data-automation="sdk-return-button"] {
+        display: none;
+    }
+""".trimIndent()
+
+private val removeReturnButtonJs = """
+    (function() {
+        var style = document.createElement('style');
+        style.type = 'text/css';
+        style.innerHTML = `${removeReturnButtonCss}`;
+        document.head.appendChild(style);
+    })();
+""".trimIndent()
+
+val quizSubmittedListener = """
+    (function() {
+        window.addEventListener("message", function(event) {
+            if (event.data && event.data.type === "quiz.resultContentRendered") {
+                $JS_BRIDGE_NAME.postMessage("$QUIZ_SUBMITTED_MESSAGE");
+            }
+        });
+    })();
+""".trimIndent()
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -64,7 +98,11 @@ fun AssessmentContentScreen(
     val activity = LocalContext.current.getActivityOrNull()
     if (uiState.showAssessmentDialog) {
         Dialog(
-            onDismissRequest = uiState.onAssessmentClosed,
+            onDismissRequest = {
+                if (!uiState.assessmentCompletionLoading) {
+                    uiState.onAssessmentClosed()
+                }
+            },
             properties = DialogProperties(
                 usePlatformDefaultWidth = false
             )
@@ -75,41 +113,72 @@ fun AssessmentContentScreen(
                     .padding(top = 16.dp)
                     .background(HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
             ) {
-                Box(modifier = Modifier.fillMaxWidth().padding(24.dp)) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                ) {
                     Text(
                         text = uiState.assessmentName,
                         style = HorizonTypography.h3,
                         modifier = Modifier
-                            .padding(horizontal = 24.dp)
-                            .align(Alignment.TopCenter)
+                            .padding(horizontal = 52.dp)
+                            .align(Alignment.Center),
+                        textAlign = TextAlign.Center
                     )
-                    IconButton(
-                        iconRes = R.drawable.close,
-                        color = IconButtonColor.INVERSE,
-                        modifier = Modifier
-                            .align(Alignment.TopEnd),
-                        elevation = HorizonElevation.level4,
-                        onClick = uiState.onAssessmentClosed,
-                        size = IconButtonSize.SMALL
-                    )
+                    if (uiState.assessmentCompletionLoading) {
+                        Spinner(
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd),
+                            size = SpinnerSize.EXTRA_SMALL,
+                            color = HorizonColors.Surface.institution(),
+                            progress = null
+                        )
+                    } else {
+                        IconButton(
+                            iconRes = R.drawable.close,
+                            color = IconButtonColor.INVERSE,
+                            modifier = Modifier
+                                .align(Alignment.CenterEnd),
+                            elevation = HorizonElevation.level4,
+                            onClick = uiState.onAssessmentClosed,
+                            size = IconButtonSize.SMALL
+                        )
+                    }
                 }
                 HorizonSpace(SpaceSize.SPACE_8)
-                if (!uiState.loadingState.isLoading && uiState.urlToLoad != null) {
-                    ComposeCanvasWebView(
-                        uiState.urlToLoad, webViewCallbacks = ComposeWebViewCallbacks(
-                        ), embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
-                            shouldLaunchInternalWebViewFragment = { _ -> false },
-                        ), applyOnWebView = {
-                            layoutParams = ViewGroup.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT,
-                                ViewGroup.LayoutParams.MATCH_PARENT
-                            )
-                            setBackgroundColor(Color.TRANSPARENT)
-                            setInitialScale(100)
-                            activity?.let { addVideoClient(it) }
-                        })
-                } else {
-                    Spinner(modifier = Modifier.fillMaxSize())
+                Box {
+                    if (uiState.urlToLoad != null) {
+                        ComposeCanvasWebView(
+                            uiState.urlToLoad, webViewCallbacks = ComposeWebViewCallbacks(
+                                onPageFinished = { webView, url ->
+                                    Handler().post {
+                                        webView.evaluateJavascript(removeReturnButtonJs, null)
+                                        webView.evaluateJavascript(quizSubmittedListener, null)
+                                    }
+                                    if (url.contains(LtiType.NEW_QUIZZES_LTI.id.orEmpty())) {
+                                        uiState.onAssessmentLoaded()
+                                    }
+                                }
+                            ), embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+                                shouldLaunchInternalWebViewFragment = { _ -> false },
+                            ), applyOnWebView = {
+                                layoutParams = ViewGroup.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT,
+                                    ViewGroup.LayoutParams.MATCH_PARENT
+                                )
+                                setBackgroundColor(Color.TRANSPARENT)
+                                setInitialScale(100)
+                                activity?.let { addVideoClient(it) }
+                                addJavascriptInterface(JSBridge {
+                                    uiState.onAssessmentCompletion()
+                                }, JS_BRIDGE_NAME)
+                            }, modifier = Modifier.alpha(if (uiState.assessmentLoading) 0f else 1f)
+                        )
+                    }
+                    if (uiState.assessmentLoading) {
+                        Spinner(modifier = Modifier.fillMaxSize())
+                    }
                 }
             }
         }
@@ -127,7 +196,11 @@ fun AssessmentContentScreen(
                 .fillMaxWidth()
                 .padding(16.dp), contentAlignment = Alignment.TopCenter
         ) {
-            Button(label = stringResource(R.string.assessment_startQuiz), color = ButtonColor.Institution, onClick = uiState.onStartQuizClicked)
+            Button(
+                label = stringResource(R.string.assessment_startQuiz),
+                color = ButtonColor.Institution,
+                onClick = uiState.onStartQuizClicked
+            )
         }
     }
 }
@@ -137,4 +210,13 @@ fun AssessmentContentScreen(
 private fun AssessmentContentScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     AssessmentContentScreen(AssessmentUiState())
+}
+
+class JSBridge(val onEventReceived: () -> Unit) {
+    @JavascriptInterface
+    fun postMessage(message: String) {
+        if (message == QUIZ_SUBMITTED_MESSAGE) {
+            onEventReceived()
+        }
+    }
 }
