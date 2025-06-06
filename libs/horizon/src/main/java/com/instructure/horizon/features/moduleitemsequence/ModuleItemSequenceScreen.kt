@@ -297,7 +297,7 @@ private fun ModuleHeaderContainer(
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
             if (buttonsEnabled) {
-                IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
+                IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.Institution, onClick = onBackPressed)
             }
             Column(
                 modifier = Modifier
@@ -323,7 +323,7 @@ private fun ModuleHeaderContainer(
             if (buttonsEnabled) {
                 IconButton(
                     iconRes = R.drawable.list_alt,
-                    color = IconButtonColor.INSTITUTION,
+                    color = IconButtonColor.Institution,
                     onClick = uiState.onProgressClick
                 )
             }
@@ -509,32 +509,32 @@ private fun ModuleItemSequenceBottomBar(
         Row(modifier = modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
             if (showPreviousButton) IconButton(
                 iconRes = R.drawable.chevron_left,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = onPreviousClick
             )
             Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
                 IconButton(
                     iconRes = R.drawable.ai,
-                    color = IconButtonColor.AI,
+                    color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
-                    color = IconButtonColor.INVERSE,
+                    color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4
                 )
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
-                    color = IconButtonColor.INVERSE,
+                    color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onAssignmentToolsClick
                 )
             }
             if (showNextButton) IconButton(
                 iconRes = R.drawable.chevron_right,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = onNextClick
             )

@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -39,7 +40,8 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val themePrefs: ThemePrefs
 ) : ViewModel() {
 
     private val _uiState =
@@ -67,9 +69,10 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceNetwork: Boolean) {
+        _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) }
         val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
-            val coursesResult = courses.dataOrThrow.filter { it.progress != null }
+            val coursesResult = courses.dataOrThrow
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
                     mapCourse(course, forceNetwork)

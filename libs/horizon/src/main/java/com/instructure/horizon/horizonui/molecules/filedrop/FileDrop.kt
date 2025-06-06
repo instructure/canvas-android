@@ -197,7 +197,7 @@ fun FileDropItem(
             IconButton(
                 iconRes = state.actionIconRes,
                 size = IconButtonSize.SMALL,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 onClick = state.onActionClick
             )
         }

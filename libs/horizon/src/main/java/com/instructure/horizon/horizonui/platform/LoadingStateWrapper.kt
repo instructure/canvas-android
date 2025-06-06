@@ -62,6 +62,7 @@ fun LoadingStateWrapper(
     loadingState: LoadingState,
     modifier: Modifier = Modifier,
     containerColor: Color = HorizonColors.Surface.pagePrimary(),
+    spinnerColor: Color = HorizonColors.Surface.institution(),
     content: @Composable BoxScope.() -> Unit,
 ) {
     val state = rememberPullToRefreshState()
@@ -96,7 +97,7 @@ fun LoadingStateWrapper(
                 },
                 content = {
                     when {
-                        loadingState.isLoading -> LoadingContent()
+                        loadingState.isLoading -> LoadingContent(spinnerColor = spinnerColor)
                         loadingState.isError -> ErrorContent(
                             loadingState.errorMessage
                                 ?: stringResource(R.string.loadingStateWrapper_errorOccurred)
@@ -123,9 +124,10 @@ fun LoadingStateWrapper(
 }
 
 @Composable
-private fun BoxScope.LoadingContent(modifier: Modifier = Modifier) {
+private fun BoxScope.LoadingContent(modifier: Modifier = Modifier, spinnerColor: Color = HorizonColors.Surface.institution()) {
     Spinner(
-        modifier
+        color = spinnerColor,
+        modifier = modifier
             .fillMaxSize()
             .align(Alignment.Center)
     )
