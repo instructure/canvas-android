@@ -2086,4 +2086,10 @@
     <string name="percentageGradeHint">Write percentage here</string>
     <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
     <string name="letterGrade">Letter Grade</string>
+    <string name="daysLate">Days late</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pt</item>
+        <item quantity="other">%s / %s pts</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
 </resources>

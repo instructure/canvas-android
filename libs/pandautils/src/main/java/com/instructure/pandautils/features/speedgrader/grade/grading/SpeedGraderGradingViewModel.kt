@@ -29,6 +29,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.math.roundToInt
 
 @HiltViewModel
 class SpeedGraderGradingViewModel @Inject constructor(
@@ -68,14 +69,13 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     pointsPossible = submission.assignment?.pointsPossible,
                     score = submission.score,
                     grade = submission.grade,
-                    lateText = submission.secondsLate?.let {
-                        "$it seconds late"
-                    },
                     enteredGrade = submission.enteredGrade,
                     enteredScore = submission.enteredScore?.toFloat(),
                     pointsDeducted = submission.deductedPoints,
                     gradingType = submission.assignment?.gradingType,
                     loading = false,
+                    daysLate = getDaysLate(submission.secondsLate),
+                    dueDate = submission.assignment?.dueAt,
                     letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
                         GradingSchemeRow(
                             gradingStandard.letterGrade.orEmpty(),
@@ -102,11 +102,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         pointsPossible = submission.assignment?.pointsPossible,
                         score = submission.score,
                         grade = submission.grade,
-                        lateText = submission.secondsLate?.let { late -> "$late seconds late" },
                         enteredGrade = submission.enteredGrade,
                         enteredScore = submission.enteredScore?.toFloat(),
-                        pointsDeducted = submission.deductedPoints,
-                        gradingType = submission.assignment?.gradingType
+                        pointsDeducted = submission.deductedPoints
                     )
                 }
             }
@@ -116,5 +114,11 @@ class SpeedGraderGradingViewModel @Inject constructor(
     private fun onPercentageChanged(percentage: Float?) {
         val score = percentage?.let { (it / 100) * (_uiState.value.pointsPossible ?: 0.0) }
         onScoreChanged(score?.toFloat())
+    }
+
+    private fun getDaysLate(secondsLate: Double?): Int? {
+        return secondsLate?.let {
+            (it / (60 * 60 * 24)).roundToInt().coerceAtLeast(1)
+        }
     }
 }

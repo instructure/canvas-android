@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.speedgrader.grade.grading
 
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.GradingType
+import java.util.Date
 
 data class SpeedGraderGradingUiState(
     val loading: Boolean = true,
@@ -26,10 +27,11 @@ data class SpeedGraderGradingUiState(
     val enteredScore: Float? = null,
     val grade: String? = null,
     val score: Double? = null,
-    val lateText: String? = null,
     val pointsDeducted: Double? = null,
     val gradingType: GradingType? = null,
+    val dueDate: Date? = null,
+    val daysLate: Int? = null,
     val letterGrades: List<GradingSchemeRow> = emptyList(),
     val onScoreChange: (Float?) -> Unit,
-    val onPercentageChange: (Float?) -> Unit,
+    val onPercentageChange: (Float?) -> Unit
 )

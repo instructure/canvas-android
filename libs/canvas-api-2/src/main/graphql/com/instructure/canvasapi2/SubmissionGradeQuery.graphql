@@ -30,6 +30,7 @@ query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!) {
         enteredGrade
         enteredScore
         assignment {
+            dueAt
             gradingType
             pointsPossible
             gradingStandard {
