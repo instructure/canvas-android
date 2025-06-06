@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.grading
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,11 +24,18 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -37,11 +45,13 @@ import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -52,13 +62,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.common.primitives.Floats.max
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.GradingType
+import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
 import com.instructure.pandautils.compose.composables.CanvasDivider
-import com.instructure.pandautils.compose.composables.Dropdown
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.pandautils.utils.orDefault
@@ -119,26 +130,111 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
+    val options = uiState.letterGrades.map { it.name }
 
-    var selectedGrade by remember { mutableStateOf(uiState.enteredGrade ?: "No Grade") }
+    var selectedGrade by remember(
+        uiState.enteredScore,
+        uiState.pointsPossible,
+        uiState.letterGrades
+    ) {
+        mutableStateOf(
+            convertScoreToLetterGrade(
+                uiState.enteredScore?.toDouble().orDefault(),
+                uiState.pointsPossible.orDefault(),
+                uiState.letterGrades
+            )
+        )
+    }
+
+    LaunchedEffect(selectedGrade) {
+        if (selectedGrade != uiState.enteredGrade) {
+            uiState.onPercentageChange(
+                uiState.letterGrades
+                    .find { it.name == selectedGrade }
+                    ?.value.orDefault()
+                    .toFloat() * 100f
+            )
+        }
+    }
 
     Column {
         if (uiState.letterGrades.isNotEmpty()) {
-            Dropdown(
-                selectedIndex = uiState.letterGrades.indexOfFirst { it.letterGrade == selectedGrade },
-                options = uiState.letterGrades.map { it.letterGrade } + "No Grade",
-                onOptionSelected = {
-                    uiState.onPercentageChange(uiState.letterGrades[it - 1].baseValue.toFloat() * 100f)
+            var expanded by remember { mutableStateOf(false) }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.letterGrade),
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(R.color.textDarkest),
+                    fontSize = 16.sp
+                )
+
+                ExposedDropdownMenuBox(
+                    expanded = expanded,
+                    onExpandedChange = {
+                        expanded = !expanded
+                    }
+                ) {
+
+                    TextButton(
+                        colors = ButtonDefaults.textButtonColors()
+                            .copy(contentColor = LocalCourseColor.current),
+                        modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            expanded = true
+                        }) {
+                        Text(
+                            text = selectedGrade,
+                            fontWeight = FontWeight.SemiBold,
+                            color = LocalCourseColor.current,
+                            fontSize = 16.sp,
+                            modifier = Modifier.padding(end = 4.dp)
+                        )
+                        Icon(
+                            painter = painterResource(R.drawable.ic_arrow_down),
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp),
+                            tint = colorResource(R.color.textDark)
+                        )
+                    }
+
+
+                    ExposedDropdownMenu(
+                        expanded = expanded,
+                        onDismissRequest = { expanded = false },
+                        modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated))
+                    ) {
+                        options.forEachIndexed { index, item ->
+                            DropdownMenuItem(
+                                onClick = {
+                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                                    expanded = false
+                                    selectedGrade = options[index]
+                                }, text = {
+                                    Text(
+                                        text = item,
+                                        color = colorResource(id = R.color.textDarkest)
+                                    )
+                                }
+                            )
+                        }
+                    }
                 }
-            )
+            }
         }
         PointGradingTypeInput(uiState)
     }
 }
-
 
 @Composable
 private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
@@ -459,7 +555,7 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
                 pointsPossible = 20.0,
-                enteredGrade = "incomplete",
+                enteredGrade = "A",
                 enteredScore = 0f,
                 grade = "A",
                 score = 15.0,
@@ -467,11 +563,11 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 gradingType = GradingType.letter_grade,
                 onPercentageChange = {},
                 letterGrades = listOf(
-                    LetterGrade(0.0, "F"),
-                    LetterGrade(0.6, "D"),
-                    LetterGrade(0.7, "C"),
-                    LetterGrade(0.8, "B"),
-                    LetterGrade(0.9, "A")
+                    GradingSchemeRow("A", 90.0),
+                    GradingSchemeRow("B", 80.0),
+                    GradingSchemeRow("C", 70.0),
+                    GradingSchemeRow("D", 60.0),
+                    GradingSchemeRow("F", 0.0)
                 )
             )
         )

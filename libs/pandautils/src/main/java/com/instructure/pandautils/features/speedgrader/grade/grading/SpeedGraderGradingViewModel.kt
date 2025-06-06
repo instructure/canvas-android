@@ -19,6 +19,7 @@ package com.instructure.pandautils.features.speedgrader.grade.grading
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -76,9 +77,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     gradingType = submission.assignment?.gradingType,
                     loading = false,
                     letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
-                        LetterGrade(
-                            gradingStandard.baseValue.orDefault(),
-                            gradingStandard.letterGrade.orEmpty()
+                        GradingSchemeRow(
+                            gradingStandard.letterGrade.orEmpty(),
+                            gradingStandard.baseValue.orDefault()
                         )
                     }.orEmpty()
                 )

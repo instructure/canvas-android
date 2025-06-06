@@ -2085,4 +2085,5 @@
     <string name="pointGradeHint">Write score here</string>
     <string name="percentageGradeHint">Write percentage here</string>
     <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Letter Grade</string>
 </resources>
