@@ -23,7 +23,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.horizon.R
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionTypeUiState
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 import com.instructure.pandautils.utils.ThemePrefs

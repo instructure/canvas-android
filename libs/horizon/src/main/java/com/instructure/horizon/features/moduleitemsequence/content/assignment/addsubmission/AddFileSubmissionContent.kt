@@ -34,8 +34,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionFileUiState
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.AddSubmissionTypeUiState
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDrop
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropBottomSheet
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropBottomSheetCallbacks

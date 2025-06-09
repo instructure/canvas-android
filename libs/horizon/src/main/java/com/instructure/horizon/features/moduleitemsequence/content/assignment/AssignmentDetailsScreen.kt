@@ -18,24 +18,19 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import android.view.ViewGroup
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
 import androidx.compose.material3.SheetValue
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
@@ -50,7 +45,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -60,8 +54,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddFileSubmissionContent
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddTextSubmissionContent
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
@@ -77,11 +71,6 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.BottomSheetActionState
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
-import com.instructure.horizon.horizonui.molecules.SegmentedControl
-import com.instructure.horizon.horizonui.molecules.SegmentedControlIconPosition
-import com.instructure.horizon.horizonui.molecules.Spinner
-import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCard
@@ -123,36 +112,6 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         )
     }
 
-    val selectedSubmissionType =
-        uiState.addSubmissionUiState.submissionTypes.getOrNull(uiState.addSubmissionUiState.selectedSubmissionTypeIndex)
-    if (selectedSubmissionType?.draftUiState?.showDeleteDraftConfirmation == true) {
-        Modal(
-            dialogState = ModalDialogState(
-                title = stringResource(R.string.assignmentDetails_deleteDraftTitle),
-                message = stringResource(R.string.assignmentDetails_deleteDraftMessage),
-                primaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftConfirm),
-                secondaryButtonTitle = stringResource(R.string.assignmentDetails_deleteDraftCancel),
-                primaryButtonClick = selectedSubmissionType.draftUiState.onDraftDeleted,
-                secondaryButtonClick = selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation
-            ),
-            onDismiss = selectedSubmissionType.draftUiState.onDismissDeleteDraftConfirmation
-        )
-    }
-
-    if (uiState.addSubmissionUiState.showSubmissionConfirmation) {
-        Modal(
-            dialogState = ModalDialogState(
-                title = stringResource(R.string.assignmentDetails_submissionConfirmationTitle),
-                message = stringResource(R.string.assignmentDetails_submissionConfirmationMessage),
-                primaryButtonTitle = stringResource(R.string.assignmentDetails_submissionConfirmationConfirm),
-                secondaryButtonTitle = stringResource(R.string.assignmentDetails_submissionConfirmationCancel),
-                primaryButtonClick = uiState.addSubmissionUiState.onSubmitAssignment,
-                secondaryButtonClick = uiState.addSubmissionUiState.onDismissSubmissionConfirmation
-            ),
-            onDismiss = uiState.addSubmissionUiState.onDismissSubmissionConfirmation
-        )
-    }
-
     if (uiState.toolsBottomSheetUiState.show) {
         ActionBottomSheet(
             title = stringResource(R.string.assignmentDetails_tools),
@@ -173,7 +132,8 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         )
     }
 
-    LoadingStateWrapper(loadingState = uiState.loadingState, containerColor = Color.Transparent) {
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+    LoadingStateWrapper(loadingState = uiState.loadingState, containerColor = Color.Transparent, snackbarHostState = snackbarHostState) {
         Box(
             contentAlignment = Alignment.Center,
             modifier = modifier
@@ -238,7 +198,17 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     SubmissionDetailsContent(uiState.submissionDetailsUiState)
                 }
                 if (uiState.showAddSubmission) {
-                    AddSubmissionContent(uiState.addSubmissionUiState, onRceFocused = { rceFocused = true })
+                    val addSubmissionViewModel = hiltViewModel<AddSubmissionViewModel>()
+                    val addSubmissionUiState by addSubmissionViewModel.uiState.collectAsState()
+                    addSubmissionViewModel.setOnSubmissionSuccessListener(uiState.onSubmissionSuccess)
+
+                    val assignment by hiltViewModel<AssignmentDetailsViewModel>().assignmentFlow.collectAsState()
+                    LaunchedEffect(assignment) {
+                        assignment?.let {
+                            addSubmissionViewModel.updateAssignment(it)
+                        }
+                    }
+                    AddSubmissionContent(addSubmissionUiState, snackbarHostState = snackbarHostState, onRceFocused = { rceFocused = true })
                 }
                 HorizonSpace(SpaceSize.SPACE_48)
             }
@@ -283,110 +253,6 @@ fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier)
     }
 }
 
-@Composable
-fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, modifier: Modifier = Modifier, onRceFocused: () -> Unit = {}) {
-    if (uiState.submissionTypes.size > 1) {
-        Text(stringResource(R.string.assignmentDetails_selectSubmissionType), style = HorizonTypography.h3)
-        HorizonSpace(SpaceSize.SPACE_16)
-        val options = uiState.submissionTypes.map { stringResource(it.labelRes) }
-        SegmentedControl(
-            options = options,
-            onItemSelected = uiState.onSubmissionTypeSelected,
-            selectedIndex = uiState.selectedSubmissionTypeIndex,
-            iconPosition = SegmentedControlIconPosition.Start(checkmark = true),
-            modifier = modifier
-        )
-        HorizonSpace(SpaceSize.SPACE_24)
-    }
-    if (uiState.submissionTypes.isNotEmpty()) {
-        val selectedSubmissionType = uiState.submissionTypes[uiState.selectedSubmissionTypeIndex]
-        when (selectedSubmissionType) {
-            is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
-                uiState = selectedSubmissionType,
-                submissionInProgress = uiState.submissionInProgress
-            )
-
-            is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
-        }
-        HorizonSpace(SpaceSize.SPACE_24)
-        AnimatedVisibility(visible = uiState.errorMessage != null) {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painterResource(R.drawable.error),
-                    tint = HorizonColors.Icon.error(),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
-                HorizonSpace(SpaceSize.SPACE_6)
-                Text(
-                    uiState.errorMessage.orEmpty(),
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.error()
-                )
-            }
-        }
-        AnimatedVisibility(visible = selectedSubmissionType.draftUiState.draftDateString.isNotEmpty() && !uiState.submissionInProgress) {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    selectedSubmissionType.draftUiState.draftDateString,
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.timestamp()
-                )
-                Button(
-                    label = stringResource(R.string.assignmentDetails_deleteDraft),
-                    color = ButtonColor.Custom(
-                        backgroundColor = HorizonColors.Surface.pageSecondary(),
-                        contentColor = HorizonColors.Text.error()
-                    ),
-                    onClick = selectedSubmissionType.draftUiState.onDeleteDraftClicked,
-                    iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-                )
-            }
-        }
-        HorizonSpace(SpaceSize.SPACE_16)
-        Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
-            val alpha = if (selectedSubmissionType.submitEnabled || uiState.submissionInProgress) 1f else 0.5f
-            Box(
-                contentAlignment = Alignment.CenterEnd,
-                modifier = Modifier
-                    .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
-                    .animateContentSize()
-            ) {
-                if (uiState.submissionInProgress) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
-                    ) {
-                        Spinner(
-                            size = SpinnerSize.EXTRA_SMALL,
-                            color = HorizonColors.Surface.cardPrimary(),
-                            modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(horizontal = 22.dp, vertical = 10.dp),
-                        )
-                    }
-                } else {
-                    Button(
-                        label = stringResource(R.string.assignmentDetails_submitAssignment),
-                        color = ButtonColor.Custom(backgroundColor = Color.Transparent, contentColor = HorizonColors.Text.surfaceColored()),
-                        onClick = uiState.onSubmissionButtonClicked,
-                        enabled = selectedSubmissionType.submitEnabled
-                    )
-                }
-            }
-        }
-    }
-}
-
 @Preview
 @Composable
 fun AssignmentDetailsScreenPreview() {
@@ -406,26 +272,6 @@ fun AssignmentDetailsScreenPreview() {
                 currentSubmissionAttempt = 1L
             ),
             showSubmissionDetails = true
-        ),
-        scrollState = ScrollState(0)
-    )
-}
-
-@Preview
-@Composable
-fun AssignmentDetailsScreenAddSubmissionPreview() {
-    ContextKeeper.appContext = LocalContext.current
-    AssignmentDetailsScreen(
-        uiState = AssignmentDetailsUiState(
-            instructions = "This is a test",
-            ltiUrl = "",
-            addSubmissionUiState = AddSubmissionUiState(
-                submissionTypes = listOf(
-                    AddSubmissionTypeUiState.File(draftUiState = DraftUiState(draftDateString = "Saved at 2023-10-01"))
-                ),
-                errorMessage = "Error occurred while submitting.",
-            ),
-            showAddSubmission = true
         ),
         scrollState = ScrollState(0)
     )

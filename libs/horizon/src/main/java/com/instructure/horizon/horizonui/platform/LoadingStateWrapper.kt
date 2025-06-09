@@ -62,10 +62,10 @@ fun LoadingStateWrapper(
     loadingState: LoadingState,
     modifier: Modifier = Modifier,
     containerColor: Color = HorizonColors.Surface.pagePrimary(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
     content: @Composable BoxScope.() -> Unit,
 ) {
     val state = rememberPullToRefreshState()
-    val snackbarHostState = remember { SnackbarHostState() }
 
     LaunchedEffect(loadingState.snackbarMessage) {
         if (loadingState.snackbarMessage != null) {
