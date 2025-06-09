@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -22,10 +23,14 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.format
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -34,6 +39,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class AssignmentDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
     savedStateHandle: SavedStateHandle
@@ -179,6 +185,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
         val initialAttempt = lastActualSubmission?.attempt ?: -1L
 
+        val currentAttempt = lastActualSubmission?.let {
+            createAttemptCard(it)
+        }
+
         _uiState.update {
             it.copy(
                 submissionDetailsUiState = it.submissionDetailsUiState.copy(
@@ -188,7 +198,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 showSubmissionDetails = lastActualSubmission != null,
                 showAddSubmission = lastActualSubmission == null,
                 submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
-                    show = true
+                    show = true,
+                    attemptCardState = currentAttempt
                 )
             )
         }
@@ -202,5 +213,12 @@ class AssignmentDetailsViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun createAttemptCard(submission: Submission): AttemptCardState {
+        return AttemptCardState(
+            attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
+            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty()
+        )
     }
 }
