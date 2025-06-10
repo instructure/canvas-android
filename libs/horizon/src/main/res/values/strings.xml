@@ -250,4 +250,5 @@
     <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
     <string name="assignmentDetails_submissionError">Error submitting assignment</string>
     <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
+    <string name="assessment_startQuiz">Start Quiz</string>
 </resources>
