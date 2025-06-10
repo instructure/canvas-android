@@ -54,7 +54,7 @@ fun NotebookAppBar(
             IconButton(
                 iconRes = R.drawable.arrow_back,
                 contentDescription = stringResource(R.string.a11yNavigateBack),
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 size = IconButtonSize.SMALL,
                 elevation = HorizonElevation.level4,
                 onClick = navigateBack,

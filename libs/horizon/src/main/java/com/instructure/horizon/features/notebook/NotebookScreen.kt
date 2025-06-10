@@ -281,7 +281,7 @@ private fun NotesPager(
     ) {
         IconButton(
             iconRes = R.drawable.chevron_left,
-            color = IconButtonColor.BLACK,
+            color = IconButtonColor.Black,
             size = IconButtonSize.SMALL,
             onClick = onNavigateBack,
             enabled = canNavigateBack && !isLoading
@@ -291,7 +291,7 @@ private fun NotesPager(
 
         IconButton(
             iconRes = R.drawable.chevron_right,
-            color = IconButtonColor.BLACK,
+            color = IconButtonColor.Black,
             size = IconButtonSize.SMALL,
             onClick = onNavigateForward,
             enabled = canNavigateForward && !isLoading

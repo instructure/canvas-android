@@ -137,7 +137,7 @@ fun AssessmentContentScreen(
                     } else {
                         IconButton(
                             iconRes = R.drawable.close,
-                            color = IconButtonColor.INVERSE,
+                            color = IconButtonColor.Inverse,
                             modifier = Modifier
                                 .align(Alignment.CenterEnd),
                             elevation = HorizonElevation.level4,
