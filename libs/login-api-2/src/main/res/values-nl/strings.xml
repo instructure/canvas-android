@@ -99,7 +99,7 @@
     <string name="findMySchool">Zoek mijn school</string>
     <string name="loginWithQRCode">QR-code</string>
     <string name="locateQRCode">QR-code zoeken</string>
-    <string name="qrCodeExplanation">Je vindt de QR-code op het web in je accountprofiel. Klik op \'QR voor mobiel aanmelden\' in de lijst.</string>
+    <string name="qrCodeExplanation">Zoek de QR-code in je accountprofiel op het internet onder \'QR for Mobile Login\'.</string>
     <string name="qrCodeScanningPrompt">Scan een QR-code van Canvas om je aan te melden</string>
     <string name="loginWithQRCodeError">Er is een fout opgetreden bij het aanmelden. Genereer een andere QR-code en probeer het opnieuw.</string>
     <string name="invalidQRCodeError">Scan een door Canvas gegenereerde QR-code</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">We hebben enkele wijzigingen aangebracht.</string>
     <string name="whatsNewText">Wat is er nieuw</string>
     <string name="findAnotherSchool">Zoek een andere school</string>
+    <string name="qrCodeDisabledExplanation">Als je deze daar niet vindt, heeft je instituut deze optie uitgeschakeld.</string>
 </resources>

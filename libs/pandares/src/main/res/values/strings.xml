@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifications</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Grades</string>
+    <string name="gradeWidgetTitleLong">Canvas - Grade</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
     <string name="notLoggedIn">You are not logged in</string>
     <string name="widgetStyle">Choose your widget style</string>
@@ -1797,6 +1798,7 @@
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
     <string name="noStudentsRefresh">Refresh</string>
     <string name="noGrade">No Grade</string>
+    <string name="noGrades">No Grades</string>
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
     <string name="parentNoCoursesMessage">Your student’s courses might not be published yet.</string>
@@ -2077,4 +2079,12 @@
     <string name="widgetToDoNotLoggedInSubtitle">To see your to-dos, please log in to your account in the app. It\'ll just take a sec!</string>
     <string name="a11y_widgetToDoOpenToDoList">Open To Do list screen</string>
     <string name="a11y_widgetToDoCreateNewToDo">Create new To Do</string>
+
+    <string name="widgetGradesErrorSubtitle">We\'re having trouble showing your grades right now. Please try again in a bit or head to the app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">To see your grades, please log in to your account in the app. It\'ll just take a sec!</string>
+    <string name="widgetSingleGradeErrorSubtitle">We\'re having trouble showing your grades right now.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
+    <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
+    <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+
 </resources>

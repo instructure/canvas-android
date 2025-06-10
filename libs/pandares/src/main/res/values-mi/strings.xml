@@ -291,7 +291,7 @@
     <string name="Todo">Hei mahi</string>
     <string name="todoFilter">Ngā Akoranga Tātari</string>
     <string name="filterByEllipsis">Tātari ma....</string>
-    <string name="favoriteCoursesLabel">Ngā akoranga tino pai</string>
+    <string name="favoritedCoursesLabel">Ngā akoranga tino pai</string>
     <string name="Event">Tauwhāinga</string>
     <string name="eventSuccessfulDeletion">I momoho te muku Tauwhāinga</string>
     <string name="timeIconDescription">Te Wā Icon</string>
@@ -1776,6 +1776,7 @@
     <string name="screenTitleHelp">Āwhina</string>
     <string name="screenTitleManageStudents">Whakahaere ngā ākonga</string>
     <string name="screenTitleSettings">Ngā Tautuhinga</string>
+    <string name="navigationDrawerSwitchUsers">Whakakā ngā Kaiwhakamahi</string>
     <string name="navigationDrawerLogOut">Takiputa</string>
     <string name="noStudentsError">Kāore he ākonga</string>
     <string name="noStudentsErrorDescription">Kaore koe e tirotiro ana ētahi ākonga.</string>
@@ -2004,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Waitohu</string>
     <string name="inboxSignatureTextfieldHeader">Kuputuhi waitohu</string>
     <string name="due_dateTime">E tika ana: %1$s, %2$s</string>
+    <string name="noDueDate">Kaore He Rā Tika</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s E hiahiatia ana mo te kōeke</string>
+    <string name="assignmentListTitle">Te rarangi taumahi</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d koinga</item>
+        <item quantity="other">%d ngā koinga</item>
+    </plurals>
+    <string name="noAssignments">Kaore ngā whakataunga</string>
+    <string name="assignmentGroup">Rōpū Whakataunga</string>
+    <string name="assignmentType">Momo whakataunga</string>
+    <string name="dueDate">Rā e tika ana</string>
+    <string name="needsGrading">E hiahiatia ana mo te kōeke</string>
+    <string name="published">I whakaputaina</string>
+    <string name="unpublished">Kaore ii whakaputaina</string>
+    <string name="notYetSubmitted">Kaore ano kia tukuna</string>
+    <string name="toBeGraded">Kia Makahia</string>
+    <string name="graded">Kōekehia</string>
+    <string name="other">Ētahi atu</string>
+    <string name="a11y_filterAssignments">Tātari Taumahi</string>
+    <string name="assignmentFilter">Tātari Taumahi</string>
+    <string name="groupedBy">Kua whakarōpūhia e</string>
+    <string name="gradingPeriod">Wā Māka:</string>
+    <string name="gradingPeriodHeading">Wā kōeke</string>
+    <string name="gradePreferences">Manakohanga Kōeke</string>
+    <string name="allAssignments">Ngā Whakataunga Katoa</string>
+    <string name="statusFilter">Tātari Tūnga</string>
     <string name="a11y_contentDescription_filter">Tātari</string>
     <string name="a11y_contentDescription_postPolicy">Kaupapa Here Pānui</string>
     <string name="late">Tūreiti</string>
@@ -2012,4 +2040,12 @@
     <string name="submissionFilter">Tātari Tuku</string>
     <string name="submissionMessageSubject">%1$s i runga i %2$s</string>
     <string name="all">Katoa</string>
+    <string name="loginRequired">E hiahiatia ana te takiuru</string>
+    <string name="loginRequiredMessage">Me takiuru ano koe na runga i te kaupapa here haumarutanga a to umanga. Ina takiuru koe ka taea e koe te mahi marie.</string>
+    <string name="login">Takiuru</string>
+    <string name="logout">Takiputa</string>
+    <string name="loginRefreshSameUserError">Me takiuru koe me te kaiwhakamahi kotahi.</string>
+    <string name="errorLoadingAssignments">I puta he hapa i te uta i nga taumahi</string>
+    <string name="a11y_searchAssignments">Rapu Ngā Whakatakanga</string>
+    <string name="dueAssignmentListItem">E tika ana %1$s</string>
 </resources>

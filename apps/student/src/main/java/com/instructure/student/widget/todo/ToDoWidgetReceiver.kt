@@ -24,8 +24,11 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.GlanceAppWidgetReceiver
 import androidx.glance.appwidget.state.updateAppWidgetState
 import androidx.glance.state.PreferencesGlanceStateDefinition
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.pandautils.utils.toJson
+import com.instructure.student.widget.WidgetLogger
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.MainScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
@@ -40,7 +43,26 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
     @Inject
     lateinit var toDoWidgetUpdater: ToDoWidgetUpdater
 
+    @Inject
+    lateinit var widgetLogger: WidgetLogger
+
     private val coroutineScope = MainScope()
+
+    override fun onEnabled(context: Context?) {
+        context?.let {
+            coroutineScope.launch(Dispatchers.IO) {
+                widgetLogger.logEvent(AnalyticsEventConstants.WIDGET_TODO_WIDGET_ADDED, context)
+            }
+        }
+        super.onEnabled(context)
+    }
+
+    override fun onDeleted(context: Context, appWidgetIds: IntArray) {
+        coroutineScope.launch(Dispatchers.IO) {
+            widgetLogger.logEvent(AnalyticsEventConstants.WIDGET_TODO_WIDGET_DELETED, context)
+        }
+        super.onDeleted(context, appWidgetIds)
+    }
 
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         super.onUpdate(context, appWidgetManager, appWidgetIds)

@@ -101,7 +101,7 @@
     <string name="findMySchool">Kimihia taku kura</string>
     <string name="loginWithQRCode">QR Waehere</string>
     <string name="locateQRCode">Kimihia QR Waehere</string>
-    <string name="qrCodeExplanation">Ka kitea e koe tte QR waehere i runga i te ipurangi i roto i tō pūkete kōtaha. Pātō QR mo te Waea Haerēre Takiuru i roto i te rārangi.</string>
+    <string name="qrCodeExplanation">Kimihia te waehere QR i roto i to kōtaha pūkete i runga i te paetukutuku i raro i te ‘QR mo te Takiuru Pukoro’.</string>
     <string name="qrCodeScanningPrompt">Mātai he QR waehere mai i Canvas ki te takiuru</string>
     <string name="loginWithQRCodeError">He hapa i puta i te wā e takiuru ana. Tēnā koa whakamahi he QR Waehere anō ka ngana anō.</string>
     <string name="invalidQRCodeError">Tēnā koa mātai he QR Waehere kua whakamahia e Canvas</string>
@@ -128,4 +128,5 @@
     <string name="weMadeChanges">I mahia e mātou he rerekētanga iti</string>
     <string name="whatsNewText">Tirohia ngā mea hou</string>
     <string name="findAnotherSchool">Kimihia tetahi atu kura</string>
+    <string name="qrCodeDisabledExplanation">Mena karekau i kona, kua monoa e to umanga tenei whiringa.</string>
 </resources>

@@ -282,12 +282,10 @@ fun bindUserAvatar(imageView: ImageView, userAvatarUrl: String?, userName: Strin
 
 @BindingAdapter("avatar")
 fun bindUserAvatar(imageView: ImageView, avatar: AvatarViewData) {
+    imageView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     if (avatar.group) {
         imageView.setImageResource(R.drawable.ic_group)
-        imageView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_NO
     } else {
-        imageView.importantForAccessibility = View.IMPORTANT_FOR_ACCESSIBILITY_YES
-        imageView.contentDescription = imageView.context.getString(R.string.a11y_avatarContentDescription)
         ProfileUtils.loadAvatarForUser(imageView, avatar.firstUserName, avatar.avatarUrl)
     }
 }
