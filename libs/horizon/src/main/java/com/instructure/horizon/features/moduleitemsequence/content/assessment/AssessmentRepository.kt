@@ -35,9 +35,11 @@ class AssessmentRepository @Inject constructor(
 
     suspend fun authenticateUrl(url: String): String {
         val ltiTool = launchDefinitionsApi.getLtiFromAuthenticationUrl(url, RestParams(isForceReadFromNetwork = true)).dataOrThrow
-        return oAuthInterface.getAuthenticatedSession(
-            ltiTool.url!!,
-            RestParams(isForceReadFromNetwork = true)
-        ).dataOrNull?.sessionUrl ?: url
+        return ltiTool.url?.let {
+            oAuthInterface.getAuthenticatedSession(
+                it,
+                RestParams(isForceReadFromNetwork = true)
+            ).dataOrNull?.sessionUrl ?: url
+        } ?: url
     }
 }
