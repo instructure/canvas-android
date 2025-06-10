@@ -45,7 +45,7 @@ class AccountViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(AccountUiState(
         screenState = LoadingState(
             isPullToRefreshEnabled = false,
-            onErrorSnackbarDismiss = ::dismissSnackbar,
+            onSnackbarDismiss = ::dismissSnackbar,
         ),
         updateUserName = ::updateUserName,
         performLogout = ::performLogout,
@@ -146,7 +146,7 @@ class AccountViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 
