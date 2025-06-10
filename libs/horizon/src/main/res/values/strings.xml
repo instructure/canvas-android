@@ -40,7 +40,8 @@
     <string name="fileDrop_acceptFileTypes">Accepted file types: %1$s</string>
     <string name="fileDropSheet_uploadFile">Upload File</string>
     <string name="fileDropSheet_choosePhotoOrVideo">Choose Photo or Video</string>
-    <string name="fileDropSheet_takePhotoOrVideo">Take Photo or Video</string>
+    <string name="fileDropSheet_takePhoto">Take Photo</string>
+    <string name="fileDropSheet_takeVideo">Take Video</string>
     <string name="fileDropSheet_chooseFile">Choose File</string>
     <string name="avatar_contentDescription">Avatar</string>
     <string name="requiredMark">" *"</string>
@@ -246,5 +247,8 @@
     <string name="addNoteLabelLabel">Label</string>
     <string name="addNoteAddANoteLabel">Add a Note</string>
     <string name="addNoteSaveLabel">Save</string>
+    <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
+    <string name="assignmentDetails_submissionError">Error submitting assignment</string>
+    <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
     <string name="assessment_startQuiz">Start Quiz</string>
 </resources>
