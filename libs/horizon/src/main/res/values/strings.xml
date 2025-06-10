@@ -254,4 +254,5 @@
     <string name="attemptCard_score">%1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Attempts</string>
     <string name="attemptBottomSheet_noAttempts">This assignment allows multiple attempts. Once you\'ve made a submission, you can view it here.</string>
+    <string name="assignmentDetails_viewingAttempt">Viewing Attempt %d</string>
 </resources>

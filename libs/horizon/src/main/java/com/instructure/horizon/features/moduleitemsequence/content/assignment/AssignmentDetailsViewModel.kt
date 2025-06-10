@@ -120,6 +120,11 @@ class AssignmentDetailsViewModel @Inject constructor(
         .sortedByDescending { it.attempt }
         .map { attempt ->
             createAttemptCard(attempt, assignment.pointsPossible, selected = attempt.attempt == initialAttempt, onClick = {
+                val viewingAttemptText = if (attempt.attempt != initialAttempt) {
+                    context.getString(R.string.assignmentDetails_viewingAttempt, attempt.attempt)
+                } else {
+                    null
+                }
                 _uiState.update {
                     it.copy(
                         submissionDetailsUiState = it.submissionDetailsUiState.copy(
@@ -129,7 +134,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                             attempts = it.attemptSelectorUiState.attempts.map { card ->
                                 card.copy(selected = card.attemptNumber == attempt.attempt)
                             }
-                        )
+                        ),
+                        viewingAttemptText = viewingAttemptText
                     )
                 }
                 dismissAttemptSelector()
@@ -239,7 +245,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     show = true,
                     attemptCardState = currentAttempt
                 ),
-                attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState)
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
+                viewingAttemptText = null
             )
         }
     }

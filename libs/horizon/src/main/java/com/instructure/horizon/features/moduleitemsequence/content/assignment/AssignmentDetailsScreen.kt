@@ -46,6 +46,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -156,14 +157,25 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
             Column(
                 modifier = Modifier
                     .fillMaxSize()
-                    .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState)
             ) {
+                if (uiState.viewingAttemptText != null) {
+                    Text(
+                        uiState.viewingAttemptText.uppercase(),
+                        style = HorizonTypography.p2,
+                        color = HorizonColors.Surface.institution(),
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = HorizonColors.Surface.pagePrimary())
+                            .padding(vertical = 8.dp)
+                    )
+                }
                 HorizonSpace(SpaceSize.SPACE_24)
                 Text(
                     stringResource(R.string.assignmentDetails_instructions),
                     style = HorizonTypography.h3,
-                    modifier = Modifier.padding(horizontal = 8.dp)
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
                 HorizonSpace(SpaceSize.SPACE_8)
                 ComposeCanvasWebViewWrapper(
@@ -178,7 +190,8 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
-                    )
+                    ),
+                    modifier = Modifier.padding(16.dp)
                 )
                 if (uiState.ltiUrl.isNotEmpty()) {
                     HorizonSpace(SpaceSize.SPACE_24)
@@ -186,7 +199,7 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                         uiState.ltiUrl,
                         modifier = modifier
                             .height(400.dp)
-                            .padding(horizontal = 16.dp),
+                            .padding(horizontal = 24.dp),
                         embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                             shouldLaunchInternalWebViewFragment = { _ -> true },
                             launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
@@ -204,7 +217,7 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                 }
                 HorizonSpace(SpaceSize.SPACE_40)
                 if (uiState.showSubmissionDetails) {
-                    SubmissionDetailsContent(uiState.submissionDetailsUiState)
+                    SubmissionDetailsContent(uiState.submissionDetailsUiState, modifier = Modifier.padding(24.dp))
                 }
                 if (uiState.showAddSubmission) {
                     val addSubmissionViewModel = hiltViewModel<AddSubmissionViewModel>()
@@ -217,7 +230,12 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                             addSubmissionViewModel.updateAssignment(it)
                         }
                     }
-                    AddSubmissionContent(addSubmissionUiState, snackbarHostState = snackbarHostState, onRceFocused = { rceFocused = true })
+                    AddSubmissionContent(
+                        addSubmissionUiState,
+                        snackbarHostState = snackbarHostState,
+                        onRceFocused = { rceFocused = true },
+                        modifier = Modifier.padding(16.dp)
+                    )
                 }
                 HorizonSpace(SpaceSize.SPACE_48)
             }
@@ -226,16 +244,18 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
 }
 
 @Composable
-private fun ColumnScope.SubmissionDetailsContent(uiState: SubmissionDetailsUiState, modifier: Modifier = Modifier) {
-    SubmissionContent(uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt }
-        ?: uiState.submissions.first(), modifier = modifier)
-    HorizonSpace(SpaceSize.SPACE_40)
-    Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-        Button(
-            label = stringResource(R.string.assignmentDetails_newAttempt),
-            color = ButtonColor.Institution,
-            onClick = uiState.onNewAttemptClick
-        )
+private fun SubmissionDetailsContent(uiState: SubmissionDetailsUiState, modifier: Modifier = Modifier) {
+    Column(modifier = modifier) {
+        SubmissionContent(uiState.submissions.find { it.submissionAttempt == uiState.currentSubmissionAttempt }
+            ?: uiState.submissions.first())
+        HorizonSpace(SpaceSize.SPACE_40)
+        Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
+            Button(
+                label = stringResource(R.string.assignmentDetails_newAttempt),
+                color = ButtonColor.Institution,
+                onClick = uiState.onNewAttemptClick
+            )
+        }
     }
 }
 
