@@ -496,11 +496,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun onAssignmentToolsClicked() {
-        _uiState.update { it.copy(openAssignmentTools = true) }
+        currentModuleItem?.contentId?.let { contentId ->
+            _uiState.update { it.copy(showAssignmentToolsForId = contentId) }
+        }
     }
 
     private fun assignmentToolsOpened() {
-        _uiState.update { it.copy(openAssignmentTools = false) }
+        _uiState.update { it.copy(showAssignmentToolsForId = -1L) }
     }
 
     private fun updateShowAiAssist(show: Boolean) {

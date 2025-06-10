@@ -35,6 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.text.NumberFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -52,7 +53,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         MutableStateFlow(
             AssignmentDetailsUiState(
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
-                toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
+                toolsBottomSheetUiState = ToolsBottomSheetUiState(
+                    onDismiss = ::dismissToolsBottomSheet,
+                    onAttemptsClick = ::openAttemptSelector
+                ),
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
                 submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed)
@@ -74,13 +78,17 @@ class AssignmentDetailsViewModel @Inject constructor(
             val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
             _assignmentFlow.value = assignment
             val lastActualSubmission = assignment.lastActualSubmission
+            val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
             val submissions = if (lastActualSubmission != null) {
-                mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+                mapSubmissions(attempts)
             } else {
                 emptyList()
             }
             val initialAttempt = lastActualSubmission?.attempt ?: -1L
             val description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty())
+
+            val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
+            val showAttemptSelector = assignment.allowedAttempts != 1L
 
             _uiState.update {
                 it.copy(
@@ -93,13 +101,40 @@ class AssignmentDetailsViewModel @Inject constructor(
                     ),
                     showSubmissionDetails = lastActualSubmission != null,
                     showAddSubmission = lastActualSubmission == null,
-                    onSubmissionSuccess = ::updateAssignment
+                    onSubmissionSuccess = ::updateAssignment,
+                    attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
+                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector)
                 )
             }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         }
     }
+
+    private fun createAttemptCardsState(
+        attempts: List<Submission>,
+        assignment: Assignment,
+        initialAttempt: Long
+    ) = attempts
+        .filter { it.workflowState != "unsubmitted" }
+        .sortedByDescending { it.attempt }
+        .map { attempt ->
+            createAttemptCard(attempt, assignment.pointsPossible, selected = attempt.attempt == initialAttempt, onClick = {
+                _uiState.update {
+                    it.copy(
+                        submissionDetailsUiState = it.submissionDetailsUiState.copy(
+                            currentSubmissionAttempt = attempt.attempt
+                        ),
+                        attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                            attempts = it.attemptSelectorUiState.attempts.map { card ->
+                                card.copy(selected = card.attemptNumber == attempt.attempt)
+                            }
+                        )
+                    )
+                }
+                dismissAttemptSelector()
+            })
+        }
 
     private fun mapSubmissions(submissions: List<Submission>): List<SubmissionUiState> {
         return submissions.mapNotNull {
@@ -178,16 +213,19 @@ class AssignmentDetailsViewModel @Inject constructor(
         val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
         _assignmentFlow.value = assignment
         val lastActualSubmission = assignment.lastActualSubmission
+        val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
         val submissions = if (lastActualSubmission != null) {
-            mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+            mapSubmissions(attempts)
         } else {
             emptyList()
         }
         val initialAttempt = lastActualSubmission?.attempt ?: -1L
 
         val currentAttempt = lastActualSubmission?.let {
-            createAttemptCard(it)
+            createAttemptCard(it, assignment.pointsPossible)
         }
+
+        val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
 
         _uiState.update {
             it.copy(
@@ -200,7 +238,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
                     show = true,
                     attemptCardState = currentAttempt
-                )
+                ),
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState)
             )
         }
     }
@@ -215,10 +254,57 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun createAttemptCard(submission: Submission): AttemptCardState {
+    private fun createAttemptCard(
+        submission: Submission,
+        possibleScore: Double,
+        selected: Boolean = false,
+        onClick: (() -> Unit)? = null
+    ): AttemptCardState {
+        val score = if (submission.isGraded) {
+            val formattedScore = formatScore(submission.score)
+            val formattedPossibleScore = formatScore(possibleScore)
+            context.getString(R.string.attemptCard_score, formattedScore, formattedPossibleScore)
+        } else {
+            null
+        }
         return AttemptCardState(
+            attemptNumber = submission.attempt,
             attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
-            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty()
+            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty(),
+            score = score,
+            selected = selected,
+            onClick = onClick
         )
+    }
+
+    private fun openAttemptSelector() {
+        _uiState.update {
+            it.copy(
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                    show = true,
+                    onDismiss = ::dismissAttemptSelector
+                ),
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
+            )
+        }
+    }
+
+    private fun dismissAttemptSelector() {
+        _uiState.update {
+            it.copy(
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                    show = false
+                )
+            )
+        }
+    }
+
+    private fun formatScore(value: Double): String {
+        val formatter = NumberFormat.getNumberInstance().apply {
+            maximumFractionDigits = 2
+            minimumFractionDigits = 0
+            isGroupingUsed = false
+        }
+        return formatter.format(value)
     }
 }

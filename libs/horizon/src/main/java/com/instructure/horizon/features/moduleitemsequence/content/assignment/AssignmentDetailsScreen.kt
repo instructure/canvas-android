@@ -56,6 +56,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
@@ -94,6 +95,10 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         }
     }
 
+    if (uiState.attemptSelectorUiState.show) {
+        AttemptSelectorBottomSheet(uiState.attemptSelectorUiState)
+    }
+
     if (uiState.submissionConfirmationUiState.show) {
         Modal(
             dialogState = ModalDialogState(
@@ -115,18 +120,22 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
     if (uiState.toolsBottomSheetUiState.show) {
         ActionBottomSheet(
             title = stringResource(R.string.assignmentDetails_tools),
-            actions = listOf(
-                BottomSheetActionState(
-                    stringResource(R.string.assignmentDetails_attemptHistory),
-                    R.drawable.history,
-                    onClick = uiState.toolsBottomSheetUiState.onAttemptsClick
-                ),
-                BottomSheetActionState(
-                    stringResource(R.string.assignmentDetails_comments),
-                    R.drawable.chat,
-                    onClick = uiState.toolsBottomSheetUiState.onCommentsClick
-                ),
-            ),
+            actions = buildList {
+                if (uiState.toolsBottomSheetUiState.showAttemptSelector) add(
+                    BottomSheetActionState(
+                        stringResource(R.string.assignmentDetails_attemptHistory),
+                        R.drawable.history,
+                        onClick = uiState.toolsBottomSheetUiState.onAttemptsClick
+                    )
+                )
+                add(
+                    BottomSheetActionState(
+                        stringResource(R.string.assignmentDetails_comments),
+                        R.drawable.chat,
+                        onClick = uiState.toolsBottomSheetUiState.onCommentsClick
+                    )
+                )
+            },
             sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded, skipHiddenState = false),
             onDismiss = uiState.toolsBottomSheetUiState.onDismiss
         )
