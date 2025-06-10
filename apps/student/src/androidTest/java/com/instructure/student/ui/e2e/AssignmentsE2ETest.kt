@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import android.util.Log
+import android.view.KeyEvent
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
@@ -80,6 +81,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val course = data.coursesList[0]
         val futureDueDate = 2.days.fromNow
         val pastDueDate = 2.days.ago
+        val futureDate = 1.days.fromNow
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = futureDueDate.iso8601, pointsPossible = 15.0, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
@@ -162,7 +164,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the reminder has been picked up and displayed on the Assignment Details Page.")
         reminderPage.assertReminderDisplayedWithText(reminderDateOneDay.time.toFormattedString())
 
-        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder and select '1 Day Before' again with custom date and time.")
         reminderPage.clickAddReminder()
 
         Log.d(STEP_TAG, "Select '1 Day Before' again.")
@@ -175,8 +177,17 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         futureDueDate.apply { add(Calendar.DAY_OF_MONTH, 1) }
 
+        Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder and select the custom reminder option and select date and time.")
+        reminderPage.clickAddReminder()
+        reminderPage.clickCustomReminderOption()
+        reminderPage.selectDate(futureDate)
+        reminderPage.selectCustomTime(KeyEvent.KEYCODE_0, KeyEvent.KEYCODE_0)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Invalid time' error is shown when we typed '0' hour and '0' minutes for the custom reminder.")
+        reminderPage.assertInvalidTimeShown()
+
         Log.d(STEP_TAG, "Navigate back to Assignment List Page.")
-        Espresso.pressBack()
+        ViewUtils.pressBackButton(3)
 
         Log.d(STEP_TAG, "Click on assignment '${alreadyPastAssignment.name}'.")
         assignmentListPage.clickAssignment(alreadyPastAssignment)

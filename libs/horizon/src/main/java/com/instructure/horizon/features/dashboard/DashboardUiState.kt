@@ -21,7 +21,6 @@ import java.util.Date
 
 data class DashboardUiState(
     val logoUrl: String = "",
-    val onNotebookClick: () -> Unit = {},
     val onInboxClick: () -> Unit = {},
     val coursesUiState: List<DashboardCourseUiState> = emptyList(),
     val loadingState: LoadingState = LoadingState(),

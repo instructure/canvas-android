@@ -540,7 +540,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxComposeMessagePage.assertSubjectText(expectedSubjectAssignment)
 
         Log.d(STEP_TAG, "Navigate back to course details.")
-        inboxComposeMessagePage.pressBackButton()
+        inboxComposeMessagePage.clickOnCloseButton()
         Espresso.pressBack()
 
         val expectedSubjectGrades = "Regarding: ${student.shortName}, Grades"
@@ -551,7 +551,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxComposeMessagePage.assertSubjectText(expectedSubjectGrades)
 
         Log.d(STEP_TAG, "Navigate back to course details and select 'SYLLABUS' tab.")
-        inboxComposeMessagePage.pressBackButton()
+        inboxComposeMessagePage.clickOnCloseButton()
         courseDetailsPage.selectTab("SYLLABUS")
 
         val expectedSubjectSyllabus = "Regarding: ${student.shortName}, Syllabus"
@@ -562,7 +562,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxComposeMessagePage.assertSubjectText(expectedSubjectSyllabus)
 
         Log.d(STEP_TAG, "Navigate back to course details and select 'SUMMARY' tab.")
-        inboxComposeMessagePage.pressBackButton()
+        inboxComposeMessagePage.clickOnCloseButton()
         courseDetailsPage.selectTab("SUMMARY")
 
         val expectedSubjectSummary = "Regarding: ${student.shortName}, Summary"
@@ -573,7 +573,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxComposeMessagePage.assertSubjectText(expectedSubjectSummary)
 
         Log.d(STEP_TAG, "Navigate back to course list.")
-        inboxComposeMessagePage.pressBackButton()
+        inboxComposeMessagePage.clickOnCloseButton()
         Espresso.pressBack()
 
         Log.d(STEP_TAG, " Select a '${courseWithFrontPage.name}' course (with 'Front Page' as home page) and select 'FRONT PAGE' tab.")
@@ -588,7 +588,7 @@ class InboxE2ETest: ParentComposeTest() {
         inboxComposeMessagePage.assertSubjectText(expectedSubjectFrontPage)
 
         Log.d(STEP_TAG, "Navigate to Calendar and click on '${testEvent.title}' event.")
-        inboxComposeMessagePage.pressBackButton()
+        inboxComposeMessagePage.clickOnCloseButton()
         Espresso.pressBack()
         dashboardPage.clickCalendarBottomMenu()
         calendarScreenPage.clickOnItem(testEvent.title.orEmpty())

@@ -291,7 +291,7 @@
     <string name="Todo">Tehtävä</string>
     <string name="todoFilter">Suodata kursseja</string>
     <string name="filterByEllipsis">Suodatustapa...</string>
-    <string name="favoriteCoursesLabel">Suosikiksi merkitys kurssit</string>
+    <string name="favoritedCoursesLabel">Suosikiksi merkitys kurssit</string>
     <string name="Event">Tapahtuma</string>
     <string name="eventSuccessfulDeletion">Tapahtuman poisto onnistui</string>
     <string name="timeIconDescription">Ajan kuvake</string>
@@ -1776,6 +1776,7 @@
     <string name="screenTitleHelp">Ohje</string>
     <string name="screenTitleManageStudents">Hallitse opiskelijoita</string>
     <string name="screenTitleSettings">Asetukset</string>
+    <string name="navigationDrawerSwitchUsers">Vaihda käyttäjiä</string>
     <string name="navigationDrawerLogOut">Kirjaudu ulos</string>
     <string name="noStudentsError">Ei opiskelijoita</string>
     <string name="noStudentsErrorDescription">Et tarkkaile yhtään opiskelijaa.</string>
@@ -2004,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Allekirjoitus</string>
     <string name="inboxSignatureTextfieldHeader">Allekirjoitusteksti</string>
     <string name="due_dateTime">Määräpäivä: %1$s, %2$s</string>
+    <string name="noDueDate">Ei määräpäivää</string>
+    <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
+    <string name="needsGradingCount">%1$s täytyy arvostella</string>
+    <string name="assignmentListTitle">Tehtäväluettelo</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d piste</item>
+        <item quantity="other">%d pistettä</item>
+    </plurals>
+    <string name="noAssignments">Ei tehtäviä</string>
+    <string name="assignmentGroup">Tehtäväryhmä</string>
+    <string name="assignmentType">Tehtävätyyppi</string>
+    <string name="dueDate">Määräpäivä</string>
+    <string name="needsGrading">Täytyy arvioida</string>
+    <string name="published">Julkaistu</string>
+    <string name="unpublished">Julkaisematon</string>
+    <string name="notYetSubmitted">Ei vielä lähetetty</string>
+    <string name="toBeGraded">Arvosana annettava</string>
+    <string name="graded">Arvioitu</string>
+    <string name="other">Muu</string>
+    <string name="a11y_filterAssignments">Suodata tehtäviä</string>
+    <string name="assignmentFilter">Tehtäväsuodatin</string>
+    <string name="groupedBy">Ryhmittelyperuste</string>
+    <string name="gradingPeriod">Arvosanojen antojakso</string>
+    <string name="gradingPeriodHeading">Arvosanojen antojakso</string>
+    <string name="gradePreferences">Arvosanojen asetukset</string>
+    <string name="allAssignments">Kaikki tehtävät</string>
+    <string name="statusFilter">Tilan suodatin</string>
     <string name="a11y_contentDescription_filter">Suodatin</string>
     <string name="a11y_contentDescription_postPolicy">Lähetä käytäntö</string>
     <string name="late">Myöhään</string>
@@ -2012,4 +2040,12 @@
     <string name="submissionFilter">Tehtäväpalautuksen suodatin</string>
     <string name="submissionMessageSubject">%1$s kohteessa %2$s</string>
     <string name="all">Kaikki</string>
+    <string name="loginRequired">Kirjautumistunnus on pakollinen</string>
+    <string name="loginRequiredMessage">Sinun on kirjauduttava sisään uudelleen laitoksesi suojauskäytäntöjen vuoksi. Kun olet kirjautunut sisään, voit jatkaa työskentelyä saumattomasti.</string>
+    <string name="login">Sisäänkirjautuminen</string>
+    <string name="logout">Kirjaudu ulos</string>
+    <string name="loginRefreshSameUserError">Sinun täytyy kirjautua sisään samana käyttäjänä.</string>
+    <string name="errorLoadingAssignments">Palautusten lataamisen yhteydessä tapahtui virhe.</string>
+    <string name="a11y_searchAssignments">Hae tehtäviä</string>
+    <string name="dueAssignmentListItem">Määräpäivä %1$s</string>
 </resources>

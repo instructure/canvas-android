@@ -55,7 +55,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
-    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
+    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetId
 
     private val _uiState =
         MutableStateFlow(
@@ -371,7 +371,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         } catch {
             // TODO Handle error
             _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false, errorSnackbar = "Failed to reload items"))
+                it.copy(loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = "Failed to reload items"))
             }
         }
     }

@@ -38,7 +38,7 @@ import androidx.glance.action.clickable
 import androidx.glance.appwidget.GlanceAppWidget
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import androidx.glance.appwidget.SizeMode
-import androidx.glance.appwidget.action.actionStartActivity
+import androidx.glance.appwidget.action.actionRunCallback
 import androidx.glance.appwidget.provideContent
 import androidx.glance.background
 import androidx.glance.currentState
@@ -60,11 +60,13 @@ import androidx.glance.text.FontWeight
 import androidx.glance.text.Text
 import androidx.glance.text.TextAlign
 import androidx.glance.unit.ColorProvider
+import com.instructure.canvasapi2.utils.AnalyticsEventConstants
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.fromJson
 import com.instructure.student.activity.InterwebsToApplication
 import com.instructure.student.activity.LoginActivity
+import com.instructure.student.widget.LoggingStartActivityAction
 import com.instructure.student.widget.glance.Loading
 import com.instructure.student.widget.glance.WidgetColors
 import com.instructure.student.widget.glance.WidgetState
@@ -145,10 +147,13 @@ class SingleGradeWidget : GlanceAppWidget() {
                     .fillMaxSize()
                     .background(WidgetColors.backgroundLightest)
                     .clickable(
-                        actionStartActivity(
-                            InterwebsToApplication.createIntent(
-                                ContextKeeper.appContext,
-                                Uri.parse(it.url)
+                        actionRunCallback<LoggingStartActivityAction>(
+                            LoggingStartActivityAction.createActionParams(
+                                InterwebsToApplication.createIntent(
+                                    ContextKeeper.appContext,
+                                    Uri.parse(it.url)
+                                ),
+                                AnalyticsEventConstants.WIDGET_SINGLE_GRADE_OPEN_ITEM_ACTION
                             )
                         )
                     )
@@ -215,7 +220,7 @@ class SingleGradeWidget : GlanceAppWidget() {
     private fun WideContent(courseItem: WidgetCourseItem) {
         Column(
             modifier = GlanceModifier.fillMaxSize()
-                .padding(top = 12.dp, bottom = 18.dp, start = 8.dp, end = 8.dp),
+                .padding(vertical = 12.dp, horizontal = 8.dp),
             horizontalAlignment = Alignment.Horizontal.Start
         ) {
             Row(
@@ -235,9 +240,9 @@ class SingleGradeWidget : GlanceAppWidget() {
                     )
                 )
             }
-            Spacer(modifier = GlanceModifier.defaultWeight())
+            Spacer(modifier = GlanceModifier.height(4.dp))
             Text(
-                modifier = GlanceModifier,
+                modifier = GlanceModifier.defaultWeight(),
                 text = courseItem.name,
                 style = WidgetTextStyles.mediumDarkest.copy(
                     color = androidx.glance.color.ColorProvider(
@@ -261,8 +266,11 @@ class SingleGradeWidget : GlanceAppWidget() {
         Column(
             modifier = GlanceModifier
                 .fillMaxSize().clickable(
-                    actionStartActivity(
-                        Intent(ContextKeeper.appContext, LoginActivity::class.java)
+                    actionRunCallback<LoggingStartActivityAction>(
+                        LoggingStartActivityAction.createActionParams(
+                            Intent(ContextKeeper.appContext, LoginActivity::class.java),
+                            AnalyticsEventConstants.WIDGET_SINGLE_GRADE_OPEN_APP_ACTION
+                        )
                     )
                 )
                 .padding(vertical = 16.dp, horizontal = 16.dp),
@@ -305,8 +313,11 @@ class SingleGradeWidget : GlanceAppWidget() {
             modifier = GlanceModifier
                 .fillMaxSize()
                 .clickable(
-                    actionStartActivity(
-                        getConfigurationIntent(glanceId)
+                    actionRunCallback<LoggingStartActivityAction>(
+                        LoggingStartActivityAction.createActionParams(
+                            getConfigurationIntent(glanceId),
+                            AnalyticsEventConstants.WIDGET_GRADES_OPEN_APP_ACTION
+                        )
                     )
                 )
                 .padding(vertical = 16.dp, horizontal = 16.dp),

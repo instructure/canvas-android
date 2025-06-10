@@ -130,7 +130,9 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             iconRes = R.drawable.menu_book_notebook,
-            onClick = uiState.onNotebookClick,
+            onClick = {
+                mainNavController.navigate(MainNavigationRoute.Notebook.route)
+            },
             color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
         )
