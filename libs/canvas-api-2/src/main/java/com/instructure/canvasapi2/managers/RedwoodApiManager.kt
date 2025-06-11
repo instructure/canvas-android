@@ -17,6 +17,8 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import com.instructure.redwood.CreateNoteMutation
@@ -110,6 +112,11 @@ class RedwoodApiManager @Inject constructor(
         notebookType: String?,
         highlightData: NoteHighlightedData? = null
     ) {
+        val gson = Gson()
+        val jsonTree = gson.toJsonTree(highlightData)
+        val mapType = object : TypeToken<Map<String, Any>>() {}.type
+        val payload: Map<String, Any> = gson.fromJson(jsonTree, mapType)
+
         val reaction = if (notebookType == null) {
             Optional.absent()
         } else {
@@ -122,7 +129,7 @@ class RedwoodApiManager @Inject constructor(
                 objectType = objectType,
                 userText = Optional.presentIfNotNull(userText),
                 reaction = reaction,
-                highlightData = Optional.presentIfNotNull(highlightData)
+                highlightData = Optional.presentIfNotNull(payload)
             )
         )
 

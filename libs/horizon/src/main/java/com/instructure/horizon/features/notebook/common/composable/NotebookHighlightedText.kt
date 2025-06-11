@@ -56,8 +56,8 @@ fun NotebookHighlightedText(
                 background(lineColor!!.copy(alpha = 0.2f))
             }
             .drawWithContent {
+                drawContent()
                 if (lineColor != null) {
-                    drawContent()
                     val strokeWidth = 1.dp.toPx()
                     val lineHeight = size.height / lineCount
                     for (i in 1..lineCount) {
@@ -92,6 +92,16 @@ private fun NotebookHighlightedTextConfusingPreview() {
     NotebookHighlightedText(
         text = "This is a confusing note",
         type = NotebookType.Confusing
+    )
+}
+
+@Composable
+@Preview
+private fun NotebookHighlightedTextNoLabelPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    NotebookHighlightedText(
+        text = "This is a not selected note",
+        type = null
     )
 }
 

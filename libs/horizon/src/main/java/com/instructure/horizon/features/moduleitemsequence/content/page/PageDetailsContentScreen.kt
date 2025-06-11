@@ -29,11 +29,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
+import com.instructure.horizon.features.notebook.common.webview.NotesCallback
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
@@ -45,6 +48,7 @@ import com.instructure.pandautils.views.JSInterface
 fun PageDetailsContentScreen(
     uiState: PageDetailsUiState,
     scrollState: ScrollState,
+    mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current.getActivityOrNull()
@@ -82,6 +86,23 @@ fun PageDetailsContentScreen(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
                     ),
+                    notesCallback = NotesCallback(
+                        onNoteSelected = {},
+                        onNoteAdded = { selectedText, startContainer, startOffset, endContainer, endOffset ->
+                            mainNavController.navigate(
+                                MainNavigationRoute.AddNotebook(
+                                    courseId = uiState.courseId.toString(),
+                                    objectType = "Page",
+                                    objectId = uiState.pageId.toString(),
+                                    highlightedTextStartOffset = startOffset,
+                                    highlightedTextEndOffset = endOffset,
+                                    highlightedTextStartContainer = startContainer,
+                                    highlightedTextEndContainer = endContainer,
+                                    highlightedText = selectedText
+                                )
+                            )
+                        }
+                    )
                 )
                 HorizonSpace(SpaceSize.SPACE_48)
             }

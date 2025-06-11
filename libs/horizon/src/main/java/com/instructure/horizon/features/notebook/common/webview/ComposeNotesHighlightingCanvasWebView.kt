@@ -25,6 +25,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
@@ -46,6 +47,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 fun ComposeNotesHighlightingCanvasWebView(
     content: String,
     notes: List<Note>,
+    notesCallback: NotesCallback,
     modifier: Modifier = Modifier,
     contentType: String = "text/html",
     useInAppFormatting: Boolean = true,
@@ -53,16 +55,23 @@ fun ComposeNotesHighlightingCanvasWebView(
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks? = ComposeWebViewCallbacks(),
-    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
+    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null
 ) {
     val webViewState = rememberSaveable { bundleOf() }
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
+
+    var selectedText by remember { mutableStateOf("") }
+    var selectedTextStartContainer by remember { mutableStateOf("") }
+    var selectedTextStartOffset by remember { mutableStateOf(0) }
+    var selectedTextEndContainer by remember { mutableStateOf("") }
+    var selectedTextEndOffset by remember { mutableStateOf(0) }
+
     val menuItems by remember {
         mutableStateOf(
             listOf(
                 ActionMenuItem(1, "Copy", {}),
-                ActionMenuItem(2, "Add Note", {})
+                ActionMenuItem(2, "Add Note", { notesCallback.onNoteAdded(selectedText, selectedTextStartContainer, selectedTextStartOffset, selectedTextEndContainer, selectedTextEndOffset) })
             )
         )
     }
@@ -82,7 +91,14 @@ fun ComposeNotesHighlightingCanvasWebView(
                                 webViewCallbacks.onPageFinished(webView, url)
 
                                 webView.addTextSelectionInterface(
-                                    onTextSelect = {text, startContainer, startOffset, endContainer, endOffset -> Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset") },
+                                    onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
+                                        Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset")
+                                        selectedText = text
+                                        selectedTextStartContainer = startContainer
+                                        selectedTextStartOffset = startOffset
+                                        selectedTextEndContainer = endContainer
+                                        selectedTextEndOffset = endOffset
+                                    },
                                     onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") },
                                     onSelectionPositionChange = { left, top, right, bottom ->
                                         Log.d("PageDetailsContentScreen", "Selection position changed: ($left, $top, $right, $bottom)")
@@ -117,6 +133,11 @@ fun ComposeNotesHighlightingCanvasWebView(
                     webView.addTextSelectionInterface(
                         onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
                             Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset")
+                            selectedText = text
+                            selectedTextStartContainer = startContainer
+                            selectedTextStartOffset = startOffset
+                            selectedTextEndContainer = endContainer
+                            selectedTextEndOffset = endOffset
                         },
                         onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") },
                         onSelectionPositionChange = { left, top, right, bottom ->

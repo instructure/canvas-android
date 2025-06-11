@@ -179,7 +179,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 item.moduleDetails?.lockExplanation ?: context.getString(R.string.modulePager_locked)
             )
 
-            item.type == Type.Page.name -> ModuleItemContent.Page(courseId, item.pageUrl.orEmpty())
+            item.type == Type.Page.name -> ModuleItemContent.Page(courseId, item.pageUrl.orEmpty(), item.contentId)
             item.type == Type.Assignment.name -> {
                 if (item.quizLti) {
                     ModuleItemContent.Assessment(courseId, item.contentId)

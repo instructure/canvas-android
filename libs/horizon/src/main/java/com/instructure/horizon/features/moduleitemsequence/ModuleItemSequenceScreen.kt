@@ -120,7 +120,7 @@ import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
 
 @Composable
-fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleItemSequenceUiState) {
+fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
     if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
@@ -140,12 +140,12 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
                     aiContext = uiState.aiContext,
-                    mainNavController = navController,
+                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
-            ModuleItemSequenceContent(uiState = uiState, navController = navController, onBackPressed = {
-                navController.popBackStack()
+            ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
+                mainNavController.popBackStack()
             })
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
             if (markAsDoneState != null && !uiState.currentItem.isLoading) {
@@ -201,7 +201,7 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
-    navController: NavHostController,
+    mainNavController: NavHostController,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -244,7 +244,7 @@ private fun ModuleItemSequenceContent(
         ) {
             if (uiState.currentPosition != -1) {
                 val homeEntry =
-                    remember(navController.currentBackStackEntry) { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
+                    remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
                 LaunchedEffect(Unit) {
                     homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
                 }
@@ -265,6 +265,7 @@ private fun ModuleItemSequenceContent(
                     ModuleItemContentScreen(
                         moduleItemUiState,
                         scrollState = contentScrollState,
+                        mainNavController,
                         uiState.openAssignmentTools,
                         uiState.assignmentToolsOpened,
                         uiState.updateAiContextString
@@ -360,6 +361,7 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
+    mainNavController: NavHostController,
     openAssignmentTools: Boolean,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (String) -> Unit,
@@ -403,14 +405,16 @@ private fun ModuleItemContentScreen(
             composable(
                 route = ModuleItemContent.Page.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                    navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType }
+                    navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType },
+                    navArgument(ModuleItemContent.Page.PAGE_ID) { type = NavType.LongType }
                 )) {
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.pageHtmlContent.orEmpty())
                 PageDetailsContentScreen(
                     uiState = uiState,
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    mainNavController = mainNavController
                 )
             }
             composable(
@@ -551,7 +555,7 @@ private class CollapsingAppBarNestedScrollConnection(
 private fun ModuleItemSequenceScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     ModuleItemSequenceScreen(
-        navController = rememberNavController(),
+        mainNavController = rememberNavController(),
         uiState = ModuleItemSequenceUiState(
             items = listOf(
                 ModuleItemUiState(

@@ -67,13 +67,14 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         }
     }
 
-    data class Page(val courseId: Long, val pageUrl: String) :
+    data class Page(val courseId: Long, val pageUrl: String, val pageId: Long):
         ModuleItemContent(
-            "courses/$courseId/pages/$pageUrl"
+            "courses/$courseId/pages/$pageId/$pageUrl"
         ) {
             companion object {
                 const val PAGE_URL = "pageUrl"
-                const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_URL}}"
+                const val PAGE_ID = "pageId"
+                const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_ID}}/{${PAGE_URL}}"
             }
         }
 

@@ -24,5 +24,7 @@ data class PageDetailsUiState(
     val ltiButtonPressed: ((String) -> Unit)? = null,
     val urlToOpen: String? = null,
     val onUrlOpened: () -> Unit = {},
-    val notes: List<Note> = emptyList()
+    val notes: List<Note> = emptyList(),
+    val courseId: Long = -1L,
+    val pageId: Long = -1L,
 )
