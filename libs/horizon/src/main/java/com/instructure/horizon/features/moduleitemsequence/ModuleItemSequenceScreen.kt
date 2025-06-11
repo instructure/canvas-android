@@ -406,7 +406,6 @@ private fun ModuleItemContentScreen(
                 route = ModuleItemContent.Page.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
                     navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType },
-                    navArgument(ModuleItemContent.Page.PAGE_ID) { type = NavType.LongType }
                 )) {
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()

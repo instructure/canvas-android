@@ -39,9 +39,8 @@ class PageDetailsViewModel @Inject constructor(
 
     private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
     private val pageUrl: String = savedStateHandle[ModuleItemContent.Page.PAGE_URL] ?: ""
-    private val pageId: Long = savedStateHandle[ModuleItemContent.Page.PAGE_ID] ?: -1L
 
-    private val _uiState = MutableStateFlow(PageDetailsUiState(ltiButtonPressed = ::ltiButtonPressed, onUrlOpened = ::onUrlOpened, courseId = courseId, pageId = pageId))
+    private val _uiState = MutableStateFlow(PageDetailsUiState(ltiButtonPressed = ::ltiButtonPressed, onUrlOpened = ::onUrlOpened, courseId = courseId))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -60,7 +59,8 @@ class PageDetailsViewModel @Inject constructor(
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
                     pageHtmlContent = html,
-                    notes = notes
+                    notes = notes,
+                    pageId = pageDetails.id,
                 )
             }
             _uiState.update {

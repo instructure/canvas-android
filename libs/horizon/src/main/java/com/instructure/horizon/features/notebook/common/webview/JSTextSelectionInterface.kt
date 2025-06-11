@@ -96,7 +96,7 @@ class JSTextSelectionInterface(
                     node = parent;
                 }
 
-                return parts.join('/');
+                return '/' + parts.join('/');
             }
             function getFirstTextNode(node) {
                 if (node.nodeType === Node.TEXT_NODE) return node;
