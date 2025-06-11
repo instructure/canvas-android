@@ -41,14 +41,14 @@ fun IconButtonScreen() {
     Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(24.dp)) {
         HorizonSpace(SpaceSize.SPACE_8)
         val colors = listOf(
-            IconButtonColor.BLACK,
-            IconButtonColor.INVERSE,
-            IconButtonColor.AI,
-            IconButtonColor.WHITE_GREY_OUTLINE,
-            IconButtonColor.INVERSE_DANGER,
-            IconButtonColor.GHOST,
-            IconButtonColor.INSTITUTION,
-            IconButtonColor.BEIGE
+            IconButtonColor.Black,
+            IconButtonColor.Inverse,
+            IconButtonColor.Ai,
+            IconButtonColor.WhiteGreyOutline,
+            IconButtonColor.InverseDanger,
+            IconButtonColor.Ghost,
+            IconButtonColor.Institution,
+            IconButtonColor.Beige
         )
 
         colors.forEach {

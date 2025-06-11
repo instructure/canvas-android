@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -39,11 +40,12 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val themePrefs: ThemePrefs
 ) : ViewModel() {
 
     private val _uiState =
-        MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh, onErrorSnackbarDismiss = ::dismissSnackbar)))
+        MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh, onSnackbarDismiss = ::dismissSnackbar)))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -67,9 +69,10 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceNetwork: Boolean) {
+        _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) }
         val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
-            val coursesResult = courses.dataOrThrow.filter { it.progress != null }
+            val coursesResult = courses.dataOrThrow
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
                     mapCourse(course, forceNetwork)
@@ -175,14 +178,14 @@ class DashboardViewModel @Inject constructor(
             if (it.coursesUiState.isEmpty()) {
                 it.copy(loadingState = it.loadingState.copy(isError = true))
             } else {
-                it.copy(loadingState = it.loadingState.copy(errorSnackbar = context.getString(R.string.errorOccurred)))
+                it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.errorOccurred)))
             }
         }
     }
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(errorSnackbar = null))
+            it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
         }
     }
 }

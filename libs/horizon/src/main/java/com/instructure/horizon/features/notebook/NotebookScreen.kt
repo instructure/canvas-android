@@ -38,8 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.managers.NoteObjectType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -223,7 +221,7 @@ private fun NoteContent(
             HorizonSpace(SpaceSize.SPACE_16)
 
             NotebookHighlightedText(
-                text = note.highlightedText.selectedText,
+                text = note.highlightedText,
                 type = note.type,
             )
 
@@ -283,7 +281,7 @@ private fun NotesPager(
     ) {
         IconButton(
             iconRes = R.drawable.chevron_left,
-            color = IconButtonColor.BLACK,
+            color = IconButtonColor.Black,
             size = IconButtonSize.SMALL,
             onClick = onNavigateBack,
             enabled = canNavigateBack && !isLoading
@@ -293,7 +291,7 @@ private fun NotesPager(
 
         IconButton(
             iconRes = R.drawable.chevron_right,
-            color = IconButtonColor.BLACK,
+            color = IconButtonColor.Black,
             size = IconButtonSize.SMALL,
             onClick = onNavigateForward,
             enabled = canNavigateForward && !isLoading
@@ -315,10 +313,7 @@ private fun NotebookScreenPreview() {
                 objectId = "456",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about an assignment.",
-                highlightedText = NoteHighlightedData(
-                    "Important part of the assignment.",
-                    NoteHighlightedDataTextPosition(0, 0, "", "")
-                ),
+                highlightedText = "Important part of the assignment.",
                 updatedAt = Date(),
                 type = NotebookType.Important
             ),
@@ -328,10 +323,7 @@ private fun NotebookScreenPreview() {
                 objectId = "789",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about another assignment.",
-                highlightedText = NoteHighlightedData(
-                    "Confusing part of the assignment.",
-                    NoteHighlightedDataTextPosition(0, 0, "", "")
-                ),
+                highlightedText = "Confusing part of the assignment.",
                 updatedAt = Date(),
                 type = NotebookType.Confusing
             )

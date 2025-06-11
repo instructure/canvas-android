@@ -32,7 +32,7 @@ class NotebookRepository @Inject constructor(
     suspend fun getNotes(
         after: String? = null,
         before: String? = null,
-        itemCount: Int = 3,
+        itemCount: Int = 10,
         filterType: NotebookType? = null
     ): QueryNotesQuery.Notes {
         val filterInput = when (filterType) {

@@ -20,7 +20,7 @@ import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
 data class DashboardUiState(
-    val logoUrl: String = "https://cdn.prod.website-files.com/5f7685be6c8c113f558855d9/62c87dbd6208a1e98e89e707_Logo_Canvas_Red_Vertical%20copy.png", // TODO how to get url?
+    val logoUrl: String = "",
     val onInboxClick: () -> Unit = {},
     val coursesUiState: List<DashboardCourseUiState> = emptyList(),
     val loadingState: LoadingState = LoadingState(),

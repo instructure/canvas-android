@@ -101,7 +101,7 @@
     <string name="findMySchool">Najdi mojo šolo</string>
     <string name="loginWithQRCode">Koda QR</string>
     <string name="locateQRCode">Poiščite kodo QR</string>
-    <string name="qrCodeExplanation">Kodo QR boste našli v svojem profilu računa na spletu. Na seznamu kliknite »QR za mobilno prijavo«.</string>
+    <string name="qrCodeExplanation">Kodo QR najdete v svojem profilu na spletu pod »QR za mobilno prijavo«.</string>
     <string name="qrCodeScanningPrompt">Za prijavo v sistemu Canvas preberite kodo QR</string>
     <string name="loginWithQRCodeError">Pri prijavi je prišlo do napake. Ustvarite novo kodo QR in poskusite znova.</string>
     <string name="invalidQRCodeError">Preberite kodo QR, ustvarjeno v sistemu Canvas</string>
@@ -128,4 +128,5 @@
     <string name="weMadeChanges">Uvedli smo nekaj sprememb.</string>
     <string name="whatsNewText">Oglejte si, kaj je novega.</string>
     <string name="findAnotherSchool">Najdi drugo šolo</string>
+    <string name="qrCodeDisabledExplanation">Če je tam ni, je vaša ustanova to možnost onemogočila.</string>
 </resources>

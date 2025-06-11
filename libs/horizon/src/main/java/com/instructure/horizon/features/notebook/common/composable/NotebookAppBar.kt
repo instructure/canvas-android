@@ -23,8 +23,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -37,6 +40,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonSize
 @Composable
 fun NotebookAppBar(
     navigateBack: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -50,15 +54,27 @@ fun NotebookAppBar(
             IconButton(
                 iconRes = R.drawable.arrow_back,
                 contentDescription = stringResource(R.string.a11yNavigateBack),
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 size = IconButtonSize.SMALL,
                 elevation = HorizonElevation.level4,
                 onClick = navigateBack,
+                modifier = Modifier.padding(4.dp)
             )
         },
-        colors = TopAppBarDefaults.topAppBarColors().copy(
-            containerColor = HorizonColors.Surface.pagePrimary()
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            titleContentColor = HorizonColors.Text.title(),
+            navigationIconContentColor = HorizonColors.Icon.default()
         ),
-        modifier = Modifier.padding(horizontal = 24.dp)
+        modifier = modifier.padding(horizontal = 24.dp)
+    )
+}
+
+@Composable
+@Preview
+private fun NotebookAppBarPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    NotebookAppBar(
+        navigateBack = {}
     )
 }
