@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.notebook.common.js
+package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
@@ -29,6 +29,12 @@ class JSTextSelectionInterface(
         endOffset: Int
     ) -> Unit,
     private val onHighlightedTextClick: (String) -> Unit,
+    private val onSelectionPositionChange: (
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float
+    ) -> Unit
 ) {
     @JavascriptInterface
     fun onTextSelected(
@@ -39,6 +45,16 @@ class JSTextSelectionInterface(
         endOffset: Int,
     ) {
         onTextSelect(text, startContainer, startOffset, endContainer, endOffset)
+    }
+
+    @JavascriptInterface
+    fun onSelectedTextPositionChanged(
+        left: Float,
+        top: Float,
+        right: Float,
+        bottom: Float,
+    ) {
+        onSelectionPositionChange(left, top, right, bottom)
     }
 
     @JavascriptInterface
@@ -140,6 +156,8 @@ class JSTextSelectionInterface(
                 const startOffset = range.startOffset;
                 const endOffset = range.endOffset;
                 ${JS_INTERFACE_NAME}.onTextSelected(document.getSelection().toString(), startContainer, startOffset, endContainer, endOffset);
+                const rect = getSelection().getRangeAt(0).getBoundingClientRect();
+                ${JS_INTERFACE_NAME}.onSelectedTextPositionChanged(rect.left, rect.top, rect.right, rect.bottom);
             })})();
         """.trimIndent()
 
@@ -151,9 +169,15 @@ class JSTextSelectionInterface(
                 endContainer: String,
                 endOffset: Int
             ) -> Unit,
-            onHighlightedTextClick: (String) -> Unit
+            onHighlightedTextClick: (String) -> Unit,
+            onSelectionPositionChange: (
+                left: Float,
+                top: Float,
+                right: Float,
+                bottom: Float
+            ) -> Unit
         ) {
-            val jsInterface = JSTextSelectionInterface(onTextSelect, onHighlightedTextClick)
+            val jsInterface = JSTextSelectionInterface(onTextSelect, onHighlightedTextClick, onSelectionPositionChange)
             this.addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
 
             this.evaluateJavascript(jsCode, null)

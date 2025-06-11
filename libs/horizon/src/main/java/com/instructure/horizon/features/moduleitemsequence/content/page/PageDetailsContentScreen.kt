@@ -15,7 +15,6 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
-import android.util.Log
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -30,15 +29,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import com.instructure.horizon.features.notebook.common.js.JSTextSelectionInterface.Companion.addTextSelectionInterface
-import com.instructure.horizon.features.notebook.common.js.JSTextSelectionInterface.Companion.highlightNotes
+import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
-import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -72,33 +68,20 @@ fun PageDetailsContentScreen(
                     .padding(horizontal = 16.dp)
                     .verticalScroll(scrollState)
             ) {
-                ComposeCanvasWebViewWrapper(
+                ComposeNotesHighlightingCanvasWebView(
                     content = it,
+                    notes = uiState.notes,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
                         overrideHtmlFormatColors = HorizonColors.htmlFormatColors
                         if (uiState.ltiButtonPressed != null) {
                             addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
                         }
-                        addTextSelectionInterface(
-                            onTextSelect = {text, startContainer, startOffset, endContainer, endOffset -> Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset") },
-                            onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") }
-                        )
                     },
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
                     ),
-                    webViewCallbacks = ComposeWebViewCallbacks(
-                        onPageFinished = { webView, _ ->
-                            webView.addTextSelectionInterface(
-                                onTextSelect = {text, startContainer, startOffset, endContainer, endOffset -> Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset") },
-                                onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") }
-                            )
-
-                            webView.highlightNotes(uiState.notes)
-                        }
-                    )
                 )
                 HorizonSpace(SpaceSize.SPACE_48)
             }
