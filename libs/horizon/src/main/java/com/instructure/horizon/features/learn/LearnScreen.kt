@@ -196,7 +196,11 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
-                        3 -> LearnNotesScreen(Modifier.clip(RoundedCornerShape(cornerAnimation)))
+                        3 -> LearnNotesScreen(
+                            state.selectedCourse?.course?.id ?: -1,
+                            mainNavController,
+                            Modifier.clip(RoundedCornerShape(cornerAnimation))
+                        )
                     }
                 }
             }

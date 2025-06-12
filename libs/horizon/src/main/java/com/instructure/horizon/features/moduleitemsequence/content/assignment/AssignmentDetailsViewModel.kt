@@ -51,6 +51,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(
             AssignmentDetailsUiState(
+                assignmentId = assignmentId,
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
                 ltiButtonPressed = ::ltiButtonPressed,

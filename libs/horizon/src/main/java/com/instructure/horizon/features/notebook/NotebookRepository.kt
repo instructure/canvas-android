@@ -20,6 +20,7 @@ import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.managers.RedwoodApiManager
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.type.LearningObjectFilter
 import com.instructure.redwood.type.NoteFilterInput
 import javax.inject.Inject
 
@@ -30,13 +31,54 @@ class NotebookRepository @Inject constructor(
         after: String? = null,
         before: String? = null,
         itemCount: Int = 10,
-        filterType: NotebookType? = null
+        filterType: NotebookType? = null,
+        courseId: Long? = null,
+        objectTypeAndId: Pair<String, String>? = null
     ): QueryNotesQuery.Notes {
         val filterInput = when (filterType) {
-            NotebookType.Important -> NoteFilterInput(reactions = Optional.present(listOf(filterType.name)))
-            NotebookType.Confusing -> NoteFilterInput(reactions = Optional.present(listOf(filterType.name)))
-            null -> null
+            NotebookType.Important -> NoteFilterInput(
+                reactions = Optional.present(listOf(filterType.name)),
+                courseId = Optional.presentIfNotNull(courseId?.toString()),
+                learningObject = if (objectTypeAndId != null) {
+                    Optional.present(
+                        LearningObjectFilter(
+                            type = objectTypeAndId.first,
+                            id = objectTypeAndId.second
+                        )
+                    )
+                } else {
+                    Optional.absent()
+                }
+            )
+            NotebookType.Confusing -> NoteFilterInput(
+                reactions = Optional.present(listOf(filterType.name)),
+                courseId = Optional.presentIfNotNull(courseId?.toString()),
+                learningObject = if (objectTypeAndId != null) {
+                    Optional.present(
+                        LearningObjectFilter(
+                            type = objectTypeAndId.first,
+                            id = objectTypeAndId.second
+                        )
+                    )
+                } else {
+                    Optional.absent()
+                }
+            )
+            null -> NoteFilterInput(
+                courseId = Optional.presentIfNotNull(courseId?.toString()),
+                learningObject = if (objectTypeAndId != null) {
+                    Optional.present(
+                        LearningObjectFilter(
+                            type = objectTypeAndId.first,
+                            id = objectTypeAndId.second
+                        )
+                    )
+                } else {
+                    Optional.absent()
+                }
+            )
         }
+
         return if (before != null) {
             redwoodApiManager.getNotes(
                 lastN = itemCount,

@@ -259,6 +259,7 @@ fun AssignmentDetailsScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     AssignmentDetailsScreen(
         uiState = AssignmentDetailsUiState(
+            assignmentId = 1L,
             instructions = "This is a test",
             ltiUrl = "",
             submissionDetailsUiState = SubmissionDetailsUiState(

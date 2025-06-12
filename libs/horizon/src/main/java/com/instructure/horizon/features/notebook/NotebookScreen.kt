@@ -30,6 +30,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
@@ -67,21 +68,29 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
+    courseId: Long? = null,
+    objectFilter: Pair<String, String>? = null,
 ) {
+    LaunchedEffect(courseId, objectFilter) {
+        state.updateContent(courseId, objectFilter)
+    }
+
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
+        topBar = { if (courseId == null && objectFilter == null) NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .padding(padding),
             contentPadding = PaddingValues(24.dp)
         ) {
-            item {
-                FilterContent(
-                    state.selectedFilter,
-                    state.onFilterSelected
-                )
+            if (objectFilter == null) {
+                item {
+                    FilterContent(
+                        state.selectedFilter,
+                        state.onFilterSelected
+                    )
+                }
             }
 
             item {
@@ -330,6 +339,7 @@ private fun NotebookScreenPreview() {
                 type = NotebookType.Confusing
             )
         ),
+        updateContent = { _, _ -> }
     )
 
     NotebookScreen(

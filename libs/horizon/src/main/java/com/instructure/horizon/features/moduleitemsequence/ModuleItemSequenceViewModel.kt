@@ -60,6 +60,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val _uiState =
         MutableStateFlow(
             ModuleItemSequenceUiState(
+                courseId = courseId,
                 loadingState = LoadingState(onRefresh = ::refresh),
                 onPreviousClick = ::previousClicked,
                 onNextClick = ::nextClicked,
@@ -78,6 +79,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     )
                 ),
                 updateAiContextString = ::updateAiContext,
+                updateShowNotebook = ::updateShowNotebook,
+                updateObjectTypeAndId = ::updateNotebookObjectTypeAndId,
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -509,5 +512,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun updateAiContext(value: String) {
         _uiState.update { it.copy(aiContext = it.aiContext.copy(contextString = value)) }
+    }
+
+    private fun updateShowNotebook(show: Boolean) {
+        _uiState.update { it.copy(showNotebook = show) }
+    }
+
+    private fun updateNotebookObjectTypeAndId(value: Pair<String, String>) {
+        _uiState.update { it.copy(objectTypeAndId = value) }
     }
 }

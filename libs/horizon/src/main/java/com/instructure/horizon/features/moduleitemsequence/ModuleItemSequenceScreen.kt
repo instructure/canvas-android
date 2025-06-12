@@ -93,6 +93,7 @@ import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalT
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
+import com.instructure.horizon.features.notebook.NotebookBottomDialog
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -133,7 +134,8 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
             onNextClick = uiState.onNextClick,
             onPreviousClick = uiState.onPreviousClick,
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-            onAiAssistClick = { uiState.updateShowAiAssist(true) }
+            onAiAssistClick = { uiState.updateShowAiAssist(true) },
+            onNotebookClick = { uiState.updateShowNotebook(true) }
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
@@ -142,6 +144,14 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
                     aiContext = uiState.aiContext,
                     mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
+                )
+            }
+            if (uiState.showNotebook) {
+                NotebookBottomDialog(
+                    uiState.courseId,
+                    uiState.objectTypeAndId,
+                    mainNavController,
+                    { uiState.updateShowNotebook(false) }
                 )
             }
             ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
@@ -268,7 +278,8 @@ private fun ModuleItemSequenceContent(
                         mainNavController,
                         uiState.openAssignmentTools,
                         uiState.assignmentToolsOpened,
-                        uiState.updateAiContextString
+                        uiState.updateAiContextString,
+                        uiState.updateObjectTypeAndId
                     )
                 }
             }
@@ -365,6 +376,7 @@ private fun ModuleItemContentScreen(
     openAssignmentTools: Boolean,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (String) -> Unit,
+    updateObjectTypeAndId: (Pair<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -391,6 +403,7 @@ private fun ModuleItemContentScreen(
                 val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.instructions)
+                updateObjectTypeAndId(Pair("Assignment", uiState.assignmentId.toString()))
                 LaunchedEffect(openAssignmentTools) {
                     if (openAssignmentTools) {
                         viewModel.openAssignmentTools()
@@ -410,6 +423,7 @@ private fun ModuleItemContentScreen(
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.pageHtmlContent.orEmpty())
+                updateObjectTypeAndId(Pair("Page", uiState.pageId.toString()))
                 PageDetailsContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
@@ -483,7 +497,8 @@ private fun ModuleItemSequenceBottomBar(
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onAiAssistClick: () -> Unit = {}
+    onAiAssistClick: () -> Unit = {},
+    onNotebookClick: () -> Unit = {}
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
         Box(
@@ -513,7 +528,8 @@ private fun ModuleItemSequenceBottomBar(
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
                     color = IconButtonColor.Inverse,
-                    elevation = HorizonElevation.level4
+                    elevation = HorizonElevation.level4,
+                    onClick = onNotebookClick,
                 )
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
@@ -556,6 +572,7 @@ private fun ModuleItemSequenceScreenPreview() {
     ModuleItemSequenceScreen(
         mainNavController = rememberNavController(),
         uiState = ModuleItemSequenceUiState(
+            courseId = 1L,
             items = listOf(
                 ModuleItemUiState(
                     moduleName = "Module Name",
@@ -572,7 +589,11 @@ private fun ModuleItemSequenceScreenPreview() {
                 detailTags = listOf("XX Mins", "Due XX/XX", "X Points Possible", "Unlimited Attempts Allowed"),
                 pillText = "Pill Text",
                 moduleItemContent = ModuleItemContent.Assignment(courseId = 1, assignmentId = 1L)
-            )
+            ),
+            updateShowAiAssist = {},
+            updateShowNotebook = {},
+            updateAiContextString = {},
+            updateObjectTypeAndId = {},
         )
     )
 }

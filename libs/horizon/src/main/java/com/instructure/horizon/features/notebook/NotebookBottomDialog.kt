@@ -14,35 +14,40 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.note
+package com.instructure.horizon.features.notebook
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import com.instructure.horizon.features.notebook.NotebookScreen
-import com.instructure.horizon.features.notebook.NotebookViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnNotesScreen(
+fun NotebookBottomDialog(
     courseId: Long,
+    objectTypeAndId: Pair<String, String>,
     mainNavController: NavHostController,
-    modifier: Modifier = Modifier
+    onDismiss: () -> Unit
 ) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
+    val viewModel = hiltViewModel<NotebookViewModel>()
+    val uiState by viewModel.uiState.collectAsState()
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    ModalBottomSheet(
+        containerColor = Color.White,
+        onDismissRequest = { onDismiss() },
+        dragHandle = null,
+        sheetState = bottomSheetState
     ) {
-        val viewModel = hiltViewModel<NotebookViewModel>()
-        val uiState by viewModel.uiState.collectAsState()
         NotebookScreen(
             mainNavController,
             uiState,
-            courseId
+            courseId,
+            objectTypeAndId
         )
     }
 }

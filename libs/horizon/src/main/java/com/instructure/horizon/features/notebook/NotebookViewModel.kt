@@ -38,7 +38,10 @@ class NotebookViewModel @Inject constructor(
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
-        onFilterSelected = ::onFilterSelected
+        onFilterSelected = ::onFilterSelected,
+        updateContent = { courseId, objectTypeAndId ->
+            loadData(courseId = courseId, objectTypeAndId = objectTypeAndId)
+        }
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -48,7 +51,9 @@ class NotebookViewModel @Inject constructor(
 
     private fun loadData(
         after: String? = null,
-        before: String? = null
+        before: String? = null,
+        courseId: Long? = null,
+        objectTypeAndId: Pair<String, String>? = null
     ) {
         viewModelScope.launch {
             _uiState.update {
@@ -58,7 +63,9 @@ class NotebookViewModel @Inject constructor(
             val notesResponse = repository.getNotes(
                 after = after,
                 before = before,
-                filterType = uiState.value.selectedFilter
+                filterType = uiState.value.selectedFilter,
+                courseId = courseId,
+                objectTypeAndId = objectTypeAndId
             )
             cursorId = notesResponse.edges?.firstOrNull()?.cursor
             pageInfo = notesResponse.pageInfo
