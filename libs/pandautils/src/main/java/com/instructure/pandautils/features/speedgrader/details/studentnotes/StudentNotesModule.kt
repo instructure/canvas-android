@@ -13,16 +13,23 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.pandautils.features.speedgrader
+ */
+package com.instructure.pandautils.features.speedgrader.details.studentnotes
 
-import androidx.annotation.ColorInt
+import com.instructure.canvasapi2.apis.CourseAPI
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-data class SpeedGraderUiState(
-    val courseId: Long,
-    val assignmentId: Long,
-    val submissionIds: List<Long>,
-    val selectedItem: Int,
-    val courseName: String = "",
-    val assignmentName: String = "",
-    @ColorInt val courseColor: Int = 0
-)
+@Module
+@InstallIn(ViewModelComponent::class)
+class StudentNotesModule {
+
+    @Provides
+    fun provideStudentNotesRepository(
+        courseApi: CourseAPI.CoursesInterface
+    ): StudentNotesRepository {
+        return StudentNotesRepository(courseApi)
+    }
+}
