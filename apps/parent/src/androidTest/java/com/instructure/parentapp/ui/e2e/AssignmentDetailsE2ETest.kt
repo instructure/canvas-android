@@ -57,14 +57,14 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         val student2 = data.studentsList[1]
         val teacher = data.teachersList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(PREPARATION_TAG,"Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
+        Log.d(PREPARATION_TAG, "Submit assignment: '${testAssignment.name}' for student: '${student.name}'.")
         SubmissionsApi.seedAssignmentSubmission(course.id, student.token, testAssignment.id, submissionSeedsList = listOf(
             SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
-        Log.d(PREPARATION_TAG,"Grade submission: '${testAssignment.name}' with 13 points.")
+        Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 13 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "13")
 
         Thread.sleep(5000) // Allow the grading to propagate
@@ -72,7 +72,7 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         tokenLogin(parent)
 
-        Log.d(STEP_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
 
@@ -81,13 +81,17 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Open the student selector.")
         dashboardPage.openStudentSelector()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Add student' selector is displayed.")
         dashboardPage.assertAddStudentDisplayed()
 
         Log.d(STEP_TAG, "Select the student which has a grade for its assignment submission.")
         dashboardPage.selectStudent(student.shortName)
 
-        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the details of the course has opened.")
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment to open it's details.")
@@ -97,7 +101,8 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         assignmentDetailsPage.assertDisplayToolbarTitle()
         assignmentDetailsPage.assertDisplayToolbarSubtitle(course.name)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testAssignment.name}' assignment's title and details are displayed and the proper score (13) is displayed as well. Assert that the selected attempt is 'Attempt 1'.")
+        Log.d(ASSERTION_TAG, "Assert that the '${testAssignment.name}' assignment's title and details are displayed and the proper score (13) is displayed as well. " +
+                "Assert that the selected attempt is 'Attempt 1'.")
         assignmentDetailsPage.assertAssignmentTitle(testAssignment.name)
         assignmentDetailsPage.assertAssignmentDetails(testAssignment)
         assignmentDetailsPage.assertAssignmentGraded("13")
@@ -111,8 +116,10 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         dashboardPage.openStudentSelector()
         dashboardPage.selectStudent(student2.shortName)
 
-        Log.d(STEP_TAG, "Click on the '${course.name}' course and assert that the details of the course has opened.")
+        Log.d(STEP_TAG, "Click on the '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
+
+        Log.d(ASSERTION_TAG, "Assert that the details of the course has opened.")
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment to open it's details.")

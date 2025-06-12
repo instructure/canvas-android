@@ -1,0 +1,5 @@
+mutation UpsertDocument($input: DocumentUpsertInput!) {
+    document(input: $input) {
+        id
+    }
+}

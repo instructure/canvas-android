@@ -526,6 +526,23 @@ object UserBookmarksEndpoint : Endpoint(
 )
 
 object ObserveeEndpoint : Endpoint(
+    LongId(PathVars::studentId) to Endpoint(
+        response = {
+            DELETE {
+                val user = data.users[pathVars.userId]!!
+                val studentId = pathVars.studentId
+
+                val enrollmentToRemove = data.enrollments.values.find {
+                    it.userId == user.id && it.observedUser?.id == studentId
+                }?.id
+
+                enrollmentToRemove?.let {
+                    data.enrollments.remove(it)
+                    request.successResponse(Unit)
+                } ?: request.unauthorizedResponse()
+            }
+        }
+    ),
     response = {
         POST {
             val user = data.users[pathVars.userId]!!

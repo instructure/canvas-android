@@ -27,6 +27,7 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
+import androidx.annotation.ColorInt
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.FileProvider
 import androidx.fragment.app.Fragment
@@ -80,7 +81,13 @@ object MediaUploadUtils {
     fun chooseFromGalleryBecausePermissionsAlreadyGranted(fragment: Fragment?, activity: Activity) {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         val file = File(activity.filesDir, "/image/*")
-        intent.setDataAndType(FileProvider.getUriForFile(activity, activity.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY, file), "image/*")
+        intent.setDataAndType(
+            FileProvider.getUriForFile(
+                activity,
+                activity.applicationContext.packageName + Const.FILE_PROVIDER_AUTHORITY,
+                file
+            ), "image/*"
+        )
         fragment?.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
             ?: activity.startActivityForResult(intent, RequestCodes.PICK_IMAGE_GALLERY)
     }
@@ -178,7 +185,13 @@ object MediaUploadUtils {
         }
     }
 
-    fun uploadRceImageJob(uri: Uri, canvasContext: CanvasContext, activity: Activity, insertImageCallback: (imageUrl: String) -> Unit): WeaveCoroutine {
+    fun uploadRceImageJob(
+        uri: Uri,
+        canvasContext: CanvasContext,
+        activity: Activity,
+        @ColorInt buttonColor: Int = ThemePrefs.textButtonColor,
+        insertImageCallback: (imageUrl: String) -> Unit = {}
+    ): WeaveCoroutine {
         val isTeacher = (canvasContext as? Course)?.isTeacher == true
         val tempFile = File(activity.externalCacheDir, "tmp-rce-image")
         var progressDialog: AlertDialog? = null
@@ -186,12 +199,15 @@ object MediaUploadUtils {
         return tryWeave(false) {
             // Show progress dialog
             progressDialog = AlertDialog.Builder(activity)
-                    .setTitle(R.string.image_uploading)
-                    .setCancelable(false)
-                    .setPositiveButton(android.R.string.cancel) { dialog, _ ->
-                        cancel()
-                        dialog.dismiss()
-                    }.create()
+                .setTitle(R.string.image_uploading)
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.cancel) { dialog, _ ->
+                    cancel()
+                    dialog.dismiss()
+                }.create()
+            progressDialog?.setOnShowListener {
+                progressDialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+            }
             progressDialog?.show()
 
             val uploadedFile = inBackground {
@@ -217,7 +233,7 @@ object MediaUploadUtils {
 
             // Grab the file data so we can get the URL we need to insert into the img tag
             var file = awaitApi<FileFolder> {
-                if (isTeacher) FileFolderManager.getCourseFile(canvasContext.id, uploadedFile.id , true, it)
+                if (isTeacher) FileFolderManager.getCourseFile(canvasContext.id, uploadedFile.id, true, it)
                 else FileFolderManager.getUserFile(uploadedFile.id, true, it)
             }
 
@@ -230,18 +246,23 @@ object MediaUploadUtils {
                 file.lockDate = null
                 file.unlockDate = null
 
-                val updateFileFolder = UpdateFileFolder(file.name, file.lockDate.toApiString(),
-                    file.unlockDate.toApiString(), file.isLocked, file.isHidden)
+                val updateFileFolder = UpdateFileFolder(
+                    file.name, file.lockDate.toApiString(),
+                    file.unlockDate.toApiString(), file.isLocked, file.isHidden
+                )
 
                 // Determine if this course has the usage rights feature enabled
                 val features = awaitApi<List<String>> { FeaturesManager.getEnabledFeaturesForCourse(canvasContext.id, true, it) }
                 usageRights = features.contains("usage_rights_required")
                 if (usageRights) {
-                    val usageRightsParams: MutableMap<String, Any> = mutableMapOf(Pair("file_ids[]", file.id),
-                            Pair("usage_rights[use_justification]", FileUsageRightsJustification.PUBLIC_DOMAIN.apiString))
+                    val usageRightsParams: MutableMap<String, Any> = mutableMapOf(
+                        Pair("file_ids[]", file.id),
+                        Pair("usage_rights[use_justification]", FileUsageRightsJustification.PUBLIC_DOMAIN.apiString)
+                    )
 
                     // Update usage rights
-                    file.usageRights = awaitApi<UsageRights> { FileFolderManager.updateUsageRights(canvasContext.id, usageRightsParams, it) }
+                    file.usageRights =
+                        awaitApi<UsageRights> { FileFolderManager.updateUsageRights(canvasContext.id, usageRightsParams, it) }
                 }
 
                 // Update the file
@@ -259,11 +280,10 @@ object MediaUploadUtils {
             progressDialog?.dismiss()
             activity.runOnUiThread {
                 AlertDialog.Builder(activity)
-                        .setTitle(R.string.image_upload_error)
-                        .setPositiveButton(R.string.retry) { _, _ -> uploadRceImageJob(uri, canvasContext, activity, insertImageCallback) }
-                        .setNegativeButton(android.R.string.cancel, null)
-                        .create()
-                        .show()
+                    .setTitle(R.string.image_upload_error)
+                    .setPositiveButton(R.string.retry) { _, _ -> uploadRceImageJob(uri, canvasContext, activity, insertImageCallback = insertImageCallback) }
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .showThemed(buttonColor)
             }
         }
     }
@@ -291,7 +311,12 @@ object MediaUploadUtils {
         return imageUri
     }
 
-    fun showAltTextDialog(activity: Activity, onPositiveClick: (String) -> Unit, onNegativeClick: () -> Unit) {
+    fun showAltTextDialog(
+        activity: Activity,
+        @ColorInt buttonColor: Int = ThemePrefs.textButtonColor,
+        onPositiveClick: (String) -> Unit,
+        onNegativeClick: () -> Unit
+    ) {
         val dialogBinding = RceDialogAltTextBinding.inflate(LayoutInflater.from(activity), null, false)
         val altTextInput = dialogBinding.altText
 
@@ -315,7 +340,10 @@ object MediaUploadUtils {
             }
             .create().apply {
                 setOnShowListener {
-                    (it as? AlertDialog)?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
+                    val dialog = it as? AlertDialog
+                    dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+                    dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
+                    dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
                 }
             }
 

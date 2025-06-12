@@ -26,18 +26,17 @@ def coverageEnabled = project.hasProperty('coverage')
 
 android {
     namespace 'com.instructure.teacher'
+    compileSdk Versions.COMPILE_SDK
+
     packagingOptions {
         exclude 'META-INF/rxjava.properties'
     }
 
-    compileSdkVersion Versions.COMPILE_SDK
-    buildToolsVersion Versions.BUILD_TOOLS
-
     defaultConfig {
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 77
-        versionName = '1.39.0'
+        versionCode = 78
+        versionName = '1.40.0'
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'

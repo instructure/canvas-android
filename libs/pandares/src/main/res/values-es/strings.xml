@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Firma</string>
     <string name="inboxSignatureTextfieldHeader">Texto de la firma</string>
     <string name="due_dateTime">Fecha límite: %1$s, %2$s</string>
+    <string name="noDueDate">No hay fecha de entrega</string>
+    <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
+    <string name="needsGradingCount">%1$s debe calificarse</string>
+    <string name="assignmentListTitle">Lista de tareas</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d punto</item>
+        <item quantity="other">%d puntos</item>
+    </plurals>
+    <string name="noAssignments">Sin tareas</string>
+    <string name="assignmentGroup">Grupo de tareas</string>
+    <string name="assignmentType">Tipo de tarea</string>
+    <string name="dueDate">Fecha de entrega</string>
+    <string name="needsGrading">Debe calificarse</string>
+    <string name="published">Publicado</string>
+    <string name="unpublished">No publicado</string>
+    <string name="notYetSubmitted">No entregado</string>
+    <string name="toBeGraded">Por calificar</string>
+    <string name="graded">Calificado</string>
+    <string name="other">Otro</string>
+    <string name="a11y_filterAssignments">Filtrar tareas</string>
+    <string name="assignmentFilter">Filtro de tareas</string>
+    <string name="groupedBy">Agrupado por</string>
+    <string name="gradingPeriod">Período de calificación:</string>
+    <string name="gradingPeriodHeading">Período de calificación</string>
+    <string name="gradePreferences">Preferencias de calificaciones</string>
+    <string name="allAssignments">Todas las tareas</string>
+    <string name="statusFilter">Filtro de estado</string>
     <string name="a11y_contentDescription_filter">Filtrar</string>
     <string name="a11y_contentDescription_postPolicy">Política de publicaciones</string>
     <string name="late">Atrasado</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Filtro de entrega</string>
     <string name="submissionMessageSubject">%1$s en %2$s</string>
     <string name="all">Todo</string>
+    <string name="loginRequired">Debe iniciar sesión</string>
+    <string name="loginRequiredMessage">Debe iniciar sesión de nuevo debido a la política de seguridad de su institución. Una vez iniciada la sesión, podrá seguir trabajando sin problemas.</string>
+    <string name="login">Iniciar sesión</string>
+    <string name="logout">Cerrar sesión</string>
+    <string name="loginRefreshSameUserError">Debe iniciar sesión con el mismo usuario.</string>
+    <string name="errorLoadingAssignments">Se produjo un error al cargar las tareas</string>
+    <string name="a11y_searchAssignments">Buscar tareas</string>
+    <string name="dueAssignmentListItem">Fecha de entrega %1$s</string>
 </resources>

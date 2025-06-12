@@ -1,0 +1,5 @@
+mutation SummarizeContent($input: SummarizeContentInput!) {
+    summarizeContent(input: $input) {
+        summarization
+    }
+}

@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">ลายมือชื่อ</string>
     <string name="inboxSignatureTextfieldHeader">ข้อความลายมือชื่อ</string>
     <string name="due_dateTime">ครบกำหนด: %1$s, %2$s</string>
+    <string name="noDueDate">ไม่มีวันครบกำหนด</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s ต้องให้เกรด</string>
+    <string name="assignmentListTitle">รายการภารกิจ</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d คะแนน</item>
+        <item quantity="other">%d คะแนน</item>
+    </plurals>
+    <string name="noAssignments">ไม่มีภารกิจ</string>
+    <string name="assignmentGroup">กลุ่มภารกิจ</string>
+    <string name="assignmentType">ประเภทภารกิจ</string>
+    <string name="dueDate">วันครบกำหนด</string>
+    <string name="needsGrading">ต้องให้เกรด</string>
+    <string name="published">เผยแพร่แล้ว</string>
+    <string name="unpublished">ไม่ได้เผยแพร่</string>
+    <string name="notYetSubmitted">ยังไม่ได้จัดส่ง</string>
+    <string name="toBeGraded">รอให้เกรด</string>
+    <string name="graded">ให้เกรดแล้ว</string>
+    <string name="other">อื่น ๆ</string>
+    <string name="a11y_filterAssignments">กรองภารกิจ</string>
+    <string name="assignmentFilter">ตัวกรองภารกิจ</string>
+    <string name="groupedBy">จัดกลุ่มจาก</string>
+    <string name="gradingPeriod">ระยะเวลาการให้เกรด:</string>
+    <string name="gradingPeriodHeading">ระยะเวลาการให้เกรด</string>
+    <string name="gradePreferences">ตัวเลือกเกรด</string>
+    <string name="allAssignments">ภารกิจทั้งหมด</string>
+    <string name="statusFilter">ตัวกรองสถานะ</string>
     <string name="a11y_contentDescription_filter">ตัวกรอง</string>
     <string name="a11y_contentDescription_postPolicy">นโยบายการโพสต์</string>
     <string name="late">ล่าช้า</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">ตัวกรองผลงานนำส่ง</string>
     <string name="submissionMessageSubject">%1$s เมื่อ %2$s</string>
     <string name="all">ทั้งหมด</string>
+    <string name="loginRequired">ต้องล็อกอิน</string>
+    <string name="loginRequiredMessage">คุณจะต้องล็อกอินอีกครั้งเนื่องจากเป็นนโยบายการรักษาความปลอดภัยของสถาบันของคุณ หลังจากล็อกอินแล้ว คุณจะสามารถดำเนินการต่อได้อย่างราบรื่น</string>
+    <string name="login">ล็อกอิน</string>
+    <string name="logout">ล็อกเอาท์</string>
+    <string name="loginRefreshSameUserError">คุณจะต้องล็อกอินเป็นผู้ใช้เดียวกัน</string>
+    <string name="errorLoadingAssignments">เกิดข้อผิดพลาดขณะโหลดภารกิจ</string>
+    <string name="a11y_searchAssignments">ค้นหาภารกิจ</string>
+    <string name="dueAssignmentListItem">ครบกำหนด %1$s</string>
 </resources>

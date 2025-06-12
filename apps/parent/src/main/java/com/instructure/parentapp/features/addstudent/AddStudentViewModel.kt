@@ -95,6 +95,7 @@ class AddStudentViewModel @Inject constructor(
                 _uiState.value = _uiState.value.copy(isLoading = false)
             } catch (e: Exception) {
                 crashlytics.recordException(e)
+                _events.emit(AddStudentViewModelAction.UnpairStudentFailed)
                 _uiState.value = _uiState.value.copy(isLoading = false)
             }
         }
