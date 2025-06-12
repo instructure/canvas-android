@@ -73,6 +73,13 @@ class PageDetailsViewModel @Inject constructor(
         }
     }
 
+    fun refreshNotes() {
+        viewModelScope.launch {
+            val notes = pageDetailsRepository.getNotes(uiState.value.courseId, uiState.value.pageId)
+            _uiState.update { it.copy(notes = notes) }
+        }
+    }
+
     private fun ltiButtonPressed(ltiUrl: String) {
         viewModelScope.launch {
             try {

@@ -424,6 +424,7 @@ private fun ModuleItemContentScreen(
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.pageHtmlContent.orEmpty())
                 updateObjectTypeAndId(Pair("Page", uiState.pageId.toString()))
+                viewModel.refreshNotes()
                 PageDetailsContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,

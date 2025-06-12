@@ -39,6 +39,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
+import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.removeHighlightedNotes
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.utils.Const
@@ -186,7 +187,6 @@ fun ComposeNotesHighlightingCanvasWebView(
                         }
                     )
 
-
                     webView.highlightNotes(notes)
                 }
             },
@@ -208,6 +208,9 @@ fun ComposeNotesHighlightingCanvasWebView(
                 } else {
                     it.webView.restoreState(webViewState)
                 }
+
+                it.webView.removeHighlightedNotes()
+                it.webView.highlightNotes(notes)
             },
             onRelease = {
                 it.webView.saveState(webViewState)
