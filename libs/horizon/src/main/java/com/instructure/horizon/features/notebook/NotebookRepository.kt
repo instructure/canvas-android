@@ -35,49 +35,26 @@ class NotebookRepository @Inject constructor(
         courseId: Long? = null,
         objectTypeAndId: Pair<String, String>? = null
     ): QueryNotesQuery.Notes {
-        val filterInput = when (filterType) {
-            NotebookType.Important -> NoteFilterInput(
-                reactions = Optional.present(listOf(filterType.name)),
-                courseId = Optional.presentIfNotNull(courseId?.toString()),
-                learningObject = if (objectTypeAndId != null) {
-                    Optional.present(
-                        LearningObjectFilter(
-                            type = objectTypeAndId.first,
-                            id = objectTypeAndId.second
-                        )
+        val filterInput = NoteFilterInput(
+            reactions = if (filterType != null) {
+                Optional.present(
+                    listOf(filterType.name)
+                )
+            } else {
+                Optional.absent()
+            },
+            courseId = Optional.presentIfNotNull(courseId?.toString()),
+            learningObject = if (objectTypeAndId != null) {
+                Optional.present(
+                    LearningObjectFilter(
+                        type = objectTypeAndId.first,
+                        id = objectTypeAndId.second
                     )
-                } else {
-                    Optional.absent()
-                }
-            )
-            NotebookType.Confusing -> NoteFilterInput(
-                reactions = Optional.present(listOf(filterType.name)),
-                courseId = Optional.presentIfNotNull(courseId?.toString()),
-                learningObject = if (objectTypeAndId != null) {
-                    Optional.present(
-                        LearningObjectFilter(
-                            type = objectTypeAndId.first,
-                            id = objectTypeAndId.second
-                        )
-                    )
-                } else {
-                    Optional.absent()
-                }
-            )
-            null -> NoteFilterInput(
-                courseId = Optional.presentIfNotNull(courseId?.toString()),
-                learningObject = if (objectTypeAndId != null) {
-                    Optional.present(
-                        LearningObjectFilter(
-                            type = objectTypeAndId.first,
-                            id = objectTypeAndId.second
-                        )
-                    )
-                } else {
-                    Optional.absent()
-                }
-            )
-        }
+                )
+            } else {
+                Optional.absent()
+            }
+        )
 
         return if (before != null) {
             redwoodApiManager.getNotes(
