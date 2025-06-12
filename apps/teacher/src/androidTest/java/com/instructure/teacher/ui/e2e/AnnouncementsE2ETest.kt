@@ -51,38 +51,46 @@ class AnnouncementsE2ETest : TeacherTest() {
         val announcement = data.announcementsList[0]
         val announcement2 = data.announcementsList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${teacher.name}, login id: ${teacher.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Assert ${course.name} course is displayed.")
+        Log.d(ASSERTION_TAG, "Assert '${course.name}' course is displayed.")
         dashboardPage.assertDisplaysCourse(course)
 
-        Log.d(STEP_TAG, "Open ${course.name} course and navigate to it's Announcements Page. Assert that the ${announcement.title} announcement has been displayed.")
+        Log.d(STEP_TAG, "Open '${course.name}' course and navigate to it's Announcements Page.")
         dashboardPage.openCourse(course.name)
         courseBrowserPage.openAnnouncementsTab()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${announcement.title}' announcement has been displayed.")
         announcementsListPage.assertHasAnnouncement(announcement)
 
         Log.d(STEP_TAG, "Click on 'Search' (magnifying glass) icon and type '${announcement2.title}', one of the announcements' name to the search input field.")
         announcementsListPage.searchable.clickOnSearchButton()
         announcementsListPage.searchable.typeToSearchBar(announcement2.title)
 
-        Log.d(STEP_TAG, "Assert that only 1 announcement matches for the search text, and it is '${announcement2.title}'.")
+        Log.d(ASSERTION_TAG, "Assert that only 1 announcement matches for the search text, and it is '${announcement2.title}'.")
         announcementsListPage.assertSearchResultCount(1)
         announcementsListPage.assertHasAnnouncement(announcement2)
 
-        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon and assert that all the announcements are displayed (2).")
+        Log.d(STEP_TAG, "Click on 'Reset' search (cross) icon.")
         announcementsListPage.searchable.clickOnClearSearchButton()
+
+        Log.d(ASSERTION_TAG, "Assert that all the announcements are displayed (2).")
         announcementsListPage.assertSearchResultCount(2)
 
-        Log.d(STEP_TAG, "Open the '${announcement.title}' announcement. Assert that it's title is displayed on the (web view) page's toolbar title and the 'Reply' button is also displayed.")
+        Log.d(STEP_TAG, "Open the '${announcement.title}' announcement.")
         announcementsListPage.clickAnnouncement(announcement)
+
+        Log.d(ASSERTION_TAG, "Assert that it's title is displayed on the (web view) page's toolbar title and the 'Reply' button is also displayed.")
         announcementDetailsPage.assertToolbarDiscussionTitle(announcement.title)
         announcementDetailsPage.waitForReplyButtonDisplayed()
         announcementDetailsPage.assertReplyButtonDisplayed()
 
-        Log.d(STEP_TAG, "Click on the more menu of the announcement and assert if the more menu items are all displayed.")
+        Log.d(STEP_TAG, "Click on the more menu of the announcement.")
         announcementDetailsPage.clickOnDiscussionMoreMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the more menu items are all displayed.")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Read")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Mark All as Unread")
         announcementDetailsPage.assertMoreMenuButtonDisplayed("Edit")

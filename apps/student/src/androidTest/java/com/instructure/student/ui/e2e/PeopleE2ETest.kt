@@ -47,58 +47,68 @@ class PeopleE2ETest : StudentComposeTest() {
         val student1 = data.studentsList[0]
         val student2 = data.studentsList[1]
 
-        Log.d(STEP_TAG, "Login with user: ${student1.name}, login id: ${student1.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student1.name}', login id: '${student1.loginId}'.")
         tokenLogin(student1)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Navigate to '${course.name}' course's People Page.")
+        Log.d(STEP_TAG, "Navigate to '${course.name}' course's People Page.")
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectPeople()
 
-        Log.d(STEP_TAG,"Assert that the teacher user and both of the student users has been displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the teacher user and both of the student users has been displayed.")
         peopleListPage.assertPersonListed(teacher)
         peopleListPage.assertPersonListed(student1)
         peopleListPage.assertPersonListed(student2)
         peopleListPage.assertPeopleCount(3)
 
-        Log.d(STEP_TAG,"Collapse student list and assert that the students are not displayed, but the teacher user is displayed.")
+        Log.d(STEP_TAG, "Collapse student list by clicking on the 'Students' expand/collapse button.")
         peopleListPage.clickOnStudentsExpandCollapseButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the teacher user is displayed and the students are not displayed.")
         peopleListPage.assertPersonListed(teacher)
         peopleListPage.assertPeopleCount(1)
+
+        Log.d(STEP_TAG, "Click on the 'Students' expand/collapse button again to expand the student list.")
         peopleListPage.clickOnStudentsExpandCollapseButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the two student users are displayed along with the teacher user.")
         peopleListPage.assertPersonListed(student1)
         peopleListPage.assertPersonListed(student2)
         peopleListPage.assertPeopleCount(3)
 
-        Log.d(STEP_TAG,"Select ${student2.name} student and assert if we are landing on the Person Details Page. Assert that the Person Details page's information (user name, role, and picture) are displayed.")
+        Log.d(STEP_TAG, "Select '${student2.name}' student.")
         peopleListPage.selectPerson(student2)
+
+        Log.d(ASSERTION_TAG, "Assert that the Person Details Page is displayed correctly.")
         personDetailsPage.assertPageObjects()
 
-        Log.d(STEP_TAG,"Compose a new message for ${student2.name} student.")
+        Log.d(STEP_TAG, "Compose a new message for '${student2.name}' student.")
         personDetailsPage.clickCompose()
         inboxComposePage.typeSubject("Yo!")
         inboxComposePage.typeBody("Hello from a fellow student")
 
-        Log.d(STEP_TAG,"Send the message and assert if we are landing on the Person Details Page.")
+        Log.d(STEP_TAG, "Send the message.")
         inboxComposePage.pressSendButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the Person Details Page is displayed correctly.")
         personDetailsPage.assertPageObjects()
-
         composeTestRule.waitForIdle()
 
-        Log.d(STEP_TAG,"Navigate back to the Dashboard (Course List) Page.")
+        Log.d(STEP_TAG, "Navigate back to the Dashboard (Course List) Page.")
         ViewUtils.pressBackButton(3)
-
         composeTestRule.waitForIdle()
 
-        Log.d(STEP_TAG,"Sign out with ${student1.name} student.")
+        Log.d(STEP_TAG, "Sign out with '${student1.name}' student.")
         leftSideNavigationDrawerPage.logout()
 
-        Log.d(STEP_TAG, "Login with user: ${student2.name}, login id: ${student2.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student2.name}', login id: '${student2.loginId}'.")
         tokenLogin(student2)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG,"Click on the 'Inbox' bottom menu and assert that ${student1.name}'s message is displayed.")
+        Log.d(STEP_TAG, "Click on the 'Inbox' bottom menu.")
         dashboardPage.clickInboxTab()
+
+        Log.d(ASSERTION_TAG, "Assert that '${student1.name}''s message is displayed.")
         inboxPage.assertConversationDisplayed("Yo!")
     }
 

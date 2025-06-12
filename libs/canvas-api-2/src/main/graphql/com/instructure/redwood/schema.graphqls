@@ -1,0 +1,90 @@
+type Note {
+    id: ID!
+    rootAccountUuid: String!
+    userId: String!
+    courseId: String!
+    objectId: String!
+    objectType: String!
+    userText: String
+    reaction: [String!]
+    highlightData: JSON
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+"""
+The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+"""
+scalar JSON
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type PageInfo {
+    hasNextPage: Boolean!
+    hasPreviousPage: Boolean!
+    startCursor: String
+    endCursor: String
+}
+
+type NoteEdge {
+    cursor: String!
+    node: Note!
+}
+
+type NoteConnection {
+    edges: [NoteEdge!]
+    nodes: [Note!]
+    pageInfo: PageInfo!
+}
+
+type Query {
+    notes(filter: NoteFilterInput, first: Float, last: Float, after: String, before: String, orderBy: OrderByInput): NoteConnection!
+}
+
+input NoteFilterInput {
+    courseId: String
+    learningObject: LearningObjectFilter
+    reactions: [String!]
+}
+
+input LearningObjectFilter {
+    type: String!
+    id: String!
+}
+
+input OrderByInput {
+    """
+    Sort order direction. Results are sorted by createdAt date, ascending by default.
+    """
+    direction: OrderDirection
+}
+
+"""Sort order direction"""
+enum OrderDirection {
+    ascending
+    descending
+}
+
+type Mutation {
+    createNote(input: CreateNoteInput!): Note!
+    updateNote(id: String!, input: UpdateNoteInput!): Note!
+    deleteNote(id: String!): String!
+}
+
+input CreateNoteInput {
+    courseId: String!
+    objectId: String!
+    objectType: String!
+    userText: String
+    reaction: [String!]
+    highlightData: JSON
+}
+
+input UpdateNoteInput {
+    userText: String
+    reaction: [String!]
+    highlightData: JSON
+}

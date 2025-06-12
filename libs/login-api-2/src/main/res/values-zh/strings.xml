@@ -99,7 +99,7 @@
     <string name="findMySchool">查找我的学校</string>
     <string name="loginWithQRCode">二维码</string>
     <string name="locateQRCode">查找二维码</string>
-    <string name="qrCodeExplanation">您可在帐户个人资料的网页上找到二维码。点击列表中的“用于移动设备登录的二维码”。</string>
+    <string name="qrCodeExplanation">在“移动设备二维码登录”网页中，在您的帐户资料中找到二维码。</string>
     <string name="qrCodeScanningPrompt">从 Canvas 扫描二维码进行登录</string>
     <string name="loginWithQRCodeError">登录时发生错误。请生成新的二维码并重试。</string>
     <string name="invalidQRCodeError">请扫描 Canvas 生成的二维码</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">我们进行了一些更改。</string>
     <string name="whatsNewText">查看新增内容</string>
     <string name="findAnotherSchool">查找其他学校</string>
+    <string name="qrCodeDisabledExplanation">如果没找到，表明贵机构已禁用此选项。</string>
 </resources>

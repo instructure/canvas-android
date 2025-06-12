@@ -33,7 +33,11 @@ package com.instructure.pandautils.views
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.content.*
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.ComponentName
+import android.content.Context
+import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Handler
@@ -47,7 +51,15 @@ import android.util.Patterns
 import android.view.ContextMenu
 import android.view.MenuItem
 import android.view.MotionEvent
-import android.webkit.*
+import android.webkit.CookieManager
+import android.webkit.JavascriptInterface
+import android.webkit.PermissionRequest
+import android.webkit.ValueCallback
+import android.webkit.WebChromeClient
+import android.webkit.WebResourceRequest
+import android.webkit.WebResourceResponse
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.ColorRes
@@ -63,7 +75,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.FileUtils.getAssetsFile
 import com.instructure.canvasapi2.utils.Logger.e
 import com.instructure.pandautils.R
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.DP
+import com.instructure.pandautils.utils.FileUploadUtils
+import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.pandautils.utils.requestWebPermissions
+import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.video.VideoWebChromeClient
 import java.io.File
 import java.io.UnsupportedEncodingException
@@ -71,7 +89,7 @@ import java.net.MalformedURLException
 import java.net.URISyntaxException
 import java.net.URLConnection
 import java.net.URLDecoder
-import java.util.*
+import java.util.Locale
 
 class CanvasWebView @JvmOverloads constructor(
     context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = android.R.attr.webViewStyle
@@ -92,6 +110,7 @@ class CanvasWebView @JvmOverloads constructor(
         fun onPageFinishedCallback(webView: WebView, url: String)
         fun routeInternallyCallback(url: String)
         fun canRouteInternallyDelegate(url: String): Boolean
+        fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) = Unit
 
     }
 
@@ -121,6 +140,8 @@ class CanvasWebView @JvmOverloads constructor(
     private var mediaDownloadCallback: MediaDownloadCallback? = null
     private var webChromeClient: CanvasWebChromeClient? = null
     private var filePathCallback: ValueCallback<Array<Uri>>? = null
+
+    var overrideHtmlFormatColors: HtmlFormatColors? = null
 
     inner class JavascriptInterface {
         @android.webkit.JavascriptInterface  // Must match Javascript interface method of VideoWebChromeClient
@@ -459,6 +480,8 @@ class CanvasWebView @JvmOverloads constructor(
             super.onReceivedError(view, errorCode, description, failingUrl)
             if (failingUrl.startsWith("file://")) {
                 view.loadUrl(failingUrl.replaceFirst("file://".toRegex(), "https://"), Utils.referer)
+            } else {
+                canvasWebViewClientCallback?.onReceivedErrorCallback(view, errorCode, description, failingUrl)
             }
         }
     }
@@ -508,15 +531,22 @@ class CanvasWebView @JvmOverloads constructor(
         var formatted = applyWorkAroundForDoubleSlashesAsUrlSource(html)
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
-        val htmlWrapperFileName = if (ApiPrefs.showElementaryView) "html_wrapper_k5.html" else "html_wrapper.html"
-        val htmlWrapper = getAssetsFile(context, htmlWrapperFileName)
+        val (fontName, fontPath) = when {
+            ApiPrefs.canvasCareerView -> Pair("Figtree", "file:///android_asset/fonts/figtree_regular.ttf")
+            ApiPrefs.showElementaryView -> Pair("K5Font", "file:///android_asset/fonts/balsamiq_regular.ttf")
+            else -> Pair("Lato", "file:///android_asset/fonts/lato_regular.ttf")
+        }
+        val htmlWrapper = getAssetsFile(context, "html_wrapper.html")
+        val colors = overrideHtmlFormatColors ?: htmlFormatColors
         return htmlWrapper
             .replace("{\$CONTENT$}", formatted)
             .replace("{\$TITLE$}", title ?: "")
-            .replace("{\$BACKGROUND$}", colorResToHexString(htmlFormatColors.backgroundColorRes))
-            .replace("{\$COLOR$}", colorResToHexString(htmlFormatColors.textColor))
-            .replace("{\$LINK_COLOR$}", colorResToHexString(htmlFormatColors.linkColor))
-            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(htmlFormatColors.visitedLinkColor))
+            .replace("{\$BACKGROUND$}", colorResToHexString(colors.backgroundColorRes))
+            .replace("{\$COLOR$}", colorResToHexString(colors.textColor))
+            .replace("{\$LINK_COLOR$}", colorResToHexString(colors.linkColor))
+            .replace("{\$VISITED_LINK_COLOR\$}", colorResToHexString(colors.visitedLinkColor))
+            .replace("{\$FONT_NAME$}", fontName)
+            .replace("{\$FONT_PATH$}", fontPath)
     }
 
     private fun colorResToHexString(@ColorRes colorRes: Int): String {
@@ -806,3 +836,12 @@ data class HtmlFormatColors(
     @ColorRes val linkColor: Int = R.color.textInfo,
     @ColorRes val visitedLinkColor: Int = R.color.textMasquerade
 )
+
+class JSInterface(private val onLtiButtonPressed: (String) -> Unit) {
+
+    @JavascriptInterface
+    fun onLtiToolButtonPressed(id: String) {
+        val ltiUrl = URLDecoder.decode(id, "UTF-8")
+        onLtiButtonPressed(ltiUrl)
+    }
+}

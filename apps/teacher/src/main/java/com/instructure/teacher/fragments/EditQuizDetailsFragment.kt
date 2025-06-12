@@ -407,7 +407,7 @@ class EditQuizDetailsFragment : BasePresenterFragment<
                     }
                 }
 
-                v.setupOverride(index, dueDateGroup, mEditDateGroups.size > 1, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
+                v.setupOverride(index, dueDateGroup, true, assignees, datePickerOnClick, timePickerOnClick, removeOverrideClick) {
                     val args = AssigneeListFragment.makeBundle(
                             mEditDateGroups,
                             index,
@@ -465,9 +465,6 @@ class EditQuizDetailsFragment : BasePresenterFragment<
         return AssignmentPostBody().apply {
             setGroupedDueDates(presenter.mEditDateGroups)
             notifyOfUpdate = false
-
-            // Only set the published flag if we can unpublish/publish the assignment
-            if (presenter.mAssignment.unpublishable) published = mIsPublished
         }
     }
 

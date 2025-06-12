@@ -2008,6 +2008,33 @@
     <string name="inboxSignatureSwitchLabel">Tanda Tangan</string>
     <string name="inboxSignatureTextfieldHeader">Teks tanda tangan</string>
     <string name="due_dateTime">Batas waktu: %1$s, %2$s</string>
+    <string name="noDueDate">Tidak Ada Batas Waktu</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Membutuhkan Penilaian</string>
+    <string name="assignmentListTitle">Daftar tugas</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d poin</item>
+        <item quantity="other">%d poin</item>
+    </plurals>
+    <string name="noAssignments">Tidak ada tugas</string>
+    <string name="assignmentGroup">Grup Tugas</string>
+    <string name="assignmentType">Jenis Tugas</string>
+    <string name="dueDate">Batas Waktu</string>
+    <string name="needsGrading">Membutuhkan Penilaian</string>
+    <string name="published">Diterbitkan</string>
+    <string name="unpublished">Belum Diterbitkan</string>
+    <string name="notYetSubmitted">Belum Diserahkan</string>
+    <string name="toBeGraded">Akan Dinilai</string>
+    <string name="graded">Dinilai</string>
+    <string name="other">Lainnya</string>
+    <string name="a11y_filterAssignments">Filter Tugas</string>
+    <string name="assignmentFilter">Filter Tugas</string>
+    <string name="groupedBy">Digrupkan Menurut</string>
+    <string name="gradingPeriod">Periode Penilaian:</string>
+    <string name="gradingPeriodHeading">Periode Penilaian</string>
+    <string name="gradePreferences">Preferensi Nilai</string>
+    <string name="allAssignments">Semua Tugas</string>
+    <string name="statusFilter">Filter Status</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Kebijakan posting</string>
     <string name="late">Terlambat</string>
@@ -2016,4 +2043,12 @@
     <string name="submissionFilter">Filter Penyerahan</string>
     <string name="submissionMessageSubject">%1$s pada %2$s</string>
     <string name="all">Semua</string>
+    <string name="loginRequired">Login harus ada</string>
+    <string name="loginRequiredMessage">Anda harus login lagi dikarenakan kebijakan keamanan institusi Anda. Setelah login, Anda dapat melanjutkan kerja tanpa gangguan.</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="loginRefreshSameUserError">Anda harus login dengan pengguna yang sama.</string>
+    <string name="errorLoadingAssignments">Kesalahan terjadi saat memuat tugas</string>
+    <string name="a11y_searchAssignments">Cari Tugas</string>
+    <string name="dueAssignmentListItem">Batas %1$s</string>
 </resources>

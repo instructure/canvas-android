@@ -19,6 +19,7 @@ package com.instructure.pandautils.room.offline.facade
 
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.room.offline.daos.*
 import com.instructure.pandautils.room.offline.entities.*
 
@@ -30,7 +31,8 @@ class CourseFacade(
     private val sectionDao: SectionDao,
     private val tabDao: TabDao,
     private val enrollmentFacade: EnrollmentFacade,
-    private val courseSettingsDao: CourseSettingsDao
+    private val courseSettingsDao: CourseSettingsDao,
+    private val apiPrefs: ApiPrefs
 ) {
 
     suspend fun insertCourse(course: Course) {
@@ -75,7 +77,10 @@ class CourseFacade(
 
     private suspend fun createFullApiModelFromEntity(courseEntity: CourseEntity): Course {
         val termEntity = courseEntity.termId?.let { termDao.findById(it) }
-        val enrollments = enrollmentFacade.getEnrollmentsByCourseId(courseEntity.id)
+
+        val enrollments = apiPrefs.user?.id?.let {
+            enrollmentFacade.getEnrollmentsForUserByCourseId(courseEntity.id, it)
+        } ?: enrollmentFacade.getEnrollmentsByCourseId(courseEntity.id)
         val sectionEntities = sectionDao.findByCourseId(courseEntity.id)
         val courseGradingPeriodEntities = courseGradingPeriodDao.findByCourseId(courseEntity.id)
         val gradingPeriods = courseGradingPeriodEntities.map {
