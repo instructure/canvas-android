@@ -187,44 +187,54 @@ fun NotebookBottomDialog(
                 )
             }
 
-            items(state.notes) { note ->
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp)
-                ) {
-                    NoteContent(note) {
-                        mainNavController.navigate(
-                            MainNavigationRoute.EditNotebook(
-                                noteId = note.id,
-                                highlightedText = note.highlightedText.selectedText,
-                                userComment = note.userText,
-                                highlightedTextStartContainer = note.highlightedText.range.startContainer,
-                                highlightedTextStartOffset = note.highlightedText.range.startOffset,
-                                highlightedTextEndContainer = note.highlightedText.range.endContainer,
-                                highlightedTextEndOffset = note.highlightedText.range.endOffset,
-                                noteType = note.type.name,
+            if (state.isLoading) {
+                item {
+                    LoadingContent()
+                }
+            } else if (state.notes.isEmpty()) {
+                item {
+                    EmptyContent()
+                }
+            } else {
+                items(state.notes) { note ->
+                    Column(
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    ) {
+                        NoteContent(note) {
+                            mainNavController.navigate(
+                                MainNavigationRoute.EditNotebook(
+                                    noteId = note.id,
+                                    highlightedText = note.highlightedText.selectedText,
+                                    userComment = note.userText,
+                                    highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                    highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                    highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                    highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                    noteType = note.type.name,
+                                )
                             )
-                        )
-                    }
+                        }
 
-                    if (state.notes.lastOrNull() != note) {
-                        HorizonSpace(SpaceSize.SPACE_12)
+                        if (state.notes.lastOrNull() != note) {
+                            HorizonSpace(SpaceSize.SPACE_12)
+                        }
                     }
                 }
-            }
 
-            item {
-                Column(
-                    modifier = Modifier.padding(horizontal = 24.dp)
-                ) {
-                    HorizonSpace(SpaceSize.SPACE_24)
+                item {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    ) {
+                        HorizonSpace(SpaceSize.SPACE_24)
 
-                    NotesPager(
-                        canNavigateBack = state.hasPreviousPage,
-                        canNavigateForward = state.hasNextPage,
-                        isLoading = state.isLoading,
-                        onNavigateBack = state.loadPreviousPage,
-                        onNavigateForward = state.loadNextPage
-                    )
+                        NotesPager(
+                            canNavigateBack = state.hasPreviousPage,
+                            canNavigateForward = state.hasNextPage,
+                            isLoading = state.isLoading,
+                            onNavigateBack = state.loadPreviousPage,
+                            onNavigateForward = state.loadNextPage
+                        )
+                    }
                 }
             }
         }
