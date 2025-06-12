@@ -209,7 +209,7 @@ private fun Error(onRefresh: () -> Unit) {
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Icon(
-                    painter = painterResource(id = R.drawable.ic_refresh),
+                    painter = painterResource(id = R.drawable.ic_refresh_lined),
                     contentDescription = null,
                     modifier = Modifier.size(18.dp),
                     tint = colorResource(id = R.color.textInfo)
