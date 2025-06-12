@@ -48,16 +48,16 @@ class BookmarksE2ETest : StudentComposeTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.BOOKMARKS, TestCategory.E2E)
     fun testBookmarksE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Preparing an assignment which will be saved as a bookmark.")
+        Log.d(PREPARATION_TAG, "Preparing an assignment which will be saved as a bookmark.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -67,43 +67,55 @@ class BookmarksE2ETest : StudentComposeTest() {
         assignmentListPage.clickAssignment(assignment)
 
         val bookmarkName = "Assignment Details BM"
-        Log.d(STEP_TAG,"Add a new bookmark with name: $bookmarkName")
+        Log.d(STEP_TAG, "Add a new bookmark with name: '$bookmarkName'")
         assignmentDetailsPage.addBookmark(bookmarkName)
 
-        Log.d(STEP_TAG,"Navigate back to Bookmarks page and assert if the newly created bookmark has displayed.")
+        Log.d(STEP_TAG, "Navigate back to Bookmarks page.")
         ViewUtils.pressBackButton(3)
         leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the newly created bookmark has displayed.")
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
-        Log.d(STEP_TAG,"Click on $bookmarkName bookmark and assert if it's navigating to the assignment details page.")
+        Log.d(STEP_TAG, "Click on '$bookmarkName' bookmark.")
         bookmarkPage.clickBookmark(bookmarkName)
+
+        Log.d(ASSERTION_TAG, "Assert if it's navigating to the assignment details page.")
         assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
-        Log.d(STEP_TAG,"Navigate back to bookmark page.")
+        Log.d(STEP_TAG, "Navigate back to bookmark page.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on the bookmark page's overflow menu.")
         leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the bookmark is displayed.")
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         val newName = "Assignment Details BM Modified"
-        Log.d(STEP_TAG,"Change bookmark's name from $bookmarkName to $newName.")
+        Log.d(STEP_TAG, "Change bookmark's name from '$bookmarkName' to '$newName'.")
         bookmarkPage.changeBookmarkName(bookmarkName, newName)
 
-        Log.d(STEP_TAG,"Refresh bookmark page and assert if the bookmark's name has been changed.")
+        Log.d(ASSERTION_TAG, "Refresh bookmark page and assert if the bookmark's name has been changed.")
         refresh()
         bookmarkPage.assertBookmarkDisplayed(newName)
 
-        Log.d(STEP_TAG,"Click on the previously renamed bookmark and assert if it's still navigating to the corresponding assignment's details page.")
+        Log.d(STEP_TAG, "Click on the previously renamed bookmark.")
         bookmarkPage.clickBookmark(newName)
+
+        Log.d(ASSERTION_TAG, "Assert if it's still navigating to the corresponding assignment's details page.")
         assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
-        Log.d(STEP_TAG,"Navigate back to the bookmark page.")
+        Log.d(STEP_TAG, "Navigate back to the bookmark page.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on the bookmark page's overflow menu.")
         leftSideNavigationDrawerPage.clickBookmarksMenu()
 
-        Log.d(STEP_TAG, "Delete bookmark: $newName.")
+        Log.d(STEP_TAG, "Delete bookmark: '$newName'.")
         bookmarkPage.deleteBookmark(newName)
 
-        Log.d(STEP_TAG,"Assert that empty view is displayed, so the bookmark has been deleted.")
+        Log.d(ASSERTION_TAG, "Assert that empty view is displayed, so the bookmark has been deleted.")
         bookmarkPage.assertEmptyView()
     }
 

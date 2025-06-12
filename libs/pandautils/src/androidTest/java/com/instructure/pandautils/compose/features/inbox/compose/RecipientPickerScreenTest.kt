@@ -91,7 +91,7 @@ class RecipientPickerScreenTest {
             .assertIsDisplayed()
             .assertHasClickAction()
 
-        composeTestRule.onNode(hasText("Search in All Recipients"))
+        composeTestRule.onNode(hasContentDescription("Search in All Recipients"))
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -114,7 +114,7 @@ class RecipientPickerScreenTest {
             .assertIsDisplayed()
             .assertHasClickAction()
 
-        composeTestRule.onNode(hasText("Search in Students"))
+        composeTestRule.onNode(hasContentDescription("Search in Students"))
             .assertIsDisplayed()
             .assertHasClickAction()
 

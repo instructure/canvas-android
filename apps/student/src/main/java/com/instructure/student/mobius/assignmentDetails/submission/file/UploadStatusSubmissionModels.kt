@@ -16,7 +16,7 @@
  */
 package com.instructure.student.mobius.assignmentDetails.submission.file
 
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
 
 sealed class UploadStatusSubmissionEvent {
     object OnRetryClicked : UploadStatusSubmissionEvent()

@@ -97,7 +97,7 @@ class TodoPage: BasePage(R.id.todoPage) {
 
     fun chooseFavoriteCourseFilter() {
         onView(withId(R.id.todoListFilter)).click()
-        onView(withText(R.string.favoritedCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
+        onView(withText(R.string.favoriteCoursesLabel) + withParent(R.id.select_dialog_listview)).click()
         onView(withText(android.R.string.ok)).click()
     }
 
@@ -111,7 +111,7 @@ class TodoPage: BasePage(R.id.todoPage) {
     }
 
     fun assertFavoritedCoursesFilterHeader() {
-        onView(allOf(withId(R.id.todoFilterTitle), withText(R.string.favoritedCoursesLabel), withParent(R.id.todoFilterContainer))).assertDisplayed()
+        onView(allOf(withId(R.id.todoFilterTitle), withText(R.string.favoriteCoursesLabel), withParent(R.id.todoFilterContainer))).assertDisplayed()
         onView(allOf(withId(R.id.clearFilterTextView), withText(R.string.clearFilter), withParent(R.id.todoFilterContainer))).assertDisplayed()
     }
 

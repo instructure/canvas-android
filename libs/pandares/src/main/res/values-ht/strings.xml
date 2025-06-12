@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Siyati</string>
     <string name="inboxSignatureTextfieldHeader">Tèks siyati</string>
     <string name="due_dateTime">Delè: %1$s, %2$s</string>
+    <string name="noDueDate">San Delè</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Bezwen Evalyasyon</string>
+    <string name="assignmentListTitle">Lis asiyasyon</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d pwen</item>
+        <item quantity="other">%d pwen</item>
+    </plurals>
+    <string name="noAssignments">Pa gen sesyon</string>
+    <string name="assignmentGroup">Sesyon Gwoup</string>
+    <string name="assignmentType">Tip Sesyon</string>
+    <string name="dueDate">Delè</string>
+    <string name="needsGrading">Bezwen Klasman</string>
+    <string name="published">Pibliye</string>
+    <string name="unpublished">Pa Pibliye</string>
+    <string name="notYetSubmitted">Poko Soumèt</string>
+    <string name="toBeGraded">Pou Evalye</string>
+    <string name="graded">Klase</string>
+    <string name="other">Lòt</string>
+    <string name="a11y_filterAssignments">Filtre devwa yo</string>
+    <string name="assignmentFilter">FIltè Devwa</string>
+    <string name="groupedBy">Gwoupe Pa</string>
+    <string name="gradingPeriod">Peryòd Klasman:</string>
+    <string name="gradingPeriodHeading">Peryòd Klasman</string>
+    <string name="gradePreferences">Preferans Nòt</string>
+    <string name="allAssignments">Tout Sesyon yo</string>
+    <string name="statusFilter">Filtè Estati</string>
     <string name="a11y_contentDescription_filter">Filtè</string>
     <string name="a11y_contentDescription_postPolicy">Politik pòs</string>
     <string name="late">An reta</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Filtè Soumisyon</string>
     <string name="submissionMessageSubject">%1$s le %2$s</string>
     <string name="all">Tout</string>
+    <string name="loginRequired">Koneksyon obligatwa</string>
+    <string name="loginRequiredMessage">Ou bezwen konekte ankò akoz politik sekirite\ enstitisyon ou a. Lè w fin konekte ou ka kontinye travay san pwoblèm.</string>
+    <string name="login">Koneksyon</string>
+    <string name="logout">Dekoneksyon</string>
+    <string name="loginRefreshSameUserError">Ou dwe konekte ak menm non itilizatè a.</string>
+    <string name="errorLoadingAssignments">Yon erè fèt pandan chajman asiyasyon yo</string>
+    <string name="a11y_searchAssignments">Chèche Sesyon</string>
+    <string name="dueAssignmentListItem">Delè %1$s</string>
 </resources>

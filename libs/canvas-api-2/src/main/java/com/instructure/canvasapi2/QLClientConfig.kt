@@ -40,7 +40,7 @@ import java.io.File
 import java.util.*
 import java.util.concurrent.TimeUnit
 
-class QLClientConfig {
+open class QLClientConfig {
 
     /** The GraphQL endpoint. Defaults to "<fullDomain>/api/graphql/" */
     var url: String = ApiPrefs.fullDomain + GRAPHQL_ENDPOINT
@@ -48,7 +48,7 @@ class QLClientConfig {
     /** The [OkHttpClient] to use for this request. Defaults to the client obtained from [CanvasRestAdapter.getOkHttpClient]
      * with a supplementary interceptor to add an additional header. It is recommended to use this default client as it
      * has several useful behaviors such as request logging, read timeouts, and auth/user-agent/referrer header injection. */
-    private var httpClient: OkHttpClient = CanvasRestAdapter.okHttpClient
+    var httpClient: OkHttpClient = CanvasRestAdapter.okHttpClient
         .newBuilder()
         .addInterceptor { chain ->
             chain.proceed(chain.request().newBuilder().addHeader("GraphQL-Metrics", "true").build())

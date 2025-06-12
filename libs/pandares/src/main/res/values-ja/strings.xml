@@ -1974,6 +1974,32 @@
     <string name="inboxSignatureSwitchLabel">署名</string>
     <string name="inboxSignatureTextfieldHeader">署名テキスト</string>
     <string name="due_dateTime">期限：%1$s、%2$s</string>
+    <string name="noDueDate">締切日なし</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$sが採点が必要です</string>
+    <string name="assignmentListTitle">課題リスト</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="other">%d 点</item>
+    </plurals>
+    <string name="noAssignments">課題なし</string>
+    <string name="assignmentGroup">課題グループ</string>
+    <string name="assignmentType">課題タイプ</string>
+    <string name="dueDate">期日</string>
+    <string name="needsGrading">採点が必要です</string>
+    <string name="published">公開済み</string>
+    <string name="unpublished">非公開</string>
+    <string name="notYetSubmitted">未提出</string>
+    <string name="toBeGraded">未評定</string>
+    <string name="graded">採点済み</string>
+    <string name="other">その他</string>
+    <string name="a11y_filterAssignments">課題を絞り込む</string>
+    <string name="assignmentFilter">課題フィルター</string>
+    <string name="groupedBy">～ごとのグループ</string>
+    <string name="gradingPeriod">評定機関：</string>
+    <string name="gradingPeriodHeading">採点期間</string>
+    <string name="gradePreferences">評定優先</string>
+    <string name="allAssignments">全課題</string>
+    <string name="statusFilter">ステータスフィルター</string>
     <string name="a11y_contentDescription_filter">フィルタ</string>
     <string name="a11y_contentDescription_postPolicy">投稿ポリシー</string>
     <string name="late">遅延</string>
@@ -1982,4 +2008,12 @@
     <string name="submissionFilter">提出フィルター</string>
     <string name="submissionMessageSubject">%1$s（%2$sについて）</string>
     <string name="all">すべて</string>
+    <string name="loginRequired">ログインが必要です</string>
+    <string name="loginRequiredMessage">機関のセキュリティポリシーにより、再度ログインする必要があります。ログイン後はシームレスに作業を継続できます。</string>
+    <string name="login">ログイン</string>
+    <string name="logout">ログアウト</string>
+    <string name="loginRefreshSameUserError">同じユーザーとしてログインする必要があります。</string>
+    <string name="errorLoadingAssignments">課題の読み込み中にエラーが発生しました。</string>
+    <string name="a11y_searchAssignments">課題の検索</string>
+    <string name="dueAssignmentListItem">%1$s期限</string>
 </resources>
