@@ -77,7 +77,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
             _assignmentFlow.value = assignment
-            val lastActualSubmission = assignment.lastActualSubmission
+            val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
             val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
             val submissions = if (lastActualSubmission != null) {
                 mapSubmissions(attempts)
@@ -119,27 +119,32 @@ class AssignmentDetailsViewModel @Inject constructor(
         .filter { it.workflowState != "unsubmitted" }
         .sortedByDescending { it.attempt }
         .map { attempt ->
-            createAttemptCard(attempt, assignment.pointsPossible, selected = attempt.attempt == initialAttempt, onClick = {
-                val viewingAttemptText = if (attempt.attempt != initialAttempt) {
-                    context.getString(R.string.assignmentDetails_viewingAttempt, attempt.attempt)
-                } else {
-                    null
-                }
-                _uiState.update {
-                    it.copy(
-                        submissionDetailsUiState = it.submissionDetailsUiState.copy(
-                            currentSubmissionAttempt = attempt.attempt
-                        ),
-                        attemptSelectorUiState = it.attemptSelectorUiState.copy(
-                            attempts = it.attemptSelectorUiState.attempts.map { card ->
-                                card.copy(selected = card.attemptNumber == attempt.attempt)
-                            }
-                        ),
-                        viewingAttemptText = viewingAttemptText
-                    )
-                }
-                dismissAttemptSelector()
-            })
+            createAttemptCard(
+                attempt,
+                assignment.pointsPossible,
+                selected = attempt.attempt == initialAttempt,
+                showScore = true,
+                onClick = {
+                    val viewingAttemptText = if (attempt.attempt != initialAttempt) {
+                        context.getString(R.string.assignmentDetails_viewingAttempt, attempt.attempt)
+                    } else {
+                        null
+                    }
+                    _uiState.update {
+                        it.copy(
+                            submissionDetailsUiState = it.submissionDetailsUiState.copy(
+                                currentSubmissionAttempt = attempt.attempt
+                            ),
+                            attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                                attempts = it.attemptSelectorUiState.attempts.map { card ->
+                                    card.copy(selected = card.attemptNumber == attempt.attempt)
+                                }
+                            ),
+                            viewingAttemptText = viewingAttemptText
+                        )
+                    }
+                    dismissAttemptSelector()
+                })
         }
 
     private fun mapSubmissions(submissions: List<Submission>): List<SubmissionUiState> {
@@ -218,7 +223,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private suspend fun updateAssignment() {
         val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
         _assignmentFlow.value = assignment
-        val lastActualSubmission = assignment.lastActualSubmission
+        val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
         val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
         val submissions = if (lastActualSubmission != null) {
             mapSubmissions(attempts)
@@ -265,9 +270,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         submission: Submission,
         possibleScore: Double,
         selected: Boolean = false,
+        showScore: Boolean = false,
         onClick: (() -> Unit)? = null
     ): AttemptCardState {
-        val score = if (submission.isGraded) {
+        val score = if (showScore && submission.isGraded) {
             val formattedScore = formatScore(submission.score)
             val formattedPossibleScore = formatScore(possibleScore)
             context.getString(R.string.attemptCard_score, formattedScore, formattedPossibleScore)
