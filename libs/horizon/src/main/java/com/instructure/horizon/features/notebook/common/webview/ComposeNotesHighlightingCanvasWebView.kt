@@ -26,11 +26,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalInspectionMode
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
+import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
@@ -61,6 +66,8 @@ fun ComposeNotesHighlightingCanvasWebView(
     val webViewState = rememberSaveable { bundleOf() }
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
+    val context = LocalContext.current
+    val clipboardManager: ClipboardManager = LocalClipboardManager.current
 
     var selectedText by remember { mutableStateOf("") }
     var selectedTextStartContainer by remember { mutableStateOf("") }
@@ -71,8 +78,18 @@ fun ComposeNotesHighlightingCanvasWebView(
     val menuItems by remember {
         mutableStateOf(
             listOf(
-                ActionMenuItem(1, "Copy", {}),
-                ActionMenuItem(2, "Add Note", { notesCallback.onNoteAdded(selectedText, selectedTextStartContainer, selectedTextStartOffset, selectedTextEndContainer, selectedTextEndOffset) })
+                ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
+                    clipboardManager.setText(AnnotatedString(selectedText))
+                },
+                ActionMenuItem(2, context.getString(R.string.notesActionMenuAddNote)) {
+                    notesCallback.onNoteAdded(
+                        selectedText,
+                        selectedTextStartContainer,
+                        selectedTextStartOffset,
+                        selectedTextEndContainer,
+                        selectedTextEndOffset
+                    )
+                }
             )
         )
     }
@@ -168,6 +185,8 @@ fun ComposeNotesHighlightingCanvasWebView(
                             selectionLocation.tryEmit(SelectionLocation(left, top, right, bottom))
                         }
                     )
+
+
                     webView.highlightNotes(notes)
                 }
             },

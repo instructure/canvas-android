@@ -251,4 +251,6 @@
     <string name="assignmentDetails_submissionError">Error submitting assignment</string>
     <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
     <string name="assessment_startQuiz">Start Quiz</string>
+    <string name="notesActionMenuCopy">Copy</string>
+    <string name="notesActionMenuAddNote">Add Note</string>
 </resources>

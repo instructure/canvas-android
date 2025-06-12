@@ -58,6 +58,7 @@ class AddNoteActionModeCallback(
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
         menuItems.firstOrNull { it.id == item?.itemId }?.onClick?.invoke()
+        mode?.finish()
         return true
     }
 
