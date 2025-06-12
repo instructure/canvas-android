@@ -22,6 +22,7 @@ import com.google.gson.reflect.TypeToken
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import com.instructure.redwood.CreateNoteMutation
+import com.instructure.redwood.DeleteNoteMutation
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.UpdateNoteMutation
 import com.instructure.redwood.type.CreateNoteInput
@@ -155,6 +156,14 @@ class RedwoodApiManager @Inject constructor(
                 highlightData = Optional.presentIfNotNull(getHighlightDataAsJson(highlightData))
             )
         )
+
+        QLClientConfig
+            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+            .dataAssertNoErrors
+    }
+
+    suspend fun deleteNote(noteId: String) {
+        val mutation = DeleteNoteMutation(noteId)
 
         QLClientConfig
             .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())

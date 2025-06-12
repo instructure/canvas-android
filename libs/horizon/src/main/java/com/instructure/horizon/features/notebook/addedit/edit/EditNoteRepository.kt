@@ -37,4 +37,8 @@ class EditNoteRepository @Inject constructor(
             notebookType = type?.name
         )
     }
+
+    suspend fun deleteNote(noteId: String) {
+        redwoodApiManager.deleteNote(noteId)
+    }
 }

@@ -27,5 +27,6 @@ data class AddEditNoteUiState(
     val type: NotebookType? = null,
     val onTypeChanged: (NotebookType?) -> Unit,
     val onSaveNote: () -> Unit,
-    val isLoading: Boolean = false
+    val isLoading: Boolean = false,
+    val onDeleteNote: (() -> Unit)? = null
 )

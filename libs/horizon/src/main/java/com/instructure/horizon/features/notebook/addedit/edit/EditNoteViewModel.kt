@@ -70,6 +70,7 @@ class EditNoteViewModel @Inject constructor(
             onTypeChanged = ::onTypeChanged,
             onUserCommentChanged = ::onUserCommentChanged,
             onSaveNote = ::editNote,
+            onDeleteNote = ::deleteNote
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -84,6 +85,16 @@ class EditNoteViewModel @Inject constructor(
                 highlightedData = uiState.value.highlightedData,
                 type = uiState.value.type
             )
+
+            _uiState.update { it.copy(isLoading = false) }
+        }
+    }
+
+    private fun deleteNote() {
+        viewModelScope.launch {
+            _uiState.update { it.copy(isLoading = true) }
+
+            repository.deleteNote(noteId)
 
             _uiState.update { it.copy(isLoading = false) }
         }
