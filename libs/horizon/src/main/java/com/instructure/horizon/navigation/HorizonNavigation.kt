@@ -29,8 +29,9 @@ import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScr
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
 import com.instructure.horizon.features.notebook.NotebookScreen
 import com.instructure.horizon.features.notebook.NotebookViewModel
-import com.instructure.horizon.features.notebook.add.AddNoteScreen
-import com.instructure.horizon.features.notebook.add.AddNoteViewModel
+import com.instructure.horizon.features.notebook.addedit.AddEditNoteScreen
+import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
+import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
 import kotlinx.serialization.Serializable
@@ -52,6 +53,18 @@ sealed class MainNavigationRoute(val route: String) {
         val highlightedTextEndContainer: String,
         val highlightedText: String,
     ): MainNavigationRoute("add_notebook")
+
+    @Serializable
+    data class EditNotebook(
+        val noteId: String,
+        val highlightedTextStartOffset: Int,
+        val highlightedTextEndOffset: Int,
+        val highlightedTextStartContainer: String,
+        val highlightedTextEndContainer: String,
+        val highlightedText: String,
+        val noteType: String,
+        val userComment: String,
+    ): MainNavigationRoute("edit_notebook")
 
     @Serializable
     data class ModuleItemSequence(
@@ -91,7 +104,12 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         composable<MainNavigationRoute.AddNotebook> {
             val viewModel = hiltViewModel<AddNoteViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AddNoteScreen(navController, uiState)
+            AddEditNoteScreen(navController, uiState)
+        }
+        composable<MainNavigationRoute.EditNotebook> {
+            val viewModel = hiltViewModel<EditNoteViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            AddEditNoteScreen(navController, uiState)
         }
     }
 }

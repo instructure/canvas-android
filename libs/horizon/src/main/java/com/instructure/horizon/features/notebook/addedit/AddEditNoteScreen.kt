@@ -14,9 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.notebook.add
+package com.instructure.horizon.features.notebook.addedit
 
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -25,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -51,95 +54,120 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.pandautils.compose.composables.Loading
 
 @Composable
-fun AddNoteScreen(
+fun AddEditNoteScreen(
     navController: NavHostController,
-    state: AddNoteUiState,
+    state: AddEditNoteUiState,
 ) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { NotebookAppBar(navigateBack = { navController.popBackStack() }) },
     ) { padding ->
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .verticalScroll(rememberScrollState())
-                .padding(padding)
-                .padding(24.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.addNoteHighlightlabel),
-                style = HorizonTypography.labelLargeBold,
-                color = HorizonColors.Text.body()
-            )
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            NotebookHighlightedText(
-                text = state.highlightedData.selectedText,
-                type = state.type
-            )
-
-            HorizonSpace(SpaceSize.SPACE_24)
-
-            Text(
-                text = stringResource(R.string.addNoteLabelLabel),
-                style = HorizonTypography.labelLargeBold,
-                color = HorizonColors.Text.body()
-            )
-
-            HorizonSpace(SpaceSize.SPACE_8)
-
-            Row {
-                NotebookTypeSelect(
-                    type = NotebookType.Important,
-                    isSelected = state.type == NotebookType.Important,
-                    onSelect = { state.onTypeChanged(if (state.type == NotebookType.Important) null else NotebookType.Important) },
-                    modifier = Modifier.weight(1f)
-                )
-
-                HorizonSpace(SpaceSize.SPACE_12)
-
-                NotebookTypeSelect(
-                    type = NotebookType.Confusing,
-                    isSelected = state.type == NotebookType.Confusing,
-                    onSelect = { state.onTypeChanged(if (state.type == NotebookType.Confusing) null else NotebookType.Confusing) },
-                    modifier = Modifier.weight(1f)
-                )
-            }
-
-            HorizonSpace(SpaceSize.SPACE_24)
-
-            TextArea(
-                state = TextAreaState(
-                    label = stringResource(R.string.addNoteAddANoteLabel),
-                    required = InputLabelRequired.Optional,
-                    value = state.userComment,
-                    onValueChange = state.onUserCommentChanged,
-                ),
-                minLines = 5
-            )
-
-            HorizonSpace(SpaceSize.SPACE_16)
-
-            Button(
-                label = stringResource(R.string.addNoteSaveLabel),
-                onClick = state.onSaveNote,
-                enabled = !state.isLoading && state.type != null,
-                color = ButtonColor.Institution,
-                width = ButtonWidth.FILL,
-                height = ButtonHeight.NORMAL
+        if (state.isLoading) {
+            AddEditNoteLoading()
+        } else {
+            AddEditNoteContent(
+                state = state,
+                padding = padding
             )
         }
     }
 }
 
 @Composable
+private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues) {
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+            .padding(padding)
+            .padding(24.dp)
+    ) {
+        Text(
+            text = stringResource(R.string.addNoteHighlightlabel),
+            style = HorizonTypography.labelLargeBold,
+            color = HorizonColors.Text.body()
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        NotebookHighlightedText(
+            text = state.highlightedData.selectedText,
+            type = state.type
+        )
+
+        HorizonSpace(SpaceSize.SPACE_24)
+
+        Text(
+            text = stringResource(R.string.addNoteLabelLabel),
+            style = HorizonTypography.labelLargeBold,
+            color = HorizonColors.Text.body()
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Row {
+            NotebookTypeSelect(
+                type = NotebookType.Important,
+                isSelected = state.type == NotebookType.Important,
+                onSelect = { state.onTypeChanged(if (state.type == NotebookType.Important) null else NotebookType.Important) },
+                modifier = Modifier.weight(1f)
+            )
+
+            HorizonSpace(SpaceSize.SPACE_12)
+
+            NotebookTypeSelect(
+                type = NotebookType.Confusing,
+                isSelected = state.type == NotebookType.Confusing,
+                onSelect = { state.onTypeChanged(if (state.type == NotebookType.Confusing) null else NotebookType.Confusing) },
+                modifier = Modifier.weight(1f)
+            )
+        }
+
+        HorizonSpace(SpaceSize.SPACE_24)
+
+        TextArea(
+            state = TextAreaState(
+                label = stringResource(R.string.addNoteAddANoteLabel),
+                required = InputLabelRequired.Optional,
+                value = state.userComment,
+                onValueChange = state.onUserCommentChanged,
+            ),
+            minLines = 5
+        )
+
+        HorizonSpace(SpaceSize.SPACE_16)
+
+        Button(
+            label = stringResource(R.string.addNoteSaveLabel),
+            onClick = state.onSaveNote,
+            enabled = !state.isLoading && state.type != null,
+            color = ButtonColor.Institution,
+            width = ButtonWidth.FILL,
+            height = ButtonHeight.NORMAL
+        )
+    }
+}
+
+@Composable
+private fun AddEditNoteLoading() {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(24.dp)
+    ) {
+        Loading()
+    }
+}
+
+@Composable
 @Preview
-private fun AddNoteScreenPreview() {
+private fun AddEditNoteScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = AddNoteUiState(
+    val state = AddEditNoteUiState(
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",
@@ -151,7 +179,7 @@ private fun AddNoteScreenPreview() {
         onSaveNote = {},
     )
 
-    AddNoteScreen(
+    AddEditNoteScreen(
         navController = NavHostController(LocalContext.current),
         state = state
     )

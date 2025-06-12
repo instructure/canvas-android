@@ -17,11 +17,8 @@
 package com.instructure.horizon.features.notebook
 
 import com.apollographql.apollo.api.Optional
-import com.google.gson.Gson
-import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.RedwoodApiManager
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.pandautils.utils.toJson
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.NoteFilterInput
 import javax.inject.Inject
@@ -54,15 +51,5 @@ class NotebookRepository @Inject constructor(
             )
         }
 
-    }
-
-    fun parseHighlightedData(highlightData: Any?): NoteHighlightedData? {
-        val result = try {
-            Gson().fromJson(highlightData?.toJson(), NoteHighlightedData::class.java)
-        } catch (e: Exception) {
-            null
-        }
-
-        return result
     }
 }

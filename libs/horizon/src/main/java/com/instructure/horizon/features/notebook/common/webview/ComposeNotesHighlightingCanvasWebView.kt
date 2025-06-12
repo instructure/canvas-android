@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.notebook.common.webview
 
-import android.util.Log
 import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
@@ -31,6 +30,7 @@ import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
 import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
@@ -42,6 +42,7 @@ import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.launch
 
 @Composable
 fun ComposeNotesHighlightingCanvasWebView(
@@ -92,16 +93,27 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                                 webView.addTextSelectionInterface(
                                     onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
-                                        Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset")
                                         selectedText = text
                                         selectedTextStartContainer = startContainer
                                         selectedTextStartOffset = startOffset
                                         selectedTextEndContainer = endContainer
                                         selectedTextEndOffset = endOffset
                                     },
-                                    onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") },
+                                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
+                                        lifecycleOwner.lifecycleScope.launch {
+                                            notesCallback.onNoteSelected(
+                                                noteId,
+                                                noteType,
+                                                selectedText,
+                                                userComment,
+                                                startContainer,
+                                                startOffset,
+                                                endContainer,
+                                                endOffset
+                                            )
+                                        }
+                                    },
                                     onSelectionPositionChange = { left, top, right, bottom ->
-                                        Log.d("PageDetailsContentScreen", "Selection position changed: ($left, $top, $right, $bottom)")
                                         selectionLocation.tryEmit(SelectionLocation(left, top, right, bottom))
                                     }
                                 )
@@ -132,16 +144,27 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                     webView.addTextSelectionInterface(
                         onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
-                            Log.d("PageDetailsContentScreen", "Text selected: $text, {$startContainer}:$startOffset, {$endContainer}:$endOffset")
                             selectedText = text
                             selectedTextStartContainer = startContainer
                             selectedTextStartOffset = startOffset
                             selectedTextEndContainer = endContainer
                             selectedTextEndOffset = endOffset
                         },
-                        onHighlightedTextClick = { Log.d("PageDetailsContentScreen", "Note clicked: $it") },
+                        onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
+                            lifecycleOwner.lifecycleScope.launch {
+                                notesCallback.onNoteSelected(
+                                    noteId,
+                                    noteType,
+                                    selectedText,
+                                    userComment,
+                                    startContainer,
+                                    startOffset,
+                                    endContainer,
+                                    endOffset
+                                )
+                            }
+                        },
                         onSelectionPositionChange = { left, top, right, bottom ->
-                            Log.d("PageDetailsContentScreen", "Selection position changed: ($left, $top, $right, $bottom)")
                             selectionLocation.tryEmit(SelectionLocation(left, top, right, bottom))
                         }
                     )

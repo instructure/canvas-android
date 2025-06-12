@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.notebook.add
+package com.instructure.horizon.features.notebook.addedit.add
 
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
+import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.navigation.MainNavigationRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -46,7 +47,8 @@ class AddNoteViewModel @Inject constructor(
     private val highlightedTextEndContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndContainer
     private val highlightedText: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedText
 
-    private val _uiState = MutableStateFlow(AddNoteUiState(
+    private val _uiState = MutableStateFlow(
+        AddEditNoteUiState(
         highlightedData = NoteHighlightedData(
             selectedText = highlightedText,
             range = NoteHighlightedDataTextPosition(
@@ -59,10 +61,11 @@ class AddNoteViewModel @Inject constructor(
         onTypeChanged = ::onTypeChanged,
         onUserCommentChanged = ::onUserCommentChanged,
         onSaveNote = ::addNote,
-    ))
+    )
+    )
     val uiState = _uiState.asStateFlow()
 
-    fun addNote() {
+    private fun addNote() {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 

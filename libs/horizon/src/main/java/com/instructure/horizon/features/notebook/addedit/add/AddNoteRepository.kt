@@ -14,18 +14,31 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.notebook.add
+package com.instructure.horizon.features.notebook.addedit.add
 
-import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.RedwoodApiManager
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import javax.inject.Inject
 
-data class AddNoteUiState(
-    val highlightedData: NoteHighlightedData,
-    val userComment: TextFieldValue = TextFieldValue(""),
-    val onUserCommentChanged: (TextFieldValue) -> Unit,
-    val type: NotebookType? = null,
-    val onTypeChanged: (NotebookType?) -> Unit,
-    val onSaveNote: () -> Unit,
-    val isLoading: Boolean = false
-)
+class AddNoteRepository @Inject constructor(
+    private val redwoodApiManager: RedwoodApiManager
+) {
+    suspend fun addNote(
+        courseId: String,
+        objectId: String,
+        objectType: String,
+        highlightedData: NoteHighlightedData,
+        userComment: String,
+        type: NotebookType?
+    ) {
+        redwoodApiManager.createNote(
+            courseId = courseId,
+            objectId = objectId,
+            objectType = objectType,
+            userText = userComment,
+            highlightData = highlightedData,
+            notebookType = type?.name
+        )
+    }
+}

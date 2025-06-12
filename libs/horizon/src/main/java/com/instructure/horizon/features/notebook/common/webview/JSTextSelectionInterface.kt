@@ -28,7 +28,16 @@ class JSTextSelectionInterface(
         endContainer: String,
         endOffset: Int
     ) -> Unit,
-    private val onHighlightedTextClick: (String) -> Unit,
+    private val onHighlightedTextClick: (
+        noteId: String,
+        noteType: String,
+        selectedText: String,
+        userComment: String,
+        startContainer: String,
+        startOffset: Int,
+        endContainer: String,
+        endOffset: Int,
+    ) -> Unit,
     private val onSelectionPositionChange: (
         left: Float,
         top: Float,
@@ -58,8 +67,17 @@ class JSTextSelectionInterface(
     }
 
     @JavascriptInterface
-    fun onHighlightedTextClicked(noteId: String) {
-        onHighlightedTextClick(noteId)
+    fun onHighlightedTextClicked(
+        noteId: String,
+        noteType: String,
+        selectedText: String,
+        userComment: String,
+        startContainer: String,
+        startOffset: Int,
+        endContainer: String,
+        endOffset: Int,
+    ) {
+        onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset)
     }
 
     companion object {
@@ -128,7 +146,7 @@ class JSTextSelectionInterface(
                 return getFirstTextNode(node);
             }
             
-            function highlightSelection(noteId, startOffset, startContainer, endOffset, endContainer, noteReactionString) {
+            function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString) {
                 const startNode = getTextNodeByXPath(startContainer);
                 const endNode = getTextNodeByXPath(endContainer);
                 const range = document.createRange();
@@ -147,7 +165,7 @@ class JSTextSelectionInterface(
                 } else {
                     span.className = 'important-highlight';
                 }
-                span.onclick = function() { ${JS_INTERFACE_NAME}.onHighlightedTextClicked(noteId); };
+                span.onclick = function() { ${JS_INTERFACE_NAME}.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer); };
               
                 range.surroundContents(span);
             }
@@ -171,7 +189,16 @@ class JSTextSelectionInterface(
                 endContainer: String,
                 endOffset: Int
             ) -> Unit,
-            onHighlightedTextClick: (String) -> Unit,
+            onHighlightedTextClick: (
+                noteId: String,
+                noteType: String,
+                selectedText: String,
+                userComment: String,
+                startContainer: String,
+                startOffset: Int,
+                endContainer: String,
+                endOffset: Int,
+            ) -> Unit,
             onSelectionPositionChange: (
                 left: Float,
                 top: Float,
@@ -187,7 +214,7 @@ class JSTextSelectionInterface(
 
         fun WebView.highlightNotes(notes: List<Note>) {
             notes.forEach { note ->
-                this.evaluateJavascript("javascript:highlightSelection('${note.id}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}')", null)
+                this.evaluateJavascript("javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText}', '${note.userText}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}')", null)
             }
         }
     }

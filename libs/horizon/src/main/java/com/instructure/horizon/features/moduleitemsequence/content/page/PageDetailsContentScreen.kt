@@ -87,7 +87,20 @@ fun PageDetailsContentScreen(
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
                     ),
                     notesCallback = NotesCallback(
-                        onNoteSelected = {},
+                        onNoteSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
+                            mainNavController.navigate(
+                                MainNavigationRoute.EditNotebook(
+                                    noteId = noteId,
+                                    noteType = noteType,
+                                    highlightedTextStartOffset = startOffset,
+                                    highlightedTextEndOffset = endOffset,
+                                    highlightedTextStartContainer = startContainer,
+                                    highlightedTextEndContainer = endContainer,
+                                    highlightedText = selectedText,
+                                    userComment = userComment
+                                )
+                            )
+                        },
                         onNoteAdded = { selectedText, startContainer, startOffset, endContainer, endOffset ->
                             mainNavController.navigate(
                                 MainNavigationRoute.AddNotebook(
