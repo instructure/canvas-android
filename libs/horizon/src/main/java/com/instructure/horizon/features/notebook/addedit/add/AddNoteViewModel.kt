@@ -65,7 +65,7 @@ class AddNoteViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
-    private fun addNote() {
+    private fun addNote(onFinished: () -> Unit) {
         viewModelScope.launch {
             _uiState.update { it.copy(isLoading = true) }
 
@@ -79,6 +79,7 @@ class AddNoteViewModel @Inject constructor(
             )
 
             _uiState.update { it.copy(isLoading = false) }
+            onFinished()
         }
     }
 

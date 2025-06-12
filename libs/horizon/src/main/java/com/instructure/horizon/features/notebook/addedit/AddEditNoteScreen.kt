@@ -74,6 +74,7 @@ fun AddEditNoteScreen(
         } else {
             AddEditNoteContent(
                 state = state,
+                navController = navController,
                 padding = padding
             )
         }
@@ -81,7 +82,7 @@ fun AddEditNoteScreen(
 }
 
 @Composable
-private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues) {
+private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHostController, padding: PaddingValues) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -148,7 +149,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
                 color = IconButtonColor.Danger,
                 size = IconButtonSize.SMALL,
                 elevation = HorizonElevation.level4,
-                onClick = state.onDeleteNote,
+                onClick = { state.onDeleteNote.invoke { navController.popBackStack() } },
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(4.dp),
@@ -159,7 +160,7 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, padding: PaddingValues
 
         Button(
             label = stringResource(R.string.addNoteSaveLabel),
-            onClick = state.onSaveNote,
+            onClick = { state.onSaveNote { navController.popBackStack() } },
             enabled = !state.isLoading && state.type != null,
             color = ButtonColor.Institution,
             width = ButtonWidth.FILL,

@@ -26,7 +26,7 @@ data class AddEditNoteUiState(
     val onUserCommentChanged: (TextFieldValue) -> Unit,
     val type: NotebookType? = null,
     val onTypeChanged: (NotebookType?) -> Unit,
-    val onSaveNote: () -> Unit,
+    val onSaveNote: (() -> Unit) -> Unit,
     val isLoading: Boolean = false,
-    val onDeleteNote: (() -> Unit)? = null
+    val onDeleteNote: ((() -> Unit) -> Unit)? = null
 )
