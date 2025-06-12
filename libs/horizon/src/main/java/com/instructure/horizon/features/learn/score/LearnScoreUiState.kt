@@ -34,7 +34,7 @@ data class AssignmentScoreItem(
         status = assignment.getStatus(),
         pointsPossible = assignment.pointsPossible,
         lastScore = assignment.submission?.score,
-        submissionCommentsCount = assignment.lastActualSubmission?.submissionComments?.size ?: 0,
+        submissionCommentsCount = assignment.lastGradedOrSubmittedSubmission?.submissionComments?.size ?: 0,
         dueDate = assignment.dueDate
     )
 }

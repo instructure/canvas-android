@@ -265,7 +265,7 @@ private fun ModuleItemSequenceContent(
                     ModuleItemContentScreen(
                         moduleItemUiState,
                         scrollState = contentScrollState,
-                        uiState.openAssignmentTools,
+                        uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
                         uiState.updateAiContextString
                     )
@@ -360,7 +360,7 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
-    openAssignmentTools: Boolean,
+    assignmentToolsForId: Long,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -389,8 +389,9 @@ private fun ModuleItemContentScreen(
                 val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.instructions)
-                LaunchedEffect(openAssignmentTools) {
-                    if (openAssignmentTools) {
+                LaunchedEffect(assignmentToolsForId) {
+                    val assignmentId = it.arguments?.getLong(ModuleItemContent.Assignment.ASSIGNMENT_ID) ?: -1L
+                    if (assignmentToolsForId != -1L && assignmentId == assignmentToolsForId) {
                         viewModel.openAssignmentTools()
                         assignmentToolsOpened()
                     }

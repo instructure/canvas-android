@@ -30,7 +30,9 @@ data class AssignmentDetailsUiState(
     val urlToOpen: String? = null,
     val onUrlOpened: () -> Unit = {},
     val onSubmissionSuccess: suspend () -> Unit = {},
-    val submissionConfirmationUiState: SubmissionConfirmationUiState = SubmissionConfirmationUiState()
+    val submissionConfirmationUiState: SubmissionConfirmationUiState = SubmissionConfirmationUiState(),
+    val attemptSelectorUiState: AttemptSelectorUiState = AttemptSelectorUiState(),
+    val viewingAttemptText: String? = null,
 )
 
 data class SubmissionDetailsUiState(
@@ -61,6 +63,7 @@ data class FileItem(
 
 data class ToolsBottomSheetUiState(
     val show: Boolean = false,
+    val showAttemptSelector: Boolean = false,
     val onDismiss: () -> Unit = {},
     val onAttemptsClick: () -> Unit = {},
     val onCommentsClick: () -> Unit = {},
@@ -70,4 +73,10 @@ data class SubmissionConfirmationUiState(
     val show: Boolean = false,
     val onDismiss: () -> Unit = {},
     val attemptCardState: AttemptCardState? = null
+)
+
+data class AttemptSelectorUiState(
+    val show: Boolean = false,
+    val attempts: List<AttemptCardState> = emptyList(),
+    val onDismiss: () -> Unit = {}
 )

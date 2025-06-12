@@ -58,7 +58,12 @@ import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
 
 @Composable
-fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, snackbarHostState: SnackbarHostState, modifier: Modifier = Modifier, onRceFocused: () -> Unit = {}) {
+fun AddSubmissionContent(
+    uiState: AddSubmissionUiState,
+    snackbarHostState: SnackbarHostState,
+    modifier: Modifier = Modifier,
+    onRceFocused: () -> Unit = {}
+) {
 
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
@@ -99,101 +104,105 @@ fun ColumnScope.AddSubmissionContent(uiState: AddSubmissionUiState, snackbarHost
             )
         }
 
-        if (uiState.submissionTypes.size > 1) {
-            Text(stringResource(R.string.assignmentDetails_selectSubmissionType), style = HorizonTypography.h3)
-            HorizonSpace(SpaceSize.SPACE_16)
-            val options = uiState.submissionTypes.map { stringResource(it.labelRes) }
-            SegmentedControl(
-                options = options,
-                onItemSelected = uiState.onSubmissionTypeSelected,
-                selectedIndex = uiState.selectedSubmissionTypeIndex,
-                iconPosition = SegmentedControlIconPosition.Start(checkmark = true),
-                modifier = modifier
-            )
+        Column(modifier = modifier) {
+            if (uiState.submissionTypes.size > 1) {
+                Text(stringResource(R.string.assignmentDetails_selectSubmissionType), style = HorizonTypography.h3)
+                HorizonSpace(SpaceSize.SPACE_16)
+                val options = uiState.submissionTypes.map { stringResource(it.labelRes) }
+                SegmentedControl(
+                    options = options,
+                    onItemSelected = uiState.onSubmissionTypeSelected,
+                    selectedIndex = uiState.selectedSubmissionTypeIndex,
+                    iconPosition = SegmentedControlIconPosition.Start(checkmark = true)
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+            }
+
+            when (selectedSubmissionType) {
+                is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
+                    uiState = selectedSubmissionType,
+                    submissionInProgress = uiState.submissionInProgress
+                )
+
+                is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
+            }
             HorizonSpace(SpaceSize.SPACE_24)
-        }
-
-        when (selectedSubmissionType) {
-            is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
-                uiState = selectedSubmissionType,
-                submissionInProgress = uiState.submissionInProgress
-            )
-
-            is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
-        }
-        HorizonSpace(SpaceSize.SPACE_24)
-        AnimatedVisibility(visible = uiState.errorMessage != null) {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Icon(
-                    painterResource(R.drawable.error),
-                    tint = HorizonColors.Icon.error(),
-                    contentDescription = null,
-                    modifier = Modifier.size(24.dp)
-                )
-                HorizonSpace(SpaceSize.SPACE_6)
-                Text(
-                    uiState.errorMessage.orEmpty(),
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.error()
-                )
+            AnimatedVisibility(visible = uiState.errorMessage != null) {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        painterResource(R.drawable.error),
+                        tint = HorizonColors.Icon.error(),
+                        contentDescription = null,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    HorizonSpace(SpaceSize.SPACE_6)
+                    Text(
+                        uiState.errorMessage.orEmpty(),
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.error()
+                    )
+                }
             }
-        }
-        AnimatedVisibility(visible = selectedSubmissionType.draftUiState.draftDateString.isNotEmpty() && !uiState.submissionInProgress) {
-            Row(
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Text(
-                    selectedSubmissionType.draftUiState.draftDateString,
-                    style = HorizonTypography.p1,
-                    color = HorizonColors.Text.timestamp()
-                )
-                Button(
-                    label = stringResource(R.string.assignmentDetails_deleteDraft),
-                    color = ButtonColor.Custom(
-                        backgroundColor = HorizonColors.Surface.pageSecondary(),
-                        contentColor = HorizonColors.Text.error()
-                    ),
-                    onClick = selectedSubmissionType.draftUiState.onDeleteDraftClicked,
-                    iconPosition = ButtonIconPosition.Start(R.drawable.delete),
-                )
+            AnimatedVisibility(visible = selectedSubmissionType.draftUiState.draftDateString.isNotEmpty() && !uiState.submissionInProgress) {
+                Row(
+                    horizontalArrangement = Arrangement.End,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Text(
+                        selectedSubmissionType.draftUiState.draftDateString,
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.timestamp()
+                    )
+                    Button(
+                        label = stringResource(R.string.assignmentDetails_deleteDraft),
+                        color = ButtonColor.Custom(
+                            backgroundColor = HorizonColors.Surface.pageSecondary(),
+                            contentColor = HorizonColors.Text.error()
+                        ),
+                        onClick = selectedSubmissionType.draftUiState.onDeleteDraftClicked,
+                        iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                    )
+                }
             }
-        }
-        HorizonSpace(SpaceSize.SPACE_16)
-        Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
-            val alpha = if (selectedSubmissionType.submitEnabled || uiState.submissionInProgress) 1f else 0.5f
-            Box(
-                contentAlignment = Alignment.CenterEnd,
-                modifier = Modifier
-                    .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
-                    .animateContentSize()
-            ) {
-                if (uiState.submissionInProgress) {
-                    Box(
-                        contentAlignment = Alignment.Center,
-                        modifier = Modifier
-                            .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
-                    ) {
-                        Spinner(
-                            size = SpinnerSize.EXTRA_SMALL,
-                            color = HorizonColors.Surface.cardPrimary(),
+            HorizonSpace(SpaceSize.SPACE_16)
+            Box(contentAlignment = Alignment.CenterEnd, modifier = Modifier.fillMaxWidth()) {
+                val alpha = if (selectedSubmissionType.submitEnabled || uiState.submissionInProgress) 1f else 0.5f
+                Box(
+                    contentAlignment = Alignment.CenterEnd,
+                    modifier = Modifier
+                        .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
+                        .animateContentSize()
+                ) {
+                    if (uiState.submissionInProgress) {
+                        Box(
+                            contentAlignment = Alignment.Center,
                             modifier = Modifier
-                                .align(Alignment.Center)
-                                .padding(horizontal = 22.dp, vertical = 10.dp),
+                                .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                        ) {
+                            Spinner(
+                                size = SpinnerSize.EXTRA_SMALL,
+                                color = HorizonColors.Surface.cardPrimary(),
+                                modifier = Modifier
+                                    .align(Alignment.Center)
+                                    .padding(horizontal = 22.dp, vertical = 10.dp),
+                            )
+                        }
+                    } else {
+                        Button(
+                            label = stringResource(R.string.assignmentDetails_submitAssignment),
+                            color = ButtonColor.Custom(
+                                backgroundColor = Color.Transparent,
+                                contentColor = HorizonColors.Text.surfaceColored()
+                            ),
+                            onClick = uiState.onSubmissionButtonClicked,
+                            enabled = selectedSubmissionType.submitEnabled
                         )
                     }
-                } else {
-                    Button(
-                        label = stringResource(R.string.assignmentDetails_submitAssignment),
-                        color = ButtonColor.Custom(backgroundColor = Color.Transparent, contentColor = HorizonColors.Text.surfaceColored()),
-                        onClick = uiState.onSubmissionButtonClicked,
-                        enabled = selectedSubmissionType.submitEnabled
-                    )
                 }
             }
         }
