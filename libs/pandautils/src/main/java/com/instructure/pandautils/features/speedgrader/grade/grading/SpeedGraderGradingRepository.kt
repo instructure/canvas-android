@@ -30,13 +30,27 @@ class SpeedGraderGradingRepository(
         return submissionGradeManager.getSubmissionGrade(assignmentId, studentId)
     }
 
-    suspend fun updateSubmissionGrade(score: Double, userId: Long, assignmentId: Long, courseId: Long): Submission {
+    suspend fun updateSubmissionGrade(score: String, userId: Long, assignmentId: Long, courseId: Long, excused: Boolean): Submission {
         return submissionApi.postSubmissionGrade(
             contextId = courseId,
             assignmentId = assignmentId,
             userId = userId,
-            assignmentScore = score.toString(),
-            isExcused = false,
+            assignmentScore = score,
+            isExcused = excused,
+            restParams = RestParams()
+        ).dataOrThrow
+    }
+
+    suspend fun excuseSubmission(
+        userId: Long,
+        assignmentId: Long,
+        courseId: Long
+    ): Submission {
+        return submissionApi.postSubmissionExcusedStatus(
+            contextId = courseId,
+            assignmentId = assignmentId,
+            userId = userId,
+            isExcused = true,
             restParams = RestParams()
         ).dataOrThrow
     }

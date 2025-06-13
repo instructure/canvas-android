@@ -49,7 +49,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
         MutableStateFlow(
             SpeedGraderGradingUiState(
                 onScoreChange = this::onScoreChanged,
-                onPercentageChange = this::onPercentageChanged
+                onPercentageChange = this::onPercentageChanged,
+                onExcuse = this::onExcuse
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -72,6 +73,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     pointsPossible = submission.assignment?.pointsPossible,
                     score = submission.score,
                     grade = submission.grade,
+                    excused = submission.excused.orDefault(),
                     enteredGrade = submission.enteredGrade,
                     enteredScore = submission.enteredScore?.toFloat(),
                     pointsDeducted = submission.deductedPoints,
@@ -93,24 +95,25 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private fun onScoreChanged(score: Float?) {
         debounceJob?.cancel()
-        score?.let {
-            debounceJob = viewModelScope.launch {
-                delay(500)
-                val submission = repository.updateSubmissionGrade(
-                    it.toDouble(),
-                    studentId,
-                    assignmentId,
-                    courseId
+
+        debounceJob = viewModelScope.launch {
+            delay(500)
+            val submission = repository.updateSubmissionGrade(
+                score = score?.toString() ?: "Not Graded",
+                studentId,
+                assignmentId,
+                courseId,
+                false
+            )
+            _uiState.update {
+                it.copy(
+                    score = submission.score,
+                    grade = submission.grade,
+                    enteredGrade = submission.enteredGrade,
+                    enteredScore = if (submission.enteredGrade == null) null else submission.enteredScore.toFloat(),
+                    pointsDeducted = submission.pointsDeducted,
+                    excused = submission.excused
                 )
-                _uiState.update {
-                    it.copy(
-                        score = submission.score,
-                        grade = submission.grade,
-                        enteredGrade = submission.enteredGrade,
-                        enteredScore = submission.enteredScore.toFloat(),
-                        pointsDeducted = submission.pointsDeducted
-                    )
-                }
             }
         }
     }
@@ -123,6 +126,24 @@ class SpeedGraderGradingViewModel @Inject constructor(
     private fun getDaysLate(secondsLate: Double?): Int? {
         return secondsLate?.let {
             (it / (60 * 60 * 24)).roundToInt().coerceAtLeast(1)
+        }
+    }
+
+    private fun onExcuse() {
+        viewModelScope.launch {
+            val submission = repository.excuseSubmission(
+                studentId,
+                assignmentId,
+                courseId,
+            )
+            _uiState.update {
+                it.copy(
+                    excused = submission.excused.orDefault(),
+                    enteredGrade = submission.enteredGrade,
+                    enteredScore = if (submission.enteredGrade == null) null else submission.enteredScore.toFloat(),
+                    pointsDeducted = submission.pointsDeducted
+                )
+            }
         }
     }
 }

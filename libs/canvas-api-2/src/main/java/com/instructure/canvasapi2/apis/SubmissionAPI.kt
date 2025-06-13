@@ -247,6 +247,14 @@ object SubmissionAPI {
             @Query("submission[excuse]") isExcused: Boolean
         ): Call<Submission>
 
+        @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
+        suspend fun postSubmissionExcusedStatus(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long, @Path("userId") userId: Long,
+            @Query("submission[excuse]") isExcused: Boolean,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
         @GET("courses/{courseId}/assignments/{assignmentId}/submission_summary")
         fun getSubmissionSummary(
             @Path("courseId") courseId: Long,

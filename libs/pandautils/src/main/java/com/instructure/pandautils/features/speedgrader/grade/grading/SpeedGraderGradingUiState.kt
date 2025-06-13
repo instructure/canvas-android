@@ -33,10 +33,12 @@ data class SpeedGraderGradingUiState(
     val gradingType: GradingType? = null,
     val dueDate: Date? = null,
     val daysLate: Int? = null,
+    val excused: Boolean = false,
     val letterGrades: List<GradingSchemeRow> = emptyList(),
     val gradingStatuses: List<LatePolicyStatusType> = emptyList(),
     val gradingStatus: LatePolicyStatusType = LatePolicyStatusType.none,
     val onScoreChange: (Float?) -> Unit,
+    val onExcuse: () -> Unit,
     val onPercentageChange: (Float?) -> Unit
 )
 

@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.grading
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -23,12 +24,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
@@ -124,6 +128,44 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
             }
         }
 
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            OutlinedButton(
+                enabled = uiState.enteredScore != null || uiState.excused,
+                onClick = { uiState.onScoreChange(null) },
+                modifier = Modifier.weight(1f),
+                border = BorderStroke(
+                    1.dp,
+                    LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
+                ),
+                colors = ButtonDefaults.outlinedButtonColors().copy(
+                    contentColor = LocalCourseColor.current,
+                    disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                )
+            ) {
+                Text(stringResource(R.string.noGrade), fontSize = 16.sp, lineHeight = 19.sp)
+            }
+            Spacer(modifier = Modifier.width(16.dp))
+            OutlinedButton(
+                enabled = uiState.excused.not(),
+                onClick = { uiState.onExcuse() },
+                border = BorderStroke(
+                    1.dp,
+                    LocalCourseColor.current.copy(alpha = if (uiState.excused) 0.5f else 1f)
+                ),
+                modifier = Modifier.weight(1f),
+                colors = ButtonDefaults.outlinedButtonColors().copy(
+                    contentColor = LocalCourseColor.current,
+                    disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                )
+            ) {
+                Text(stringResource(R.string.gradeExcused), fontSize = 16.sp, lineHeight = 19.sp)
+            }
+        }
+
         uiState.daysLate?.let {
             LateHeader(it, uiState.dueDate)
         }
@@ -134,8 +176,10 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
 
 @Composable
 private fun FinalScore(uiState: SpeedGraderGradingUiState) {
-    val enteredScore = uiState.enteredScore?.let { numberFormatter.format(uiState.enteredScore) } ?: "-"
-    val pointsPossible = uiState.pointsPossible?.let { numberFormatter.format(uiState.pointsPossible) } ?: "-"
+    val enteredScore =
+        uiState.enteredScore?.let { numberFormatter.format(uiState.enteredScore) } ?: "-"
+    val pointsPossible =
+        uiState.pointsPossible?.let { numberFormatter.format(uiState.pointsPossible) } ?: "-"
     val finalScore = uiState.score?.let { numberFormatter.format(uiState.score) } ?: "-"
 
     Card(
@@ -496,7 +540,13 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
     var sliderDrivenScore by remember { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
-    var textFieldScore by remember { mutableStateOf(uiState.enteredScore?.let { numberFormatter.format(it) }.orEmpty()) }
+    var textFieldScore by remember {
+        mutableStateOf(uiState.enteredScore?.let {
+            numberFormatter.format(
+                it
+            )
+        }.orEmpty())
+    }
 
     val maxScore by remember {
         mutableFloatStateOf(
@@ -599,6 +649,7 @@ private fun SpeedGraderGradingContentPreview() {
     CanvasTheme(courseColor = Color.Magenta) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
+                excused = true,
                 pointsPossible = 20.0,
                 enteredGrade = "15",
                 enteredScore = 15.0f,
@@ -609,7 +660,8 @@ private fun SpeedGraderGradingContentPreview() {
                 dueDate = Date(),
                 daysLate = 4,
                 gradingType = GradingType.points,
-                onPercentageChange = {}
+                onPercentageChange = {},
+                onExcuse = {}
             )
         )
     }
@@ -630,7 +682,8 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 dueDate = Date(),
                 daysLate = 4,
                 gradingType = GradingType.percent,
-                onPercentageChange = {}
+                onPercentageChange = {},
+                onExcuse = {}
             )
         )
     }
@@ -651,7 +704,8 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
                 daysLate = 4,
                 onScoreChange = {},
                 gradingType = GradingType.pass_fail,
-                onPercentageChange = {}
+                onPercentageChange = {},
+                onExcuse = {}
             )
         )
     }
@@ -680,7 +734,8 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                     GradingSchemeRow("C", 70.0),
                     GradingSchemeRow("D", 60.0),
                     GradingSchemeRow("F", 0.0)
-                )
+                ),
+                onExcuse = {}
             )
         )
     }

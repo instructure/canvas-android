@@ -27,6 +27,7 @@ query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!) {
         secondsLate
         deductedPoints
         score
+        excused
         enteredGrade
         enteredScore
         assignment {
