@@ -46,7 +46,6 @@ fun SpeedGraderScreen(
     val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size })
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
 
-
     LaunchedEffect(Unit) {
         pagerState.scrollToPage(uiState.selectedItem)
     }

@@ -25,7 +25,10 @@ import androidx.compose.foundation.gestures.DraggableAnchors
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -39,18 +42,21 @@ import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.compose.composables.DraggableResizableLayout
-import com.instructure.pandautils.compose.composables.HorizontalDraggableResizableLayout
+import com.instructure.pandautils.compose.composables.HorizontalDraggableResizeableLayout
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
-
-    val horizontal =
-        currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass != WindowWidthSizeClass.COMPACT
+fun SpeedGraderSubmissionScreen(
+    assignmentId: Long,
+    submissionId: Long
+) {
+    val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
+    val horizontal = windowClass != WindowWidthSizeClass.COMPACT
 
     if (horizontal) {
-        HorizontalDraggableResizableLayout(
+        var expanded by remember { mutableStateOf(false) }
+        HorizontalDraggableResizeableLayout(
             modifier = Modifier,
             leftContent = {
                 NavHost(
@@ -58,7 +64,9 @@ fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
                     modifier = Modifier.fillMaxSize(),
                     startDestination = "speedGraderContent/$assignmentId/$submissionId"
                 ) {
-                    speedGraderContentScreen()
+                    speedGraderContentScreen(expanded) {
+                        expanded = !expanded
+                    }
                 }
             },
             rightContent = {
@@ -69,7 +77,9 @@ fun SpeedGraderSubmissionScreen(assignmentId: Long, submissionId: Long) {
                 ) {
                     speedGraderBottomSheet()
                 }
-            }
+            },
+            fixedSplit = windowClass != WindowWidthSizeClass.EXPANDED,
+            expanded = expanded
         )
     } else {
         val density = LocalDensity.current
@@ -144,7 +154,7 @@ fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
     SpeedGraderSubmissionScreen(3L, 3L)
 }
 
-private fun NavGraphBuilder.speedGraderContentScreen() {
+private fun NavGraphBuilder.speedGraderContentScreen(expanded: Boolean = false, onExpandClick: (() -> Unit)? = null) {
     composable(
         route = "speedGraderContent/{assignmentId}/{submissionId}",
         arguments = listOf(
@@ -152,7 +162,7 @@ private fun NavGraphBuilder.speedGraderContentScreen() {
             navArgument("submissionId") { type = NavType.LongType }
         )
     ) {
-        SpeedGraderContentScreen()
+        SpeedGraderContentScreen(expanded, onExpandClick)
     }
 }
 
