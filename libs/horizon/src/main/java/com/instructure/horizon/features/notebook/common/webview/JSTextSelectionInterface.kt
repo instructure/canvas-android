@@ -106,11 +106,10 @@ class JSTextSelectionInterface(
                 while (node && node !== root) {
                     const parent = node.parentNode;
                     if (!parent) break;
-
-                    const siblings = Array.from(parent.childNodes).filter(n => n.nodeName === node.nodeName);
-                    const index = siblings.indexOf(node) + 1; // XPath is 1-based
-                    const nodeName = node.nodeName.toLowerCase();
                     if (node.nodeType !== Node.TEXT_NODE) {
+                        const siblings = Array.from(parent.childNodes).filter(n => n.nodeName === node.nodeName);
+                        const index = siblings.indexOf(node) + 1; // XPath is 1-based
+                        const nodeName = node.nodeType === Node.TEXT_NODE ? 'text()' : node.nodeName.toLowerCase();
                         parts.unshift(`${'$'}{nodeName}[${'$'}{index}]`);
                     }
                     node = parent;
