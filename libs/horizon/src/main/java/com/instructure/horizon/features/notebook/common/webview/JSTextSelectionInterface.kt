@@ -214,7 +214,6 @@ class JSTextSelectionInterface(
         }
 
         fun WebView.highlightNotes(notes: List<Note>) {
-            //this.evaluateJavascript("javascript:removeAllHighlights()", null)
             notes.forEach { note ->
                 this.evaluateJavascript("javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText}', '${note.userText}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}')", null)
             }

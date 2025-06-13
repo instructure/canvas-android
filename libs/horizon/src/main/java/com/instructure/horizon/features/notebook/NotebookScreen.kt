@@ -193,7 +193,7 @@ fun NotebookBottomDialog(
                 }
             } else if (state.notes.isEmpty()) {
                 item {
-                    EmptyContent()
+                    EmptyContent(modifier = Modifier.padding(vertical = 24.dp))
                 }
             } else {
                 items(state.notes) { note ->
@@ -346,10 +346,10 @@ private fun NoteContent(
 }
 
 @Composable
-private fun EmptyContent() {
+private fun EmptyContent(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .shadow(
                 elevation = HorizonElevation.level4,
