@@ -43,5 +43,5 @@ fun SpeedGraderCommentsScreen() {
 
     val context = LocalContext.current.applicationContext
 
-    SpeedGraderCommentSection(uiState.comments)
+    SpeedGraderCommentSection(uiState, actionHandler = viewModel::handleAction)
 }

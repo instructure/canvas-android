@@ -31,22 +31,30 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.Divider
 import androidx.compose.material.Icon
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -58,26 +66,50 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderComment
 import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentAttachment
+import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentsAction
+import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentsUiState
 import com.instructure.pandautils.utils.iconRes
-
 
 @Composable
 fun SpeedGraderCommentSection(
+    state: SpeedGraderCommentsUiState,
+    modifier: Modifier = Modifier,
+    gradingAnonymously: Boolean = false,
+    actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
+) {
+    Column(
+        modifier = modifier.background(colorResource(id = R.color.backgroundLightest))
+    ) {
+        SpeedGraderCommentItems(
+            comments = state.comments,
+            modifier = Modifier.weight(1f),
+            gradingAnonymously = gradingAnonymously
+        )
+        Divider(color = colorResource(id = R.color.backgroundMedium))
+        SpeedGraderCommentCreator(
+            commentText = state.commentText, actionHandler = actionHandler
+        )
+    }
+}
+
+@Composable
+fun SpeedGraderCommentItems(
     comments: List<SpeedGraderComment>,
     modifier: Modifier = Modifier,
     gradingAnonymously: Boolean = false
 ) {
     LazyColumn(
-        modifier = modifier
-            .background(colorResource(id = R.color.backgroundLightest))
-            .padding(8.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(comments) { comment ->
             if (comment.isOwnComment) {
-                SpeedGraderOwnCommentItem(comment = comment)
+                SpeedGraderOwnCommentItem(
+                    comment = comment, gradingAnonymously = gradingAnonymously
+                )
             } else {
-                SpeedGraderUserCommentItem(comment = comment)
+                SpeedGraderUserCommentItem(
+                    comment = comment, gradingAnonymously = gradingAnonymously
+                )
             }
 
         }
@@ -86,15 +118,12 @@ fun SpeedGraderCommentSection(
 
 @Composable
 fun SpeedGraderOwnCommentItem(
-    comment: SpeedGraderComment,
-    modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false
+    comment: SpeedGraderComment, modifier: Modifier = Modifier, gradingAnonymously: Boolean = false
 ) {
     Column(modifier = modifier.padding(8.dp)) {
         Text(
             text = DateHelper.getDateTimeString(
-                LocalContext.current,
-                DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
             ) ?: "",
             modifier = Modifier
                 .fillMaxWidth()
@@ -122,9 +151,7 @@ fun SpeedGraderOwnCommentItem(
             textAlign = TextAlign.Right
         )
         SpeedGraderAttachmentsComponent(
-            attachments = comment.attachments,
-            gradingAnonymously = gradingAnonymously,
-            isOwn = true
+            attachments = comment.attachments, gradingAnonymously = gradingAnonymously, isOwn = true
         )
     }
 }
@@ -139,8 +166,7 @@ fun SpeedGraderAttachmentsComponent(
 ) {
     if (attachments.isNotEmpty()) {
         Column(
-            modifier = modifier
-                .fillMaxWidth(),
+            modifier = modifier.fillMaxWidth(),
             horizontalAlignment = if (isOwn) Alignment.End else Alignment.Start
         ) {
             var itemModifier = Modifier
@@ -152,17 +178,14 @@ fun SpeedGraderAttachmentsComponent(
                     shape = RoundedCornerShape(size = 16.dp)
                 )
             itemModifier = if (isOwn) {
-                itemModifier
-                    .fillMaxWidth(0.6f)
+                itemModifier.fillMaxWidth(0.6f)
             } else {
-                itemModifier
-                    .fillMaxWidth(0.7f)
+                itemModifier.fillMaxWidth(0.7f)
             }
             attachments.forEach { attachment ->
                 SpeedGraderAttachmentComponent(
                     attachment = attachment,
-                    modifier = itemModifier
-                        .clickable { onSelect(attachment) },
+                    modifier = itemModifier.clickable { onSelect(attachment) },
 
                     gradingAnonymously = gradingAnonymously,
                 )
@@ -221,8 +244,7 @@ fun SpeedGraderAttachmentComponent(
         Spacer(Modifier.width(8.dp))
 
         Column(
-            modifier = Modifier
-                .weight(1f)
+            modifier = Modifier.weight(1f)
         ) {
             Text(
                 attachment.displayName,
@@ -250,9 +272,7 @@ fun SpeedGraderAttachmentComponent(
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun SpeedGraderUserCommentItem(
-    comment: SpeedGraderComment,
-    modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false
+    comment: SpeedGraderComment, modifier: Modifier = Modifier, gradingAnonymously: Boolean = false
 ) {
     Row(modifier = modifier) {
         GlideImage(
@@ -278,8 +298,7 @@ fun SpeedGraderUserCommentItem(
             )
             Text(
                 text = DateHelper.getDateTimeString(
-                    LocalContext.current,
-                    DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                    LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
                 ) ?: "",
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
@@ -300,7 +319,91 @@ fun SpeedGraderUserCommentItem(
     }
 }
 
-@Preview
+@Composable
+fun SpeedGraderCommentCreator(
+    modifier: Modifier = Modifier,
+    commentText: TextFieldValue = TextFieldValue(""),
+    actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .wrapContentHeight()
+            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
+            .border(
+                width = 1.dp,
+                color = colorResource(id = R.color.backgroundMedium),
+                shape = RoundedCornerShape(size = 16.dp)
+            )
+    ) {
+        TextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .wrapContentHeight()
+                .background(Color.Transparent),
+            label = { Text("Comment") },
+            value = commentText,
+            maxLines = 5,
+            onValueChange = {
+                actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it))
+            },
+            textStyle = TextStyle(
+                fontSize = 14.sp,
+                lineHeight = 17.sp,
+                fontWeight = FontWeight(400),
+                color = colorResource(id = R.color.textDarkest),
+            ),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = Color.Transparent,
+                unfocusedContainerColor = Color.Transparent,
+                disabledContainerColor = Color.Transparent,
+                errorContainerColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+                disabledIndicatorColor = Color.Transparent,
+                focusedLabelColor = colorResource(R.color.textDark),
+                unfocusedLabelColor = colorResource(R.color.textDark),
+                disabledLabelColor = colorResource(R.color.textDark),
+                errorLabelColor = colorResource(R.color.textDark),
+            )
+        )
+
+        Row(modifier = Modifier
+            .fillMaxWidth()
+            .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
+            .wrapContentHeight()) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_message),
+                contentDescription = "Comment Library",
+                modifier = Modifier
+                    .height(24.dp)
+                    .clickable { /* Handle add attachment action */ },
+                tint = colorResource(id = R.color.textDark)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_attachment),
+                contentDescription = "Add Attachment",
+                modifier = Modifier
+                    .height(24.dp)
+                    .clickable { /* Handle add attachment action */ },
+                tint = colorResource(id = R.color.textDark)
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Icon(
+                painter = painterResource(id = R.drawable.ic_send_outlined),
+                contentDescription = "Send Comment",
+                modifier = Modifier
+                    .height(24.dp)
+                    .clickable { actionHandler(SpeedGraderCommentsAction.SendCommentClicked) }
+                    .alpha(if (commentText.text.isEmpty()) 0.5f else 1f),
+                tint = colorResource(id = R.color.messageBackground)
+            )
+        }
+    }
+}
+
+@Preview(heightDp = 300)
 @Composable
 fun SpeedGraderCommentSectionPreview() {
     val comments = listOf(
@@ -310,18 +413,14 @@ fun SpeedGraderCommentSectionPreview() {
             createdAt = "Wed May 27 00:23:23 GMT+02:00 2025",
             attachments = listOf(
                 SpeedGraderCommentAttachment(
-                    displayName = "image_file_name.jpg",
-                    contentType = "image/jpeg",
-                    size = "1.2 MB"
+                    displayName = "image_file_name.jpg", contentType = "image/jpeg", size = "1.2 MB"
                 )
             )
-        ),
-        SpeedGraderComment(
+        ), SpeedGraderComment(
             content = "Please review the feedback provided.",
             isOwnComment = true,
             createdAt = "Wed May 28 00:12:38 GMT+02:00 2025"
-        ),
-        SpeedGraderComment(
+        ), SpeedGraderComment(
             content = "Good job overall. She has met the basic requirements. There are a few areas where she could improve clarity and depth of analysis.",
             isOwnComment = true,
             createdAt = "Wed May 29 00:43:38 GMT+02:00 2025",
@@ -334,6 +433,12 @@ fun SpeedGraderCommentSectionPreview() {
             )
         )
     )
-    SpeedGraderCommentSection(comments = comments)
+    SpeedGraderCommentSection(state = SpeedGraderCommentsUiState(
+        comments = comments,
+        commentText = TextFieldValue(""),
+        isLoading = false,
+        errorMessage = null,
+        isEmpty = false
+    ), gradingAnonymously = false, actionHandler = {})
 }
 

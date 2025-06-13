@@ -1,8 +1,11 @@
 package com.instructure.pandautils.features.speedgrader.comments
 
+import androidx.compose.ui.text.input.TextFieldValue
+
 
 data class SpeedGraderCommentsUiState(
     val comments: List<SpeedGraderComment> = emptyList(),
+    val commentText: TextFieldValue = TextFieldValue(""),
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val isEmpty: Boolean = false
@@ -29,3 +32,10 @@ data class SpeedGraderCommentAttachment(
     val thumbnailUrl: String? = null,
     val createdAt: String = "",
 )
+
+sealed class SpeedGraderCommentsAction {
+    data class CommentFieldChanged(val commentText: TextFieldValue) : SpeedGraderCommentsAction()
+    data object AddCommentLibraryClicked : SpeedGraderCommentsAction()
+    data object AddAttachmentClicked : SpeedGraderCommentsAction()
+    data object SendCommentClicked : SpeedGraderCommentsAction()
+}

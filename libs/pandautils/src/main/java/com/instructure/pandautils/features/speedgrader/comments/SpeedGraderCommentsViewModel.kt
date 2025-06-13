@@ -16,10 +16,12 @@
  */
 package com.instructure.pandautils.features.speedgrader.comments
 
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -31,6 +33,7 @@ import javax.inject.Inject
 class SpeedGraderCommentsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val speedGraderCommentsRepository: SpeedGraderCommentsRepository,
+    private val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
     private val apiPrefs: ApiPrefs
 ): ViewModel() {
 
@@ -79,6 +82,51 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 } ?: emptyList(),
                 isLoading = false,
             )
+        }
+    }
+
+    fun handleAction(action: SpeedGraderCommentsAction) {
+        when (action) {
+            is SpeedGraderCommentsAction.CommentFieldChanged -> {
+                _uiState.update { state ->
+                    state.copy(commentText = action.commentText)
+                }
+            }
+            SpeedGraderCommentsAction.AddCommentLibraryClicked -> {
+                // Handle adding comment from library
+            }
+            SpeedGraderCommentsAction.AddAttachmentClicked -> {
+                // Handle adding attachment
+            }
+            SpeedGraderCommentsAction.SendCommentClicked -> {
+                onSendCommentClicked()
+            }
+        }
+    }
+
+    private fun onSendCommentClicked() {
+        if (_uiState.value.commentText.text.isNotEmpty()) {
+            viewModelScope.launch {
+                val newComment = speedGraderCommentsRepository.createSubmissionComment(
+                    submissionId,
+                    _uiState.value.commentText.text
+                )
+                _uiState.update { state ->
+                    state.copy(
+                        comments = state.comments + SpeedGraderComment(
+                            id = newComment.createSubmissionComment?.submissionComment?._id ?: "",
+                            authorName = apiPrefs.user?.name ?: "",
+                            authorId = apiPrefs.user?.id?.toString() ?: "",
+                            authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
+                            content = _uiState.value.commentText.text,
+                            createdAt = newComment.createSubmissionComment?.submissionComment?.createdAt.toString(),
+                            isOwnComment = true,
+                            attachments = emptyList()
+                        ),
+                        commentText = TextFieldValue("")
+                    )
+                }
+            }
         }
     }
 
