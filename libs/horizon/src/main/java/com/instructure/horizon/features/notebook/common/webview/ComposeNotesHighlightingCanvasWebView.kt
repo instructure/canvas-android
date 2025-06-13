@@ -23,6 +23,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -38,8 +39,8 @@ import androidx.lifecycle.lifecycleScope
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
+import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
-import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.removeHighlightedNotes
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
 import com.instructure.pandautils.utils.Const
@@ -61,7 +62,7 @@ fun ComposeNotesHighlightingCanvasWebView(
     title: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
-    webViewCallbacks: ComposeWebViewCallbacks? = ComposeWebViewCallbacks(),
+    webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null
 ) {
     val webViewState = rememberSaveable { bundleOf() }
@@ -69,6 +70,8 @@ fun ComposeNotesHighlightingCanvasWebView(
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+    val notesStateValue = rememberUpdatedState(notes)
 
     var selectedText by remember { mutableStateOf("") }
     var selectedTextStartContainer by remember { mutableStateOf("") }
@@ -101,52 +104,25 @@ fun ComposeNotesHighlightingCanvasWebView(
         AndroidView(
             factory = {
                 NotesHighlightingCanvasWebViewWrapper(it, callback = AddNoteActionModeCallback(lifecycleOwner, selectionLocation, menuItems)).apply {
-                    if (webViewCallbacks != null) {
-                        webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
-                            override fun openMediaFromWebView(mime: String, url: String, filename: String) =
-                                webViewCallbacks.openMedia(mime, url, filename)
+                    webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+                        override fun openMediaFromWebView(mime: String, url: String, filename: String) =
+                            webViewCallbacks.openMedia(mime, url, filename)
 
-                            override fun onPageFinishedCallback(webView: WebView, url: String) {
-                                webViewCallbacks.onPageFinished(webView, url)
+                        override fun onPageFinishedCallback(webView: WebView, url: String) {
+                            webViewCallbacks.onPageFinished(webView, url)
 
-                                webView.addTextSelectionInterface(
-                                    onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
-                                        selectedText = text
-                                        selectedTextStartContainer = startContainer
-                                        selectedTextStartOffset = startOffset
-                                        selectedTextEndContainer = endContainer
-                                        selectedTextEndOffset = endOffset
-                                    },
-                                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
-                                        lifecycleOwner.lifecycleScope.launch {
-                                            notesCallback.onNoteSelected(
-                                                noteId,
-                                                noteType,
-                                                selectedText,
-                                                userComment,
-                                                startContainer,
-                                                startOffset,
-                                                endContainer,
-                                                endOffset
-                                            )
-                                        }
-                                    },
-                                    onSelectionPositionChange = { left, top, right, bottom ->
-                                        selectionLocation.tryEmit(SelectionLocation(left, top, right, bottom))
-                                    }
-                                )
-                                webView.highlightNotes(notes)
-                            }
-
-                            override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
-
-                            override fun canRouteInternallyDelegate(url: String): Boolean = webViewCallbacks.canRouteInternally(url)
-
-                            override fun routeInternallyCallback(url: String) = webViewCallbacks.routeInternally(url)
-
-                            override fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) =
-                                webViewCallbacks.onReceivedError(webView, errorCode, description, failingUrl)
+                            webView.evaluateTextSelectionInterface()
+                            webView.highlightNotes(notesStateValue.value)
                         }
+
+                        override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
+
+                        override fun canRouteInternallyDelegate(url: String): Boolean = webViewCallbacks.canRouteInternally(url)
+
+                        override fun routeInternallyCallback(url: String) = webViewCallbacks.routeInternally(url)
+
+                        override fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) =
+                            webViewCallbacks.onReceivedError(webView, errorCode, description, failingUrl)
                     }
                     if (embeddedWebViewCallbacks != null) {
                         webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
@@ -160,34 +136,6 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
 
-                    webView.addTextSelectionInterface(
-                        onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
-                            selectedText = text
-                            selectedTextStartContainer = startContainer
-                            selectedTextStartOffset = startOffset
-                            selectedTextEndContainer = endContainer
-                            selectedTextEndOffset = endOffset
-                        },
-                        onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
-                            lifecycleOwner.lifecycleScope.launch {
-                                notesCallback.onNoteSelected(
-                                    noteId,
-                                    noteType,
-                                    selectedText,
-                                    userComment,
-                                    startContainer,
-                                    startOffset,
-                                    endContainer,
-                                    endOffset
-                                )
-                            }
-                        },
-                        onSelectionPositionChange = { left, top, right, bottom ->
-                            selectionLocation.tryEmit(SelectionLocation(left, top, right, bottom))
-                        }
-                    )
-
-                    webView.highlightNotes(notes)
                 }
             },
             update = {
@@ -209,8 +157,32 @@ fun ComposeNotesHighlightingCanvasWebView(
                     it.webView.restoreState(webViewState)
                 }
 
-                it.webView.removeHighlightedNotes()
-                it.webView.highlightNotes(notes)
+                it.webView.addTextSelectionInterface(
+                    onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
+                        selectedText = text
+                        selectedTextStartContainer = startContainer
+                        selectedTextStartOffset = startOffset
+                        selectedTextEndContainer = endContainer
+                        selectedTextEndOffset = endOffset
+                    },
+                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
+                        lifecycleOwner.lifecycleScope.launch {
+                            notesCallback.onNoteSelected(
+                                noteId,
+                                noteType,
+                                selectedText,
+                                userComment,
+                                startContainer,
+                                startOffset,
+                                endContainer,
+                                endOffset
+                            )
+                        }
+                    },
+                    onSelectionPositionChange = { left, top, right, bottom ->
+                        selectionLocation.tryEmit(SelectionLocation(left, top, right, bottom))
+                    }
+                )
             },
             onRelease = {
                 it.webView.saveState(webViewState)

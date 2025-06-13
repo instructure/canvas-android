@@ -72,10 +72,10 @@ class JSTextSelectionInterface(
         noteType: String,
         selectedText: String,
         userComment: String,
-        startContainer: String,
         startOffset: Int,
-        endContainer: String,
+        startContainer: String,
         endOffset: Int,
+        endContainer: String,
     ) {
         onHighlightedTextClick(noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset)
     }
@@ -98,23 +98,6 @@ class JSTextSelectionInterface(
             `;
             document.head.appendChild(style);
             
-            function removeAllHighlights() {
-                unwrapElementsByClass('important-highlight');
-                unwrapElementsByClass('confusing-highlight');
-            }
-            function unwrapElementsByClass(className) {
-              const elements = document.querySelectorAll(`.${'$'}{className}`);
-
-              elements.forEach(el => {
-                const parent = el.parentNode;
-
-                while (el.firstChild) {
-                  parent.insertBefore(el.firstChild, el);
-                }
-
-                parent.removeChild(el);
-              });
-            }
             function getXPathForNode(node, root = document.body) {
                 if (node === root) return '';
                 if (!node || !node.parentNode) return null;
@@ -225,18 +208,17 @@ class JSTextSelectionInterface(
         ) {
             val jsInterface = JSTextSelectionInterface(onTextSelect, onHighlightedTextClick, onSelectionPositionChange)
             this.addJavascriptInterface(jsInterface, JS_INTERFACE_NAME)
+        }
 
+        fun WebView.evaluateTextSelectionInterface() {
             this.evaluateJavascript(jsCode, null)
         }
 
         fun WebView.highlightNotes(notes: List<Note>) {
+            //this.evaluateJavascript("javascript:removeAllHighlights()", null)
             notes.forEach { note ->
                 this.evaluateJavascript("javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText}', '${note.userText}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}')", null)
             }
-        }
-
-        fun WebView.removeHighlightedNotes() {
-            this.evaluateJavascript("javascript:removeAllHighlights()", null)
         }
     }
 }
