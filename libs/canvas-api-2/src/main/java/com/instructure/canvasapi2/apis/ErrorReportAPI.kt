@@ -21,7 +21,6 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.ErrorReport
 import com.instructure.canvasapi2.models.ErrorReportResult
-
 import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
@@ -41,13 +40,13 @@ object ErrorReportAPI {
     }
 
     interface ErrorReportInterface {
-        @POST("/error_reports.json")
+        @POST("/api/v1/error_reports")
         fun postErrorReport(
             @Query("error[subject]") subject: String,
             @Query("error[url]") url: String,
             @Query("error[email]") email: String,
             @Query("error[comments]") comments: String,
-            @Query("error[user_perceived_severity") userPerceivedSeverity: String,
+            @Query("error[user_perceived_severity]") userPerceivedSeverity: String,
             @Query("error[name]") name: String,
             @Query("error[user_roles]") userRoles: String,
             @Query("error[become_user]") becomeUser: String,
@@ -77,5 +76,4 @@ object ErrorReportAPI {
                     )
             ).enqueue(callback)
     }
-
 }
