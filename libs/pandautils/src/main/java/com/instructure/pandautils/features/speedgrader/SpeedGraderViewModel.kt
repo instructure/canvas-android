@@ -36,6 +36,9 @@ class SpeedGraderViewModel @Inject constructor(
     private val repository: SpeedGraderRepository
 ) : ViewModel() {
 
+    private val courseId: Long = savedStateHandle[Const.COURSE_ID]
+        ?: throw IllegalStateException("Course ID is required")
+
     private val assignmentId: Long = savedStateHandle[Const.ASSIGNMENT_ID]
         ?: throw IllegalStateException("Assignment ID is required")
 
@@ -44,7 +47,7 @@ class SpeedGraderViewModel @Inject constructor(
 
     private val selectedItem: Int = savedStateHandle[Const.SELECTED_ITEM] ?: 0
 
-    private val _uiState = MutableStateFlow(SpeedGraderUiState(assignmentId, submissionIds.toList(), selectedItem))
+    private val _uiState = MutableStateFlow(SpeedGraderUiState(courseId, assignmentId, submissionIds.toList(), selectedItem))
     val uiState = _uiState.asStateFlow()
 
     init {
