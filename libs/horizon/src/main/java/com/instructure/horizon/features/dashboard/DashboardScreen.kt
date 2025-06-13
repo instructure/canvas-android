@@ -23,8 +23,8 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -38,6 +38,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -64,6 +65,7 @@ import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.utils.ThemePrefs
 
 const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
 
@@ -85,7 +87,9 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     }
 
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
-        LoadingStateWrapper(loadingState = uiState.loadingState) {
+        val spinnerColor =
+            if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
+        LoadingStateWrapper(loadingState = uiState.loadingState, spinnerColor = spinnerColor) {
             LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
                 item {
                     HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
@@ -117,14 +121,19 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
     Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
         GlideImage(
             model = uiState.logoUrl,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .weight(1f)
+                .heightIn(max = 44.dp),
             contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
-            modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             iconRes = R.drawable.menu_book_notebook,
-            onClick = uiState.onNotebookClick,
-            color = IconButtonColor.INVERSE,
+            onClick = {
+                mainNavController.navigate(MainNavigationRoute.Notebook.route)
+            },
+            color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
         )
         HorizonSpace(SpaceSize.SPACE_8)
@@ -134,14 +143,14 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
                 mainNavController.navigate(MainNavigationRoute.Notification.route)
             },
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.INVERSE
+            color = IconButtonColor.Inverse
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.mail,
             onClick = uiState.onInboxClick,
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.INVERSE
+            color = IconButtonColor.Inverse
         )
     }
 }

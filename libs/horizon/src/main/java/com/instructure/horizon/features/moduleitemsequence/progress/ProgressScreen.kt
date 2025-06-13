@@ -92,7 +92,7 @@ fun ProgressScreen(uiState: ProgressScreenUiState, loadingState: LoadingState, m
             }
             IconButton(
                 iconRes = R.drawable.close,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 modifier = Modifier
                     .align(Alignment.TopEnd)
                     .padding(top = 30.dp),
@@ -186,7 +186,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     }
     if (uiState.currentPosition > 0) IconButton(
         iconRes = R.drawable.chevron_left,
-        color = IconButtonColor.INVERSE,
+        color = IconButtonColor.Inverse,
         modifier = Modifier
             .align(Alignment.BottomStart)
             .padding(bottom = 24.dp),
@@ -195,7 +195,7 @@ private fun BoxScope.ProgressScreenContent(uiState: ProgressScreenUiState) {
     )
     if (uiState.currentPosition < uiState.pages.size - 1) IconButton(
         iconRes = R.drawable.chevron_right,
-        color = IconButtonColor.INVERSE,
+        color = IconButtonColor.Inverse,
         modifier = Modifier
             .align(Alignment.BottomEnd)
             .padding(bottom = 24.dp),

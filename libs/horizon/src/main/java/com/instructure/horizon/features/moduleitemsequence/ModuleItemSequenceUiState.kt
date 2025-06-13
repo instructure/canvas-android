@@ -107,12 +107,12 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         }
     }
 
-    data class Assessment(val courseId: Long, val quizId: Long) : ModuleItemContent(
-        "courses/$courseId/quizzes/$quizId"
+    data class Assessment(val courseId: Long, val assignmentId: Long) : ModuleItemContent(
+        "courses/$courseId/quizzes/$assignmentId"
     ) {
         companion object {
-            const val QUIZ_ID = "quizId"
-            const val ROUTE = "courses/{${Const.COURSE_ID}}/quizzes/{$QUIZ_ID}"
+            const val ASSIGNMENT_ID = "assignmentId"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/quizzes/{$ASSIGNMENT_ID}"
         }
     }
 

@@ -19,11 +19,8 @@ package com.instructure.horizon.features.moduleitemsequence
 
 import android.net.Uri
 import androidx.compose.animation.animateContentSize
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -34,7 +31,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.pager.HorizontalPager
@@ -50,19 +47,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -75,8 +79,9 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
-import com.instructure.horizon.features.moduleitemsequence.content.DummyContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentContentScreen
+import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.AssignmentDetailsScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.AssignmentDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.file.FileDetailsContentScreen
@@ -112,7 +117,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.toPx
 import kotlin.math.abs
 
 @Composable
@@ -201,57 +205,42 @@ private fun ModuleItemSequenceContent(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val density = LocalDensity.current
+    var moduleHeaderHeight by remember { mutableIntStateOf(0) }
+    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
     val contentScrollState = rememberScrollState()
-    var isCollapsedByScroll by remember { mutableStateOf(false) }
-    var isCollapsed by remember { mutableStateOf(false) }
 
-    LaunchedEffect(contentScrollState) {
-        snapshotFlow { contentScrollState.value }
-            .collect { offset ->
-                if (offset > 100.toPx) {
-                    if (!isCollapsedByScroll) {
-                        isCollapsedByScroll = true
-                        isCollapsed = true
-                    }
-                } else {
-                    isCollapsedByScroll = false
-                    isCollapsed = false
-                }
-            }
-    }
-
-    Column(modifier = modifier) {
+    Box(
+        modifier = modifier
+            .nestedScroll(nestedScrollConnection)
+    ) {
         Box(
-            modifier = Modifier.animateContentSize(
-                animationSpec = tween(
-                    durationMillis = 200,
-                    easing = FastOutSlowInEasing,
-                    delayMillis = if (contentScrollState.value > 0) 0 else 200,
-                )
-            )
+            modifier = Modifier
+                .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
+                .onGloballyPositioned { coordinates ->
+                    if (coordinates.size.height != moduleHeaderHeight) {
+                        moduleHeaderHeight = coordinates.size.height
+                        nestedScrollConnection =
+                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)
+                    }
+                }
         ) {
             ModuleHeaderContainer(
                 uiState = uiState,
                 modifier = Modifier
-                    .conditional(isCollapsedByScroll) {
-                        clickable {
-                            isCollapsed = !isCollapsed
-                        }
-                    }
                     .padding(start = 24.dp, end = 24.dp, top = 16.dp, bottom = 24.dp)
-                    .then(
-                        if (isCollapsed) Modifier.height(0.dp) else Modifier.wrapContentHeight()
-                    ),
-                onBackPressed = onBackPressed,
-                buttonsEnabled = !isCollapsed
+                    .wrapContentHeight(),
+                onBackPressed = onBackPressed
             )
         }
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
-            modifier = Modifier.conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
-                background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
-            }
+            modifier = Modifier
+                .conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
+                    background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
+                }
+                .padding(top = with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
         ) {
             if (uiState.currentPosition != -1) {
                 val homeEntry =
@@ -262,9 +251,8 @@ private fun ModuleItemSequenceContent(
 
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
                 LaunchedEffect(key1 = uiState.currentPosition) {
-                    isCollapsedByScroll = false
-                    isCollapsed = false
                     contentScrollState.scrollTo(0)
+                    nestedScrollConnection.appBarOffset = 0
                     if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
                         pagerState.scrollToPage(uiState.currentPosition)
                     } else {
@@ -291,14 +279,11 @@ private fun ModuleItemSequenceContent(
 private fun ModuleHeaderContainer(
     uiState: ModuleItemSequenceUiState,
     onBackPressed: () -> Unit,
-    buttonsEnabled: Boolean,
     modifier: Modifier = Modifier
 ) {
     Column(modifier = modifier, horizontalAlignment = Alignment.CenterHorizontally) {
         Row {
-            if (buttonsEnabled) {
-                IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.INSTITUTION, onClick = onBackPressed)
-            }
+            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.Institution, onClick = onBackPressed)
             Column(
                 modifier = Modifier
                     .weight(1f)
@@ -320,13 +305,11 @@ private fun ModuleHeaderContainer(
                     textAlign = TextAlign.Center
                 )
             }
-            if (buttonsEnabled) {
-                IconButton(
-                    iconRes = R.drawable.list_alt,
-                    color = IconButtonColor.INSTITUTION,
-                    onClick = uiState.onProgressClick
-                )
-            }
+            IconButton(
+                iconRes = R.drawable.list_alt,
+                color = IconButtonColor.Institution,
+                onClick = uiState.onProgressClick
+            )
         }
         if (!uiState.currentItem?.detailTags.isNullOrEmpty()) {
             HorizonSpace(SpaceSize.SPACE_24)
@@ -395,100 +378,94 @@ private fun ModuleItemContentScreen(
             Spinner()
         }
     } else {
-        // TODO We only need this condition and the DummyContentScreen until we have all the content implemented.
-        if (moduleItemUiState.moduleItemContent is ModuleItemContent.Locked ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.Page ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalLink ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.ExternalTool ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.File ||
-            moduleItemUiState.moduleItemContent is ModuleItemContent.Assignment
-        ) {
-            val navController = rememberNavController()
+        val navController = rememberNavController()
 
-            NavHost(navController, startDestination = moduleItemUiState.moduleItemContent.routeWithArgs, modifier = modifier) {
-                composable(
-                    route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
-                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                        navArgument(ModuleItemContent.Assignment.ASSIGNMENT_ID) { type = NavType.LongType }
-                    )) {
-                    val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
-                    val uiState by viewModel.uiState.collectAsState()
-                    updateAiContext(uiState.instructions)
-                    LaunchedEffect(openAssignmentTools) {
-                        if (openAssignmentTools) {
-                            viewModel.openAssignmentTools()
-                            assignmentToolsOpened()
-                        }
+        NavHost(navController, startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(), modifier = modifier) {
+            composable(
+                route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.Assignment.ASSIGNMENT_ID) { type = NavType.LongType }
+                )) {
+                val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
+                val uiState by viewModel.uiState.collectAsState()
+                updateAiContext(uiState.instructions)
+                LaunchedEffect(openAssignmentTools) {
+                    if (openAssignmentTools) {
+                        viewModel.openAssignmentTools()
+                        assignmentToolsOpened()
                     }
-                    AssignmentDetailsScreen(
-                        uiState = uiState,
-                        scrollState = scrollState
-                    )
                 }
-                composable(
-                    route = ModuleItemContent.Page.ROUTE, arguments = listOf(
-                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                        navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType }
-                    )) {
-                    val viewModel = hiltViewModel<PageDetailsViewModel>()
-                    val uiState by viewModel.uiState.collectAsState()
-                    updateAiContext(uiState.pageHtmlContent.orEmpty())
-                    PageDetailsContentScreen(
-                        uiState = uiState,
-                        scrollState = scrollState
-                    )
-                }
-                composable(
-                    route = ModuleItemContent.ExternalLink.ROUTE, arguments = listOf(
-                        navArgument(ModuleItemContent.ExternalLink.TITLE) { type = NavType.StringType },
-                        navArgument(ModuleItemContent.ExternalLink.URL) { type = NavType.StringType }
-                    )) {
-                    val title = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.TITLE).orEmpty())
-                    val url = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.URL).orEmpty())
-                    val uiState = ExternalLinkUiState(title, url)
-                    ExternalLinkContentScreen(uiState)
-                }
-                composable(
-                    ModuleItemContent.File.ROUTE, arguments = listOf(
-                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                        navArgument(ModuleItemContent.File.FILE_URL) { type = NavType.StringType },
-                        navArgument(Const.MODULE_ITEM_ID) { type = NavType.LongType },
-                        navArgument(Const.MODULE_ID) { type = NavType.LongType }
-                    )) {
-                    val viewModel = hiltViewModel<FileDetailsViewModel>()
-                    val uiState by viewModel.uiState.collectAsState()
-                    FileDetailsContentScreen(
-                        uiState = uiState,
-                        modifier = modifier
-                    )
-                }
-                composable(
-                    route = ModuleItemContent.ExternalTool.ROUTE, arguments = listOf(
-                        navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                        navArgument(ModuleItemContent.ExternalTool.URL) { type = NavType.StringType },
-                        navArgument(ModuleItemContent.ExternalTool.EXTERNAL_URL) { type = NavType.StringType }
-                    )) {
-                    val viewModel = hiltViewModel<ExternalToolViewModel>()
-                    val uiState by viewModel.uiState.collectAsState()
-                    ExternalToolContentScreen(uiState = uiState)
-                }
-                composable(
-                    ModuleItemContent.Locked.ROUTE, arguments = listOf(
-                        navArgument(ModuleItemContent.Locked.LOCK_EXPLANATION) { type = NavType.StringType }
-                    )) {
-                    val lockExplanation = Uri.decode(it.arguments?.getString(ModuleItemContent.Locked.LOCK_EXPLANATION).orEmpty())
-                    LockedContentScreen(
-                        lockExplanation = lockExplanation,
-                        scrollState = scrollState
-                    )
-                }
+                AssignmentDetailsScreen(
+                    uiState = uiState,
+                    scrollState = scrollState
+                )
             }
-        } else {
-            DummyContentScreen(
-                moduleItemName = moduleItemUiState.moduleItemName,
-                moduleItemType = moduleItemUiState.moduleItemContent!!::class.simpleName.orEmpty(),
-                scrollState = scrollState
-            )
+            composable(
+                route = ModuleItemContent.Page.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType }
+                )) {
+                val viewModel = hiltViewModel<PageDetailsViewModel>()
+                val uiState by viewModel.uiState.collectAsState()
+                updateAiContext(uiState.pageHtmlContent.orEmpty())
+                PageDetailsContentScreen(
+                    uiState = uiState,
+                    scrollState = scrollState
+                )
+            }
+            composable(
+                route = ModuleItemContent.ExternalLink.ROUTE, arguments = listOf(
+                    navArgument(ModuleItemContent.ExternalLink.TITLE) { type = NavType.StringType },
+                    navArgument(ModuleItemContent.ExternalLink.URL) { type = NavType.StringType }
+                )) {
+                val title = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.TITLE).orEmpty())
+                val url = Uri.decode(it.arguments?.getString(ModuleItemContent.ExternalLink.URL).orEmpty())
+                val uiState = ExternalLinkUiState(title, url)
+                ExternalLinkContentScreen(uiState)
+            }
+            composable(
+                ModuleItemContent.File.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.File.FILE_URL) { type = NavType.StringType },
+                    navArgument(Const.MODULE_ITEM_ID) { type = NavType.LongType },
+                    navArgument(Const.MODULE_ID) { type = NavType.LongType }
+                )) {
+                val viewModel = hiltViewModel<FileDetailsViewModel>()
+                val uiState by viewModel.uiState.collectAsState()
+                FileDetailsContentScreen(
+                    uiState = uiState,
+                    modifier = modifier
+                )
+            }
+            composable(
+                route = ModuleItemContent.ExternalTool.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.ExternalTool.URL) { type = NavType.StringType },
+                    navArgument(ModuleItemContent.ExternalTool.EXTERNAL_URL) { type = NavType.StringType }
+                )) {
+                val viewModel = hiltViewModel<ExternalToolViewModel>()
+                val uiState by viewModel.uiState.collectAsState()
+                ExternalToolContentScreen(uiState = uiState)
+            }
+            composable(
+                ModuleItemContent.Locked.ROUTE, arguments = listOf(
+                    navArgument(ModuleItemContent.Locked.LOCK_EXPLANATION) { type = NavType.StringType }
+                )) {
+                val lockExplanation = Uri.decode(it.arguments?.getString(ModuleItemContent.Locked.LOCK_EXPLANATION).orEmpty())
+                LockedContentScreen(
+                    lockExplanation = lockExplanation,
+                    scrollState = scrollState
+                )
+            }
+            composable(
+                ModuleItemContent.Assessment.ROUTE, arguments = listOf(
+                    navArgument(Const.COURSE_ID) { type = NavType.LongType },
+                    navArgument(ModuleItemContent.Assessment.ASSIGNMENT_ID) { type = NavType.LongType }
+                )) {
+                val viewModel = hiltViewModel<AssessmentViewModel>()
+                val uiState by viewModel.uiState.collectAsState()
+                AssessmentContentScreen(uiState)
+            }
         }
     }
 }
@@ -502,43 +479,70 @@ private fun ModuleItemSequenceBottomBar(
     onNextClick: () -> Unit,
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
-    onAiAssistClick: () -> Unit = {},
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onAiAssistClick: () -> Unit = {}
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
-        Row(modifier = modifier.padding(horizontal = 24.dp, vertical = 16.dp)) {
+        Box(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp, vertical = 16.dp)
+        ) {
             if (showPreviousButton) IconButton(
                 iconRes = R.drawable.chevron_left,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
-                onClick = onPreviousClick
+                onClick = onPreviousClick,
+                modifier = Modifier.align(Alignment.CenterStart)
             )
-            Row(modifier = Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)) {
+            Row(
+                modifier = Modifier
+                    .padding(horizontal = 92.dp)
+                    .align(Alignment.Center),
+                horizontalArrangement = Arrangement.spacedBy(12.dp, Alignment.CenterHorizontally)
+            ) {
                 IconButton(
                     iconRes = R.drawable.ai,
-                    color = IconButtonColor.AI,
+                    color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
-                    color = IconButtonColor.INVERSE,
+                    color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4
                 )
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
-                    color = IconButtonColor.INVERSE,
+                    color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onAssignmentToolsClick
                 )
             }
             if (showNextButton) IconButton(
                 iconRes = R.drawable.chevron_right,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
-                onClick = onNextClick
+                onClick = onNextClick,
+                modifier = Modifier.align(Alignment.CenterEnd)
             )
         }
+    }
+}
+
+private class CollapsingAppBarNestedScrollConnection(
+    val appBarMaxHeight: Int
+) : NestedScrollConnection {
+
+    var appBarOffset: Int by mutableIntStateOf(0)
+
+    override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
+        val delta = available.y.toInt()
+        val newOffset = appBarOffset + delta
+        val previousOffset = appBarOffset
+        appBarOffset = newOffset.coerceIn(-appBarMaxHeight, 0)
+        val consumed = appBarOffset - previousOffset
+        return Offset(0f, consumed.toFloat())
     }
 }
 
