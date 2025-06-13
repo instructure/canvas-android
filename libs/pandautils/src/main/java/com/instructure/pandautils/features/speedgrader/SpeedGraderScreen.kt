@@ -69,7 +69,7 @@ fun SpeedGraderScreen(
     ) { padding ->
         HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
             val submissionId = uiState.submissionIds[page]
-            NavHost(navController = rememberNavController(), startDestination = "${uiState.assignmentId}/submission/$submissionId") {
+            NavHost(navController = rememberNavController(), startDestination = "${uiState.courseId}/${uiState.assignmentId}/submission/$submissionId") {
                 submissionScreen()
             }
         }
@@ -78,15 +78,17 @@ fun SpeedGraderScreen(
 
 fun NavGraphBuilder.submissionScreen() {
     composable(
-        route = "{assignmentId}/submission/{submissionId}",
+        route = "{courseId}/{assignmentId}/submission/{submissionId}",
         arguments = listOf(
             navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType }
+            navArgument("submissionId") { type = NavType.LongType },
+            navArgument("courseId") { type = NavType.LongType }
         )
     ) {
         SpeedGraderSubmissionScreen(
             assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
-            submissionId = it.arguments?.getLong("submissionId") ?: 0L
+            submissionId = it.arguments?.getLong("submissionId") ?: 0L,
+            courseId = it.arguments?.getLong("courseId") ?: 0L
         )
     }
 }

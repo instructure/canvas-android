@@ -15,6 +15,7 @@
  *
  */package com.instructure.pandautils.features.speedgrader.grade.grading
 
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import dagger.Module
 import dagger.Provides
@@ -26,7 +27,10 @@ import dagger.hilt.android.components.ViewModelComponent
 class SpeedGraderGradingModule {
 
     @Provides
-    fun provideSpeedGraderGradingRepository(submissionGradeManager: SubmissionGradeManager): SpeedGraderGradingRepository {
-        return SpeedGraderGradingRepository(submissionGradeManager)
+    fun provideSpeedGraderGradingRepository(
+        submissionGradeManager: SubmissionGradeManager,
+        submissionApi: SubmissionAPI.SubmissionInterface
+    ): SpeedGraderGradingRepository {
+        return SpeedGraderGradingRepository(submissionGradeManager, submissionApi)
     }
 }

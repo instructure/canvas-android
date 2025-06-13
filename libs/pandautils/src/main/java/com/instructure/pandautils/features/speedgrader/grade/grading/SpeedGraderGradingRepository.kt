@@ -16,18 +16,28 @@
  */package com.instructure.pandautils.features.speedgrader.grade.grading
 
 import com.instructure.canvasapi2.SubmissionGradeQuery
-import com.instructure.canvasapi2.UpdateSubmissionGradeMutation
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
+import com.instructure.canvasapi2.models.Submission
 
 class SpeedGraderGradingRepository(
-    private val submissionGradeManager: SubmissionGradeManager
+    private val submissionGradeManager: SubmissionGradeManager,
+    private val submissionApi: SubmissionAPI.SubmissionInterface
 ) {
 
     suspend fun getSubmissionGrade(assignmentId: Long, studentId: Long): SubmissionGradeQuery.Data {
         return submissionGradeManager.getSubmissionGrade(assignmentId, studentId)
     }
 
-    suspend fun updateSubmissionGrade(score: Double, submissionId: Long): UpdateSubmissionGradeMutation.Data {
-        return submissionGradeManager.updateSubmissionGrade(score, submissionId)
+    suspend fun updateSubmissionGrade(score: Double, userId: Long, assignmentId: Long, courseId: Long): Submission {
+        return submissionApi.postSubmissionGrade(
+            contextId = courseId,
+            assignmentId = assignmentId,
+            userId = userId,
+            assignmentScore = score.toString(),
+            isExcused = false,
+            restParams = RestParams()
+        ).dataOrThrow
     }
 }

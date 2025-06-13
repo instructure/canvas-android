@@ -18,6 +18,8 @@ package com.instructure.pandautils.features.speedgrader.grade.grading
 
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.GradingType
+import com.instructure.canvasapi2.type.LatePolicyStatusType
+import com.instructure.pandautils.R
 import java.util.Date
 
 data class SpeedGraderGradingUiState(
@@ -32,6 +34,18 @@ data class SpeedGraderGradingUiState(
     val dueDate: Date? = null,
     val daysLate: Int? = null,
     val letterGrades: List<GradingSchemeRow> = emptyList(),
+    val gradingStatuses: List<LatePolicyStatusType> = emptyList(),
+    val gradingStatus: LatePolicyStatusType = LatePolicyStatusType.none,
     val onScoreChange: (Float?) -> Unit,
     val onPercentageChange: (Float?) -> Unit
 )
+
+fun LatePolicyStatusType.stringRes() {
+    when (this) {
+        LatePolicyStatusType.none -> R.string.gradingStatus_none
+        LatePolicyStatusType.late -> R.string.gradingStatus_late
+        LatePolicyStatusType.missing -> R.string.gradingStatus_missing
+        LatePolicyStatusType.extended -> R.string.gradingStatus_extended
+        else -> R.string.gradingStatus_none
+    }
+}

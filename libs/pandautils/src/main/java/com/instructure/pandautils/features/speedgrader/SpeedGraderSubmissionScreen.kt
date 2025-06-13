@@ -49,7 +49,8 @@ import com.instructure.pandautils.features.speedgrader.content.SpeedGraderConten
 @Composable
 fun SpeedGraderSubmissionScreen(
     assignmentId: Long,
-    submissionId: Long
+    submissionId: Long,
+    courseId: Long
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
@@ -73,7 +74,7 @@ fun SpeedGraderSubmissionScreen(
                 NavHost(
                     navController = rememberNavController(),
                     modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
+                    startDestination = "speedGraderBottomSheet/$courseId/$assignmentId/$submissionId"
                 ) {
                     speedGraderBottomSheet()
                 }
@@ -127,7 +128,7 @@ fun SpeedGraderSubmissionScreen(
                 NavHost(
                     navController = rememberNavController(),
                     modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
+                    startDestination = "speedGraderBottomSheet/$courseId/$assignmentId/$submissionId"
                 ) {
                     speedGraderBottomSheet(anchoredDraggableState)
                 }
@@ -139,19 +140,19 @@ fun SpeedGraderSubmissionScreen(
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 fun SpeedGraderSubmissionScreenTabletPreview() {
-    SpeedGraderSubmissionScreen(1L, 1L)
+    SpeedGraderSubmissionScreen(1L, 1L, 1L)
 }
 
 @Preview
 @Composable
 fun SpeedGraderSubmissionScreenPhonePreview() {
-    SpeedGraderSubmissionScreen(2L, 2L)
+    SpeedGraderSubmissionScreen(2L, 2L, 2L)
 }
 
 @Preview(device = "spec:width=411dp,height=891dp,orientation=landscape")
 @Composable
 fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
-    SpeedGraderSubmissionScreen(3L, 3L)
+    SpeedGraderSubmissionScreen(3L, 3L, 3L)
 }
 
 private fun NavGraphBuilder.speedGraderContentScreen(expanded: Boolean = false, onExpandClick: (() -> Unit)? = null) {
@@ -169,14 +170,16 @@ private fun NavGraphBuilder.speedGraderContentScreen(expanded: Boolean = false, 
 @OptIn(ExperimentalFoundationApi::class)
 private fun NavGraphBuilder.speedGraderBottomSheet(anchoredDraggableState: AnchoredDraggableState<AnchorPoints>? = null) {
     composable(
-        route = "speedGraderBottomSheet/{assignmentId}/{submissionId}",
+        route = "speedGraderBottomSheet/{courseId}/{assignmentId}/{submissionId}",
         arguments = listOf(
             navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType }
+            navArgument("submissionId") { type = NavType.LongType },
+            navArgument("courseId") { type = NavType.LongType }
         )
     ) {
         SpeedGraderBottomSheet(
             anchoredDraggableState = anchoredDraggableState,
+            courseId = it.arguments?.getLong("courseId") ?: 0L,
             assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
             submissionId = it.arguments?.getLong("submissionId") ?: 0L
         )

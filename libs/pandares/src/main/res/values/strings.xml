@@ -2092,4 +2092,9 @@
         <item quantity="other">%s / %s pts</item>
     </plurals>
     <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
+    <string name="gradingStatus_none">None</string>
+    <string name="gradingStatus_late">Late</string>
+    <string name="gradingStatus_missing">Missing</string>
+    <string name="gradingStatus_extended">Extended</string>
+    <string name="gradingStatus_excused">Excused</string>
 </resources>

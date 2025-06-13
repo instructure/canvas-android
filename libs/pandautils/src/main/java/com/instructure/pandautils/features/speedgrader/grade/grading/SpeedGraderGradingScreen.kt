@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.grading
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,22 +23,15 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuAnchorType
-import androidx.compose.material3.ExposedDropdownMenuBox
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -56,7 +48,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -78,6 +69,7 @@ import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDeco
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.RadioButtonText
+import com.instructure.pandautils.compose.composables.TextDropdown
 import com.instructure.pandautils.utils.orDefault
 import java.text.DecimalFormat
 import java.util.Date
@@ -305,7 +297,6 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val haptic = LocalHapticFeedback.current
     val options = uiState.letterGrades.map { it.name }
 
     var selectedGrade by remember(
@@ -335,74 +326,14 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
     Column {
         if (uiState.letterGrades.isNotEmpty()) {
-            var expanded by remember { mutableStateOf(false) }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(bottom = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(
-                    text = stringResource(R.string.letterGrade),
-                    fontWeight = FontWeight.SemiBold,
-                    color = colorResource(R.color.textDarkest),
-                    fontSize = 16.sp
-                )
-
-                ExposedDropdownMenuBox(
-                    expanded = expanded,
-                    onExpandedChange = {
-                        expanded = !expanded
-                    }
-                ) {
-
-                    TextButton(
-                        colors = ButtonDefaults.textButtonColors()
-                            .copy(contentColor = LocalCourseColor.current),
-                        modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable),
-                        onClick = {
-                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                            expanded = true
-                        }) {
-                        Text(
-                            text = selectedGrade,
-                            fontWeight = FontWeight.SemiBold,
-                            color = LocalCourseColor.current,
-                            fontSize = 16.sp,
-                            modifier = Modifier.padding(end = 4.dp)
-                        )
-                        Icon(
-                            painter = painterResource(R.drawable.ic_arrow_down),
-                            contentDescription = null,
-                            modifier = Modifier.size(16.dp),
-                            tint = colorResource(R.color.textDark)
-                        )
-                    }
-
-
-                    ExposedDropdownMenu(
-                        expanded = expanded,
-                        onDismissRequest = { expanded = false },
-                        modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated))
-                    ) {
-                        options.forEachIndexed { index, item ->
-                            DropdownMenuItem(
-                                onClick = {
-                                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    expanded = false
-                                    selectedGrade = options[index]
-                                }, text = {
-                                    Text(
-                                        text = item,
-                                        color = colorResource(id = R.color.textDarkest)
-                                    )
-                                }
-                            )
-                        }
-                    }
-                }
-            }
+            TextDropdown(
+                options = options,
+                onSelection = { selectedGrade = it },
+                title = R.string.letterGrade,
+                selectedOption = selectedGrade,
+                modifier = Modifier.fillMaxWidth(),
+                color = LocalCourseColor.current,
+            )
         }
         PointGradingTypeInput(uiState)
     }

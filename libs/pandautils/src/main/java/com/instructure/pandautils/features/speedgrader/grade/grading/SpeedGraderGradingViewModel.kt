@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.GradingSchemeRow
+import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -41,6 +42,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
         ?: throw IllegalArgumentException("Missing assignmentId")
     private val studentId = savedStateHandle.get<Long>("submissionId")
         ?: throw IllegalArgumentException("Missing studentId")
+    private val courseId: Long = savedStateHandle.get<Long>("courseId")
+        ?: throw IllegalArgumentException("Missing courseId")
 
     private val _uiState =
         MutableStateFlow(
@@ -76,6 +79,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     loading = false,
                     daysLate = getDaysLate(submission.secondsLate),
                     dueDate = submission.assignment?.dueAt,
+                    gradingStatuses = LatePolicyStatusType.entries,
                     letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
                         GradingSchemeRow(
                             gradingStandard.letterGrade.orEmpty(),
@@ -94,17 +98,17 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 delay(500)
                 val submission = repository.updateSubmissionGrade(
                     it.toDouble(),
-                    submissionId.toLong()
-                ).updateSubmissionGrade?.submission
-                    ?: throw IllegalStateException("Submission not found")
+                    studentId,
+                    assignmentId,
+                    courseId
+                )
                 _uiState.update {
                     it.copy(
-                        pointsPossible = submission.assignment?.pointsPossible,
                         score = submission.score,
                         grade = submission.grade,
                         enteredGrade = submission.enteredGrade,
-                        enteredScore = submission.enteredScore?.toFloat(),
-                        pointsDeducted = submission.deductedPoints
+                        enteredScore = submission.enteredScore.toFloat(),
+                        pointsDeducted = submission.pointsDeducted
                     )
                 }
             }

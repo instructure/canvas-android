@@ -65,7 +65,8 @@ import kotlinx.coroutines.launch
 fun SpeedGraderBottomSheet(
     anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?,
     assignmentId: Long,
-    submissionId: Long
+    submissionId: Long,
+    courseId: Long
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
@@ -110,8 +111,10 @@ fun SpeedGraderBottomSheet(
                                 anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
                             }
                         }
-                        val route = tab.route.replace("{assignmentId}", assignmentId.toString())
+                        val route = tab.route
+                            .replace("{assignmentId}", assignmentId.toString())
                             .replace("{submissionId}", submissionId.toString())
+                            .replace("{courseId}", courseId.toString())
                         navController.navigate(route) {
                             popUpTo(route) { inclusive = true }
                         }
@@ -125,6 +128,7 @@ fun SpeedGraderBottomSheet(
             startDestination = startDestination.route
                 .replace("{assignmentId}", assignmentId.toString())
                 .replace("{submissionId}", submissionId.toString())
+                .replace("{courseId}", courseId.toString()),
         )
     }
 }
@@ -144,7 +148,8 @@ private fun SpeedGraderBottomSheetNavHost(
             route = SpeedGraderTab.GRADE.route,
             arguments = listOf(
                 navArgument("assignmentId") { type = NavType.LongType },
-                navArgument("submissionId") { type = NavType.LongType }
+                navArgument("submissionId") { type = NavType.LongType },
+                navArgument("courseId") { type = NavType.LongType }
             )
         ) {
             SpeedGraderGradeScreen()
@@ -166,7 +171,7 @@ enum class SpeedGraderTab(
     val route: String,
     @StringRes val title: Int
 ) {
-    GRADE("speedGraderGrade/{assignmentId}/{submissionId}", R.string.speedGraderGradeTabTitle),
+    GRADE("speedGraderGrade/{courseId}/{assignmentId}/{submissionId}", R.string.speedGraderGradeTabTitle),
     DETAILS(
         "speedGraderDetails/{assignmentId}/{submissionId}",
         R.string.speedGraderDetailsTabTitle
@@ -178,6 +183,6 @@ enum class SpeedGraderTab(
 @Composable
 private fun SpeedGraderBottomSheetPreview() {
     CanvasTheme(courseColor = Color.Blue) {
-        SpeedGraderBottomSheet(null, 1L, 1L)
+        SpeedGraderBottomSheet(null, 1L, 1L, 1L)
     }
 }

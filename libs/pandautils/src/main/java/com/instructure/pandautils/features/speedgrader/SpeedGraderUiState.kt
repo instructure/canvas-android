@@ -20,6 +20,7 @@ data class SpeedGraderUiState(
     val assignmentId: Long,
     val submissionIds: List<Long>,
     val selectedItem: Int,
+    val courseId: Long,
     val courseName: String = "",
     val assignmentName: String = ""
 )
