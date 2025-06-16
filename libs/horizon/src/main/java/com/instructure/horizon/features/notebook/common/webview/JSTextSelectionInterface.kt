@@ -720,7 +720,8 @@ javascript: (function () {
 
         fun WebView.highlightNotes(notes: List<Note>) {
             notes.forEach { note ->
-                this.evaluateJavascript("javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText}', '${note.userText}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end})", null)
+                val script = "javascript:highlightSelection('${note.id}', '${note.highlightedText.selectedText.replace("\n", "\\n")}', '${note.userText.replace("\n", "\\n")}', ${note.highlightedText.range.startOffset}, '${note.highlightedText.range.startContainer}', ${note.highlightedText.range.endOffset}, '${note.highlightedText.range.endContainer}', '${note.type.name}', ${note.highlightedText.textPosition.start}, ${note.highlightedText.textPosition.end})"
+                this.evaluateJavascript(script, null)
             }
         }
     }
