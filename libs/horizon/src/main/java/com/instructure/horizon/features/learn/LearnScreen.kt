@@ -59,7 +59,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.models.Course
@@ -81,7 +81,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import kotlinx.coroutines.launch
 
 @Composable
-fun LearnScreen(state: LearnUiState, mainNavController: NavController) {
+fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
     ) { padding ->
@@ -102,7 +102,7 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavController) {
 }
 
 @Composable
-private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
+private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostController, modifier: Modifier = Modifier) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
     var appBarHeight by remember { mutableIntStateOf(0) }
@@ -192,6 +192,7 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavContro
                         )
                         2 -> LearnScoreScreen(
                             state.selectedCourse?.course?.id ?: -1,
+                            mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 

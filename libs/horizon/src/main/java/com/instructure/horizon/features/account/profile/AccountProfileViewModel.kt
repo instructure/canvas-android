@@ -42,7 +42,7 @@ class AccountProfileViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountProfileUiState(
-        screenState = LoadingState(isPullToRefreshEnabled = false, onErrorSnackbarDismiss = ::dismissSnackbar),
+        screenState = LoadingState(isPullToRefreshEnabled = false, onSnackbarDismiss = ::dismissSnackbar),
         fullNameInputState = TextFieldState(
             label = context.getString(R.string.accountFullNameLabel),
             size = TextFieldInputSize.Medium,
@@ -199,7 +199,7 @@ class AccountProfileViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 
@@ -211,14 +211,14 @@ class AccountProfileViewModel @Inject constructor(
             )
             _uiState.update {
                 it.copy(
-                    screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.accountProfileUpdated)),
+                    screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.accountProfileUpdated)),
                 )
             }
             notifyParent(uiState.value.fullNameInputState.value.text)
         } catch {
             _uiState.update {
                 it.copy(
-                    screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.accountProfileFailedToUpdate)),
+                    screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.accountProfileFailedToUpdate)),
                 )
             }
         }
