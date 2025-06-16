@@ -19,7 +19,8 @@ data class SpeedGraderComment(
     val content: String = "",
     val createdAt: String = "",
     val isOwnComment: Boolean = false,
-    val attachments: List<SpeedGraderCommentAttachment> = emptyList()
+    val attachments: List<SpeedGraderCommentAttachment> = emptyList(),
+    val isPending: Boolean = false
 )
 
 data class SpeedGraderCommentAttachment(

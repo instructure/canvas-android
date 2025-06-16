@@ -17,6 +17,8 @@
 query SubmissionCommentsQuery($submissionId: ID!) {
     submission(id: $submissionId) {
         _id
+        userId
+        attempt
         commentsConnection {
             edges {
                 node {
@@ -39,6 +41,7 @@ query SubmissionCommentsQuery($submissionId: ID!) {
                     canReply
                     draft
                     attempt
+                    read
                     attachments {
                         id
                         contentType
@@ -54,6 +57,11 @@ query SubmissionCommentsQuery($submissionId: ID!) {
             pageInfo {
                 hasNextPage
                 endCursor
+            }
+        }
+        assignment {
+            course {
+                _id
             }
         }
     }

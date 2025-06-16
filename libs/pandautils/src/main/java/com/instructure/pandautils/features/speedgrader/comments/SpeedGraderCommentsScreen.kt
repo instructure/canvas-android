@@ -16,32 +16,17 @@
  */
 package com.instructure.pandautils.features.speedgrader.comments
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderCommentSection
 
 @Composable
 fun SpeedGraderCommentsScreen() {
-    // This is a placeholder for the SpeedGrader Comments Screen.
-    // The actual implementation will be added later.
-    // For now, we can display a simple text or a loading indicator.
 
     val viewModel: SpeedGraderCommentsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
-
-    val context = LocalContext.current.applicationContext
 
     SpeedGraderCommentSection(uiState, actionHandler = viewModel::handleAction)
 }

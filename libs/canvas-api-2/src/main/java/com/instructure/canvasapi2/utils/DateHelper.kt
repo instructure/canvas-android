@@ -40,10 +40,15 @@ object DateHelper {
 
     fun speedGraderDateStringToDate(dateString: String?): Date? {
         return try {
-            SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.US).parse(dateString)
+            speedGraderDateTimeFormat.parse(dateString!!)
         } catch (e: Exception) {
             null
         }
+    }
+
+    fun longToSpeedGraderDateString(date: Long?): String? {
+        if (date == null) return null
+        return speedGraderDateTimeFormat.format(Date(date))
     }
 
     /**
@@ -98,6 +103,9 @@ object DateHelper {
 
     val monthDayYearDateFormatUniversalShort: SimpleDateFormat
         get() = SimpleDateFormat("MMM d, YYYY", Locale.getDefault())
+
+    val speedGraderDateTimeFormat: SimpleDateFormat
+        get() = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.getDefault())
 
 
     fun getFormattedTime(context: Context?, date: Date?): String? {

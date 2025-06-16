@@ -120,7 +120,11 @@ fun SpeedGraderCommentItems(
 fun SpeedGraderOwnCommentItem(
     comment: SpeedGraderComment, modifier: Modifier = Modifier, gradingAnonymously: Boolean = false
 ) {
-    Column(modifier = modifier.padding(8.dp)) {
+    Column(
+        modifier = modifier
+            .padding(8.dp)
+            .alpha(if (comment.isPending) 0.5f else 1f)
+    ) {
         Text(
             text = DateHelper.getDateTimeString(
                 LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
@@ -403,7 +407,7 @@ fun SpeedGraderCommentCreator(
     }
 }
 
-@Preview(heightDp = 300)
+@Preview
 @Composable
 fun SpeedGraderCommentSectionPreview() {
     val comments = listOf(
