@@ -2,6 +2,7 @@ package com.instructure.horizon.features.notebook.common.model
 
 import com.google.gson.Gson
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.managers.NoteObjectType
 import com.instructure.canvasapi2.managers.NoteReaction
@@ -33,7 +34,14 @@ fun QueryNotesQuery.Notes.mapToNotes(): List<Note> {
             highlightedText = try {
                 Gson().fromJson(note.highlightData?.toJson(), NoteHighlightedData::class.java)
             } catch (e: Exception) {
-                NoteHighlightedData(selectedText = "", range = NoteHighlightedDataTextPosition(0, 0, "", ""))
+                NoteHighlightedData(
+                    selectedText = "",
+                    range = NoteHighlightedDataRange(0, 0, "", ""),
+                    textPosition = NoteHighlightedDataTextPosition(
+                        start = 0,
+                        end = 0
+                    )
+                )
             },
             updatedAt = note.updatedAt,
             type = when (note.reaction?.firstOrNull()) {

@@ -10,6 +10,8 @@ data class NotesCallback(
         startOffset: Int,
         endContainer: String,
         endOffset: Int,
+        textSelectionStart: Int,
+        textSelectionEnd: Int
     ) -> Unit,
     val onNoteAdded: (
         selectedText: String,
@@ -17,5 +19,7 @@ data class NotesCallback(
         startOffset: Int,
         endContainer: String,
         endOffset: Int,
+        textSelectionStart: Int,
+        textSelectionEnd: Int
     ) -> Unit,
 )

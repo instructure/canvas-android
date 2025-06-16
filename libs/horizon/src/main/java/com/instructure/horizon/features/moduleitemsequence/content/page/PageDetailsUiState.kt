@@ -27,4 +27,5 @@ data class PageDetailsUiState(
     val notes: List<Note> = emptyList(),
     val courseId: Long = -1L,
     val pageId: Long = -1L,
+    val pageUrl: String = ""
 )

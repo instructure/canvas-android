@@ -51,6 +51,8 @@ sealed class MainNavigationRoute(val route: String) {
         val highlightedTextEndOffset: Int,
         val highlightedTextStartContainer: String,
         val highlightedTextEndContainer: String,
+        val textSelectionStart: Int,
+        val textSelectionEnd: Int,
         val highlightedText: String,
     ): MainNavigationRoute("add_notebook")
 
@@ -61,6 +63,8 @@ sealed class MainNavigationRoute(val route: String) {
         val highlightedTextEndOffset: Int,
         val highlightedTextStartContainer: String,
         val highlightedTextEndContainer: String,
+        val textSelectionStart: Int,
+        val textSelectionEnd: Int,
         val highlightedText: String,
         val noteType: String,
         val userComment: String,

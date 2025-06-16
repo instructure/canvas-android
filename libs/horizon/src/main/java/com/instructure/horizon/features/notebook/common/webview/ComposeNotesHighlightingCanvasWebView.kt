@@ -74,10 +74,12 @@ fun ComposeNotesHighlightingCanvasWebView(
     val notesStateValue = rememberUpdatedState(notes)
 
     var selectedText by remember { mutableStateOf("") }
-    var selectedTextStartContainer by remember { mutableStateOf("") }
-    var selectedTextStartOffset by remember { mutableStateOf(0) }
-    var selectedTextEndContainer by remember { mutableStateOf("") }
-    var selectedTextEndOffset by remember { mutableStateOf(0) }
+    var selectedTextRangeStartContainer by remember { mutableStateOf("") }
+    var selectedTextRangeStartOffset by remember { mutableStateOf(0) }
+    var selectedTextRangeEndContainer by remember { mutableStateOf("") }
+    var selectedTextRangeEndOffset by remember { mutableStateOf(0) }
+    var selectedTextStart by remember { mutableStateOf(0) }
+    var selectedTextEnd by remember { mutableStateOf(0) }
 
     val menuItems by remember {
         mutableStateOf(
@@ -88,10 +90,12 @@ fun ComposeNotesHighlightingCanvasWebView(
                 ActionMenuItem(2, context.getString(R.string.notesActionMenuAddNote)) {
                     notesCallback.onNoteAdded(
                         selectedText,
-                        selectedTextStartContainer,
-                        selectedTextStartOffset,
-                        selectedTextEndContainer,
-                        selectedTextEndOffset
+                        selectedTextRangeStartContainer,
+                        selectedTextRangeStartOffset,
+                        selectedTextRangeEndContainer,
+                        selectedTextRangeEndOffset,
+                        selectedTextStart,
+                        selectedTextEnd
                     )
                 }
             )
@@ -158,14 +162,16 @@ fun ComposeNotesHighlightingCanvasWebView(
                 }
 
                 it.webView.addTextSelectionInterface(
-                    onTextSelect = { text, startContainer, startOffset, endContainer, endOffset ->
+                    onTextSelect = { text, startContainer, startOffset, endContainer, endOffset, selectedTextStartParam, selectedTextEndParam ->
                         selectedText = text
-                        selectedTextStartContainer = startContainer
-                        selectedTextStartOffset = startOffset
-                        selectedTextEndContainer = endContainer
-                        selectedTextEndOffset = endOffset
+                        selectedTextRangeStartContainer = startContainer
+                        selectedTextRangeStartOffset = startOffset
+                        selectedTextRangeEndContainer = endContainer
+                        selectedTextRangeEndOffset = endOffset
+                        selectedTextStart = selectedTextStartParam
+                        selectedTextEnd = selectedTextEndParam
                     },
-                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
+                    onHighlightedTextClick = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, selectedTextStartParam, selectedTextEndParam ->
                         lifecycleOwner.lifecycleScope.launch {
                             notesCallback.onNoteSelected(
                                 noteId,
@@ -175,7 +181,9 @@ fun ComposeNotesHighlightingCanvasWebView(
                                 startContainer,
                                 startOffset,
                                 endContainer,
-                                endOffset
+                                endOffset,
+                                selectedTextStartParam,
+                                selectedTextEndParam
                             )
                         }
                     },

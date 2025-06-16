@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -53,16 +54,24 @@ class EditNoteViewModel @Inject constructor(
         savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedTextStartContainer
     private val highlightedTextEndContainer: String =
         savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedTextEndContainer
+    private val highlightedTextSelectionStart: Int =
+        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().textSelectionStart
+    private val highlightedTextSelectionEnd: Int =
+        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().textSelectionEnd
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(
             highlightedData = NoteHighlightedData(
                 selectedText = highlightedText,
-                NoteHighlightedDataTextPosition(
+                range = NoteHighlightedDataRange(
                     startOffset = highlightedTextStartOffset,
                     endOffset = highlightedTextEndOffset,
                     startContainer = highlightedTextStartContainer,
                     endContainer = highlightedTextEndContainer
+                ),
+                textPosition = NoteHighlightedDataTextPosition(
+                    start = highlightedTextSelectionStart,
+                    end = highlightedTextSelectionEnd
                 )
             ),
             userComment = TextFieldValue(userComment),

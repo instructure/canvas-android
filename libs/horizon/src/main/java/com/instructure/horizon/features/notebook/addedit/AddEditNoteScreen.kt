@@ -36,6 +36,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -189,7 +190,8 @@ private fun AddEditNoteScreenPreview() {
         type = NotebookType.Important,
         highlightedData = NoteHighlightedData(
             selectedText = "This is a highlighted text",
-            range = NoteHighlightedDataTextPosition(startOffset = 0, endOffset = 25, startContainer = "text", endContainer = "text")
+            range = NoteHighlightedDataRange(0, 0, "", ""),
+            textPosition = NoteHighlightedDataTextPosition(0, 0)
         ),
         userComment = TextFieldValue("This is an important part"),
         onUserCommentChanged = {},

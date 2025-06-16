@@ -61,6 +61,7 @@ class PageDetailsViewModel @Inject constructor(
                     pageHtmlContent = html,
                     notes = notes,
                     pageId = pageDetails.id,
+                    pageUrl = pageUrl
                 )
             }
             _uiState.update {

@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
@@ -45,17 +46,23 @@ class AddNoteViewModel @Inject constructor(
     private val highlightedTextEndOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndOffset
     private val highlightedTextStartContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartContainer
     private val highlightedTextEndContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndContainer
+    private val highlightedTextSelectionStart: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionStart
+    private val highlightedTextSelectionEnd: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionEnd
     private val highlightedText: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedText
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(
         highlightedData = NoteHighlightedData(
             selectedText = highlightedText,
-            range = NoteHighlightedDataTextPosition(
+            range = NoteHighlightedDataRange(
                 startOffset = highlightedTextStartOffset,
                 endOffset = highlightedTextEndOffset,
                 startContainer = highlightedTextStartContainer,
                 endContainer = highlightedTextEndContainer
+            ),
+            textPosition = NoteHighlightedDataTextPosition(
+                start = highlightedTextSelectionStart,
+                end = highlightedTextSelectionEnd
             )
         ),
         onTypeChanged = ::onTypeChanged,

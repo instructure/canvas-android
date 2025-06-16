@@ -73,7 +73,7 @@ fun PageDetailsContentScreen(
                     .verticalScroll(scrollState)
             ) {
                 ComposeNotesHighlightingCanvasWebView(
-                    content = it,
+                    content = "<div id=\"parent-container\"><div>$it</div></div>",
                     notes = uiState.notes,
                     applyOnWebView = {
                         activity?.let { addVideoClient(it) }
@@ -87,7 +87,7 @@ fun PageDetailsContentScreen(
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
                     ),
                     notesCallback = NotesCallback(
-                        onNoteSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset ->
+                        onNoteSelected = { noteId, noteType, selectedText, userComment, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
                             mainNavController.navigate(
                                 MainNavigationRoute.EditNotebook(
                                     noteId = noteId,
@@ -97,11 +97,13 @@ fun PageDetailsContentScreen(
                                     highlightedTextStartContainer = startContainer,
                                     highlightedTextEndContainer = endContainer,
                                     highlightedText = selectedText,
-                                    userComment = userComment
+                                    userComment = userComment,
+                                    textSelectionStart = textSelectionStart,
+                                    textSelectionEnd = textSelectionEnd
                                 )
                             )
                         },
-                        onNoteAdded = { selectedText, startContainer, startOffset, endContainer, endOffset ->
+                        onNoteAdded = { selectedText, startContainer, startOffset, endContainer, endOffset, textSelectionStart, textSelectionEnd ->
                             mainNavController.navigate(
                                 MainNavigationRoute.AddNotebook(
                                     courseId = uiState.courseId.toString(),
@@ -111,7 +113,9 @@ fun PageDetailsContentScreen(
                                     highlightedTextEndOffset = endOffset,
                                     highlightedTextStartContainer = startContainer,
                                     highlightedTextEndContainer = endContainer,
-                                    highlightedText = selectedText
+                                    highlightedText = selectedText,
+                                    textSelectionStart = textSelectionStart,
+                                    textSelectionEnd = textSelectionEnd
                                 )
                             )
                         }

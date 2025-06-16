@@ -46,6 +46,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.managers.NoteObjectType
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -210,6 +211,8 @@ fun NotebookBottomDialog(
                                     highlightedTextStartOffset = note.highlightedText.range.startOffset,
                                     highlightedTextEndContainer = note.highlightedText.range.endContainer,
                                     highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                    textSelectionStart = note.highlightedText.textPosition.start,
+                                    textSelectionEnd = note.highlightedText.textPosition.end,
                                     noteType = note.type.name,
                                 )
                             )
@@ -416,7 +419,7 @@ private fun NotebookScreenPreview() {
                 objectId = "456",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about an assignment.",
-                highlightedText = NoteHighlightedData("Important part of the assignment.", NoteHighlightedDataTextPosition(0, 0, "", "")),
+                highlightedText = NoteHighlightedData("Important part of the assignment.", NoteHighlightedDataRange(0, 0, "", ""), NoteHighlightedDataTextPosition(0, 0)),
                 updatedAt = Date(),
                 type = NotebookType.Important
             ),
@@ -426,7 +429,7 @@ private fun NotebookScreenPreview() {
                 objectId = "789",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about another assignment.",
-                highlightedText = NoteHighlightedData("Confusing part of the assignment.", NoteHighlightedDataTextPosition(0, 0, "", "")),
+                highlightedText = NoteHighlightedData("Confusing part of the assignment.", NoteHighlightedDataRange(0, 0, "", ""), NoteHighlightedDataTextPosition(0, 0)),
                 updatedAt = Date(),
                 type = NotebookType.Confusing
             )
