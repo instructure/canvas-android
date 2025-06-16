@@ -299,10 +299,11 @@ private fun GradesScreenContent(
                 stickyHeader {
                     GroupHeader(
                         name = it.name,
-                        expanded = it.expanded
-                    ) {
-                        actionHandler(GradesAction.GroupHeaderClick(it.id))
-                    }
+                        expanded = it.expanded,
+                        onClick = {
+                            actionHandler(GradesAction.GroupHeaderClick(it.id))
+                        }
+                    )
                 }
 
                 if (it.expanded) {

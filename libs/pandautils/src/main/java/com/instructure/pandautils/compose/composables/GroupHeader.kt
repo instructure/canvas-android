@@ -54,7 +54,8 @@ import com.instructure.pandautils.R
 fun GroupHeader(
     name: String,
     expanded: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val iconRotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f, label = "expandedIconRotation")
 
@@ -68,7 +69,7 @@ fun GroupHeader(
     )
 
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(colorResource(id = R.color.backgroundLightest))
             .clickable {
                 onClick()

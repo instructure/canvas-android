@@ -89,10 +89,11 @@ private fun StudentNotes(
         item {
             GroupHeader(
                 name = stringResource(R.string.speedGraderStudentNotes),
-                expanded = expanded
-            ) {
-                expanded = !expanded
-            }
+                expanded = expanded,
+                onClick = {
+                    expanded = !expanded
+                }
+            )
         }
         if (expanded) {
             when (uiState.state) {

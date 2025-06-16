@@ -74,7 +74,7 @@ fun SpeedGraderSubmissionScreen(
                 NavHost(
                     navController = rememberNavController(),
                     modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
+                    startDestination = "speedGraderBottomSheet/$courseId/$assignmentId/$submissionId"
                 ) {
                     speedGraderBottomSheet()
                 }
