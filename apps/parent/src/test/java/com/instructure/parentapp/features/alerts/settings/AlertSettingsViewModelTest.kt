@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.ThresholdWorkflowState
 import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.parentapp.R
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -214,7 +215,7 @@ class AlertSettingsViewModelTest {
     }
 
     @Test
-    fun `deleteThreshold error`() = runTest{
+    fun `deleteThreshold error`() = runTest {
         val alertType = AlertType.ASSIGNMENT_GRADE_HIGH
 
         coEvery { repository.loadAlertThresholds(any()) } returns listOf(
@@ -259,7 +260,23 @@ class AlertSettingsViewModelTest {
         assertEquals(expected, events.last())
     }
 
+    @Test
+    fun `unpair student fails`() = runTest {
+        createViewModel()
 
+        viewModel.handleAction(AlertSettingsAction.UnpairStudentFailed)
+
+        val events = mutableListOf<AlertSettingsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+        }
+
+        val event = events.last() as AlertSettingsViewModelAction.ShowSnackbar
+        assertEquals(R.string.generalUnexpectedError, event.message)
+
+        event.actionCallback.invoke()
+        assertEquals(AlertSettingsViewModelAction.UnpairStudent(1L), events.last())
+    }
 
     private fun createViewModel() {
         viewModel = AlertSettingsViewModel(savedStateHandle, repository, crashlytics)

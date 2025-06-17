@@ -291,7 +291,7 @@
     <string name="Todo">Untuk Dilakukan</string>
     <string name="todoFilter">Tapis Kursus</string>
     <string name="filterByEllipsis">Tapis mengikut...</string>
-    <string name="favoriteCoursesLabel">Kursus Kegemaran</string>
+    <string name="favoritedCoursesLabel">Kursus Kegemaran</string>
     <string name="Event">Acara</string>
     <string name="eventSuccessfulDeletion">Acara berjaya dipadamkan</string>
     <string name="timeIconDescription">Ikon Masa</string>
@@ -1782,6 +1782,7 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Urus Pelajar</string>
     <string name="screenTitleSettings">Tetapan</string>
+    <string name="navigationDrawerSwitchUsers">Tukar Pengguna</string>
     <string name="navigationDrawerLogOut">Log Keluar</string>
     <string name="noStudentsError">Tiada Pelajar</string>
     <string name="noStudentsErrorDescription">Anda tidak memerhatikan mana-mana pelajar.</string>
@@ -2010,6 +2011,33 @@
     <string name="inboxSignatureSwitchLabel">Tandatangan</string>
     <string name="inboxSignatureTextfieldHeader">Teks tandatangan</string>
     <string name="due_dateTime">Cukup tempoh: %1$s, %2$s</string>
+    <string name="noDueDate">Tiada Tarikh Siap</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Memerlukan Penggredan</string>
+    <string name="assignmentListTitle">Senarai tugasan</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d mata</item>
+        <item quantity="other">%d mata</item>
+    </plurals>
+    <string name="noAssignments">Tiada tugasan</string>
+    <string name="assignmentGroup">Kumpulan Tugasan</string>
+    <string name="assignmentType">Jenis Tugasan</string>
+    <string name="dueDate">Tarikh Siap</string>
+    <string name="needsGrading">Perlu Digredkan</string>
+    <string name="published">Telah diterbitkan</string>
+    <string name="unpublished">Dinyahterbit</string>
+    <string name="notYetSubmitted">Belum Diserahkan</string>
+    <string name="toBeGraded">Untuk Digredkan</string>
+    <string name="graded">Digredkan</string>
+    <string name="other">Lain</string>
+    <string name="a11y_filterAssignments">Tapis Tugasan</string>
+    <string name="assignmentFilter">Penapis Tugasan</string>
+    <string name="groupedBy">Dikumpulkan Mengikut</string>
+    <string name="gradingPeriod">Tempoh Penggredan</string>
+    <string name="gradingPeriodHeading">Tempoh Penggredan</string>
+    <string name="gradePreferences">Keutamaan Gred</string>
+    <string name="allAssignments">Semua Tugasan</string>
+    <string name="statusFilter">Penapis Status</string>
     <string name="a11y_contentDescription_filter">Tapis</string>
     <string name="a11y_contentDescription_postPolicy">Dasar siaran</string>
     <string name="late">Lewat</string>
@@ -2018,4 +2046,12 @@
     <string name="submissionFilter">Penapis Serahan</string>
     <string name="submissionMessageSubject">%1$s pada %2$s</string>
     <string name="all">Semua</string>
+    <string name="loginRequired">Log masuk diperlukan</string>
+    <string name="loginRequiredMessage">Anda perlu log masuk semula kerana dasar keselamatan institusi anda. Setelah log masuk, anda boleh terus bekerja dengan lancar.</string>
+    <string name="login">Log masuk</string>
+    <string name="logout">Log keluar</string>
+    <string name="loginRefreshSameUserError">Anda mestilah log masuk dengan nama pengguna yang sama.</string>
+    <string name="errorLoadingAssignments">Ralat berlaku semasa memuatkan tugasan.</string>
+    <string name="a11y_searchAssignments">Cari Tugasan</string>
+    <string name="dueAssignmentListItem">Cukup tempoh %1$s</string>
 </resources>

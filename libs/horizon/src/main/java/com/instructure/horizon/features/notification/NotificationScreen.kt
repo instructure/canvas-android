@@ -99,7 +99,7 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
             IconButton(
                 iconRes = R.drawable.chevron_left,
                 onClick = state.decreasePageIndex,
-                color = IconButtonColor.BLACK,
+                color = IconButtonColor.Black,
                 enabled = state.currentPageIndex > 0 && state.pagedNotificationItems.size > 1
             )
 
@@ -108,7 +108,7 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
             IconButton(
                 iconRes = R.drawable.chevron_right,
                 onClick = state.increasePageIndex,
-                color = IconButtonColor.BLACK,
+                color = IconButtonColor.Black,
                 enabled = state.currentPageIndex < state.pagedNotificationItems.lastIndex
             )
         }

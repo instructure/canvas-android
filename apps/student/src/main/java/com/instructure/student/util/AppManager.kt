@@ -25,6 +25,7 @@ import androidx.work.PeriodicWorkRequestBuilder
 import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.utils.MasqueradeHelper
+import com.instructure.canvasapi2.utils.PendoInitCallbackHandler
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.pageview.PageViewUploadWorker
 import com.instructure.pandautils.features.reminder.AlarmScheduler
@@ -72,7 +73,7 @@ class AppManager : BaseAppManager() {
 
     private fun initPendo() {
         val options = Pendo.PendoOptions.Builder().setJetpackComposeBeta(true).build()
-        Pendo.setup(this, BuildConfig.PENDO_TOKEN, options, null)
+        Pendo.setup(this, BuildConfig.PENDO_TOKEN, options, PendoInitCallbackHandler)
     }
 
     override fun performLogoutOnAuthError() {

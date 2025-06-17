@@ -291,7 +291,7 @@
     <string name="Todo">Tasgau i’w Gwneud</string>
     <string name="todoFilter">Hidlo Cyrsiau</string>
     <string name="filterByEllipsis">Hidlo yn ôl&#8230;</string>
-    <string name="favoriteCoursesLabel">Cyrsiau wedi’u hoffi</string>
+    <string name="favoritedCoursesLabel">Cyrsiau wedi’u hoffi</string>
     <string name="Event">Digwyddiad</string>
     <string name="eventSuccessfulDeletion">Wedi llwyddo i ddileu digwyddiad</string>
     <string name="timeIconDescription">Eicon Amser</string>
@@ -1776,6 +1776,7 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Rheoli Myfyrwyr</string>
     <string name="screenTitleSettings">Gosodiadau</string>
+    <string name="navigationDrawerSwitchUsers">Newid Defnyddwyr</string>
     <string name="navigationDrawerLogOut">Allgofnodi</string>
     <string name="noStudentsError">Dim Myfyrwyr</string>
     <string name="noStudentsErrorDescription">Dydych chi ddim yn arsyllu unrhyw fyfyrwyr.</string>
@@ -2004,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Llofnod</string>
     <string name="inboxSignatureTextfieldHeader">Testun llofnod</string>
     <string name="due_dateTime">Erbyn: %1$s, %2$s</string>
+    <string name="noDueDate">Dim Dyddiad Erbyn</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s Angen Graddio</string>
+    <string name="assignmentListTitle">Rhestr aseiniadau</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d pwynt</item>
+        <item quantity="other">%d pwynt</item>
+    </plurals>
+    <string name="noAssignments">Dim aseiniadau</string>
+    <string name="assignmentGroup">Grŵp o Aseiniadau</string>
+    <string name="assignmentType">Math o Aseiniad</string>
+    <string name="dueDate">Dyddiad Erbyn</string>
+    <string name="needsGrading">Angen Graddio</string>
+    <string name="published">Wedi Cyhoeddi</string>
+    <string name="unpublished">Wedi dad-gyhoeddi</string>
+    <string name="notYetSubmitted">Heb Gyflwyno Eto</string>
+    <string name="toBeGraded">I gael ei raddio</string>
+    <string name="graded">Wedi graddio</string>
+    <string name="other">Arall</string>
+    <string name="a11y_filterAssignments">Hidlo Aseiniadau</string>
+    <string name="assignmentFilter">Hidlydd Aseiniadau</string>
+    <string name="groupedBy">Wedi grwpio yn ôl</string>
+    <string name="gradingPeriod">Cyfnod Graddio:</string>
+    <string name="gradingPeriodHeading">Cyfnod Graddio</string>
+    <string name="gradePreferences">Dewisiadau Gradd</string>
+    <string name="allAssignments">Pob Aseiniad</string>
+    <string name="statusFilter">Hidlydd Statws</string>
     <string name="a11y_contentDescription_filter">Hidlo</string>
     <string name="a11y_contentDescription_postPolicy">Polisi postio</string>
     <string name="late">Yn Hwyr</string>
@@ -2012,4 +2040,12 @@
     <string name="submissionFilter">Hidlydd Cyflwyno</string>
     <string name="submissionMessageSubject">%1$s ar gyfer %2$s</string>
     <string name="all">Y cyfan</string>
+    <string name="loginRequired">Angen mewngofnodi</string>
+    <string name="loginRequiredMessage">Bydd angen i chi fewngofnodi eto oherwydd polisi diogelwch eich sefydliad. Ar ôl mewngofnodi, gallwch barhau i weithio’n ddi-dor.</string>
+    <string name="login">Mewngofnodi</string>
+    <string name="logout">Allgofnodi</string>
+    <string name="loginRefreshSameUserError">Rhaid i chi fewngofnodi efo\'r un defnyddiwr.</string>
+    <string name="errorLoadingAssignments">Gwall wrth lwytho\'r aseiniadau</string>
+    <string name="a11y_searchAssignments">Chwilio Aseiniadau</string>
+    <string name="dueAssignmentListItem">Erbyn %1$s</string>
 </resources>

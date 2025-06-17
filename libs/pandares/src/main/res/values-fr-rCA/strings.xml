@@ -291,7 +291,7 @@
     <string name="Todo">À faire</string>
     <string name="todoFilter">Filtrer les cours</string>
     <string name="filterByEllipsis">Filtrer par...</string>
-    <string name="favoriteCoursesLabel">Cours favoris</string>
+    <string name="favoritedCoursesLabel">Cours favoris</string>
     <string name="Event">Événement</string>
     <string name="eventSuccessfulDeletion">L\'événement a été supprimé avec succès</string>
     <string name="timeIconDescription">Icône Heure</string>
@@ -1776,6 +1776,7 @@
     <string name="screenTitleHelp">Aide</string>
     <string name="screenTitleManageStudents">Gestion des participants</string>
     <string name="screenTitleSettings">Paramètres</string>
+    <string name="navigationDrawerSwitchUsers">Changer d’utilisateurs</string>
     <string name="navigationDrawerLogOut">Déconnexion</string>
     <string name="noStudentsError">Aucun étudiant</string>
     <string name="noStudentsErrorDescription">Vous n’observez aucun étudiant.</string>
@@ -2004,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Texte de la signature</string>
     <string name="due_dateTime">Échéance : %1$s, %2$s</string>
+    <string name="noDueDate">Aucune date d’échéance</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s a besoin de classement</string>
+    <string name="assignmentListTitle">Liste des tâches</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d point</item>
+        <item quantity="other">%d points</item>
+    </plurals>
+    <string name="noAssignments">Pas de tâche</string>
+    <string name="assignmentGroup">Groupe de tâches</string>
+    <string name="assignmentType">Type de tâche</string>
+    <string name="dueDate">Date d’échéance</string>
+    <string name="needsGrading">Requiert une notation</string>
+    <string name="published">Publié</string>
+    <string name="unpublished">Non publié</string>
+    <string name="notYetSubmitted">Pas encore envoyé</string>
+    <string name="toBeGraded">À noter</string>
+    <string name="graded">Noté</string>
+    <string name="other">Autre</string>
+    <string name="a11y_filterAssignments">Filtrer les tâches</string>
+    <string name="assignmentFilter">Filtre des tâches</string>
+    <string name="groupedBy">Regroupés par</string>
+    <string name="gradingPeriod">Période de notation :</string>
+    <string name="gradingPeriodHeading">Période de notation</string>
+    <string name="gradePreferences">Préférences de notation</string>
+    <string name="allAssignments">Toutes les tâches</string>
+    <string name="statusFilter">Filtre d’état</string>
     <string name="a11y_contentDescription_filter">Filtre</string>
     <string name="a11y_contentDescription_postPolicy">Politique de publication</string>
     <string name="late">En retard</string>
@@ -2012,4 +2040,12 @@
     <string name="submissionFilter">Filtre d’envoi</string>
     <string name="submissionMessageSubject">%1$s le %2$s</string>
     <string name="all">Tout</string>
+    <string name="loginRequired">Connexion requise</string>
+    <string name="loginRequiredMessage">Vous devez vous connecter à nouveau en raison de la politique de sécurité de votre institution. Une fois connecté, vous pouvez continuer à travailler en toute transparence.</string>
+    <string name="login">Connexion</string>
+    <string name="logout">Déconnexion</string>
+    <string name="loginRefreshSameUserError">Vous devez vous connecter avec le même utilisateur.</string>
+    <string name="errorLoadingAssignments">Une erreur s’est produite lors du chargement des tâches</string>
+    <string name="a11y_searchAssignments">Rechercher des tâches</string>
+    <string name="dueAssignmentListItem">Dû le %1$s</string>
 </resources>

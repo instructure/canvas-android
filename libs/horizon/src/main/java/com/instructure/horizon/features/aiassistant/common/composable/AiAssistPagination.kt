@@ -49,7 +49,7 @@ fun AiAssistPagination(
         IconButton(
             iconRes = R.drawable.chevron_left,
             contentDescription = stringResource(R.string.a11y_aiAssistPaginationPreviousPage),
-            color = IconButtonColor.INVERSE,
+            color = IconButtonColor.Inverse,
             size = IconButtonSize.NORMAL,
             onClick = onPreviousPage,
             enabled = currentPage > 1,
@@ -68,7 +68,7 @@ fun AiAssistPagination(
         IconButton(
             iconRes = R.drawable.chevron_right,
             contentDescription = stringResource(R.string.a11y_aiAssistPaginationNextPage),
-            color = IconButtonColor.INVERSE,
+            color = IconButtonColor.Inverse,
             size = IconButtonSize.NORMAL,
             onClick = onNextPage,
             enabled = currentPage < totalPages,

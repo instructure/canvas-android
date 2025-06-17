@@ -99,9 +99,9 @@ class QuizListRecyclerAdapter(
         lifecycleScope.tryLaunch {
             settings = repository.loadCourseSettings(canvasContext.id, isRefresh)
             quizzes = repository.loadQuizzes(canvasContext.type.apiString, canvasContext.id, isRefresh)
+            isAllPagesLoaded = true
             populateData()
             onCallbackFinished(ApiType.API)
-            isAllPagesLoaded = true
         } catch {
             context.toast(R.string.errorOccurred)
         }
