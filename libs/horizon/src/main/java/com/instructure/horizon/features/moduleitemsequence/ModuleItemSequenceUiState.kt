@@ -31,7 +31,7 @@ data class ModuleItemSequenceUiState(
     val onNextClick: () -> Unit = {},
     val onProgressClick: () -> Unit = {},
     val onAssignmentToolsClick: () -> Unit = {},
-    val openAssignmentTools: Boolean = false,
+    val showAssignmentToolsForId: Long? = null,
     val assignmentToolsOpened: () -> Unit = {},
     val showAiAssist: Boolean = false,
     val updateShowAiAssist: (Boolean) -> Unit = {},
