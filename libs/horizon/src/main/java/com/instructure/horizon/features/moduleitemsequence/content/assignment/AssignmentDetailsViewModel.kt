@@ -132,6 +132,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     }
                     _uiState.update {
                         it.copy(
+                            showSubmissionDetails = true,
+                            showAddSubmission = false,
                             submissionDetailsUiState = it.submissionDetailsUiState.copy(
                                 currentSubmissionAttempt = attempt.attempt
                             ),
@@ -215,7 +217,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 showSubmissionDetails = false,
-                showAddSubmission = true
+                showAddSubmission = true,
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = it.attemptSelectorUiState.attempts.map { attempt ->
+                    attempt.copy(selected = false)
+                })
             )
         }
     }
