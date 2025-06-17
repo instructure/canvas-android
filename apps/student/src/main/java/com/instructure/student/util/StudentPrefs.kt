@@ -22,7 +22,7 @@ object StudentPrefs : PrefManager("candroidSP") {
 
     var tempCaptureUri by NStringPref()
 
-    var showGradesOnCard by BooleanPref(true)
+    var showGradesOnCard by BooleanPref(false)
 
     var hideCourseColorOverlay by BooleanPref(false)
 

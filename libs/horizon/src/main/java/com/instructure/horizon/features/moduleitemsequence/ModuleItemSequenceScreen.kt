@@ -276,7 +276,7 @@ private fun ModuleItemSequenceContent(
                         moduleItemUiState,
                         scrollState = contentScrollState,
                         mainNavController,
-                        uiState.openAssignmentTools,
+                        uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
                         uiState.updateAiContextString,
                         uiState.updateObjectTypeAndId
@@ -373,7 +373,7 @@ private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
     mainNavController: NavHostController,
-    openAssignmentTools: Boolean,
+    assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (String) -> Unit,
     updateObjectTypeAndId: (Pair<String, String>) -> Unit,
@@ -404,8 +404,9 @@ private fun ModuleItemContentScreen(
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.instructions)
                 updateObjectTypeAndId(Pair("Assignment", uiState.assignmentId.toString()))
-                LaunchedEffect(openAssignmentTools) {
-                    if (openAssignmentTools) {
+                LaunchedEffect(assignmentToolsForId) {
+                    val assignmentId = it.arguments?.getLong(ModuleItemContent.Assignment.ASSIGNMENT_ID) ?: -1L
+                    if (assignmentId == assignmentToolsForId) {
                         viewModel.openAssignmentTools()
                         assignmentToolsOpened()
                     }

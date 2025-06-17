@@ -16,10 +16,6 @@
 package com.instructure.student.ui.interaction
 
 import android.app.Activity
-import android.app.Instrumentation
-import android.content.Intent
-import androidx.test.espresso.intent.Intents
-import androidx.test.espresso.intent.matcher.IntentMatchers
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.StubMultiAPILevel
@@ -30,10 +26,8 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.hamcrest.CoreMatchers
 import org.junit.Before
 import org.junit.Test
 
@@ -91,9 +85,9 @@ class SettingsInteractionTest : StudentComposeTest() {
         leftSideNavigationDrawerPage.clickSettingsMenu()
         settingsPage.clickOnSettingsItem("Pair with Observer")
 
-        pairObserverPage.hasCode("1")
-        pairObserverPage.refresh()
-        pairObserverPage.hasCode("2")
+        pairObserverPage.hasPairingCode("1")
+        pairObserverPage.refreshPairingCode()
+        pairObserverPage.hasPairingCode("2")
     }
 
     @Test
