@@ -502,7 +502,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun assignmentToolsOpened() {
-        _uiState.update { it.copy(showAssignmentToolsForId = -1L) }
+        _uiState.update { it.copy(showAssignmentToolsForId = null) }
     }
 
     private fun updateShowAiAssist(show: Boolean) {

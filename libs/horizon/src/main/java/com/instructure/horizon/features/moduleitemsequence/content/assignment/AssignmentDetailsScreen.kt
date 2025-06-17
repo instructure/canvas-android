@@ -122,13 +122,15 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         ActionBottomSheet(
             title = stringResource(R.string.assignmentDetails_tools),
             actions = buildList {
-                if (uiState.toolsBottomSheetUiState.showAttemptSelector) add(
-                    BottomSheetActionState(
-                        stringResource(R.string.assignmentDetails_attemptHistory),
-                        R.drawable.history,
-                        onClick = uiState.toolsBottomSheetUiState.onAttemptsClick
+                if (uiState.toolsBottomSheetUiState.showAttemptSelector) {
+                    add(
+                        BottomSheetActionState(
+                            stringResource(R.string.assignmentDetails_attemptHistory),
+                            R.drawable.history,
+                            onClick = uiState.toolsBottomSheetUiState.onAttemptsClick
+                        )
                     )
-                )
+                }
                 add(
                     BottomSheetActionState(
                         stringResource(R.string.assignmentDetails_comments),

@@ -360,7 +360,7 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
-    assignmentToolsForId: Long,
+    assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (String) -> Unit,
     modifier: Modifier = Modifier
@@ -391,7 +391,7 @@ private fun ModuleItemContentScreen(
                 updateAiContext(uiState.instructions)
                 LaunchedEffect(assignmentToolsForId) {
                     val assignmentId = it.arguments?.getLong(ModuleItemContent.Assignment.ASSIGNMENT_ID) ?: -1L
-                    if (assignmentToolsForId != -1L && assignmentId == assignmentToolsForId) {
+                    if (assignmentId == assignmentToolsForId) {
                         viewModel.openAssignmentTools()
                         assignmentToolsOpened()
                     }
