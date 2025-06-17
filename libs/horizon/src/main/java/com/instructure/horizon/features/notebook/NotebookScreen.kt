@@ -173,7 +173,7 @@ fun NotebookBottomDialog(
         containerColor = HorizonColors.Surface.pagePrimary(),
         onDismissRequest = { onDismiss() },
         dragHandle = null,
-        sheetState = bottomSheetState
+        sheetState = bottomSheetState,
     ) {
         LaunchedEffect(courseId, objectFilter) {
             state.updateContent(courseId, objectFilter)
@@ -290,7 +290,7 @@ private fun LoadingContent() {
             .fillMaxWidth()
             .padding(24.dp)
     ) {
-        Spinner(color = HorizonColors.Surface.inversePrimary())
+        Spinner(color = HorizonColors.Surface.institution())
     }
 }
 
@@ -319,7 +319,7 @@ private fun NoteContent(
                 .padding(24.dp)
         ) {
             Text(
-                text = note.updatedAt.format("EEE MM, yyyy"),
+                text = note.updatedAt.format("MMM d, yyyy"),
                 style = HorizonTypography.labelSmall,
                 color = HorizonColors.Text.timestamp()
             )

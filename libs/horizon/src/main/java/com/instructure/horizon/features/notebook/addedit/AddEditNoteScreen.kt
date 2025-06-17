@@ -27,6 +27,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -34,6 +35,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
@@ -56,22 +58,29 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
-import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 
 @Composable
 fun AddEditNoteScreen(
     navController: NavHostController,
     state: AddEditNoteUiState,
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(Unit) {
+        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+    }
+
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { NotebookAppBar(navigateBack = { navController.popBackStack() }) },
     ) { padding ->
         if (state.isLoading) {
-            AddEditNoteLoading()
+            AddEditNoteLoading(padding)
         } else {
             AddEditNoteContent(
                 state = state,
@@ -171,14 +180,15 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
 }
 
 @Composable
-private fun AddEditNoteLoading() {
+private fun AddEditNoteLoading(padding: PaddingValues) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
             .fillMaxWidth()
+            .padding(padding)
             .padding(24.dp)
     ) {
-        Loading()
+        Spinner(color = HorizonColors.Surface.institution())
     }
 }
 
@@ -197,6 +207,30 @@ private fun AddEditNoteScreenPreview() {
         onUserCommentChanged = {},
         onTypeChanged = {},
         onSaveNote = {},
+    )
+
+    AddEditNoteScreen(
+        navController = NavHostController(LocalContext.current),
+        state = state
+    )
+}
+
+@Composable
+@Preview
+private fun AddEditNoteScreenLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = AddEditNoteUiState(
+        type = NotebookType.Important,
+        highlightedData = NoteHighlightedData(
+            selectedText = "This is a highlighted text",
+            range = NoteHighlightedDataRange(0, 0, "", ""),
+            textPosition = NoteHighlightedDataTextPosition(0, 0)
+        ),
+        userComment = TextFieldValue("This is an important part"),
+        onUserCommentChanged = {},
+        onTypeChanged = {},
+        onSaveNote = {},
+        isLoading = true
     )
 
     AddEditNoteScreen(

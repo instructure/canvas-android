@@ -21,6 +21,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -35,12 +36,17 @@ class NotebookViewModel @Inject constructor(
     private var cursorId: String? = null
     private var pageInfo: QueryNotesQuery.PageInfo? = null
 
+    private var courseId: Long? = null
+    private var objectTypeAndId: Pair<String, String>? = null
+
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
         updateContent = { courseId, objectTypeAndId ->
-            loadData(courseId = courseId, objectTypeAndId = objectTypeAndId)
+            this.courseId = courseId
+            this.objectTypeAndId = objectTypeAndId
+            loadData()
         }
     ))
     val uiState = _uiState.asStateFlow()
@@ -52,8 +58,8 @@ class NotebookViewModel @Inject constructor(
     private fun loadData(
         after: String? = null,
         before: String? = null,
-        courseId: Long? = null,
-        objectTypeAndId: Pair<String, String>? = null
+        courseId: Long? = this.courseId,
+        objectTypeAndId: Pair<String, String>? = this.objectTypeAndId
     ) {
         viewModelScope.launch {
             _uiState.update {
@@ -65,7 +71,8 @@ class NotebookViewModel @Inject constructor(
                 before = before,
                 filterType = uiState.value.selectedFilter,
                 courseId = courseId,
-                objectTypeAndId = objectTypeAndId
+                objectTypeAndId = objectTypeAndId,
+                orderDirection = OrderDirection.descending
             )
             cursorId = notesResponse.edges?.firstOrNull()?.cursor
             pageInfo = notesResponse.pageInfo
