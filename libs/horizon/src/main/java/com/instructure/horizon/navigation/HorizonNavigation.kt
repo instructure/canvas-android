@@ -25,6 +25,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
+import com.instructure.horizon.features.inbox.HorizonInboxScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
 import com.instructure.horizon.features.notebook.NotebookScreen
@@ -40,6 +41,7 @@ sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
     data object Notification : MainNavigationRoute("notification")
     data object Notebook : MainNavigationRoute("notebook")
+    data object Inbox : MainNavigationRoute("inbox")
 
     @Serializable
     data class AddNotebook(
@@ -90,6 +92,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             val viewModel = hiltViewModel<AddNoteViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AddNoteScreen(navController, uiState)
+        }
+        composable(MainNavigationRoute.Inbox.route) {
+            HorizonInboxScreen()
         }
     }
 }
