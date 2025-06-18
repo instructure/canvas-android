@@ -22,6 +22,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.Const
 
 data class ModuleItemSequenceUiState(
+    val courseId: Long,
     val loadingState: LoadingState = LoadingState(),
     val items: List<ModuleItemUiState> = emptyList(),
     val currentPosition: Int = -1,
@@ -34,9 +35,13 @@ data class ModuleItemSequenceUiState(
     val showAssignmentToolsForId: Long? = null,
     val assignmentToolsOpened: () -> Unit = {},
     val showAiAssist: Boolean = false,
-    val updateShowAiAssist: (Boolean) -> Unit = {},
+    val showNotebook: Boolean = false,
+    val updateShowAiAssist: (Boolean) -> Unit,
+    val updateShowNotebook: (Boolean) -> Unit,
     val aiContext: AiAssistContext = AiAssistContext(),
-    val updateAiContextString: (String) -> Unit = {},
+    val updateAiContextString: (String) -> Unit,
+    val objectTypeAndId: Pair<String, String> = Pair("", ""),
+    val updateObjectTypeAndId: (Pair<String, String>) -> Unit,
 )
 
 data class ModuleItemUiState(
@@ -67,7 +72,7 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         }
     }
 
-    data class Page(val courseId: Long, val pageUrl: String) :
+    data class Page(val courseId: Long, val pageUrl: String):
         ModuleItemContent(
             "courses/$courseId/pages/$pageUrl"
         ) {

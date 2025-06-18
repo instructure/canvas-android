@@ -18,11 +18,10 @@ package com.instructure.horizon.features.notebook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.NoteObjectType
-import com.instructure.canvasapi2.managers.NoteReaction
-import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.type.OrderDirection
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -37,10 +36,18 @@ class NotebookViewModel @Inject constructor(
     private var cursorId: String? = null
     private var pageInfo: QueryNotesQuery.PageInfo? = null
 
+    private var courseId: Long? = null
+    private var objectTypeAndId: Pair<String, String>? = null
+
     private val _uiState = MutableStateFlow(NotebookUiState(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
-        onFilterSelected = ::onFilterSelected
+        onFilterSelected = ::onFilterSelected,
+        updateContent = { courseId, objectTypeAndId ->
+            this.courseId = courseId
+            this.objectTypeAndId = objectTypeAndId
+            loadData()
+        }
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -50,7 +57,9 @@ class NotebookViewModel @Inject constructor(
 
     private fun loadData(
         after: String? = null,
-        before: String? = null
+        before: String? = null,
+        courseId: Long? = this.courseId,
+        objectTypeAndId: Pair<String, String>? = this.objectTypeAndId
     ) {
         viewModelScope.launch {
             _uiState.update {
@@ -60,28 +69,15 @@ class NotebookViewModel @Inject constructor(
             val notesResponse = repository.getNotes(
                 after = after,
                 before = before,
-                filterType = uiState.value.selectedFilter
+                filterType = uiState.value.selectedFilter,
+                courseId = courseId,
+                objectTypeAndId = objectTypeAndId,
+                orderDirection = OrderDirection.descending
             )
             cursorId = notesResponse.edges?.firstOrNull()?.cursor
             pageInfo = notesResponse.pageInfo
 
-            val notes = notesResponse.edges?.map { edge ->
-                val note = edge.node
-                Note(
-                    id = note.id,
-                    courseId = note.courseId.toLong(),
-                    objectId = note.objectId,
-                    objectType = NoteObjectType.fromValue(note.objectType)!!,
-                    userText = note.userText.orEmpty(),
-                    highlightedText = repository.parseHighlightedData(note.highlightData)?.selectedText.orEmpty(),
-                    updatedAt = note.updatedAt,
-                    type = when (note.reaction?.firstOrNull()) {
-                        NoteReaction.Important.value -> NotebookType.Important
-                        NoteReaction.Confusing.value -> NotebookType.Confusing
-                        else -> NotebookType.Important
-                    },
-                )
-            }.orEmpty()
+            val notes = notesResponse.mapToNotes()
 
             _uiState.update {
                 it.copy(
