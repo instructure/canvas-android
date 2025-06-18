@@ -188,6 +188,8 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testFab_scanner(){
+        val scannerComponent = "com.instructure.student.features.documentscanning.DocumentScanningActivity"
+
         goToSubmissionPicker()
 
         Intents.init()
@@ -199,9 +201,8 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
             val resultData = Intent().apply { data = uri }
             val scannerResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
 
-            // Match the scanner activity intent (adjust the component name if needed)
             intending(
-                IntentMatchers.hasComponent("com.instructure.student.features.documentscanning.DocumentScanningActivity")
+                IntentMatchers.hasComponent(scannerComponent)
             ).respondWith(scannerResult)
 
             pickerSubmissionUploadPage.chooseScanner()
@@ -263,7 +264,6 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         }
 
         pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
-        composeTestRule.waitForIdle()
         pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
 
         pickerSubmissionUploadPage.submit()
