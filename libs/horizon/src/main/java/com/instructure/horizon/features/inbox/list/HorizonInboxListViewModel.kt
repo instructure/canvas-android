@@ -16,13 +16,13 @@
  */
 package com.instructure.horizon.features.inbox.list
 
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -44,6 +44,8 @@ class HorizonInboxListViewModel @Inject constructor(
                 onSnackbarDismiss = ::dismissSnackbar,
             ),
             updateRecipientSearchQuery = ::updateRecipientSearchQuery,
+            updateScopeFilter = ::updateScopeFilter,
+            updateSelectedRecipients = ::updateSelectedRecipients
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -64,7 +66,6 @@ class HorizonInboxListViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
         } catch {
-            Log.d("HorizonInboxListViewModel", "Failed to load Inbox", it)
             _uiState.update { currentState ->
                 currentState.copy(
                     loadingState = currentState.loadingState.copy(
@@ -135,6 +136,7 @@ class HorizonInboxListViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 items = items.sortedByDescending { it.date },
+                allRecipients = recipients
             )
         }
     }
@@ -169,8 +171,38 @@ class HorizonInboxListViewModel @Inject constructor(
     }
 
     private fun updateRecipientSearchQuery(value: TextFieldValue) {
-        _uiState.update {
-            it.copy(recipientSearchQuery = value)
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(recipientSearchQuery = value)
+            }
+            val recipients = repository.getRecipients(value.text, true)
+            _uiState.update {
+                it.copy(allRecipients = recipients)
+            }
+        } catch {
+
+        }
+    }
+
+    private fun updateScopeFilter(scope: HorizonInboxScope) {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(selectedScope = scope)
+            }
+            loadData()
+        } catch {
+
+        }
+    }
+
+    private fun updateSelectedRecipients(value: List<Recipient>) {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(selectedRecipients = value)
+            }
+            loadData()
+        } catch {
+
         }
     }
 }

@@ -33,6 +33,7 @@ import com.instructure.horizon.features.inbox.list.HorizonInboxListViewModel
 
 @Composable
 fun HorizonInboxNavigation(
+    mainNavController: NavHostController,
     navController: NavHostController = rememberNavController(),
     modifier: Modifier = Modifier
 ) {
@@ -44,7 +45,7 @@ fun HorizonInboxNavigation(
         composable(HorizonInboxRoute.InboxList.route) {
             val viewModel = hiltViewModel<HorizonInboxListViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            HorizonInboxListScreen(uiState, navController)
+            HorizonInboxListScreen(uiState, mainNavController, navController)
         }
         composable(
             HorizonInboxRoute.InboxDetails.route,

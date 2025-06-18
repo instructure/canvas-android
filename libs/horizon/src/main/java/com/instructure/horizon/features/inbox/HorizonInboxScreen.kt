@@ -17,9 +17,10 @@
 package com.instructure.horizon.features.inbox
 
 import androidx.compose.runtime.Composable
+import androidx.navigation.NavHostController
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxNavigation
 
 @Composable
-fun HorizonInboxScreen() {
-    HorizonInboxNavigation()
+fun HorizonInboxScreen(mainNavController: NavHostController) {
+    HorizonInboxNavigation(mainNavController)
 }

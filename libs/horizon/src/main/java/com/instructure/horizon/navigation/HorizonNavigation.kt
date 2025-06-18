@@ -94,7 +94,7 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             AddNoteScreen(navController, uiState)
         }
         composable(MainNavigationRoute.Inbox.route) {
-            HorizonInboxScreen()
+            HorizonInboxScreen(navController)
         }
     }
 }

@@ -55,6 +55,7 @@ class HorizonInboxListRepository @Inject constructor(
             recipientsApi.getFirstPageRecipientList(searchQuery, course.id.toString(), params)
                 .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
                 .dataOrThrow
+                .filter { it.recipientType == Recipient.Type.Person }
         }.flatten()
     }
 
