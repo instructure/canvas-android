@@ -257,4 +257,8 @@
     <string name="attemptBottomSheet_header">Attempts</string>
     <string name="attemptBottomSheet_noAttempts">This assignment allows multiple attempts. Once you\'ve made a submission, you can view it here.</string>
     <string name="assignmentDetails_viewingAttempt">Viewing Attempt %d</string>
+    <string name="noteHasBeenSavedMessage">Saved to Notebook.</string>
+    <string name="noteHasBeenDeletedMessage">Deleted from Notebook.</string>
+    <string name="failedToSaveNoteMessage">Error saving to Notebook.</string>
+    <string name="failedToDeleteNoteMessage">Error deleting from Notebook.</string>
 </resources>

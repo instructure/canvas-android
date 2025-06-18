@@ -39,9 +39,9 @@ import com.instructure.horizon.horizonui.molecules.IconButtonSize
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun NotebookAppBar(
+    modifier: Modifier = Modifier,
     navigateBack: (() -> Unit)? = null,
-    onClose: (() -> Unit)? = null,
-    modifier: Modifier = Modifier
+    onClose: (() -> Unit)? = null
 ) {
     CenterAlignedTopAppBar(
         title = {
@@ -60,7 +60,7 @@ fun NotebookAppBar(
                     size = IconButtonSize.SMALL,
                     elevation = HorizonElevation.level4,
                     onClick = navigateBack,
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
         },
@@ -73,7 +73,7 @@ fun NotebookAppBar(
                     size = IconButtonSize.SMALL,
                     elevation = HorizonElevation.level4,
                     onClick = onClose,
-                    modifier = Modifier.padding(4.dp)
+                    modifier = Modifier.padding(horizontal = 24.dp)
                 )
             }
         },
@@ -82,7 +82,7 @@ fun NotebookAppBar(
             titleContentColor = HorizonColors.Text.title(),
             navigationIconContentColor = HorizonColors.Icon.default()
         ),
-        modifier = modifier.padding(horizontal = 24.dp)
+        modifier = modifier
     )
 }
 

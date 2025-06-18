@@ -90,7 +90,7 @@ class JSTextSelectionInterface(
 
     companion object {
         private const val JS_INTERFACE_NAME = "TextSelectionInterface"
-		private const val jsCodeFromWeb = """
+		private const val JS_CODE_FROM_WEB = """
 const getNodeName = (node) => {
 	const nodeName = node.nodeName.toLowerCase();
 	return nodeName === "#text" ? "text()" : nodeName;
@@ -608,8 +608,8 @@ const isNodeInRange = (range, node) => {
 	}
 };
 		"""
-        private val jsCode = """
-${jsCodeFromWeb}
+        private val JS_CODE = """
+${JS_CODE_FROM_WEB}
 function highlightSelection(noteId, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, noteReactionString, textSelectionStart, textSelectionEnd) {
 	let parent = document.getElementById("parent-container");//document.documentElement;
 	if (!parent) return;
@@ -715,7 +715,7 @@ javascript: (function () {
         }
 
         fun WebView.evaluateTextSelectionInterface() {
-            this.evaluateJavascript(jsCode, null)
+            this.evaluateJavascript(JS_CODE, null)
         }
 
         fun WebView.highlightNotes(notes: List<Note>) {

@@ -69,10 +69,15 @@ import com.instructure.pandautils.utils.getActivityOrNull
 fun AddEditNoteScreen(
     navController: NavHostController,
     state: AddEditNoteUiState,
+    onShowSnackbar: (String?, () -> Unit) -> Unit
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+    }
+
+    LaunchedEffect(state.snackbarMessage) {
+        onShowSnackbar(state.snackbarMessage, state.onSnackbarDismiss)
     }
 
     Scaffold(
@@ -207,11 +212,13 @@ private fun AddEditNoteScreenPreview() {
         onUserCommentChanged = {},
         onTypeChanged = {},
         onSaveNote = {},
+        onSnackbarDismiss = {}
     )
 
     AddEditNoteScreen(
         navController = NavHostController(LocalContext.current),
-        state = state
+        state = state,
+        onShowSnackbar = { _, _ -> }
     )
 }
 
@@ -230,11 +237,13 @@ private fun AddEditNoteScreenLoadingPreview() {
         onUserCommentChanged = {},
         onTypeChanged = {},
         onSaveNote = {},
-        isLoading = true
+        isLoading = true,
+        onSnackbarDismiss = {}
     )
 
     AddEditNoteScreen(
         navController = NavHostController(LocalContext.current),
-        state = state
+        state = state,
+        onShowSnackbar = { _, _ -> }
     )
 }

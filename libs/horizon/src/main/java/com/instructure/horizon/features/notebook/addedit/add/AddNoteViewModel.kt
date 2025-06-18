@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notebook.addedit.add
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -24,18 +25,22 @@ import androidx.navigation.toRoute
 import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.navigation.MainNavigationRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: AddNoteRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -52,28 +57,29 @@ class AddNoteViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(
-        highlightedData = NoteHighlightedData(
-            selectedText = highlightedText,
-            range = NoteHighlightedDataRange(
-                startOffset = highlightedTextStartOffset,
-                endOffset = highlightedTextEndOffset,
-                startContainer = highlightedTextStartContainer,
-                endContainer = highlightedTextEndContainer
+            highlightedData = NoteHighlightedData(
+                selectedText = highlightedText,
+                range = NoteHighlightedDataRange(
+                    startOffset = highlightedTextStartOffset,
+                    endOffset = highlightedTextEndOffset,
+                    startContainer = highlightedTextStartContainer,
+                    endContainer = highlightedTextEndContainer
+                ),
+                textPosition = NoteHighlightedDataTextPosition(
+                    start = highlightedTextSelectionStart,
+                    end = highlightedTextSelectionEnd
+                )
             ),
-            textPosition = NoteHighlightedDataTextPosition(
-                start = highlightedTextSelectionStart,
-                end = highlightedTextSelectionEnd
-            )
-        ),
-        onTypeChanged = ::onTypeChanged,
-        onUserCommentChanged = ::onUserCommentChanged,
-        onSaveNote = ::addNote,
-    )
+            onTypeChanged = ::onTypeChanged,
+            onUserCommentChanged = ::onUserCommentChanged,
+            onSaveNote = ::addNote,
+            onSnackbarDismiss = ::onSnackbarDismissed
+        )
     )
     val uiState = _uiState.asStateFlow()
 
     private fun addNote(onFinished: () -> Unit) {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
 
             repository.addNote(
@@ -85,8 +91,10 @@ class AddNoteViewModel @Inject constructor(
                 type = uiState.value.type
             )
 
-            _uiState.update { it.copy(isLoading = false) }
+            _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.noteHasBeenSavedMessage)) }
             onFinished()
+        } catch {
+            _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.failedToSaveNoteMessage)) }
         }
     }
 
@@ -100,5 +108,9 @@ class AddNoteViewModel @Inject constructor(
 
     private fun onUserCommentChanged(userComment: TextFieldValue) {
         _uiState.update { it.copy(userComment = userComment) }
+    }
+
+    private fun onSnackbarDismissed() {
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 }

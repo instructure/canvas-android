@@ -24,6 +24,7 @@ import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -31,11 +32,13 @@ import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.pandautils.compose.modifiers.conditional
+import kotlin.math.min
 
 @Composable
 fun NotebookHighlightedText(
     text: String,
     type: NotebookType?,
+    maxLines: Int? = null,
     modifier: Modifier = Modifier
 ) {
     var lineCount = 1
@@ -45,8 +48,10 @@ fun NotebookHighlightedText(
         text = text,
         style = HorizonTypography.p1,
         color = HorizonColors.Text.body(),
+        maxLines = maxLines ?: Int.MAX_VALUE,
+        overflow = TextOverflow.Ellipsis,
         onTextLayout = { textLayoutResult ->
-            lineCount = textLayoutResult.lineCount
+            lineCount = if (maxLines == null) textLayoutResult.lineCount else min(textLayoutResult.lineCount, maxLines)
             for(i in 0 until  lineCount) {
                 lineList.add(textLayoutResult.getLineRight(i))
             }
