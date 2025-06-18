@@ -14,19 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.notebook
+package com.instructure.horizon.features.notebook.addedit
 
-import com.instructure.horizon.features.notebook.common.model.Note
+import androidx.compose.ui.text.input.TextFieldValue
+import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 
-data class NotebookUiState(
-    val isLoading: Boolean = true,
-    val selectedFilter: NotebookType? = null,
-    val onFilterSelected: (NotebookType?) -> Unit = {},
-    val notes: List<Note> = emptyList(),
-    val hasPreviousPage: Boolean = false,
-    val hasNextPage: Boolean = false,
-    val loadPreviousPage: () -> Unit = {},
-    val loadNextPage: () -> Unit = {},
-    val updateContent: (Long?, Pair<String, String>?) -> Unit
+data class AddEditNoteUiState(
+    val highlightedData: NoteHighlightedData,
+    val userComment: TextFieldValue = TextFieldValue(""),
+    val onUserCommentChanged: (TextFieldValue) -> Unit,
+    val type: NotebookType? = null,
+    val onTypeChanged: (NotebookType?) -> Unit,
+    val onSaveNote: (() -> Unit) -> Unit,
+    val isLoading: Boolean = false,
+    val onDeleteNote: ((() -> Unit) -> Unit)? = null,
+    val snackbarMessage: String? = null,
+    val onSnackbarDismiss: () -> Unit,
 )
