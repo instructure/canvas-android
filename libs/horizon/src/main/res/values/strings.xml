@@ -251,4 +251,8 @@
     <string name="assignmentDetails_submissionError">Error submitting assignment</string>
     <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
     <string name="assessment_startQuiz">Start Quiz</string>
+    <string name="inboxAllMessagesScopeLabel">All Messages</string>
+    <string name="inboxAnnouncementsScopeLabel">Announcements</string>
+    <string name="inboxUnreadScopeLabel">Unread</string>
+    <string name="inboxSentScopeLabel">Sent</string>
 </resources>
