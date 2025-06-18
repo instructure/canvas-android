@@ -61,6 +61,7 @@ import kotlinx.coroutines.launch
 @Composable
 fun SpeedGraderBottomSheet(
     anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?,
+    courseId: Long,
     assignmentId: Long,
     submissionId: Long
 ) {
@@ -107,7 +108,9 @@ fun SpeedGraderBottomSheet(
                                 anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
                             }
                         }
-                        val route = tab.route.replace("{assignmentId}", assignmentId.toString())
+                        val route = tab.route
+                            .replace("{courseId}", courseId.toString())
+                            .replace("{assignmentId}", assignmentId.toString())
                             .replace("{submissionId}", submissionId.toString())
                         navController.navigate(route) {
                             popUpTo(route) { inclusive = true }
@@ -120,6 +123,7 @@ fun SpeedGraderBottomSheet(
         SpeedGraderBottomSheetNavHost(
             navController = navController,
             startDestination = startDestination.route
+                .replace("{courseId}", courseId.toString())
                 .replace("{assignmentId}", assignmentId.toString())
                 .replace("{submissionId}", submissionId.toString())
         )
@@ -140,6 +144,7 @@ private fun SpeedGraderBottomSheetNavHost(
         composable(
             route = SpeedGraderTab.GRADE.route,
             arguments = listOf(
+                navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType }
             )
@@ -150,6 +155,7 @@ private fun SpeedGraderBottomSheetNavHost(
         composable(
             route = SpeedGraderTab.DETAILS.route,
             arguments = listOf(
+                navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType }
             )
@@ -163,9 +169,12 @@ enum class SpeedGraderTab(
     val route: String,
     @StringRes val title: Int
 ) {
-    GRADE("speedGraderGrade/{assignmentId}/{submissionId}", R.string.speedGraderGradeTabTitle),
+    GRADE(
+        "speedGraderGrade/{courseId}/assignments/{assignmentId}/{submissionId}",
+        R.string.speedGraderGradeTabTitle
+    ),
     DETAILS(
-        "speedGraderDetails/{assignmentId}/{submissionId}",
+        "speedGraderDetails/{courseId}/assignments/{assignmentId}/{submissionId}",
         R.string.speedGraderDetailsTabTitle
     ),
 }
@@ -174,5 +183,5 @@ enum class SpeedGraderTab(
 @Preview
 @Composable
 private fun SpeedGraderBottomSheetPreview() {
-    SpeedGraderBottomSheet(null, 1L, 1L)
+    SpeedGraderBottomSheet(null, 1L, 1L, 1L)
 }
