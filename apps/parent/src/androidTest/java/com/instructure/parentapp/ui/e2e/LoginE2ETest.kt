@@ -333,6 +333,9 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
         loginWithUser(parent, true)
 
+        Log.d(PREPARATION_TAG, "Generate a pairing code for the '${student.name}' student to be able to pair with an observer.")
+        val responsePairingCodeObject = UserApi.postGeneratePairingCode(student.id)
+
         Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
         dashboardPage.waitForRender()
         dashboardPage.assertPageObjects()
@@ -348,6 +351,25 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the 'Manage Students' page is displayed with the '${student.name}' student.")
         manageStudentsPage.assertToolbarTitle()
+        manageStudentsPage.assertStudentItemDisplayed(student.shortName)
+
+        Log.d(STEP_TAG, "Click on the 'Add Student' FAB (+) button on the bottom-right corner.")
+        manageStudentsPage.tapAddStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Add student with...' label and both the 'Pairing Code' and the 'QR Code' options are displayed on the Add Student (bottom) Page.")
+        addStudentBottomPage.assertAddStudentWithLabel()
+        addStudentBottomPage.assertPairingCodeOptionDisplayed()
+        addStudentBottomPage.assertQRCodeOptionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the 'Pairing Code' to add a student via pairing code.")
+        addStudentBottomPage.clickOnPairingCode()
+
+        Log.d(STEP_TAG, "Enter the pairing code of the student and click on the 'OK' button to apply.")
+        pairingCodePage.enterPairingCode(responsePairingCodeObject.pairingCode.toString())
+        pairingCodePage.clickOkButton()
+        composeTestRule.waitForIdle()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${student.shortName}' student is displayed.")
         manageStudentsPage.assertStudentItemDisplayed(student.shortName)
 
         Log.d(STEP_TAG, "Click on the '${student.name}' student on the 'Manage Students' page.")
@@ -367,13 +389,10 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Click on the 'Delete' button on the 'Delete Student' dialog.")
         studentAlertSettingsPage.clickDeleteStudentButton()
-        composeTestRule.waitForIdle()
-
-        Thread.sleep(8000)
 
         Log.d(ASSERTION_TAG, "Assert that the previously deleted student is not displayed on the 'Manage Students' page anymore.")
         manageStudentsPage.assertStudentItemNotDisplayed(student.shortName)
-        manageStudentsPage.assertNoStudentsDisplayed()
+        manageStudentsPage.assertEmptyContent()
     }
 
 }

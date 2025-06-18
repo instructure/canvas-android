@@ -27,11 +27,7 @@ import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
-import com.instructure.parentapp.R
+import androidx.compose.ui.test.performScrollToNode
 
 
 class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
@@ -80,11 +76,15 @@ class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Manage Students").assertIsDisplayed()
     }
 
-    fun assertNoStudentsDisplayed() {
-        onView(withText(R.string.noStudentsErrorDescription))
-            .check(matches(isDisplayed()))
-
-        onView(withText(R.string.noStudentsRefresh))
-            .check(matches(isDisplayed()))
+    fun assertEmptyContent() {
+        composeTestRule.onNodeWithText("You are not observing any students.")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithTag("EmptyContent")
+            .performScrollToNode(hasText("Refresh"))
+        composeTestRule.onNodeWithText("Refresh")
+            .assertIsDisplayed()
+            .assertHasClickAction()
+        composeTestRule.onNodeWithTag(com.instructure.pandares.R.drawable.panda_manage_students.toString())
+            .assertIsDisplayed()
     }
 }
