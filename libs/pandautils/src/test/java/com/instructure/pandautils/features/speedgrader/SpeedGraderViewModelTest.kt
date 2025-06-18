@@ -50,7 +50,13 @@ class SpeedGraderViewModelTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         Dispatchers.setMain(testDispatcher)
         repository = mockk()
-        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L, SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)))
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)
+            )
+        )
     }
 
     @After
@@ -72,6 +78,7 @@ class SpeedGraderViewModelTest {
         val uiState = viewModel.uiState.first()
         assertEquals("Test Assignment", uiState.assignmentName)
         assertEquals("Test Course", uiState.courseName)
+        assertEquals(1L, uiState.courseId)
         assertEquals(CanvasContext.emptyCourseContext(1L).color, uiState.courseColor)
     }
 
@@ -99,7 +106,13 @@ class SpeedGraderViewModelTest {
         val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
-        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L, SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)))
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)
+            )
+        )
 
         viewModel = SpeedGraderViewModel(savedStateHandle, repository)
 
@@ -114,7 +127,14 @@ class SpeedGraderViewModelTest {
         val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
-        savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L, SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L), Const.SELECTED_ITEM to 2))
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L),
+                Const.SELECTED_ITEM to 2
+            )
+        )
 
         viewModel = SpeedGraderViewModel(savedStateHandle, repository)
 
