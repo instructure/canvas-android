@@ -15,15 +15,23 @@
  *
  */
 
-package com.instructure.teacher.features.calendarevent
+package com.instructure.student.features.calendarevent.details
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import com.instructure.student.widget.WidgetUpdater
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 
-class TeacherEventViewModelBehavior : EventViewModelBehavior {
+class StudentEventViewModelBehavior(
+    @ApplicationContext private val context: Context,
+    private val widgetUpdater: WidgetUpdater,
+    private val appWidgetManager: AppWidgetManager
+) : EventViewModelBehavior {
 
     override val shouldShowMessageFab = false
 
@@ -31,5 +39,7 @@ class TeacherEventViewModelBehavior : EventViewModelBehavior {
         throw NotImplementedError("This method should not be called")
     }
 
-    override fun updateWidget() = Unit
+    override fun updateWidget() {
+        context.sendBroadcast(widgetUpdater.getTodoWidgetUpdateIntent(appWidgetManager))
+    }
 }
