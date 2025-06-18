@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.list
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -33,12 +34,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -192,19 +195,48 @@ private fun InboxContent(
             InboxHeader(state, mainNavController, navController)
         }
         items(state.items) { item ->
-            InboxContentItem(item)
+            InboxContentItem(
+                item,
+                Modifier
+                    .then(
+                        when (item) {
+                            state.items.firstOrNull() -> {
+                                Modifier.clip(
+                                    HorizonCornerRadius.level4Top
+                                )
+                            }
+                            state.items.lastOrNull() -> {
+                                Modifier.clip(
+                                    HorizonCornerRadius.level4Bottom
+                                )
+                            }
+                            else -> {
+                                Modifier
+                            }
+                        }
+                    ).background(HorizonColors.Surface.cardPrimary())
+            )
         }
     }
 }
 
 @Composable
-private fun InboxContentItem(item: HorizonInboxListItemState) {
-    Column {
+private fun InboxContentItem(
+    item: HorizonInboxListItemState,
+    modifier: Modifier = Modifier
+) {
+    Column(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
         Text(
             text = item.date.format("MMM dd, yyyy"),
             style = HorizonTypography.p2,
             color = HorizonColors.Text.timestamp(),
         )
+
+        HorizonSpace(SpaceSize.SPACE_8)
 
         Text(
             text = item.title,
