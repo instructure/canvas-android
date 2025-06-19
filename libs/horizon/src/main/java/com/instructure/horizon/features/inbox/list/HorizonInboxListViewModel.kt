@@ -28,12 +28,17 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class HorizonInboxListViewModel @Inject constructor(
     private val repository: HorizonInboxListRepository
@@ -51,8 +56,20 @@ class HorizonInboxListViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
+    private val recipientSearchQueryFlow = MutableStateFlow("")
+
     init {
         loadData()
+
+        viewModelScope.launch {
+            recipientSearchQueryFlow
+                .debounce(200)
+                .collectLatest {
+                    _uiState.update { it.copy(isOptionListLoading = true) }
+                    fetchData()
+                    _uiState.update { it.copy(isOptionListLoading = false) }
+                }
+        }
     }
 
     private fun loadData() {
@@ -196,17 +213,10 @@ class HorizonInboxListViewModel @Inject constructor(
     }
 
     private fun updateRecipientSearchQuery(value: TextFieldValue) {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(recipientSearchQuery = value)
-            }
-            val recipients = repository.getRecipients(value.text, true)
-            _uiState.update {
-                it.copy(allRecipients = recipients)
-            }
-        } catch {
-
+        _uiState.update {
+            it.copy(recipientSearchQuery = value)
         }
+        recipientSearchQueryFlow.tryEmit(value.text)
     }
 
     private fun updateScopeFilter(scope: HorizonInboxScope) {

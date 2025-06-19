@@ -34,6 +34,7 @@ data class HorizonInboxListUiState(
     val updateRecipientSearchQuery: (TextFieldValue) -> Unit,
     val updateScopeFilter: (HorizonInboxScope) -> Unit,
     val updateSelectedRecipients: (List<Recipient>) -> Unit,
+    val isOptionListLoading: Boolean = false
 )
 
 data class HorizonInboxListItemState(

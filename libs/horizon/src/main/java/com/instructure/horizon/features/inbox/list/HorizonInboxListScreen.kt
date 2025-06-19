@@ -20,7 +20,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -28,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -69,9 +69,9 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
-import com.instructure.horizon.horizonui.organisms.inputs.multiselect.MultiSelect
-import com.instructure.horizon.horizonui.organisms.inputs.multiselect.MultiSelectInputSize
-import com.instructure.horizon.horizonui.organisms.inputs.multiselect.MultiSelectState
+import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.MultiSelectSearch
+import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.MultiSelectSearchInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.MultiSelectSearchState
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
@@ -116,205 +116,204 @@ private fun InboxStateWrapper(
 ) {
     val pullToRefreshState = rememberPullToRefreshState()
 
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        InboxHeader(state, mainNavController, navController)
-        HorizonSpace(SpaceSize.SPACE_16)
+    PullToRefreshBox(
+        isRefreshing = state.loadingState.isRefreshing,
+        onRefresh = { state.loadingState.onRefresh() },
+        state = pullToRefreshState,
+        modifier = modifier.fillMaxSize(),
+        indicator = {
+            Indicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter),
+                isRefreshing = state.loadingState.isRefreshing,
+                containerColor = HorizonColors.Surface.pageSecondary(),
+                color = HorizonColors.Surface.institution(),
+                state = pullToRefreshState
+            )
+        },
+        content = {
+            LazyColumn {
+                InboxHeader(state, mainNavController, navController)
 
-        PullToRefreshBox(
-            isRefreshing = state.loadingState.isRefreshing,
-            onRefresh = { state.loadingState.onRefresh() },
-            state = pullToRefreshState,
-            modifier = modifier.fillMaxSize(),
-            indicator = {
-                Indicator(
-                    modifier = Modifier
-                        .align(Alignment.TopCenter)
-                        .padding(top = 16.dp),
-                    isRefreshing = state.loadingState.isRefreshing,
-                    containerColor = HorizonColors.Surface.pageSecondary(),
-                    color = HorizonColors.Surface.institution(),
-                    state = pullToRefreshState
-                )
-            },
-            content = {
                 if (state.loadingState.isLoading) {
                     LoadingContent()
                 } else {
                     InboxContent(state, navController)
                 }
             }
-        )
+        }
+    )
+}
+
+private fun LazyListScope.LoadingContent(modifier: Modifier = Modifier) {
+    item {
+        Box(
+            contentAlignment = Alignment.Center,
+            modifier = modifier
+                .fillMaxSize()
+                .clip(HorizonCornerRadius.level4)
+                .background(HorizonColors.Surface.cardPrimary())
+        ) {
+            Spinner(
+                color = HorizonColors.Surface.institution()
+            )
+        }
     }
 }
 
-@Composable
-private fun LoadingContent(modifier: Modifier = Modifier) {
-    Box(
-        contentAlignment = Alignment.Center,
-        modifier = modifier
-            .fillMaxSize()
-            .clip(HorizonCornerRadius.level4)
-            .background(HorizonColors.Surface.cardPrimary())
-    ) {
-        Spinner(
-            color = HorizonColors.Surface.institution()
-        )
-    }
-}
-
-@Composable
-private fun InboxHeader(
+private fun LazyListScope.InboxHeader(
     state: HorizonInboxListUiState,
     mainNavController: NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .padding(vertical = 12.dp, horizontal = 24.dp)
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            verticalAlignment = Alignment.CenterVertically
+    item {
+        Column(
+            modifier = modifier
+                .fillMaxWidth()
+                .padding(vertical = 12.dp, horizontal = 24.dp)
         ) {
-            IconButton(
-                iconRes = R.drawable.arrow_back,
-                size = IconButtonSize.NORMAL,
-                color = IconButtonColor.Inverse,
-                elevation = HorizonElevation.level4,
-                onClick = { mainNavController.popBackStack() },
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            Button(
-                label = "Create Message",
-                height = ButtonHeight.NORMAL,
-                width = ButtonWidth.RELATIVE,
-                color = ButtonColor.Institution,
-                iconPosition = ButtonIconPosition.Start(R.drawable.edit_square),
-                onClick = { navController.navigate(HorizonInboxRoute.InboxCompose.route) }
-            )
-        }
-
-        HorizonSpace(SpaceSize.SPACE_16)
-
-        val context = LocalContext.current
-        var isScopeFilterFocused by remember { mutableStateOf(false) }
-        var isScopeFilterOpen by remember { mutableStateOf(false) }
-        val singleSelectState = SingleSelectState(
-            size = SingleSelectInputSize.Medium,
-            options = HorizonInboxScope.entries.map { context.getString(it.label) },
-            isFocused = isScopeFilterFocused,
-            onFocusChanged = { isFocused ->
-                isScopeFilterFocused = isFocused
-            },
-            selectedOption = context.getString(state.selectedScope.label),
-            onOptionSelected = { option ->
-                state.updateScopeFilter(
-                    HorizonInboxScope.entries.firstOrNull { context.getString(it.label) == option }
-                        ?: HorizonInboxScope.All
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                IconButton(
+                    iconRes = R.drawable.arrow_back,
+                    size = IconButtonSize.NORMAL,
+                    color = IconButtonColor.Inverse,
+                    elevation = HorizonElevation.level4,
+                    onClick = { mainNavController.popBackStack() },
                 )
-            },
-            isMenuOpen = isScopeFilterOpen,
-            onMenuOpenChanged = { isOpen ->
-                isScopeFilterOpen = isOpen
-            },
-        )
-        SingleSelect(singleSelectState)
 
-        HorizonSpace(SpaceSize.SPACE_16)
+                Spacer(modifier = Modifier.weight(1f))
 
-        var isRecipientFilterFocused by remember { mutableStateOf(false) }
-        var isRecipientFilterOpen by remember { mutableStateOf(false) }
-        val multiSelectState = MultiSelectState(
-            placeHolderText = "Filter by person",
-            size = MultiSelectInputSize.Medium,
-            options = state.allRecipients.map { it.name.orEmpty() },
-            isFocused = isRecipientFilterFocused,
-            onFocusChanged = { isFocused ->
-                isRecipientFilterFocused = isFocused
-            },
-            selectedOptions = state.selectedRecipients.map { it.name.orEmpty() },
-            onOptionSelected = { option ->
-                val recipient = state.allRecipients.firstOrNull { it.name == option }
-                if (recipient != null) {
-                    state.updateSelectedRecipients(state.selectedRecipients + recipient)
-                }
-            },
-            onOptionRemoved = { option ->
-                val recipient = state.allRecipients.firstOrNull { it.name == option }
-                if (recipient != null) {
-                    state.updateSelectedRecipients(state.selectedRecipients - recipient)
-                }
-            },
-            isMenuOpen = isRecipientFilterOpen,
-            onMenuOpenChanged = { isOpen ->
-                isRecipientFilterOpen = isOpen
+                Button(
+                    label = "Create Message",
+                    height = ButtonHeight.NORMAL,
+                    width = ButtonWidth.RELATIVE,
+                    color = ButtonColor.Institution,
+                    iconPosition = ButtonIconPosition.Start(R.drawable.edit_square),
+                    onClick = { navController.navigate(HorizonInboxRoute.InboxCompose.route) }
+                )
             }
-        )
-        MultiSelect(state = multiSelectState)
+
+            HorizonSpace(SpaceSize.SPACE_16)
+
+            val context = LocalContext.current
+            var isScopeFilterFocused by remember { mutableStateOf(false) }
+            var isScopeFilterOpen by remember { mutableStateOf(false) }
+            val singleSelectState = SingleSelectState(
+                size = SingleSelectInputSize.Medium,
+                options = HorizonInboxScope.entries.map { context.getString(it.label) },
+                isFocused = isScopeFilterFocused,
+                onFocusChanged = { isFocused ->
+                    isScopeFilterFocused = isFocused
+                },
+                selectedOption = context.getString(state.selectedScope.label),
+                onOptionSelected = { option ->
+                    state.updateScopeFilter(
+                        HorizonInboxScope.entries.firstOrNull { context.getString(it.label) == option }
+                            ?: HorizonInboxScope.All
+                    )
+                },
+                isMenuOpen = isScopeFilterOpen,
+                onMenuOpenChanged = { isOpen ->
+                    isScopeFilterOpen = isOpen
+                },
+            )
+            SingleSelect(singleSelectState)
+
+            HorizonSpace(SpaceSize.SPACE_16)
+
+            var isRecipientFilterFocused by remember { mutableStateOf(false) }
+            var isRecipientFilterOpen by remember { mutableStateOf(false) }
+            val multiSelectState = MultiSelectSearchState(
+                placeHolderText = "Filter by person",
+                size = MultiSelectSearchInputSize.Medium,
+                options = state.allRecipients.map { it.name.orEmpty() },
+                isFocused = isRecipientFilterFocused,
+                onFocusChanged = { isFocused ->
+                    isRecipientFilterFocused = isFocused
+                },
+                selectedOptions = state.selectedRecipients.map { it.name.orEmpty() },
+                onOptionSelected = { option ->
+                    val recipient = state.allRecipients.firstOrNull { it.name == option }
+                    if (recipient != null) {
+                        state.updateSelectedRecipients(state.selectedRecipients + recipient)
+                    }
+                },
+                onOptionRemoved = { option ->
+                    val recipient = state.allRecipients.firstOrNull { it.name == option }
+                    if (recipient != null) {
+                        state.updateSelectedRecipients(state.selectedRecipients - recipient)
+                    }
+                },
+                isMenuOpen = isRecipientFilterOpen,
+                onMenuOpenChanged = { isOpen ->
+                    isRecipientFilterOpen = isOpen
+                },
+                searchPlaceHolder = "Search recipients",
+                searchQuery = state.recipientSearchQuery,
+                onSearchQueryChanged = { query ->
+                    state.updateRecipientSearchQuery(query)
+                },
+                isOptionListLoading = state.isOptionListLoading
+            )
+            MultiSelectSearch(state = multiSelectState)
+
+            HorizonSpace(SpaceSize.SPACE_16)
+        }
     }
 }
 
-@Composable
-private fun InboxContent(
+private fun LazyListScope.InboxContent(
     state: HorizonInboxListUiState,
     navController: NavHostController,
-    modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(bottom = 16.dp)
-    ) {
-        if (state.items.isEmpty()) {
-            item {
-                Column(
-                    modifier = Modifier
-                        .fillParentMaxSize()
-                        .clip(HorizonCornerRadius.level4)
-                        .background(HorizonColors.Surface.cardPrimary())
-                ){
-                    Text(
-                        text = "No messages yet.",
-                        style = HorizonTypography.p1,
-                        color = HorizonColors.Text.body(),
-                        modifier = Modifier.padding(24.dp)
-                    )
-                }
+    if (state.items.isEmpty()) {
+        item {
+            Column(
+                modifier = Modifier
+                    .fillParentMaxSize()
+                    .clip(HorizonCornerRadius.level4)
+                    .background(HorizonColors.Surface.cardPrimary())
+            ){
+                Text(
+                    text = "No messages yet.",
+                    style = HorizonTypography.p1,
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier.padding(24.dp)
+                )
             }
         }
-        items(state.items) { item ->
-            InboxContentItem(
-                item,
-                item != state.items.lastOrNull(),
-                { navController.navigate(HorizonInboxRoute.InboxDetails.route(item.id)) },
-                Modifier
-                    .then(
-                        when (item) {
-                            state.items.firstOrNull() -> {
-                                Modifier.clip(
-                                    HorizonCornerRadius.level4Top
-                                )
-                            }
-
-                            state.items.lastOrNull() -> {
-                                Modifier.clip(
-                                    HorizonCornerRadius.level4Bottom
-                                )
-                            }
-
-                            else -> {
-                                Modifier
-                            }
+    }
+    items(state.items) { item ->
+        InboxContentItem(
+            item,
+            item != state.items.lastOrNull(),
+            { navController.navigate(HorizonInboxRoute.InboxDetails.route(item.id)) },
+            Modifier
+                .then(
+                    when (item) {
+                        state.items.firstOrNull() -> {
+                            Modifier.clip(
+                                HorizonCornerRadius.level4Top
+                            )
                         }
-                    )
-                    .background(HorizonColors.Surface.cardPrimary())
-            )
-        }
+
+                        state.items.lastOrNull() -> {
+                            Modifier.clip(
+                                HorizonCornerRadius.level4Bottom
+                            )
+                        }
+
+                        else -> {
+                            Modifier
+                        }
+                    }
+                )
+                .background(HorizonColors.Surface.cardPrimary())
+        )
     }
 }
 
