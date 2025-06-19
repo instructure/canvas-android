@@ -55,11 +55,13 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(
                     onDismiss = ::dismissToolsBottomSheet,
-                    onAttemptsClick = ::openAttemptSelector
+                    onAttemptsClick = ::openAttemptSelector,
+                    onCommentsClick = ::openComments
                 ),
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
-                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed)
+                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed),
+                onCommentsBottomSheetDismissed = ::dismissComments
             )
         )
 
@@ -314,6 +316,22 @@ class AssignmentDetailsViewModel @Inject constructor(
                     show = false
                 )
             )
+        }
+    }
+
+    private fun openComments() {
+        _uiState.update {
+            it.copy(
+                showCommentsBottomSheet = true,
+                assignmentId = assignmentId,
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
+            )
+        }
+    }
+
+    private fun dismissComments() {
+        _uiState.update {
+            it.copy(showCommentsBottomSheet = false)
         }
     }
 

@@ -32,6 +32,9 @@ data class AssignmentDetailsUiState(
     val onSubmissionSuccess: suspend () -> Unit = {},
     val submissionConfirmationUiState: SubmissionConfirmationUiState = SubmissionConfirmationUiState(),
     val attemptSelectorUiState: AttemptSelectorUiState = AttemptSelectorUiState(),
+    val showCommentsBottomSheet: Boolean = false,
+    val assignmentId: Long = -1L,
+    val onCommentsBottomSheetDismissed: () -> Unit = {},
     val viewingAttemptText: String? = null,
 )
 

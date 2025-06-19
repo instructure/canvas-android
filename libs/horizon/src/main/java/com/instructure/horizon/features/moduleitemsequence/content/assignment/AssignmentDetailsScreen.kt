@@ -22,7 +22,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,6 +57,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsBottomSheet
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
@@ -98,6 +99,15 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
 
     if (uiState.attemptSelectorUiState.show) {
         AttemptSelectorBottomSheet(uiState.attemptSelectorUiState)
+    }
+
+    if (uiState.showCommentsBottomSheet) {
+        val commentsViewModel = hiltViewModel<CommentsViewModel>()
+        val commentsUiState by commentsViewModel.uiState.collectAsState()
+        LaunchedEffect(uiState.assignmentId, uiState.submissionDetailsUiState.currentSubmissionAttempt) {
+            commentsViewModel.initWithAttempt(uiState.assignmentId, uiState.submissionDetailsUiState.currentSubmissionAttempt.toInt())
+        }
+        CommentsBottomSheet(commentsUiState, onDismiss = uiState.onCommentsBottomSheetDismissed)
     }
 
     if (uiState.submissionConfirmationUiState.show) {
