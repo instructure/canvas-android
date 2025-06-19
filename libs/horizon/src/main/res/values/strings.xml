@@ -255,4 +255,11 @@
     <string name="inboxAnnouncementsScopeLabel">Announcements</string>
     <string name="inboxUnreadScopeLabel">Unread</string>
     <string name="inboxSentScopeLabel">Sent</string>
+    <string name="failedToLoadInbox">Failed to load Inbox</string>
+    <string name="inboxMessageTitle">Message</string>
+    <string name="inboxAnnouncementTitle">Announcement</string>
+    <string name="inboxCourseAnnouncementTitle">Announcement For %1$s</string>
+    <string name="inboxCreateMessageLabel">Create Message</string>
+    <string name="inboxFilterByPersonLabel">Filter by person</string>
+    <string name="inboxNoMessagesLabel">No messages yet.</string>
 </resources>

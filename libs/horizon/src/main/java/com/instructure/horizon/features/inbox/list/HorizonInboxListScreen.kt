@@ -49,6 +49,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
@@ -147,15 +148,16 @@ private fun InboxStateWrapper(
 
 private fun LazyListScope.LoadingContent(modifier: Modifier = Modifier) {
     item {
-        Box(
-            contentAlignment = Alignment.Center,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
-                .fillMaxSize()
+                .fillParentMaxSize()
                 .clip(HorizonCornerRadius.level4)
                 .background(HorizonColors.Surface.cardPrimary())
         ) {
             Spinner(
-                color = HorizonColors.Surface.institution()
+                color = HorizonColors.Surface.institution(),
+                modifier = Modifier.padding(24.dp)
             )
         }
     }
@@ -188,7 +190,7 @@ private fun LazyListScope.InboxHeader(
                 Spacer(modifier = Modifier.weight(1f))
 
                 Button(
-                    label = "Create Message",
+                    label = stringResource(R.string.inboxCreateMessageLabel),
                     height = ButtonHeight.NORMAL,
                     width = ButtonWidth.RELATIVE,
                     color = ButtonColor.Institution,
@@ -251,7 +253,7 @@ private fun LazyListScope.InboxHeader(
                 onMenuOpenChanged = { isOpen ->
                     isRecipientFilterOpen = isOpen
                 },
-                searchPlaceHolder = "Filter by person",
+                searchPlaceHolder = stringResource(R.string.inboxFilterByPersonLabel),
                 searchQuery = state.recipientSearchQuery,
                 onSearchQueryChanged = { query ->
                     state.updateRecipientSearchQuery(query)
@@ -278,7 +280,7 @@ private fun LazyListScope.InboxContent(
                     .background(HorizonColors.Surface.cardPrimary())
             ){
                 Text(
-                    text = "No messages yet.",
+                    text = stringResource(R.string.inboxNoMessagesLabel),
                     style = HorizonTypography.p1,
                     color = HorizonColors.Text.body(),
                     modifier = Modifier.padding(24.dp)

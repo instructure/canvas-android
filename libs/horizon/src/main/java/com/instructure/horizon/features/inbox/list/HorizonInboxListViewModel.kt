@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.list
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,9 +26,11 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -41,6 +44,7 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HorizonInboxListViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: HorizonInboxListRepository
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
@@ -88,7 +92,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 currentState.copy(
                     loadingState = currentState.loadingState.copy(
                         isLoading = false,
-                        snackbarMessage = "Failed to load Inbox"
+                        snackbarMessage = context.getString(R.string.failedToLoadInbox)
                     )
                 )
             }
@@ -139,7 +143,7 @@ class HorizonInboxListViewModel @Inject constructor(
                         HorizonInboxListItemState(
                             id = it.id.toString(),
                             type = HorizonInboxItemType.Inbox,
-                            title = "Message",
+                            title = context.getString(R.string.inboxMessageTitle),
                             description = it.subject.orEmpty(),
                             date = it.lastMessageSent,
                             isUnread = it.workflowState == Conversation.WorkflowState.UNREAD
@@ -152,10 +156,10 @@ class HorizonInboxListViewModel @Inject constructor(
                         HorizonInboxListItemState(
                             id = it.id.toString(),
                             type = HorizonInboxItemType.AccountNotification,
-                            title = "Announcement",
+                            title = context.getString(R.string.inboxAnnouncementTitle),
                             description = it.subject,
                             date = it.endDate ?: Date(),
-                            isUnread = true // TODO
+                            isUnread = true
                         )
                     }
             )
@@ -167,7 +171,10 @@ class HorizonInboxListViewModel @Inject constructor(
                         HorizonInboxListItemState(
                             id = announcement.id.toString(),
                             type = HorizonInboxItemType.CourseNotification(course.id.toString()),
-                            title = "Announcement For ${course.name}",
+                            title = context.getString(
+                                R.string.inboxCourseAnnouncementTitle,
+                                course.name
+                            ),
                             description = announcement.title.orEmpty(),
                             date = announcement.createdDate ?: Date(),
                             isUnread = announcement.status == DiscussionTopicHeader.ReadState.UNREAD
@@ -199,7 +206,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 currentState.copy(
                     loadingState = currentState.loadingState.copy(
                         isRefreshing = false,
-                        snackbarMessage = "Failed to load Inbox"
+                        snackbarMessage = context.getString(R.string.failedToLoadInbox)
                     )
                 )
             }
