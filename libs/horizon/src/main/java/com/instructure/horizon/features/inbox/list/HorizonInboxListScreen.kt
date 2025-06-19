@@ -50,9 +50,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -77,6 +81,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.pandautils.utils.format
+import java.util.Date
 
 @Composable
 fun HorizonInboxListScreen(
@@ -134,19 +139,19 @@ private fun InboxStateWrapper(
         },
         content = {
             LazyColumn {
-                InboxHeader(state, mainNavController, navController)
+                inboxHeader(state, mainNavController, navController)
 
                 if (state.loadingState.isLoading) {
-                    LoadingContent()
+                    loadingContent()
                 } else {
-                    InboxContent(state, navController)
+                    inboxContent(state, navController)
                 }
             }
         }
     )
 }
 
-private fun LazyListScope.LoadingContent(modifier: Modifier = Modifier) {
+private fun LazyListScope.loadingContent(modifier: Modifier = Modifier) {
     item {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -163,7 +168,7 @@ private fun LazyListScope.LoadingContent(modifier: Modifier = Modifier) {
     }
 }
 
-private fun LazyListScope.InboxHeader(
+private fun LazyListScope.inboxHeader(
     state: HorizonInboxListUiState,
     mainNavController: NavHostController,
     navController: NavHostController,
@@ -267,7 +272,7 @@ private fun LazyListScope.InboxHeader(
     }
 }
 
-private fun LazyListScope.InboxContent(
+private fun LazyListScope.inboxContent(
     state: HorizonInboxListUiState,
     navController: NavHostController,
 ) {
@@ -375,4 +380,38 @@ private fun InboxContentItem(
             HorizonDivider()
         }
     }
+}
+
+@Composable
+@Preview
+private fun HorizonInboxListPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = HorizonInboxListUiState(
+        items = listOf(
+            HorizonInboxListItemState(
+                id = "1",
+                title = "Message",
+                description = "This is the first message.",
+                date = Date(),
+                type = HorizonInboxItemType.Inbox,
+                isUnread = true
+            ),
+            HorizonInboxListItemState(
+                id = "2",
+                title = "Announcement",
+                description = "This is the second message.",
+                date = Date(),
+                type = HorizonInboxItemType.AccountNotification,
+                isUnread = false
+            )
+        ),
+        selectedScope = HorizonInboxScope.All,
+        allRecipients = emptyList(),
+        selectedRecipients = emptyList(),
+        updateScopeFilter = {},
+        updateSelectedRecipients = {},
+        updateRecipientSearchQuery = {}
+    )
+    HorizonInboxListScreen(state, rememberNavController(), rememberNavController())
+
 }
