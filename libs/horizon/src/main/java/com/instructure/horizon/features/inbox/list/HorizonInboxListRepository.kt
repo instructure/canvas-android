@@ -56,7 +56,7 @@ class HorizonInboxListRepository @Inject constructor(
                 .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
                 .dataOrThrow
                 .filter { it.recipientType == Recipient.Type.Person }
-        }.flatten()
+        }.flatten().distinct()
     }
 
     suspend fun getCourseAnnouncements(forceNetwork: Boolean): List<Pair<Course, DiscussionTopicHeader>> {
