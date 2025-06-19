@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
@@ -42,6 +43,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
@@ -62,6 +64,7 @@ fun MultiSelectSearch(
     state: MultiSelectSearchState,
     modifier: Modifier = Modifier
 ) {
+    val focusManager = LocalFocusManager.current
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -82,7 +85,10 @@ fun MultiSelectSearch(
                 isFocused = state.isFocused || state.isMenuOpen,
                 isError = state.errorText != null,
                 enabled = state.enabled,
-                onClick = { state.onMenuOpenChanged(!state.isMenuOpen) },
+                onClick = {
+                    focusManager.clearFocus()
+                    state.onMenuOpenChanged(!state.isMenuOpen)
+              },
                 modifier = Modifier
                     .onGloballyPositioned {
                         heightInPx = it.size.height
@@ -101,7 +107,7 @@ fun MultiSelectSearch(
                 isFocusable = false,
                 verticalOffsetPx = heightInPx,
                 width = width,
-                onMenuOpenChanged = state.onMenuOpenChanged,
+                onMenuOpenChanged = {},
                 onOptionSelected = { selectedOption ->
                     if (state.selectedOptions.contains(selectedOption)) {
                         state.onOptionRemoved(selectedOption)
@@ -180,7 +186,6 @@ private fun MultiSelectContent(state: MultiSelectSearchState) {
                         },
                     )
                 }
-                //MultiSelectSearchContent(state)
             }
         } else if (state.placeHolderText != null) {
             Text(
@@ -206,6 +211,7 @@ private fun MultiSelectContent(state: MultiSelectSearchState) {
 private fun TextFieldBox(state: MultiSelectSearchState, textStyle: TextStyle, innerTextField: @Composable () -> Unit) {
     Box(
         contentAlignment = Alignment.CenterStart,
+        modifier = Modifier.fillMaxWidth()
     ){
         innerTextField()
         if (state.searchQuery.text.isEmpty() && state.searchPlaceHolder != null) {

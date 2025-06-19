@@ -228,7 +228,6 @@ private fun LazyListScope.InboxHeader(
             var isRecipientFilterFocused by remember { mutableStateOf(false) }
             var isRecipientFilterOpen by remember { mutableStateOf(false) }
             val multiSelectState = MultiSelectSearchState(
-                placeHolderText = "Filter by person",
                 size = MultiSelectSearchInputSize.Medium,
                 options = state.allRecipients.map { it.name.orEmpty() },
                 isFocused = isRecipientFilterFocused,
@@ -252,7 +251,7 @@ private fun LazyListScope.InboxHeader(
                 onMenuOpenChanged = { isOpen ->
                     isRecipientFilterOpen = isOpen
                 },
-                searchPlaceHolder = "Search recipients",
+                searchPlaceHolder = "Filter by person",
                 searchQuery = state.recipientSearchQuery,
                 onSearchQueryChanged = { query ->
                     state.updateRecipientSearchQuery(query)
