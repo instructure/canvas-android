@@ -17,13 +17,13 @@
 package com.instructure.horizon.features.notebook
 
 import com.apollographql.apollo.api.Optional
-import com.google.gson.Gson
-import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.RedwoodApiManager
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.pandautils.utils.toJson
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.type.LearningObjectFilter
 import com.instructure.redwood.type.NoteFilterInput
+import com.instructure.redwood.type.OrderByInput
+import com.instructure.redwood.type.OrderDirection
 import javax.inject.Inject
 
 class NotebookRepository @Inject constructor(
@@ -33,36 +33,50 @@ class NotebookRepository @Inject constructor(
         after: String? = null,
         before: String? = null,
         itemCount: Int = 10,
-        filterType: NotebookType? = null
+        filterType: NotebookType? = null,
+        courseId: Long? = null,
+        objectTypeAndId: Pair<String, String>? = null,
+        orderDirection: OrderDirection? = null
     ): QueryNotesQuery.Notes {
-        val filterInput = when (filterType) {
-            NotebookType.Important -> NoteFilterInput(reactions = Optional.present(listOf(filterType.name)))
-            NotebookType.Confusing -> NoteFilterInput(reactions = Optional.present(listOf(filterType.name)))
-            null -> null
-        }
+        val filterInput = NoteFilterInput(
+            reactions = if (filterType != null) {
+                Optional.present(
+                    listOf(filterType.name)
+                )
+            } else {
+                Optional.absent()
+            },
+            courseId = Optional.presentIfNotNull(courseId?.toString()),
+            learningObject = if (objectTypeAndId != null) {
+                Optional.present(
+                    LearningObjectFilter(
+                        type = objectTypeAndId.first,
+                        id = objectTypeAndId.second
+                    )
+                )
+            } else {
+                Optional.absent()
+            }
+        )
+        val orderByInput = OrderByInput(
+            direction = Optional.presentIfNotNull(orderDirection)
+        )
+
         return if (before != null) {
             redwoodApiManager.getNotes(
                 lastN = itemCount,
                 before = before,
-                filter = filterInput
+                filter = filterInput,
+                orderBy = orderByInput
             )
         } else {
             redwoodApiManager.getNotes(
                 firstN = itemCount,
                 after = after,
-                filter = filterInput
+                filter = filterInput,
+                orderBy = orderByInput
             )
         }
 
-    }
-
-    fun parseHighlightedData(highlightData: Any?): NoteHighlightedData? {
-        val result = try {
-            Gson().fromJson(highlightData?.toJson(), NoteHighlightedData::class.java)
-        } catch (e: Exception) {
-            null
-        }
-
-        return result
     }
 }

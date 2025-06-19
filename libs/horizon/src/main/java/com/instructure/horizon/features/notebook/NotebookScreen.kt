@@ -27,17 +27,28 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.managers.NoteObjectType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -65,21 +76,29 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
+    courseId: Long? = null,
+    objectFilter: Pair<String, String>? = null,
 ) {
+    LaunchedEffect(courseId, objectFilter) {
+        state.updateContent(courseId, objectFilter)
+    }
+
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
+        topBar = { if (courseId == null && objectFilter == null) NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .padding(padding),
             contentPadding = PaddingValues(24.dp)
         ) {
-            item {
-                FilterContent(
-                    state.selectedFilter,
-                    state.onFilterSelected
-                )
+            if (objectFilter == null) {
+                item {
+                    FilterContent(
+                        state.selectedFilter,
+                        state.onFilterSelected
+                    )
+                }
             }
 
             item {
@@ -139,6 +158,94 @@ fun NotebookScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun NotebookBottomDialog(
+    courseId: Long,
+    objectFilter: Pair<String, String>,
+    mainNavController: NavHostController,
+    onDismiss: () -> Unit
+) {
+    val viewModel = hiltViewModel<NotebookViewModel>()
+    val state by viewModel.uiState.collectAsState()
+    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+
+    ModalBottomSheet(
+        containerColor = HorizonColors.Surface.pagePrimary(),
+        onDismissRequest = { onDismiss() },
+        dragHandle = null,
+        sheetState = bottomSheetState,
+    ) {
+        LaunchedEffect(courseId, objectFilter) {
+            state.updateContent(courseId, objectFilter)
+        }
+
+        LazyColumn(
+            contentPadding = PaddingValues(vertical = 24.dp)
+        ) {
+            item {
+                NotebookAppBar(
+                    onClose = onDismiss,
+                )
+            }
+
+            if (state.isLoading) {
+                item {
+                    LoadingContent()
+                }
+            } else if (state.notes.isEmpty()) {
+                item {
+                    EmptyContent(modifier = Modifier.padding(vertical = 24.dp))
+                }
+            } else {
+                items(state.notes) { note ->
+                    Column(
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    ) {
+                        NoteContent(note) {
+                            mainNavController.navigate(
+                                MainNavigationRoute.EditNotebook(
+                                    noteId = note.id,
+                                    highlightedText = note.highlightedText.selectedText,
+                                    userComment = note.userText,
+                                    highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                                    highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                                    highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                                    highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                                    textSelectionStart = note.highlightedText.textPosition.start,
+                                    textSelectionEnd = note.highlightedText.textPosition.end,
+                                    noteType = note.type.name,
+                                )
+                            )
+                        }
+
+                        if (state.notes.lastOrNull() != note) {
+                            HorizonSpace(SpaceSize.SPACE_12)
+                        }
+                    }
+                }
+
+                item {
+                    Column(
+                        modifier = Modifier.padding(horizontal = 24.dp)
+                    ) {
+                        HorizonSpace(SpaceSize.SPACE_24)
+
+                        NotesPager(
+                            canNavigateBack = state.hasPreviousPage,
+                            canNavigateForward = state.hasNextPage,
+                            isLoading = state.isLoading,
+                            onNavigateBack = state.loadPreviousPage,
+                            onNavigateForward = state.loadNextPage
+                        )
+                    }
+                }
+            }
+        }
+
+    }
+}
+
 @Composable
 private fun FilterContent(
     selectedFilter: NotebookType?,
@@ -184,7 +291,7 @@ private fun LoadingContent() {
             .fillMaxWidth()
             .padding(24.dp)
     ) {
-        Spinner(color = HorizonColors.Surface.inversePrimary())
+        Spinner(color = HorizonColors.Surface.institution())
     }
 }
 
@@ -213,7 +320,7 @@ private fun NoteContent(
                 .padding(24.dp)
         ) {
             Text(
-                text = note.updatedAt.format("EEE MM, yyyy"),
+                text = note.updatedAt.format("MMM d, yyyy"),
                 style = HorizonTypography.labelSmall,
                 color = HorizonColors.Text.timestamp()
             )
@@ -221,8 +328,9 @@ private fun NoteContent(
             HorizonSpace(SpaceSize.SPACE_16)
 
             NotebookHighlightedText(
-                text = note.highlightedText,
+                text = note.highlightedText.selectedText,
                 type = note.type,
+                maxLines = 3,
             )
 
             HorizonSpace(SpaceSize.SPACE_16)
@@ -232,6 +340,8 @@ private fun NoteContent(
                     text = note.userText,
                     style = HorizonTypography.p1,
                     color = HorizonColors.Text.body(),
+                    maxLines = 3,
+                    overflow = TextOverflow.Ellipsis,
                 )
 
                 HorizonSpace(SpaceSize.SPACE_16)
@@ -243,10 +353,10 @@ private fun NoteContent(
 }
 
 @Composable
-private fun EmptyContent() {
+private fun EmptyContent(modifier: Modifier = Modifier) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .shadow(
                 elevation = HorizonElevation.level4,
@@ -313,7 +423,7 @@ private fun NotebookScreenPreview() {
                 objectId = "456",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about an assignment.",
-                highlightedText = "Important part of the assignment.",
+                highlightedText = NoteHighlightedData("Important part of the assignment.", NoteHighlightedDataRange(0, 0, "", ""), NoteHighlightedDataTextPosition(0, 0)),
                 updatedAt = Date(),
                 type = NotebookType.Important
             ),
@@ -323,11 +433,12 @@ private fun NotebookScreenPreview() {
                 objectId = "789",
                 objectType = NoteObjectType.PAGE,
                 userText = "This is a note about another assignment.",
-                highlightedText = "Confusing part of the assignment.",
+                highlightedText = NoteHighlightedData("Confusing part of the assignment.", NoteHighlightedDataRange(0, 0, "", ""), NoteHighlightedDataTextPosition(0, 0)),
                 updatedAt = Date(),
                 type = NotebookType.Confusing
             )
         ),
+        updateContent = { _, _ -> }
     )
 
     NotebookScreen(
