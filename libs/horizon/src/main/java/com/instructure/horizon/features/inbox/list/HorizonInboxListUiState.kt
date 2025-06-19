@@ -20,6 +20,7 @@ import androidx.annotation.StringRes
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.horizonui.platform.LoadingState
 import java.util.Date
 
@@ -37,18 +38,12 @@ data class HorizonInboxListUiState(
 
 data class HorizonInboxListItemState(
     val id: String,
-    val type: HorizonInboxListItemType,
+    val type: HorizonInboxItemType,
     val title: String,
     val description: String,
     val date: Date,
     val isUnread: Boolean,
 )
-
-sealed class HorizonInboxListItemType {
-    data object Inbox: HorizonInboxListItemType()
-    data object AccountNotification: HorizonInboxListItemType()
-    data class CourseNotification(val courseId: String): HorizonInboxListItemType()
-}
 
 enum class HorizonInboxScope(@StringRes val label: Int) {
     All(R.string.inboxAllMessagesScopeLabel),

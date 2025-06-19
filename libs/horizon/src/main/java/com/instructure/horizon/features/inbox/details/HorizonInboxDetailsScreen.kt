@@ -23,7 +23,7 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.horizonui.molecules.Button
 
 @Composable
-fun HorizonInboxDetailsScreen(id: Long, navController: NavHostController) {
+fun HorizonInboxDetailsScreen(id: String, navController: NavHostController) {
     Column {
         Text("Inbox Details: $id")
         Button(

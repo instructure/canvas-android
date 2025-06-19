@@ -25,7 +25,7 @@ sealed class HorizonInboxRoute(val route: String) {
         companion object {
             const val CONVERSATION_ID: String = "conversationId"
             const val route: String = "inbox_details/{$CONVERSATION_ID}"
-            fun route(conversationId: Long): String {
+            fun route(conversationId: String): String {
                 return "inbox_details/$conversationId"
             }
         }

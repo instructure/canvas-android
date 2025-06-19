@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -120,7 +121,7 @@ class HorizonInboxListViewModel @Inject constructor(
                     .map {
                         HorizonInboxListItemState(
                             id = it.id.toString(),
-                            type = HorizonInboxListItemType.Inbox,
+                            type = HorizonInboxItemType.Inbox,
                             title = "Message",
                             description = it.subject.orEmpty(),
                             date = it.lastMessageSent,
@@ -133,7 +134,7 @@ class HorizonInboxListViewModel @Inject constructor(
                     .map {
                         HorizonInboxListItemState(
                             id = it.id.toString(),
-                            type = HorizonInboxListItemType.AccountNotification,
+                            type = HorizonInboxItemType.AccountNotification,
                             title = "Announcement",
                             description = it.subject,
                             date = it.endDate ?: Date(),
@@ -148,7 +149,7 @@ class HorizonInboxListViewModel @Inject constructor(
                         val announcement = courseAnnouncementPair.second
                         HorizonInboxListItemState(
                             id = announcement.id.toString(),
-                            type = HorizonInboxListItemType.CourseNotification(course.id.toString()),
+                            type = HorizonInboxItemType.CourseNotification(course.id.toString()),
                             title = "Announcement For ${course.name}",
                             description = announcement.title.orEmpty(),
                             date = announcement.createdDate ?: Date(),

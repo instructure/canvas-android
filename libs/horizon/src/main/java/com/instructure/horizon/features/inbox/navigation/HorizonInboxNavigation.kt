@@ -51,11 +51,11 @@ fun HorizonInboxNavigation(
             HorizonInboxRoute.InboxDetails.route,
             arguments = listOf(
                 navArgument(HorizonInboxRoute.InboxDetails.CONVERSATION_ID) {
-                    type = androidx.navigation.NavType.LongType
+                    type = androidx.navigation.NavType.StringType
                 }
             )
         ) { backStackEntry ->
-            val conversationId = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.CONVERSATION_ID)
+            val conversationId = backStackEntry.arguments?.getString(HorizonInboxRoute.InboxDetails.CONVERSATION_ID)
             if (conversationId != null) {
                 HorizonInboxDetailsScreen(conversationId, navController)
             }

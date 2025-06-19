@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.inbox.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -25,8 +26,10 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -61,6 +64,7 @@ import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
@@ -138,7 +142,7 @@ private fun InboxStateWrapper(
                 if (state.loadingState.isLoading) {
                     LoadingContent()
                 } else {
-                    InboxContent(state)
+                    InboxContent(state, navController)
                 }
             }
         )
@@ -259,6 +263,7 @@ private fun InboxHeader(
 @Composable
 private fun InboxContent(
     state: HorizonInboxListUiState,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     LazyColumn(
@@ -285,6 +290,8 @@ private fun InboxContent(
         items(state.items) { item ->
             InboxContentItem(
                 item,
+                item != state.items.lastOrNull(),
+                { navController.navigate(HorizonInboxRoute.InboxDetails.route(item.id)) },
                 Modifier
                     .then(
                         when (item) {
@@ -314,31 +321,58 @@ private fun InboxContent(
 @Composable
 private fun InboxContentItem(
     item: HorizonInboxListItemState,
+    showDivider: Boolean,
+    onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(16.dp)
+            .clickable { onClick() }
     ) {
-        Text(
-            text = item.date.format("MMM dd, yyyy"),
-            style = HorizonTypography.p2,
-            color = HorizonColors.Text.timestamp(),
-        )
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp)
+        ) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    text = item.date.format("MMM dd, yyyy"),
+                    style = HorizonTypography.p2,
+                    color = HorizonColors.Text.timestamp(),
+                )
 
-        HorizonSpace(SpaceSize.SPACE_8)
+                Spacer(modifier = Modifier.weight(1f))
 
-        Text(
-            text = item.title,
-            style = HorizonTypography.labelMediumBold,
-            color = HorizonColors.Text.body(),
-        )
+                if (item.isUnread) {
+                    Box(
+                        modifier = Modifier
+                            .size(8.dp)
+                            .clip(CircleShape)
+                            .background(HorizonColors.Surface.institution())
+                    )
+                }
+            }
 
-        Text(
-            text = item.description,
-            style = HorizonTypography.labelMediumBold,
-            color = HorizonColors.Text.body(),
-        )
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            Text(
+                text = item.title,
+                style = HorizonTypography.labelMediumBold,
+                color = HorizonColors.Text.body(),
+            )
+
+            Text(
+                text = item.description,
+                style = HorizonTypography.labelMediumBold,
+                color = HorizonColors.Text.body(),
+            )
+        }
+
+        if (showDivider) {
+            HorizonDivider()
+        }
     }
 }
