@@ -15,6 +15,8 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.comments
 
+import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -46,6 +48,7 @@ import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -58,6 +61,7 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.cards.CommentCard
 import com.instructure.horizon.horizonui.organisms.cards.CommentCardState
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
@@ -173,13 +177,43 @@ private fun CommentsContent(uiState: CommentsUiState) {
 
         HorizonSpace(SpaceSize.SPACE_16)
 
-        Button(
-            label = stringResource(R.string.commentsBottomSheet_post),
-            height = ButtonHeight.NORMAL,
-            width = ButtonWidth.FILL,
-            color = ButtonColor.Institution,
-            enabled = uiState.comment.text.isNotBlank(),
-        )
+        val alpha = if (uiState.comment.text.isNotBlank()) 1f else 0.5f
+        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
+                    .animateContentSize()
+            ) {
+                if (uiState.postingComment) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                    ) {
+                        Spinner(
+                            size = SpinnerSize.EXTRA_SMALL,
+                            color = HorizonColors.Surface.cardPrimary(),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 22.dp, vertical = 10.dp),
+                        )
+                    }
+                } else {
+                    Button(
+                        label = stringResource(R.string.commentsBottomSheet_post),
+                        height = ButtonHeight.NORMAL,
+                        width = ButtonWidth.FILL,
+                        color = ButtonColor.Custom(
+                            backgroundColor = Color.Transparent,
+                            contentColor = HorizonColors.Text.surfaceColored()
+                        ),
+                        enabled = uiState.comment.text.isNotBlank(),
+                        onClick = uiState.onPostClicked
+                    )
+                }
+            }
+        }
 
         HorizonSpace(SpaceSize.SPACE_24)
     }

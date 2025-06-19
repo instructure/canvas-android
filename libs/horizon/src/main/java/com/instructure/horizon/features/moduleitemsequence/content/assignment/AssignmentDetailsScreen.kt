@@ -101,11 +101,16 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         AttemptSelectorBottomSheet(uiState.attemptSelectorUiState)
     }
 
-    if (uiState.showCommentsBottomSheet) {
+    if (uiState.openCommentsBottomSheetParams != null) {
         val commentsViewModel = hiltViewModel<CommentsViewModel>()
         val commentsUiState by commentsViewModel.uiState.collectAsState()
-        LaunchedEffect(uiState.assignmentId, uiState.submissionDetailsUiState.currentSubmissionAttempt) {
-            commentsViewModel.initWithAttempt(uiState.assignmentId, uiState.submissionDetailsUiState.currentSubmissionAttempt.toInt())
+        val commentBottomSheetParams = uiState.openCommentsBottomSheetParams
+        LaunchedEffect(commentBottomSheetParams.assignmentId, uiState.submissionDetailsUiState.currentSubmissionAttempt) {
+            commentsViewModel.initWithAttempt(
+                commentBottomSheetParams.assignmentId,
+                uiState.submissionDetailsUiState.currentSubmissionAttempt.toInt(),
+                commentBottomSheetParams.courseId
+            )
         }
         CommentsBottomSheet(commentsUiState, onDismiss = uiState.onCommentsBottomSheetDismissed)
     }

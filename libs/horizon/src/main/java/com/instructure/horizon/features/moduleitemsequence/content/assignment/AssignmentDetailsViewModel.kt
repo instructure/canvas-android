@@ -322,8 +322,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private fun openComments() {
         _uiState.update {
             it.copy(
-                showCommentsBottomSheet = true,
-                assignmentId = assignmentId,
+                openCommentsBottomSheetParams = OpenCommentsBottomSheetParams(assignmentId, courseId),
                 toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
             )
         }
@@ -331,7 +330,7 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private fun dismissComments() {
         _uiState.update {
-            it.copy(showCommentsBottomSheet = false)
+            it.copy(openCommentsBottomSheetParams = null)
         }
     }
 

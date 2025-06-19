@@ -29,4 +29,5 @@ data class CommentsUiState(
     val nextPageEnabled: Boolean = false,
     val onPreviousPageClicked: () -> Unit = {},
     val onNextPageClicked: () -> Unit = {},
+    val postingComment: Boolean = false,
 )

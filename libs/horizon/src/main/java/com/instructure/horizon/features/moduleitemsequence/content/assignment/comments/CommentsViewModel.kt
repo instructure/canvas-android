@@ -46,16 +46,24 @@ class CommentsViewModel @Inject constructor(
 
     private var assignmentId: Long = -1L
     private var attempt: Int = -1
+    private var courseId: Long = -1L
 
     private var endCursor: String? = null
     private var startCursor: String? = null
     private var hasNextPage: Boolean = false
     private var hasPreviousPage: Boolean = false
 
-    fun initWithAttempt(assignmentId: Long, attempt: Int) {
+    fun initWithAttempt(assignmentId: Long, attempt: Int, courseId: Long) {
         _uiState.update { it.copy(loading = true) }
         this.assignmentId = assignmentId
         this.attempt = attempt
+        this.courseId = courseId
+
+        endCursor = null
+        startCursor = null
+        hasNextPage = false
+        hasPreviousPage = false
+
         viewModelScope.tryLaunch {
             val commentsData = commentsRepository.getComments(
                 assignmentId = assignmentId,
@@ -148,6 +156,34 @@ class CommentsViewModel @Inject constructor(
         val commentText = _uiState.value.comment.text
         if (commentText.isBlank()) return
 
+        _uiState.update {
+            it.copy(postingComment = true)
+        }
 
+        viewModelScope.tryLaunch {
+            commentsRepository.postComment(courseId, assignmentId, apiPrefs.user?.id.orDefault(), attempt, commentText).dataOrThrow
+            reloadData()
+            _uiState.update {
+                it.copy(comment = TextFieldValue(""), postingComment = false)
+            }
+        } catch { _ ->
+            _uiState.update { it.copy(postingComment = false) }
+        }
+    }
+
+    private suspend fun reloadData() {
+        endCursor = null
+        startCursor = null
+        hasNextPage = false
+        hasPreviousPage = false
+
+        val commentsData = commentsRepository.getComments(
+            assignmentId = assignmentId,
+            userId = apiPrefs.user?.id.orDefault(),
+            attempt = attempt,
+            forceNetwork = true
+        )
+
+        updateState(commentsData)
     }
 }

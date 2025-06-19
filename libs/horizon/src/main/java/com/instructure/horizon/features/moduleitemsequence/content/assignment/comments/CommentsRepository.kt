@@ -15,12 +15,17 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.comments
 
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CommentsData
 import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.utils.DataResult
 import javax.inject.Inject
 
 class CommentsRepository @Inject constructor(
-    private val getCommentsManager: HorizonGetCommentsManager
+    private val getCommentsManager: HorizonGetCommentsManager,
+    private val submissionApi: SubmissionAPI.SubmissionInterface
 ) {
     suspend fun getComments(
         assignmentId: Long,
@@ -39,6 +44,25 @@ class CommentsRepository @Inject constructor(
             startCursor = startCursor,
             endCursor = endCursor,
             nextPage = nextPage
+        )
+    }
+
+    suspend fun postComment(
+        courseId: Long,
+        assignmentId: Long,
+        userId: Long,
+        attempt: Int,
+        commentText: String
+    ): DataResult<Submission> {
+        return submissionApi.postSubmissionComment(
+            courseId,
+            assignmentId,
+            userId,
+            commentText,
+            attempt.toLong(),
+            false,
+            emptyList(),
+            RestParams()
         )
     }
 }
