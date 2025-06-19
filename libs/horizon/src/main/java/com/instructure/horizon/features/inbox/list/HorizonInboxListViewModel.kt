@@ -88,49 +88,73 @@ class HorizonInboxListViewModel @Inject constructor(
             emptyList()
         } else {
             repository.getConversations(conversationScope, forceRefresh)
+                .filter {
+                    uiState.value.selectedRecipients.isEmpty()
+                            || it.participants.map { it.id.toString() }.containsAll(
+                        uiState.value.selectedRecipients.map { it.stringId }
+                    )
+                }
         }
-        val accountAnnouncements = repository.getAccountAnnouncements(forceRefresh)
-        val courseAnnouncements = repository.getCourseAnnouncements(forceRefresh)
+        val accountAnnouncements = if (uiState.value.selectedScope == HorizonInboxScope.All || uiState.value.selectedScope == HorizonInboxScope.Announcements) {
+             repository.getAccountAnnouncements(forceRefresh)
+                 .filter {
+                     uiState.value.selectedRecipients.isEmpty()
+                 }
+        } else {
+            emptyList()
+        }
+        val courseAnnouncements = if (uiState.value.selectedScope == HorizonInboxScope.All || uiState.value.selectedScope == HorizonInboxScope.Announcements) {
+            repository.getCourseAnnouncements(forceRefresh)
+                .filter {
+                    uiState.value.selectedRecipients.isEmpty()
+                            || listOf(it.second.author?.id?.toString()) == uiState.value.selectedRecipients.map { it.stringId }
+                }
+        } else {
+            emptyList()
+        }
         val recipients = repository.getRecipients(uiState.value.recipientSearchQuery.text, forceRefresh)
 
         val items = buildList {
             addAll(
-                conversations.map {
-                    HorizonInboxListItemState(
-                        id = it.id.toString(),
-                        type = HorizonInboxListItemType.Inbox,
-                        title = "Message",
-                        description = it.subject.orEmpty(),
-                        date = it.lastMessageSent,
-                        isUnread = it.workflowState == Conversation.WorkflowState.UNREAD
-                    )
-                }
+                conversations
+                    .map {
+                        HorizonInboxListItemState(
+                            id = it.id.toString(),
+                            type = HorizonInboxListItemType.Inbox,
+                            title = "Message",
+                            description = it.subject.orEmpty(),
+                            date = it.lastMessageSent,
+                            isUnread = it.workflowState == Conversation.WorkflowState.UNREAD
+                        )
+                    }
             )
             addAll(
-                accountAnnouncements.map {
-                    HorizonInboxListItemState(
-                        id = it.id.toString(),
-                        type = HorizonInboxListItemType.AccountNotification,
-                        title = "Announcement",
-                        description = it.subject,
-                        date = it.endDate ?: Date(),
-                        isUnread = true // TODO
-                    )
-                }
+                accountAnnouncements
+                    .map {
+                        HorizonInboxListItemState(
+                            id = it.id.toString(),
+                            type = HorizonInboxListItemType.AccountNotification,
+                            title = "Announcement",
+                            description = it.subject,
+                            date = it.endDate ?: Date(),
+                            isUnread = true // TODO
+                        )
+                    }
             )
             addAll(
-                courseAnnouncements.map { courseAnnouncementPair ->
-                    val course = courseAnnouncementPair.first
-                    val announcement = courseAnnouncementPair.second
-                    HorizonInboxListItemState(
-                        id = announcement.id.toString(),
-                        type = HorizonInboxListItemType.CourseNotification(course.id.toString()),
-                        title = "Announcement For ${course.name}",
-                        description = announcement.title.orEmpty(),
-                        date = announcement.createdDate ?: Date(),
-                        isUnread = announcement.status == DiscussionTopicHeader.ReadState.UNREAD
-                    )
-                }
+                courseAnnouncements
+                    .map { courseAnnouncementPair ->
+                        val course = courseAnnouncementPair.first
+                        val announcement = courseAnnouncementPair.second
+                        HorizonInboxListItemState(
+                            id = announcement.id.toString(),
+                            type = HorizonInboxListItemType.CourseNotification(course.id.toString()),
+                            title = "Announcement For ${course.name}",
+                            description = announcement.title.orEmpty(),
+                            date = announcement.createdDate ?: Date(),
+                            isUnread = announcement.status == DiscussionTopicHeader.ReadState.UNREAD
+                        )
+                    }
             )
         }
         _uiState.update {
@@ -185,24 +209,16 @@ class HorizonInboxListViewModel @Inject constructor(
     }
 
     private fun updateScopeFilter(scope: HorizonInboxScope) {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(selectedScope = scope)
-            }
-            loadData()
-        } catch {
-
+        _uiState.update {
+            it.copy(selectedScope = scope)
         }
+        loadData()
     }
 
     private fun updateSelectedRecipients(value: List<Recipient>) {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(selectedRecipients = value)
-            }
-            loadData()
-        } catch {
-
+        _uiState.update {
+            it.copy(selectedRecipients = value)
         }
+        loadData()
     }
 }

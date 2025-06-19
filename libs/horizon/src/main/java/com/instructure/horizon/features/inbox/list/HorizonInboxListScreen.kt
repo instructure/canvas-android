@@ -17,17 +17,27 @@
 package com.instructure.horizon.features.inbox.list
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,36 +64,99 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
+import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.multiselect.MultiSelect
 import com.instructure.horizon.horizonui.organisms.inputs.multiselect.MultiSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.multiselect.MultiSelectState
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
-import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.format
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizonInboxListScreen(
     state: HorizonInboxListUiState,
     mainNavController: NavHostController,
     navController: NavHostController
 ) {
-    Scaffold { padding ->
-
-        LoadingStateWrapper(state.loadingState) {
-            if (state.items.isEmpty()) {
-                Text("Empty")
-            } else {
-                InboxContent(
-                    state,
-                    mainNavController,
-                    navController,
-                    Modifier.padding(padding)
-                )
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(state.loadingState.snackbarMessage) {
+        if (state.loadingState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(state.loadingState.snackbarMessage)
+            if (result == SnackbarResult.Dismissed) {
+                state.loadingState.onSnackbarDismiss()
             }
         }
+    }
+
+    Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        containerColor = HorizonColors.Surface.pagePrimary(),
+    ) { padding ->
+        InboxStateWrapper(
+            state,
+            mainNavController,
+            navController,
+            Modifier.padding(padding)
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun InboxStateWrapper(
+    state: HorizonInboxListUiState,
+    mainNavController: NavHostController,
+    navController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    val pullToRefreshState = rememberPullToRefreshState()
+
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        InboxHeader(state, mainNavController, navController)
+        HorizonSpace(SpaceSize.SPACE_16)
+
+        PullToRefreshBox(
+            isRefreshing = state.loadingState.isRefreshing,
+            onRefresh = { state.loadingState.onRefresh() },
+            state = pullToRefreshState,
+            modifier = modifier.fillMaxSize(),
+            indicator = {
+                Indicator(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 16.dp),
+                    isRefreshing = state.loadingState.isRefreshing,
+                    containerColor = HorizonColors.Surface.pageSecondary(),
+                    color = HorizonColors.Surface.institution(),
+                    state = pullToRefreshState
+                )
+            },
+            content = {
+                if (state.loadingState.isLoading) {
+                    LoadingContent()
+                } else {
+                    InboxContent(state)
+                }
+            }
+        )
+    }
+}
+
+@Composable
+private fun LoadingContent(modifier: Modifier = Modifier) {
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = modifier
+            .fillMaxSize()
+            .clip(HorizonCornerRadius.level4)
+            .background(HorizonColors.Surface.cardPrimary())
+    ) {
+        Spinner(
+            color = HorizonColors.Surface.institution()
+        )
     }
 }
 
@@ -118,7 +191,7 @@ private fun InboxHeader(
                 height = ButtonHeight.NORMAL,
                 width = ButtonWidth.RELATIVE,
                 color = ButtonColor.Institution,
-                iconPosition = ButtonIconPosition.Start(R.drawable.edit),
+                iconPosition = ButtonIconPosition.Start(R.drawable.edit_square),
                 onClick = { navController.navigate(HorizonInboxRoute.InboxCompose.route) }
             )
         }
@@ -186,13 +259,28 @@ private fun InboxHeader(
 @Composable
 private fun InboxContent(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
-    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(modifier = modifier) {
-        item {
-            InboxHeader(state, mainNavController, navController)
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(bottom = 16.dp)
+    ) {
+        if (state.items.isEmpty()) {
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillParentMaxSize()
+                        .clip(HorizonCornerRadius.level4)
+                        .background(HorizonColors.Surface.cardPrimary())
+                ){
+                    Text(
+                        text = "No messages yet.",
+                        style = HorizonTypography.p1,
+                        color = HorizonColors.Text.body(),
+                        modifier = Modifier.padding(24.dp)
+                    )
+                }
+            }
         }
         items(state.items) { item ->
             InboxContentItem(
@@ -205,16 +293,19 @@ private fun InboxContent(
                                     HorizonCornerRadius.level4Top
                                 )
                             }
+
                             state.items.lastOrNull() -> {
                                 Modifier.clip(
                                     HorizonCornerRadius.level4Bottom
                                 )
                             }
+
                             else -> {
                                 Modifier
                             }
                         }
-                    ).background(HorizonColors.Surface.cardPrimary())
+                    )
+                    .background(HorizonColors.Surface.cardPrimary())
             )
         }
     }
