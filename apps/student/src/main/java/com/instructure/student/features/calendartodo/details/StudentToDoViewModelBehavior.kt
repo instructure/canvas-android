@@ -15,21 +15,21 @@
  *
  */
 
-package com.instructure.teacher.features.calendarevent
+package com.instructure.student.features.calendartodo.details
 
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
-import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+import android.appwidget.AppWidgetManager
+import android.content.Context
+import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior
+import com.instructure.student.widget.WidgetUpdater
+import dagger.hilt.android.qualifiers.ApplicationContext
 
+class StudentToDoViewModelBehavior(
+    @ApplicationContext private val context: Context,
+    private val widgetUpdater: WidgetUpdater,
+    private val appWidgetManager: AppWidgetManager
+) : ToDoViewModelBehavior {
 
-class TeacherEventViewModelBehavior : EventViewModelBehavior {
-
-    override val shouldShowMessageFab = false
-
-    override fun getInboxComposeOptions(canvasContext: CanvasContext?, event: ScheduleItem): InboxComposeOptions {
-        throw NotImplementedError("This method should not be called")
+    override fun updateWidget() {
+        context.sendBroadcast(widgetUpdater.getTodoWidgetUpdateIntent(appWidgetManager))
     }
-
-    override fun updateWidget() = Unit
 }

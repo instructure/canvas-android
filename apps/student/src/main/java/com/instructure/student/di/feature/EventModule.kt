@@ -17,16 +17,20 @@
 
 package com.instructure.student.di.feature
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import androidx.fragment.app.FragmentActivity
 import com.instructure.pandautils.features.calendarevent.details.EventRouter
 import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
-import com.instructure.student.features.calendarevent.StudentEventRouter
-import com.instructure.student.features.calendarevent.StudentEventViewModelBehavior
+import com.instructure.student.features.calendarevent.details.StudentEventRouter
+import com.instructure.student.features.calendarevent.details.StudentEventViewModelBehavior
+import com.instructure.student.widget.WidgetUpdater
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -43,7 +47,11 @@ class EventModule {
 class EventViewModelModule {
 
     @Provides
-    fun provideEventViewModelBehavior(): EventViewModelBehavior {
-        return StudentEventViewModelBehavior()
+    fun provideEventViewModelBehavior(
+        @ApplicationContext context: Context,
+        widgetUpdater: WidgetUpdater,
+        appWidgetManager: AppWidgetManager
+    ): EventViewModelBehavior {
+        return StudentEventViewModelBehavior(context, widgetUpdater, appWidgetManager)
     }
 }

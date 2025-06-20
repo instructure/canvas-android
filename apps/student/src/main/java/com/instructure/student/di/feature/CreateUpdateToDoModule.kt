@@ -20,10 +20,10 @@ import android.content.Context
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
-import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoBehavior
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
-import com.instructure.student.features.calendartodo.StudentCreateUpdateToDoBehavior
-import com.instructure.student.features.calendartodo.StudentCreateUpdateToDoRepository
+import com.instructure.student.features.calendartodo.createupdate.StudentCreateUpdateToDoViewModelBehavior
+import com.instructure.student.features.calendartodo.createupdate.StudentCreateUpdateToDoRepository
 import com.instructure.student.widget.WidgetUpdater
 import dagger.Module
 import dagger.Provides
@@ -49,7 +49,7 @@ class CreateUpdateToDoModule {
         @ApplicationContext context: Context,
         widgetUpdater: WidgetUpdater,
         appWidgetManager: AppWidgetManager
-    ): CreateUpdateToDoBehavior {
-        return StudentCreateUpdateToDoBehavior(context, widgetUpdater, appWidgetManager)
+    ): CreateUpdateToDoViewModelBehavior {
+        return StudentCreateUpdateToDoViewModelBehavior(context, widgetUpdater, appWidgetManager)
     }
 }
