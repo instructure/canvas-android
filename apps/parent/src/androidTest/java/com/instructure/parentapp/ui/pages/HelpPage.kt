@@ -18,19 +18,22 @@ package com.instructure.parentapp.ui.pages
 
 import android.app.Instrumentation
 import android.content.Intent
-import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.typeText
 import com.instructure.parentapp.R
 import org.hamcrest.CoreMatchers
 
@@ -68,8 +71,22 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     fun assertReportProblemDialogDisplayed() {
-        waitForViewWithText("Report A Problem").assertDisplayed()
+        waitForViewWithText("Report a problem").assertDisplayed()
+    }
+
+    fun clickCancelReportProblem() {
         onView(withId(R.id.cancelButton)).click()
+    }
+
+    fun fillReportProblemForm(subject: String, description: String) {
+        onView(withId(R.id.subjectEditText)).typeText(subject)
+        Espresso.closeSoftKeyboard()
+        onView(withId(R.id.descriptionEditText)).typeText(description)
+        Espresso.closeSoftKeyboard()
+    }
+
+    fun clickSendReportProblem() {
+        onView(containsTextCaseInsensitive("Send")).scrollTo().click()
     }
 
     fun assertHelpMenuContent() {
