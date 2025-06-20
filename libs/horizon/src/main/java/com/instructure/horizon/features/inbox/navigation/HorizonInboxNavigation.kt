@@ -28,6 +28,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
 import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsScreen
+import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsViewModel
 import com.instructure.horizon.features.inbox.list.HorizonInboxListScreen
 import com.instructure.horizon.features.inbox.list.HorizonInboxListViewModel
 
@@ -50,15 +51,22 @@ fun HorizonInboxNavigation(
         composable(
             HorizonInboxRoute.InboxDetails.route,
             arguments = listOf(
-                navArgument(HorizonInboxRoute.InboxDetails.CONVERSATION_ID) {
+                navArgument(HorizonInboxRoute.InboxDetails.TYPE) {
                     type = androidx.navigation.NavType.StringType
+                },
+                navArgument(HorizonInboxRoute.InboxDetails.ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+                navArgument(HorizonInboxRoute.InboxDetails.COURSE_ID) {
+                    type = androidx.navigation.NavType.StringType
+                    nullable = true
+                    defaultValue = null
                 }
             )
-        ) { backStackEntry ->
-            val conversationId = backStackEntry.arguments?.getString(HorizonInboxRoute.InboxDetails.CONVERSATION_ID)
-            if (conversationId != null) {
-                HorizonInboxDetailsScreen(conversationId, navController)
-            }
+        ) {
+            val viewModel: HorizonInboxDetailsViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+            HorizonInboxDetailsScreen(uiState, navController)
         }
         composable(HorizonInboxRoute.InboxCompose.route) {
             HorizonInboxComposeScreen(navController)

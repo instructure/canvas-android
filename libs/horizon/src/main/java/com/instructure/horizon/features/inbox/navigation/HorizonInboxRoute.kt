@@ -16,17 +16,27 @@
  */
 package com.instructure.horizon.features.inbox.navigation
 
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
+
 sealed class HorizonInboxRoute(val route: String) {
     data object InboxList : HorizonInboxRoute("inbox_list")
 
     data class InboxDetails(
-        val conversationId: Long
+        val type: HorizonInboxItemType,
+        val id: Long,
+        val courseId: Long? = null,
     ) : HorizonInboxRoute("inbox_details") {
         companion object {
-            const val CONVERSATION_ID: String = "conversationId"
-            const val route: String = "inbox_details/{$CONVERSATION_ID}"
-            fun route(conversationId: String): String {
-                return "inbox_details/$conversationId"
+            const val TYPE: String = "type"
+            const val ID: String = "id"
+            const val COURSE_ID: String = "courseId"
+            const val route: String = "inbox_details/{$TYPE}/{$ID}?$COURSE_ID={$COURSE_ID}"
+            fun route(id: Long, type: HorizonInboxItemType, courseId: Long?): String {
+                return if (courseId == null) {
+                    "inbox_details/${type.navigationValue}/$id"
+                } else {
+                    "inbox_details/${type.navigationValue}/$id?$COURSE_ID=${courseId}"
+                }
             }
         }
     }
