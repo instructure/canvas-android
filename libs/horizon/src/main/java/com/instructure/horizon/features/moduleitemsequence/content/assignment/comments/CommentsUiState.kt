@@ -30,4 +30,7 @@ data class CommentsUiState(
     val onPreviousPageClicked: () -> Unit = {},
     val onNextPageClicked: () -> Unit = {},
     val postingComment: Boolean = false,
+    val filePathToOpen: String? = null,
+    val mimeTypeToOpen: String? = null,
+    val onFileOpened: () -> Unit = {}
 )

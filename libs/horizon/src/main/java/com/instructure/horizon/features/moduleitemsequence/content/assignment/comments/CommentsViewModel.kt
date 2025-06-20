@@ -19,12 +19,19 @@ import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
+import com.instructure.canvasapi2.managers.CommentAttachment
 import com.instructure.canvasapi2.managers.CommentsData
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.organisms.cards.CommentAttachmentState
 import com.instructure.horizon.horizonui.organisms.cards.CommentCardState
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.format
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -32,16 +39,25 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class CommentsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val commentsRepository: CommentsRepository,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val workManager: WorkManager,
+    private val fileDownloadProgressDao: FileDownloadProgressDao,
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(CommentsUiState(onCommentChanged = ::onCommentChanged, onPostClicked = ::postComment))
+    private val _uiState = MutableStateFlow(
+        CommentsUiState(
+            onCommentChanged = ::onCommentChanged,
+            onPostClicked = ::postComment,
+            onFileOpened = ::onFileOpened
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private var assignmentId: Long = -1L
@@ -52,6 +68,8 @@ class CommentsViewModel @Inject constructor(
     private var startCursor: String? = null
     private var hasNextPage: Boolean = false
     private var hasPreviousPage: Boolean = false
+
+    private var fileIdToWorkerIdMap = mutableMapOf<Long, String>()
 
     fun initWithAttempt(assignmentId: Long, attempt: Int, courseId: Long) {
         _uiState.update { it.copy(loading = true) }
@@ -127,7 +145,8 @@ class CommentsViewModel @Inject constructor(
                 subtitle = context.getString(R.string.commentsBottomSheet_attempt, attempt),
                 commentText = it.commentText,
                 fromCurrentUser = it.authorId == apiPrefs.user?.id,
-                read = it.read
+                read = it.read,
+                files = mapAttachments(it.attachments)
             )
         }
 
@@ -144,6 +163,17 @@ class CommentsViewModel @Inject constructor(
                 onPreviousPageClicked = ::loadPreviousPage,
                 onNextPageClicked = ::loadNextPage,
                 loading = false
+            )
+        }
+    }
+
+    private fun mapAttachments(attachments: List<CommentAttachment>): List<CommentAttachmentState> {
+        return attachments.map { attachment ->
+            CommentAttachmentState(
+                fileName = attachment.fileName,
+                fileUrl = attachment.fileUrl,
+                fileId = attachment.attachmentId,
+                onDownloadClick = { downloadFile(it) },
             )
         }
     }
@@ -185,5 +215,64 @@ class CommentsViewModel @Inject constructor(
         )
 
         updateState(commentsData)
+    }
+
+    private fun downloadFile(attachment: CommentAttachmentState) {
+        updateAttachmentState(attachment.copy(downloadState = FileDownloadProgressState.STARTING, downloadProgress = 0f))
+        val workRequest = FileDownloadWorker.createOneTimeWorkRequest(attachment.fileName, attachment.fileUrl)
+        workManager.enqueue(workRequest)
+        val workerId = workRequest.id.toString()
+        fileIdToWorkerIdMap[attachment.fileId] = workerId
+        viewModelScope.tryLaunch {
+            fileDownloadProgressDao.findByWorkerIdFlow(workerId)
+                .collect { progress ->
+                    updateProgress(attachment, progress)
+                }
+        } catch {
+            updateAttachmentState(attachment.copy(downloadState = FileDownloadProgressState.COMPLETED, downloadProgress = 0f))
+        }
+    }
+
+    private fun updateProgress(attachment: CommentAttachmentState, progressEntity: FileDownloadProgressEntity?) {
+        updateAttachmentState(
+            attachment.copy(
+                downloadState = progressEntity?.progressState ?: FileDownloadProgressState.COMPLETED,
+                downloadProgress = (progressEntity?.progress ?: 0) / 100f
+            )
+        )
+        if (progressEntity?.progressState == FileDownloadProgressState.COMPLETED) {
+            _uiState.update {
+                it.copy(filePathToOpen = progressEntity.filePath, mimeTypeToOpen = attachment.fileType)
+            }
+        }
+        if (progressEntity?.progressState?.isCompleted() == true) {
+            viewModelScope.launch {
+                fileDownloadProgressDao.deleteByWorkerId(progressEntity.workerId)
+            }
+        }
+    }
+
+    private fun updateAttachmentState(attachment: CommentAttachmentState) {
+        _uiState.update {
+            it.copy(comments = it.comments.map { comment ->
+                if (comment.files.any { file -> file.fileId == attachment.fileId }) {
+                    comment.copy(
+                        files = comment.files.map { item ->
+                            if (item.fileId == attachment.fileId) {
+                                attachment
+                            } else {
+                                item
+                            }
+                        }
+                    )
+                } else {
+                    comment
+                }
+            })
+        }
+    }
+
+    private fun onFileOpened() {
+        _uiState.update { it.copy(filePathToOpen = null, mimeTypeToOpen = null) }
     }
 }

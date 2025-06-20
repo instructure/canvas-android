@@ -61,7 +61,10 @@ class HorizonGetCommentsManager {
                     commentText = commentNode.comment ?: "",
                     createdAt = commentNode.createdAt,
                     attachments = commentNode.attachments?.map { attachment ->
-                        CommentAttachment(fileName = attachment.displayName ?: "")
+                        CommentAttachment(
+                            attachmentId = attachment._id.toLong(), fileName = attachment.displayName ?: "",
+                            fileUrl = attachment.url ?: "", fileType = attachment.contentType ?: ""
+                        )
                     } ?: emptyList(),
                     read = commentNode.read
                 )
@@ -95,5 +98,8 @@ data class Comment(
 )
 
 data class CommentAttachment(
-    val fileName: String
+    val attachmentId: Long,
+    val fileName: String,
+    val fileUrl: String,
+    val fileType: String,
 )

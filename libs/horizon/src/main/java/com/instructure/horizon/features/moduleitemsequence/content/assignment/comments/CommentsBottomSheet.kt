@@ -67,6 +67,7 @@ import com.instructure.horizon.horizonui.organisms.cards.CommentCardState
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.pandautils.utils.openFile
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -76,6 +77,15 @@ fun CommentsBottomSheet(
     onDismiss: () -> Unit = {},
     sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
 ) {
+
+    val context = LocalContext.current
+    LaunchedEffect(uiState.filePathToOpen) {
+        if (uiState.filePathToOpen != null) {
+            context.openFile(uiState.filePathToOpen, uiState.mimeTypeToOpen ?: "*/*", context.getString(R.string.fileDetails_openWith))
+            uiState.onFileOpened()
+        }
+    }
+
     ModalBottomSheet(
         sheetState = sheetState,
         onDismissRequest = onDismiss,

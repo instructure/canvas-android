@@ -42,6 +42,7 @@ query HorizonGetSubmissionComments(
                             _id
                             url
                             displayName
+                            contentType
                         }
                     }
                 }

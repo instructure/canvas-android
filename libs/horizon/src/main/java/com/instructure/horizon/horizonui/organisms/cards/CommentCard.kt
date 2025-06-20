@@ -41,6 +41,7 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 
 data class CommentCardState(
     val title: String,
@@ -48,8 +49,19 @@ data class CommentCardState(
     val subtitle: String,
     val commentText: String,
     val read: Boolean = false,
-    val files: List<FileDropItemState> = emptyList(),
+    val files: List<CommentAttachmentState> = emptyList(),
     val fromCurrentUser: Boolean = false
+)
+
+data class CommentAttachmentState(
+    val fileName: String,
+    val fileUrl: String,
+    val fileId: Long = -1L,
+    val fileType: String = "*/*",
+    val onDownloadClick: (CommentAttachmentState) -> Unit = {},
+    val onCancelDownloadClick: (Long) -> Unit = {},
+    val downloadState: FileDownloadProgressState = FileDownloadProgressState.COMPLETED,
+    val downloadProgress: Float = 0f,
 )
 
 @Composable
@@ -78,8 +90,20 @@ fun CommentCard(
             HorizonSpace(SpaceSize.SPACE_12)
             Text(text = state.commentText, style = HorizonTypography.p1)
             HorizonSpace(SpaceSize.SPACE_12)
-            state.files.forEach {
-                FileDropItem(it)
+            state.files.forEach { file ->
+                val fileDropItemState = if (file.downloadState == FileDownloadProgressState.STARTING || file.downloadState == FileDownloadProgressState.IN_PROGRESS) {
+                    FileDropItemState.InProgress(
+                        fileName = file.fileName,
+                        progress = file.downloadProgress,
+                        onActionClick = { file.onCancelDownloadClick(file.fileId) },
+                    )
+                } else {
+                    FileDropItemState.NoLongerEditable(
+                        fileName = file.fileName,
+                        onActionClick = { file.onDownloadClick(file) },
+                    )
+                }
+                FileDropItem(state = fileDropItemState)
                 HorizonSpace(SpaceSize.SPACE_8)
             }
         }
@@ -105,9 +129,13 @@ fun CommentCardPreview() {
             commentText = "This is a sample comment text.",
             read = true,
             files = listOf(
-                FileDropItemState.NoLongerEditable(
-                    fileName = "example.txt"
-                )
+                CommentAttachmentState(
+                    fileName = "file.txt",
+                    fileUrl = "https://example.com/file.txt",
+                    fileId = 1L,
+                    downloadState = FileDownloadProgressState.COMPLETED,
+                    downloadProgress = 1f
+                ),
             )
         )
     )
