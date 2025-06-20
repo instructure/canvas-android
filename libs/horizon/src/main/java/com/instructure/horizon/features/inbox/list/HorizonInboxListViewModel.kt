@@ -143,9 +143,11 @@ class HorizonInboxListViewModel @Inject constructor(
                         HorizonInboxListItemState(
                             id = it.id.toString(),
                             type = HorizonInboxItemType.Inbox,
-                            title = context.getString(R.string.inboxMessageTitle),
-                            description = it.subject.orEmpty(),
-                            date = it.lastMessageSent,
+                            title = it.subject.orEmpty(),
+                            description = it.audience?.mapNotNull {
+                                recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
+                            }?.map { it.name }?.joinToString(", ").orEmpty(),
+                            date = it.lastMessageDate ?: Date(),
                             isUnread = it.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }
