@@ -86,7 +86,9 @@ fun CommentCard(
             HorizonSpace(SpaceSize.SPACE_2)
             Text(text = state.date, style = HorizonTypography.p2, color = HorizonColors.Text.timestamp())
             HorizonSpace(SpaceSize.SPACE_2)
-            Text(text = state.subtitle, style = HorizonTypography.p2, color = HorizonColors.Text.timestamp())
+            if (state.subtitle.isNotEmpty()) {
+                Text(text = state.subtitle, style = HorizonTypography.p2, color = HorizonColors.Text.timestamp())
+            }
             HorizonSpace(SpaceSize.SPACE_12)
             Text(text = state.commentText, style = HorizonTypography.p1)
             HorizonSpace(SpaceSize.SPACE_12)

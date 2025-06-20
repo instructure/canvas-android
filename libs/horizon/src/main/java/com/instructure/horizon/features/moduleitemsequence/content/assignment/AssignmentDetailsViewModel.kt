@@ -86,7 +86,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             } else {
                 emptyList()
             }
-            val initialAttempt = lastActualSubmission?.attempt ?: -1L
+            val initialAttempt = lastActualSubmission?.attempt ?: 0 // We need to use 0 as the initial attempt if there are no submissions
             val description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty())
 
             val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)

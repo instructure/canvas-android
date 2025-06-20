@@ -138,11 +138,16 @@ class CommentsViewModel @Inject constructor(
         hasNextPage = commentsData.hasNextPage
         hasPreviousPage = commentsData.hasPreviousPage
 
+        val subtitle = if (attempt == 0) {
+            ""
+        } else {
+            context.getString(R.string.commentsBottomSheet_attempt, attempt)
+        }
         val commentCards = commentsData.comments.map {
             CommentCardState(
                 title = it.authorName,
                 date = it.createdAt.format("dd/MM, h:mm a"),
-                subtitle = context.getString(R.string.commentsBottomSheet_attempt, attempt),
+                subtitle = subtitle,
                 commentText = it.commentText,
                 fromCurrentUser = it.authorId == apiPrefs.user?.id,
                 read = it.read,

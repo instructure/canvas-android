@@ -26,15 +26,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.SheetState
-import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
-import androidx.compose.material3.rememberStandardBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -45,6 +39,8 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -69,13 +65,11 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.pandautils.utils.openFile
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CommentsBottomSheet(
     uiState: CommentsUiState,
     modifier: Modifier = Modifier,
-    onDismiss: () -> Unit = {},
-    sheetState: SheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
+    onDismiss: () -> Unit = {}
 ) {
 
     val context = LocalContext.current
@@ -86,50 +80,55 @@ fun CommentsBottomSheet(
         }
     }
 
-    ModalBottomSheet(
-        sheetState = sheetState,
+    Dialog(
         onDismissRequest = onDismiss,
-        dragHandle = null,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(top = 48.dp)
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false
+        )
     ) {
-        Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 8.dp)) {
-            IconButton(
-                iconRes = R.drawable.close,
-                color = IconButtonColor.Inverse,
-                modifier = Modifier
-                    .align(Alignment.CenterEnd)
-                    .padding(vertical = 8.dp),
-                elevation = HorizonElevation.level4,
-                onClick = onDismiss,
-                size = IconButtonSize.SMALL
-            )
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 8.dp, horizontal = 40.dp)
-                    .align(Alignment.Center),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Icon(
-                    painterResource(R.drawable.chat),
-                    contentDescription = null,
-                    tint = HorizonColors.Icon.default()
+        Column(
+            modifier = modifier
+                .fillMaxSize()
+                .padding(top = 16.dp)
+                .background(HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level5)
+        ) {
+            Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 8.dp)) {
+                IconButton(
+                    iconRes = R.drawable.close,
+                    color = IconButtonColor.Inverse,
+                    modifier = Modifier
+                        .align(Alignment.CenterEnd)
+                        .padding(vertical = 8.dp),
+                    elevation = HorizonElevation.level4,
+                    onClick = onDismiss,
+                    size = IconButtonSize.SMALL
                 )
-                HorizonSpace(SpaceSize.SPACE_8)
-                Text(
-                    text = stringResource(R.string.commentsBottomSheet_header),
-                    style = HorizonTypography.h3
-                )
+                Row(
+                    horizontalArrangement = Arrangement.Center,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 8.dp, horizontal = 40.dp)
+                        .align(Alignment.Center),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        painterResource(R.drawable.chat),
+                        contentDescription = null,
+                        tint = HorizonColors.Icon.default()
+                    )
+                    HorizonSpace(SpaceSize.SPACE_8)
+                    Text(
+                        text = stringResource(R.string.commentsBottomSheet_header),
+                        style = HorizonTypography.h3
+                    )
+                }
             }
-        }
-        HorizonSpace(SpaceSize.SPACE_24)
-        if (uiState.loading) {
-            Spinner(modifier = Modifier.fillMaxSize())
-        } else {
-            CommentsContent(uiState)
+            HorizonSpace(SpaceSize.SPACE_24)
+            if (uiState.loading) {
+                Spinner(modifier = Modifier.fillMaxSize())
+            } else {
+                CommentsContent(uiState)
+            }
         }
     }
 }
@@ -144,7 +143,7 @@ private fun CommentsContent(uiState: CommentsUiState) {
 
     Column(
         modifier = Modifier
-            .padding(horizontal = 24.dp, vertical = 8.dp)
+            .padding(start = 24.dp, end = 24.dp, top = 8.dp)
             .verticalScroll(scrollState),
         verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -229,7 +228,6 @@ private fun CommentsContent(uiState: CommentsUiState) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Preview
 @Composable
 fun CommentsBottomSheetPreview() {
@@ -258,8 +256,7 @@ fun CommentsBottomSheetPreview() {
                         fromCurrentUser = false
                     )
                 )
-            ),
-            sheetState = rememberStandardBottomSheetState(initialValue = SheetValue.Expanded)
+            )
         )
     }
 }
