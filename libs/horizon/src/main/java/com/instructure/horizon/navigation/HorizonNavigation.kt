@@ -148,9 +148,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                     }
                 }
             }
-        }
-        composable(MainNavigationRoute.Inbox.route) {
-            HorizonInboxScreen(navController)
+            composable(MainNavigationRoute.Inbox.route) {
+                HorizonInboxScreen(navController)
+            }
         }
     }
 }
