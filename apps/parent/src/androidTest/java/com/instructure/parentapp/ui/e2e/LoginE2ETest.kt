@@ -312,8 +312,8 @@ class LoginE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
-    fun testLoginE2EWithParentWhoHasNoStudent() {
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginWithParentWhoHasNoStudentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, courses = 1, parents = 1)
