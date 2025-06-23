@@ -19,6 +19,7 @@ import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class AssignmentDetailsUiState(
+    val assignmentId: Long,
     val loadingState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
     val instructions: String = "",
     val ltiUrl: String = "",

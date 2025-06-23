@@ -17,13 +17,18 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
 import com.instructure.redwood.CreateNoteMutation
+import com.instructure.redwood.DeleteNoteMutation
 import com.instructure.redwood.QueryNotesQuery
+import com.instructure.redwood.UpdateNoteMutation
 import com.instructure.redwood.type.CreateNoteInput
 import com.instructure.redwood.type.NoteFilterInput
 import com.instructure.redwood.type.OrderByInput
+import com.instructure.redwood.type.UpdateNoteInput
 import java.util.Date
 import javax.inject.Inject
 
@@ -52,7 +57,15 @@ enum class NoteReaction(val value: String) {
 
 data class NoteHighlightedData(
     val selectedText: String,
+    val range: NoteHighlightedDataRange,
     val textPosition: NoteHighlightedDataTextPosition
+)
+
+data class NoteHighlightedDataRange(
+    val startOffset: Int,
+    val endOffset: Int,
+    val startContainer: String,
+    val endContainer: String,
 )
 
 data class NoteHighlightedDataTextPosition(
@@ -120,12 +133,55 @@ class RedwoodApiManager @Inject constructor(
                 objectType = objectType,
                 userText = Optional.presentIfNotNull(userText),
                 reaction = reaction,
-                highlightData = Optional.presentIfNotNull(highlightData)
+                highlightData = Optional.presentIfNotNull(getHighlightDataAsJson(highlightData))
             )
         )
 
         QLClientConfig
             .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
             .dataAssertNoErrors
+    }
+
+    suspend fun updateNote(
+        id: String,
+        userText: String?,
+        notebookType: String?,
+        highlightData: NoteHighlightedData? = null
+    ) {
+        val reaction = if (notebookType == null) {
+            Optional.absent()
+        } else {
+            Optional.present(listOf(notebookType))
+        }
+
+        val mutation = UpdateNoteMutation(
+            id = id,
+            input = UpdateNoteInput(
+                userText = Optional.presentIfNotNull(userText),
+                reaction = reaction,
+                highlightData = Optional.presentIfNotNull(getHighlightDataAsJson(highlightData))
+            )
+        )
+
+        QLClientConfig
+            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+            .dataAssertNoErrors
+    }
+
+    suspend fun deleteNote(noteId: String) {
+        val mutation = DeleteNoteMutation(noteId)
+
+        QLClientConfig
+            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+            .dataAssertNoErrors
+    }
+
+    private fun getHighlightDataAsJson(highlightedData: NoteHighlightedData?): Map<String, Any>? {
+        return highlightedData?.let {
+            val gson = Gson()
+            val jsonTree = gson.toJsonTree(highlightedData)
+            val mapType = object : TypeToken<Map<String, Any>>() {}.type
+            gson.fromJson(jsonTree, mapType)
+        }
     }
 }

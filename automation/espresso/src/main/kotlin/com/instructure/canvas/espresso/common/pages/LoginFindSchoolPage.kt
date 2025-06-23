@@ -77,9 +77,9 @@ class LoginFindSchoolPage: BasePage() {
      * Assert that the schoolText school is displayed in the results.
      * @param schoolText The school to assert.
      */
-    fun assertHintText() {
+    fun assertHintText(schoolText: Int) {
         val hintText = getHintText(withId(R.id.domainInput))
-        assertEquals(hintText, getStringFromResource(R.string.loginHint))
+        assertEquals(hintText, getStringFromResource(schoolText))
     }
 }
 
