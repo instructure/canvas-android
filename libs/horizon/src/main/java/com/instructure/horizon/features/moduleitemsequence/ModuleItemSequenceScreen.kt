@@ -93,6 +93,7 @@ import com.instructure.horizon.features.moduleitemsequence.content.lti.ExternalT
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.page.PageDetailsViewModel
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreen
+import com.instructure.horizon.features.notebook.NotebookBottomDialog
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -122,7 +123,7 @@ import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
 
 @Composable
-fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleItemSequenceUiState) {
+fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
     if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
@@ -136,6 +137,7 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onPreviousClick = uiState.onPreviousClick,
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
             onAiAssistClick = { uiState.updateShowAiAssist(true) },
+            onNotebookClick = { uiState.updateShowNotebook(true) },
             hasUnreadComments = uiState.hasUnreadComments
         )
     }) { contentPadding ->
@@ -143,12 +145,20 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
                     aiContext = uiState.aiContext,
-                    mainNavController = navController,
+                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
-            ModuleItemSequenceContent(uiState = uiState, navController = navController, onBackPressed = {
-                navController.popBackStack()
+            if (uiState.showNotebook) {
+                NotebookBottomDialog(
+                    uiState.courseId,
+                    uiState.objectTypeAndId,
+                    mainNavController,
+                    { uiState.updateShowNotebook(false) }
+                )
+            }
+            ModuleItemSequenceContent(uiState = uiState, mainNavController = mainNavController, onBackPressed = {
+                mainNavController.popBackStack()
             })
             val markAsDoneState = uiState.currentItem?.markAsDoneUiState
             if (markAsDoneState != null && !uiState.currentItem.isLoading) {
@@ -204,7 +214,7 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
 @Composable
 private fun ModuleItemSequenceContent(
     uiState: ModuleItemSequenceUiState,
-    navController: NavHostController,
+    mainNavController: NavHostController,
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -247,7 +257,7 @@ private fun ModuleItemSequenceContent(
         ) {
             if (uiState.currentPosition != -1) {
                 val homeEntry =
-                    remember(navController.currentBackStackEntry) { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
+                    remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
                 LaunchedEffect(Unit) {
                     homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
                 }
@@ -268,9 +278,11 @@ private fun ModuleItemSequenceContent(
                     ModuleItemContentScreen(
                         moduleItemUiState,
                         scrollState = contentScrollState,
+                        mainNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
-                        uiState.updateAiContextString
+                        uiState.updateAiContextString,
+                        uiState.updateObjectTypeAndId
                     )
                 }
             }
@@ -363,9 +375,11 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
+    mainNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (String) -> Unit,
+    updateObjectTypeAndId: (Pair<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -392,6 +406,7 @@ private fun ModuleItemContentScreen(
                 val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.instructions)
+                updateObjectTypeAndId(Pair("Assignment", uiState.assignmentId.toString()))
                 LaunchedEffect(assignmentToolsForId) {
                     val assignmentId = it.arguments?.getLong(ModuleItemContent.Assignment.ASSIGNMENT_ID) ?: -1L
                     if (assignmentId == assignmentToolsForId) {
@@ -407,14 +422,17 @@ private fun ModuleItemContentScreen(
             composable(
                 route = ModuleItemContent.Page.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
-                    navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType }
+                    navArgument(ModuleItemContent.Page.PAGE_URL) { type = NavType.StringType },
                 )) {
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 updateAiContext(uiState.pageHtmlContent.orEmpty())
+                updateObjectTypeAndId(Pair("Page", uiState.pageId.toString()))
+                viewModel.refreshNotes()
                 PageDetailsContentScreen(
                     uiState = uiState,
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    mainNavController = mainNavController
                 )
             }
             composable(
@@ -485,6 +503,7 @@ private fun ModuleItemSequenceBottomBar(
     onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier,
     onAiAssistClick: () -> Unit = {},
+    onNotebookClick: () -> Unit = {},
     hasUnreadComments: Boolean = false
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
@@ -515,7 +534,8 @@ private fun ModuleItemSequenceBottomBar(
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
                     color = IconButtonColor.Inverse,
-                    elevation = HorizonElevation.level4
+                    elevation = HorizonElevation.level4,
+                    onClick = onNotebookClick,
                 )
                 if (showAssignmentToolsButton) IconButton(
                     iconRes = R.drawable.more_vert,
@@ -563,8 +583,9 @@ private class CollapsingAppBarNestedScrollConnection(
 private fun ModuleItemSequenceScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     ModuleItemSequenceScreen(
-        navController = rememberNavController(),
+        mainNavController = rememberNavController(),
         uiState = ModuleItemSequenceUiState(
+            courseId = 1L,
             items = listOf(
                 ModuleItemUiState(
                     moduleName = "Module Name",
@@ -581,7 +602,11 @@ private fun ModuleItemSequenceScreenPreview() {
                 detailTags = listOf("XX Mins", "Due XX/XX", "X Points Possible", "Unlimited Attempts Allowed"),
                 pillText = "Pill Text",
                 moduleItemContent = ModuleItemContent.Assignment(courseId = 1, assignmentId = 1L)
-            )
+            ),
+            updateShowAiAssist = {},
+            updateShowNotebook = {},
+            updateAiContextString = {},
+            updateObjectTypeAndId = {},
         )
     )
 }

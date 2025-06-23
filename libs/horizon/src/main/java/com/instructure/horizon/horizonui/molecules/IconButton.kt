@@ -64,6 +64,11 @@ sealed class IconButtonColor(
         HorizonColors.Icon.default()
     )
 
+    data object Danger : IconButtonColor(
+        HorizonColors.Icon.error(),
+        HorizonColors.Surface.pageSecondary()
+    )
+
     data object InverseDanger : IconButtonColor(
         HorizonColors.Surface.pageSecondary(),
         HorizonColors.Icon.error()

@@ -14,52 +14,72 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.notebook.add
+package com.instructure.horizon.features.notebook.addedit.add
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
 import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
+import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.navigation.MainNavigationRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class AddNoteViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: AddNoteRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
     private val courseId: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().courseId
     private val objectType: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().objectType
     private val objectId: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().objectId
-    private val highlightedTextStartPosition: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStart
-    private val highlightedTextEndPosition: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEnd
+    private val highlightedTextStartOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartOffset
+    private val highlightedTextEndOffset: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndOffset
+    private val highlightedTextStartContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextStartContainer
+    private val highlightedTextEndContainer: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedTextEndContainer
+    private val highlightedTextSelectionStart: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionStart
+    private val highlightedTextSelectionEnd: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionEnd
     private val highlightedText: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedText
 
-    private val _uiState = MutableStateFlow(AddNoteUiState(
-        highlightedData = NoteHighlightedData(
-            selectedText = highlightedText,
-            textPosition = NoteHighlightedDataTextPosition(
-                start = highlightedTextStartPosition,
-                end = highlightedTextEndPosition
-            )
-        ),
-        onTypeChanged = ::onTypeChanged,
-        onUserCommentChanged = ::onUserCommentChanged,
-        onSaveNote = ::addNote,
-    ))
+    private val _uiState = MutableStateFlow(
+        AddEditNoteUiState(
+            highlightedData = NoteHighlightedData(
+                selectedText = highlightedText,
+                range = NoteHighlightedDataRange(
+                    startOffset = highlightedTextStartOffset,
+                    endOffset = highlightedTextEndOffset,
+                    startContainer = highlightedTextStartContainer,
+                    endContainer = highlightedTextEndContainer
+                ),
+                textPosition = NoteHighlightedDataTextPosition(
+                    start = highlightedTextSelectionStart,
+                    end = highlightedTextSelectionEnd
+                )
+            ),
+            onTypeChanged = ::onTypeChanged,
+            onUserCommentChanged = ::onUserCommentChanged,
+            onSaveNote = ::addNote,
+            onSnackbarDismiss = ::onSnackbarDismissed
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
-    fun addNote() {
-        viewModelScope.launch {
+    private fun addNote(onFinished: () -> Unit) {
+        viewModelScope.tryLaunch {
             _uiState.update { it.copy(isLoading = true) }
 
             repository.addNote(
@@ -71,7 +91,10 @@ class AddNoteViewModel @Inject constructor(
                 type = uiState.value.type
             )
 
-            _uiState.update { it.copy(isLoading = false) }
+            _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.noteHasBeenSavedMessage)) }
+            onFinished()
+        } catch {
+            _uiState.update { it.copy(isLoading = false, snackbarMessage = context.getString(R.string.failedToSaveNoteMessage)) }
         }
     }
 
@@ -85,5 +108,9 @@ class AddNoteViewModel @Inject constructor(
 
     private fun onUserCommentChanged(userComment: TextFieldValue) {
         _uiState.update { it.copy(userComment = userComment) }
+    }
+
+    private fun onSnackbarDismissed() {
+        _uiState.update { it.copy(snackbarMessage = null) }
     }
 }

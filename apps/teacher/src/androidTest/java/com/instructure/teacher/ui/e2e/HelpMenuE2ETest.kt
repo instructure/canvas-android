@@ -14,7 +14,7 @@
  *     limitations under the License.
  *
  */
-package com.instructure.parentapp.ui.e2e
+package com.instructure.teacher.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.intent.Intents
@@ -24,15 +24,16 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
-import com.instructure.parentapp.R
-import com.instructure.parentapp.utils.ParentComposeTest
-import com.instructure.parentapp.utils.seedData
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.teacher.R
+import com.instructure.teacher.ui.utils.TeacherTest
+import com.instructure.teacher.ui.utils.seedData
+import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
+
 @HiltAndroidTest
-class HelpMenuE2ETest : ParentComposeTest() {
+class HelpMenuE2ETest: TeacherTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -44,17 +45,14 @@ class HelpMenuE2ETest : ParentComposeTest() {
     fun testHelpMenuE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(parents = 1, students = 1, courses = 1)
-        val parent = data.parentsList[0]
+        val data = seedData(teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
-        tokenLogin(parent)
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openLeftSideMenu()
-
-        Log.d(STEP_TAG, "Open 'Help' menu.")
+        Log.d(STEP_TAG, "Open Help Menu.")
         leftSideNavigationDrawerPage.clickHelpMenu()
 
         Log.d(ASSERTION_TAG, "Assert Help Menu Dialog is displayed.")
@@ -63,10 +61,10 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
         helpPage.assertHelpMenuContent()
 
-        Log.d(STEP_TAG, "Click on the 'Report a Problem' help menu.")
-        helpPage.clickReportProblemLabel()
+        Log.d(STEP_TAG, "Click on 'Report a problem' menu.")
+        helpPage.verifyReportAProblem("Test Subject", "Test Description")
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
+        Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
         helpPage.assertReportProblemDialogDisplayed()
 
         Log.d(STEP_TAG, "Click on 'Cancel' button on the 'Report a problem' dialog.")
@@ -78,6 +76,9 @@ class HelpMenuE2ETest : ParentComposeTest() {
         try {
             helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
             helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
+            helpPage.assertHelpMenuURL("Ask the Community", "https://community.canvaslms.com/community/answers")
+            helpPage.assertHelpMenuURL("Training Services Portal", "https://training-portal-beta-pdx.insproserv.net?canvas_domain=mobileqa.instructure.com&sf_id=")
+            helpPage.assertHelpMenuURL("Conference Guides for Remote Classrooms", "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
             helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
         }
         finally {
@@ -91,15 +92,12 @@ class HelpMenuE2ETest : ParentComposeTest() {
     fun testHelpMenuReportProblemE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(parents = 1, students = 1, courses = 1)
-        val parent = data.parentsList[0]
+        val data = seedData(teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
-        tokenLogin(parent)
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
         dashboardPage.waitForRender()
-
-        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Open Help Menu.")
         leftSideNavigationDrawerPage.clickHelpMenu()
@@ -110,14 +108,11 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
         helpPage.assertHelpMenuContent()
 
-        Log.d(STEP_TAG, "Click on the 'Report a Problem' help menu.")
-        helpPage.clickReportProblemLabel()
+        Log.d(STEP_TAG, "Click on 'Report a problem' menu.")
+        helpPage.verifyReportAProblem("Test Subject", "Test Description")
 
         Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
         helpPage.assertReportProblemDialogDisplayed()
-
-        Log.d(STEP_TAG, "Fill in the 'Report a problem' form with subject and description.")
-        helpPage.fillReportProblemForm("Test Subject", "Test Description")
 
         Log.d(STEP_TAG, "Click on the 'Send' button on the 'Report a problem' dialog.")
         helpPage.clickSendReportProblem()
@@ -125,4 +120,5 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the corresponding toast message is displayed.")
         checkToastText(R.string.errorReportThankyou, activityRule.activity)
     }
+
 }
