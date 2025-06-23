@@ -14,7 +14,7 @@
 #     limitations under the License.
 #
 
-query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!) {
+query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!, $nextCursor: String) {
     submission(userId: $userId, assignmentId: $assignmentId) {
         gradingStatus
         grade
@@ -41,6 +41,20 @@ query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!) {
                 }
             }
             course {
+                customGradeStatusesConnection(after: $nextCursor) {
+                    edges {
+                        node {
+                            color
+                            name
+                            id
+                            _id
+                        }
+                    }
+                    pageInfo {
+                        endCursor
+                        hasNextPage
+                    }
+                }
                 gradingStandard {
                     data {
                         baseValue
@@ -82,6 +96,23 @@ mutation UpdateSubmissionGradeMutation($score: Int!, $submissionId: ID!) {
                     gradeStatuses
                 }
             }
+        }
+    }
+}
+
+mutation UpdateSubmissionStatusMutation($submissionId: ID!, $customGradeStatusId: ID, $latePolicyStatus: String) {
+    updateSubmissionGradeStatus(
+        input: {submissionId: $submissionId, customGradeStatusId: $customGradeStatusId, latePolicyStatus: $latePolicyStatus}
+    ) {
+        submission {
+            excused
+            status
+            grade
+            enteredGrade
+            enteredScore
+            score
+            secondsLate
+            deductedPoints
         }
     }
 }

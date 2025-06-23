@@ -16,11 +16,13 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.grading
 
+import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.GradingSchemeRow
-import com.instructure.canvasapi2.type.LatePolicyStatusType
+import com.instructure.canvasapi2.type.CourseGradeStatus
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -35,7 +37,8 @@ import kotlin.math.roundToInt
 @HiltViewModel
 class SpeedGraderGradingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: SpeedGraderGradingRepository
+    private val repository: SpeedGraderGradingRepository,
+    private val resources: Resources
 ) : ViewModel() {
 
     private val assignmentId = savedStateHandle.get<Long>("assignmentId")
@@ -50,7 +53,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
             SpeedGraderGradingUiState(
                 onScoreChange = this::onScoreChanged,
                 onPercentageChange = this::onPercentageChanged,
-                onExcuse = this::onExcuse
+                onExcuse = this::onExcuse,
+                onStatusChange = this::onStatusChange
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -63,9 +67,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
         loadData()
     }
 
-    private fun loadData() {
+    private fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
-            val submission = repository.getSubmissionGrade(assignmentId, studentId).submission
+            val submission = repository.getSubmissionGrade(assignmentId, studentId, forceNetwork).submission
                 ?: throw IllegalStateException("Submission not found")
             submissionId = submission._id
             _uiState.update {
@@ -81,7 +85,17 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     loading = false,
                     daysLate = getDaysLate(submission.secondsLate),
                     dueDate = submission.assignment?.dueAt,
-                    gradingStatuses = LatePolicyStatusType.entries,
+                    gradingStatuses = submission.assignment?.course?.gradeStatuses
+                        ?.map { GradeStatus(statusId = it.rawValue, name = getGradeStatusName(it)) }
+                        .orEmpty() +
+                            submission.assignment?.course?.customGradeStatusesConnection?.edges?.filterNotNull()
+                                ?.map {
+                                    GradeStatus(
+                                        id = it.node?._id?.toLongOrNull(),
+                                        name = it.node?.name.orEmpty()
+                                    )
+                                }.orEmpty(),
+                    gradingStatus = submission.status,
                     letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
                         GradingSchemeRow(
                             gradingStandard.letterGrade.orEmpty(),
@@ -93,28 +107,29 @@ class SpeedGraderGradingViewModel @Inject constructor(
         }
     }
 
+    private fun getGradeStatusName(status: CourseGradeStatus): String {
+        return when (status) {
+            CourseGradeStatus.late -> resources.getString(R.string.gradingStatus_late)
+            CourseGradeStatus.missing -> resources.getString(R.string.gradingStatus_missing)
+            CourseGradeStatus.extended -> resources.getString(R.string.gradingStatus_extended)
+            CourseGradeStatus.excused -> resources.getString(R.string.gradingStatus_excused)
+            else -> resources.getString(R.string.gradingStatus_none)
+        }
+    }
+
     private fun onScoreChanged(score: Float?) {
         debounceJob?.cancel()
 
         debounceJob = viewModelScope.launch {
             delay(500)
-            val submission = repository.updateSubmissionGrade(
+            repository.updateSubmissionGrade(
                 score = score?.toString() ?: "Not Graded",
                 studentId,
                 assignmentId,
                 courseId,
                 false
             )
-            _uiState.update {
-                it.copy(
-                    score = submission.score,
-                    grade = submission.grade,
-                    enteredGrade = submission.enteredGrade,
-                    enteredScore = if (submission.enteredGrade == null) null else submission.enteredScore.toFloat(),
-                    pointsDeducted = submission.pointsDeducted,
-                    excused = submission.excused
-                )
-            }
+            loadData(true)
         }
     }
 
@@ -131,17 +146,33 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private fun onExcuse() {
         viewModelScope.launch {
-            val submission = repository.excuseSubmission(
+            repository.excuseSubmission(
                 studentId,
                 assignmentId,
                 courseId,
             )
+            loadData(forceNetwork = true)
+        }
+    }
+
+    private fun onStatusChange(gradeStatus: GradeStatus) {
+        viewModelScope.launch {
+            val submission = repository.updateSubmissionStatus(
+                submissionId.toLong(),
+                gradeStatus.id?.toString(),
+                gradeStatus.statusId
+            ).updateSubmissionGradeStatus?.submission
+
             _uiState.update {
                 it.copy(
-                    excused = submission.excused.orDefault(),
-                    enteredGrade = submission.enteredGrade,
-                    enteredScore = if (submission.enteredGrade == null) null else submission.enteredScore.toFloat(),
-                    pointsDeducted = submission.pointsDeducted
+                    gradingStatus = submission?.status,
+                    score = submission?.score,
+                    grade = submission?.grade,
+                    enteredGrade = submission?.enteredGrade,
+                    enteredScore = submission?.enteredScore?.toFloat(),
+                    pointsDeducted = submission?.deductedPoints,
+                    daysLate = getDaysLate(submission?.secondsLate),
+                    excused = submission?.excused.orDefault()
                 )
             }
         }

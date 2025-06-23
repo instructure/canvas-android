@@ -17,9 +17,11 @@
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredWidth
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenuItem
@@ -43,6 +45,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
@@ -64,8 +67,7 @@ fun TextDropdown(
 
     Row(
         modifier = modifier
-            .fillMaxWidth()
-            .padding(bottom = 16.dp),
+            .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
@@ -110,7 +112,7 @@ fun TextDropdown(
             ExposedDropdownMenu(
                 expanded = expanded,
                 onDismissRequest = { expanded = false },
-                modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated))
+                modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)).requiredWidth(IntrinsicSize.Min)
             ) {
                 options.forEachIndexed { index, item ->
                     DropdownMenuItem(
@@ -129,4 +131,16 @@ fun TextDropdown(
             }
         }
     }
+}
+
+@Preview
+@Composable
+fun TextDropdownPreview() {
+    var selectedOption by remember { mutableStateOf("Option 1") }
+    TextDropdown(
+        options = listOf("Option 1", "Option 2", "Option 3"),
+        onSelection = { selectedOption = it },
+        title = R.string.select,
+        selectedOption = selectedOption
+    )
 }

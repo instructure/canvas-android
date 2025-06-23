@@ -166,6 +166,17 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
             }
         }
 
+        TextDropdown(
+            modifier = Modifier.padding(top = 16.dp),
+            options = uiState.gradingStatuses.map { it.name },
+            selectedOption = uiState.gradingStatus ?: stringResource(R.string.gradingStatus_none),
+            title = R.string.status,
+            onSelection = { selected ->
+                val status = uiState.gradingStatuses.first { it.name == selected }
+                uiState.onStatusChange(status)
+            }
+        )
+
         uiState.daysLate?.let {
             LateHeader(it, uiState.dueDate)
         }
@@ -338,7 +349,6 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val options = uiState.letterGrades.map { it.name }
@@ -375,7 +385,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 onSelection = { selectedGrade = it },
                 title = R.string.letterGrade,
                 selectedOption = selectedGrade,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
                 color = LocalCourseColor.current,
             )
         }
@@ -661,7 +671,8 @@ private fun SpeedGraderGradingContentPreview() {
                 daysLate = 4,
                 gradingType = GradingType.points,
                 onPercentageChange = {},
-                onExcuse = {}
+                onExcuse = {},
+                onStatusChange = {}
             )
         )
     }
@@ -683,7 +694,8 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 daysLate = 4,
                 gradingType = GradingType.percent,
                 onPercentageChange = {},
-                onExcuse = {}
+                onExcuse = {},
+                onStatusChange = {}
             )
         )
     }
@@ -705,7 +717,8 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
                 onScoreChange = {},
                 gradingType = GradingType.pass_fail,
                 onPercentageChange = {},
-                onExcuse = {}
+                onExcuse = {},
+                onStatusChange = {}
             )
         )
     }
@@ -735,7 +748,8 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                     GradingSchemeRow("D", 60.0),
                     GradingSchemeRow("F", 0.0)
                 ),
-                onExcuse = {}
+                onExcuse = {},
+                onStatusChange = {}
             )
         )
     }

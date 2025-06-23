@@ -35,11 +35,12 @@ data class SpeedGraderGradingUiState(
     val daysLate: Int? = null,
     val excused: Boolean = false,
     val letterGrades: List<GradingSchemeRow> = emptyList(),
-    val gradingStatuses: List<LatePolicyStatusType> = emptyList(),
-    val gradingStatus: LatePolicyStatusType = LatePolicyStatusType.none,
+    val gradingStatuses: List<GradeStatus> = emptyList(),
+    val gradingStatus: String? = null,
     val onScoreChange: (Float?) -> Unit,
     val onExcuse: () -> Unit,
-    val onPercentageChange: (Float?) -> Unit
+    val onPercentageChange: (Float?) -> Unit,
+    val onStatusChange: (GradeStatus) -> Unit
 )
 
 fun LatePolicyStatusType.stringRes() {
@@ -51,3 +52,9 @@ fun LatePolicyStatusType.stringRes() {
         else -> R.string.gradingStatus_none
     }
 }
+
+data class GradeStatus(
+    val id: Long? = null,
+    val statusId: String? = null,
+    val name: String
+)
