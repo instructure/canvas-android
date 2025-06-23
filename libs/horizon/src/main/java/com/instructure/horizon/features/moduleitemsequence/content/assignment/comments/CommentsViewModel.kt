@@ -40,6 +40,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
@@ -180,6 +181,7 @@ class CommentsViewModel @Inject constructor(
                 fileUrl = attachment.fileUrl,
                 fileId = attachment.attachmentId,
                 onDownloadClick = { downloadFile(it) },
+                onCancelDownloadClick = ::cancelDownload
             )
         }
     }
@@ -284,5 +286,16 @@ class CommentsViewModel @Inject constructor(
 
     private fun onErrorDismissed() {
         _uiState.update { it.copy(errorMessage = null) }
+    }
+
+    private fun cancelDownload(fileId: Long) {
+        val workerId = fileIdToWorkerIdMap[fileId]
+        if (workerId != null) {
+            workManager.cancelWorkById(UUID.fromString(workerId))
+            fileIdToWorkerIdMap.remove(fileId)
+            viewModelScope.tryLaunch {
+                fileDownloadProgressDao.deleteByWorkerId(workerId)
+            } catch {}
+        }
     }
 }

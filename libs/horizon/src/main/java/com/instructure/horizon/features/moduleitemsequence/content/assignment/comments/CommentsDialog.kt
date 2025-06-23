@@ -84,8 +84,8 @@ fun CommentsDialog(
     LaunchedEffect(uiState.errorMessage) {
         if (uiState.errorMessage != null) {
             context.toast(uiState.errorMessage)
+            uiState.onErrorDismissed()
         }
-        uiState.onErrorDismissed()
     }
 
     Dialog(
