@@ -16,29 +16,41 @@
  */
 package com.instructure.pandautils.features.speedgrader.comments
 
+import android.content.Context
+import android.net.Uri
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.GroupAssignee
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
+import com.instructure.pandautils.services.NotoriousUploadWorker
+import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 import javax.inject.Inject
 
 @HiltViewModel
 class SpeedGraderCommentsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    @ApplicationContext private val context: Context,
     private val speedGraderCommentsRepository: SpeedGraderCommentsRepository,
     private val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
     private val apiPrefs: ApiPrefs
@@ -50,11 +62,13 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
     private val submissionId: Long = savedStateHandle.get<Long>(SUBMISSION_ID_KEY) ?: -1L
 
-    var pageId: String? = null
-        private set
+    private var courseId = -1L
+    private var userId = -1L
+    private var pageId: String = ""
+    private var attempt: Int = -1
 
-    var attempt: Int = -1
-        private set
+    private var fetchedComments: List<SpeedGraderComment> = emptyList()
+    private var pendingComments: List<SpeedGraderComment> = emptyList()
 
     // TODO use actual value from feature flag
     val assignmentEnhancementsEnabled = true
@@ -67,41 +81,75 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         val comments = speedGraderCommentsRepository.getSubmissionComments(submissionId)
+        courseId = comments.submission?.assignment?.courseId?.toLong() ?: -1L
+        userId = comments.submission?.userId?.toLong() ?: -1L
         pageId =
-            "${apiPrefs.domain}-${comments.submission?.assignment?.course?._id}-$assignmentId-${comments.submission?.userId}"
+            "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
+        collectPendingComments()
+        fetchedComments = comments.submission?.commentsConnection?.edges
+            ?.mapNotNull { edge ->
+                edge?.node?.let {
+                    SpeedGraderComment(
+                        id = it.mediaCommentId ?: "",
+                        authorName = it.author?.name ?: "Unknown",
+                        authorId = it.author?._id ?: "",
+                        authorAvatarUrl = it.author?.avatarUrl ?: "",
+                        content = it.comment ?: "",
+                        createdAt = it.createdAt.toString(),
+                        isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id,
+                        attachments = it.attachments?.map { attachment ->
+                            SpeedGraderCommentAttachment(
+                                id = attachment.id,
+                                url = attachment.url ?: "",
+                                thumbnailUrl = attachment.thumbnailUrl,
+                                createdAt = attachment.createdAt.toString(),
+                                title = attachment.title ?: "",
+                                displayName = attachment.displayName ?: "",
+                                contentType = attachment.contentType ?: "",
+                                size = attachment.size ?: "",
+
+                                )
+                        } ?: emptyList()
+                    )
+                }
+            } ?: emptyList()
         attempt = comments.submission?.attempt ?: -1
         _uiState.update { state ->
             state.copy(
-                comments = comments.submission?.commentsConnection?.edges
-                    ?.mapNotNull { edge ->
-                        edge?.node?.let {
-                            SpeedGraderComment(
-                                id = it.mediaCommentId ?: "",
-                                authorName = it.author?.name ?: "Unknown",
-                                authorId = it.author?._id ?: "",
-                                authorAvatarUrl = it.author?.avatarUrl ?: "",
-                                content = it.comment ?: "",
-                                createdAt = it.createdAt.toString(),
-                                isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id,
-                                attachments = it.attachments?.map { attachment ->
-                                    SpeedGraderCommentAttachment(
-                                        id = attachment.id,
-                                        url = attachment.url ?: "",
-                                        thumbnailUrl = attachment.thumbnailUrl,
-                                        createdAt = attachment.createdAt.toString(),
-                                        title = attachment.title ?: "",
-                                        displayName = attachment.displayName ?: "",
-                                        contentType = attachment.contentType ?: "",
-                                        size = attachment.size ?: "",
-
-                                        )
-                                } ?: emptyList()
-                            )
-                        }
-
-                    } ?: emptyList(),
+                comments = fetchedComments + pendingComments,
                 isLoading = false,
             )
+        }
+    }
+
+    private fun collectPendingComments() {
+        viewModelScope.launch(Dispatchers.IO) {
+            pendingSubmissionCommentDao.findByPageIdFlow(pageId)
+                .collect { pendingCommentsEntities ->
+                    pendingComments = pendingCommentsEntities
+                        .orEmpty()
+                        .map { it.pendingSubmissionCommentEntity.toApiModel() }
+                        .map { pendingComment ->
+                            SpeedGraderComment(
+                                id = pendingComment.id.toString(),
+                                authorName = apiPrefs.user?.name ?: "",
+                                authorId = apiPrefs.user?.id?.toString() ?: "",
+                                authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
+                                content = pendingComment.comment ?: "",
+                                createdAt = DateHelper.longToSpeedGraderDateString(pendingComment.date.time)
+                                    ?: "",
+                                isOwnComment = true,
+                                attachments = emptyList(),
+                                isPending = true
+                            )
+                        }
+                    _uiState.update { state ->
+                        state.copy(
+                            comments = fetchedComments + pendingComments,
+                            isEmpty = fetchedComments.isEmpty() && pendingComments.isEmpty()
+                        )
+                    }
+                }
         }
     }
 
@@ -118,63 +166,135 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             }
 
             SpeedGraderCommentsAction.AddAttachmentClicked -> {
-                // Handle adding attachment
+                _uiState.update { state ->
+                    state.copy(showAttachmentTypeDialog = true)
+                }
             }
 
             SpeedGraderCommentsAction.SendCommentClicked -> {
                 onSendCommentClicked()
             }
-        }
-    }
 
-    private suspend fun createPendingComment(commentText: String): SpeedGraderComment? {
-        pageId?.let { pageId ->
-            val drafts = pendingSubmissionCommentDao.findByPageId(pageId)
-                .orEmpty()
-                .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }
-            pendingSubmissionCommentDao.deleteAll(drafts.map { it.pendingSubmissionCommentEntity })
-            val newComment = PendingSubmissionComment(pageId, commentText).apply {
-                attemptId = attempt.toLong().takeIf { assignmentEnhancementsEnabled }
+            SpeedGraderCommentsAction.AttachmentTypeSelectorDialogClosed -> {
+                _uiState.update { state ->
+                    state.copy(showAttachmentTypeDialog = false)
+                }
             }
-            pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
-            val pendingComment = SpeedGraderComment(
-                id = newComment.id.toString(),
-                authorName = apiPrefs.user?.name ?: "",
-                authorId = apiPrefs.user?.id?.toString() ?: "",
-                authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
-                content = commentText,
-                createdAt = DateHelper.longToSpeedGraderDateString(System.currentTimeMillis())
-                    ?: "",
-                isOwnComment = true,
-                attachments = emptyList(),
-                isPending = true
-            )
 
-            return pendingComment
+            SpeedGraderCommentsAction.ChooseFilesClicked -> {
+                _uiState.update { state ->
+                    state.copy(showAttachmentTypeDialog = false)
+                }
+            }
+
+            SpeedGraderCommentsAction.RecordAudioClicked -> {
+                _uiState.update { state ->
+                    state.copy(
+                        showAttachmentTypeDialog = false,
+                        showRecordFloatingView = RecordingMediaType.Audio
+                    )
+                }
+            }
+
+            SpeedGraderCommentsAction.RecordVideoClicked -> {
+                _uiState.update { state ->
+                    state.copy(
+                        showAttachmentTypeDialog = false,
+                        showRecordFloatingView = RecordingMediaType.Video
+                    )
+                }
+            }
+
+            SpeedGraderCommentsAction.AttachmentRecordDialogClosed -> {
+                _uiState.update { state ->
+                    state.copy(showRecordFloatingView = null)
+                }
+            }
+
+            is SpeedGraderCommentsAction.MediaRecorded -> {
+                handleMediaRecording(action.file)
+            }
         }
-        return null
     }
 
-    private suspend fun sendComment(comment: SpeedGraderComment) {
-        pendingSubmissionCommentDao.findById(comment.id.toLong())?.let {
+    private fun handleMediaRecording(file: File) {
+        viewModelScope.launch {
+            val id = createPendingMediaComment(file.path)
+            NotoriousUploadWorker.enqueueUpload(
+                context = context,
+                mediaFilePath = Uri.fromFile(file).path,
+                assignment = Assignment(id = assignmentId, courseId = courseId),
+                studentId = userId,
+                isGroupComment = false, // TODO handle group comments
+                pageId = pageId,
+                attemptId = attempt.toLong(),
+                mediaCommentId = id
+            ).collect { result ->
+                Log.d("ASDF", "Worker result: $result")
+                when (result.state) {
+                    WorkInfo.State.SUCCEEDED -> {
+                        pendingSubmissionCommentDao.findById(id)?.let {
+                            pendingSubmissionCommentDao.delete(it)
+                        }
+                    }
+                    WorkInfo.State.FAILED -> {
+                        pendingSubmissionCommentDao.findById(id)?.let {
+                            it.status = CommentSendStatus.ERROR.toString()
+                            pendingSubmissionCommentDao.update(it)
+                        }
+                    }
+                    else -> {
+                        // Do nothing for other states
+                    }
+                }
+            }
+        }
+    }
+
+    suspend fun createPendingMediaComment(filePath: String): Long {
+        val newComment = PendingSubmissionComment(pageId).apply {
+            attemptId = attempt.toLong().takeIf { assignmentEnhancementsEnabled }
+        }
+        newComment.filePath = filePath
+        newComment.status = CommentSendStatus.SENDING
+        val id = pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
+        return id
+    }
+
+    private suspend fun createPendingComment(commentText: String): Long {
+        val drafts = pendingSubmissionCommentDao.findByPageId(pageId)
+            .orEmpty()
+            .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }
+        pendingSubmissionCommentDao.deleteAll(drafts.map { it.pendingSubmissionCommentEntity })
+        val newComment = PendingSubmissionComment(pageId, commentText).apply {
+            attemptId = attempt.toLong().takeIf { assignmentEnhancementsEnabled }
+        }
+        pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
+        return newComment.id
+    }
+
+    private suspend fun sendComment(id: Long, comment: String) {
+        pendingSubmissionCommentDao.findById(id)?.let {
             it.status = CommentSendStatus.SENDING.toString()
             pendingSubmissionCommentDao.update(it)
         }
 
         try {
+            // TODO remove after testing, this is just to simulate a delay for the UI
+            delay(3000)
             val newComment = speedGraderCommentsRepository.createSubmissionComment(
                 submissionId,
-                comment.content
+                comment
             )
-            pendingSubmissionCommentDao.findById(comment.id.toLong())?.let {
+            pendingSubmissionCommentDao.findById(id)?.let {
                 pendingSubmissionCommentDao.delete(it)
             }
-            val comments = _uiState.value.comments.filterNot { it.id == comment.id } + SpeedGraderComment(
+            fetchedComments = fetchedComments + SpeedGraderComment(
                 id = newComment.createSubmissionComment?.submissionComment?._id ?: "",
                 authorName = apiPrefs.user?.name ?: "",
                 authorId = apiPrefs.user?.id?.toString() ?: "",
                 authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
-                content = comment.content,
+                content = comment,
                 createdAt = newComment.createSubmissionComment?.submissionComment?.createdAt.toString(),
                 isOwnComment = true,
                 attachments = emptyList(),
@@ -182,12 +302,12 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             )
             _uiState.update { state ->
                 state.copy(
-                    comments = comments,
+                    comments = fetchedComments + pendingComments,
                     commentText = TextFieldValue("")
                 )
             }
         } catch (e: Throwable) {
-            pendingSubmissionCommentDao.findById(comment.id.toLong())?.let {
+            pendingSubmissionCommentDao.findById(id)?.let {
                 it.status = CommentSendStatus.ERROR.toString()
                 pendingSubmissionCommentDao.update(it)
             }
@@ -200,18 +320,15 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private fun onSendCommentClicked() {
         viewModelScope.launch(Dispatchers.IO) {
             if (_uiState.value.commentText.text.isNotEmpty()) {
-                val pendingComment = createPendingComment(_uiState.value.commentText.text)
-
-                pendingComment ?: return@launch
+                val comment = _uiState.value.commentText.text
                 _uiState.update { state ->
                     state.copy(
-                        comments = state.comments + pendingComment,
                         commentText = TextFieldValue("")
                     )
                 }
 
-                delay(10000)
-                sendComment(pendingComment)
+                val id = createPendingComment(_uiState.value.commentText.text)
+                sendComment(id, comment)
             }
         }
     }

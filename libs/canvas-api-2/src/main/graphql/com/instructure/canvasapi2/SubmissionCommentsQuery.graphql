@@ -60,9 +60,9 @@ query SubmissionCommentsQuery($submissionId: ID!) {
             }
         }
         assignment {
-            course {
-                _id
-            }
+            courseId
+            groupCategoryId
+            gradeGroupStudentsIndividually
         }
     }
 }
