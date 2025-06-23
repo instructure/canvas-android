@@ -33,6 +33,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
@@ -95,12 +96,14 @@ private fun HorizonInboxDetailsHeader(
     CenterAlignedTopAppBar(
         title = {
             Row(
-                modifier = Modifier
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
             ) {
                 if (titleIcon != null) {
-                    Image(
+                    Icon(
                         painterResource(id = titleIcon),
                         contentDescription = null,
+                        tint = HorizonColors.Surface.institution(),
                         modifier = Modifier.size(16.dp)
                     )
 
