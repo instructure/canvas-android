@@ -55,7 +55,8 @@ class CommentsViewModel @Inject constructor(
         CommentsUiState(
             onCommentChanged = ::onCommentChanged,
             onPostClicked = ::postComment,
-            onFileOpened = ::onFileOpened
+            onFileOpened = ::onFileOpened,
+            onErrorDismissed = ::onErrorDismissed,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -92,7 +93,7 @@ class CommentsViewModel @Inject constructor(
 
             updateState(commentsData)
         } catch { _ ->
-            _uiState.update { it.copy(loading = false) }
+            _uiState.update { it.copy(loading = false, errorMessage = context.getString(R.string.commentsBottomSheet_failedToLoadComments)) }
         }
     }
 
@@ -110,7 +111,7 @@ class CommentsViewModel @Inject constructor(
 
             updateState(commentsData)
         } catch { _ ->
-            _uiState.update { it.copy(loading = false) }
+            _uiState.update { it.copy(loading = false, errorMessage = context.getString(R.string.commentsBottomSheet_failedToLoadNextPage)) }
         }
     }
 
@@ -128,7 +129,7 @@ class CommentsViewModel @Inject constructor(
 
             updateState(commentsData)
         } catch { _ ->
-            _uiState.update { it.copy(loading = false) }
+            _uiState.update { it.copy(loading = false, errorMessage = context.getString(R.string.commentsBottomSheet_failedToLoadPreviousPage)) }
         }
     }
 
@@ -202,7 +203,7 @@ class CommentsViewModel @Inject constructor(
                 it.copy(comment = TextFieldValue(""), postingComment = false)
             }
         } catch { _ ->
-            _uiState.update { it.copy(postingComment = false) }
+            _uiState.update { it.copy(postingComment = false, errorMessage = context.getString(R.string.commentsBottomSheet_failedToPostComment)) }
         }
     }
 
@@ -279,5 +280,9 @@ class CommentsViewModel @Inject constructor(
 
     private fun onFileOpened() {
         _uiState.update { it.copy(filePathToOpen = null, mimeTypeToOpen = null) }
+    }
+
+    private fun onErrorDismissed() {
+        _uiState.update { it.copy(errorMessage = null) }
     }
 }

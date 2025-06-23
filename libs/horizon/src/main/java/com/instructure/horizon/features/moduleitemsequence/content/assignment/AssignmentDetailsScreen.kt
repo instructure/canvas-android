@@ -57,7 +57,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsBottomSheet
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsDialog
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
@@ -112,7 +112,7 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                 commentBottomSheetParams.courseId
             )
         }
-        CommentsBottomSheet(commentsUiState, onDismiss = uiState.onCommentsBottomSheetDismissed)
+        CommentsDialog(commentsUiState, onDismiss = uiState.onCommentsBottomSheetDismissed)
     }
 
     if (uiState.submissionConfirmationUiState.show) {

@@ -64,9 +64,10 @@ import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequi
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.pandautils.utils.openFile
+import com.instructure.pandautils.utils.toast
 
 @Composable
-fun CommentsBottomSheet(
+fun CommentsDialog(
     uiState: CommentsUiState,
     modifier: Modifier = Modifier,
     onDismiss: () -> Unit = {}
@@ -78,6 +79,13 @@ fun CommentsBottomSheet(
             context.openFile(uiState.filePathToOpen, uiState.mimeTypeToOpen ?: "*/*", context.getString(R.string.fileDetails_openWith))
             uiState.onFileOpened()
         }
+    }
+
+    LaunchedEffect(uiState.errorMessage) {
+        if (uiState.errorMessage != null) {
+            context.toast(uiState.errorMessage)
+        }
+        uiState.onErrorDismissed()
     }
 
     Dialog(
@@ -233,7 +241,7 @@ private fun CommentsContent(uiState: CommentsUiState) {
 fun CommentsBottomSheetPreview() {
     ContextKeeper.appContext = LocalContext.current
     Surface(color = Color.White) {
-        CommentsBottomSheet(
+        CommentsDialog(
             modifier = Modifier.fillMaxSize(),
             uiState = CommentsUiState(
                 comments = listOf(

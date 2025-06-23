@@ -32,5 +32,7 @@ data class CommentsUiState(
     val postingComment: Boolean = false,
     val filePathToOpen: String? = null,
     val mimeTypeToOpen: String? = null,
-    val onFileOpened: () -> Unit = {}
+    val onFileOpened: () -> Unit = {},
+    val errorMessage: String? = null,
+    val onErrorDismissed: () -> Unit = {}
 )
