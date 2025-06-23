@@ -22,6 +22,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -34,6 +35,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -42,14 +44,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -61,8 +66,10 @@ import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.toFormattedString
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizonInboxDetailsScreen(
     state: HorizonInboxDetailsUiState,
@@ -72,7 +79,9 @@ fun HorizonInboxDetailsScreen(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, navController) },
     ) { innerPadding ->
-        HorizonInboxDetailsContent(state, modifier = Modifier.padding(innerPadding))
+        LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(innerPadding)) {
+            HorizonInboxDetailsContent(state)
+        }
     }
 }
 
@@ -87,8 +96,6 @@ private fun HorizonInboxDetailsHeader(
         title = {
             Row(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 12.dp)
             ) {
                 if (titleIcon != null) {
                     Image(
@@ -113,13 +120,18 @@ private fun HorizonInboxDetailsHeader(
                 painter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = null,
                 modifier = Modifier
-                    .size(24.dp)
+                    //.size(24.dp)
                     .padding(horizontal = 10.dp)
                     .clickable {
                         navController.popBackStack()
                     }
             )
-        }
+        },
+        colors = TopAppBarDefaults.topAppBarColors(
+            containerColor = HorizonColors.Surface.pagePrimary(),
+            titleContentColor = HorizonColors.Text.title(),
+            navigationIconContentColor = HorizonColors.Icon.default()
+        )
     )
 }
 
@@ -129,23 +141,28 @@ private fun HorizonInboxDetailsContent(
     state: HorizonInboxDetailsUiState,
     modifier: Modifier = Modifier
 ) {
-    LazyColumn(
-        reverseLayout = state.bottomLayout,
-        modifier = Modifier
+    Column(
+        modifier = modifier
             .fillMaxSize()
             .clip(HorizonCornerRadius.level4Top)
-            .shadow(HorizonElevation.level4, HorizonCornerRadius.level4Top)
-    ) {
-        if (state.replyState != null) {
-            stickyHeader {
-                HorizonInboxReplyContent(state.replyState)
+            .background(HorizonColors.Surface.pageSecondary())
+    ){
+        LazyColumn(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(HorizonColors.Surface.pageSecondary()),
+            reverseLayout = state.bottomLayout,
+            contentPadding = PaddingValues(vertical = 8.dp)
+        ) {
+            if (state.replyState != null) {
+                stickyHeader { HorizonInboxReplyContent(state.replyState) }
             }
-        }
-        items(state.items) {
-            Column {
-                HorizonInboxDetailsItem(it)
-                if (it != state.items.last()) {
-                    HorizonDivider()
+            items(state.items) {
+                Column {
+                    HorizonInboxDetailsItem(it)
+                    if (it != state.items.last()) {
+                        HorizonDivider()
+                    }
                 }
             }
         }
@@ -162,7 +179,6 @@ private fun HorizonInboxDetailsItem(
             .fillMaxWidth()
             .background(HorizonColors.Surface.pageSecondary())
             .padding(top = 16.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
-            .clip(HorizonCornerRadius.level3)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -185,8 +201,17 @@ private fun HorizonInboxDetailsItem(
 
         HorizonSpace(SpaceSize.SPACE_8)
 
+        val annotatedString = AnnotatedString.fromHtml(
+            item.content,
+            linkStyles = TextLinkStyles(
+                style = SpanStyle(
+                    textDecoration = TextDecoration.Underline,
+                    color = HorizonColors.Text.link()
+                )
+            )
+        )
         Text(
-            text = item.content,
+            text = annotatedString,
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body(),
         )

@@ -41,7 +41,8 @@ class HorizonInboxDetailsRepository @Inject constructor(
 
     suspend fun getAccountAnnouncement(id: Long, forceRefresh: Boolean): AccountNotification {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        return accountNotificationApi.getAccountNotification(id, params).dataOrThrow
+        //return accountNotificationApi.getAccountNotification(id, params).dataOrThrow
+        return accountNotificationApi.getAccountNotifications(params, true, true).dataOrThrow.first { it.id == id }
     }
 
     suspend fun getAnnouncement(id: Long, courseId: Long, forceRefresh: Boolean): DiscussionTopicHeader {

@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.details
 
+import android.util.Log
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -67,6 +68,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 )
             }
         } catch {
+            Log.d("HorizonInboxDetailsViewModel", "Error loading data", it)
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = "Error")
@@ -130,7 +132,14 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 uiState.value.copy(
                     title = announcement.title.orEmpty(),
                     titleIcon = R.drawable.ic_announcement,
-                    items = topic.views.map { message ->
+                    items = listOf(
+                        HorizonInboxDetailsItem(
+                            author = announcement.author?.displayName.orEmpty(),
+                            date = announcement.postedDate ?: Date(),
+                            content = announcement.message.orEmpty(),
+                            attachments = emptyList()
+                        )
+                    ) + topic.views.map { message ->
                         HorizonInboxDetailsItem(
                             author = message.author?.displayName.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
@@ -144,6 +153,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
             }
         }
 
+        Log.d("HorizonInboxDetailsViewModel", "New state: $newState")
         _uiState.update { newState }
     }
 
