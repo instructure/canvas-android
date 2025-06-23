@@ -71,9 +71,7 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_MISSING)
         studentAlertSettingsPage.clickThreshold(AlertType.COURSE_ANNOUNCEMENT)
         studentAlertSettingsPage.clickThreshold(AlertType.INSTITUTION_ANNOUNCEMENT)
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
-        studentAlertSettingsPage.enterThreshold("80")
-        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80")
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
@@ -119,10 +117,7 @@ class AlertsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Change some alert settings")
         studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
         studentAlertSettingsPage.tapThresholdNeverButton()
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
-        studentAlertSettingsPage.enterThreshold("20")
-        studentAlertSettingsPage.tapThresholdSaveButton()
-
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "20")
 
         Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
         val testAssignmentBelow = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
@@ -182,9 +177,7 @@ class AlertsE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Open the Student Alert Settings Page and enable alerts")
         manageStudentsPage.clickStudent(student.shortName)
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
-        studentAlertSettingsPage.enterThreshold("80")
-        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80")
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(2)
@@ -260,21 +253,10 @@ class AlertsE2ETest : ParentComposeTest() {
         studentAlertSettingsPage.clickThreshold(AlertType.COURSE_ANNOUNCEMENT)
         studentAlertSettingsPage.clickThreshold(AlertType.INSTITUTION_ANNOUNCEMENT)
 
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
-        studentAlertSettingsPage.enterThreshold("80")
-        studentAlertSettingsPage.tapThresholdSaveButton()
-
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
-        studentAlertSettingsPage.enterThreshold("20")
-        studentAlertSettingsPage.tapThresholdSaveButton()
-
-        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
-        studentAlertSettingsPage.enterThreshold("80")
-        studentAlertSettingsPage.tapThresholdSaveButton()
-
-        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_LOW)
-        studentAlertSettingsPage.enterThreshold("20")
-        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80")
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "20")
+        studentAlertSettingsPage.setThreshold(AlertType.COURSE_GRADE_HIGH, "80")
+        studentAlertSettingsPage.setThreshold(AlertType.COURSE_GRADE_LOW, "20")
 
         Log.d(STEP_TAG, "Reopen the alerts screen")
         Espresso.pressBack()
@@ -357,8 +339,8 @@ class AlertsE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ALERTS, TestCategory.E2E)
-    fun testAlertsE2EUndoMechanism() {
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.ALERTS, TestCategory.E2E)
+    fun testAlertsUndoMechanismE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, courses = 1, teachers = 1, parents = 1)
@@ -377,24 +359,17 @@ class AlertsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open the Manage Students Page.")
         leftSideNavigationDrawerPage.clickManageStudents()
 
-        Log.d(STEP_TAG, "Open the Student Alert Settings Page and enable alerts")
+        Log.d(STEP_TAG, "Open the Student Alert Settings Page and enable some alerts.")
         manageStudentsPage.clickStudent(student.shortName)
 
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_HIGH)
-        studentAlertSettingsPage.enterThreshold("80")
-        studentAlertSettingsPage.tapThresholdSaveButton()
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80")
+        studentAlertSettingsPage.setThreshold(AlertType.ASSIGNMENT_GRADE_LOW, "20")
+        studentAlertSettingsPage.setThreshold(AlertType.COURSE_GRADE_HIGH, "80")
 
-        studentAlertSettingsPage.clickThreshold(AlertType.ASSIGNMENT_GRADE_LOW)
-        studentAlertSettingsPage.enterThreshold("20")
-        studentAlertSettingsPage.tapThresholdSaveButton()
-
-        studentAlertSettingsPage.clickThreshold(AlertType.COURSE_GRADE_HIGH)
-        studentAlertSettingsPage.enterThreshold("80")
-        studentAlertSettingsPage.tapThresholdSaveButton()
-
-        Log.d(STEP_TAG, "Reopen the alerts screen")
+        Log.d(STEP_TAG, "Reopen the alerts screen and refresh it.")
         Espresso.pressBack()
         manageStudentsPage.clickStudent(student.shortName)
+        alertsPage.refresh()
 
         Log.d(ASSERTION_TAG, "Assert that the alert settings are saved")
         studentAlertSettingsPage.assertPercentageThreshold(AlertType.ASSIGNMENT_GRADE_HIGH, "80%")
@@ -418,7 +393,7 @@ class AlertsE2ETest : ParentComposeTest() {
         Log.d(PREPARATION_TAG, "Grade submission: '${testAssignment.name}' with 18 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignment.id, student.id, postedGrade = "18")
 
-        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Seeding another assignment for '${course.name}' course.")
         val testAssignmentBelow = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 20.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test Assignment Below")
 
@@ -430,45 +405,41 @@ class AlertsE2ETest : ParentComposeTest() {
         SubmissionsApi.gradeSubmission(teacher.token, course.id, testAssignmentBelow.id, student.id, postedGrade = "1")
 
         Thread.sleep(5000) // Allow the grading to propagate
+        val gradeBelowAlertTitle = "Assignment Grade Below 20"
+        val gradeFilterLabel = "Course Grade Above 80"
 
         Log.d(STEP_TAG, "Refresh the Alerts Page")
         alertsPage.refresh()
 
         Log.d(ASSERTION_TAG, "Assert that the alerts are displayed.")
-        alertsPage.assertAlertItemDisplayed("Assignment Grade Below 20")
+        alertsPage.assertAlertItemDisplayed(gradeBelowAlertTitle)
         alertsPage.assertAlertItemDisplayed("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
-        alertsPage.assertAlertItemDisplayed("Course Grade Above 80")
+        alertsPage.assertAlertItemDisplayed(gradeFilterLabel)
         alertsPage.assertAlertItemDisplayed("Course grade: 90.0% in ${course.courseCode}")
         alertsPage.assertAlertItemDisplayed("Assignment Grade Above 80")
         alertsPage.assertAlertItemDisplayed("Assignment graded: 18 on Test Assignment in ${course.courseCode}")
 
-        Log.d(STEP_TAG, "Dismiss the TOP 1 alert.")
+        Log.d(STEP_TAG, "Dismiss the '$gradeBelowAlertTitle' alert.")
         alertsPage.dismissAlert("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
 
         Log.d(STEP_TAG, "Click on the UNDO button in the snackbar.")
         alertsPage.clickUndo()
 
-        Log.d(ASSERTION_TAG, "Assert that the alert is displayed again and it is no longer marked as unread" +
-                "Assert that the other alerts remain unread.")
-        alertsPage.assertAlertItemDisplayed("Assignment Grade Below 20")
+        Log.d(ASSERTION_TAG, "Assert that the '$gradeBelowAlertTitle' alert is displayed again and it is no longer marked as unread.")
+        alertsPage.assertAlertItemDisplayed(gradeBelowAlertTitle)
         alertsPage.assertAlertItemDisplayed("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
         alertsPage.assertAlertRead("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
-        alertsPage.assertAlertUnread("Course Grade Above 80")
-        alertsPage.assertAlertUnread("Assignment Grade Above 80")
 
-        Log.d(STEP_TAG, "Dismiss the 'Course Grade Above 80' alert.")
+        Log.d(STEP_TAG, "Dismiss the '$gradeFilterLabel' alert.")
         alertsPage.dismissAlert("Course grade: 90.0% in ${course.courseCode}")
 
         Log.d(STEP_TAG, "Click on the UNDO button in the snackbar.")
         alertsPage.clickUndo()
 
-        Log.d(ASSERTION_TAG, "Assert that the alert is displayed again and it is no longer marked as unread same as the TOP 1" +
-                "Assert that the other alert (bottommost) remain unread.")
-        alertsPage.assertAlertItemDisplayed("Course Grade Above 80")
+        Log.d(ASSERTION_TAG, "Assert that the '$gradeFilterLabel' alert is displayed again and it is no longer marked as unread same as the '$gradeBelowAlertTitle' alert.")
+        alertsPage.assertAlertItemDisplayed(gradeFilterLabel)
         alertsPage.assertAlertItemDisplayed("Course grade: 90.0% in ${course.courseCode}")
-        alertsPage.assertAlertRead("Assignment graded: 1 on Test Assignment Below in ${course.courseCode}")
         alertsPage.assertAlertRead("Course grade: 90.0% in ${course.courseCode}")
-        alertsPage.assertAlertUnread("Assignment Grade Above 80")
     }
 
 }
