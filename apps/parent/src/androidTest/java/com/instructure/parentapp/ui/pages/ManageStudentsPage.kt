@@ -28,6 +28,8 @@ import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollToNode
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.pandautils.R
 
 
 class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
@@ -77,11 +79,11 @@ class ManageStudentsPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertEmptyContent() {
-        composeTestRule.onNodeWithText("You are not observing any students.")
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.noStudentsErrorDescription))
             .assertIsDisplayed()
         composeTestRule.onNodeWithTag("EmptyContent")
-            .performScrollToNode(hasText("Refresh"))
-        composeTestRule.onNodeWithText("Refresh")
+            .performScrollToNode(hasText(getStringFromResource(R.string.noStudentsRefresh)))
+        composeTestRule.onNodeWithText(getStringFromResource(R.string.noStudentsRefresh))
             .assertIsDisplayed()
             .assertHasClickAction()
         composeTestRule.onNodeWithTag(com.instructure.pandares.R.drawable.panda_manage_students.toString())
