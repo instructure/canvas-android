@@ -2098,4 +2098,9 @@
     <string name="gradingStatus_extended">Extended</string>
     <string name="gradingStatus_excused">Excused</string>
     <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Student Notes</string>
+    <string name="speedGraderStudentNotesLoading">Loading Student notes</string>
+    <string name="speedGraderStudentNotesErrorTitle">Oops! Something Went Wrong</string>
+    <string name="speedGraderStudentNotesErrorDescription">We\'re having trouble showing the student notes.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Refresh</string>
 </resources>

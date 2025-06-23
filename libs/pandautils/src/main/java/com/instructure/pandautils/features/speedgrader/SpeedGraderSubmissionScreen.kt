@@ -172,6 +172,7 @@ private fun NavGraphBuilder.speedGraderBottomSheet(anchoredDraggableState: Ancho
     composable(
         route = "speedGraderBottomSheet/{courseId}/{assignmentId}/{submissionId}",
         arguments = listOf(
+            navArgument("courseId") { type = NavType.LongType },
             navArgument("assignmentId") { type = NavType.LongType },
             navArgument("submissionId") { type = NavType.LongType },
             navArgument("courseId") { type = NavType.LongType }

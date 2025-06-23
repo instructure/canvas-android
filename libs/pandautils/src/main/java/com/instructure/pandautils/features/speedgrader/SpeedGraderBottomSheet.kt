@@ -112,6 +112,7 @@ fun SpeedGraderBottomSheet(
                             }
                         }
                         val route = tab.route
+                            .replace("{courseId}", courseId.toString())
                             .replace("{assignmentId}", assignmentId.toString())
                             .replace("{submissionId}", submissionId.toString())
                             .replace("{courseId}", courseId.toString())
@@ -126,6 +127,7 @@ fun SpeedGraderBottomSheet(
         SpeedGraderBottomSheetNavHost(
             navController = navController,
             startDestination = startDestination.route
+                .replace("{courseId}", courseId.toString())
                 .replace("{assignmentId}", assignmentId.toString())
                 .replace("{submissionId}", submissionId.toString())
                 .replace("{courseId}", courseId.toString()),
@@ -147,6 +149,7 @@ private fun SpeedGraderBottomSheetNavHost(
         composable(
             route = SpeedGraderTab.GRADE.route,
             arguments = listOf(
+                navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType },
                 navArgument("courseId") { type = NavType.LongType }
@@ -158,6 +161,7 @@ private fun SpeedGraderBottomSheetNavHost(
         composable(
             route = SpeedGraderTab.DETAILS.route,
             arguments = listOf(
+                navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType }
             )
@@ -171,9 +175,12 @@ enum class SpeedGraderTab(
     val route: String,
     @StringRes val title: Int
 ) {
-    GRADE("speedGraderGrade/{courseId}/{assignmentId}/{submissionId}", R.string.speedGraderGradeTabTitle),
+    GRADE(
+        "speedGraderGrade/{courseId}/assignments/{assignmentId}/{submissionId}",
+        R.string.speedGraderGradeTabTitle
+    ),
     DETAILS(
-        "speedGraderDetails/{assignmentId}/{submissionId}",
+        "speedGraderDetails/{courseId}/assignments/{assignmentId}/{submissionId}",
         R.string.speedGraderDetailsTabTitle
     ),
 }

@@ -278,6 +278,7 @@ private fun SelectorContent(
             Selector(
                 selectorUiState = attemptSelectorUiState,
                 color = courseColor,
+                showBadge = false,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -288,6 +289,7 @@ private fun SelectorContent(
             Selector(
                 selectorUiState = attachmentSelectorUiState,
                 color = courseColor,
+                showBadge = true,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -298,6 +300,7 @@ private fun SelectorContent(
 private fun Selector(
     selectorUiState: SelectorUiState,
     color: Color,
+    showBadge: Boolean,
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
@@ -326,23 +329,25 @@ private fun Selector(
                 modifier = Modifier.size(28.dp),
                 tint = color
             )
-            Box(
-                modifier = Modifier
-                    .offset(x = 10.dp, y = (-6).dp)
-                    .size(16.dp)
-                    .border(1.dp, colorResource(R.color.textLightest), CircleShape)
-                    .background(color, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = selectorUiState.items.size.toString(),
-                    color = colorResource(id = R.color.textLightest),
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            if (showBadge) {
+                Box(
+                    modifier = Modifier
+                        .offset(x = 10.dp, y = (-6).dp)
+                        .size(16.dp)
+                        .border(1.dp, colorResource(R.color.textLightest), CircleShape)
+                        .background(color, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = selectorUiState.items.size.toString(),
+                        color = colorResource(id = R.color.textLightest),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.width(18.dp))
+        Spacer(modifier = Modifier.width(if (showBadge) 18.dp else 8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.weight(1f)
@@ -438,7 +443,8 @@ fun SelectorContentPreview() {
     SelectorContent(
         attemptSelectorUiState = SelectorUiState(
             items = listOf(
-                SelectorItem(1, "Attempt 1")
+                SelectorItem(1, "Attempt 1"),
+                SelectorItem(2, "Attempt 2")
             ),
             selectedItemId = 1
         ),
