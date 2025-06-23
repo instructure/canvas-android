@@ -33,6 +33,7 @@ import com.instructure.pandautils.mvvm.ItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorApiHelper
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -133,21 +134,22 @@ class GradesViewModel @Inject constructor(
                 val grades = it.getCourseGrade(false)
                 val restrictQuantitativeData = it.settings?.restrictQuantitativeData ?: false
                 val notGraded = (enrollment?.currentGradingPeriodId ?: 0L) != 0L
+                val hideGrades = grades?.isLocked.orDefault()
                 GradeRowItemViewModel(resources,
                     GradeRowViewData(
                         it.id,
                         it.name,
                         colorKeeper.getOrGenerateColor(it),
                         it.imageUrl ?: "",
-                        if (it.hideFinalGrades) 0.0 else grades?.currentScore,
+                        if (hideGrades) 0.0 else grades?.currentScore,
                         createGradeText(
                             grades?.currentScore,
                             grades?.currentGrade,
-                            it.hideFinalGrades,
+                            hideGrades,
                             notGraded = notGraded,
                             restrictQuantitativeData = restrictQuantitativeData
                         ),
-                        hideProgress = restrictQuantitativeData || notGraded || it.hideFinalGrades)
+                        hideProgress = restrictQuantitativeData || notGraded || hideGrades)
                 ) { gradeRowClicked(it) }
             }
     }
