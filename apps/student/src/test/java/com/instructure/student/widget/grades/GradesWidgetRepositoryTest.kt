@@ -24,7 +24,6 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 
@@ -47,7 +46,7 @@ class GradesWidgetRepositoryTest {
         coEvery { coursesApi.next(any(), any()) } returns DataResult.Success(emptyList())
 
         val result = repository.getCoursesWithGradingScheme()
-        assertEquals(listOf(favoriteCourse), result)
+        assertEquals(DataResult.Success(listOf(favoriteCourse)), result)
     }
 
     @Test
@@ -58,7 +57,7 @@ class GradesWidgetRepositoryTest {
         coEvery { coursesApi.next(any(), any()) } returns DataResult.Success(emptyList())
 
         val result = repository.getCoursesWithGradingScheme()
-        assertEquals(listOf(activeCourse), result)
+        assertEquals(DataResult.Success(listOf(activeCourse)), result)
     }
 
     @Test
@@ -69,14 +68,14 @@ class GradesWidgetRepositoryTest {
         coEvery { coursesApi.next(any(), any()) } returns DataResult.Success(emptyList())
 
         val result = repository.getCoursesWithGradingScheme()
-        assertTrue(result.isEmpty())
+        assertEquals(DataResult.Success(emptyList<Course>()), result)
     }
 
     @Test
-    fun `handles null or empty data gracefully`() = runTest {
+    fun `returns failed result if api call fails`() = runTest {
         coEvery { coursesApi.getFirstPageCoursesWithGradingScheme(any()) } returns DataResult.Fail()
-        coEvery { coursesApi.next(any(), any()) } returns DataResult.Success(emptyList())
+        coEvery { coursesApi.next(any(), any()) } returns DataResult.Fail()
         val result = repository.getCoursesWithGradingScheme()
-        assertTrue(result.isEmpty())
+        assertEquals(DataResult.Fail(), result)
     }
 }
