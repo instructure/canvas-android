@@ -163,7 +163,7 @@ private fun HorizonInboxDetailsContent(
             items(state.items) {
                 Column {
                     HorizonInboxDetailsItem(it)
-                    if (it != state.items.last()) {
+                    if ((state.bottomLayout && it != state.items.firstOrNull()) ||(!state.bottomLayout && it != state.items.lastOrNull())) {
                         HorizonDivider()
                     }
                 }
@@ -271,7 +271,7 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
             Button(
                 label = "Send",
                 color = ButtonColor.Institution,
-                onClick = {},
+                onClick = { state.onSendReply() },
             )
         }
     }

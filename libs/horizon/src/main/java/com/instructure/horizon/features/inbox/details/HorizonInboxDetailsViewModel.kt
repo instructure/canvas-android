@@ -17,19 +17,23 @@
 package com.instructure.horizon.features.inbox.details
 
 import android.util.Log
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
+import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import java.util.Date
 import javax.inject.Inject
 
@@ -43,8 +47,16 @@ class HorizonInboxDetailsViewModel @Inject constructor(
     private val type = HorizonInboxItemType.entries.firstOrNull { it.navigationValue == typeStringValue }
     private val id: Long? = savedStateHandle[HorizonInboxRoute.InboxDetails.ID]
 
+    private var recipientIds: List<String> = emptyList()
+    private var messageIds: List<Long> = emptyList()
+
     private val _uiState = MutableStateFlow(
-        HorizonInboxDetailsUiState()
+        HorizonInboxDetailsUiState(
+            loadingState = LoadingState(
+                onSnackbarDismiss = ::dismissSnackbar,
+                onRefresh = ::refresh
+            ),
+        )
     )
     val uiState = _uiState.asStateFlow()
 
@@ -85,25 +97,22 @@ class HorizonInboxDetailsViewModel @Inject constructor(
         val newState = when(type) {
             HorizonInboxItemType.Inbox -> {
                 val conversation = repository.getConversation(id, forceRefresh = forceRefresh)
-                    uiState.value.copy(
-                        title = conversation.subject.orEmpty(),
-                        titleIcon = null,
-                        items = conversation.messages.map { message ->
-                            HorizonInboxDetailsItem(
-                                author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
-                                date = message.createdAt.toDate() ?: Date(),
-                                content = message.body.orEmpty(),
-                                attachments = message.attachments
-                            )
-                        },
-                        replyState = if (conversation.cannotReply) {
-                            null
-                        } else {
-                            HorizonInboxReplyState()
-                        },
-                        bottomLayout = true
-                    )
-
+                recipientIds = conversation.participants.map { it.id.toString() }
+                messageIds = conversation.messages.map { it.id }
+                uiState.value.copy(
+                    title = conversation.subject.orEmpty(),
+                    titleIcon = null,
+                    items = conversation.messages.map { message ->
+                        HorizonInboxDetailsItem(
+                            author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
+                            date = message.createdAt.toDate() ?: Date(),
+                            content = message.body.orEmpty(),
+                            attachments = message.attachments
+                        )
+                    },
+                    replyState = getReplyState(),
+                    bottomLayout = true
+                )
             }
             HorizonInboxItemType.AccountNotification -> {
                 val accountNotification = repository.getAccountAnnouncement(id, forceRefresh)
@@ -118,7 +127,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                             attachments = emptyList()
                         )
                     ),
-                    replyState = null,
+                    replyState = getReplyState(),
                     bottomLayout = false
                 )
             }
@@ -147,7 +156,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                             attachments = emptyList()
                         )
                     },
-                    replyState = null,
+                    replyState = getReplyState(),
                     bottomLayout = false
                 )
             }
@@ -155,6 +164,17 @@ class HorizonInboxDetailsViewModel @Inject constructor(
 
         Log.d("HorizonInboxDetailsViewModel", "New state: $newState")
         _uiState.update { newState }
+    }
+
+    private fun getReplyState(): HorizonInboxReplyState? {
+        return when (type) {
+            HorizonInboxItemType.Inbox -> HorizonInboxReplyState(
+                onReplyTextValueChange = ::replyValueChanged,
+                onSendReply = ::sendReply,
+            )
+            HorizonInboxItemType.AccountNotification, HorizonInboxItemType.CourseNotification -> null
+            else -> null
+        }
     }
 
     private fun loadErrorState() {
@@ -165,6 +185,87 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     isError = true
                 )
             )
+        }
+    }
+
+    private fun refresh() {
+        viewModelScope.tryLaunch {
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isRefreshing = true))
+            }
+
+            fetchData(true)
+
+            _uiState.update {
+                it.copy(loadingState = it.loadingState.copy(isRefreshing = false))
+            }
+        } catch {
+            Log.d("HorizonInboxDetailsViewModel", "Error refreshing data", it)
+            _uiState.update { currentState ->
+                currentState.copy(
+                    loadingState = currentState.loadingState.copy(
+                        isRefreshing = false,
+                        snackbarMessage = "Failed to refresh inbox"
+                    )
+                )
+            }
+        }
+    }
+
+    private fun dismissSnackbar() {
+        _uiState.update {
+            it.copy(
+                loadingState = it.loadingState.copy(snackbarMessage = null)
+            )
+        }
+    }
+
+    private fun replyValueChanged(value: TextFieldValue) {
+        _uiState.update { currentState ->
+            currentState.copy(
+                replyState = currentState.replyState?.copy(replyTextValue = value)
+            )
+        }
+    }
+
+    private fun sendReply() {
+        if (courseId == null || id == null || uiState.value.replyState == null) {
+            loadErrorState()
+            return
+        }
+
+        viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    loadingState = it.loadingState.copy(isLoading = true)
+                )
+            }
+
+            val conversation = repository.addMessageToConversation(
+                Course(id = courseId.toLong()).contextId,
+                conversationId = id,
+                recipientIds = recipientIds,
+                body = uiState.value.replyState!!.replyTextValue.text,
+                includedMessageIds = messageIds,
+                attachmentIds = emptyList()
+            )
+
+            _uiState.update {
+                it.copy(
+                    loadingState = it.loadingState.copy(isLoading = false),
+                    items = conversation.messages.map { message ->
+                        HorizonInboxDetailsItem(
+                            author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
+                            date = message.createdAt.toDate() ?: Date(),
+                            content = message.body.orEmpty(),
+                            attachments = message.attachments
+                        )
+                    } + it.items,
+                    replyState = it.replyState?.copy(
+                        replyTextValue = TextFieldValue(""),
+                    )
+                )
+            }
         }
     }
 }

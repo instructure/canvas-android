@@ -148,7 +148,8 @@ class HorizonInboxListViewModel @Inject constructor(
                                 recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
                             }?.map { it.name }?.joinToString(", ").orEmpty(),
                             date = it.lastMessageDate ?: Date(),
-                            isUnread = it.workflowState == Conversation.WorkflowState.UNREAD
+                            isUnread = it.workflowState == Conversation.WorkflowState.UNREAD,
+                            courseId = it.contextCode?.substringAfter("course_")?.toLongOrNull()
                         )
                     }
             )

@@ -54,4 +54,24 @@ class HorizonInboxDetailsRepository @Inject constructor(
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, id, 1, params).dataOrThrow
     }
+
+    suspend fun addMessageToConversation(
+        contextCode: String,
+        conversationId: Long,
+        recipientIds: List<String>,
+        body: String,
+        includedMessageIds: List<Long>,
+        attachmentIds: List<Long>,
+    ): Conversation {
+        val params = RestParams()
+        return inboxApi.addMessage(
+            conversationId = conversationId,
+            recipientIds = recipientIds,
+            body = body,
+            includedMessageIds = includedMessageIds.toLongArray(),
+            attachmentIds = attachmentIds.toLongArray(),
+            contextCode = contextCode,
+            params = params
+        ).dataOrThrow
+    }
 }
