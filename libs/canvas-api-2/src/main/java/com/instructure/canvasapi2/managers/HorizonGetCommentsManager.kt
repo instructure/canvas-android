@@ -16,6 +16,7 @@
 package com.instructure.canvasapi2.managers
 
 import com.apollographql.apollo.api.Optional
+import com.instructure.canvasapi2.GetUnreadCommentCountQuery
 import com.instructure.canvasapi2.HorizonGetSubmissionCommentsQuery
 import com.instructure.canvasapi2.QLClientConfig
 import java.util.Date
@@ -77,6 +78,20 @@ class HorizonGetCommentsManager {
             endCursor = newEndCursor,
             startCursor = newStartCursor
         )
+    }
+
+    suspend fun getUnreadCommentsCount(
+        assignmentId: Long,
+        userId: Long,
+        forceNetwork: Boolean
+    ): Int {
+        val query = GetUnreadCommentCountQuery(
+            assignmentId.toString(),
+            userId.toString()
+        )
+        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+
+        return result.data?.submission?.onSubmission?.unreadCommentCount ?: 0
     }
 }
 

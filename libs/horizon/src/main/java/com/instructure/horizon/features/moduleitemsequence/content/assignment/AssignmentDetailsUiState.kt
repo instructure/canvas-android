@@ -69,6 +69,7 @@ data class ToolsBottomSheetUiState(
     val onDismiss: () -> Unit = {},
     val onAttemptsClick: () -> Unit = {},
     val onCommentsClick: () -> Unit = {},
+    val hasUnreadComments: Boolean = false,
 )
 
 data class SubmissionConfirmationUiState(

@@ -99,6 +99,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
@@ -133,7 +135,8 @@ fun ModuleItemSequenceScreen(navController: NavHostController, uiState: ModuleIt
             onNextClick = uiState.onNextClick,
             onPreviousClick = uiState.onPreviousClick,
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-            onAiAssistClick = { uiState.updateShowAiAssist(true) }
+            onAiAssistClick = { uiState.updateShowAiAssist(true) },
+            hasUnreadComments = uiState.hasUnreadComments
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
@@ -481,7 +484,8 @@ private fun ModuleItemSequenceBottomBar(
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier,
-    onAiAssistClick: () -> Unit = {}
+    onAiAssistClick: () -> Unit = {},
+    hasUnreadComments: Boolean = false
 ) {
     Surface(shadowElevation = HorizonElevation.level4, color = HorizonColors.Surface.pagePrimary()) {
         Box(
@@ -517,7 +521,14 @@ private fun ModuleItemSequenceBottomBar(
                     iconRes = R.drawable.more_vert,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
-                    onClick = onAssignmentToolsClick
+                    onClick = onAssignmentToolsClick,
+                    badge = {
+                        if (hasUnreadComments) {
+                            Box(modifier = Modifier.offset(x = (-8).dp, y = 8.dp)) {
+                                Badge(content = BadgeContent.ColorSmall)
+                            }
+                        }
+                    }
                 )
             }
             if (showNextButton) IconButton(

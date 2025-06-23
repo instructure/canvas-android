@@ -92,6 +92,8 @@ class AssignmentDetailsViewModel @Inject constructor(
             val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
             val showAttemptSelector = assignment.allowedAttempts != 1L
 
+            val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
+
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
@@ -105,7 +107,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     showAddSubmission = lastActualSubmission == null,
                     onSubmissionSuccess = ::updateAssignment,
                     attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
-                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector)
+                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments)
                 )
             }
         } catch {

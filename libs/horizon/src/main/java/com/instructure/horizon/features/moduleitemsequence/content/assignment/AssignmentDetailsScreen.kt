@@ -146,10 +146,15 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                         )
                     )
                 }
+                val commentsIcon = if (uiState.toolsBottomSheetUiState.hasUnreadComments) {
+                    R.drawable.mark_unread_chat_alt
+                } else {
+                    R.drawable.chat
+                }
                 add(
                     BottomSheetActionState(
                         stringResource(R.string.assignmentDetails_comments),
-                        R.drawable.chat,
+                        commentsIcon,
                         onClick = uiState.toolsBottomSheetUiState.onCommentsClick
                     )
                 )
