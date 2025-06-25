@@ -19,6 +19,7 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
@@ -432,4 +433,188 @@ class SpeedGraderGradingViewModelTest {
         )
     }
 
+    @Test
+    fun `init loading error`() = runTest {
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } throws Exception("Network error")
+
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals(true, uiState.error)
+        assertEquals(false, uiState.loading)
+        assertNotNull(uiState.retryAction)
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns createMockSubmission()
+
+        uiState.retryAction?.invoke()
+        val updatedUiState = viewModel.uiState.first()
+
+        assertEquals(false, updatedUiState.error)
+        assertEquals(false, updatedUiState.loading)
+        assertEquals(100.0, updatedUiState.pointsPossible)
+        assertEquals(95.0, updatedUiState.score)
+    }
+
+    @Test
+    fun `on score changed error`() = runTest {
+        val submission = createMockSubmission()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals(95.0, uiState.score)
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission.copy(
+            submission = submission.submission?.copy(enteredScore = 90.0)
+        )
+        coEvery {
+            repository.updateSubmissionGrade(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } throws Exception("Network error")
+
+        uiState.onScoreChange(90f)
+        testDispatcher.scheduler.advanceTimeBy(600)
+        coVerify {
+            repository.updateSubmissionGrade(
+                "90.0",
+                userId = studentId,
+                assignmentId = assignmentId,
+                courseId = courseId,
+                excused = false
+            )
+        }
+        val updatedUiState = viewModel.uiState.first()
+        assertEquals(true, updatedUiState.error)
+        assertNotNull(updatedUiState.retryAction)
+
+        coEvery { repository.updateSubmissionGrade(any(), any(), any(), any(), any()) } returns mockk()
+        updatedUiState.retryAction?.invoke()
+        testDispatcher.scheduler.advanceTimeBy(600)
+
+        coVerify {
+            repository.updateSubmissionGrade(
+                "90.0",
+                userId = studentId,
+                assignmentId = assignmentId,
+                courseId = courseId,
+                excused = false
+            )
+        }
+        val finalUiState = viewModel.uiState.first()
+        assertEquals(false, finalUiState.error)
+        assertEquals(90.0f, finalUiState.enteredScore)
+    }
+
+    @Test
+    fun `on excuse error`() = runTest {
+        val submission = createMockSubmission()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals(false, uiState.excused)
+
+        coEvery { repository.excuseSubmission(any(), any(), any()) } throws Exception("Network error")
+
+        uiState.onExcuse()
+        coVerify {
+            repository.excuseSubmission(studentId, assignmentId, courseId)
+        }
+
+        val updatedUiState = viewModel.uiState.first()
+        assertEquals(true, updatedUiState.error)
+        assertNotNull(updatedUiState.retryAction)
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission.copy(
+            submission = submission.submission?.copy(excused = true)
+        )
+        coEvery { repository.excuseSubmission(any(), any(), any()) } returns mockk()
+        updatedUiState.retryAction?.invoke()
+
+        coVerify {
+            repository.excuseSubmission(studentId, assignmentId, courseId)
+        }
+
+        val finalUiState = viewModel.uiState.first()
+        assertEquals(false, finalUiState.error)
+        assertEquals(true, finalUiState.excused)
+    }
+
+    @Test
+    fun `on status change error`() = runTest {
+        val submission = createMockSubmission()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals("graded", uiState.gradingStatus)
+
+        val newStatus = GradeStatus(123L, null, "Custom Status")
+        coEvery {
+            repository.updateSubmissionStatus(
+                any(),
+                any(),
+                any()
+            )
+        } throws Exception("Network error")
+
+        uiState.onStatusChange(newStatus)
+        coVerify {
+            repository.updateSubmissionStatus(
+                submissionId = submission.submission?._id?.toLong() ?: 0L,
+                customStatusId = newStatus.id?.toString(),
+                latePolicyStatus = null
+            )
+        }
+
+        val updatedUiState = viewModel.uiState.first()
+        assertEquals(true, updatedUiState.error)
+        assertNotNull(updatedUiState.retryAction)
+
+        coEvery {
+            repository.updateSubmissionStatus(
+                any(),
+                any(),
+                any()
+            )
+        } returns UpdateSubmissionStatusMutation.Data(
+            updateSubmissionGradeStatus = UpdateSubmissionStatusMutation.UpdateSubmissionGradeStatus(
+                submission = UpdateSubmissionStatusMutation.Submission(
+                    status = "Custom Status",
+                    score = 95.0,
+                    grade = "A",
+                    enteredGrade = "A",
+                    enteredScore = 95.0,
+                    secondsLate = 0.0,
+                    deductedPoints = 0.0,
+                    excused = false
+                )
+            )
+        )
+
+        updatedUiState.retryAction?.invoke()
+
+        coVerify {
+            repository.updateSubmissionStatus(
+                submissionId = submission.submission?._id?.toLong() ?: 0L,
+                customStatusId = newStatus.id?.toString(),
+                latePolicyStatus = null
+            )
+        }
+
+        val finalUiState = viewModel.uiState.first()
+        assertEquals(false, finalUiState.error)
+        assertEquals("Custom Status", finalUiState.gradingStatus)
+    }
 }

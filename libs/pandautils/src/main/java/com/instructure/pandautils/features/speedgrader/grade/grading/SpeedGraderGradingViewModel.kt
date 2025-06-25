@@ -69,40 +69,59 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
-            val submission = repository.getSubmissionGrade(assignmentId, studentId, forceNetwork).submission
-                ?: throw IllegalStateException("Submission not found")
-            submissionId = submission._id
-            _uiState.update {
-                it.copy(
-                    pointsPossible = submission.assignment?.pointsPossible,
-                    score = submission.score,
-                    grade = submission.grade,
-                    excused = submission.excused.orDefault(),
-                    enteredGrade = submission.enteredGrade,
-                    enteredScore = submission.enteredScore?.toFloat(),
-                    pointsDeducted = submission.deductedPoints,
-                    gradingType = submission.assignment?.gradingType,
-                    loading = false,
-                    daysLate = getDaysLate(submission.secondsLate),
-                    dueDate = submission.assignment?.dueAt,
-                    gradingStatuses = submission.assignment?.course?.gradeStatuses
-                        ?.map { GradeStatus(statusId = it.rawValue, name = getGradeStatusName(it)) }
-                        .orEmpty() +
-                            submission.assignment?.course?.customGradeStatusesConnection?.edges?.filterNotNull()
-                                ?.map {
-                                    GradeStatus(
-                                        id = it.node?._id?.toLongOrNull(),
-                                        name = it.node?.name.orEmpty()
-                                    )
-                                }.orEmpty(),
-                    gradingStatus = submission.status,
-                    letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
-                        GradingSchemeRow(
-                            gradingStandard.letterGrade.orEmpty(),
-                            gradingStandard.baseValue.orDefault()
-                        )
-                    }.orEmpty()
-                )
+            try {
+                val submission =
+                    repository.getSubmissionGrade(assignmentId, studentId, forceNetwork).submission
+                        ?: throw IllegalStateException("Submission not found")
+                submissionId = submission._id
+                _uiState.update {
+                    it.copy(
+                        pointsPossible = submission.assignment?.pointsPossible,
+                        score = submission.score,
+                        grade = submission.grade,
+                        excused = submission.excused.orDefault(),
+                        enteredGrade = submission.enteredGrade,
+                        enteredScore = submission.enteredScore?.toFloat(),
+                        pointsDeducted = submission.deductedPoints,
+                        gradingType = submission.assignment?.gradingType,
+                        loading = false,
+                        error = false,
+                        daysLate = getDaysLate(submission.secondsLate),
+                        dueDate = submission.assignment?.dueAt,
+                        gradingStatuses = submission.assignment?.course?.gradeStatuses
+                            ?.map {
+                                GradeStatus(
+                                    statusId = it.rawValue,
+                                    name = getGradeStatusName(it)
+                                )
+                            }
+                            .orEmpty() +
+                                submission.assignment?.course?.customGradeStatusesConnection?.edges?.filterNotNull()
+                                    ?.map {
+                                        GradeStatus(
+                                            id = it.node?._id?.toLongOrNull(),
+                                            name = it.node?.name.orEmpty()
+                                        )
+                                    }.orEmpty(),
+                        gradingStatus = submission.status,
+                        letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
+                            GradingSchemeRow(
+                                gradingStandard.letterGrade.orEmpty(),
+                                gradingStandard.baseValue.orDefault()
+                            )
+                        }.orEmpty()
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        loading = false,
+                        error = true,
+                        retryAction = {
+                            loadData(forceNetwork)
+                        }
+                    )
+                }
             }
         }
     }
@@ -122,14 +141,23 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
         debounceJob = viewModelScope.launch {
             delay(500)
-            repository.updateSubmissionGrade(
-                score = score?.toString() ?: "Not Graded",
-                studentId,
-                assignmentId,
-                courseId,
-                false
-            )
-            loadData(true)
+            try {
+                repository.updateSubmissionGrade(
+                    score = score?.toString() ?: "Not Graded",
+                    studentId,
+                    assignmentId,
+                    courseId,
+                    false
+                )
+                loadData(true)
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        error = true,
+                        retryAction = { onScoreChanged(score) }
+                    )
+                }
+            }
         }
     }
 
@@ -146,34 +174,56 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private fun onExcuse() {
         viewModelScope.launch {
-            repository.excuseSubmission(
-                studentId,
-                assignmentId,
-                courseId,
-            )
-            loadData(forceNetwork = true)
+            try {
+                repository.excuseSubmission(
+                    studentId,
+                    assignmentId,
+                    courseId,
+                )
+                loadData(forceNetwork = true)
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        error = true,
+                        retryAction = {
+                            onExcuse()
+                        }
+                    )
+                }
+            }
         }
     }
 
     private fun onStatusChange(gradeStatus: GradeStatus) {
         viewModelScope.launch {
-            val submission = repository.updateSubmissionStatus(
-                submissionId.toLong(),
-                gradeStatus.id?.toString(),
-                gradeStatus.statusId
-            ).updateSubmissionGradeStatus?.submission
+            try {
+                val submission = repository.updateSubmissionStatus(
+                    submissionId.toLong(),
+                    gradeStatus.id?.toString(),
+                    gradeStatus.statusId
+                ).updateSubmissionGradeStatus?.submission
 
-            _uiState.update {
-                it.copy(
-                    gradingStatus = submission?.status,
-                    score = submission?.score,
-                    grade = submission?.grade,
-                    enteredGrade = submission?.enteredGrade,
-                    enteredScore = submission?.enteredScore?.toFloat(),
-                    pointsDeducted = submission?.deductedPoints,
-                    daysLate = getDaysLate(submission?.secondsLate),
-                    excused = submission?.excused.orDefault()
-                )
+                _uiState.update {
+                    it.copy(
+                        error = false,
+                        loading = false,
+                        gradingStatus = submission?.status,
+                        score = submission?.score,
+                        grade = submission?.grade,
+                        enteredGrade = submission?.enteredGrade,
+                        enteredScore = submission?.enteredScore?.toFloat(),
+                        pointsDeducted = submission?.deductedPoints,
+                        daysLate = getDaysLate(submission?.secondsLate),
+                        excused = submission?.excused.orDefault()
+                    )
+                }
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(
+                        error = true,
+                        retryAction = { onStatusChange(gradeStatus) }
+                    )
+                }
             }
         }
     }

@@ -64,6 +64,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.google.common.primitives.Floats.max
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.GradingType
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.pandautils.R
@@ -71,6 +72,7 @@ import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.pandautils.compose.composables.TextDropdown
@@ -88,100 +90,113 @@ fun SpeedGraderGradingScreen() {
     val viewModel = hiltViewModel<SpeedGraderGradingViewModel>()
     val uiState by viewModel.uiState.collectAsState()
 
-    when {
-        uiState.loading -> {
-            Loading()
-        }
-
-        else -> {
-            SpeedGraderGradingContent(uiState)
-        }
-    }
+    SpeedGraderGradingContent(uiState = uiState)
 }
 
 @Composable
 fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
-    Column(
-        modifier = Modifier
-            .imePadding()
-            .fillMaxWidth()
-            .verticalScroll(rememberScrollState())
-            .padding(horizontal = 16.dp, vertical = 12.dp)
-    ) {
-        when (uiState.gradingType) {
-            GradingType.letter_grade -> {
-                LetterGradeGradingTypeInput(uiState)
-            }
-
-            GradingType.pass_fail -> {
-                CompleteIncompleteGradingTypeInput(uiState)
-            }
-
-            GradingType.percent -> {
-                PercentageGradingTypeInput(uiState)
-            }
-
-            GradingType.not_graded -> {}
-
-            else -> {
-                PointGradingTypeInput(uiState)
-            }
+    when {
+        uiState.error -> {
+            ErrorContent(
+                modifier = Modifier.fillMaxWidth(),
+                errorMessage = stringResource(R.string.errorOccurred),
+                retryClick = uiState.retryAction
+            )
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 16.dp)
-        ) {
-            OutlinedButton(
-                enabled = uiState.enteredScore != null || uiState.excused,
-                onClick = { uiState.onScoreChange(null) },
-                modifier = Modifier.weight(1f),
-                border = BorderStroke(
-                    1.dp,
-                    LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
-                ),
-                colors = ButtonDefaults.outlinedButtonColors().copy(
-                    contentColor = LocalCourseColor.current,
-                    disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
-                )
+        uiState.loading -> {
+            Loading(modifier = Modifier.fillMaxWidth())
+        }
+
+        else -> {
+            Column(
+                modifier = Modifier
+                    .imePadding()
+                    .fillMaxWidth()
+                    .verticalScroll(rememberScrollState())
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                Text(stringResource(R.string.noGrade), fontSize = 16.sp, lineHeight = 19.sp)
-            }
-            Spacer(modifier = Modifier.width(16.dp))
-            OutlinedButton(
-                enabled = uiState.excused.not(),
-                onClick = { uiState.onExcuse() },
-                border = BorderStroke(
-                    1.dp,
-                    LocalCourseColor.current.copy(alpha = if (uiState.excused) 0.5f else 1f)
-                ),
-                modifier = Modifier.weight(1f),
-                colors = ButtonDefaults.outlinedButtonColors().copy(
-                    contentColor = LocalCourseColor.current,
-                    disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                when (uiState.gradingType) {
+                    GradingType.letter_grade -> {
+                        LetterGradeGradingTypeInput(uiState)
+                    }
+
+                    GradingType.pass_fail -> {
+                        CompleteIncompleteGradingTypeInput(uiState)
+                    }
+
+                    GradingType.percent -> {
+                        PercentageGradingTypeInput(uiState)
+                    }
+
+                    GradingType.not_graded -> {}
+
+                    else -> {
+                        PointGradingTypeInput(uiState)
+                    }
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(top = 16.dp)
+                ) {
+                    OutlinedButton(
+                        enabled = uiState.enteredScore != null || uiState.excused,
+                        onClick = { uiState.onScoreChange(null) },
+                        modifier = Modifier.weight(1f),
+                        border = BorderStroke(
+                            1.dp,
+                            LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
+                        ),
+                        colors = ButtonDefaults.outlinedButtonColors().copy(
+                            contentColor = LocalCourseColor.current,
+                            disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Text(stringResource(R.string.noGrade), fontSize = 16.sp, lineHeight = 19.sp)
+                    }
+                    Spacer(modifier = Modifier.width(16.dp))
+                    OutlinedButton(
+                        enabled = uiState.excused.not(),
+                        onClick = { uiState.onExcuse() },
+                        border = BorderStroke(
+                            1.dp,
+                            LocalCourseColor.current.copy(alpha = if (uiState.excused) 0.5f else 1f)
+                        ),
+                        modifier = Modifier.weight(1f),
+                        colors = ButtonDefaults.outlinedButtonColors().copy(
+                            contentColor = LocalCourseColor.current,
+                            disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                        )
+                    ) {
+                        Text(
+                            stringResource(R.string.gradeExcused),
+                            fontSize = 16.sp,
+                            lineHeight = 19.sp
+                        )
+                    }
+                }
+
+                TextDropdown(
+                    modifier = Modifier.padding(top = 16.dp),
+                    options = uiState.gradingStatuses.map { it.name },
+                    selectedOption = uiState.gradingStatus
+                        ?: stringResource(R.string.gradingStatus_none),
+                    title = R.string.status,
+                    onSelection = { selected ->
+                        val status = uiState.gradingStatuses.first { it.name == selected }
+                        uiState.onStatusChange(status)
+                    }
                 )
-            ) {
-                Text(stringResource(R.string.gradeExcused), fontSize = 16.sp, lineHeight = 19.sp)
+
+                uiState.daysLate?.let {
+                    LateHeader(it, uiState.dueDate)
+                }
+
+                FinalScore(uiState)
             }
         }
-
-        TextDropdown(
-            modifier = Modifier.padding(top = 16.dp),
-            options = uiState.gradingStatuses.map { it.name },
-            selectedOption = uiState.gradingStatus ?: stringResource(R.string.gradingStatus_none),
-            title = R.string.status,
-            onSelection = { selected ->
-                val status = uiState.gradingStatuses.first { it.name == selected }
-                uiState.onStatusChange(status)
-            }
-        )
-
-        uiState.daysLate?.let {
-            LateHeader(it, uiState.dueDate)
-        }
-
-        FinalScore(uiState)
     }
 }
 
@@ -385,7 +400,9 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 onSelection = { selectedGrade = it },
                 title = R.string.letterGrade,
                 selectedOption = selectedGrade,
-                modifier = Modifier.fillMaxWidth().padding(bottom = 16.dp),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp),
                 color = LocalCourseColor.current,
             )
         }
@@ -656,10 +673,12 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Preview
 @Composable
 private fun SpeedGraderGradingContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CanvasTheme(courseColor = Color.Magenta) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
                 excused = true,
+                loading = false,
                 pointsPossible = 20.0,
                 enteredGrade = "15",
                 enteredScore = 15.0f,
@@ -681,9 +700,11 @@ private fun SpeedGraderGradingContentPreview() {
 @Preview
 @Composable
 private fun SpeedGraderGradingContentPercentagePreview() {
+    ContextKeeper.appContext = LocalContext.current
     CanvasTheme(courseColor = Color.Blue) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
+                loading = false,
                 pointsPossible = 20.0,
                 enteredGrade = "95.5%",
                 enteredScore = 18f,
@@ -704,9 +725,11 @@ private fun SpeedGraderGradingContentPercentagePreview() {
 @Preview
 @Composable
 private fun SpeedGraderGradingContentCompleteIncompletePreview() {
+    ContextKeeper.appContext = LocalContext.current
     CanvasTheme(courseColor = Color.Green) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
+                loading = false,
                 pointsPossible = 20.0,
                 enteredGrade = "incomplete",
                 enteredScore = 0f,
@@ -727,9 +750,11 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
 @Preview
 @Composable
 private fun SpeedGraderGradingContentLetterGraderPreview() {
+    ContextKeeper.appContext = LocalContext.current
     CanvasTheme(courseColor = Color.Red) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
+                loading = false,
                 pointsPossible = 20.5,
                 enteredGrade = "A",
                 enteredScore = 0f,
@@ -748,6 +773,43 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                     GradingSchemeRow("D", 60.0),
                     GradingSchemeRow("F", 0.0)
                 ),
+                onExcuse = {},
+                onStatusChange = {}
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SpeedGraderGradingContentErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasTheme(courseColor = Color.Red) {
+        SpeedGraderGradingContent(
+            SpeedGraderGradingUiState(
+                error = true,
+                loading = false,
+                onScoreChange = {},
+                onPercentageChange = {},
+                onExcuse = {},
+                onStatusChange = {},
+                retryAction = {}
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SpeedGraderGradingContentLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasTheme(courseColor = Color.Red) {
+        SpeedGraderGradingContent(
+            SpeedGraderGradingUiState(
+                error = false,
+                loading = true,
+                onScoreChange = {},
+                onPercentageChange = {},
                 onExcuse = {},
                 onStatusChange = {}
             )

@@ -22,6 +22,8 @@ import java.util.Date
 
 data class SpeedGraderGradingUiState(
     val loading: Boolean = true,
+    val error: Boolean = false,
+    val retryAction: (() -> Unit)? = null,
     val pointsPossible: Double? = null,
     val enteredGrade: String? = null,
     val enteredScore: Float? = null,
