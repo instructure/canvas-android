@@ -24,11 +24,13 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
@@ -55,6 +57,10 @@ class ParentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
+
+    @BindValue
+    @JvmField
+    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
 
     private val dashboardPage = DashboardPage()
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()

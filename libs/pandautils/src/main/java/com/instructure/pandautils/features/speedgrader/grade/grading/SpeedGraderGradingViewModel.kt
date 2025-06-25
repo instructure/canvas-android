@@ -59,7 +59,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
         )
     val uiState = _uiState.asStateFlow()
 
-    private lateinit var submissionId: String
+    lateinit var submissionId: String
 
     private var debounceJob: Job? = null
 
