@@ -34,7 +34,6 @@ data class HorizonInboxDetailsUiState(
 data class HorizonInboxReplyState(
     val replyTextValue: TextFieldValue = TextFieldValue(""),
     val onReplyTextValueChange: (TextFieldValue) -> Unit = {},
-    val attachments: List<Attachment> = emptyList(),
     val onSendReply: () -> Unit = {},
 )
 

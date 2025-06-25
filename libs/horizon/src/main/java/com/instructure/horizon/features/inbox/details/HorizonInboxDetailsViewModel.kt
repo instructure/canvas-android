@@ -16,7 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.details
 
-import android.util.Log
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -30,6 +30,7 @@ import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -39,6 +40,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HorizonInboxDetailsViewModel @Inject constructor(
+    @ApplicationContext private val context: Context,
     private val repository: HorizonInboxDetailsRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
@@ -80,7 +82,6 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 )
             }
         } catch {
-            Log.d("HorizonInboxDetailsViewModel", "Error loading data", it)
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = "Error")
@@ -121,7 +122,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     titleIcon = R.drawable.ic_announcement,
                     items = listOf(
                             HorizonInboxDetailsItem(
-                            author = "Global Announcement",
+                            author = context.getString(R.string.inboxGlobalAnnouncementAuthorLabel),
                             date = accountNotification.endDate ?: Date(),
                             content = accountNotification.message,
                             attachments = emptyList()
@@ -162,7 +163,6 @@ class HorizonInboxDetailsViewModel @Inject constructor(
             }
         }
 
-        Log.d("HorizonInboxDetailsViewModel", "New state: $newState")
         _uiState.update { newState }
     }
 
@@ -200,12 +200,11 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isRefreshing = false))
             }
         } catch {
-            Log.d("HorizonInboxDetailsViewModel", "Error refreshing data", it)
             _uiState.update { currentState ->
                 currentState.copy(
                     loadingState = currentState.loadingState.copy(
                         isRefreshing = false,
-                        snackbarMessage = "Failed to refresh inbox"
+                        snackbarMessage = context.getString(R.string.inboxFailedToRefreshLabel)
                     )
                 )
             }

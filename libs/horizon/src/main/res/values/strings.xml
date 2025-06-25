@@ -272,4 +272,8 @@
     <string name="noteHasBeenDeletedMessage">Deleted from Notebook.</string>
     <string name="failedToSaveNoteMessage">Error saving to Notebook.</string>
     <string name="failedToDeleteNoteMessage">Error deleting from Notebook.</string>
+    <string name="inboxReplyPlaceholder">Reply</string>
+    <string name="inboxSendLabel">Send</string>
+    <string name="inboxGlobalAnnouncementAuthorLabel">Global Announcement</string>
+    <string name="inboxFailedToRefreshLabel">Failed to refresh inbox</string>
 </resources>

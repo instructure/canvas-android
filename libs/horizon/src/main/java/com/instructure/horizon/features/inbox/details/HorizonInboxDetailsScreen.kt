@@ -46,6 +46,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -61,7 +62,6 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
@@ -123,7 +123,6 @@ private fun HorizonInboxDetailsHeader(
                 painter = painterResource(id = R.drawable.arrow_back),
                 contentDescription = null,
                 modifier = Modifier
-                    //.size(24.dp)
                     .padding(horizontal = 10.dp)
                     .clickable {
                         navController.popBackStack()
@@ -247,7 +246,7 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
         val textAreaState = TextAreaState(
             value = state.replyTextValue,
             onValueChange = state.onReplyTextValueChange,
-            placeHolderText = "Reply",
+            placeHolderText = stringResource(R.string.inboxReplyPlaceholder),
             isFocused = isFocused,
             onFocusChanged = { isFocused = it },
         )
@@ -259,17 +258,10 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
-            Button(
-                label = "Attach file",
-                color = ButtonColor.Inverse,
-                iconPosition = ButtonIconPosition.Start(R.drawable.attach_file),
-                onClick = {},
-            )
-
             Spacer(modifier = Modifier.weight(1f))
 
             Button(
-                label = "Send",
+                label = stringResource(R.string.inboxSendLabel),
                 color = ButtonColor.Institution,
                 onClick = { state.onSendReply() },
             )
