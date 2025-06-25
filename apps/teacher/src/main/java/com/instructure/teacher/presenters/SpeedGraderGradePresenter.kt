@@ -34,7 +34,7 @@ class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Ass
     private var refreshSubmissionApiCall: Job? = null
 
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
-    fun  updateGrade(grade: String, isExcused: Boolean) {
+    fun updateGrade(grade: String, isExcused: Boolean) {
         mPostGradeAPICall = weave {
             try {
                 viewCallback?.onRefreshStarted()

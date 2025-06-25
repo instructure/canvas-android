@@ -143,7 +143,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
             delay(500)
             try {
                 repository.updateSubmissionGrade(
-                    score = score?.toString() ?: "Not Graded",
+                    score = score?.toString() ?: resources.getString(R.string.not_graded),
                     studentId,
                     assignmentId,
                     courseId,

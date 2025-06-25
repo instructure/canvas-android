@@ -2103,4 +2103,5 @@
     <string name="speedGraderStudentNotesErrorTitle">Oops! Something Went Wrong</string>
     <string name="speedGraderStudentNotesErrorDescription">We\'re having trouble showing the student notes.</string>
     <string name="speedGraderStudentNotesErrorButtonText">Refresh</string>
+    <string name="not_graded">Not Graded</string>
 </resources>

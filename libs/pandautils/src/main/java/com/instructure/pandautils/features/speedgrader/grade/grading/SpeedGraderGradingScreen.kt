@@ -183,7 +183,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                     options = uiState.gradingStatuses.map { it.name },
                     selectedOption = uiState.gradingStatus
                         ?: stringResource(R.string.gradingStatus_none),
-                    title = R.string.status,
+                    title = stringResource(R.string.status),
                     onSelection = { selected ->
                         val status = uiState.gradingStatuses.first { it.name == selected }
                         uiState.onStatusChange(status)
@@ -398,7 +398,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             TextDropdown(
                 options = options,
                 onSelection = { selectedGrade = it },
-                title = R.string.letterGrade,
+                title = stringResource(R.string.letterGrade),
                 selectedOption = selectedGrade,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -476,7 +476,7 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
 @Composable
 private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
-    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
+    var sliderDrivenScore by remember(uiState.enteredGrade) { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
     var textFieldScore by remember { mutableStateOf(grade) }
 
     val maxScore = 100f
@@ -566,7 +566,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Composable
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
-    var sliderDrivenScore by remember { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
+    var sliderDrivenScore by remember(uiState.enteredScore) { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
     var textFieldScore by remember {
         mutableStateOf(uiState.enteredScore?.let {
             numberFormatter.format(
@@ -575,7 +575,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         }.orEmpty())
     }
 
-    val maxScore by remember {
+    val maxScore by remember(uiState.enteredScore) {
         mutableFloatStateOf(
             max(
                 (uiState.pointsPossible?.toFloat() ?: 10f),
@@ -657,16 +657,18 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
-        Slider(
-            modifier = Modifier.padding(top = 16.dp), state = sliderState,
-            colors = SliderDefaults.colors(
-                thumbColor = LocalCourseColor.current,
-                activeTrackColor = LocalCourseColor.current,
-                inactiveTrackColor = LocalCourseColor.current.copy(alpha = 0.2f),
-                inactiveTickColor = LocalCourseColor.current,
-                activeTickColor = colorResource(R.color.textLightest)
+        if ((uiState.enteredScore ?: 0f) <= 100.0) {
+            Slider(
+                modifier = Modifier.padding(top = 16.dp), state = sliderState,
+                colors = SliderDefaults.colors(
+                    thumbColor = LocalCourseColor.current,
+                    activeTrackColor = LocalCourseColor.current,
+                    inactiveTrackColor = LocalCourseColor.current.copy(alpha = 0.2f),
+                    inactiveTickColor = LocalCourseColor.current,
+                    activeTickColor = colorResource(R.color.textLightest)
+                )
             )
-        )
+        }
     }
 }
 
@@ -816,7 +818,3 @@ private fun SpeedGraderGradingContentLoadingPreview() {
         )
     }
 }
-
-
-
-

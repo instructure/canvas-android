@@ -14,7 +14,6 @@
  *     limitations under the License.
  */package com.instructure.pandautils.compose.composables
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -43,7 +42,6 @@ import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -55,7 +53,7 @@ import com.instructure.pandautils.R
 fun TextDropdown(
     options: List<String>,
     onSelection: (String) -> Unit,
-    @StringRes title: Int,
+    title: String,
     modifier: Modifier = Modifier,
     selectedOption: String? = null,
     color: Color = colorResource(R.color.textDarkest)
@@ -72,7 +70,7 @@ fun TextDropdown(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Text(
-            text = stringResource(title),
+            text = title,
             fontWeight = FontWeight.SemiBold,
             color = colorResource(R.color.textDarkest),
             fontSize = 16.sp
@@ -135,12 +133,12 @@ fun TextDropdown(
 
 @Preview
 @Composable
-fun TextDropdownPreview() {
+private fun TextDropdownPreview() {
     var selectedOption by remember { mutableStateOf("Option 1") }
     TextDropdown(
         options = listOf("Option 1", "Option 2", "Option 3"),
         onSelection = { selectedOption = it },
-        title = R.string.select,
+        title = "Select an Option",
         selectedOption = selectedOption
     )
 }

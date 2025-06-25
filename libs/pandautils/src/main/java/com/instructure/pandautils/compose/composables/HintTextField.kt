@@ -34,6 +34,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -64,6 +65,7 @@ fun BasicTextFieldWithHintDecoration(
             textAlign = TextAlign.End,
             fontWeight = FontWeight.SemiBold
         ),
+        cursorBrush = SolidColor(textColor),
         decorationBox = { innerTextField ->
             Box {
                 if (value.isNullOrEmpty()) {
@@ -73,6 +75,7 @@ fun BasicTextFieldWithHintDecoration(
                         color = hintColor,
                         textAlign = TextAlign.End
                     )
+                    innerTextField()
                 } else {
                     Row {
                         innerTextField()
