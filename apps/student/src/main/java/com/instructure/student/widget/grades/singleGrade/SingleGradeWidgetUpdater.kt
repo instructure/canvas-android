@@ -59,7 +59,13 @@ class SingleGradeWidgetUpdater(
             }
 
             for (widgetId in widgetIds) {
-                glanceId = glanceAppWidgetManager.getGlanceIdBy(widgetId)
+                val validGlanceId = try {
+                    glanceAppWidgetManager.getGlanceIdBy(widgetId)
+                } catch (e: IllegalArgumentException) {
+                    // Invalid AppWidget ID (widget deleted)
+                    continue
+                }
+                glanceId = validGlanceId
                 val courseId = StudentPrefs.getLong(
                     CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId,
                     -1
