@@ -38,12 +38,13 @@ data class HorizonInboxListUiState(
 )
 
 data class HorizonInboxListItemState(
-    val id: String,
+    val id: Long,
     val type: HorizonInboxItemType,
     val title: String,
     val description: String,
     val date: Date,
     val isUnread: Boolean,
+    val courseId: Long? = null,
 )
 
 enum class HorizonInboxScope(@StringRes val label: Int) {
