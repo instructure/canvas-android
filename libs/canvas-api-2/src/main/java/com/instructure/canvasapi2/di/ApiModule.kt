@@ -379,6 +379,23 @@ class ApiModule {
     fun provideSectionApi(): SectionAPI.SectionsInterface {
         return RestBuilder().build(SectionAPI.SectionsInterface::class.java, RestParams())
     }
+
+    @Provides
+    @Singleton
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
+        return TokenRefresher(context, loginRouter, eventBus)
+    }
+
+    @Provides
+    fun provideCanvaDocApi(): CanvaDocsAPI.CanvaDocsInterFace {
+        return RestBuilder().build(CanvaDocsAPI.CanvaDocsInterFace::class.java, RestParams())
+    }
+}
+
+@EarlyEntryPoint
+@InstallIn(SingletonComponent::class)
+interface CanvasAuthenticatorEntryPoint {
+    fun canvasAuthenticator(): CanvasAuthenticator
 }
 
 @EarlyEntryPoint
