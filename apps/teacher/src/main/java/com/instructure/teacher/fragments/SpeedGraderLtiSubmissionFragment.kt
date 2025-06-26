@@ -37,7 +37,6 @@ import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderLtiSubmissionBinding
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.view.ExternalToolContent
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject

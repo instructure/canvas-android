@@ -390,19 +390,6 @@ class ApiModule {
     fun provideCanvaDocApi(): CanvaDocsAPI.CanvaDocsInterFace {
         return RestBuilder().build(CanvaDocsAPI.CanvaDocsInterFace::class.java, RestParams())
     }
-}
-
-@EarlyEntryPoint
-@InstallIn(SingletonComponent::class)
-interface CanvasAuthenticatorEntryPoint {
-    fun canvasAuthenticator(): CanvasAuthenticator
-}
-
-@EarlyEntryPoint
-@InstallIn(SingletonComponent::class)
-interface CanvasAuthenticatorEntryPoint {
-    fun canvasAuthenticator(): CanvasAuthenticator
-
     @Provides
     fun provideStreamApi(): StreamAPI.StreamInterface {
         return RestBuilder().build(StreamAPI.StreamInterface::class.java, RestParams())
@@ -416,17 +403,6 @@ interface CanvasAuthenticatorEntryPoint {
     @Provides
     fun provideCommunicationChannelsApi(): CommunicationChannelsAPI.CommunicationChannelInterface {
         return RestBuilder().build(CommunicationChannelsAPI.CommunicationChannelInterface::class.java, RestParams())
-    }
-
-    @Provides
-    @Singleton
-    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
-        return TokenRefresher(context, loginRouter, eventBus)
-    }
-
-    @Provides
-    fun provideCanvaDocApi(): CanvaDocsAPI.CanvaDocsInterFace {
-        return RestBuilder().build(CanvaDocsAPI.CanvaDocsInterFace::class.java, RestParams())
     }
 
     @Provides
