@@ -109,11 +109,21 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(containsTextCaseInsensitive("Send")).scrollTo().assertDisplayed()
     }
 
+    fun clickSendReportProblem() {
+        onView(containsTextCaseInsensitive("Send")).scrollTo().click()
+    }
+
     /**
-     * Assert that the 'Report A Problem' dialog is displayed and then dismiss the dialog.
+     * Assert that the 'Report a problem' dialog is displayed and then dismiss the dialog.
      */
     fun assertReportProblemDialogDisplayed() {
-        waitForViewWithText("Report A Problem").assertDisplayed()
+        waitForViewWithText("Report a problem").assertDisplayed()
+    }
+
+    /**
+     * Click on the 'Cancel' button on the 'Report a problem' dialog.
+     */
+    fun clickCancelReportProblem() {
         onView(withId(R.id.cancelButton)).click()
     }
 

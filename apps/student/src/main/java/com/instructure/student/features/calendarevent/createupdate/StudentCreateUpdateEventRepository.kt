@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.calendarevent
+package com.instructure.student.features.calendarevent.createupdate
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -25,7 +25,6 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
 
 

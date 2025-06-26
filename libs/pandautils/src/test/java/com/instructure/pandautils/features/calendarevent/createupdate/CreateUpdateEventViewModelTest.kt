@@ -63,6 +63,7 @@ class CreateUpdateEventViewModelTest {
     private val repository: TestCreateUpdateEventRepository = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val createUpdateEventViewModelBehavior: CreateUpdateEventViewModelBehavior = mockk(relaxed = true)
 
     private val clock = Clock.fixed(Instant.parse("2024-04-10T11:00:00.00Z"), ZoneId.systemDefault())
 
@@ -190,6 +191,10 @@ class CreateUpdateEventViewModelTest {
             )
         }
 
+        coVerify(exactly = 1) {
+            createUpdateEventViewModelBehavior.updateWidget()
+        }
+
         val expectedEvent = CreateUpdateEventViewModelAction.RefreshCalendar
         Assert.assertEquals(expectedEvent, events.last())
         Assert.assertEquals(CreateUpdateEventViewModelAction.AnnounceEventCreation("Title"), events[events.size - 2])
@@ -233,6 +238,10 @@ class CreateUpdateEventViewModelTest {
                 "",
                 CalendarEventAPI.ModifyEventScope.ONE
             )
+        }
+
+        coVerify(exactly = 1) {
+            createUpdateEventViewModelBehavior.updateWidget()
         }
 
         val expectedEvent = CreateUpdateEventViewModelAction.RefreshCalendarDays(
@@ -566,7 +575,7 @@ class CreateUpdateEventViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = CreateUpdateEventViewModel(savedStateHandle, resources, repository, apiPrefs)
+        viewModel = CreateUpdateEventViewModel(savedStateHandle, resources, repository, apiPrefs, createUpdateEventViewModelBehavior)
     }
 
     private fun setupResources() {

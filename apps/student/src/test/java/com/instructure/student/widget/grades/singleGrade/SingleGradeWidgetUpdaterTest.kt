@@ -1,23 +1,25 @@
- /* Copyright (C) 2025 - present Instructure, Inc.
- *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
- *
- *     http://www.apache.org/licenses/LICENSE-2.0
- *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
- */
- package com.instructure.student.widget.grades.singleGrade
+/* Copyright (C) 2025 - present Instructure, Inc.
+*
+*     Licensed under the Apache License, Version 2.0 (the "License");
+*     you may not use this file except in compliance with the License.
+*     You may obtain a copy of the License at
+*
+*     http://www.apache.org/licenses/LICENSE-2.0
+*
+*     Unless required by applicable law or agreed to in writing, software
+*     distributed under the License is distributed on an "AS IS" BASIS,
+*     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*     See the License for the specific language governing permissions and
+*     limitations under the License.
+*/
+package com.instructure.student.widget.grades.singleGrade
 
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.util.StudentPrefs
@@ -60,7 +62,20 @@ class SingleGradeWidgetUpdaterTest {
     @Test
     fun `emits NotLoggedIn when user is null`() = runTest {
         every { apiPrefs.user } returns null
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns listOf(mockk())
+
+        val events = mutableListOf<Any>()
+        backgroundScope.launch(testDispatcher) {
+            updater.events.take(2).toList(events)
+        }
+        updater.updateData(listOf(widgetId))
+
+        assertTrue(events.any { it is SingleGradeWidgetAction.UpdateAllState && it.state.state == WidgetState.NotLoggedIn })
+        assertTrue(events.any { it is SingleGradeWidgetAction.UpdateUi })
+    }
+
+    @Test
+    fun `Emits NotLoggedIn state when api call gets authorization error`() = runTest {
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Fail(Failure.Authorization())
 
         val events = mutableListOf<Any>()
         backgroundScope.launch(testDispatcher) {
@@ -74,7 +89,7 @@ class SingleGradeWidgetUpdaterTest {
 
     @Test
     fun `emits Error when repository returns empty list`() = runTest {
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns emptyList()
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Success(emptyList())
 
         val events = mutableListOf<Any>()
         backgroundScope.launch(testDispatcher) {
@@ -97,7 +112,7 @@ class SingleGradeWidgetUpdaterTest {
         val course = mockk<Course>(relaxed = true)
         val courseId = 123L
         every { course.id } returns courseId
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns listOf(course)
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Success(listOf(course))
         mockkObject(StudentPrefs)
         every { StudentPrefs.getLong(CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId, -1) } returns courseId
 
@@ -116,7 +131,7 @@ class SingleGradeWidgetUpdaterTest {
         val course = mockk<Course>(relaxed = true)
         val courseId = 123L
         every { course.id } returns courseId
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns listOf(course)
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Success(listOf(course))
         mockkObject(StudentPrefs)
         every { StudentPrefs.getLong(CourseSelectorActivity.WIDGET_COURSE_ID_PREFIX + widgetId, -1) } returns -1
 
@@ -146,7 +161,7 @@ class SingleGradeWidgetUpdaterTest {
 
     @Test
     fun `emits Loading when showLoading is true`() = runTest {
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns emptyList()
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Success(emptyList())
 
         val events = mutableListOf<Any>()
         backgroundScope.launch(testDispatcher) {

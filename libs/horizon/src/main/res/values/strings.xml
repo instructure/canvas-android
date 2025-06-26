@@ -276,4 +276,12 @@
     <string name="inboxSendLabel">Send</string>
     <string name="inboxGlobalAnnouncementAuthorLabel">Global Announcement</string>
     <string name="inboxFailedToRefreshLabel">Failed to refresh inbox</string>
+    <string name="commentsBottomSheet_header">Comments</string>
+    <string name="commentsBottomSheet_addComment">Add Comment</string>
+    <string name="commentsBottomSheet_post">Post</string>
+    <string name="commentsBottomSheet_attempt">Attempt %d</string>
+    <string name="commentsBottomSheet_failedToLoadComments">Failed to load comments.</string>
+    <string name="commentsBottomSheet_failedToLoadNextPage">Failed to load next page.</string>
+    <string name="commentsBottomSheet_failedToLoadPreviousPage">Failed to load previous page.</string>
+    <string name="commentsBottomSheet_failedToPostComment">Failed to post comment.</string>
 </resources>

@@ -62,7 +62,7 @@ class CreateUpdateToDoViewModelTest {
     private val repository: CreateUpdateToDoRepository = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val createUpdateToDoBehavior: CreateUpdateToDoBehavior = mockk(relaxed = true)
+    private val createUpdateToDoViewModelBehavior: CreateUpdateToDoViewModelBehavior = mockk(relaxed = true)
 
     private lateinit var viewModel: CreateUpdateToDoViewModel
 
@@ -181,7 +181,7 @@ class CreateUpdateToDoViewModelTest {
 
         coVerify(exactly = 1) { repository.createToDo("Title", "Details", "2024-02-22T11:00:00Z", 1) }
 
-        verify(exactly = 1) { createUpdateToDoBehavior.updateWidget() }
+        verify(exactly = 1) { createUpdateToDoViewModelBehavior.updateWidget() }
 
         val expectedEvent = CreateUpdateToDoViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 2, 22)))
         Assert.assertEquals(expectedEvent, events.last())
@@ -207,7 +207,7 @@ class CreateUpdateToDoViewModelTest {
 
         coVerify(exactly = 1) { repository.updateToDo(1, "Updated Title", "Description", "2024-02-23T11:00:00Z", 2) }
 
-        verify(exactly = 1) { createUpdateToDoBehavior.updateWidget() }
+        verify(exactly = 1) { createUpdateToDoViewModelBehavior.updateWidget() }
 
         val expectedEvent = CreateUpdateToDoViewModelAction.RefreshCalendarDays(
             listOf(
@@ -328,6 +328,6 @@ class CreateUpdateToDoViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = CreateUpdateToDoViewModel(savedStateHandle, resources, repository, apiPrefs, createUpdateToDoBehavior)
+        viewModel = CreateUpdateToDoViewModel(savedStateHandle, resources, repository, apiPrefs, createUpdateToDoViewModelBehavior)
     }
 }

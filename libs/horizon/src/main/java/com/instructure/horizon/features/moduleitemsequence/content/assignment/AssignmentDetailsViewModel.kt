@@ -56,11 +56,13 @@ class AssignmentDetailsViewModel @Inject constructor(
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
                 toolsBottomSheetUiState = ToolsBottomSheetUiState(
                     onDismiss = ::dismissToolsBottomSheet,
-                    onAttemptsClick = ::openAttemptSelector
+                    onAttemptsClick = ::openAttemptSelector,
+                    onCommentsClick = ::openComments
                 ),
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
-                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed)
+                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed),
+                onCommentsBottomSheetDismissed = ::dismissComments
             )
         )
 
@@ -85,11 +87,13 @@ class AssignmentDetailsViewModel @Inject constructor(
             } else {
                 emptyList()
             }
-            val initialAttempt = lastActualSubmission?.attempt ?: -1L
+            val initialAttempt = lastActualSubmission?.attempt ?: 0L // We need to use 0 as the initial attempt if there are no submissions
             val description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty())
 
             val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
             val showAttemptSelector = assignment.allowedAttempts != 1L
+
+            val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
 
             _uiState.update {
                 it.copy(
@@ -104,7 +108,7 @@ class AssignmentDetailsViewModel @Inject constructor(
                     showAddSubmission = lastActualSubmission == null,
                     onSubmissionSuccess = ::updateAssignment,
                     attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
-                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector)
+                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments)
                 )
             }
         } catch {
@@ -315,6 +319,21 @@ class AssignmentDetailsViewModel @Inject constructor(
                     show = false
                 )
             )
+        }
+    }
+
+    private fun openComments() {
+        _uiState.update {
+            it.copy(
+                openCommentsBottomSheetParams = OpenCommentsBottomSheetParams(assignmentId, courseId),
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
+            )
+        }
+    }
+
+    private fun dismissComments() {
+        _uiState.update {
+            it.copy(openCommentsBottomSheetParams = null)
         }
     }
 

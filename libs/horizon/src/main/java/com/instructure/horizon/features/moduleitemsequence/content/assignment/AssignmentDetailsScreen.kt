@@ -22,7 +22,6 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -58,6 +57,8 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsDialog
+import com.instructure.horizon.features.moduleitemsequence.content.assignment.comments.CommentsViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
@@ -100,6 +101,20 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
         AttemptSelectorBottomSheet(uiState.attemptSelectorUiState)
     }
 
+    if (uiState.openCommentsBottomSheetParams != null) {
+        val commentsViewModel = hiltViewModel<CommentsViewModel>()
+        val commentsUiState by commentsViewModel.uiState.collectAsState()
+        val commentBottomSheetParams = uiState.openCommentsBottomSheetParams
+        LaunchedEffect(commentBottomSheetParams.assignmentId, uiState.submissionDetailsUiState.currentSubmissionAttempt) {
+            commentsViewModel.initWithAttempt(
+                commentBottomSheetParams.assignmentId,
+                uiState.submissionDetailsUiState.currentSubmissionAttempt.toInt(),
+                commentBottomSheetParams.courseId
+            )
+        }
+        CommentsDialog(commentsUiState, onDismiss = uiState.onCommentsBottomSheetDismissed)
+    }
+
     if (uiState.submissionConfirmationUiState.show) {
         Modal(
             dialogState = ModalDialogState(
@@ -131,10 +146,15 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                         )
                     )
                 }
+                val commentsIcon = if (uiState.toolsBottomSheetUiState.hasUnreadComments) {
+                    R.drawable.mark_unread_chat_alt
+                } else {
+                    R.drawable.chat
+                }
                 add(
                     BottomSheetActionState(
                         stringResource(R.string.assignmentDetails_comments),
-                        R.drawable.chat,
+                        commentsIcon,
                         onClick = uiState.toolsBottomSheetUiState.onCommentsClick
                     )
                 )
