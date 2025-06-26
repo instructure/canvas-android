@@ -141,7 +141,12 @@ class FileDetailsViewModel @Inject constructor(
         val thumbnailUrl = file.thumbnailUrl.orEmpty()
 
         return when {
-            contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
+            contentType == "application/pdf" -> {
+                val tempFile: File? = fileCache.awaitFileDownload(url)
+                tempFile?.let {
+                    FilePreviewUiState.Pdf(Uri.fromFile(it))
+                } ?: FilePreviewUiState.NoPreview
+            }
 
             contentType.startsWith("video") || contentType.startsWith("audio") -> {
                 val tempFile: File? = fileCache.awaitFileDownload(url)

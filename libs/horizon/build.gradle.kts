@@ -68,6 +68,8 @@ dependencies {
     implementation(Libs.HILT_ANDROIDX_WORK)
     kapt(Libs.HILT_ANDROIDX_COMPILER)
 
+    implementation(Libs.PSPDFKIT)
+
     implementation(Libs.ANDROIDX_ANNOTATION)
     implementation(Libs.ANDROIDX_APPCOMPAT)
     implementation(Libs.ANDROIDX_WEBKIT)
