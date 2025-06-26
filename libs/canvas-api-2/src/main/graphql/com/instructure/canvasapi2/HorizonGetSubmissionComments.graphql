@@ -1,0 +1,52 @@
+query HorizonGetSubmissionComments(
+    $assignmentId: ID!,
+    $userId: ID!,
+    $startCursor: String,
+    $endCursor: String,
+    $first: Int,
+    $last: Int,
+    $attempt: Int
+) {
+    submission(assignmentId: $assignmentId, userId: $userId) {
+        ...on Submission {
+            id: _id
+            unreadCommentCount
+            commentsConnection(
+                first: $first
+                after: $endCursor
+                last: $last
+                before: $startCursor
+                sortOrder: asc,
+                filter:{allComments: false, forAttempt: $attempt}
+            ) {
+                pageInfo {
+                    endCursor
+                    startCursor
+                    hasPreviousPage
+                    hasNextPage
+                }
+                edges {
+                    node {
+                        id: _id
+                        attempt
+                        author {
+                            _id
+                            avatarUrl
+                            shortName
+                        }
+                        comment
+                        read
+                        updatedAt
+                        createdAt
+                        attachments {
+                            _id
+                            url
+                            displayName
+                            contentType
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

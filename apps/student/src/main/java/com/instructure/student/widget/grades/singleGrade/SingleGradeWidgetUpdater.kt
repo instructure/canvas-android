@@ -18,6 +18,8 @@ package com.instructure.student.widget.grades.singleGrade
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.util.StudentPrefs
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.GradesWidgetRepository
@@ -45,13 +47,21 @@ class SingleGradeWidgetUpdater(
             if (showLoading) {
                 updateAll(WidgetState.Loading)
             }
-            val courses = repository.getCoursesWithGradingScheme(forceNetwork)
 
             val user = apiPrefs.user
             if (user == null) {
                 updateAll(WidgetState.NotLoggedIn)
                 return
             }
+
+            val coursesDataResult = repository.getCoursesWithGradingScheme(forceNetwork)
+
+            if (coursesDataResult is DataResult.Fail && coursesDataResult.failure is Failure.Authorization) {
+                updateAll(WidgetState.NotLoggedIn)
+                return
+            }
+            // Other errors are handled in catch
+            val courses = coursesDataResult.dataOrThrow
 
             if (courses.isEmpty()) {
                 updateAll(WidgetState.Error)

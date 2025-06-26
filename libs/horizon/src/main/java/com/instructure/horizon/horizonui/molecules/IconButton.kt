@@ -106,6 +106,11 @@ sealed class IconButtonColor(
         secondaryBackgroundColor = HorizonColors.Surface.aiGradientEnd()
     )
 
+    data object White : IconButtonColor(
+        HorizonColors.Surface.pageSecondary(),
+        HorizonColors.Icon.default()
+    )
+
     data class Custom(
         override val backgroundColor: Color,
         override val iconColor: Color,

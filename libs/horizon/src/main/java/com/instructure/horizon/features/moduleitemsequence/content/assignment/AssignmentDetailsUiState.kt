@@ -33,6 +33,8 @@ data class AssignmentDetailsUiState(
     val onSubmissionSuccess: suspend () -> Unit = {},
     val submissionConfirmationUiState: SubmissionConfirmationUiState = SubmissionConfirmationUiState(),
     val attemptSelectorUiState: AttemptSelectorUiState = AttemptSelectorUiState(),
+    val openCommentsBottomSheetParams: OpenCommentsBottomSheetParams? = null,
+    val onCommentsBottomSheetDismissed: () -> Unit = {},
     val viewingAttemptText: String? = null,
 )
 
@@ -68,6 +70,7 @@ data class ToolsBottomSheetUiState(
     val onDismiss: () -> Unit = {},
     val onAttemptsClick: () -> Unit = {},
     val onCommentsClick: () -> Unit = {},
+    val hasUnreadComments: Boolean = false,
 )
 
 data class SubmissionConfirmationUiState(
@@ -80,4 +83,9 @@ data class AttemptSelectorUiState(
     val show: Boolean = false,
     val attempts: List<AttemptCardState> = emptyList(),
     val onDismiss: () -> Unit = {}
+)
+
+data class OpenCommentsBottomSheetParams(
+    val assignmentId: Long = -1L,
+    val courseId: Long = -1L
 )

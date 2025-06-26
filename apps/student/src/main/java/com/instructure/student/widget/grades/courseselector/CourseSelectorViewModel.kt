@@ -30,7 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class CourseSelectorViewModel @Inject constructor(
     private val repository: GradesWidgetRepository
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
         CourseSelectorUiState()
@@ -41,7 +41,7 @@ class CourseSelectorViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             try {
-                val courses = repository.getCoursesWithGradingScheme(forceNetwork = true)
+                val courses = repository.getCoursesWithGradingScheme(forceNetwork = true).dataOrThrow
                 if (courses.isEmpty()) {
                     _uiState.update { it.copy(state = ScreenState.Empty) }
                 } else {

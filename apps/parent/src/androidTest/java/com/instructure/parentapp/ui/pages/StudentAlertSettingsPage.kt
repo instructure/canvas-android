@@ -120,6 +120,12 @@ class StudentAlertSettingsPage(private val composeTestRule: ComposeTestRule) : B
             .assertHasClickAction()
     }
 
+    fun setThreshold(alertType: AlertType, threshold: String) {
+        clickThreshold(alertType)
+        enterThreshold(threshold)
+        tapThresholdSaveButton()
+    }
+
     private fun getAlertTitle(alertType: AlertType): String {
         return when (alertType) {
             AlertType.COURSE_GRADE_HIGH -> "Course grade above"
