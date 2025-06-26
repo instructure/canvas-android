@@ -45,15 +45,20 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.fromHtml
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -67,9 +72,11 @@ import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.toFormattedString
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -280,4 +287,50 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
             )
         }
     }
+}
+
+@Composable
+@Preview
+private fun HorizonInboxDetailsScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    HorizonInboxDetailsScreen(
+        navController = rememberNavController(),
+        state = HorizonInboxDetailsUiState(
+            loadingState = LoadingState(),
+            title = "Message",
+            titleIcon = null,
+            items = listOf(
+                HorizonInboxDetailsItem(
+                    author = "John Doe",
+                    date = Date(),
+                    content = "This is a sample message content.",
+                    attachments = emptyList()
+                ),
+                HorizonInboxDetailsItem(
+                    author = "John Doe",
+                    date = Date(),
+                    content = "This is a sample message content.",
+                    attachments = listOf(
+                        HorizonInboxDetailsAttachment(
+                            id = 1L,
+                            name = "Sample Attachment.pdf",
+                            url = "https://www.example.com/sample.pdf",
+                            contentType = "application/pdf",
+                            onDownloadClick = {},
+                            onCancelDownloadClick = {},
+                            downloadState = FileDownloadProgressState.COMPLETED,
+                            downloadProgress = 0f
+                        )
+                    )
+                )
+            ),
+            replyState = HorizonInboxReplyState(
+                replyTextValue = TextFieldValue(""),
+                onReplyTextValueChange = {},
+                onSendReply = {}
+            ),
+            bottomLayout = true
+        )
+    )
 }
