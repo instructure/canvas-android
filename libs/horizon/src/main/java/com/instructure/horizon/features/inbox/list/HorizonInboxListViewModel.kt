@@ -110,9 +110,9 @@ class HorizonInboxListViewModel @Inject constructor(
             emptyList()
         } else {
             repository.getConversations(conversationScope, forceRefresh)
-                .filter {
+                .filter { conversation ->
                     uiState.value.selectedRecipients.isEmpty()
-                            || it.participants.map { it.id.toString() }.containsAll(
+                            || conversation.participants.map { conversation.id.toString() }.containsAll(
                         uiState.value.selectedRecipients.map { it.stringId }
                     )
                 }
@@ -139,17 +139,17 @@ class HorizonInboxListViewModel @Inject constructor(
         val items = buildList {
             addAll(
                 conversations
-                    .map {
+                    .map { conversation ->
                         HorizonInboxListItemState(
-                            id = it.id,
+                            id = conversation.id,
                             type = HorizonInboxItemType.Inbox,
-                            title = it.subject.orEmpty(),
-                            description = it.audience?.mapNotNull {
+                            title = conversation.subject.orEmpty(),
+                            description = conversation.audience?.mapNotNull {
                                 recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
                             }?.map { it.name }?.joinToString(", ").orEmpty(),
-                            date = it.lastMessageDate ?: Date(),
-                            isUnread = it.workflowState == Conversation.WorkflowState.UNREAD,
-                            courseId = it.contextCode?.substringAfter("course_")?.toLongOrNull()
+                            courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
+                            date = conversation.lastMessageDate ?: Date(),
+                            isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }
             )
@@ -188,7 +188,7 @@ class HorizonInboxListViewModel @Inject constructor(
         }
         _uiState.update {
             it.copy(
-                items = items.sortedByDescending { it.date },
+                items = items.sortedByDescending { item -> item.date },
                 allRecipients = recipients
             )
         }

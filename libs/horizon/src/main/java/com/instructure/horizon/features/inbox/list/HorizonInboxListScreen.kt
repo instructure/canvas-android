@@ -157,7 +157,7 @@ private fun LazyListScope.loadingContent(modifier: Modifier = Modifier) {
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier
                 .fillParentMaxSize()
-                .clip(HorizonCornerRadius.level4)
+                .clip(HorizonCornerRadius.level4Top)
                 .background(HorizonColors.Surface.cardPrimary())
         ) {
             Spinner(
@@ -281,7 +281,7 @@ private fun LazyListScope.inboxContent(
             Column(
                 modifier = Modifier
                     .fillParentMaxSize()
-                    .clip(HorizonCornerRadius.level4)
+                    .clip(HorizonCornerRadius.level4Top)
                     .background(HorizonColors.Surface.cardPrimary())
             ){
                 Text(
@@ -308,12 +308,6 @@ private fun LazyListScope.inboxContent(
                         state.items.firstOrNull() -> {
                             Modifier.clip(
                                 HorizonCornerRadius.level4Top
-                            )
-                        }
-
-                        state.items.lastOrNull() -> {
-                            Modifier.clip(
-                                HorizonCornerRadius.level4Bottom
                             )
                         }
 
