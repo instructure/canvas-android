@@ -42,6 +42,7 @@ data class ModuleItemSequenceUiState(
     val updateAiContextString: (String) -> Unit,
     val objectTypeAndId: Pair<String, String> = Pair("", ""),
     val updateObjectTypeAndId: (Pair<String, String>) -> Unit,
+    val hasUnreadComments: Boolean = false
 )
 
 data class ModuleItemUiState(
@@ -76,11 +77,11 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         ModuleItemContent(
             "courses/$courseId/pages/$pageUrl"
         ) {
-            companion object {
-                const val PAGE_URL = "pageUrl"
-                const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_URL}}"
-            }
+        companion object {
+            const val PAGE_URL = "pageUrl"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_URL}}"
         }
+    }
 
     data class ExternalLink(val title: String, val url: String) :
         ModuleItemContent("external_link/${Uri.encode(title)}/${Uri.encode(url)}") {
@@ -97,7 +98,8 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         ) {
         companion object {
             const val FILE_URL = "fileUrl"
-            const val ROUTE = "courses/{${Const.COURSE_ID}}/files/{${FILE_URL}}?moduleItemId={${Const.MODULE_ITEM_ID}}&moduleId={${Const.MODULE_ID}}"
+            const val ROUTE =
+                "courses/{${Const.COURSE_ID}}/files/{${FILE_URL}}?moduleItemId={${Const.MODULE_ITEM_ID}}&moduleId={${Const.MODULE_ID}}"
         }
     }
 
