@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.toApiString
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -64,7 +65,7 @@ class HorizonInboxListRepository @Inject constructor(
         val courses = getAllInboxCourses(forceNetwork)
         return announcementsApi.getFirstPageAnnouncements(
             courseCode = courses.map { it.contextId }.toTypedArray(),
-            startDate = Date().apply { year = year - 1 }.toApiString(),
+            startDate = Calendar.getInstance().apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
             endDate = Date().toApiString(),
             params = params
         )

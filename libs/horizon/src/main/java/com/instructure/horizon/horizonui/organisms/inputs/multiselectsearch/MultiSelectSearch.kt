@@ -96,8 +96,20 @@ fun MultiSelectSearch(
                     }
             ) {
                 Column {
-                    MultiSelectContent(state)
-                    MultiSelectSearchContent(state)
+                    if (state.selectedOptions.isNotEmpty()) { MultiSelectContent(state) }
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        MultiSelectSearchContent(state, Modifier.weight(1f))
+
+                        if (state.selectedOptions.isEmpty()) {
+                            DropDownIcon(
+                                state,
+                                Modifier.padding(horizontal = state.size.horizontalContentPadding)
+                            )
+                        }
+                    }
                 }
             }
             InputDropDownPopup(
@@ -122,7 +134,7 @@ fun MultiSelectSearch(
 }
 
 @Composable
-private fun MultiSelectSearchContent(state: MultiSelectSearchState) {
+private fun MultiSelectSearchContent(state: MultiSelectSearchState, modifier: Modifier = Modifier) {
     BasicTextField(
         value = state.searchQuery,
         singleLine = true,
@@ -131,7 +143,7 @@ private fun MultiSelectSearchContent(state: MultiSelectSearchState) {
             state.onSearchQueryChanged(newValue)
             state.onMenuOpenChanged(true)
         },
-        modifier = Modifier
+        modifier = modifier
             .padding(
                 vertical = state.size.verticalTextPadding,
                 horizontal = state.size.horizontalTextPadding
@@ -147,10 +159,6 @@ private fun MultiSelectSearchContent(state: MultiSelectSearchState) {
 @Composable
 @OptIn(ExperimentalLayoutApi::class)
 private fun MultiSelectContent(state: MultiSelectSearchState) {
-    val iconRotation = animateIntAsState(
-        targetValue = if (state.isMenuOpen) 180 else 0,
-        label = "iconRotation"
-    )
     val paddingModifier = if (state.selectedOptions.isNotEmpty()) {
         Modifier.padding(
             vertical = state.size.verticalContentPadding,
@@ -197,14 +205,23 @@ private fun MultiSelectContent(state: MultiSelectSearchState) {
 
         Spacer(modifier = Modifier.weight(1f))
 
-        Icon(
-            painter = painterResource(R.drawable.keyboard_arrow_down),
-            tint = HorizonColors.Icon.default(),
-            contentDescription = null,
-            modifier = Modifier
-                .rotate(iconRotation.value.toFloat())
-        )
+        DropDownIcon(state)
     }
+}
+
+@Composable
+private fun DropDownIcon(state: MultiSelectSearchState, modifier: Modifier = Modifier) {
+    val iconRotation = animateIntAsState(
+        targetValue = if (state.isMenuOpen) 180 else 0,
+        label = "iconRotation"
+    )
+    Icon(
+        painter = painterResource(R.drawable.keyboard_arrow_down),
+        tint = HorizonColors.Icon.default(),
+        contentDescription = null,
+        modifier = modifier
+            .rotate(iconRotation.value.toFloat())
+    )
 }
 
 @Composable
