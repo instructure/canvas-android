@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.inbox.details
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -273,7 +272,6 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     message.copy(
                         attachments = message.attachments.map { attachmentState ->
                             if (attachmentState.id == attachment.id) {
-                                Log.d("HorizonInboxDetailsViewModel", "Updating attachment: ${attachmentState.id} with new state: $attachment")
                                 attachment
                             } else {
                                 attachmentState
