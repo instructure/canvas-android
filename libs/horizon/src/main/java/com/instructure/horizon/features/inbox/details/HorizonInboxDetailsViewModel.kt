@@ -17,10 +17,13 @@
 package com.instructure.horizon.features.inbox.details
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkManager
+import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
@@ -29,6 +32,10 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.features.file.download.FileDownloadWorker
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,13 +43,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.util.Date
+import java.util.UUID
 import javax.inject.Inject
 
 @HiltViewModel
 class HorizonInboxDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: HorizonInboxDetailsRepository,
-    savedStateHandle: SavedStateHandle
+    private val workManager: WorkManager,
+    private val fileDownloadProgressDao: FileDownloadProgressDao,
+    savedStateHandle: SavedStateHandle,
 ): ViewModel() {
     private val courseId: String? = savedStateHandle[HorizonInboxRoute.InboxDetails.COURSE_ID]
     private val typeStringValue: String? = savedStateHandle[HorizonInboxRoute.InboxDetails.TYPE]
@@ -51,6 +61,8 @@ class HorizonInboxDetailsViewModel @Inject constructor(
 
     private var recipientIds: List<String> = emptyList()
     private var messageIds: List<Long> = emptyList()
+
+    private var fileIdToWorkerIdMap = mutableMapOf<Long, String>()
 
     private val _uiState = MutableStateFlow(
         HorizonInboxDetailsUiState(
@@ -108,7 +120,9 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                             author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
                             content = message.body.orEmpty(),
-                            attachments = message.attachments
+                            attachments = message.attachments.map { attachment ->
+                                attachment.toAttachmentUiState()
+                            }
                         )
                     },
                     replyState = getReplyState(),
@@ -211,6 +225,66 @@ class HorizonInboxDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun downloadFile(attachment: HorizonInboxDetailsAttachment) {
+        updateFileItem(attachment.copy(downloadState = FileDownloadProgressState.STARTING, downloadProgress = 0f))
+        val workRequest = FileDownloadWorker.createOneTimeWorkRequest(attachment.name, attachment.url)
+        workManager.enqueue(workRequest)
+        val workerId = workRequest.id.toString()
+        fileIdToWorkerIdMap[attachment.id] = workerId
+        viewModelScope.tryLaunch {
+            fileDownloadProgressDao.findByWorkerIdFlow(workerId)
+                .collect { progress ->
+                    updateProgress(attachment, progress)
+                }
+        } catch {
+            updateFileItem(attachment.copy(downloadState = FileDownloadProgressState.COMPLETED, downloadProgress = 0f))
+        }
+    }
+
+    private fun updateProgress(attachment: HorizonInboxDetailsAttachment, progressEntity: FileDownloadProgressEntity?) {
+        updateFileItem(
+            attachment.copy(
+                downloadState = progressEntity?.progressState ?: FileDownloadProgressState.COMPLETED,
+                downloadProgress = (progressEntity?.progress ?: 0) / 100f
+            )
+        )
+        if (progressEntity?.progressState?.isCompleted() == true) {
+            viewModelScope.launch {
+                fileDownloadProgressDao.deleteByWorkerId(progressEntity.workerId)
+            }
+        }
+    }
+
+    private fun cancelDownload(fileId: Long) {
+        val workerId = fileIdToWorkerIdMap[fileId]
+        if (workerId != null) {
+            workManager.cancelWorkById(UUID.fromString(workerId))
+            fileIdToWorkerIdMap.remove(fileId)
+            viewModelScope.tryLaunch {
+                fileDownloadProgressDao.deleteByWorkerId(workerId)
+            } catch {}
+        }
+    }
+
+    private fun updateFileItem(attachment: HorizonInboxDetailsAttachment) {
+        _uiState.update {
+            it.copy(
+                items = it.items.map { message ->
+                    message.copy(
+                        attachments = message.attachments.map { attachmentState ->
+                            if (attachmentState.id == attachment.id) {
+                                Log.d("HorizonInboxDetailsViewModel", "Updating attachment: ${attachmentState.id} with new state: $attachment")
+                                attachment
+                            } else {
+                                attachmentState
+                            }
+                        }
+                    )
+                }
+            )
+        }
+    }
+
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(
@@ -225,6 +299,20 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 replyState = currentState.replyState?.copy(replyTextValue = value)
             )
         }
+    }
+
+    private fun Attachment.toAttachmentUiState(): HorizonInboxDetailsAttachment {
+        return HorizonInboxDetailsAttachment(
+            id = this.id,
+            name = this.displayName.orEmpty(),
+            url = this.url.orEmpty(),
+            contentType = this.contentType,
+            thumbnailUrl = this.thumbnailUrl,
+            onDownloadClick = { attachmentState -> downloadFile(attachmentState) },
+            onCancelDownloadClick = { id -> cancelDownload(id) },
+            downloadState = FileDownloadProgressState.COMPLETED,
+            downloadProgress = 0f
+        )
     }
 
     private fun sendReply() {
@@ -257,7 +345,9 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                             author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
                             content = message.body.orEmpty(),
-                            attachments = message.attachments
+                            attachments = message.attachments.map { attachment ->
+                                attachment.toAttachmentUiState()
+                            }
                         )
                     } + it.items,
                     replyState = it.replyState?.copy(

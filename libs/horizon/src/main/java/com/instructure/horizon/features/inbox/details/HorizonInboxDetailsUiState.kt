@@ -18,8 +18,8 @@ package com.instructure.horizon.features.inbox.details
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.input.TextFieldValue
-import com.instructure.canvasapi2.models.Attachment
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import java.util.Date
 
 data class HorizonInboxDetailsUiState(
@@ -41,5 +41,17 @@ data class HorizonInboxDetailsItem(
     val author: String,
     val date: Date,
     val content: String,
-    val attachments: List<Attachment>,
+    val attachments: List<HorizonInboxDetailsAttachment>,
+)
+
+data class HorizonInboxDetailsAttachment(
+    val id: Long,
+    val name: String,
+    val url: String,
+    val contentType: String?,
+    var thumbnailUrl: String? = null,
+    val onDownloadClick: (HorizonInboxDetailsAttachment) -> Unit = {},
+    val onCancelDownloadClick: (Long) -> Unit = {},
+    val downloadState: FileDownloadProgressState = FileDownloadProgressState.COMPLETED,
+    val downloadProgress: Float = 0f,
 )

@@ -68,6 +68,7 @@ import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.toFormattedString
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -218,14 +219,26 @@ private fun HorizonInboxDetailsItem(
             color = HorizonColors.Text.body(),
         )
 
-        item.attachments.forEach {
+        item.attachments.forEach { attachment ->
             HorizonSpace(SpaceSize.SPACE_8)
 
+            val fileState = if (attachment.downloadState == FileDownloadProgressState.STARTING || attachment.downloadState == FileDownloadProgressState.IN_PROGRESS) {
+                FileDropItemState.InProgress(
+                    fileName = attachment.name,
+                    progress = attachment.downloadProgress,
+                    onActionClick = { attachment.onCancelDownloadClick(attachment.id) },
+                    onClick = { attachment.onDownloadClick(attachment) }
+                )
+            } else {
+                FileDropItemState.NoLongerEditable(
+                    fileName = attachment.name,
+                    onActionClick = { attachment.onDownloadClick(attachment) },
+                    onClick = { attachment.onDownloadClick(attachment) }
+                )
+            }
+
             FileDropItem(
-                state = FileDropItemState.NoLongerEditable(
-                    fileName = it.displayName.orEmpty(),
-                    onClick = { /* Handle attachment click */ }
-                ),
+                state = fileState,
                 hasBorder = true,
                 borderColor = HorizonColors.LineAndBorder.lineStroke()
             )
