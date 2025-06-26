@@ -141,22 +141,24 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 ) {
-                    OutlinedButton(
-                        enabled = uiState.enteredScore != null || uiState.excused,
-                        onClick = { uiState.onScoreChange(null) },
-                        modifier = Modifier.weight(1f),
-                        border = BorderStroke(
-                            1.dp,
-                            LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
-                        ),
-                        colors = ButtonDefaults.outlinedButtonColors().copy(
-                            contentColor = LocalCourseColor.current,
-                            disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
-                        )
-                    ) {
-                        Text(stringResource(R.string.noGrade), fontSize = 16.sp, lineHeight = 19.sp)
+                    if (uiState.gradingType != GradingType.pass_fail) {
+                        OutlinedButton(
+                            enabled = uiState.enteredScore != null || uiState.excused,
+                            onClick = { uiState.onScoreChange(null) },
+                            modifier = Modifier.weight(1f),
+                            border = BorderStroke(
+                                1.dp,
+                                LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
+                            ),
+                            colors = ButtonDefaults.outlinedButtonColors().copy(
+                                contentColor = LocalCourseColor.current,
+                                disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                            )
+                        ) {
+                            Text(stringResource(R.string.noGrade), fontSize = 16.sp, lineHeight = 19.sp)
+                        }
+                        Spacer(modifier = Modifier.width(16.dp))
                     }
-                    Spacer(modifier = Modifier.width(16.dp))
                     OutlinedButton(
                         enabled = uiState.excused.not(),
                         onClick = { uiState.onExcuse() },
@@ -440,16 +442,6 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
         }
         RadioButtonText(
             modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.noGrade),
-            selected = grade.isBlank(),
-            color = LocalCourseColor.current,
-            onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            }
-        )
-        CanvasDivider()
-        RadioButtonText(
-            modifier = Modifier.fillMaxWidth(),
             text = stringResource(R.string.gradeComplete),
             selected = grade == "complete",
             color = LocalCourseColor.current,
@@ -476,7 +468,7 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
 @Composable
 private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
-    var sliderDrivenScore by remember(uiState.enteredGrade) { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
+    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
     var textFieldScore by remember { mutableStateOf(grade) }
 
     val maxScore = 100f
@@ -566,7 +558,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Composable
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
-    var sliderDrivenScore by remember(uiState.enteredScore) { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
+    var sliderDrivenScore by remember { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
     var textFieldScore by remember {
         mutableStateOf(uiState.enteredScore?.let {
             numberFormatter.format(
@@ -575,7 +567,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         }.orEmpty())
     }
 
-    val maxScore by remember(uiState.enteredScore) {
+    val maxScore by remember {
         mutableFloatStateOf(
             max(
                 (uiState.pointsPossible?.toFloat() ?: 10f),

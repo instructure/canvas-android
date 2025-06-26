@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -151,6 +152,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 )
                 loadData(true)
             } catch (e: Exception) {
+                if (e is CancellationException) {
+                    return@launch
+                }
                 _uiState.update {
                     it.copy(
                         error = true,

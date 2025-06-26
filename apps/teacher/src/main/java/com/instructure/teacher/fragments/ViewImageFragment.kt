@@ -212,7 +212,7 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
                 .load(it)
                 .listener(requestListener)
                 .into(binding.photoView)
-        } ?: {
+        } ?: run {
             load(url) {
                 Glide.with(requireContext())
                     .asBitmap()
