@@ -15,10 +15,8 @@
  *
  */package com.instructure.pandautils.features.speedgrader.content
 
-import android.graphics.Color
 import android.net.Uri
 import android.os.Parcelable
-import androidx.annotation.ColorInt
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import kotlinx.parcelize.Parcelize
@@ -33,8 +31,7 @@ data class SpeedGraderContentUiState(
     val dueDate: Date? = null,
     val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
     val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
-    @ColorInt val courseColor: Int = Color.GREEN
-)
+    )
 
 @Parcelize
 sealed class GradeableContent : Parcelable

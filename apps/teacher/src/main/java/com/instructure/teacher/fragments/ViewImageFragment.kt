@@ -207,13 +207,22 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
         super.onStart()
         binding.progressBar.announceForAccessibility(getString(R.string.loading))
 
-        load(url) {
+        uri?.let {
             Glide.with(requireContext())
                 .asBitmap()
                 .load(it)
                 .listener(requestListener)
                 .into(binding.photoView)
+        } ?: run {
+            load(url) {
+                Glide.with(requireContext())
+                    .asBitmap()
+                    .load(it)
+                    .listener(requestListener)
+                    .into(binding.photoView)
+            }
         }
+
     }
 
     override fun viewExternally() {

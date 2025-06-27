@@ -48,9 +48,9 @@ import com.instructure.pandautils.features.speedgrader.content.SpeedGraderConten
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun SpeedGraderSubmissionScreen(
-    courseId: Long,
     assignmentId: Long,
-    submissionId: Long
+    submissionId: Long,
+    courseId: Long
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
@@ -174,7 +174,8 @@ private fun NavGraphBuilder.speedGraderBottomSheet(anchoredDraggableState: Ancho
         arguments = listOf(
             navArgument("courseId") { type = NavType.LongType },
             navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType }
+            navArgument("submissionId") { type = NavType.LongType },
+            navArgument("courseId") { type = NavType.LongType }
         )
     ) {
         SpeedGraderBottomSheet(

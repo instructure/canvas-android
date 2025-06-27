@@ -82,7 +82,9 @@ data class Submission(
         @SerializedName("posted_at")
         val postedAt: Date? = null,
         @SerializedName("grading_period_id")
-        val gradingPeriodId: Long? = null
+        val gradingPeriodId: Long? = null,
+        @SerializedName("late_policy_status")
+        val latePolicyStatus: String? = null,
 ) : CanvasModel<Submission>() {
     override val comparisonDate get() = submittedAt
     override val comparisonString get() = submissionType

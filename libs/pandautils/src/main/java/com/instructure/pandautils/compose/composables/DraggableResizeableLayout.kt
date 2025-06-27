@@ -28,9 +28,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Card
@@ -56,6 +58,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.utils.toDp
 import kotlinx.coroutines.launch
 
@@ -74,8 +77,47 @@ fun DraggableResizableLayout(
     minTopHeightDp: Dp = 56.dp,
     initialAnchor: AnchorPoints = AnchorPoints.TOP,
 ) {
-    val coroutineScope = rememberCoroutineScope()
+
     val density = LocalDensity.current
+    val coroutineScope = rememberCoroutineScope()
+
+    val imeInsets = WindowInsets.ime
+    val isKeyboardActuallyVisible by remember {
+        derivedStateOf { imeInsets.getBottom(density) > 0 }
+    }
+
+    var lastKeyboardInducedSnapTo by remember { mutableStateOf<AnchorPoints?>(null) }
+
+    LaunchedEffect(isKeyboardActuallyVisible, anchoredDraggableState.anchors) {
+        if (anchoredDraggableState.anchors.size == 0) {
+            return@LaunchedEffect
+        }
+
+        val currentTarget = anchoredDraggableState.targetValue
+
+        if (isKeyboardActuallyVisible) {
+            val targetAnchor = AnchorPoints.TOP
+            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor)) {
+                if (currentTarget != targetAnchor) {
+                    coroutineScope.launch {
+                        anchoredDraggableState.animateTo(targetAnchor)
+                        lastKeyboardInducedSnapTo = targetAnchor
+                    }
+                }
+            }
+        } else {
+            val targetAnchor = AnchorPoints.MIDDLE
+            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor)) {
+                if (currentTarget != targetAnchor) {
+                    coroutineScope.launch {
+                        anchoredDraggableState.animateTo(targetAnchor)
+                        lastKeyboardInducedSnapTo = targetAnchor
+                    }
+                }
+            }
+        }
+    }
+
     val minBottomHeightPx =
         remember(minBottomHeightDp) { with(density) { minBottomHeightDp.toPx() } }
     val minTopHeightPx = remember(minBottomHeightDp) { with(density) { minTopHeightDp.toPx() } }
@@ -223,7 +265,7 @@ fun DraggableResizableLayout(
                                     }
                                 }) {
                                     Icon(
-                                        tint = colorResource(R.color.textInfo),
+                                        tint = LocalCourseColor.current,
                                         painter = painterResource(R.drawable.ic_collapse_bottomsheet),
                                         contentDescription = stringResource(R.string.a11y_contentDescription_collapsePanel),
                                     )
@@ -235,7 +277,7 @@ fun DraggableResizableLayout(
                                     }
                                 }) {
                                     Icon(
-                                        tint = colorResource(R.color.textInfo),
+                                        tint = LocalCourseColor.current,
                                         painter = painterResource(R.drawable.ic_expand_bottomsheet),
                                         contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
                                     )
@@ -265,7 +307,7 @@ fun DraggableResizableLayout(
                             }) {
                                 Icon(
                                     painter = painterResource(R.drawable.arrow_right),
-                                    tint = colorResource(R.color.textInfo),
+                                    tint = LocalCourseColor.current,
                                     contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
                                     modifier = Modifier.rotate(
                                         when (anchoredDraggableState.currentValue) {

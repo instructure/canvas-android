@@ -35,6 +35,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
@@ -52,6 +53,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.CanvasTheme
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.AnchorPoints
 import com.instructure.pandautils.features.speedgrader.details.SpeedGraderDetailsScreen
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradeScreen
@@ -61,9 +64,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun SpeedGraderBottomSheet(
     anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?,
-    courseId: Long,
     assignmentId: Long,
-    submissionId: Long
+    submissionId: Long,
+    courseId: Long
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
@@ -81,13 +84,13 @@ fun SpeedGraderBottomSheet(
                 .requiredHeight(64.dp),
             selectedTabIndex = selectedTab,
             containerColor = colorResource(R.color.backgroundLightestElevated),
-            contentColor = colorResource(R.color.textInfo),
+            contentColor = LocalCourseColor.current,
             indicator = {
                 TabRowDefaults.PrimaryIndicator(
                     modifier = Modifier.tabIndicatorOffset(selectedTab, matchContentSize = false),
                     width = Dp.Unspecified,
                     height = 1.5.dp,
-                    color = colorResource(R.color.textInfo)
+                    color = LocalCourseColor.current
                 )
             }
         ) {
@@ -112,6 +115,7 @@ fun SpeedGraderBottomSheet(
                             .replace("{courseId}", courseId.toString())
                             .replace("{assignmentId}", assignmentId.toString())
                             .replace("{submissionId}", submissionId.toString())
+                            .replace("{courseId}", courseId.toString())
                         navController.navigate(route) {
                             popUpTo(route) { inclusive = true }
                         }
@@ -126,6 +130,7 @@ fun SpeedGraderBottomSheet(
                 .replace("{courseId}", courseId.toString())
                 .replace("{assignmentId}", assignmentId.toString())
                 .replace("{submissionId}", submissionId.toString())
+                .replace("{courseId}", courseId.toString()),
         )
     }
 }
@@ -146,7 +151,8 @@ private fun SpeedGraderBottomSheetNavHost(
             arguments = listOf(
                 navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
-                navArgument("submissionId") { type = NavType.LongType }
+                navArgument("submissionId") { type = NavType.LongType },
+                navArgument("courseId") { type = NavType.LongType }
             )
         ) {
             SpeedGraderGradeScreen()
@@ -183,5 +189,7 @@ enum class SpeedGraderTab(
 @Preview
 @Composable
 private fun SpeedGraderBottomSheetPreview() {
-    SpeedGraderBottomSheet(null, 1L, 1L, 1L)
+    CanvasTheme(courseColor = Color.Blue) {
+        SpeedGraderBottomSheet(null, 1L, 1L, 1L)
+    }
 }

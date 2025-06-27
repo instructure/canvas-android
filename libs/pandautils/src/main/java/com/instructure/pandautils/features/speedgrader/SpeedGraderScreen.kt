@@ -16,6 +16,9 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
@@ -25,7 +28,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -34,6 +36,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 
 @Composable
@@ -55,12 +58,14 @@ fun SpeedGraderScreen(
             CanvasAppBar(
                 title = uiState.assignmentName,
                 subtitle = uiState.courseName,
-                backgroundColor = Color(uiState.courseColor),
+                backgroundColor = LocalCourseColor.current,
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_back_arrow,
                 textColor = colorResource(id = R.color.textLightest),
             )
         },
+        modifier = Modifier.imePadding(),
+        contentWindowInsets = WindowInsets.ime
     ) { padding ->
         HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
             val submissionId = uiState.submissionIds[page]
@@ -80,13 +85,14 @@ fun NavGraphBuilder.submissionScreen() {
         arguments = listOf(
             navArgument("courseId") { type = NavType.LongType },
             navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType }
+            navArgument("submissionId") { type = NavType.LongType },
+            navArgument("courseId") { type = NavType.LongType }
         )
     ) {
         SpeedGraderSubmissionScreen(
             courseId = it.arguments?.getLong("courseId") ?: 0L,
             assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
-            submissionId = it.arguments?.getLong("submissionId") ?: 0L
+            submissionId = it.arguments?.getLong("submissionId") ?: 0L,
         )
     }
 }
