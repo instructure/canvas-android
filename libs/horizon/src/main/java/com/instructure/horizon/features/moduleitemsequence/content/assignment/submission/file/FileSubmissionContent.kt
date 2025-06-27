@@ -70,20 +70,21 @@ fun FileSubmissionContent(
         Column {
             uiState.files.forEach { file ->
                 val borderColor = if (file.selected) HorizonColors.Surface.institution() else HorizonColors.LineAndBorder.lineStroke()
-                val fileDropItemState = if (file.downloadState == FileDownloadProgressState.STARTING || file.downloadState == FileDownloadProgressState.IN_PROGRESS) {
-                    FileDropItemState.InProgress(
-                        fileName = file.fileName,
-                        progress = file.downloadProgress,
-                        onActionClick = { file.onCancelDownloadClick(file.fileId) },
-                        onClick = file.onClick
-                    )
-                } else {
-                    FileDropItemState.NoLongerEditable(
-                        fileName = file.fileName,
-                        onActionClick = { file.onDownloadClick(file) },
-                        onClick = file.onClick
-                    )
-                }
+                val fileDropItemState =
+                    if (file.downloadState == FileDownloadProgressState.STARTING || file.downloadState == FileDownloadProgressState.IN_PROGRESS) {
+                        FileDropItemState.InProgress(
+                            fileName = file.fileName,
+                            progress = file.downloadProgress,
+                            onActionClick = { file.onCancelDownloadClick(file.fileId) },
+                            onClick = file.onClick
+                        )
+                    } else {
+                        FileDropItemState.NoLongerEditable(
+                            fileName = file.fileName,
+                            onActionClick = { file.onDownloadClick(file) },
+                            onClick = file.onClick
+                        )
+                    }
                 FileDropItem(
                     state = fileDropItemState, borderColor = borderColor
                 )
