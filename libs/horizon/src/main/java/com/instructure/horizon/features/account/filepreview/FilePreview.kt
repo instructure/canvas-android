@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
@@ -25,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.media3.common.util.UnstableApi
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.moduleitemsequence.content.file.ViewMediaActivity
 import com.instructure.horizon.horizonui.molecules.Spinner
@@ -39,7 +39,6 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
 
-@UnstableApi
 @Composable
 fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -71,16 +70,16 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
             is FilePreviewUiState.WebView -> {
                 ComposeCanvasWebView(
                     url = filePreviewUiState.url, applyOnWebView = {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    settings.loadWithOverviewMode = true
-                    settings.displayZoomControls = false
-                    settings.setSupportZoom(true)
-                    activity?.let { addVideoClient(it) }
-                    setInitialScale(100)
-                })
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        settings.loadWithOverviewMode = true
+                        settings.displayZoomControls = false
+                        settings.setSupportZoom(true)
+                        activity?.let { addVideoClient(it) }
+                        setInitialScale(100)
+                    })
             }
 
             FilePreviewUiState.NoPreview -> {}
@@ -105,7 +104,6 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
     }
 }
 
-@UnstableApi
 @Preview(showBackground = true)
 @Composable
 fun FilePreviewPreview() {

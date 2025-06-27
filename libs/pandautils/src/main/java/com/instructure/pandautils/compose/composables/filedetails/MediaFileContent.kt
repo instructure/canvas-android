@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
@@ -15,6 +16,7 @@
  */
 package com.instructure.pandautils.compose.composables.filedetails
 
+import android.annotation.SuppressLint
 import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
@@ -41,13 +43,7 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.onClick
 
-@UnstableApi
-@Composable
-fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked: (Uri, String) -> Unit, modifier: Modifier = Modifier) {
-    MediaFileContent(mediaUrl.toUri(), contentType, onFullScreenClicked, modifier)
-}
-
-@UnstableApi
+@SuppressLint("UnsafeOptInUsageError")
 @Composable
 fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, String) -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
@@ -115,7 +111,7 @@ fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, S
 @Preview
 fun MediaFileContentPreview() {
     MediaFileContent(
-        mediaUrl = "https://www.example.com/media.mp4",
+        uri = "https://www.example.com/media.mp4".toUri(),
         contentType = "video/mp4",
         onFullScreenClicked = { _, _ -> }
     )
