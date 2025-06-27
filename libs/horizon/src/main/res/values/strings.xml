@@ -15,7 +15,7 @@
   ~
   -->
 <resources>
-    <string name="horizon">Horizon</string>
+    <string name="horizon_app_name" translatable="false">Canvas Career</string>
     <string name="bottomNav_home">Home</string>
     <string name="bottomNav_learn">Learn</string>
     <string name="bottomNav_skillspace">Skillspace</string>
