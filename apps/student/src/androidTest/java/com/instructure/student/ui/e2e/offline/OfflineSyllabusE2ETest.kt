@@ -65,18 +65,36 @@ class OfflineSyllabusE2ETest : StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
-        dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
 
-        Log.d(STEP_TAG, "Expand '${course.name}' course.")
-        manageOfflineContentPage.expandCollapseItem(course.name)
+            refresh()
 
-        Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
-        manageOfflineContentPage.changeItemSelectionState("Syllabus")
-        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+            Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+            dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
 
-        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            Log.d(STEP_TAG, "Expand '${course.name}' course.")
+            manageOfflineContentPage.expandCollapseItem(course.name)
+
+            Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
+            manageOfflineContentPage.changeItemSelectionState("Syllabus")
+            manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+            Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+            dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+            device.waitForIdle()
+        }) {
+
+            Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+            dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
+
+            Log.d(STEP_TAG, "Expand '${course.name}' course.")
+            manageOfflineContentPage.expandCollapseItem(course.name)
+
+            Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
+            manageOfflineContentPage.changeItemSelectionState("Syllabus")
+            manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+            Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
             dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
             device.waitForIdle()
         }
@@ -105,6 +123,7 @@ class OfflineSyllabusE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Page List Page.")
         OfflineTestUtils.assertOfflineIndicator()
     }
+
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")
