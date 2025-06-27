@@ -17,16 +17,22 @@
 
 package com.instructure.student.di.feature
 
+import android.appwidget.AppWidgetManager
+import android.content.Context
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
-import com.instructure.student.features.calendarevent.StudentCreateUpdateEventRepository
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventViewModelBehavior
+import com.instructure.student.features.calendarevent.createupdate.StudentCreateUpdateEventRepository
+import com.instructure.student.features.calendarevent.createupdate.StudentCreateUpdateEventViewModelBehavior
+import com.instructure.student.widget.WidgetUpdater
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
 
 
 @Module
@@ -41,5 +47,14 @@ class CreateUpdateEventModule {
         apiPrefs: ApiPrefs
     ): CreateUpdateEventRepository {
         return StudentCreateUpdateEventRepository(calendarEventApi, coursesApi, groupsApi, apiPrefs)
+    }
+
+    @Provides
+    fun provideCreateUpdateEventViewModelBehavior(
+        @ApplicationContext context: Context,
+        widgetUpdater: WidgetUpdater,
+        appWidgetManager: AppWidgetManager
+    ): CreateUpdateEventViewModelBehavior {
+        return StudentCreateUpdateEventViewModelBehavior(context, widgetUpdater, appWidgetManager)
     }
 }

@@ -19,6 +19,7 @@ package com.instructure.teacher.di
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
 import com.instructure.teacher.features.calendartodo.TeacherCreateUpdateToDoRepository
 import dagger.Module
@@ -37,5 +38,12 @@ class CreateUpdateToDoModule {
         @Named(PLANNER_API_SERIALIZE_NULLS) plannerApi: PlannerAPI.PlannerInterface
     ): CreateUpdateToDoRepository {
         return TeacherCreateUpdateToDoRepository(coursesApi, plannerApi)
+    }
+
+    @Provides
+    fun provideCreateUpdateToDoBehavior(): CreateUpdateToDoViewModelBehavior {
+        return object : CreateUpdateToDoViewModelBehavior {
+            override fun updateWidget() = Unit
+        }
     }
 }

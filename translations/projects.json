@@ -42,10 +42,9 @@
     "extension": "xml"
   },
   {
-    "name": "flutter-parent",
-    "source_path": "apps/flutter_parent/lib/l10n/res/intl_en.arb",
-    "resource_dir": "apps/flutter_parent/lib/l10n/res",
-    "flutter_dir": "apps/flutter_parent",
-    "extension": "arb"
+    "name": "horizon",
+    "source_path": "libs/horizon/src/main/res/values/strings.xml",
+    "resource_dir": "libs/horizon/src/main/res",
+    "extension": "xml"
   }
 ]

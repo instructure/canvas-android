@@ -37,8 +37,8 @@ import com.instructure.student.R
 import com.instructure.student.mobius.assignmentDetails.getVideoUri
 import com.instructure.student.mobius.assignmentDetails.uploadAudioRecording
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.student.util.getStudioLTITool
 import java.io.File
 import java.util.Date

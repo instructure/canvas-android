@@ -362,7 +362,7 @@ private fun EventContent(
                         fontSize = 14.sp
                     )
                     ComposeCanvasWebViewWrapper(
-                        html = uiState.formattedDescription,
+                        content = uiState.formattedDescription,
                         modifier = Modifier
                             .padding(horizontal = 8.dp)
                             .testTag("composeCanvasWebViewWrapper"),

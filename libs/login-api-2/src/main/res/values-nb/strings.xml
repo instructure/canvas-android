@@ -101,7 +101,7 @@
     <string name="findMySchool">Finne skolen min</string>
     <string name="loginWithQRCode">QR-kode</string>
     <string name="locateQRCode">Lokalisere QR-kode</string>
-    <string name="qrCodeExplanation">Du finner QR-koden på nettet i kontoprofilen din. Klikk \'QR for mobil-innlogging\' i listen.</string>
+    <string name="qrCodeExplanation">Finn QR-koden i kontoprofilen på nettstedet under «QR for mobil-innlogging»</string>
     <string name="qrCodeScanningPrompt">Skann en QR-kode fra Canvas for å begynne.</string>
     <string name="loginWithQRCodeError">Det oppsto en feil ved innlogging. Vennligst lag en ny QR-kode og prøv på nytt.</string>
     <string name="invalidQRCodeError">Skann en QR-kode generert av Canvas</string>
@@ -128,4 +128,5 @@
     <string name="weMadeChanges">Vi har gjort noen endringer.</string>
     <string name="whatsNewText">Se hva som er nytt</string>
     <string name="findAnotherSchool">Finn en annen skole</string>
+    <string name="qrCodeDisabledExplanation">Hvis du ikke finner det der, har institusjonen din deaktivert dette alternativet.</string>
 </resources>

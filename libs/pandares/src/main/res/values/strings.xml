@@ -291,7 +291,7 @@
     <string name="Todo">To Do</string>
     <string name="todoFilter">Filter Courses</string>
     <string name="filterByEllipsis">Filter by…</string>
-    <string name="favoritedCoursesLabel">Favorited Courses</string>
+    <string name="favoriteCoursesLabel">Favorite Courses</string>
     <string name="Event">Event</string>
     <string name="eventSuccessfulDeletion">Event was successfully deleted</string>
     <string name="timeIconDescription">Time Icon</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifications</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Grades</string>
+    <string name="gradeWidgetTitleLong">Canvas - Grade</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
     <string name="notLoggedIn">You are not logged in</string>
     <string name="widgetStyle">Choose your widget style</string>
@@ -705,7 +706,7 @@
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
-    <string name="reportProblem">Report a Problem</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">If the app misbehaves, let us know</string>
     <string name="requestFeature">Request a Feature</string>
     <string name="requestFeatureDetails">Have an idea to improve the app?</string>
@@ -1792,12 +1793,12 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Manage Students</string>
     <string name="screenTitleSettings">Settings</string>
-    <string name="navigationDrawerSwitchUsers">Switch Users</string>
     <string name="navigationDrawerLogOut">Log Out</string>
     <string name="noStudentsError">No Students</string>
     <string name="noStudentsErrorDescription">You are not observing any students.</string>
     <string name="noStudentsRefresh">Refresh</string>
     <string name="noGrade">No Grade</string>
+    <string name="noGrades">No Grades</string>
     <string name="errorLoadingCourses">There was an error loading your student’s courses.</string>
     <string name="parentNoCourses">No Courses</string>
     <string name="parentNoCoursesMessage">Your student’s courses might not be published yet.</string>
@@ -2064,6 +2065,28 @@
     <string name="errorLoadingAssignments">An error occurred while loading assignments</string>
     <string name="a11y_searchAssignments">Search Assignments</string>
     <string name="dueAssignmentListItem">Due %1$s</string>
+    <string name="a11y_searchAmongRecipients">Search among Recipients</string>
+    <string name="a11y_recipientIsRemoved">%1$s is removed</string>
+
+    <string name="widgetDueDate">Due at %1$s</string>
+    <string name="widgetFromTo">%1$s to %2$s</string>
+    <string name="widgetAllDay">All day</string>
+    <string name="widgetErrorTitle">Oops! Something Went Wrong</string>
+    <string name="widgetErrorSubtitle">We\'re having trouble showing your tasks right now. Please try again in a bit or head to the app.</string>
+    <string name="widgetToDoEmptyTitle">You’re all done for now!</string>
+    <string name="widgetToDoEmptySubtitle">Looks like you\'re free for the next 4 weeks. Do you want to add some to-dos?</string>
+    <string name="widgetNotLoggedInTitle">Let\'s Get You Logged In!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">To see your to-dos, please log in to your account in the app. It\'ll just take a sec!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Open To Do list screen</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Create new To Do</string>
+
+    <string name="widgetGradesErrorSubtitle">We\'re having trouble showing your grades right now. Please try again in a bit or head to the app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">To see your grades, please log in to your account in the app. It\'ll just take a sec!</string>
+    <string name="widgetSingleGradeErrorSubtitle">We\'re having trouble showing your grades right now.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
+    <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
+    <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+
     <string name="speedGraderGradeTabTitle">Grade &amp; Rubric</string>
     <string name="speedGraderDetailsTabTitle">Details</string>
     <string name="a11y_contentDescription_expandPanel">Expand panel</string>

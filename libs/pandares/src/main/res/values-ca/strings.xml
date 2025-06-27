@@ -2006,6 +2006,33 @@
     <string name="inboxSignatureSwitchLabel">Signatura</string>
     <string name="inboxSignatureTextfieldHeader">Text de la signatura</string>
     <string name="due_dateTime">Data de lliurament: %1$s, %2$s</string>
+    <string name="noDueDate">Sense data de lliurament</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">S\'ha de qualificar %1$s</string>
+    <string name="assignmentListTitle">Llista d\'activitats</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d punt</item>
+        <item quantity="other">%d punts</item>
+    </plurals>
+    <string name="noAssignments">No hi ha cap activitat</string>
+    <string name="assignmentGroup">Grup d\'activitats</string>
+    <string name="assignmentType">Tipus d\'activitat</string>
+    <string name="dueDate">Data de lliurament</string>
+    <string name="needsGrading">S\'ha de qualificar</string>
+    <string name="published">S’ha publicat</string>
+    <string name="unpublished">Se n’ha anul·lat la publicació</string>
+    <string name="notYetSubmitted">Encara no s\'ha entregat</string>
+    <string name="toBeGraded">Pendent de qualificació</string>
+    <string name="graded">Qualificat</string>
+    <string name="other">Altres</string>
+    <string name="a11y_filterAssignments">Filtra les activitats</string>
+    <string name="assignmentFilter">Filtre per a activitats</string>
+    <string name="groupedBy">Agrupat per</string>
+    <string name="gradingPeriod">Període de qualificació:</string>
+    <string name="gradingPeriodHeading">Període de qualificació</string>
+    <string name="gradePreferences">Preferències de notes</string>
+    <string name="allAssignments">Totes les activitats</string>
+    <string name="statusFilter">Filtre d\'estat</string>
     <string name="a11y_contentDescription_filter">Filtra</string>
     <string name="a11y_contentDescription_postPolicy">Política de publicació</string>
     <string name="late">Endarrerit</string>
@@ -2014,4 +2041,12 @@
     <string name="submissionFilter">Filtre d’entregues</string>
     <string name="submissionMessageSubject">%1$s el %2$s</string>
     <string name="all">Tot</string>
+    <string name="loginRequired">Cal iniciar la sessió</string>
+    <string name="loginRequiredMessage">Haureu de tornar a iniciar la sessió a causa de la política de seguretat de la vostra institució. Quan ja l’hàgiu iniciada, podreu continuar treballant sense interrupcions.</string>
+    <string name="login">Inici de sessió</string>
+    <string name="logout">Tanca la sessió</string>
+    <string name="loginRefreshSameUserError">Heu d’iniciar la sessió amb el mateix usuari.</string>
+    <string name="errorLoadingAssignments">S\'ha produït un error en carregar les activitats</string>
+    <string name="a11y_searchAssignments">Cerca activitats</string>
+    <string name="dueAssignmentListItem">Venç el %1$s</string>
 </resources>

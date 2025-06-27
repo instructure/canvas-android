@@ -20,15 +20,15 @@ import androidx.work.WorkRequest
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.features.submission.SubmissionWorkerAction
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.mobius.common.ui.SubmissionWorker
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreateSubmissionEntity
-import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
-import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
-import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
-import com.instructure.student.room.entities.daos.CreateSubmissionDao
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -79,7 +79,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.TEXT_ENTRY.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.TEXT_ENTRY.name)
             })
         }
     }
@@ -105,7 +105,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.URL_ENTRY.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.URL_ENTRY.name)
             })
         }
     }
@@ -141,7 +141,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.FILE_ENTRY.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.FILE_ENTRY.name)
             })
         }
     }
@@ -188,7 +188,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.MEDIA_ENTRY.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.MEDIA_ENTRY.name)
             })
         }
     }
@@ -214,7 +214,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.STUDIO_ENTRY.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.STUDIO_ENTRY.name)
             })
         }
     }
@@ -244,7 +244,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.STUDENT_ANNOTATION.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.STUDENT_ANNOTATION.name)
             })
         }
     }
@@ -295,7 +295,7 @@ class SubmissionHelperTest {
 
         verify {
             workManager.enqueue(withArg<WorkRequest> {
-                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.FILE_ENTRY.name)
+                assert(it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.FILE_ENTRY.name)
             })
         }
     }
@@ -333,7 +333,7 @@ class SubmissionHelperTest {
         verify {
             workManager.enqueue(withArg<WorkRequest> {
                 assert(
-                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.COMMENT_ENTRY.name
+                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.COMMENT_ENTRY.name
                             && it.workSpec.input.getLong(Const.ID, -1) == 1L
                 )
             })
@@ -370,7 +370,7 @@ class SubmissionHelperTest {
         verify {
             workManager.enqueue(withArg<WorkRequest> {
                 assert(
-                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.COMMENT_ENTRY.name
+                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.COMMENT_ENTRY.name
                             && it.workSpec.input.getLong(Const.ID, -1) == 1L
                 )
             })
@@ -425,7 +425,7 @@ class SubmissionHelperTest {
         verify {
             workManager.enqueue(withArg<WorkRequest> {
                 assert(
-                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorker.Action.COMMENT_ENTRY.name
+                    it.workSpec.input.getString(Const.ACTION) == SubmissionWorkerAction.COMMENT_ENTRY.name
                             && it.workSpec.input.getLong(Const.ID, -1) == 1L
                 )
             })

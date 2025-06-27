@@ -37,8 +37,8 @@ android {
         applicationId "com.instructure.candroid"
         minSdkVersion Versions.MIN_SDK
         targetSdkVersion Versions.TARGET_SDK
-        versionCode = 276
-        versionName = '7.12.0'
+        versionCode = 277
+        versionName = '7.13.0'
 
         vectorDrawables.useSupportLibrary = true
         testInstrumentationRunner 'com.instructure.student.espresso.StudentHiltTestRunner'
@@ -51,14 +51,6 @@ android {
         buildConfigField "String", "PSPDFKIT_LICENSE_KEY", "\"$pspdfkitLicenseKey\""
 
         testBuildType = "debug"
-
-        javaCompileOptions {
-            annotationProcessorOptions {
-                compilerArgumentProviders(
-                        new RoomSchemaArgProvider(new File(projectDir, "schemas"))
-                )
-            }
-        }
     }
 
     bundle {
@@ -329,6 +321,11 @@ dependencies {
 
     implementation Libs.NAVIGATION_FRAGMENT
     implementation Libs.NAVIGATION_KTX
+
+    implementation Libs.GLANCE
+    implementation Libs.GLANCE_PREVIEW
+    implementation Libs.GLANCE_APPWIDGET
+    implementation Libs.GLANCE_APPWIDGET_PREVIEW
 }
 
 // Comment out this line if the reporting logic starts going wonky.
@@ -372,5 +369,4 @@ if (coverageEnabled) {
             xml.enabled  false
         }
     }
-
 }

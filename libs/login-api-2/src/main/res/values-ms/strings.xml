@@ -100,7 +100,7 @@
     <string name="findMySchool">Cari sekolah anda</string>
     <string name="loginWithQRCode">Kod QR</string>
     <string name="locateQRCode">Kesan Kod QR</string>
-    <string name="qrCodeExplanation">Anda akan menemui kod QR di web dalam profil akaun anda. Klik \'QR untuk Log Masuk Mudah Alih\' dalam senarai.</string>
+    <string name="qrCodeExplanation">Cari kod QR dalam profil akaun anda di web di bawah \'QR untuk Log Masuk Mudah Alih\'.</string>
     <string name="qrCodeScanningPrompt">Imbas kod QR daripada Canvas untuk log masuk</string>
     <string name="loginWithQRCodeError">Terdapat ralat log masuk. Sila jana Kod QR lain dan cuba semula.</string>
     <string name="invalidQRCodeError">Sila imbas kod QR yang dijana oleh Canvas</string>
@@ -127,4 +127,5 @@
     <string name="weMadeChanges">Kami telah membuat beberapa perubahan.</string>
     <string name="whatsNewText">Lihat apa yang baharu.</string>
     <string name="findAnotherSchool">Cari sekolah lain</string>
+    <string name="qrCodeDisabledExplanation">Jika kod itu tidak ditemui, institusi anda telah menyahaktifkan pilihan ini.</string>
 </resources>

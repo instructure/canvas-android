@@ -36,6 +36,7 @@ import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withDescendant
 import com.instructure.espresso.page.withId
@@ -256,6 +257,20 @@ class DashboardPage : BasePage() {
     fun selectCourse(course: CourseApiModel) {
         assertDisplaysCourse(course)
         onView(withText(course.name)).click()
+    }
+
+    /**
+     * Asserts that the 'Login Required' dialog is displayed.
+     */
+    fun assertLoginRequiredDialog() {
+        waitForViewWithText(R.string.loginRequired).assertDisplayed()
+    }
+
+    /**
+     * Clicks on the 'LOG IN' button on the 'Login Required' dialog.
+     */
+    fun clickLogInOnLoginRequiredDialog() {
+        onView(withText("LOG IN")).click()
     }
 
     /**

@@ -20,9 +20,13 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.dataseeding.api.UserApi
 import com.instructure.dataseeding.model.CanvasUserApiModel
+import com.instructure.espresso.withIdlingResourceDisabled
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.seedData
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -30,6 +34,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 class LoginE2ETest : ParentComposeTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -59,7 +64,7 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu (to be able to log out).")
         dashboardPage.openLeftSideMenu()
 
-        Log.d(STEP_TAG, "Log out with '${student.name}' student.")
+        Log.d(STEP_TAG, "Log out with '${parent.name}' student.")
         leftSideNavigationDrawerPage.logout()
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
@@ -102,7 +107,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -121,7 +126,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Previous Logins' section is displayed and both the '${parent.name}' and '${parent2.name}' parents are displayed on the previous login list.")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -142,7 +147,7 @@ class LoginE2ETest : ParentComposeTest() {
         dashboardPage.openLeftSideMenu()
 
         Log.d(STEP_TAG, "Click on 'Switch Users' button on the left-side menu.")
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
 
         Log.d(ASSERTION_TAG, "Assert that the previously logins has been displayed. Assert that '${parent2.name}' parent is displayed but '${parent.name}' parent is not displayed within the previous logins list (as it was removed before).")
         loginLandingPage.assertDisplaysPreviousLogins()
@@ -192,6 +197,43 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
         leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.ACCESS_TOKEN_EXPIRATION)
+    fun testTokenExpirationForcedLogoutThenLogBackE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1, parents = 1)
+        val parent = data.parentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        loginWithUser(parent)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+
+        Log.d(PREPARATION_TAG, "Delete the '${parent.name}' parent's (valid) access token which has been created by the login mechanism.")
+        UserApi.deleteToken(ApiPrefs.accessToken)
+
+        withIdlingResourceDisabled {
+
+            Log.d(STEP_TAG, "Click on the 'Calendar' bottom menu to navigate to the Calendar page.")
+            dashboardPage.clickCalendarBottomMenu()
+
+            Log.d(ASSERTION_TAG, "Assert that the 'Login Required' dialog is displayed because the session (aka. access token) is expired/deleted, so we drop out the user when any action has been made.")
+            loginSignInPage.assertLoginRequiredDialog()
+
+            Log.d(STEP_TAG, "Click on the 'LOG IN' button on the 'Login Required' dialog.")
+            loginSignInPage.clickLogInOnLoginRequiredDialog()
+
+            Log.d(STEP_TAG, "Log back with the SAME user: '${parent.name}', login id: '${parent.loginId}'.")
+            loginSignInPage.loginAs(parent)
+
+            Log.d(ASSERTION_TAG, "Assert that the Calendar Screen page (with empty view) has been loaded.")
+            calendarScreenPage.assertEmptyView()
+        }
     }
 
     @E2E
@@ -266,6 +308,91 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(STEP_TAG, "Login with '${user.name}' user.")
         loginSignInPage.loginAs(user)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testLoginWithParentWhoHasNoStudentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1, parents = 1)
+        val parent = data.parentsList[0]
+        val parentWithoutStudent = UserApi.createCanvasUser()
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${parentWithoutStudent.name}', login id: '${parentWithoutStudent.loginId}'.")
+        loginWithUser(parentWithoutStudent)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Not a Parent' page has been displayed with all the corresponding information on it.")
+        notAParentPage.assertNotAParentPageDetails()
+
+        Log.d(STEP_TAG, "Click on 'Return to login' button to navigate back to the login page.")
+        notAParentPage.clickReturnToLogin()
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        loginWithUser(parent, true)
+
+        Log.d(PREPARATION_TAG, "Generate a pairing code for the '${student.name}' student to be able to pair with an observer.")
+        val responsePairingCodeObject = UserApi.postGeneratePairingCode(student.id)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully.")
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
+        leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Manage Students' button on the left-side menu.")
+        leftSideNavigationDrawerPage.clickManageStudents()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Manage Students' page is displayed with the '${student.name}' student.")
+        manageStudentsPage.assertToolbarTitle()
+        manageStudentsPage.assertStudentItemDisplayed(student.shortName)
+
+        Log.d(STEP_TAG, "Click on the 'Add Student' FAB (+) button on the bottom-right corner.")
+        manageStudentsPage.tapAddStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Add student with...' label and both the 'Pairing Code' and the 'QR Code' options are displayed on the Add Student (bottom) Page.")
+        addStudentBottomPage.assertAddStudentWithLabel()
+        addStudentBottomPage.assertPairingCodeOptionDisplayed()
+        addStudentBottomPage.assertQRCodeOptionDisplayed()
+
+        Log.d(STEP_TAG, "Click on the 'Pairing Code' to add a student via pairing code.")
+        addStudentBottomPage.clickOnPairingCode()
+
+        Log.d(STEP_TAG, "Enter the pairing code of the student and click on the 'OK' button to apply.")
+        pairingCodePage.enterPairingCode(responsePairingCodeObject.pairingCode.toString())
+        pairingCodePage.clickOkButton()
+        composeTestRule.waitForIdle()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${student.shortName}' student is displayed.")
+        manageStudentsPage.assertStudentItemDisplayed(student.shortName)
+
+        Log.d(STEP_TAG, "Click on the '${student.name}' student on the 'Manage Students' page.")
+        manageStudentsPage.clickStudent(student.shortName)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Alert Settings' page is displayed.")
+        studentAlertSettingsPage.assertToolbarTitle()
+
+        Log.d(STEP_TAG, "Click on the 'overflow menu' button on the 'Alert Settings' page.")
+        studentAlertSettingsPage.clickOverflowMenu()
+
+        Log.d(STEP_TAG, "Click on the 'Delete Student' button on the overflow menu.")
+        studentAlertSettingsPage.clickDeleteStudent()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Delete Student' dialog is displayed with the correct details.")
+        studentAlertSettingsPage.assertDeleteStudentDialogDetails()
+
+        Log.d(STEP_TAG, "Click on the 'Delete' button on the 'Delete Student' dialog.")
+        studentAlertSettingsPage.clickDeleteStudentButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the previously deleted student is not displayed on the 'Manage Students' page anymore.")
+        manageStudentsPage.assertStudentItemNotDisplayed(student.shortName)
+        manageStudentsPage.assertEmptyContent()
     }
 
 }

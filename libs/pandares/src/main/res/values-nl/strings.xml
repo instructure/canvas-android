@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Handtekening</string>
     <string name="inboxSignatureTextfieldHeader">Tekst handtekening</string>
     <string name="due_dateTime">Inleverdatum: %1$s, %2$s</string>
+    <string name="noDueDate">Geen inleverdatum</string>
+    <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
+    <string name="needsGradingCount">%1$s moet worden beoordeeld</string>
+    <string name="assignmentListTitle">Opdrachtenlijst</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d punt</item>
+        <item quantity="other">%d punten</item>
+    </plurals>
+    <string name="noAssignments">Geen opdrachten</string>
+    <string name="assignmentGroup">Opdrachtgroep</string>
+    <string name="assignmentType">Opdrachttype</string>
+    <string name="dueDate">Inleverdatum</string>
+    <string name="needsGrading">Moet worden beoordeeld</string>
+    <string name="published">Gepubliceerd</string>
+    <string name="unpublished">Niet-gepubliceerd</string>
+    <string name="notYetSubmitted">Nog niet ingeleverd</string>
+    <string name="toBeGraded">Te beoordelen</string>
+    <string name="graded">Beoordeeld</string>
+    <string name="other">Overige</string>
+    <string name="a11y_filterAssignments">Opdrachten filteren</string>
+    <string name="assignmentFilter">Filter Opdrachten</string>
+    <string name="groupedBy">Gegroepeerd op</string>
+    <string name="gradingPeriod">Beoordelingsperiode:</string>
+    <string name="gradingPeriodHeading">Beoordelingsperiode</string>
+    <string name="gradePreferences">Cijfervoorkeuren</string>
+    <string name="allAssignments">Alle opdrachten</string>
+    <string name="statusFilter">Statusfilter</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Beleid voor posten</string>
     <string name="late">Te laat</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Inleveringsfilter</string>
     <string name="submissionMessageSubject">%1$s om %2$s</string>
     <string name="all">Alles</string>
+    <string name="loginRequired">Inloggen vereist</string>
+    <string name="loginRequiredMessage">Je zult je opnieuw moeten aanmelden vanwege het beveiligingsbeleid van je instituut. Zodra je bent aangemeld, kun je probleemloos doorwerken.</string>
+    <string name="login">Inloggen</string>
+    <string name="logout">Uitloggen</string>
+    <string name="loginRefreshSameUserError">Je moet je aanmelden als dezelfde gebruiker.</string>
+    <string name="errorLoadingAssignments">Er is een fout opgetreden bij het laden van de opdrachten</string>
+    <string name="a11y_searchAssignments">Opdrachten zoeken</string>
+    <string name="dueAssignmentListItem">Inleverdatum %1$s</string>
 </resources>

@@ -3,7 +3,7 @@
 object Versions {
     /* SDK Versions */
     const val COMPILE_SDK = 35
-    const val MIN_SDK = 26
+    const val MIN_SDK = 28
     const val TARGET_SDK = 35
 
     /* Build/tooling */
@@ -42,6 +42,8 @@ object Versions {
     const val DATASTORE = "1.1.1"
     const val LOTTIE = "6.5.2"
     const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
+    const val JAVA_JWT = "4.5.0"
+    const val GLANCE = "1.1.1"
 }
 
 object Libs {
@@ -78,6 +80,7 @@ object Libs {
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.9.0"
     const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
     const val ENCRYPTED_SHARED_PREFERENCES = "androidx.security:security-crypto:${Versions.ENCRYPTED_SHARED_PREFERENCES}"
+    const val JAVA_JWT = "com.auth0:java-jwt:${Versions.JAVA_JWT}"
 
     /* Firebase */
     const val FIREBASE_BOM = "com.google.firebase:firebase-bom:33.4.0"
@@ -117,6 +120,7 @@ object Libs {
     const val HILT_TESTING_COMPILER = "com.google.dagger:hilt-android-compiler:${Versions.HILT}"
     const val HILT_ANDROIDX_COMPILER = "androidx.hilt:hilt-compiler:${Versions.HILT_ANDROIDX}"
     const val HILT_ANDROIDX_WORK = "androidx.hilt:hilt-work:${Versions.HILT_ANDROIDX}"
+    const val HILT_COMPOSE_NAVIGATION = "androidx.hilt:hilt-navigation-compose:${Versions.HILT_ANDROIDX}"
 
     /* Android Architecture Components */
     const val VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-ktx:${Versions.LIFECYCLE}"
@@ -191,9 +195,18 @@ object Libs {
     const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.2.0"
     const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.6"
 
+    // Glance
+    const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"
+    const val GLANCE_PREVIEW = "androidx.glance:glance-preview:${Versions.GLANCE}"
+    const val GLANCE_APPWIDGET = "androidx.glance:glance-appwidget:${Versions.GLANCE}"
+    const val GLANCE_APPWIDGET_PREVIEW = "androidx.glance:glance-appwidget-preview:${Versions.GLANCE}"
+
     // Navigation
     const val NAVIGATION_FRAGMENT = "androidx.navigation:navigation-fragment-ktx:${Versions.NAVIGATION}"
     const val NAVIGATION_KTX = "androidx.navigation:navigation-ui-ktx:${Versions.NAVIGATION}"
+    const val NAVIGATION_COMPOSE = "androidx.navigation:navigation-compose:${Versions.NAVIGATION}"
+
+    const val KOTLIN_SERIALIZABLE = "org.jetbrains.kotlinx:kotlinx-serialization-json:1.8.0"
 }
 
 object Plugins {
