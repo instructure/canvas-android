@@ -81,4 +81,8 @@ dependencies {
     /* WorkManager */
     implementation(Libs.ANDROIDX_WORK_MANAGER)
     implementation(Libs.ANDROIDX_WORK_MANAGER_KTX)
+
+    implementation(Libs.FIREBASE_CRASHLYTICS) {
+        isTransitive = true
+    }
 }
