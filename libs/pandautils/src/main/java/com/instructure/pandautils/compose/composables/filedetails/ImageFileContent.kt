@@ -48,6 +48,28 @@ fun ImageFileContent(
     )
 }
 
+@Composable
+fun ImageFileContent(
+    uri: Uri,
+    modifier: Modifier = Modifier,
+    contentDescription: String? = null,
+    contentScale: ContentScale = ContentScale.Fit,
+    loadingIndicator: @Composable () -> Unit = {},
+) {
+
+    GlideImage(
+        model = uri,
+        contentDescription = contentDescription,
+        modifier = modifier,
+        contentScale = contentScale,
+        alignment = Alignment.TopCenter,
+        loading = placeholder {
+            loadingIndicator()
+        }
+    )
+}
+
+
 @Preview
 @Composable
 fun ImageFileContentPreview() {
