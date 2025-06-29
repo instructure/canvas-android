@@ -42,7 +42,13 @@ class GradesWidgetUpdater(
 
     suspend fun updateData(widgetIds: List<Int>) {
         for (widgetId in widgetIds) {
-            val glanceId = glanceAppWidgetManager.getGlanceIdBy(widgetId)
+            val glanceId = try {
+                glanceAppWidgetManager.getGlanceIdBy(widgetId)
+            } catch (e: IllegalArgumentException) {
+                // Invalid AppWidget ID (widget deleted)
+                continue
+            }
+
             val user = apiPrefs.user
             if (user == null) {
                 _uiState.emit(Pair(glanceId, GradesWidgetUiState(WidgetState.NotLoggedIn)))
