@@ -18,20 +18,20 @@
 package com.instructure.student.widget.todo
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 
 class ToDoWidgetRepository(
     private val plannerApi: PlannerAPI.PlannerInterface,
     private val coursesApi: CourseAPI.CoursesInterface,
-    private val groupApi: GroupAPI.GroupInterface
+    private val calendarFilterDao: CalendarFilterDao
 ) {
     suspend fun getPlannerItems(
         startDate: String,
@@ -59,39 +59,19 @@ class ToDoWidgetRepository(
         }
     }
 
-    suspend fun getFavouriteCourses(forceNetwork: Boolean): List<Course> {
+    suspend fun getCourses(forceNetwork: Boolean): List<Course> {
         val restParams = RestParams(
             usePerPageQueryParam = true,
             isForceReadFromNetwork = forceNetwork,
             shouldLoginOnTokenError = false
         )
 
-        val courses = coursesApi.getFirstPageCourses(restParams).depaginate { nextUrl ->
+        return coursesApi.getFirstPageCourses(restParams).depaginate { nextUrl ->
             coursesApi.next(nextUrl, restParams)
         }.dataOrNull.orEmpty()
-
-        return courses.filter {
-            it.isFavorite
-        }.ifEmpty {
-            courses
-        }
     }
 
-    suspend fun getFavouriteGroups(forceNetwork: Boolean): List<Group> {
-        val restParams = RestParams(
-            usePerPageQueryParam = true,
-            isForceReadFromNetwork = forceNetwork,
-            shouldLoginOnTokenError = false
-        )
-
-        val groups = groupApi.getFirstPageGroups(restParams).depaginate { nextUrl ->
-            groupApi.getNextPageGroups(nextUrl, restParams)
-        }.dataOrNull.orEmpty()
-
-        return groups.filter {
-            it.isFavorite
-        }.ifEmpty {
-            groups
-        }
+    suspend fun getCalendarFilters(userId: Long, domain: String): CalendarFilterEntity? {
+        return calendarFilterDao.findByUserIdAndDomain(userId, domain)
     }
 }
