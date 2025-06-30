@@ -42,7 +42,7 @@ data class HorizonInboxListItemState(
     val type: HorizonInboxItemType,
     val title: String,
     val description: String,
-    val date: Date,
+    val date: Date?,
     val isUnread: Boolean,
     val courseId: Long? = null,
 )

@@ -342,7 +342,7 @@ private fun InboxContentItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = item.date.format("MMM dd, yyyy"),
+                    text = item.date?.format("MMM dd, yyyy").orEmpty(),
                     style = HorizonTypography.p2,
                     color = HorizonColors.Text.timestamp(),
                 )
@@ -361,15 +361,16 @@ private fun InboxContentItem(
 
             HorizonSpace(SpaceSize.SPACE_8)
 
+            val textStyle = if (item.isUnread) HorizonTypography.labelMediumBold else HorizonTypography.p2
             Text(
                 text = item.title,
-                style = HorizonTypography.labelMediumBold,
+                style = textStyle,
                 color = HorizonColors.Text.body(),
             )
 
             Text(
                 text = item.description,
-                style = HorizonTypography.labelMediumBold,
+                style = textStyle,
                 color = HorizonColors.Text.body(),
             )
         }
