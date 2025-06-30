@@ -17,20 +17,76 @@
 package com.instructure.horizon.features.inbox.compose
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonElevation
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
 
 @Composable
-fun HorizonInboxComposeScreen(navController: NavHostController) {
-    Column {
-        Text("Compose Screen")
-        Button(
-            "Back",
-            onClick = {
-                navController.popBackStack()
-            }
+fun HorizonInboxComposeScreen(
+    state: HorizonInboxComposeUiState,
+    navController: NavHostController
+) {
+    Scaffold(
+        topBar = {
+            HorizonInboxComposeTopBar(navController)
+        }
+    ) { innerPadding ->
+        HorizonInboxComposeContent(
+            state,
+            navController,
+            Modifier.padding(innerPadding)
         )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun HorizonInboxComposeTopBar(
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+) {
+    TopAppBar(
+        title = {
+            Text(
+                "Create Message",
+                style = HorizonTypography.h2,
+                color = HorizonColors.Text.title()
+            )
+        },
+        actions = {
+            IconButton(
+                iconRes = R.drawable.close,
+                contentDescription = null,
+                color = IconButtonColor.Inverse,
+                elevation = HorizonElevation.level4,
+                onClick = {
+                    navController.popBackStack()
+                },
+            )
+        },
+        modifier = modifier.padding(24.dp)
+    )
+}
+
+@Composable
+private fun HorizonInboxComposeContent(
+    state: HorizonInboxComposeUiState,
+    navController: NavHostController,
+    modifier: Modifier = Modifier,
+) {
+    Column(modifier = modifier) {
+
     }
 }

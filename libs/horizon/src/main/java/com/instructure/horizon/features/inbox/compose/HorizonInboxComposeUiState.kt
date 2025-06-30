@@ -1,0 +1,27 @@
+package com.instructure.horizon.features.inbox.compose
+
+import androidx.compose.ui.text.input.TextFieldValue
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Recipient
+
+data class HorizonInboxComposeUiState(
+    val isCoursePickerLoading: Boolean = false,
+    val coursePickerOptions: List<Course> = emptyList(),
+    val selectedCourse: Course? = null,
+    val isRecipientPickerLoading: Boolean = false,
+    val recipientSearchQuery: TextFieldValue = TextFieldValue(""),
+    val recipientPickerOptions: List<Recipient> = emptyList(),
+    val selectedRecipients: List<Recipient> = emptyList(),
+    val isConversationSendLoading: Boolean = false,
+    val isSendIndividually: Boolean = false,
+    val subject: TextFieldValue = TextFieldValue(""),
+    val body: TextFieldValue = TextFieldValue(""),
+    val onCourseSelected: (Course) -> Unit = {},
+    val onRecipientSearchQueryChanged: (TextFieldValue) -> Unit = {},
+    val onRecipientSelected: (Recipient) -> Unit = {},
+    val onRecipientRemoved: (Recipient) -> Unit = {},
+    val onSendConversation: () -> Unit = {},
+    val onSendIndividuallyChanged: (Boolean) -> Unit = {},
+    val onSubjectChanged: (TextFieldValue) -> Unit = {},
+    val onBodyChanged: (TextFieldValue) -> Unit = {},
+)
