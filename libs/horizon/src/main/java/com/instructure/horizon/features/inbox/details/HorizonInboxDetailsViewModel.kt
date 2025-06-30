@@ -95,7 +95,9 @@ class HorizonInboxDetailsViewModel @Inject constructor(
         } catch {
             _uiState.update {
                 it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = "Error")
+                    loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = context.getString(
+                        R.string.inboxFailedtoLoadErrorMessage
+                    ))
                 )
             }
         }
@@ -118,6 +120,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                         HorizonInboxDetailsItem(
                             author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
+                            isHtmlContent = false,
                             content = message.body.orEmpty(),
                             attachments = message.attachments.map { attachment ->
                                 attachment.toAttachmentUiState()
@@ -137,6 +140,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                             HorizonInboxDetailsItem(
                             author = context.getString(R.string.inboxGlobalAnnouncementAuthorLabel),
                             date = accountNotification.endDate ?: Date(),
+                            isHtmlContent = true,
                             content = accountNotification.message,
                             attachments = emptyList()
                         )
@@ -159,6 +163,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                         HorizonInboxDetailsItem(
                             author = announcement.author?.displayName.orEmpty(),
                             date = announcement.postedDate ?: Date(),
+                            isHtmlContent = true,
                             content = announcement.message.orEmpty(),
                             attachments = emptyList()
                         )
@@ -166,6 +171,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                         HorizonInboxDetailsItem(
                             author = message.author?.displayName.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
+                            isHtmlContent = true,
                             content = message.message.orEmpty(),
                             attachments = emptyList()
                         )
@@ -319,10 +325,10 @@ class HorizonInboxDetailsViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(
-                    loadingState = it.loadingState.copy(isLoading = true)
+                    replyState = it.replyState?.copy(isLoading = true)
                 )
             }
 
@@ -337,11 +343,11 @@ class HorizonInboxDetailsViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false),
                     items = conversation.messages.map { message ->
                         HorizonInboxDetailsItem(
                             author = conversation.participants.firstOrNull { it.id == message.authorId }?.name.orEmpty(),
                             date = message.createdAt.toDate() ?: Date(),
+                            isHtmlContent = true,
                             content = message.body.orEmpty(),
                             attachments = message.attachments.map { attachment ->
                                 attachment.toAttachmentUiState()
@@ -350,6 +356,18 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     } + it.items,
                     replyState = it.replyState?.copy(
                         replyTextValue = TextFieldValue(""),
+                        isLoading = false
+                    )
+                )
+            }
+        } catch {
+            _uiState.update { currentState ->
+                currentState.copy(
+                    replyState = currentState.replyState?.copy(
+                        isLoading = false,
+                    ),
+                    loadingState = currentState.loadingState.copy(
+                        snackbarMessage = context.getString(R.string.inboxFailedToSendReplyLabel)
                     )
                 )
             }

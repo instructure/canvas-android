@@ -284,4 +284,6 @@
     <string name="commentsBottomSheet_failedToLoadNextPage">Failed to load next page.</string>
     <string name="commentsBottomSheet_failedToLoadPreviousPage">Failed to load previous page.</string>
     <string name="commentsBottomSheet_failedToPostComment">Failed to post comment.</string>
+    <string name="inboxFailedToSendReplyLabel">Failed to send reply</string>
+    <string name="inboxFailedtoLoadErrorMessage">Failed to load</string>
 </resources>

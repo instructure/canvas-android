@@ -17,10 +17,10 @@
 package com.instructure.horizon.features.inbox.details
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -48,12 +48,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.fromHtml
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -68,12 +63,17 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
@@ -111,7 +111,7 @@ private fun HorizonInboxDetailsHeader(
                     Icon(
                         painterResource(id = titleIcon),
                         contentDescription = null,
-                        tint = HorizonColors.Surface.institution(),
+                        tint = HorizonColors.Icon.default(),
                         modifier = Modifier.size(16.dp)
                     )
 
@@ -127,14 +127,12 @@ private fun HorizonInboxDetailsHeader(
             }
         },
         navigationIcon = {
-            Image(
-                painter = painterResource(id = R.drawable.arrow_back),
-                contentDescription = null,
-                modifier = Modifier
-                    .padding(horizontal = 10.dp)
-                    .clickable {
-                        navController.popBackStack()
-                    }
+            IconButton(
+                iconRes = R.drawable.arrow_back,
+                contentDescription = stringResource(R.string.a11yNavigateBack),
+                color = IconButtonColor.Ghost,
+                onClick = { navController.popBackStack() },
+                modifier = Modifier.padding(horizontal = 10.dp)
             )
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -162,7 +160,7 @@ private fun HorizonInboxDetailsContent(
                 .fillMaxSize()
                 .background(HorizonColors.Surface.pageSecondary()),
             reverseLayout = state.bottomLayout,
-            contentPadding = PaddingValues(vertical = 8.dp)
+            contentPadding = PaddingValues(top = 16.dp)
         ) {
             if (state.replyState != null) {
                 stickyHeader { HorizonInboxReplyContent(state.replyState) }
@@ -188,11 +186,13 @@ private fun HorizonInboxDetailsItem(
         modifier = modifier
             .fillMaxWidth()
             .background(HorizonColors.Surface.pageSecondary())
-            .padding(top = 16.dp, bottom = 24.dp, start = 24.dp, end = 24.dp)
+            .padding(top = 16.dp, bottom = 24.dp)
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 24.dp)
         ){
             Text(
                 text = item.author,
@@ -211,20 +211,11 @@ private fun HorizonInboxDetailsItem(
 
         HorizonSpace(SpaceSize.SPACE_8)
 
-        val annotatedString = AnnotatedString.fromHtml(
-            item.content,
-            linkStyles = TextLinkStyles(
-                style = SpanStyle(
-                    textDecoration = TextDecoration.Underline,
-                    color = HorizonColors.Text.link()
-                )
-            )
-        )
-        Text(
-            text = annotatedString,
-            style = HorizonTypography.p1,
-            color = HorizonColors.Text.body(),
-        )
+        if (item.isHtmlContent) {
+            HorizonInboxHtmlContent(item.content, Modifier.padding(horizontal = 16.dp))
+        } else {
+            HorizonInboxTextContent(item.content, Modifier.padding(horizontal = 24.dp))
+        }
 
         item.attachments.forEach { attachment ->
             HorizonSpace(SpaceSize.SPACE_8)
@@ -234,7 +225,6 @@ private fun HorizonInboxDetailsItem(
                     fileName = attachment.name,
                     progress = attachment.downloadProgress,
                     onActionClick = { attachment.onCancelDownloadClick(attachment.id) },
-                    onClick = { attachment.onDownloadClick(attachment) }
                 )
             } else {
                 FileDropItemState.NoLongerEditable(
@@ -247,10 +237,32 @@ private fun HorizonInboxDetailsItem(
             FileDropItem(
                 state = fileState,
                 hasBorder = true,
-                borderColor = HorizonColors.LineAndBorder.lineStroke()
+                borderColor = HorizonColors.LineAndBorder.lineStroke(),
+                modifier = Modifier.padding(horizontal = 24.dp)
             )
         }
     }
+}
+
+@Composable
+private fun HorizonInboxTextContent(
+    content: String,
+    modifier: Modifier = Modifier
+) {
+    Text(
+        text = content,
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = modifier
+    )
+}
+
+@Composable
+private fun HorizonInboxHtmlContent(
+    content: String,
+    modifier: Modifier = Modifier
+) {
+    ComposeCanvasWebViewWrapper(content, modifier)
 }
 
 @Composable
@@ -280,11 +292,32 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
         ) {
             Spacer(modifier = Modifier.weight(1f))
 
-            Button(
-                label = stringResource(R.string.inboxSendLabel),
-                color = ButtonColor.Institution,
-                onClick = { state.onSendReply() },
-            )
+            AnimatedContent(
+                state.isLoading,
+                label = "ReplyButtonAnimation",
+            ) { isLoading ->
+                if (isLoading) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                    ) {
+                        Spinner(
+                            size = SpinnerSize.EXTRA_SMALL,
+                            color = HorizonColors.Surface.cardPrimary(),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 22.dp, vertical = 10.dp),
+                        )
+                    }
+                } else {
+                    Button(
+                        label = stringResource(R.string.inboxSendLabel),
+                        color = ButtonColor.Institution,
+                        onClick = { state.onSendReply() },
+                    )
+                }
+            }
         }
     }
 }
@@ -304,12 +337,14 @@ private fun HorizonInboxDetailsScreenPreview() {
                 HorizonInboxDetailsItem(
                     author = "John Doe",
                     date = Date(),
+                    isHtmlContent = false,
                     content = "This is a sample message content.",
                     attachments = emptyList()
                 ),
                 HorizonInboxDetailsItem(
                     author = "John Doe",
                     date = Date(),
+                    isHtmlContent = false,
                     content = "This is a sample message content.",
                     attachments = listOf(
                         HorizonInboxDetailsAttachment(
