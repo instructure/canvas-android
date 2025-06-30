@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -38,7 +39,6 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import java.util.Date
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -112,9 +112,9 @@ class HorizonInboxListViewModel @Inject constructor(
             repository.getConversations(conversationScope, forceRefresh)
                 .filter { conversation ->
                     uiState.value.selectedRecipients.isEmpty()
-                            || conversation.participants.map { conversation.id.toString() }.containsAll(
+                            || conversation.audience?.map { it.toString() }?.containsAll(
                         uiState.value.selectedRecipients.map { it.stringId }
-                    )
+                    ).orDefault()
                 }
         }
         val accountAnnouncements = if (uiState.value.selectedScope == HorizonInboxScope.All || uiState.value.selectedScope == HorizonInboxScope.Announcements) {
@@ -147,7 +147,7 @@ class HorizonInboxListViewModel @Inject constructor(
                             description = conversation.audience?.mapNotNull {
                                 recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
                             }?.map { it.name }?.joinToString(", ").orEmpty(),
-                            date = conversation.lastMessageDate ?: Date(),
+                            date = conversation.lastAuthoredMessageSent,
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }
@@ -160,7 +160,7 @@ class HorizonInboxListViewModel @Inject constructor(
                             type = HorizonInboxItemType.AccountNotification,
                             title = context.getString(R.string.inboxAnnouncementTitle),
                             description = it.subject,
-                            date = it.endDate ?: Date(),
+                            date = it.startDate,
                             isUnread = true
                         )
                     }
@@ -178,7 +178,7 @@ class HorizonInboxListViewModel @Inject constructor(
                                 course.name
                             ),
                             description = announcement.title.orEmpty(),
-                            date = announcement.createdDate ?: Date(),
+                            date = announcement.createdDate,
                             isUnread = announcement.status == DiscussionTopicHeader.ReadState.UNREAD
                         )
                     }
