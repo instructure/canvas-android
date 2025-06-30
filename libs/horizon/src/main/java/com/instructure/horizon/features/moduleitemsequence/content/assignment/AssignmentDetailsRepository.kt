@@ -18,14 +18,18 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.utils.orDefault
 import javax.inject.Inject
 
 class AssignmentDetailsRepository @Inject constructor(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val oAuthInterface: OAuthAPI.OAuthInterface
+    private val oAuthInterface: OAuthAPI.OAuthInterface,
+    private val horizonGetCommentsManager: HorizonGetCommentsManager,
+    private val apiPrefs: ApiPrefs,
 ) {
-
     suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
@@ -36,5 +40,12 @@ class AssignmentDetailsRepository @Inject constructor(
             url,
             RestParams(isForceReadFromNetwork = true)
         ).dataOrNull?.sessionUrl ?: url
+    }
+
+    suspend fun hasUnreadComments(
+        assignmentId: Long,
+        forceNetwork: Boolean = false
+    ): Boolean {
+        return horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, apiPrefs.user?.id.orDefault(), forceNetwork) > 0
     }
 }

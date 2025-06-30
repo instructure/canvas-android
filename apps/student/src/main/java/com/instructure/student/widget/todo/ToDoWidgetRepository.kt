@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
@@ -37,7 +38,7 @@ class ToDoWidgetRepository(
         endDate: String,
         contextCodes: List<String>,
         forceNetwork: Boolean
-    ): List<PlannerItem> {
+    ): DataResult<List<PlannerItem>> {
         val restParams = RestParams(
             usePerPageQueryParam = true,
             isForceReadFromNetwork = forceNetwork,
@@ -51,8 +52,10 @@ class ToDoWidgetRepository(
             restParams
         ).depaginate {
             plannerApi.nextPagePlannerItems(it, restParams)
-        }.dataOrThrow.filter {
-            it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST
+        }.map { items ->
+            items.filter {
+                it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST
+            }
         }
     }
 

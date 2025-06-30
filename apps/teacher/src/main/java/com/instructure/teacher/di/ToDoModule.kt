@@ -18,12 +18,14 @@
 package com.instructure.teacher.di
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.pandautils.features.calendartodo.details.ToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.details.ToDoRouter
 import com.instructure.teacher.features.calendartodo.TeacherToDoRouter
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
@@ -32,5 +34,17 @@ class ToDoModule {
     @Provides
     fun provideToDoRouter(activity: FragmentActivity): ToDoRouter {
         return TeacherToDoRouter(activity)
+    }
+}
+
+@Module
+@InstallIn(ViewModelComponent::class)
+class ToDoViewModelModule {
+
+    @Provides
+    fun provideToDoBehavior(): ToDoViewModelBehavior {
+        return object : ToDoViewModelBehavior {
+            override fun updateWidget() = Unit
+        }
     }
 }

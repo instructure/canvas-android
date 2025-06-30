@@ -18,6 +18,6 @@
 package com.instructure.pandautils.features.calendartodo.createupdate
 
 
-interface CreateUpdateToDoBehavior {
+interface CreateUpdateToDoViewModelBehavior {
     fun updateWidget()
 }

@@ -27,7 +27,9 @@ import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.color
@@ -91,8 +93,16 @@ class ToDoWidgetUpdaterTest {
     }
 
     @Test
+    fun `Emits NotLoggedIn state when api call gets authorization error`() = runTest {
+        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail(Failure.Authorization())
+
+        val flow = updater.updateData(context)
+        assertEquals(WidgetState.NotLoggedIn, flow.last().state)
+    }
+
+    @Test
     fun `Emits Error state when api calls fail`() = runTest {
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } throws Exception()
+        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail()
 
         val flow = updater.updateData(context)
         assertEquals(WidgetState.Error, flow.last().state)
@@ -100,7 +110,7 @@ class ToDoWidgetUpdaterTest {
 
     @Test
     fun `Emits Empty state when api returns empty list`() = runTest {
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns emptyList()
+        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(emptyList())
 
         val flow = updater.updateData(context)
         assertEquals(WidgetState.Empty, flow.last().state)
@@ -134,7 +144,7 @@ class ToDoWidgetUpdaterTest {
         )
 
         coEvery { repository.getCourses(any()) } returns listOf(Course(1, courseCode = "CODE"))
-        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns listOf(assignmentItem, toDoItem, calendarEvent)
+        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(listOf(assignmentItem, toDoItem, calendarEvent))
 
         val expected = ToDoWidgetUiState(
             WidgetState.Content,

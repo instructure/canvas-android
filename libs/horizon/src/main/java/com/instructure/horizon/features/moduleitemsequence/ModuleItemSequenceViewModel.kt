@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.models.ModuleObject
@@ -122,7 +123,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
         moduleItems = modules.flatMap { it.items }
 
         currentModuleItem = moduleItems.find { it.id == moduleItemId }
-        val attempts = getAttemptCount(currentModuleItem)
+
+        val assignment = getAssignment(currentModuleItem)
+        val attempts = getAttemptCount(assignment)
+        val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
 
         val items = modules
             .flatMap { it.items }.mapNotNull {
@@ -152,7 +156,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                         this += "title" to currentModuleItem?.title.orEmpty()
                         this += "module-id" to currentModuleItem?.id.orDefault().toString()
                     }
-                )
+                ),
+                hasUnreadComments = hasUnreadComments
             )
         }
     }
@@ -190,6 +195,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     ModuleItemContent.Assignment(courseId, item.contentId)
                 }
             }
+
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(courseId, item.contentId)
             item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.title.orEmpty(), item.externalUrl.orEmpty())
             item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(
@@ -277,10 +283,18 @@ class ModuleItemSequenceViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val moduleItem =
                 repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
-            val attempts = getAttemptCount(moduleItem)
+
+            val assignment = getAssignment(currentModuleItem)
+            val attempts = getAttemptCount(assignment)
+            val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
+
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
-                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules, attempts) else it
+                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(
+                    moduleItem,
+                    modules,
+                    attempts
+                ) else it
             }
             val currentItem = getCurrentItem(items = newItems)
             _uiState.update {
@@ -292,7 +306,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                             this += "title" to currentModuleItem?.title.orEmpty()
                             this += "module-id" to currentModuleItem?.id.orDefault().toString()
                         }
-                    )
+                    ),
+                    hasUnreadComments = hasUnreadComments
                 )
             }
         } catch {
@@ -353,7 +368,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
             modules = repository.getModulesWithItems(courseId)
             moduleItems = modules.flatMap { it.items }
 
-            val attempts = getAttemptCount(currentModuleItem)
+            val assignment = getAssignment(currentModuleItem)
+            val attempts = getAttemptCount(assignment)
+            val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
 
             val items = modules
                 .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
@@ -369,6 +386,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     progressScreenState = it.progressScreenState.copy(
                         pages = progressPages
                     ),
+                    hasUnreadComments = hasUnreadComments
                 )
             }
         } catch {
@@ -487,12 +505,21 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAttemptCount(item: ModuleItem?): String? {
+    private suspend fun getAssignment(item: ModuleItem?): Assignment? {
         if (item?.type != Type.Assignment.name) return null
 
-        val assignment = repository.getAssignment(item.contentId, courseId, forceNetwork = true)
+        return repository.getAssignment(item.contentId, courseId, forceNetwork = true)
+    }
+
+    private suspend fun getAttemptCount(assignment: Assignment?): String? {
+        if (assignment == null) return null
+
         return if (assignment.allowedAttempts > 0) {
-            context.resources.getQuantityString(R.plurals.modulePager_numberOfAttemtps, assignment.allowedAttempts.toInt(), assignment.allowedAttempts)
+            context.resources.getQuantityString(
+                R.plurals.modulePager_numberOfAttemtps,
+                assignment.allowedAttempts.toInt(),
+                assignment.allowedAttempts
+            )
         } else {
             context.getString(R.string.modulePager_unlimitedAttempts)
         }

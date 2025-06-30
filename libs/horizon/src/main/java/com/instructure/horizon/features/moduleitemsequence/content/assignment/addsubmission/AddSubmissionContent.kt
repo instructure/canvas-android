@@ -21,7 +21,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -49,7 +48,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
-import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
+import com.instructure.horizon.horizonui.molecules.IconButton
+import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.SegmentedControl
 import com.instructure.horizon.horizonui.molecules.SegmentedControlIconPosition
 import com.instructure.horizon.horizonui.molecules.Spinner
@@ -158,14 +158,11 @@ fun AddSubmissionContent(
                         style = HorizonTypography.p1,
                         color = HorizonColors.Text.timestamp()
                     )
-                    Button(
-                        label = stringResource(R.string.assignmentDetails_deleteDraft),
-                        color = ButtonColor.Custom(
-                            backgroundColor = HorizonColors.Surface.pageSecondary(),
-                            contentColor = HorizonColors.Text.error()
-                        ),
+                    IconButton(
+                        color = IconButtonColor.InverseDanger,
                         onClick = selectedSubmissionType.draftUiState.onDeleteDraftClicked,
-                        iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+                        iconRes = R.drawable.delete,
+                        contentDescription = stringResource(R.string.assignmentDetails_deleteDraft)
                     )
                 }
             }

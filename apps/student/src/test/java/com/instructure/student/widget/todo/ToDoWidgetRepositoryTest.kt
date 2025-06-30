@@ -47,11 +47,13 @@ class ToDoWidgetRepositoryTest {
 
     private val repository: ToDoWidgetRepository = ToDoWidgetRepository(plannerApi, coursesApi, calendarFilterDao)
 
-    @Test(expected = IllegalStateException::class)
-    fun `Throw exception when planner api request fails`() = runTest {
+    @Test
+    fun `Returns failed result when planner api request fails`() = runTest {
         coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail()
 
-        repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+        val result = repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
+
+        assertEquals(DataResult.Fail(), result)
     }
 
     @Test
@@ -71,7 +73,7 @@ class ToDoWidgetRepositoryTest {
 
         val result = repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
 
-        assertEquals(plannerItems.minus(listOf(filteredItem, filteredItem2).toSet()), result)
+        assertEquals(DataResult.Success(plannerItems.minus(listOf(filteredItem, filteredItem2).toSet())), result)
     }
 
     @Test
@@ -94,7 +96,7 @@ class ToDoWidgetRepositoryTest {
 
         val result = repository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
 
-        assertEquals(plannerItems1.plus(plannerItems2), result)
+        assertEquals(DataResult.Success(plannerItems1.plus(plannerItems2)), result)
     }
 
     @Test

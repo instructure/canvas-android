@@ -15,19 +15,9 @@
  *
  */
 
-package com.instructure.student.features.calendarevent
-
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ScheduleItem
-import com.instructure.pandautils.features.calendarevent.details.EventViewModelBehavior
-import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
+package com.instructure.pandautils.features.calendarevent.createupdate
 
 
-class StudentEventViewModelBehavior : EventViewModelBehavior {
-
-    override val shouldShowMessageFab = false
-
-    override fun getInboxComposeOptions(canvasContext: CanvasContext?, event: ScheduleItem): InboxComposeOptions {
-        throw NotImplementedError("This method should not be called")
-    }
+interface CreateUpdateEventViewModelBehavior {
+    fun updateWidget()
 }
