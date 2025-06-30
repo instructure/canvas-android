@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
+import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -24,7 +25,7 @@ import javax.inject.Inject
 @HiltViewModel
 class HorizonInboxComposeViewModel @Inject constructor(
     private val repository: HorizonInboxComposeRepository
-) {
+): ViewModel() {
     private val _uiState = MutableStateFlow(
         HorizonInboxComposeUiState(
 
