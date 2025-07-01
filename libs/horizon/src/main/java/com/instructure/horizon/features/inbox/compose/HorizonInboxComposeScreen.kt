@@ -16,7 +16,10 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
+import androidx.compose.animation.AnimatedContent
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -42,6 +45,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -51,6 +55,8 @@ import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
@@ -279,13 +285,33 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
 
             HorizonSpace(SpaceSize.SPACE_8)
 
-            Button(
-                label = stringResource(R.string.inboxComposeSendLabel),
-                color = ButtonColor.Institution,
-                onClick = {
-                    state.onSendConversation()
+            AnimatedContent(state.isSendLoading, label = "SendButtonAnimation") { isLoading ->
+                if (isLoading) {
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .background(color = HorizonColors.Surface.institution(), shape = HorizonCornerRadius.level6)
+                    ) {
+                        Spinner(
+                            size = SpinnerSize.EXTRA_SMALL,
+                            color = HorizonColors.Surface.cardPrimary(),
+                            modifier = Modifier
+                                .align(Alignment.Center)
+                                .padding(horizontal = 22.dp, vertical = 10.dp),
+                        )
+                    }
+                } else {
+                    Button(
+                        label = stringResource(R.string.inboxComposeSendLabel),
+                        color = ButtonColor.Institution,
+                        onClick = {
+                            state.onSendConversation {
+                                navController.popBackStack()
+                            }
+                        }
+                    )
                 }
-            )
+            }
         }
     }
 }

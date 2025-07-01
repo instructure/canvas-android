@@ -37,7 +37,7 @@ class HorizonInboxComposeRepository @Inject constructor(
         }.dataOrThrow
     }
 
-    suspend fun getRecipients(courseId: Long, searchQuery: String?, forceNetwork: Boolean): List<Recipient> {
+    suspend fun getRecipients(courseId: Long, searchQuery: String?, forceNetwork: Boolean = false): List<Recipient> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
         return recipientApi.getFirstPageRecipientList(searchQuery, courseId.toString(), params)
             .depaginate { recipientApi.getNextPageRecipientList(it, params) }

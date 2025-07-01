@@ -5,7 +5,6 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 
 data class HorizonInboxComposeUiState(
-    val isCoursePickerLoading: Boolean = false,
     val coursePickerOptions: List<Course> = emptyList(),
     val selectedCourse: Course? = null,
     val isRecipientPickerLoading: Boolean = false,
@@ -16,11 +15,12 @@ data class HorizonInboxComposeUiState(
     val isSendIndividually: Boolean = false,
     val subject: TextFieldValue = TextFieldValue(""),
     val body: TextFieldValue = TextFieldValue(""),
+    val isSendLoading: Boolean = false,
     val onCourseSelected: (Course) -> Unit = {},
     val onRecipientSearchQueryChanged: (TextFieldValue) -> Unit = {},
     val onRecipientSelected: (Recipient) -> Unit = {},
     val onRecipientRemoved: (Recipient) -> Unit = {},
-    val onSendConversation: () -> Unit = {},
+    val onSendConversation: (onFinished: () -> Unit) -> Unit = {},
     val onSendIndividuallyChanged: (Boolean) -> Unit = {},
     val onSubjectChanged: (TextFieldValue) -> Unit = {},
     val onBodyChanged: (TextFieldValue) -> Unit = {},
