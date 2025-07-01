@@ -55,7 +55,8 @@ class HorizonInboxListViewModel @Inject constructor(
             ),
             updateRecipientSearchQuery = ::updateRecipientSearchQuery,
             updateScopeFilter = ::updateScopeFilter,
-            updateSelectedRecipients = ::updateSelectedRecipients
+            updateSelectedRecipients = ::updateSelectedRecipients,
+            showSnackbar = ::showSnackbar
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -242,5 +243,11 @@ class HorizonInboxListViewModel @Inject constructor(
             it.copy(selectedRecipients = value)
         }
         loadData()
+    }
+
+    private fun showSnackbar(message: String) {
+        _uiState.update {
+            it.copy(loadingState = it.loadingState.copy(snackbarMessage = message))
+        }
     }
 }

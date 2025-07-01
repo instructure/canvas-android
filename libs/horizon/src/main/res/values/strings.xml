@@ -301,4 +301,5 @@
     <string name="inboxComposeCourseErrorMessage">Failed to load Courses</string>
     <string name="inboxComposeRecipientErrorMessage">Failed to load Recipients</string>
     <string name="inboxComposeSendErrorMessage">Failed to send Message</string>
+    <string name="inboxListConversationCreatedMessage">Conversation created successfully</string>
 </resources>

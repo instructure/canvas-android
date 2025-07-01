@@ -48,6 +48,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
+import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -319,11 +321,13 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                         )
                     }
                 } else {
+                    val listEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry(HorizonInboxRoute.InboxList.route) }
                     Button(
                         label = stringResource(R.string.inboxComposeSendLabel),
                         color = ButtonColor.Institution,
                         onClick = {
                             state.onSendConversation {
+                                listEntry.savedStateHandle[HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED] = true
                                 navController.popBackStack()
                             }
                         }
