@@ -42,7 +42,10 @@ fun SpeedGraderDetailsScreen() {
             .fillMaxWidth()
             .verticalScroll(rememberScrollState())
     ) {
-        SubmissionDetails(selectedAttemptId)
+        SubmissionDetails(
+            attemptId = selectedAttemptId,
+            modifier = Modifier.fillMaxWidth()
+        )
         StudentNotes(modifier = Modifier.fillMaxWidth())
     }
 }
