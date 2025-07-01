@@ -286,4 +286,12 @@
     <string name="commentsBottomSheet_failedToPostComment">Failed to post comment.</string>
     <string name="inboxFailedToSendReplyLabel">Failed to send reply</string>
     <string name="inboxFailedtoLoadErrorMessage">Failed to load</string>
+    <string name="inboxComposeTitle">Create Message</string>
+    <string name="inboxComposeCoursePickerLabel">Course</string>
+    <string name="inboxComposeRecipientPickerLabel">Recipient(s)</string>
+    <string name="inboxComposeSendIndividuallyLabel">Send an individual message to each recipient</string>
+    <string name="inboxComposeSubjectLabel">Title/Subject</string>
+    <string name="inboxComposeMessageLabel">Message</string>
+    <string name="inboxComposeCancelLabel">Cancel</string>
+    <string name="inboxComposeSendLabel">Send</string>
 </resources>
