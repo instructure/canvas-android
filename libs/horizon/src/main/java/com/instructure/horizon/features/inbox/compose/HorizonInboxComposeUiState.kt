@@ -24,4 +24,8 @@ data class HorizonInboxComposeUiState(
     val onSendIndividuallyChanged: (Boolean) -> Unit = {},
     val onSubjectChanged: (TextFieldValue) -> Unit = {},
     val onBodyChanged: (TextFieldValue) -> Unit = {},
+    val courseErrorMessage: String? = null,
+    val recipientErrorMessage: String? = null,
+    val subjectErrorMessage: String? = null,
+    val bodyErrorMessage: String? = null
 )

@@ -16,12 +16,15 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
+import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.horizon.R
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -34,7 +37,8 @@ import javax.inject.Inject
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HorizonInboxComposeViewModel @Inject constructor(
-    private val repository: HorizonInboxComposeRepository
+    private val repository: HorizonInboxComposeRepository,
+    @ApplicationContext private val context: Context
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         HorizonInboxComposeUiState(
@@ -87,6 +91,28 @@ class HorizonInboxComposeViewModel @Inject constructor(
     }
 
     private fun sendConversation(onFinished: () -> Unit = {}) {
+        val selectedCourse = uiState.value.selectedCourse
+        var isError = false
+        if (selectedCourse == null) {
+            _uiState.update { it.copy(courseErrorMessage = context.getString(R.string.inboxComposeSelectCourseErrorMessage)) }
+            isError = true
+        }
+        if (uiState.value.selectedRecipients.isEmpty()) {
+            _uiState.update { it.copy(recipientErrorMessage = context.getString(R.string.inboxComposeSelectRecipientErrorMessage)) }
+            isError = true
+        }
+        if (uiState.value.subject.text.isBlank()) {
+            _uiState.update { it.copy(subjectErrorMessage = context.getString(R.string.inboxComposeSubjectErrorMessage)) }
+            isError = true
+        }
+        if (uiState.value.body.text.isBlank()) {
+            _uiState.update { it.copy(bodyErrorMessage = context.getString(R.string.inboxComposeBodyErrorMessage)) }
+            isError = true
+        }
+        if (isError || selectedCourse == null) {
+            return
+        }
+
         viewModelScope.launch {
             _uiState.update { it.copy(isSendLoading = true) }
 
@@ -94,9 +120,9 @@ class HorizonInboxComposeViewModel @Inject constructor(
                 recipientIds = uiState.value.selectedRecipients.mapNotNull { it.stringId },
                 body = uiState.value.body.text,
                 subject = uiState.value.subject.text,
-                contextCode = uiState.value.selectedCourse!!.contextId,
+                contextCode = selectedCourse.contextId,
                 attachmentIds = emptyList<Long>().toLongArray(),
-                isBulkMessage = uiState.value.isSendIndividually
+                isBulkMessage = uiState.value.isSendIndividually || uiState.value.selectedRecipients.size >= 100
             )
 
             _uiState.update { it.copy(isSendLoading = false) }
@@ -107,7 +133,7 @@ class HorizonInboxComposeViewModel @Inject constructor(
 
     private fun onCourseSelected(course: Course) {
         _uiState.update {
-            it.copy(selectedCourse = course)
+            it.copy(selectedCourse = course, courseErrorMessage = null)
         }
         fetchRecipients()
     }
@@ -121,13 +147,13 @@ class HorizonInboxComposeViewModel @Inject constructor(
 
     private fun onRecipientSelected(recipient: Recipient) {
         _uiState.update {
-            it.copy(selectedRecipients = it.selectedRecipients + recipient)
+            it.copy(selectedRecipients = it.selectedRecipients + recipient, recipientErrorMessage = null)
         }
     }
 
     fun onRecipientRemoved(recipient: Recipient) {
         _uiState.update {
-            it.copy(selectedRecipients = it.selectedRecipients - recipient)
+            it.copy(selectedRecipients = it.selectedRecipients - recipient, recipientErrorMessage = null)
         }
     }
 
@@ -139,13 +165,13 @@ class HorizonInboxComposeViewModel @Inject constructor(
 
     private fun onSubjectChanged(subject: TextFieldValue) {
         _uiState.update {
-            it.copy(subject = subject)
+            it.copy(subject = subject, subjectErrorMessage = null)
         }
     }
 
     private fun onBodyChanged(body: TextFieldValue) {
         _uiState.update {
-            it.copy(body = body)
+            it.copy(body = body, bodyErrorMessage = null)
         }
     }
 }

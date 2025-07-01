@@ -165,6 +165,7 @@ private fun CourseRecipientPickerSection(state: HorizonInboxComposeUiState) {
             placeHolderText = stringResource(R.string.inboxComposeCoursePickerLabel),
             options = state.coursePickerOptions.map { it.name },
             selectedOption = state.selectedCourse?.name,
+            errorText = state.courseErrorMessage,
             onOptionSelected = {
                 state.coursePickerOptions.firstOrNull()?.let {
                     state.onCourseSelected(it)
@@ -189,6 +190,7 @@ private fun CourseRecipientPickerSection(state: HorizonInboxComposeUiState) {
             searchPlaceHolder = stringResource(R.string.inboxComposeRecipientPickerLabel),
             searchQuery = state.recipientSearchQuery,
             isOptionListLoading = state.isRecipientPickerLoading,
+            errorText = state.recipientErrorMessage,
             onSearchQueryChanged = state.onRecipientSearchQueryChanged,
             onOptionSelected = { recipient ->
                 state.recipientPickerOptions.firstOrNull { it.name == recipient }?.let {
@@ -239,6 +241,7 @@ private fun HorizonInboxComposeTextSection(state: HorizonInboxComposeUiState) {
             placeHolderText = stringResource(R.string.inboxComposeSubjectLabel),
             size = TextFieldInputSize.Medium,
             isFocused = isSubjectFieldFocused,
+            errorText = state.subjectErrorMessage,
             onValueChange = state.onSubjectChanged,
             onFocusChanged = { isSubjectFieldFocused = it },
         )
@@ -251,6 +254,7 @@ private fun HorizonInboxComposeTextSection(state: HorizonInboxComposeUiState) {
             value = state.body,
             placeHolderText = stringResource(R.string.inboxComposeMessageLabel),
             isFocused = isBodyAreaFocused,
+            errorText = state.bodyErrorMessage,
             onValueChange = state.onBodyChanged,
             onFocusChanged = { isBodyAreaFocused = it },
         )
