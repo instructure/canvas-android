@@ -32,10 +32,14 @@ import com.instructure.pandautils.features.speedgrader.details.submissiondetails
 import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
-fun SpeedGraderDetailsScreen() {
+fun SpeedGraderDetailsScreen(
+    studentId: Long
+) {
     val activity = LocalContext.current.getFragmentActivity()
     val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
-    val selectedAttemptId by speedGraderSharedViewModel.selectedAttemptId.collectAsStateWithLifecycle(null)
+    val selectedAttemptId by speedGraderSharedViewModel
+        .selectedAttemptIdFlowFor(studentId)
+        .collectAsStateWithLifecycle(null)
 
     Column(
         modifier = Modifier

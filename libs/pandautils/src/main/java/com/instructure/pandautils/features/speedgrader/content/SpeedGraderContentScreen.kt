@@ -97,7 +97,7 @@ fun SpeedGraderContentScreen(
     }
 
     LaunchedEffect(uiState.attemptSelectorUiState.selectedItemId) {
-        speedGraderSharedViewModel.setSelectedAttemptId(uiState.attemptSelectorUiState.selectedItemId)
+        speedGraderSharedViewModel.setSelectedAttemptId(viewModel.studentId, uiState.attemptSelectorUiState.selectedItemId)
     }
 
     SpeedGraderContentScreen(

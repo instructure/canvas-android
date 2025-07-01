@@ -62,10 +62,22 @@ class SpeedGraderSharedViewModelTest {
 
     @Test
     fun `Set selected attempt ID updates state correctly`() = runTest {
+        val studentId = 1L
         val attemptId = 123L
-        viewModel.setSelectedAttemptId(attemptId)
+        viewModel.setSelectedAttemptId(studentId, attemptId)
 
-        val result = viewModel.selectedAttemptId.first()
+        val result = viewModel.selectedAttemptIds.first().values.first()
+        assertEquals(attemptId, result)
+    }
+
+    @Test
+    fun `Selected attempt ID flow returns correct value`() = runTest {
+        val studentId = 1L
+        val attemptId = 123L
+        viewModel.setSelectedAttemptId(11, 11)
+        viewModel.setSelectedAttemptId(studentId, attemptId)
+
+        val result = viewModel.selectedAttemptIdFlowFor(studentId).first()
         assertEquals(attemptId, result)
     }
 }

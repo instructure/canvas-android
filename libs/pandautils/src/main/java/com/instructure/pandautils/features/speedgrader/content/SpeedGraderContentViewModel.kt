@@ -54,7 +54,7 @@ class SpeedGraderContentViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
-    private val studentId: Long = savedStateHandle.get<Long>(STUDENT_ID_KEY) ?: -1L
+    val studentId: Long = savedStateHandle.get<Long>(STUDENT_ID_KEY) ?: -1L
 
     init {
         viewModelScope.launch {

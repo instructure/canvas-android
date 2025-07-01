@@ -18,10 +18,15 @@ package com.instructure.pandautils.features.speedgrader
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class SpeedGraderSharedViewModel : ViewModel() {
@@ -29,8 +34,8 @@ class SpeedGraderSharedViewModel : ViewModel() {
     private val _viewPagerEnabled: MutableSharedFlow<Boolean> = MutableSharedFlow()
     val viewPagerEnabled = _viewPagerEnabled.asSharedFlow()
 
-    private val _selectedAttemptId: MutableStateFlow<Long?> = MutableStateFlow(null)
-    val selectedAttemptId = _selectedAttemptId.asStateFlow()
+    private val _selectedAttemptIds: MutableStateFlow<Map<Long, Long>> = MutableStateFlow(emptyMap())
+    val selectedAttemptIds: StateFlow<Map<Long, Long>> = _selectedAttemptIds.asStateFlow()
 
     fun enableViewPager(enabled: Boolean) {
         viewModelScope.launch {
@@ -38,9 +43,17 @@ class SpeedGraderSharedViewModel : ViewModel() {
         }
     }
 
-    fun setSelectedAttemptId(attemptId: Long?) = attemptId?.let {
+    fun setSelectedAttemptId(studentId: Long, attemptId: Long?) {
         viewModelScope.launch {
-            _selectedAttemptId.emit(it)
+            attemptId?.let {
+                _selectedAttemptIds.update { currentMap ->
+                    currentMap + (studentId to it)
+                }
+            }
         }
+    }
+
+    fun selectedAttemptIdFlowFor(studentId: Long): Flow<Long?> {
+        return selectedAttemptIds.map { it[studentId] }.distinctUntilChanged()
     }
 }
