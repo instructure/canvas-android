@@ -298,4 +298,7 @@
     <string name="inboxComposeSelectRecipientErrorMessage">Please select recipients</string>
     <string name="inboxComposeSubjectErrorMessage">Please enter a subject</string>
     <string name="inboxComposeBodyErrorMessage">Please enter a message</string>
+    <string name="inboxComposeCourseErrorMessage">Failed to load Courses</string>
+    <string name="inboxComposeRecipientErrorMessage">Failed to load Recipients</string>
+    <string name="inboxComposeSendErrorMessage">Failed to send Message</string>
 </resources>

@@ -27,5 +27,7 @@ data class HorizonInboxComposeUiState(
     val courseErrorMessage: String? = null,
     val recipientErrorMessage: String? = null,
     val subjectErrorMessage: String? = null,
-    val bodyErrorMessage: String? = null
+    val bodyErrorMessage: String? = null,
+    val snackbarMessage: String? = null,
+    val onDismissSnackbar: () -> Unit = {}
 )

@@ -22,6 +22,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -31,7 +33,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -49,7 +50,8 @@ class HorizonInboxComposeViewModel @Inject constructor(
             onSendConversation = ::sendConversation,
             onSendIndividuallyChanged = ::onSendIndividuallyChanged,
             onSubjectChanged = ::onSubjectChanged,
-            onBodyChanged = ::onBodyChanged
+            onBodyChanged = ::onBodyChanged,
+            onDismissSnackbar = ::onDismissSnackbar
         )
     )
 
@@ -58,7 +60,7 @@ class HorizonInboxComposeViewModel @Inject constructor(
     private val searchQuery: MutableStateFlow<String> = MutableStateFlow("")
 
     init {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             val courses = repository.getAllInboxCourses(forceNetwork = true)
             _uiState.update {
                 it.copy(
@@ -69,12 +71,14 @@ class HorizonInboxComposeViewModel @Inject constructor(
             searchQuery.debounce(200).collectLatest { query ->
                 fetchRecipients()
             }
+        } catch {
+            _uiState.update { it.copy(snackbarMessage = context.getString(R.string.inboxComposeCourseErrorMessage)) }
         }
     }
 
     private fun fetchRecipients() {
         uiState.value.selectedCourse?.id?.let { courseId ->
-            viewModelScope.launch {
+            viewModelScope.tryLaunch {
                 _uiState.update { it.copy(isRecipientPickerLoading = true) }
                 val recipients = repository.getRecipients(
                     courseId = courseId,
@@ -86,6 +90,9 @@ class HorizonInboxComposeViewModel @Inject constructor(
                         isRecipientPickerLoading = false
                     )
                 }
+            } catch {
+                _uiState.update { it.copy(snackbarMessage = context.getString(R.string.inboxComposeRecipientErrorMessage)) }
+                _uiState.update { it.copy(isRecipientPickerLoading = false) }
             }
         }
     }
@@ -113,9 +120,8 @@ class HorizonInboxComposeViewModel @Inject constructor(
             return
         }
 
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update { it.copy(isSendLoading = true) }
-
             repository.createConversation(
                 recipientIds = uiState.value.selectedRecipients.mapNotNull { it.stringId },
                 body = uiState.value.body.text,
@@ -128,6 +134,9 @@ class HorizonInboxComposeViewModel @Inject constructor(
             _uiState.update { it.copy(isSendLoading = false) }
 
             onFinished()
+        } catch {
+            _uiState.update { it.copy(snackbarMessage = context.getString(R.string.inboxComposeSendErrorMessage)) }
+            _uiState.update { it.copy(isSendLoading = false) }
         }
     }
 
@@ -172,6 +181,12 @@ class HorizonInboxComposeViewModel @Inject constructor(
     private fun onBodyChanged(body: TextFieldValue) {
         _uiState.update {
             it.copy(body = body, bodyErrorMessage = null)
+        }
+    }
+
+    private fun onDismissSnackbar() {
+        _uiState.update {
+            it.copy(snackbarMessage = null)
         }
     }
 }

@@ -30,10 +30,14 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -77,7 +81,17 @@ fun HorizonInboxComposeScreen(
     state: HorizonInboxComposeUiState,
     navController: NavHostController
 ) {
+    val snackbarHostState = remember { SnackbarHostState() }
+    LaunchedEffect(state.snackbarMessage) {
+        if (state.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(state.snackbarMessage)
+            if (result == SnackbarResult.Dismissed) {
+                state.onDismissSnackbar()
+            }
+        }
+    }
     Scaffold(
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = {
             HorizonInboxComposeTopBar(navController)
