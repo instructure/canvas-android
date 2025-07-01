@@ -28,12 +28,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -56,6 +53,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupHeader
+import com.instructure.pandautils.features.speedgrader.composables.Loading
 import com.instructure.pandautils.utils.ScreenState
 
 
@@ -80,9 +78,7 @@ private fun StudentNotes(
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = if (expanded) 16.dp else 0.dp)
+        modifier = modifier.padding(bottom = if (expanded) 16.dp else 0.dp)
     ) {
         GroupHeader(
             name = stringResource(R.string.speedGraderStudentNotes),
@@ -95,7 +91,7 @@ private fun StudentNotes(
         if (expanded) {
             when (uiState.state) {
                 ScreenState.Loading -> {
-                    Loading()
+                    Loading(stringResource(R.string.speedGraderStudentNotesLoading))
                 }
 
                 ScreenState.Error -> {
@@ -133,29 +129,6 @@ private fun StudentNotes(
                 else -> {}
             }
         }
-    }
-}
-
-@Composable
-private fun Loading() {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        CircularProgressIndicator(
-            strokeWidth = 2.dp,
-            color = colorResource(id = R.color.textDark),
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = stringResource(R.string.speedGraderStudentNotesLoading),
-            color = colorResource(id = R.color.textDark),
-            fontSize = 14.sp
-        )
     }
 }
 

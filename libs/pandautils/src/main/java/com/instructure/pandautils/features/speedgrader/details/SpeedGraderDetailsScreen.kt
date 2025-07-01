@@ -16,21 +16,33 @@
  */
 package com.instructure.pandautils.features.speedgrader.details
 
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.features.speedgrader.details.studentnotes.StudentNotes
+import com.instructure.pandautils.features.speedgrader.details.submissiondetails.SubmissionDetails
 import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
 fun SpeedGraderDetailsScreen() {
     val activity = LocalContext.current.getFragmentActivity()
     val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
-    val selectedAttemptId = speedGraderSharedViewModel.selectedAttemptId.collectAsStateWithLifecycle(null)
+    val selectedAttemptId by speedGraderSharedViewModel.selectedAttemptId.collectAsStateWithLifecycle(null)
 
-    StudentNotes(modifier = Modifier.fillMaxWidth())
+    Column(
+        modifier = Modifier
+            .fillMaxWidth()
+            .verticalScroll(rememberScrollState())
+    ) {
+        SubmissionDetails(selectedAttemptId)
+        StudentNotes(modifier = Modifier.fillMaxWidth())
+    }
 }
