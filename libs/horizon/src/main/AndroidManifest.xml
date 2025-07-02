@@ -23,7 +23,7 @@
             android:name=".HorizonActivity"
             android:windowSoftInputMode="adjustResize"
             android:exported="false"
-            android:label="@string/horizon"
+            android:label="@string/horizon_app_name"
             android:launchMode="singleTask"
             android:theme="@style/HorizonTheme" />
 

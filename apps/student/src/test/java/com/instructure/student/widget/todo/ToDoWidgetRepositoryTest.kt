@@ -18,10 +18,8 @@
 package com.instructure.student.widget.todo
 
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
@@ -29,7 +27,10 @@ import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
+import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertEquals
@@ -42,9 +43,9 @@ class ToDoWidgetRepositoryTest {
 
     private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
-    private val groupsApi: GroupAPI.GroupInterface = mockk(relaxed = true)
+    private val calendarFilterDao: CalendarFilterDao = mockk(relaxed = true)
 
-    private val repository: ToDoWidgetRepository = ToDoWidgetRepository(plannerApi, coursesApi, groupsApi)
+    private val repository: ToDoWidgetRepository = ToDoWidgetRepository(plannerApi, coursesApi, calendarFilterDao)
 
     @Test
     fun `Returns failed result when planner api request fails`() = runTest {
@@ -102,13 +103,13 @@ class ToDoWidgetRepositoryTest {
     fun `Returns empty list when course call fails`() = runTest {
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Fail()
 
-        val result = repository.getFavouriteCourses(true)
+        val result = repository.getCourses(true)
 
         assertTrue(result.isEmpty())
     }
 
     @Test
-    fun `Returns favourite courses only when the call is successful`() = runTest {
+    fun `Returns courses when the call is successful`() = runTest {
         val courses = listOf(
             Course(id = 1, name = "Course 1", isFavorite = true),
             Course(id = 2, name = "Course 2", isFavorite = false),
@@ -117,22 +118,7 @@ class ToDoWidgetRepositoryTest {
 
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
 
-        val result = repository.getFavouriteCourses(true)
-
-        assertEquals(courses.filter { it.isFavorite }, result)
-    }
-
-    @Test
-    fun `Returns all courses when theres no favorite course and the call is successful`() = runTest {
-        val courses = listOf(
-            Course(id = 1, name = "Course 1", isFavorite = false),
-            Course(id = 2, name = "Course 2", isFavorite = false),
-            Course(id = 3, name = "Course 3", isFavorite = false)
-        )
-
-        coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(courses)
-
-        val result = repository.getFavouriteCourses(true)
+        val result = repository.getCourses(true)
 
         assertEquals(courses, result)
     }
@@ -149,65 +135,20 @@ class ToDoWidgetRepositoryTest {
         coEvery { coursesApi.getFirstPageCourses(any()) } returns DataResult.Success(page1, LinkHeaders(nextUrl = "next"))
         coEvery { coursesApi.next(any(), any()) } returns DataResult.Success(page2)
 
-        val result = repository.getFavouriteCourses(true)
+        val result = repository.getCourses(true)
 
         assertEquals(page1 + page2, result)
     }
 
     @Test
-    fun `Returns empty list when groups call fails`() = runTest {
-        coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Fail()
+    fun `Gets calendar filters frm db`() = runTest {
+        val filters = CalendarFilterEntity(1, "domain", "1", -1, setOf("filter1"))
+        coEvery { calendarFilterDao.findByUserIdAndDomain(any(), any()) } returns filters
 
-        val result = repository.getFavouriteGroups(true)
+        val result = repository.getCalendarFilters(1, "domain")
 
-        assertTrue(result.isEmpty())
-    }
-
-    @Test
-    fun `Returns favourite groups only when the call is successful`() = runTest {
-        val groups = listOf(
-            Group(id = 1, name = "Group 1", isFavorite = true),
-            Group(id = 2, name = "Group 2", isFavorite = false),
-            Group(id = 3, name = "Group 3", isFavorite = true)
-        )
-
-        coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
-
-        val result = repository.getFavouriteGroups(true)
-
-        assertEquals(groups.filter { it.isFavorite }, result)
-    }
-
-    @Test
-    fun `Returns all groups when theres no favorite group and the call is successful`() = runTest {
-        val groups = listOf(
-            Group(id = 1, name = "Group 1", isFavorite = false),
-            Group(id = 2, name = "Group 2", isFavorite = false),
-            Group(id = 3, name = "Group 3", isFavorite = false)
-        )
-
-        coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(groups)
-
-        val result = repository.getFavouriteGroups(true)
-
-        assertEquals(groups, result)
-    }
-
-    @Test
-    fun `Returns groups depaginated`() = runTest {
-        val page1 = listOf(
-            Group(id = 1, name = "Group 1", isFavorite = true)
-        )
-        val page2 = listOf(
-            Group(id = 2, name = "Group 2", isFavorite = true)
-        )
-
-        coEvery { groupsApi.getFirstPageGroups(any()) } returns DataResult.Success(page1, LinkHeaders(nextUrl = "next"))
-        coEvery { groupsApi.getNextPageGroups(any(), any()) } returns DataResult.Success(page2)
-
-        val result = repository.getFavouriteGroups(true)
-
-        assertEquals(page1 + page2, result)
+        assertEquals(filters, result)
+        coVerify { calendarFilterDao.findByUserIdAndDomain(1, "domain") }
     }
 
     private fun createPlannerItem(
