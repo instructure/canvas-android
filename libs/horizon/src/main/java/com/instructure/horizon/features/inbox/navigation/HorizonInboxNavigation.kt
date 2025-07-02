@@ -27,6 +27,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
+import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeViewModel
 import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsScreen
 import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsViewModel
 import com.instructure.horizon.features.inbox.list.HorizonInboxListScreen
@@ -69,7 +70,9 @@ fun HorizonInboxNavigation(
             HorizonInboxDetailsScreen(uiState, navController)
         }
         composable(HorizonInboxRoute.InboxCompose.route) {
-            HorizonInboxComposeScreen(navController)
+            val viewModel: HorizonInboxComposeViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+            HorizonInboxComposeScreen(uiState, navController)
         }
     }
 }

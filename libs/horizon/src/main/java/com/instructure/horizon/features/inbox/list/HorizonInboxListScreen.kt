@@ -41,6 +41,7 @@ import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -83,6 +84,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.pandautils.utils.format
 import java.util.Date
 
+const val HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED = "horizon_inbox_list_new_conversation_created"
 @Composable
 fun HorizonInboxListScreen(
     state: HorizonInboxListUiState,
@@ -96,6 +98,19 @@ fun HorizonInboxListScreen(
             if (result == SnackbarResult.Dismissed) {
                 state.loadingState.onSnackbarDismiss()
             }
+        }
+    }
+
+    val listEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry(HorizonInboxRoute.InboxList.route) }
+    val savedStateHandle = listEntry.savedStateHandle
+    val refreshFlow = remember { savedStateHandle.getStateFlow(HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED, false) }
+    val shouldRefresh by refreshFlow.collectAsState()
+    val snackbarMessage = stringResource(R.string.inboxListConversationCreatedMessage)
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
+            state.loadingState.onRefresh()
+            state.showSnackbar(snackbarMessage)
+            savedStateHandle[HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED] = false
         }
     }
 
