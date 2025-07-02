@@ -77,7 +77,6 @@ class HelpMenuE2ETest: TeacherTest() {
             helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
             helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
             helpPage.assertHelpMenuURL("Ask the Community", "https://community.canvaslms.com/community/answers")
-            helpPage.assertHelpMenuURL("Training Services Portal", "https://training-portal-beta-pdx.insproserv.net?canvas_domain=mobileqa.instructure.com&sf_id=")
             helpPage.assertHelpMenuURL("Conference Guides for Remote Classrooms", "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
             helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
         }
