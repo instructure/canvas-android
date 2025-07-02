@@ -65,7 +65,9 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
                     context.startActivity(ViewMediaActivity.createIntent(context, bundle))
                 })
 
-            is FilePreviewUiState.Pdf -> {} // TODO Will be implemented once we know if we can use PSPDFKit
+            is FilePreviewUiState.Pdf -> {
+                PdfPreview(documentUri = filePreviewUiState.uri, modifier = Modifier.fillMaxSize())
+            }
             is FilePreviewUiState.WebView -> {
                 ComposeCanvasWebView(
                     url = filePreviewUiState.url, applyOnWebView = {

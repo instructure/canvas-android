@@ -146,11 +146,9 @@ class DashboardE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         Espresso.pressBack()
 
-        Log.d(ASSERTION_TAG, "Assert that both of the courses, '${course1.name}' and '${course2.name}', and their grades are displayed properly.")
+        Log.d(ASSERTION_TAG, "Assert that both of the courses, '${course1.name}' and '${course2.name}'.")
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertDisplaysCourse(course2)
-        dashboardPage.assertCourseGrade(course1.name, "N/A")
-        dashboardPage.assertCourseGrade(course2.name, "N/A")
 
         Log.d(STEP_TAG, "Click on 'Edit nickname' menu of '${course1.name}' course.")
         dashboardPage.clickCourseOverflowMenu(course1.name, "Edit nickname")
@@ -179,12 +177,9 @@ class DashboardE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that '${group.name}' groups is displayed and the '${data.coursesList[0]}' is displayed as the corresponding course name of the group.")
         dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
 
-        Log.d(STEP_TAG, "Toggle OFF 'Show Grades' and navigate back to Dashboard Page.")
-        leftSideNavigationDrawerPage.setShowGrades(false)
-
-        Log.d(ASSERTION_TAG, "Assert that the grades does not displayed on both of the courses' cards.")
-        dashboardPage.assertCourseGradeNotDisplayed(course1.name, "N/A")
-        dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A")
+        Log.d(ASSERTION_TAG, "Assert that the grades does not displayed on both of the courses' cards by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course1.name, "N/A", false)
+        dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A", false)
 
         Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
         leftSideNavigationDrawerPage.setShowGrades(true)
@@ -192,6 +187,13 @@ class DashboardE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the grades are displayed on both of the courses' cards.")
         dashboardPage.assertCourseGrade(course1.name, "N/A")
         dashboardPage.assertCourseGrade(course2.name, "N/A")
+
+        Log.d(STEP_TAG, "Toggle OFF 'Show Grades' and navigate back to Dashboard Page.")
+        leftSideNavigationDrawerPage.setShowGrades(false)
+
+        Log.d(ASSERTION_TAG, "Assert that the grades does not displayed on both of the courses' cards by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course1.name, "N/A")
+        dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A")
 
         Log.d(STEP_TAG, "Click on 'All Courses' button.")
         dashboardPage.openAllCoursesPage()
