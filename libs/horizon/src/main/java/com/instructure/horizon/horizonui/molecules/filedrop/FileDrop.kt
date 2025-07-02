@@ -161,7 +161,7 @@ fun FileDropItem(
         HorizonSpace(SpaceSize.SPACE_8)
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
                 .defaultMinSize(minHeight = 64.dp)
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level3)
