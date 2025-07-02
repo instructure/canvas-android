@@ -62,6 +62,10 @@ import com.instructure.horizon.features.moduleitemsequence.content.assignment.co
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.TextSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file.FileSubmissionContentViewModel
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -288,6 +292,10 @@ fun SubmissionContent(uiState: SubmissionUiState, modifier: Modifier = Modifier)
         is SubmissionContent.FileSubmission -> {
             NavHost(
                 rememberNavController(),
+                enterTransition = { enterTransition },
+                exitTransition = { exitTransition },
+                popEnterTransition = { popEnterTransition },
+                popExitTransition = { popExitTransition },
                 startDestination = "fileSubmission",
                 modifier = modifier
             ) {

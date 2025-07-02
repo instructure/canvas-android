@@ -41,6 +41,10 @@ import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
 import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -96,6 +100,10 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition },
             modifier = modifier.padding(innerPadding),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
