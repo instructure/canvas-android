@@ -54,7 +54,11 @@ class PageDetailsViewModel @Inject constructor(
             }
             val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
             val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty())
-            val notes = pageDetailsRepository.getNotes(courseId, pageDetails.id)
+            val notes = try { // We don't want to fail the page load if fetching notes fails
+                pageDetailsRepository.getNotes(courseId, pageDetails.id)
+            } catch (e: Exception) {
+                emptyList()
+            }
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
@@ -75,10 +79,10 @@ class PageDetailsViewModel @Inject constructor(
     }
 
     fun refreshNotes() {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             val notes = pageDetailsRepository.getNotes(uiState.value.courseId, uiState.value.pageId)
             _uiState.update { it.copy(notes = notes) }
-        }
+        } catch {  }
     }
 
     private fun ltiButtonPressed(ltiUrl: String) {
