@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -47,14 +48,15 @@ import javax.inject.Inject
 class SpeedGraderContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderContentRepository,
-    private val resources: Resources
+    private val resources: Resources,
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderContentUiState())
     val uiState = _uiState.asStateFlow()
 
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
-    val studentId: Long = savedStateHandle.get<Long>(STUDENT_ID_KEY) ?: -1L
+    private val studentId: Long = savedStateHandle.get<Long>(STUDENT_ID_KEY) ?: -1L
 
     init {
         viewModelScope.launch {
@@ -75,6 +77,8 @@ class SpeedGraderContentViewModel @Inject constructor(
             }
 
         val attempts = mapAttempts(submissionHistory)
+
+        speedGraderSelectedAttemptHolder.setSelectedAttemptId(studentId, attempts.firstOrNull()?.id)
 
         val attachments = mapAttachments(submissionHistory.firstOrNull()?.node)
 
@@ -311,6 +315,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 )
             )
         }
+        speedGraderSelectedAttemptHolder.setSelectedAttemptId(studentId, attemptId)
     }
 
     private fun mapAttachments(submissionNode: SubmissionContentQuery.Node?) = submissionNode?.submissionFields?.attachments

@@ -41,7 +41,6 @@ fragment SubmissionFields on SubmissionInterface {
     submissionStatus
     cachedDueDate
     submittedAt
-    wordCount
     attachments {
         _id
         contentType

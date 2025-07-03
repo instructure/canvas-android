@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -49,6 +50,7 @@ class SpeedGraderContentViewModelTest {
     private lateinit var repository: SpeedGraderContentRepository
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var viewModel: SpeedGraderContentViewModel
+    private val selectedAttemptHolder = SpeedGraderSelectedAttemptHolder()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val assignmentId = 123L
@@ -92,7 +94,7 @@ class SpeedGraderContentViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderContentViewModel(savedStateHandle, repository, resources)
+        viewModel = SpeedGraderContentViewModel(savedStateHandle, repository, resources, selectedAttemptHolder)
     }
 
     @Test

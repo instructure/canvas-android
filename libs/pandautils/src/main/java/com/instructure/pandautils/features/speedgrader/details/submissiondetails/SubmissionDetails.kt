@@ -17,6 +17,9 @@
 
 package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -24,20 +27,16 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.features.speedgrader.composables.Loading
@@ -46,27 +45,12 @@ import com.instructure.pandautils.utils.ScreenState
 
 @Composable
 internal fun SubmissionDetails(
-    attemptId: Long?,
-    modifier: Modifier = Modifier,
-    submissionDetailsViewModel: SubmissionDetailsViewModel = hiltViewModel()
-) {
-    val uiState by submissionDetailsViewModel.uiState.collectAsStateWithLifecycle()
-
-    LaunchedEffect(key1 = attemptId) {
-        uiState.loadSubmissionDetails(attemptId)
-    }
-
-    if (uiState.state != ScreenState.Empty) {
-        SubmissionDetails(uiState, modifier)
-    }
-}
-
-@Composable
-private fun SubmissionDetails(
     uiState: SubmissionDetailsUiState,
+    expanded: Boolean,
+    onExpandToggle: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(true) }
+    val haptic = LocalHapticFeedback.current
 
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -76,14 +60,21 @@ private fun SubmissionDetails(
             name = stringResource(R.string.speedGraderSubmissionDetails),
             expanded = expanded,
             onClick = {
-                expanded = !expanded
-            }
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onExpandToggle()
+            },
+            showTopDivider = false
         )
 
-        if (expanded) {
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top),
+            label = "GroupExpandAnimation"
+        ) {
             when (uiState.state) {
                 ScreenState.Loading -> {
-                    Loading(stringResource(R.string.speedGraderSubmissionDetilsLoading))
+                    Loading(stringResource(R.string.speedGraderSubmissionDetailsLoading))
                 }
 
                 ScreenState.Content -> {
@@ -126,8 +117,9 @@ private fun WordCount(
 @Composable
 private fun SubmissionDetailsLoadingPreview() {
     SubmissionDetails(
+        expanded = true,
+        onExpandToggle = {},
         uiState = SubmissionDetailsUiState(
-            loadSubmissionDetails = {},
             state = ScreenState.Loading
         )
     )
@@ -137,8 +129,9 @@ private fun SubmissionDetailsLoadingPreview() {
 @Composable
 private fun SubmissionDetailsPreview() {
     SubmissionDetails(
+        expanded = true,
+        onExpandToggle = {},
         uiState = SubmissionDetailsUiState(
-            loadSubmissionDetails = {},
             state = ScreenState.Content,
             wordCount = 312
         )

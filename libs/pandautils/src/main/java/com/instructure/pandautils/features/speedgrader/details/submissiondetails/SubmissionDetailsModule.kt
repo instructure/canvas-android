@@ -17,7 +17,7 @@
 
 package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
-import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,8 +30,8 @@ class SubmissionDetailsModule {
 
     @Provides
     fun provideSubmissionDetailsRepository(
-        submissionContentManager: SubmissionContentManager
+        submissionDetailsManager: SubmissionDetailsManager
     ): SubmissionDetailsRepository {
-        return SubmissionDetailsRepository(submissionContentManager)
+        return SubmissionDetailsRepository(submissionDetailsManager)
     }
 }

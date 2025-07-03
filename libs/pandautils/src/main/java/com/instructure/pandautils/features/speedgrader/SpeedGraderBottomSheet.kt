@@ -165,9 +165,8 @@ private fun SpeedGraderBottomSheetNavHost(
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType }
             )
-        ) { backStackEntry ->
-            val studentId = backStackEntry.arguments?.getLong("submissionId") ?: -1L
-            SpeedGraderDetailsScreen(studentId)
+        ) {
+            SpeedGraderDetailsScreen()
         }
     }
 }

@@ -17,8 +17,8 @@
 
 package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
-import com.instructure.canvasapi2.SubmissionContentQuery
-import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.SubmissionDetailsQuery
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
@@ -28,17 +28,17 @@ import org.junit.Test
 
 class SubmissionDetailsRepositoryTest {
 
-    private val submissionContentManager = mockk<SubmissionContentManager>()
+    private val submissionDetailsManager = mockk<SubmissionDetailsManager>()
 
-    private val repository = SubmissionDetailsRepository(submissionContentManager)
+    private val repository = SubmissionDetailsRepository(submissionDetailsManager)
 
     @Test
-    fun `getSubmission calls submissionContentManager and returns data`() = runTest {
+    fun `getSubmission calls submissionDetailsManager and returns data`() = runTest {
         val assignmentId = 123L
         val studentId = 456L
-        val expectedData = mockk<SubmissionContentQuery.Data>()
+        val expectedData = mockk<SubmissionDetailsQuery.Data>()
 
-        coEvery { submissionContentManager.getSubmissionContent(studentId, assignmentId) } returns expectedData
+        coEvery { submissionDetailsManager.getSubmissionDetails(studentId, assignmentId) } returns expectedData
 
         val result = repository.getSubmission(assignmentId, studentId)
 
@@ -46,11 +46,11 @@ class SubmissionDetailsRepositoryTest {
     }
 
     @Test(expected = Exception::class)
-    fun `getSubmission throws exception when submissionContentManager fails`() = runTest {
+    fun `getSubmission throws exception when submissionDetailsManager fails`() = runTest {
         val assignmentId = 123L
         val studentId = 456L
 
-        coEvery { submissionContentManager.getSubmissionContent(studentId, assignmentId) } throws Exception("Error")
+        coEvery { submissionDetailsManager.getSubmissionDetails(studentId, assignmentId) } throws Exception("Error")
 
         repository.getSubmission(assignmentId, studentId)
     }

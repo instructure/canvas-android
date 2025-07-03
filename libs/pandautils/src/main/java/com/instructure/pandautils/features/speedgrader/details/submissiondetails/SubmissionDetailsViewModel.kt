@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentViewModel.Companion.ASSIGNMENT_ID_KEY
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentViewModel.Companion.STUDENT_ID_KEY
 import com.instructure.pandautils.utils.ScreenState
@@ -30,21 +31,32 @@ import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
 @HiltViewModel
 class SubmissionDetailsViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: SubmissionDetailsRepository,
-    savedStateHandle: SavedStateHandle
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
     private val studentId: Long = savedStateHandle.get<Long>(STUDENT_ID_KEY) ?: -1L
 
-    private val _uiState = MutableStateFlow(SubmissionDetailsUiState(::loadSubmissionDetails))
+    private val _uiState = MutableStateFlow(SubmissionDetailsUiState())
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            speedGraderSelectedAttemptHolder.selectedAttemptIdFlowFor(studentId).collectLatest {
+                loadSubmissionDetails(it)
+            }
+        }
+    }
 
     private fun loadSubmissionDetails(attemptId: Long?) {
         viewModelScope.tryLaunch {
@@ -52,8 +64,8 @@ class SubmissionDetailsViewModel @Inject constructor(
 
             val submission = repository.getSubmission(assignmentId, studentId)
                 .submission?.submissionHistoriesConnection?.edges
-                ?.find { it?.node?.submissionFields?.attempt == attemptId?.toInt() }
-                ?.node?.submissionFields
+                ?.find { it?.node?.attempt == attemptId?.toInt() }
+                ?.node
 
             _uiState.update {
                 val wordCount = submission?.wordCount

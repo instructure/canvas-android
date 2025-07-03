@@ -21,7 +21,6 @@ import com.instructure.pandautils.utils.ScreenState
 
 
 data class SubmissionDetailsUiState(
-    val loadSubmissionDetails: (attemptId: Long?) -> Unit,
     val state: ScreenState = ScreenState.Loading,
     val wordCount: Int = 0
 )

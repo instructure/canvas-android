@@ -18,9 +18,9 @@
 package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.SubmissionContentQuery
-import com.instructure.canvasapi2.fragment.SubmissionFields
+import com.instructure.canvasapi2.SubmissionDetailsQuery
 import com.instructure.canvasapi2.type.SubmissionType
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentViewModel.Companion.ASSIGNMENT_ID_KEY
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentViewModel.Companion.STUDENT_ID_KEY
 import com.instructure.pandautils.utils.ScreenState
@@ -46,6 +46,7 @@ class SubmissionDetailsViewModelTest {
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: SubmissionDetailsRepository = mockk(relaxed = true)
+    private val selectedAttemptHolder = SpeedGraderSelectedAttemptHolder()
 
     private lateinit var viewModel: SubmissionDetailsViewModel
 
@@ -63,27 +64,28 @@ class SubmissionDetailsViewModelTest {
     }
 
     private fun createViewModel(): SubmissionDetailsViewModel {
-        return SubmissionDetailsViewModel(repository, savedStateHandle)
+        return SubmissionDetailsViewModel(savedStateHandle, repository, selectedAttemptHolder)
     }
 
     @Test
     fun `Loads submission details`() {
-        val submissionFields1 = mockk<SubmissionFields>(relaxed = true).apply {
-            coEvery { attempt } returns 1
-            coEvery { submissionType } returns SubmissionType.online_upload
-        }
-        val submissionFields2 = mockk<SubmissionFields>(relaxed = true).apply {
-            coEvery { attempt } returns 2
-            coEvery { submissionType } returns SubmissionType.online_text_entry
-            coEvery { wordCount } returns 123.0
-        }
-        coEvery { repository.getSubmission(1, 1) } returns mockk<SubmissionContentQuery.Data>(relaxed = true).apply {
-            coEvery { this@apply.submission?.submissionHistoriesConnection } returns mockSubmissionHistory(submissionFields1, submissionFields2)
+        val submissionData1 = SubmissionDetailsData(
+            attempt = 1,
+            wordCount = null,
+            submissionType = SubmissionType.online_upload
+        )
+        val submissionData2 = SubmissionDetailsData(
+            attempt = 2,
+            wordCount = 123.0,
+            submissionType = SubmissionType.online_text_entry
+        )
+        coEvery { repository.getSubmission(1, 1) } returns mockk<SubmissionDetailsQuery.Data>(relaxed = true).apply {
+            coEvery { this@apply.submission?.submissionHistoriesConnection } returns mockSubmissionHistory(submissionData1, submissionData2)
         }
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.loadSubmissionDetails(2)
+        selectedAttemptHolder.setSelectedAttemptId(1, 2)
 
         assertEquals(ScreenState.Content, viewModel.uiState.value.state)
         assertEquals(123, viewModel.uiState.value.wordCount)
@@ -91,17 +93,18 @@ class SubmissionDetailsViewModelTest {
 
     @Test
     fun `Loads submission details with not online text type`() {
-        val submissionFields = mockk<SubmissionFields>(relaxed = true).apply {
-            coEvery { attempt } returns 1
-            coEvery { submissionType } returns SubmissionType.online_upload
-        }
-        coEvery { repository.getSubmission(1, 1) } returns mockk<SubmissionContentQuery.Data>(relaxed = true).apply {
-            coEvery { this@apply.submission?.submissionHistoriesConnection } returns mockSubmissionHistory(submissionFields)
+        val submissionData = SubmissionDetailsData(
+            attempt = 1,
+            wordCount = null,
+            submissionType = SubmissionType.online_upload
+        )
+        coEvery { repository.getSubmission(1, 1) } returns mockk<SubmissionDetailsQuery.Data>(relaxed = true).apply {
+            coEvery { this@apply.submission?.submissionHistoriesConnection } returns mockSubmissionHistory(submissionData)
         }
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.loadSubmissionDetails(1)
+        selectedAttemptHolder.setSelectedAttemptId(1, 1)
 
         assertEquals(ScreenState.Empty, viewModel.uiState.value.state)
     }
@@ -112,21 +115,31 @@ class SubmissionDetailsViewModelTest {
 
         viewModel = createViewModel()
 
-        viewModel.uiState.value.loadSubmissionDetails(1)
+        selectedAttemptHolder.setSelectedAttemptId(1, 1)
 
         assertEquals(ScreenState.Empty, viewModel.uiState.value.state)
     }
 
-    private fun mockSubmissionHistory(vararg fields: SubmissionFields): SubmissionContentQuery.SubmissionHistoriesConnection {
+    private data class SubmissionDetailsData(
+        val attempt: Int,
+        val wordCount: Double?,
+        val submissionType: SubmissionType
+    )
+
+    private fun mockSubmissionHistory(
+        vararg fields: SubmissionDetailsData
+    ): SubmissionDetailsQuery.SubmissionHistoriesConnection {
         val edges = fields.map { field ->
-            val node = mockk<SubmissionContentQuery.Node>(relaxed = true).apply {
-                coEvery { submissionFields } returns field
+            val node = mockk<SubmissionDetailsQuery.Node>(relaxed = true).apply {
+                coEvery { attempt } returns field.attempt
+                coEvery { wordCount } returns field.wordCount
+                coEvery { submissionType } returns field.submissionType
             }
-            mockk<SubmissionContentQuery.Edge>(relaxed = true).apply {
+            mockk<SubmissionDetailsQuery.Edge>(relaxed = true).apply {
                 coEvery { this@apply.node } returns node
             }
         }
-        return mockk<SubmissionContentQuery.SubmissionHistoriesConnection>(relaxed = true).apply {
+        return mockk<SubmissionDetailsQuery.SubmissionHistoriesConnection>(relaxed = true).apply {
             coEvery { this@apply.edges } returns edges
         }
     }

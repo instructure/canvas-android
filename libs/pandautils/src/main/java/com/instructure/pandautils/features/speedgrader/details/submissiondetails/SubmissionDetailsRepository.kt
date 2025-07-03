@@ -17,14 +17,14 @@
 
 package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
-import com.instructure.canvasapi2.SubmissionContentQuery
-import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.SubmissionDetailsQuery
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 
 
 class SubmissionDetailsRepository(
-    private val submissionContentManager: SubmissionContentManager
+    private val submissionDetailsManager: SubmissionDetailsManager
 ) {
-    suspend fun getSubmission(assignmentId: Long, studentId: Long): SubmissionContentQuery.Data {
-        return submissionContentManager.getSubmissionContent(studentId, assignmentId)
+    suspend fun getSubmission(assignmentId: Long, studentId: Long): SubmissionDetailsQuery.Data {
+        return submissionDetailsManager.getSubmissionDetails(studentId, assignmentId)
     }
 }
