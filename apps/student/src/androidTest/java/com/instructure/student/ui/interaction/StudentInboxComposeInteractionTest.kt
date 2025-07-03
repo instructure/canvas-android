@@ -28,12 +28,14 @@ import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
@@ -74,6 +76,10 @@ class StudentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     @BindValue
     @JvmField
     val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
 
     override fun goToInboxCompose(data: MockCanvas) {
         val parent = data.parents.first()

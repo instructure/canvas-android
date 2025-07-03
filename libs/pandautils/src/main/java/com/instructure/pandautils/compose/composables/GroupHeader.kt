@@ -55,7 +55,8 @@ fun GroupHeader(
     name: String,
     expanded: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    showTopDivider: Boolean = true
 ) {
     val iconRotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f, label = "expandedIconRotation")
 
@@ -80,7 +81,9 @@ fun GroupHeader(
                 role = Role.Button
             }
     ) {
-        Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+        if (showTopDivider) {
+            Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
+        }
         Row(
             modifier = Modifier
                 .fillMaxWidth()

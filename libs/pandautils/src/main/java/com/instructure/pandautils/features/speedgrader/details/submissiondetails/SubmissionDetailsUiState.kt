@@ -14,22 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
-class SpeedGraderSharedViewModel : ViewModel() {
+import com.instructure.pandautils.utils.ScreenState
 
-    private val _viewPagerEnabled: MutableSharedFlow<Boolean> = MutableSharedFlow()
-    val viewPagerEnabled = _viewPagerEnabled.asSharedFlow()
 
-    fun enableViewPager(enabled: Boolean) {
-        viewModelScope.launch {
-            _viewPagerEnabled.emit(enabled)
-        }
-    }
-}
+data class SubmissionDetailsUiState(
+    val state: ScreenState = ScreenState.Loading,
+    val wordCount: Int = 0
+)

@@ -59,13 +59,4 @@ class SpeedGraderSharedViewModelTest {
 
         job.cancel()
     }
-
-    @Test
-    fun `Set selected attempt ID updates state correctly`() = runTest {
-        val attemptId = 123L
-        viewModel.setSelectedAttemptId(attemptId)
-
-        val result = viewModel.selectedAttemptId.first()
-        assertEquals(attemptId, result)
-    }
 }

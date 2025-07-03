@@ -17,6 +17,9 @@
 
 package com.instructure.pandautils.features.speedgrader.details.studentnotes
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -28,12 +31,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Card
-import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedButton
 import androidx.compose.material.Text
@@ -44,6 +44,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -52,50 +54,45 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupHeader
+import com.instructure.pandautils.features.speedgrader.composables.Loading
 import com.instructure.pandautils.utils.ScreenState
 
 
 @Composable
 internal fun StudentNotes(
-    modifier: Modifier = Modifier,
-    studentHolderViewModel: StudentNotesViewModel = hiltViewModel()
-) {
-    val uiState by studentHolderViewModel.uiState.collectAsStateWithLifecycle()
-
-    if (uiState.state != ScreenState.Empty) {
-        StudentNotes(uiState, modifier)
-    }
-}
-
-@Composable
-private fun StudentNotes(
+    showTopDivider: Boolean,
     uiState: StudentNotesUiState,
     modifier: Modifier = Modifier
 ) {
     var expanded by remember { mutableStateOf(true) }
 
+    val haptic = LocalHapticFeedback.current
+
     Column(
         verticalArrangement = Arrangement.spacedBy(16.dp),
-        modifier = modifier
-            .verticalScroll(rememberScrollState())
-            .padding(bottom = if (expanded) 16.dp else 0.dp)
+        modifier = modifier.padding(bottom = if (expanded) 16.dp else 0.dp)
     ) {
         GroupHeader(
             name = stringResource(R.string.speedGraderStudentNotes),
             expanded = expanded,
             onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 expanded = !expanded
-            }
+            },
+            showTopDivider = showTopDivider
         )
 
-        if (expanded) {
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top),
+            label = "GroupExpandAnimation"
+        ) {
             when (uiState.state) {
                 ScreenState.Loading -> {
-                    Loading()
+                    Loading(stringResource(R.string.speedGraderStudentNotesLoading))
                 }
 
                 ScreenState.Error -> {
@@ -133,29 +130,6 @@ private fun StudentNotes(
                 else -> {}
             }
         }
-    }
-}
-
-@Composable
-private fun Loading() {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 16.dp)
-    ) {
-        CircularProgressIndicator(
-            strokeWidth = 2.dp,
-            color = colorResource(id = R.color.textDark),
-            modifier = Modifier.size(24.dp)
-        )
-        Spacer(modifier = Modifier.width(16.dp))
-        Text(
-            text = stringResource(R.string.speedGraderStudentNotesLoading),
-            color = colorResource(id = R.color.textDark),
-            fontSize = 14.sp
-        )
     }
 }
 
@@ -218,6 +192,7 @@ private fun Error(onRefresh: () -> Unit) {
 @Composable
 private fun StudentNotesLoadingPreview() {
     StudentNotes(
+        showTopDivider = true,
         uiState = StudentNotesUiState(
             state = ScreenState.Loading,
             studentNotes = emptyList()
@@ -229,6 +204,7 @@ private fun StudentNotesLoadingPreview() {
 @Composable
 private fun StudentNotesErrorPreview() {
     StudentNotes(
+        showTopDivider = true,
         uiState = StudentNotesUiState(
             state = ScreenState.Error,
             studentNotes = emptyList()
@@ -240,6 +216,7 @@ private fun StudentNotesErrorPreview() {
 @Composable
 private fun StudentNotesPreview() {
     StudentNotes(
+        showTopDivider = true,
         uiState = StudentNotesUiState(
             state = ScreenState.Content,
             studentNotes = listOf(
