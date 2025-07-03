@@ -15,15 +15,34 @@
  */
 package com.instructure.horizon.features.skillspace
 
+import android.graphics.Color
+import android.view.ViewGroup
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun SkillspaceScreen() {
+fun SkillspaceScreen(state: SkillspaceUiState) {
     Box(modifier = Modifier.fillMaxSize()) {
-        Text(text = "Skillspace Screen")
+        LoadingStateWrapper(state.loadingState) {
+            state.webviewUrl?.let {
+                ComposeCanvasWebView(
+                    url = state.webviewUrl,
+                    applyOnWebView = {
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        setBackgroundColor(Color.TRANSPARENT)
+                        setInitialScale(100)
+                    }
+                )
+            }
+        }
     }
 }
