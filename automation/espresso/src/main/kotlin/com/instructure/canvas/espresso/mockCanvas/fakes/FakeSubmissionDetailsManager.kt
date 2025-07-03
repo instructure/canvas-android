@@ -21,6 +21,6 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 
 class FakeSubmissionDetailsManager : SubmissionDetailsManager {
     override suspend fun getSubmissionDetails(userId: Long, assignmentId: Long): SubmissionDetailsQuery.Data {
-        throw NotImplementedError("FakeSubmissionContentManager.getSubmissionContent() not implemented")
+        throw NotImplementedError("FakeSubmissionDetailsManager.getSubmissionDetails() not implemented")
     }
 }
