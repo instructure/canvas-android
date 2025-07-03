@@ -18,6 +18,8 @@ package com.instructure.pandautils.compose.composables.rce
 import android.content.ContentValues
 import android.net.Uri
 import android.provider.MediaStore
+import android.util.Log
+import android.webkit.JavascriptInterface
 import android.webkit.URLUtil
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,6 +68,7 @@ fun ComposeRCE(
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
     onTextChangeListener: (String) -> Unit,
     onRceFocused: () -> Unit = {},
+    onCursorYCoordinateChanged: (Float) -> Unit = {},
     rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP,
     rceDialogThemeColor: Int = ThemePrefs.brandColor,
     rceDialogButtonColor: Int = ThemePrefs.textButtonColor,
@@ -88,6 +91,38 @@ fun ComposeRCE(
         setOnTextChangeListener {
             onTextChangeListener(it)
             evaluateJavascript("javascript:RE.enabledEditingItems();", null)
+        }
+        addJavascriptInterface(
+            RCECursorPositionInterface { y ->
+                onCursorYCoordinateChanged(y)
+                Log.d(RCECursorPositionInterface.NAME, "Cursor position changed: $y")
+            }, RCECursorPositionInterface.NAME
+        )
+        setOnInitialLoadListener {
+            evaluateJavascript("""
+            document.addEventListener("selectionchange", () => {
+                    const selection = window.getSelection();
+                if (!selection || selection.rangeCount === 0) {
+                    return null;
+                }
+
+                const range = selection.getRangeAt(0);
+                let y = null;
+
+                // Try getting rects directly first
+                const rects = range.getClientRects();
+                if (rects.length > 0) {
+                    y = rects[0].y;
+                } else {
+                    const editorDiv = document.getElementById('editor');
+                    const computedStyle = window.getComputedStyle(editorDiv);
+                    const lineHeight = computedStyle.lineHeight;
+                    const lineCount = editorDiv.getElementsByTagName('br').length;
+                    y = getSelection().getRangeAt(0).endContainer?.lastChild?.getBoundingClientRect()?.y ?? 0;
+                }
+                ${RCECursorPositionInterface.NAME}.onCursorPositionChanged(y);
+            })
+        """.trimIndent(), null)
         }
         setOnDecorationChangeListener { text, _ ->
             if (!focused) {
@@ -257,5 +292,17 @@ fun ComposeRCE(
             Divider()
             RCEControls(rceState, onActionClick = onActionClick, onColorClick = onColorClick)
         }
+    }
+}
+
+private class RCECursorPositionInterface(
+    val onCursorPositionChangeCallback: (Float) -> Unit
+) {
+    @JavascriptInterface
+    fun onCursorPositionChanged(y: Float) {
+        this.onCursorPositionChangeCallback(y)
+    }
+    companion object {
+        const val NAME = "RCECursorPositionInterface"
     }
 }

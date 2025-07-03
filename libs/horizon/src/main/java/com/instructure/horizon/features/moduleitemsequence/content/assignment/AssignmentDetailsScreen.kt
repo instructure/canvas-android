@@ -255,6 +255,7 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     AddSubmissionContent(
                         addSubmissionUiState,
                         snackbarHostState = snackbarHostState,
+                        scrollState = scrollState,
                         onRceFocused = { rceFocused = true },
                         modifier = Modifier.padding(16.dp)
                     )

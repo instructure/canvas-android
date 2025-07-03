@@ -15,8 +15,10 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission
 
+import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -25,15 +27,24 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInParent
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -56,15 +67,22 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
+import com.instructure.pandautils.utils.toPx
 
 @Composable
 fun AddSubmissionContent(
     uiState: AddSubmissionUiState,
     snackbarHostState: SnackbarHostState,
+    scrollState: ScrollState,
     modifier: Modifier = Modifier,
     onRceFocused: () -> Unit = {}
 ) {
-
+    var rceYPosition by remember { mutableFloatStateOf(0f) }
+    var scrollContent: Float? by remember { mutableStateOf(null) }
+    LaunchedEffect(scrollContent) {
+        scrollState.scrollTo((scrollContent?.toInt()?.toPx ?: 0) + rceYPosition.toInt().toPx)
+        //scrollContent = null
+    }
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
             val result = snackbarHostState.showSnackbar(uiState.snackbarMessage)
@@ -124,7 +142,18 @@ fun AddSubmissionContent(
                     submissionInProgress = uiState.submissionInProgress
                 )
 
-                is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
+                is AddSubmissionTypeUiState.Text ->
+                    AddTextSubmissionContent(
+                        uiState = selectedSubmissionType,
+                        onRceFocused = onRceFocused,
+                        onCursorYCoordinateChanged = {
+                            scrollContent = it
+                        },
+                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                            Log.d("AddSubmissionContent", "RCE Y Position: ${coordinates.positionInRoot().y}")
+                            rceYPosition = coordinates.positionInParent().y
+                        }
+                    )
             }
             HorizonSpace(SpaceSize.SPACE_24)
             AnimatedVisibility(visible = uiState.errorMessage != null) {
@@ -218,7 +247,8 @@ fun AssignmentDetailsScreenAddSubmissionPreview() {
                 ),
                 errorMessage = "Error occurred while submitting.",
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState()
         )
     }
 }
@@ -238,7 +268,8 @@ fun AssignmentDetailsScreenAddSubmissionSubmitEnabledPreview() {
                 ),
                 errorMessage = "Error occurred while submitting.",
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState()
         )
     }
 }
@@ -257,7 +288,8 @@ fun AssignmentDetailsScreenAddSubmissionNoErrorPreview() {
                     )
                 )
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState()
         )
     }
 }
@@ -273,7 +305,8 @@ fun AssignmentDetailsScreenAddSubmissionNoDraftPreview() {
                     AddSubmissionTypeUiState.File(submitEnabled = true)
                 )
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState()
         )
     }
 }
