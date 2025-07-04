@@ -112,11 +112,30 @@ fun ComposeRCE(
                 if (rects.length > 0) {
                     y = rects[0].y;
                 } else {
-                    const editorDiv = document.getElementById('editor');
-                    const computedStyle = window.getComputedStyle(editorDiv);
-                    const lineHeight = computedStyle.lineHeight;
-                    const lineCount = editorDiv.getElementsByTagName('br').length;
-                    y = getSelection().getRangeAt(0).endContainer?.lastChild?.getBoundingClientRect()?.y ?? 0;
+                    const container = range.endContainer;
+                    const offset = range.endOffset;
+                    const editorDiv = document.getElementById('editor'); // Your contenteditable div
+            
+                    // Create a temporary span to get the position
+                    const tempSpan = document.createElement('span');
+                    tempSpan.textContent = '\u200b'; // Zero-width space character
+                    tempSpan.style.whiteSpace = 'pre'; // Ensure space is preserved
+                    tempSpan.style.lineHeight = '0'; // Don't affect line height by this span
+                    tempSpan.style.fontSize = '0'; // Make it invisible visually
+            
+                    // Insert the temporary span at the caret position
+                    range.insertNode(tempSpan);
+            
+                    // Get its position
+                    const spanRect = tempSpan.getBoundingClientRect();
+                    y = spanRect.y;
+            
+                    // Clean up: remove the temporary span and restore the selection
+                    tempSpan.parentNode.removeChild(tempSpan);
+            
+                    // Restore the original selection
+                    selection.removeAllRanges();
+                    selection.addRange(range);
                 }
                 ${RCECursorPositionInterface.NAME}.onCursorPositionChanged(y);
             })
