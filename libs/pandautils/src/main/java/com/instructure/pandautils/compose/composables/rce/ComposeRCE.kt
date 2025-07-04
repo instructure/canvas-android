@@ -99,7 +99,7 @@ fun ComposeRCE(
         setOnInitialLoadListener {
             evaluateJavascript("""
             document.addEventListener("selectionchange", () => {
-                    const selection = window.getSelection();
+                const selection = window.getSelection();
                 if (!selection || selection.rangeCount === 0) {
                     return null;
                 }
@@ -132,10 +132,6 @@ fun ComposeRCE(
             
                     // Clean up: remove the temporary span and restore the selection
                     tempSpan.parentNode.removeChild(tempSpan);
-            
-                    // Restore the original selection
-                    selection.removeAllRanges();
-                    selection.addRange(range);
                 }
                 ${RCECursorPositionInterface.NAME}.onCursorPositionChanged(y);
             })
