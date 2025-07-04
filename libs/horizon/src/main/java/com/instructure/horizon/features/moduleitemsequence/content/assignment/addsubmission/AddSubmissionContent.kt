@@ -49,6 +49,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -74,19 +75,21 @@ fun AddSubmissionContent(
     uiState: AddSubmissionUiState,
     snackbarHostState: SnackbarHostState,
     scrollState: ScrollState,
+    moduleHeaderHeight: Dp,
     modifier: Modifier = Modifier,
     onRceFocused: () -> Unit = {}
 ) {
-    var rceYPositionInParent by remember { mutableIntStateOf(0) }
+    var rceYPositionInRoot by remember { mutableIntStateOf(0) }
     var cursorYPosition by remember { mutableIntStateOf(0) }
     var scrollContent: Int? by remember { mutableStateOf(null) }
     var viewportHeight by remember { mutableIntStateOf(0) }
-    LaunchedEffect(scrollState.viewportSize) {
-        viewportHeight = scrollState.viewportSize
+    LaunchedEffect(scrollState.viewportSize, moduleHeaderHeight) {
+        viewportHeight = scrollState.viewportSize + moduleHeaderHeight.value.toInt().toPx
     }
     LaunchedEffect(viewportHeight, cursorYPosition) {
-        if (rceYPositionInParent + cursorYPosition + 32.toPx > viewportHeight) {
-            scrollContent = (rceYPositionInParent + cursorYPosition) + 32.toPx - (viewportHeight)
+        Log.d("AddSubmissionContent", "Viewport Height: $viewportHeight, Cursor Y Position: $cursorYPosition, RCE Y Position: $rceYPositionInRoot")
+        if (rceYPositionInRoot + cursorYPosition + 32.toPx > viewportHeight) {
+            scrollContent = (rceYPositionInRoot + cursorYPosition) + 32.toPx - (viewportHeight)
         }
     }
     LaunchedEffect(scrollContent) {
@@ -157,10 +160,9 @@ fun AddSubmissionContent(
                         onRceFocused = onRceFocused,
                         onCursorYCoordinateChanged = {
                             cursorYPosition = it.toInt().toPx
-                            Log.d("AddSubmissionContent", "Cursor Y Position: $cursorYPosition")
                         },
                         modifier = Modifier.onGloballyPositioned { coordinates ->
-                            rceYPositionInParent = coordinates.positionInRoot().y.toInt()
+                            rceYPositionInRoot = coordinates.positionInRoot().y.toInt()
                         }
                     )
             }
@@ -257,7 +259,8 @@ fun AssignmentDetailsScreenAddSubmissionPreview() {
                 errorMessage = "Error occurred while submitting.",
             ),
             snackbarHostState = SnackbarHostState(),
-            scrollState = rememberScrollState()
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
@@ -278,7 +281,8 @@ fun AssignmentDetailsScreenAddSubmissionSubmitEnabledPreview() {
                 errorMessage = "Error occurred while submitting.",
             ),
             snackbarHostState = SnackbarHostState(),
-            scrollState = rememberScrollState()
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
@@ -298,7 +302,8 @@ fun AssignmentDetailsScreenAddSubmissionNoErrorPreview() {
                 )
             ),
             snackbarHostState = SnackbarHostState(),
-            scrollState = rememberScrollState()
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
@@ -315,7 +320,8 @@ fun AssignmentDetailsScreenAddSubmissionNoDraftPreview() {
                 )
             ),
             snackbarHostState = SnackbarHostState(),
-            scrollState = rememberScrollState()
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
