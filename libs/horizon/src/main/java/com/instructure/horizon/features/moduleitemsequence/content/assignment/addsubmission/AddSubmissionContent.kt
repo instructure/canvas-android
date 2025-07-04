@@ -20,6 +20,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -36,6 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -43,7 +45,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.layout.positionInParent
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -77,11 +78,22 @@ fun AddSubmissionContent(
     modifier: Modifier = Modifier,
     onRceFocused: () -> Unit = {}
 ) {
-    var rceYPosition by remember { mutableFloatStateOf(0f) }
-    var scrollContent: Float? by remember { mutableStateOf(null) }
+    var rceYPositionInParent by remember { mutableFloatStateOf(0f) }
+    var cursorYPosition by remember { mutableIntStateOf(0) }
+    var scrollContent: Int? by remember { mutableStateOf(null) }
+    var viewportHeight by remember { mutableIntStateOf(0) }
+    LaunchedEffect(scrollState.viewportSize) {
+        viewportHeight = scrollState.viewportSize
+    }
+    LaunchedEffect(viewportHeight, cursorYPosition) {
+        Log.d("AddSubmissionContent", "Scrolling by: $scrollContent, cursorYPosition: $cursorYPosition, rceYPositionInParent: $rceYPositionInParent, viewportHeight: $viewportHeight")
+        if (rceYPositionInParent.toInt() + cursorYPosition > viewportHeight) {
+            scrollContent = (rceYPositionInParent.toInt() + cursorYPosition) - (viewportHeight)
+            Log.d("AddSubmissionContent", "Calculated scrollContent: $scrollContent")
+        }
+    }
     LaunchedEffect(scrollContent) {
-        scrollState.scrollTo((scrollContent?.toInt()?.toPx ?: 0) + rceYPosition.toInt().toPx)
-        //scrollContent = null
+        scrollState.scrollBy(scrollContent?.toFloat() ?: 0f)
     }
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
@@ -147,11 +159,10 @@ fun AddSubmissionContent(
                         uiState = selectedSubmissionType,
                         onRceFocused = onRceFocused,
                         onCursorYCoordinateChanged = {
-                            scrollContent = it
+                            cursorYPosition = it.toInt().toPx
                         },
                         modifier = Modifier.onGloballyPositioned { coordinates ->
-                            Log.d("AddSubmissionContent", "RCE Y Position: ${coordinates.positionInRoot().y}")
-                            rceYPosition = coordinates.positionInParent().y
+                            rceYPositionInParent = coordinates.positionInRoot().y
                         }
                     )
             }
