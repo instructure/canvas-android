@@ -19,8 +19,10 @@ package com.instructure.student.activity
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Toast
+import androidx.lifecycle.lifecycleScope
 import androidx.loader.app.LoaderManager
 import androidx.loader.content.Loader
 import com.instructure.canvasapi2.StatusCallback
@@ -37,12 +39,16 @@ import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LoaderUtils
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.FileUtils
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 //Intended to handle all routing to fragments from links both internal and external
 abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
@@ -68,7 +74,12 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         }
 
         LoaderUtils.restoreLoaderFromBundle(
-            LoaderManager.getInstance(this), savedInstanceState, loaderCallbacks, R.id.openMediaLoaderID, Const.OPEN_MEDIA_LOADER_BUNDLE)
+            LoaderManager.getInstance(this),
+            savedInstanceState,
+            loaderCallbacks,
+            R.id.openMediaLoaderID,
+            Const.OPEN_MEDIA_LOADER_BUNDLE
+        )
 
         if (savedInstanceState?.getBundle(Const.OPEN_MEDIA_LOADER_BUNDLE) != null) {
             showLoadingIndicator()
@@ -91,45 +102,56 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     //region OpenMediaAsyncTaskLoader
 
     private var openMediaBundle: Bundle? = null
-    private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? = null
+    private var openMediaCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>? =
+        null
 
     // Show pdf with PSPDFkit - set to null, otherwise the progressDialog will appear again
     private val loaderCallbacks: LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>
         get() {
             if (openMediaCallbacks == null) {
-                openMediaCallbacks = object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
-                    override fun onCreateLoader(id: Int, args: Bundle?): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
-                        showLoadingIndicator()
-                        return OpenMediaAsyncTaskLoader(context, args)
-                    }
-
-                    override fun onLoadFinished(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>, loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia) {
-                        hideLoadingIndicator()
-
-                        try {
-                            if (loadedMedia.isError) {
-                                toast(loadedMedia.errorMessage, Toast.LENGTH_LONG)
-                            } else if (loadedMedia.isHtmlFile) {
-                                InternalWebviewFragment.loadInternalWebView(this@BaseRouterActivity, InternalWebviewFragment.makeRoute(loadedMedia.bundle!!))
-                            } else if (loadedMedia.intent != null) {
-                                if (loadedMedia.intent!!.type!!.contains("pdf")) {
-                                    val uri = loadedMedia.intent!!.data
-                                    FileUtils.showPdfDocument(uri!!, loadedMedia, context)
-                                } else {
-                                    context.startActivity(loadedMedia.intent)
-                                }
-                            }
-                        } catch (e: ActivityNotFoundException) {
-                            toast(R.string.noApps, Toast.LENGTH_LONG)
+                openMediaCallbacks =
+                    object : LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia> {
+                        override fun onCreateLoader(
+                            id: Int,
+                            args: Bundle?
+                        ): Loader<OpenMediaAsyncTaskLoader.LoadedMedia> {
+                            showLoadingIndicator()
+                            return OpenMediaAsyncTaskLoader(context, args)
                         }
 
-                        openMediaBundle = null
-                    }
+                        override fun onLoadFinished(
+                            loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>,
+                            loadedMedia: OpenMediaAsyncTaskLoader.LoadedMedia
+                        ) {
+                            hideLoadingIndicator()
 
-                    override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {
+                            try {
+                                if (loadedMedia.isError) {
+                                    toast(loadedMedia.errorMessage, Toast.LENGTH_LONG)
+                                } else if (loadedMedia.isHtmlFile) {
+                                    InternalWebviewFragment.loadInternalWebView(
+                                        this@BaseRouterActivity,
+                                        InternalWebviewFragment.makeRoute(loadedMedia.bundle!!)
+                                    )
+                                } else if (loadedMedia.intent != null) {
+                                    if (loadedMedia.intent!!.type!!.contains("pdf")) {
+                                        val uri = loadedMedia.intent!!.data
+                                        FileUtils.showPdfDocument(uri!!, loadedMedia, context)
+                                    } else {
+                                        context.startActivity(loadedMedia.intent)
+                                    }
+                                }
+                            } catch (e: ActivityNotFoundException) {
+                                toast(R.string.noApps, Toast.LENGTH_LONG)
+                            }
 
+                            openMediaBundle = null
+                        }
+
+                        override fun onLoaderReset(loader: Loader<OpenMediaAsyncTaskLoader.LoadedMedia>) {
+
+                        }
                     }
-                }
             }
             return openMediaCallbacks!!
         }
@@ -160,6 +182,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
                 val url = extras.getString(Const.URL).orEmpty()
                 RouteMatcher.routeUrl(this, url)
             }
+
             extras.containsKey(PushExternalReceiver.NEW_PUSH_NOTIFICATION) -> {
                 val url = extras.getString(PushNotification.HTML_URL).orEmpty()
                 RouteMatcher.routeUrl(this, url)
@@ -172,12 +195,29 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         Logger.d("BaseRouterActivity: handleSpecificFile()")
         //If the file no longer exists (404), we want to show a different crouton than the default.
         val fileFolderCanvasCallback = object : StatusCallback<FileFolder>() {
-            override fun onResponse(response: retrofit2.Response<FileFolder>, linkHeaders: LinkHeaders, type: ApiType) {
+            override fun onResponse(
+                response: retrofit2.Response<FileFolder>,
+                linkHeaders: LinkHeaders,
+                type: ApiType
+            ) {
                 response.body()?.let {
                     if (it.isLocked || it.isLockedForUser) {
-                        Toast.makeText(context, String.format(context.getString(R.string.fileLocked), if (it.displayName == null) getString(R.string.file) else it.displayName), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            String.format(
+                                context.getString(R.string.fileLocked),
+                                if (it.displayName == null) getString(R.string.file) else it.displayName
+                            ),
+                            Toast.LENGTH_LONG
+                        ).show()
                     } else {
-                        openMedia(canvasContext, it.contentType.orEmpty(), it.url.orEmpty(), it.displayName.orEmpty(), fileID)
+                        openMedia(
+                            canvasContext,
+                            it.contentType.orEmpty(),
+                            it.url.orEmpty(),
+                            it.displayName.orEmpty(),
+                            fileID
+                        )
                     }
                 }
             }
@@ -190,12 +230,29 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         Logger.d("BaseRouterActivity: handleSpecificFile() no context")
         //If the file no longer exists (404), we want to show a different crouton than the default.
         val fileFolderCanvasCallback = object : StatusCallback<FileFolder>() {
-            override fun onResponse(response: retrofit2.Response<FileFolder>, linkHeaders: LinkHeaders, type: ApiType) {
+            override fun onResponse(
+                response: retrofit2.Response<FileFolder>,
+                linkHeaders: LinkHeaders,
+                type: ApiType
+            ) {
                 response.body()?.let {
                     if (it.isLocked || it.isLockedForUser) {
-                        Toast.makeText(context, String.format(context.getString(R.string.fileLocked), if (it.displayName == null) getString(R.string.file) else it.displayName), Toast.LENGTH_LONG).show()
+                        Toast.makeText(
+                            context,
+                            String.format(
+                                context.getString(R.string.fileLocked),
+                                if (it.displayName == null) getString(R.string.file) else it.displayName
+                            ),
+                            Toast.LENGTH_LONG
+                        ).show()
                     } else {
-                        openMedia(CanvasContext.emptyUserContext(), it.contentType.orEmpty(), it.url.orEmpty(), it.displayName.orEmpty(), fileID)
+                        openMedia(
+                            CanvasContext.emptyUserContext(),
+                            it.contentType.orEmpty(),
+                            it.url.orEmpty(),
+                            it.displayName.orEmpty(),
+                            fileID
+                        )
                     }
                 }
             }
@@ -207,14 +264,45 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     fun openMedia(canvasContext: CanvasContext?, url: String, fileID: String?) {
         openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, null, fileID, canvasContext)
         LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
-            LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
+            LoaderManager.getInstance(this),
+            openMediaBundle,
+            loaderCallbacks,
+            R.id.openMediaLoaderID
+        )
     }
 
-    fun openMedia(canvasContext: CanvasContext?, mime: String, url: String, filename: String, fileID: String?) {
+    fun openMedia(
+        canvasContext: CanvasContext?,
+        mime: String,
+        url: String,
+        filename: String,
+        fileID: String?
+    ) {
         /*openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, fileID)
         LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
             LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)*/
-        startActivity(VideoViewActivity.createIntent(this, url))
+
+        showLoadingIndicator()
+        lifecycleScope.launch(Dispatchers.IO) {
+            var mediaUrl = url
+            try {
+                RouteUtils.getRedirectUrl(Uri.parse(url)).let { redirectUri ->
+                    mediaUrl = redirectUri.toString()
+                }
+            } catch (e: Exception) {
+                Logger.w("Error retrieving redirect URL for media: ${e.message}")
+            }
+            withContext(Dispatchers.Main) {
+                hideLoadingIndicator()
+                startActivity(
+                    VideoViewActivity.createIntent(
+                        this@BaseRouterActivity,
+                        mediaUrl
+                    )
+                )
+            }
+
+        }
     }
 
     override fun onDestroy() {

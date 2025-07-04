@@ -16,6 +16,7 @@
 
 package com.instructure.pandautils.utils
 
+import android.net.Uri
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -41,7 +42,10 @@ object RouteUtils {
         block.invoke(fileUrl, context, needsAuth)
     }
 
-    fun getRedirectUrl(url: String): String {
+    fun getRedirectUrl(uri: Uri): Uri {
+        if (false) {
+            return uri
+        }
         val client = CanvasRestAdapter.okHttpClient
             .newBuilder()
             .followRedirects(false)
@@ -49,7 +53,7 @@ object RouteUtils {
             .build()
 
         val request = Request.Builder()
-            .url(url)
+            .url(uri.toString())
             .build()
 
         val response = client.newCall(request).execute()
@@ -59,7 +63,7 @@ object RouteUtils {
             redirectUrl = response.header("Location") ?: ""
 
             // Let's parse out what we don't want
-            redirectUrl.substringBefore("/view")
-        } else ""
+            Uri.parse(redirectUrl.substringBefore("/view"))
+        } else uri
     }
 }
