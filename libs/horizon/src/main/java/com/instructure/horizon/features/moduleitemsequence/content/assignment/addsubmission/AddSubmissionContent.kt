@@ -15,7 +15,6 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission
 
-import android.util.Log
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
@@ -87,9 +86,13 @@ fun AddSubmissionContent(
         viewportHeight = scrollState.viewportSize + moduleHeaderHeight.value.toInt().toPx
     }
     LaunchedEffect(viewportHeight, cursorYPosition) {
-        Log.d("AddSubmissionContent", "Viewport Height: $viewportHeight, Cursor Y Position: $cursorYPosition, RCE Y Position: $rceYPositionInRoot")
         if (rceYPositionInRoot + cursorYPosition + 32.toPx > viewportHeight) {
-            scrollContent = (rceYPositionInRoot + cursorYPosition) + 32.toPx - (viewportHeight)
+            //Cursor is under the viewport
+            scrollContent = rceYPositionInRoot + cursorYPosition + 32.toPx - viewportHeight
+        }
+        if (rceYPositionInRoot + cursorYPosition < moduleHeaderHeight.value.toInt().toPx) {
+            //Cursor is under the module header
+            scrollContent = (rceYPositionInRoot + cursorYPosition) - moduleHeaderHeight.value.toInt().toPx
         }
     }
     LaunchedEffect(scrollContent) {
