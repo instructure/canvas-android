@@ -18,7 +18,6 @@ package com.instructure.pandautils.compose.composables.rce
 import android.content.ContentValues
 import android.net.Uri
 import android.provider.MediaStore
-import android.util.Log
 import android.webkit.JavascriptInterface
 import android.webkit.URLUtil
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -95,7 +94,6 @@ fun ComposeRCE(
         addJavascriptInterface(
             RCECursorPositionInterface { y ->
                 onCursorYCoordinateChanged(y)
-                Log.d(RCECursorPositionInterface.NAME, "Cursor position changed: $y")
             }, RCECursorPositionInterface.NAME
         )
         setOnInitialLoadListener {

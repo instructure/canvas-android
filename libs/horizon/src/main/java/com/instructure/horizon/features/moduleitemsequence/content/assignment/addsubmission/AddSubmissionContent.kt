@@ -36,7 +36,6 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -78,7 +77,7 @@ fun AddSubmissionContent(
     modifier: Modifier = Modifier,
     onRceFocused: () -> Unit = {}
 ) {
-    var rceYPositionInParent by remember { mutableFloatStateOf(0f) }
+    var rceYPositionInParent by remember { mutableIntStateOf(0) }
     var cursorYPosition by remember { mutableIntStateOf(0) }
     var scrollContent: Int? by remember { mutableStateOf(null) }
     var viewportHeight by remember { mutableIntStateOf(0) }
@@ -86,10 +85,8 @@ fun AddSubmissionContent(
         viewportHeight = scrollState.viewportSize
     }
     LaunchedEffect(viewportHeight, cursorYPosition) {
-        Log.d("AddSubmissionContent", "Scrolling by: $scrollContent, cursorYPosition: $cursorYPosition, rceYPositionInParent: $rceYPositionInParent, viewportHeight: $viewportHeight")
-        if (rceYPositionInParent.toInt() + cursorYPosition > viewportHeight) {
-            scrollContent = (rceYPositionInParent.toInt() + cursorYPosition) - (viewportHeight)
-            Log.d("AddSubmissionContent", "Calculated scrollContent: $scrollContent")
+        if (rceYPositionInParent + cursorYPosition + 32.toPx > viewportHeight) {
+            scrollContent = (rceYPositionInParent + cursorYPosition) + 32.toPx - (viewportHeight)
         }
     }
     LaunchedEffect(scrollContent) {
@@ -160,9 +157,10 @@ fun AddSubmissionContent(
                         onRceFocused = onRceFocused,
                         onCursorYCoordinateChanged = {
                             cursorYPosition = it.toInt().toPx
+                            Log.d("AddSubmissionContent", "Cursor Y Position: $cursorYPosition")
                         },
                         modifier = Modifier.onGloballyPositioned { coordinates ->
-                            rceYPositionInParent = coordinates.positionInRoot().y
+                            rceYPositionInParent = coordinates.positionInRoot().y.toInt()
                         }
                     )
             }
