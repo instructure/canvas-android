@@ -20,24 +20,33 @@ import android.content.Context
 import android.net.Uri
 import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.GroupAssignee
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
+import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.PendingSubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
+import com.instructure.pandautils.room.appdatabase.model.SubmissionCommentWithAttachments
 import com.instructure.pandautils.services.NotoriousUploadWorker
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -53,6 +62,11 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val speedGraderCommentsRepository: SpeedGraderCommentsRepository,
     private val pendingSubmissionCommentDao: PendingSubmissionCommentDao,
+    private val fileUploadInputDao: FileUploadInputDao,
+    private val submissionCommentDao: SubmissionCommentDao,
+    private val attachmentDao: AttachmentDao,
+    private val authorDao: AuthorDao,
+    private val mediaCommentDao: MediaCommentDao,
     private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
@@ -67,8 +81,9 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private var pageId: String = ""
     private var attempt: Int = -1
 
-    private var fetchedComments: List<SpeedGraderComment> = emptyList()
+    private var fetchedComments: MutableList<SpeedGraderComment> = mutableListOf()
     private var pendingComments: List<SpeedGraderComment> = emptyList()
+    private var selectedFilePaths: List<String>? = null
 
     // TODO use actual value from feature flag
     val assignmentEnhancementsEnabled = true
@@ -80,15 +95,15 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
-        val comments = speedGraderCommentsRepository.getSubmissionComments(submissionId)
-        courseId = comments.submission?.assignment?.courseId?.toLong() ?: -1L
-        userId = comments.submission?.userId?.toLong() ?: -1L
+        val response = speedGraderCommentsRepository.getSubmissionComments(submissionId)
+        courseId = response.data.submission?.assignment?.courseId?.toLong() ?: -1L
+        userId = response.data.submission?.userId?.toLong() ?: -1L
         pageId =
             "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
         collectPendingComments()
-        fetchedComments = comments.submission?.commentsConnection?.edges
-            ?.mapNotNull { edge ->
-                edge?.node?.let {
+        fetchedComments = response.comments
+            .map { node ->
+                node.let {
                     SpeedGraderComment(
                         id = it.mediaCommentId ?: "",
                         authorName = it.author?.name ?: "Unknown",
@@ -109,11 +124,25 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                                 size = attachment.size ?: "",
 
                                 )
-                        } ?: emptyList()
+                        } ?: emptyList(),
+                        mediaObject = it.mediaObject?.let { mediaObject ->
+                            SpeedGraderMediaObject(
+                                id = mediaObject._id ?: "",
+                                mediaDownloadUrl = mediaObject.mediaDownloadUrl,
+                                title = mediaObject.title,
+                                mediaType = if (mediaObject.title?.endsWith(".mp4") == true) { // TODO Check mediaType field if the query is fixed
+                                    MediaType.VIDEO
+                                } else {
+                                    MediaType.AUDIO
+                                },
+                                thumbnailUrl = mediaObject.thumbnailUrl
+                            )
+                        }
                     )
                 }
-            } ?: emptyList()
-        attempt = comments.submission?.attempt ?: -1
+            }.toMutableList()
+
+        attempt = response.data.submission?.attempt ?: -1
         _uiState.update { state ->
             state.copy(
                 comments = fetchedComments + pendingComments,
@@ -183,7 +212,15 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
             SpeedGraderCommentsAction.ChooseFilesClicked -> {
                 _uiState.update { state ->
-                    state.copy(showAttachmentTypeDialog = false)
+                    state.copy(
+                        showAttachmentTypeDialog = false,
+                        fileSelectorDialogData = SpeedGraderFileSelectorDialogData(
+                            assignmentId = assignmentId,
+                            courseId = courseId,
+                            userId = userId,
+                            attempt = attempt.toLong()
+                        )
+                    )
                 }
             }
 
@@ -214,7 +251,132 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             is SpeedGraderCommentsAction.MediaRecorded -> {
                 handleMediaRecording(action.file)
             }
+
+            SpeedGraderCommentsAction.FileUploadDialogClosed -> {
+                _uiState.update { state ->
+                    state.copy(fileSelectorDialogData = null)
+                }
+            }
+
+            is SpeedGraderCommentsAction.FileUploadStarted -> {
+                onFileUploadStarted(action.workInfoLiveData)
+            }
+
+            is SpeedGraderCommentsAction.FilesSelected -> {
+                selectedFilePaths = action.filePaths
+            }
         }
+    }
+
+    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo>) {
+        _uiState.update { state ->
+            state.copy(
+                fileSelectorDialogData = null,
+                showAttachmentTypeDialog = false
+            )
+        }
+        // Subscribe to the worker's LiveData to observe its state
+        viewModelScope.launch {
+            workInfoLiveData.asFlow().collect { workInfo ->
+                when (workInfo.state) {
+                    WorkInfo.State.RUNNING -> createPendingFileComment(workInfo)
+                    WorkInfo.State.SUCCEEDED -> handleFileUploadSuccess(workInfo)
+                    WorkInfo.State.FAILED -> handleFileUploadFailure(workInfo)
+                    else -> {}
+                }
+            }
+        }
+    }
+
+    private suspend fun createPendingFileComment(workInfo: WorkInfo) {
+        var fileUploadInput = fileUploadInputDao.findByWorkerId(workInfo.id.toString())
+        if (fileUploadInput == null) {
+            fileUploadInput = FileUploadInputEntity(
+                workerId = workInfo.id.toString(),
+                courseId = courseId,
+                assignmentId = assignmentId,
+                userId = userId,
+                filePaths = selectedFilePaths.orEmpty(),
+                action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
+                attemptId = attempt.takeIf { assignmentEnhancementsEnabled }?.toLong()
+            )
+            fileUploadInputDao.insert(fileUploadInput)
+        }
+
+        val comment = pendingSubmissionCommentDao.findByPageId(pageId)?.find {
+            it.fileUploadInput?.workerId == workInfo.id.toString()
+        }
+        if (comment == null) {
+            val newComment = PendingSubmissionComment(pageId).apply {
+                this.workerId = workInfo.id
+                this.status = CommentSendStatus.SENDING
+                this.workerInputData = FileUploadWorkerData(
+                    selectedFilePaths.orEmpty(),
+                    courseId,
+                    assignmentId,
+                    userId
+                )
+                this.attemptId = attempt.takeIf { assignmentEnhancementsEnabled }?.toLong()
+            }
+            pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
+        }
+    }
+
+    private suspend fun handleFileUploadSuccess(workInfo: WorkInfo) {
+        pendingSubmissionCommentDao.findByWorkerId(workInfo.id.toString())?.let { pending ->
+            pendingSubmissionCommentDao.delete(pending)
+
+            val submissionCommentId =
+                workInfo.outputData.getLong(FileUploadWorker.RESULT_SUBMISSION_COMMENT, 0L)
+            submissionCommentDao.findById(submissionCommentId)?.let {
+                fetchedComments.add(
+                    SpeedGraderComment(
+                        id = it.submissionComment.id.toString(),
+                        authorName = it.author?.displayName ?: apiPrefs.user?.name ?: "",
+                        authorId = it.author?.id?.toString() ?: apiPrefs.user?.id?.toString() ?: "",
+                        authorAvatarUrl = it.author?.avatarImageUrl ?: apiPrefs.user?.avatarUrl
+                        ?: "",
+                        content = it.submissionComment.comment ?: "",
+                        createdAt = DateHelper.longToSpeedGraderDateString(it.submissionComment.createdAt?.time)
+                            ?: "",
+                        isOwnComment = true,
+                        attachments = it.attachments?.map { attachment ->
+                            SpeedGraderCommentAttachment(
+                                id = attachment.id.toString(),
+                                url = attachment.url ?: "",
+                                thumbnailUrl = attachment.thumbnailUrl,
+                                createdAt = attachment.createdAt.toString(),
+                                title = attachment.displayName ?: attachment.filename ?: "",
+                                displayName = attachment.displayName ?: "",
+                                contentType = attachment.contentType ?: "",
+                                size = attachment.size.toString()
+                            )
+                        } ?: emptyList(),
+                        isPending = false
+                    )
+                )
+                dbCleanUp(it)
+                _uiState.update { state ->
+                    state.copy(
+                        comments = fetchedComments + pendingComments,
+                        commentText = TextFieldValue("")
+                    )
+                }
+                /*viewCallback?.scrollToBottom()
+                SubmissionCommentsUpdated().post()*/
+            }
+        }
+    }
+
+    private suspend fun handleFileUploadFailure(workInfo: WorkInfo) {
+
+    }
+
+    private suspend fun dbCleanUp(submissionComment: SubmissionCommentWithAttachments) {
+        submissionComment.author?.let { authorDao.delete(it) }
+        submissionComment.mediaComment?.let { mediaCommentDao.delete(it) }
+        submissionComment.attachments?.let { attachmentDao.deleteAll(it) }
+        submissionCommentDao.delete(submissionComment.submissionComment)
     }
 
     private fun handleMediaRecording(file: File) {
@@ -237,12 +399,14 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                             pendingSubmissionCommentDao.delete(it)
                         }
                     }
+
                     WorkInfo.State.FAILED -> {
                         pendingSubmissionCommentDao.findById(id)?.let {
                             it.status = CommentSendStatus.ERROR.toString()
                             pendingSubmissionCommentDao.update(it)
                         }
                     }
+
                     else -> {
                         // Do nothing for other states
                     }
@@ -289,16 +453,18 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             pendingSubmissionCommentDao.findById(id)?.let {
                 pendingSubmissionCommentDao.delete(it)
             }
-            fetchedComments = fetchedComments + SpeedGraderComment(
-                id = newComment.createSubmissionComment?.submissionComment?._id ?: "",
-                authorName = apiPrefs.user?.name ?: "",
-                authorId = apiPrefs.user?.id?.toString() ?: "",
-                authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
-                content = comment,
-                createdAt = newComment.createSubmissionComment?.submissionComment?.createdAt.toString(),
-                isOwnComment = true,
-                attachments = emptyList(),
-                isPending = false
+            fetchedComments.add(
+                SpeedGraderComment(
+                    id = newComment.createSubmissionComment?.submissionComment?._id ?: "",
+                    authorName = apiPrefs.user?.name ?: "",
+                    authorId = apiPrefs.user?.id?.toString() ?: "",
+                    authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
+                    content = comment,
+                    createdAt = newComment.createSubmissionComment?.submissionComment?.createdAt.toString(),
+                    isOwnComment = true,
+                    attachments = emptyList(),
+                    isPending = false
+                )
             )
             _uiState.update { state ->
                 state.copy(

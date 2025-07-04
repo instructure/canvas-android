@@ -1,6 +1,8 @@
 package com.instructure.pandautils.features.speedgrader.comments
 
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.lifecycle.LiveData
+import androidx.work.WorkInfo
 import com.instructure.pandautils.views.RecordingMediaType
 import java.io.File
 
@@ -12,6 +14,7 @@ data class SpeedGraderCommentsUiState(
     val errorMessage: String? = null,
     val isEmpty: Boolean = false,
     val showAttachmentTypeDialog: Boolean = false,
+    val fileSelectorDialogData: SpeedGraderFileSelectorDialogData? = null,
     val showRecordFloatingView: RecordingMediaType? = null,
 )
 
@@ -24,6 +27,7 @@ data class SpeedGraderComment(
     val createdAt: String = "",
     val isOwnComment: Boolean = false,
     val attachments: List<SpeedGraderCommentAttachment> = emptyList(),
+    val mediaObject: SpeedGraderMediaObject? = null,
     val isPending: Boolean = false
 )
 
@@ -38,6 +42,26 @@ data class SpeedGraderCommentAttachment(
     val createdAt: String = "",
 )
 
+data class SpeedGraderMediaObject(
+    val id: String,
+    val mediaDownloadUrl: String?,
+    val title: String?,
+    val mediaType: MediaType?,
+    val thumbnailUrl: String?
+)
+
+enum class MediaType {
+    AUDIO,
+    VIDEO
+}
+
+data class SpeedGraderFileSelectorDialogData(
+    val assignmentId: Long = 0L,
+    val courseId: Long = 0L,
+    val userId: Long = 0L,
+    val attempt: Long = 0L,
+)
+
 sealed class SpeedGraderCommentsAction {
     data class CommentFieldChanged(val commentText: TextFieldValue) : SpeedGraderCommentsAction()
     data object AddCommentLibraryClicked : SpeedGraderCommentsAction()
@@ -48,5 +72,10 @@ sealed class SpeedGraderCommentsAction {
     data object RecordAudioClicked : SpeedGraderCommentsAction()
     data object RecordVideoClicked : SpeedGraderCommentsAction()
     data object ChooseFilesClicked : SpeedGraderCommentsAction()
+    data object FileUploadDialogClosed : SpeedGraderCommentsAction()
+    data class FilesSelected(val filePaths: List<String>) : SpeedGraderCommentsAction()
+    data class FileUploadStarted(val workInfoLiveData: LiveData<WorkInfo>) :
+        SpeedGraderCommentsAction()
+
     data class MediaRecorded(val file: File) : SpeedGraderCommentsAction()
 }

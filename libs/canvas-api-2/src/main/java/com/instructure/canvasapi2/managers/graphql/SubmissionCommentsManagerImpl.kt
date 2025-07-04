@@ -19,13 +19,32 @@ import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.SubmissionCommentsQuery
+import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
 
-    override suspend fun getSubmissionComments(submissionId: Long): SubmissionCommentsQuery.Data {
-        val query = SubmissionCommentsQuery(submissionId.toString())
-        val result = QLClientConfig.enqueueQuery(query)
-        return result.dataAssertNoErrors
+    override suspend fun getSubmissionComments(submissionId: Long): SubmissionCommentsResponseWrapper {
+        var hasNextPage = true
+        var nextCursor: String? = null
+        val allComments = mutableListOf<SubmissionCommentsQuery.Node>()
+        var data: SubmissionCommentsQuery.Data? = null
+
+        while (hasNextPage) {
+            val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
+            val query = SubmissionCommentsQuery(submissionId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
+            data = QLClientConfig.enqueueQuery(query).data
+            val comments = data?.submission?.commentsConnection?.edges?.mapNotNull { edge ->
+                edge?.node
+            } ?: emptyList()
+            allComments.addAll(comments)
+
+            hasNextPage = data?.submission?.commentsConnection?.pageInfo?.hasNextPage ?: false
+            nextCursor = data?.submission?.commentsConnection?.pageInfo?.endCursor
+        }
+        if (data == null) {
+            throw Exception("No data returned from SubmissionCommentsQuery")
+        }
+        return SubmissionCommentsResponseWrapper(data, allComments)
     }
 
     override suspend fun createSubmissionComment(

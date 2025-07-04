@@ -14,12 +14,12 @@
 #     limitations under the License.
 #
 
-query SubmissionCommentsQuery($submissionId: ID!) {
+query SubmissionCommentsQuery($submissionId: ID!, $pageSize: Int!, $nextCursor: String) {
     submission(id: $submissionId) {
         _id
         userId
         attempt
-        commentsConnection {
+        commentsConnection(first: $pageSize, after: $nextCursor) {
             edges {
                 node {
                     author {
@@ -34,6 +34,11 @@ query SubmissionCommentsQuery($submissionId: ID!) {
                         mediaDownloadUrl
                         title
                         mediaType
+                        thumbnailUrl
+                        mediaSources {
+                            contentType
+                            fileExt
+                        }
                     }
                     comment
                     mediaCommentId

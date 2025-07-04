@@ -16,11 +16,11 @@
 package com.instructure.canvasapi2.managers.graphql
 
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
-import com.instructure.canvasapi2.SubmissionCommentsQuery
+import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 interface SubmissionCommentsManager {
 
-    suspend fun getSubmissionComments(submissionId: Long): SubmissionCommentsQuery.Data
+    suspend fun getSubmissionComments(submissionId: Long): SubmissionCommentsResponseWrapper
 
     suspend fun createSubmissionComment(
         submissionId: Long,

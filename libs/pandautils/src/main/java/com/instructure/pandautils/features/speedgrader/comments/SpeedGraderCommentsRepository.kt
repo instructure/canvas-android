@@ -19,11 +19,12 @@ package com.instructure.pandautils.features.speedgrader.comments
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
 import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 class SpeedGraderCommentsRepository(
     private val submissionCommentsManager: SubmissionCommentsManager
 ) {
-    suspend fun getSubmissionComments(assignmentId: Long): SubmissionCommentsQuery.Data {
+    suspend fun getSubmissionComments(assignmentId: Long): SubmissionCommentsResponseWrapper {
         return submissionCommentsManager.getSubmissionComments(assignmentId)
     }
 
