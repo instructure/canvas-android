@@ -15,9 +15,11 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.file
 
+import android.net.Uri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.account.filepreview.FilePreviewUiState
@@ -41,7 +43,8 @@ import javax.inject.Inject
 class FileSubmissionContentViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
-    private val fileCache: FileCache
+    private val fileCache: FileCache,
+    private val crashlytics: FirebaseCrashlytics,
 ) : ViewModel() {
 
     private val _uiState =
@@ -138,13 +141,14 @@ class FileSubmissionContentViewModel @Inject constructor(
 
     private fun fileSelected(fileItem: FileItemUiState) {
         viewModelScope.tryLaunch {
+            _uiState.update { it.copy(filePreviewLoading = true) }
             val filePreview = getFilePreview(fileItem)
             _uiState.update {
-                it.copy(filePreview = filePreview)
+                it.copy(filePreview = filePreview, filePreviewLoading = false)
             }
         } catch {
             _uiState.update {
-                it.copy(filePreview = FilePreviewUiState.NoPreview)
+                it.copy(filePreview = FilePreviewUiState.NoPreview, filePreviewLoading = false)
             }
         }
     }
@@ -155,31 +159,54 @@ class FileSubmissionContentViewModel @Inject constructor(
         val contentType = file.fileType
         val thumbnailUrl = file.thumbnailUrl
 
-        return when {
-            contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
+        try {
+            return when {
+                contentType == "application/pdf" -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Pdf(Uri.fromFile(it))
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            contentType.startsWith("video") || contentType.startsWith("audio") -> FilePreviewUiState.Media(
-                url,
-                thumbnailUrl,
-                contentType,
-                displayName
-            )
+                contentType.startsWith("video") || contentType.startsWith("audio") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
+                    tempFile?.let {
+                        FilePreviewUiState.Media(
+                            Uri.fromFile(it),
+                            thumbnailUrl,
+                            contentType,
+                            displayName
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
+                contentType.startsWith("image") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
+                    tempFile?.let {
+                        FilePreviewUiState.Image(
+                            displayName = displayName,
+                            uri = Uri.fromFile(it)
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            contentType.startsWith("text") -> {
-                val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
-                tempFile?.let {
-                    FilePreviewUiState.Text(
-                        content = it.readText(),
-                        contentType = contentType
-                    )
-                } ?: FilePreviewUiState.NoPreview
+                contentType.startsWith("text") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(file.fileUrl)
+                    tempFile?.let {
+                        FilePreviewUiState.Text(
+                            content = it.readText(),
+                            contentType = contentType
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
+
+                else -> {
+                    FilePreviewUiState.NoPreview
+                }
             }
-
-            else -> {
-                FilePreviewUiState.NoPreview
-            }
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            return FilePreviewUiState.NoPreview
         }
     }
 

@@ -97,6 +97,7 @@ object MasqueradeHelper {
                             response.body()?.rootAccount?.let {
                                 ApiPrefs.domain = it
                             }
+                            ApiPrefs.webViewAuthenticationTimestamp = 0 // Reset the timestamp so the WebViews will authenticate for the new user
                             restartApplication(startingClass)
                         }
                     }

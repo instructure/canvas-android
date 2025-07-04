@@ -101,7 +101,7 @@ private fun DialogHeader(
         IconButton(
             iconRes = R.drawable.close,
             size = IconButtonSize.SMALL,
-            color = IconButtonColor.INVERSE,
+            color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
             onClick = onDismiss
         )

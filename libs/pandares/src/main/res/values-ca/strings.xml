@@ -291,7 +291,7 @@
     <string name="Todo">Tasques pendents</string>
     <string name="todoFilter">Filtra les assignatures</string>
     <string name="filterByEllipsis">Filtra per&#8230;</string>
-    <string name="favoritedCoursesLabel">Assignatures preferides</string>
+    <string name="favoriteCoursesLabel">Assignatures preferides</string>
     <string name="Event">Esdeveniment</string>
     <string name="eventSuccessfulDeletion">S\'ha suprimit correctament l\'esdeveniment</string>
     <string name="timeIconDescription">Icona de l\'hora</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notificacions</string>
     <string name="todoWidgetTitleLong">Canvas: tasques pendents</string>
     <string name="gradesWidgetTitleLong">Canvas: notes</string>
+    <string name="gradeWidgetTitleLong">Canvas: nota</string>
     <string name="notificationWidgetTitleLong">Canvas: notificacions</string>
     <string name="notLoggedIn">No heu iniciat la sessió</string>
     <string name="widgetStyle">Trieu l\'estil de giny</string>
@@ -1777,12 +1778,12 @@
     <string name="screenTitleHelp">Ajuda</string>
     <string name="screenTitleManageStudents">Administra els estudiants</string>
     <string name="screenTitleSettings">Configuració</string>
-    <string name="navigationDrawerSwitchUsers">Canvia els usuaris</string>
     <string name="navigationDrawerLogOut">Tanca la sessió</string>
     <string name="noStudentsError">Cap estudiant</string>
     <string name="noStudentsErrorDescription">No esteu observant cap estudiant.</string>
     <string name="noStudentsRefresh">Actualitza-ho</string>
     <string name="noGrade">Sense nota</string>
+    <string name="noGrades">Sense nota</string>
     <string name="errorLoadingCourses">S\'ha produït un error en carregar les vostres assignatures de l\'estudiant.</string>
     <string name="parentNoCourses">No hi ha cap assignatura</string>
     <string name="parentNoCoursesMessage">És possible que encara no s\'hagin publicat les vostres assignatures de l\'estudiant.</string>
@@ -2049,4 +2050,23 @@
     <string name="errorLoadingAssignments">S\'ha produït un error en carregar les activitats</string>
     <string name="a11y_searchAssignments">Cerca activitats</string>
     <string name="dueAssignmentListItem">Venç el %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cerqueu entre els destinataris</string>
+    <string name="a11y_recipientIsRemoved">S\'ha suprimit %1$s</string>
+    <string name="widgetDueDate">Venç a les %1$s</string>
+    <string name="widgetFromTo">Del %1$s al %2$s</string>
+    <string name="widgetAllDay">Tot el dia</string>
+    <string name="widgetErrorTitle">Vaja! S’ha produït un error</string>
+    <string name="widgetErrorSubtitle">Estem tenint problemes per mostrar les vostres tasques en aquest moment. Torneu a provar-ho d’aquí a uns instants o aneu a l’aplicació.</string>
+    <string name="widgetToDoEmptyTitle">Ja ho teniu tot fet de moment!</string>
+    <string name="widgetToDoEmptySubtitle">Sembla que esteu lliure durant les properes 4 setmanes. Voleu afegir alguna tasca pendent?</string>
+    <string name="widgetNotLoggedInTitle">Anem a fer que inicieu la sessió!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Per consultar les tasques pendents, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Obriu la pantalla de la llista de tasques pendents</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Creeu una llista nova de tasques pendents</string>
+    <string name="widgetGradesErrorSubtitle">Estem tenint problemes per mostrar les vostres notes en aquest moment. Torneu a provar-ho d’aquí a uns instants o aneu a l’aplicació.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Estem tenint problemes per mostrar les vostres notes en aquest moment.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació.</string>
+    <string name="widgetSingleGradeSelectCourse">Triem una assignatura</string>
+    <string name="widgetGradesErrorLoadingCourses">S\'ha produït un error en carregar les assignatures.</string>
 </resources>

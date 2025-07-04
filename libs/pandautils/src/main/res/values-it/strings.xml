@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Impostazioni Posta in arrivo salvate!</string>
     <string name="inboxSignatureSettingsError">Impossibile salvare le impostazioni casella di posta in arrivo</string>
     <string name="inboxSignatureTextFieldPlaceholder">Scrivi qui la tua firma</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d ora</item>
+        <item quantity="other">%d ore</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minuto</item>
+        <item quantity="other">%d minuti</item>
+    </plurals>
 </resources>

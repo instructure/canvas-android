@@ -291,7 +291,7 @@
     <string name="Todo">Zu erledigen</string>
     <string name="todoFilter">Kurse filtern</string>
     <string name="filterByEllipsis">Filtern nach ...</string>
-    <string name="favoritedCoursesLabel">Bevorzugte Kurse</string>
+    <string name="favoriteCoursesLabel">Lieblingskurse</string>
     <string name="Event">Ereignis</string>
     <string name="eventSuccessfulDeletion">Das Ereignis wurde erfolgreich gelöscht</string>
     <string name="timeIconDescription">Zeitsymbol</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Benachrichtigungen</string>
     <string name="todoWidgetTitleLong">Canvas – Zu erledigen</string>
     <string name="gradesWidgetTitleLong">Canvas - Noten</string>
+    <string name="gradeWidgetTitleLong">Canvas – Note</string>
     <string name="notificationWidgetTitleLong">Canvas - Benachrichtigungen</string>
     <string name="notLoggedIn">Sie sind nicht angemeldet</string>
     <string name="widgetStyle">Wählen Sie Ihren Widget-Stil</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Hilfe</string>
     <string name="screenTitleManageStudents">Studierende verwalten</string>
     <string name="screenTitleSettings">Einstellungen</string>
-    <string name="navigationDrawerSwitchUsers">Benutzer*innen wechseln</string>
     <string name="navigationDrawerLogOut">Abmelden</string>
     <string name="noStudentsError">Keine Studierende</string>
     <string name="noStudentsErrorDescription">Sie beobachten keine Studierende*n.</string>
     <string name="noStudentsRefresh">Aktualisieren</string>
     <string name="noGrade">Keine Note</string>
+    <string name="noGrades">Keine Noten</string>
     <string name="errorLoadingCourses">Fehler beim Laden der Kurse Ihres Studierenden.</string>
     <string name="parentNoCourses">Keine Kurse</string>
     <string name="parentNoCoursesMessage">Die Kurse sind möglicherweise noch nicht veröffentlicht.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Beim Laden der Aufgaben ist ein Fehler aufgetreten.</string>
     <string name="a11y_searchAssignments">Aufgaben suchen</string>
     <string name="dueAssignmentListItem">Fällig am %1$s</string>
+    <string name="a11y_searchAmongRecipients">Suche unter Empfängern</string>
+    <string name="a11y_recipientIsRemoved">%1$s wird entfernt</string>
+    <string name="widgetDueDate">Fällig um %1$s</string>
+    <string name="widgetFromTo">%1$s bis %2$s</string>
+    <string name="widgetAllDay">Den ganzen Tag</string>
+    <string name="widgetErrorTitle">Ups! Etwas ging schief</string>
+    <string name="widgetErrorSubtitle">Wir haben im Moment Probleme mit der Anzeige Ihrer Aufgaben. Bitte versuchen Sie es in Kürze erneut oder besuchen Sie die App.</string>
+    <string name="widgetToDoEmptyTitle">Das war\'s fürs Erste.</string>
+    <string name="widgetToDoEmptySubtitle">Sieht so aus, als ob Sie für die nächsten 4 Wochen frei sind. Möchten Sie ein paar Aufgaben hinzufügen?</string>
+    <string name="widgetNotLoggedInTitle">Dann melden Sie sich an!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Um Ihre Aufgaben zu sehen, melden Sie sich bitte in der App bei Ihrem Konto an. Es dauert nur eine Sekunde!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Bildschirm „Aufgabenliste“ öffnen</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Neue Aufgabe erstellen</string>
+    <string name="widgetGradesErrorSubtitle">Wir haben im Moment Probleme mit der Anzeige Ihrer Aufgaben. Bitte versuchen Sie es in Kürze erneut oder besuchen Sie die App.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Um Ihre Noten zu sehen, melden Sie sich bitte in der App bei Ihrem Konto an. Es dauert nur eine Sekunde!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Wir haben im Moment Probleme mit der Anzeige Ihrer Aufgaben.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Um Ihre Noten zu sehen, melden Sie sich bitte in der App bei Ihrem Konto an.</string>
+    <string name="widgetSingleGradeSelectCourse">Wählen wir einen Kurs aus</string>
+    <string name="widgetGradesErrorLoadingCourses">Beim Laden der Kurse ist ein Fehler aufgetreten.</string>
 </resources>

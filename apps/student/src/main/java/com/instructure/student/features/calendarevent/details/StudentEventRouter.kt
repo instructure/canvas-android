@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.calendarevent
+package com.instructure.student.features.calendarevent.details
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.ScheduleItem

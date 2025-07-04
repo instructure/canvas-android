@@ -291,7 +291,7 @@
     <string name="Todo">Tareas pendientes</string>
     <string name="todoFilter">Filtrar las asignaturas</string>
     <string name="filterByEllipsis">Filtrar por...</string>
-    <string name="favoritedCoursesLabel">Asignaturas favoritas</string>
+    <string name="favoriteCoursesLabel">Asignaturas favoritas</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">Se ha eliminado el evento</string>
     <string name="timeIconDescription">Icono de horario</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notificaciones</string>
     <string name="todoWidgetTitleLong">Canvas: tareas pendientes</string>
     <string name="gradesWidgetTitleLong">Canvas: Notas</string>
+    <string name="gradeWidgetTitleLong">Canvas: nota</string>
     <string name="notificationWidgetTitleLong">Canvas: Notificaciones</string>
     <string name="notLoggedIn">No has iniciado sesión</string>
     <string name="widgetStyle">Elige el estilo de los componentes</string>
@@ -1778,12 +1779,12 @@
     <string name="screenTitleHelp">Ayuda</string>
     <string name="screenTitleManageStudents">Administrar estudiantes</string>
     <string name="screenTitleSettings">Configuraciones</string>
-    <string name="navigationDrawerSwitchUsers">Cambiar usuarios</string>
     <string name="navigationDrawerLogOut">Cerrar sesión</string>
     <string name="noStudentsError">No hay estudiantes</string>
     <string name="noStudentsErrorDescription">No estás observando a ningún estudiante.</string>
     <string name="noStudentsRefresh">Actualizar</string>
     <string name="noGrade">No hay nota</string>
+    <string name="noGrades">No hay ninguna nota</string>
     <string name="errorLoadingCourses">Se ha producido un error al cargar las asignaturas de tu estudiante.</string>
     <string name="parentNoCourses">No hay asignaturas</string>
     <string name="parentNoCoursesMessage">Puede que las asignaturas de tus estudiantes aún no estén publicadas.</string>
@@ -2050,4 +2051,23 @@
     <string name="errorLoadingAssignments">Se ha producido un error al cargar las actividades</string>
     <string name="a11y_searchAssignments">Buscar actividades</string>
     <string name="dueAssignmentListItem">Fecha de entrega %1$s</string>
+    <string name="a11y_searchAmongRecipients">Buscar entre los destinatarios</string>
+    <string name="a11y_recipientIsRemoved">Se ha eliminado %1$s</string>
+    <string name="widgetDueDate">Vence a las %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">Todo el día</string>
+    <string name="widgetErrorTitle">¡Vaya! Se ha producido un error</string>
+    <string name="widgetErrorSubtitle">Estamos teniendo problemas para mostrar tus tareas en este momento. Inténtalo de nuevo transcurridos unos instantes o dirígete a la aplicación.</string>
+    <string name="widgetToDoEmptyTitle">¡De momento, has terminado!</string>
+    <string name="widgetToDoEmptySubtitle">Parece que te has quedado libre durante las próximas 4 semanas. ¿Quieres añadir algunas tareas pendientes?</string>
+    <string name="widgetNotLoggedInTitle">¡Permítenos ayudarte a iniciar sesión!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Para ver tus tareas pendientes, inicia sesión en tu cuenta desde la aplicación. ¡Solo te llevará un segundo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Abrir la pantalla de la lista de tareas pendientes</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Crear nueva tarea pendiente</string>
+    <string name="widgetGradesErrorSubtitle">Estamos teniendo problemas para mostrar tus notas en este momento. Inténtalo de nuevo transcurridos unos instantes o dirígete a la aplicación.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Para ver tus notas, inicia sesión en tu cuenta desde la aplicación. ¡Solo te llevará un segundo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Estamos teniendo problemas para mostrar tus notas en este momento.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver tus notas, inicia sesión en tu cuenta desde la aplicación.</string>
+    <string name="widgetSingleGradeSelectCourse">Elijamos una asignatura</string>
+    <string name="widgetGradesErrorLoadingCourses">Se ha producido un error al cargar las asignaturas.</string>
 </resources>

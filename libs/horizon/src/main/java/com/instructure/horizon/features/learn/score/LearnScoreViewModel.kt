@@ -44,7 +44,7 @@ class LearnScoreViewModel @Inject constructor(
         LearnScoreUiState(
             screenState = LoadingState(
                 onRefresh = ::refresh,
-                onErrorSnackbarDismiss = ::dismissSnackbar,
+                onSnackbarDismiss = ::dismissSnackbar,
             ),
         )
     )
@@ -97,7 +97,7 @@ class LearnScoreViewModel @Inject constructor(
             getData(uiState.value.courseId, forceRefresh = true)
             _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
-            _uiState.update { it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.errorOccurred), isRefreshing = false)) }
+            _uiState.update { it.copy(screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.errorOccurred), isRefreshing = false)) }
         }
     }
 
@@ -118,7 +118,7 @@ class LearnScoreViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 }

@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Kua tiakina nga tautuhinga pouakaroto!</string>
     <string name="inboxSignatureSettingsError">I rahua te tiaki i nga tautuhinga pouakaroto</string>
     <string name="inboxSignatureTextFieldPlaceholder">Tuhia to hainatanga ki konei</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Haora</item>
+        <item quantity="other">%d Haora</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Min</item>
+    </plurals>
 </resources>

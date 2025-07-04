@@ -91,7 +91,7 @@ fun AiAssistDetailedFeedback(
                 iconRes = R.drawable.close,
                 contentDescription = stringResource(R.string.a11y_dismiss),
                 onClick = onDismiss,
-                color = IconButtonColor.BLACK_GHOST,
+                color = IconButtonColor.BlackGhost,
                 size = IconButtonSize.SMALL
             )
         }

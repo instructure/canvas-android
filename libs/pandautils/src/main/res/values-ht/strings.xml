@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Paramèt bwat resepsyon sovgade!</string>
     <string name="inboxSignatureSettingsError">Sovgade paramèt bwat resepsyon yo echwe</string>
     <string name="inboxSignatureTextFieldPlaceholder">Siyen la</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Èdtan</item>
+        <item quantity="other">%d Èdtan</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Mins</item>
+    </plurals>
 </resources>

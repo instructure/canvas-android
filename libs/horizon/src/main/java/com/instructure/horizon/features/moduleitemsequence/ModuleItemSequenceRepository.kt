@@ -18,19 +18,24 @@ package com.instructure.horizon.features.moduleitemsequence
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
 import com.instructure.canvasapi2.models.ModuleObject
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.pandautils.utils.orDefault
 import okhttp3.ResponseBody
 import javax.inject.Inject
 
 class ModuleItemSequenceRepository @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface,
-    private val assignmentApi: AssignmentAPI.AssignmentInterface
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
+    private val horizonGetCommentsManager: HorizonGetCommentsManager,
+    private val apiPrefs: ApiPrefs
 ) {
 
     suspend fun getModuleItemSequence(courseId: Long, assetType: String, assetId: String): ModuleItemSequence {
@@ -116,5 +121,13 @@ class ModuleItemSequenceRepository @Inject constructor(
     suspend fun getAssignment(assignmentId: Long, courseId: Long, forceNetwork: Boolean): Assignment {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return assignmentApi.getAssignmentWithHistory(courseId, assignmentId, params).dataOrThrow
+    }
+
+    suspend fun hasUnreadComments(
+        assignmentId: Long?,
+        forceNetwork: Boolean = false
+    ): Boolean {
+        if (assignmentId == null) return false
+        return horizonGetCommentsManager.getUnreadCommentsCount(assignmentId, apiPrefs.user?.id.orDefault(), forceNetwork) > 0
     }
 }

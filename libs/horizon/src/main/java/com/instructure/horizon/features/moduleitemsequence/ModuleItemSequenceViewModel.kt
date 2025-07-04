@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItem.Type
 import com.instructure.canvasapi2.models.ModuleObject
@@ -55,11 +56,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
-    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
+    private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetId
 
     private val _uiState =
         MutableStateFlow(
             ModuleItemSequenceUiState(
+                courseId = courseId,
                 loadingState = LoadingState(onRefresh = ::refresh),
                 onPreviousClick = ::previousClicked,
                 onNextClick = ::nextClicked,
@@ -78,6 +80,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     )
                 ),
                 updateAiContextString = ::updateAiContext,
+                updateShowNotebook = ::updateShowNotebook,
+                updateObjectTypeAndId = ::updateNotebookObjectTypeAndId,
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -119,7 +123,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
         moduleItems = modules.flatMap { it.items }
 
         currentModuleItem = moduleItems.find { it.id == moduleItemId }
-        val attempts = getAttemptCount(currentModuleItem)
+
+        val assignment = getAssignment(currentModuleItem)
+        val attempts = getAttemptCount(assignment)
+        val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
 
         val items = modules
             .flatMap { it.items }.mapNotNull {
@@ -149,7 +156,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                         this += "title" to currentModuleItem?.title.orEmpty()
                         this += "module-id" to currentModuleItem?.id.orDefault().toString()
                     }
-                )
+                ),
+                hasUnreadComments = hasUnreadComments
             )
         }
     }
@@ -187,6 +195,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     ModuleItemContent.Assignment(courseId, item.contentId)
                 }
             }
+
             item.type == Type.Quiz.name -> ModuleItemContent.Assessment(courseId, item.contentId)
             item.type == Type.ExternalUrl.name -> ModuleItemContent.ExternalLink(item.title.orEmpty(), item.externalUrl.orEmpty())
             item.type == Type.ExternalTool.name -> ModuleItemContent.ExternalTool(
@@ -274,10 +283,18 @@ class ModuleItemSequenceViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             val moduleItem =
                 repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
-            val attempts = getAttemptCount(moduleItem)
+
+            val assignment = getAssignment(currentModuleItem)
+            val attempts = getAttemptCount(assignment)
+            val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
+
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
-                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(moduleItem, modules, attempts) else it
+                if (it.moduleItemId == _uiState.value.items[position].moduleItemId) createModuleItemUiState(
+                    moduleItem,
+                    modules,
+                    attempts
+                ) else it
             }
             val currentItem = getCurrentItem(items = newItems)
             _uiState.update {
@@ -289,7 +306,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                             this += "title" to currentModuleItem?.title.orEmpty()
                             this += "module-id" to currentModuleItem?.id.orDefault().toString()
                         }
-                    )
+                    ),
+                    hasUnreadComments = hasUnreadComments
                 )
             }
         } catch {
@@ -350,7 +368,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
             modules = repository.getModulesWithItems(courseId)
             moduleItems = modules.flatMap { it.items }
 
-            val attempts = getAttemptCount(currentModuleItem)
+            val assignment = getAssignment(currentModuleItem)
+            val attempts = getAttemptCount(assignment)
+            val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
 
             val items = modules
                 .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
@@ -366,12 +386,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     progressScreenState = it.progressScreenState.copy(
                         pages = progressPages
                     ),
+                    hasUnreadComments = hasUnreadComments
                 )
             }
         } catch {
             // TODO Handle error
             _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false, errorSnackbar = "Failed to reload items"))
+                it.copy(loadingState = it.loadingState.copy(isLoading = false, snackbarMessage = "Failed to reload items"))
             }
         }
     }
@@ -484,23 +505,34 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
     }
 
-    private suspend fun getAttemptCount(item: ModuleItem?): String? {
+    private suspend fun getAssignment(item: ModuleItem?): Assignment? {
         if (item?.type != Type.Assignment.name) return null
 
-        val assignment = repository.getAssignment(item.contentId, courseId, forceNetwork = true)
+        return repository.getAssignment(item.contentId, courseId, forceNetwork = true)
+    }
+
+    private suspend fun getAttemptCount(assignment: Assignment?): String? {
+        if (assignment == null) return null
+
         return if (assignment.allowedAttempts > 0) {
-            context.resources.getQuantityString(R.plurals.modulePager_numberOfAttemtps, assignment.allowedAttempts.toInt(), assignment.allowedAttempts)
+            context.resources.getQuantityString(
+                R.plurals.modulePager_numberOfAttemtps,
+                assignment.allowedAttempts.toInt(),
+                assignment.allowedAttempts
+            )
         } else {
             context.getString(R.string.modulePager_unlimitedAttempts)
         }
     }
 
     private fun onAssignmentToolsClicked() {
-        _uiState.update { it.copy(openAssignmentTools = true) }
+        currentModuleItem?.contentId?.let { contentId ->
+            _uiState.update { it.copy(showAssignmentToolsForId = contentId) }
+        }
     }
 
     private fun assignmentToolsOpened() {
-        _uiState.update { it.copy(openAssignmentTools = false) }
+        _uiState.update { it.copy(showAssignmentToolsForId = null) }
     }
 
     private fun updateShowAiAssist(show: Boolean) {
@@ -509,5 +541,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun updateAiContext(value: String) {
         _uiState.update { it.copy(aiContext = it.aiContext.copy(contextString = value)) }
+    }
+
+    private fun updateShowNotebook(show: Boolean) {
+        _uiState.update { it.copy(showNotebook = show) }
+    }
+
+    private fun updateNotebookObjectTypeAndId(value: Pair<String, String>) {
+        _uiState.update { it.copy(objectTypeAndId = value) }
     }
 }

@@ -68,6 +68,8 @@ dependencies {
     implementation(Libs.HILT_ANDROIDX_WORK)
     kapt(Libs.HILT_ANDROIDX_COMPILER)
 
+    implementation(Libs.PSPDFKIT)
+
     implementation(Libs.ANDROIDX_ANNOTATION)
     implementation(Libs.ANDROIDX_APPCOMPAT)
     implementation(Libs.ANDROIDX_WEBKIT)
@@ -79,4 +81,8 @@ dependencies {
     /* WorkManager */
     implementation(Libs.ANDROIDX_WORK_MANAGER)
     implementation(Libs.ANDROIDX_WORK_MANAGER_KTX)
+
+    implementation(Libs.FIREBASE_CRASHLYTICS) {
+        isTransitive = true
+    }
 }
