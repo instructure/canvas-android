@@ -50,7 +50,7 @@ class AccountCalendarFeedViewModel @Inject constructor(
     @ApplicationContext private val context: Context
 ): ViewModel() {
     private val _uiState = MutableStateFlow(AccountCalendarUiState(
-        screenState = LoadingState(isPullToRefreshEnabled = false, onErrorSnackbarDismiss = ::dismissSnackBar),
+        screenState = LoadingState(isPullToRefreshEnabled = false, onSnackbarDismiss = ::dismissSnackBar),
         showSnackBar = ::showSnackBar
     ))
     val uiState = _uiState.asStateFlow()
@@ -61,13 +61,13 @@ class AccountCalendarFeedViewModel @Inject constructor(
 
     private fun showSnackBar(message: String) {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = message))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = message))
         }
     }
 
     private fun dismissSnackBar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 

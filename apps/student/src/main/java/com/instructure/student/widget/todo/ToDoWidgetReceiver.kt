@@ -71,11 +71,11 @@ class ToDoWidgetReceiver : GlanceAppWidgetReceiver() {
 
     private fun updateData(context: Context) {
         coroutineScope.launch {
-            val glanceId = GlanceAppWidgetManager(context)
-                .getGlanceIds(ToDoWidget::class.java)
-                .firstOrNull() ?: return@launch
-
             toDoWidgetUpdater.updateData(context).collectLatest {
+                val glanceId = GlanceAppWidgetManager(context)
+                    .getGlanceIds(ToDoWidget::class.java)
+                    .firstOrNull() ?: return@collectLatest
+
                 updateAppWidgetState(context, PreferencesGlanceStateDefinition, glanceId) { prefs ->
                     prefs.toMutablePreferences().apply {
                         this[toDoWidgetUiStateKey] = it.toJson()

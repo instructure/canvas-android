@@ -291,7 +291,7 @@
     <string name="Todo">Čakajoča opravila</string>
     <string name="todoFilter">Filtriraj predmete</string>
     <string name="filterByEllipsis">Filtriraj po ...</string>
-    <string name="favoritedCoursesLabel">Priljubljeni predmeti</string>
+    <string name="favoriteCoursesLabel">Priljubljeni predmeti</string>
     <string name="Event">Dogodek</string>
     <string name="eventSuccessfulDeletion">Dogodek je bil uspešno izbrisan.</string>
     <string name="timeIconDescription">Ikona časa</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Obvestila</string>
     <string name="todoWidgetTitleLong">Sistem Canvas – Čakajoča opravila</string>
     <string name="gradesWidgetTitleLong">Sistem Canvas – Ocene</string>
+    <string name="gradeWidgetTitleLong">Canvas – Ocena</string>
     <string name="notificationWidgetTitleLong">Sistem Canvas – Obvestila</string>
     <string name="notLoggedIn">Niste prijavljeni.</string>
     <string name="widgetStyle">Izberite slog svojega pripomočka.</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Pomoč</string>
     <string name="screenTitleManageStudents">Uredi študente</string>
     <string name="screenTitleSettings">Nastavitve</string>
-    <string name="navigationDrawerSwitchUsers">Preklopi uporabnika</string>
     <string name="navigationDrawerLogOut">Odjava</string>
     <string name="noStudentsError">Ni študentov</string>
     <string name="noStudentsErrorDescription">Ne opazujete nobenega študenta.</string>
     <string name="noStudentsRefresh">Osveži</string>
     <string name="noGrade">Ni ocen</string>
+    <string name="noGrades">Ni ocen</string>
     <string name="errorLoadingCourses">Pri nalaganju predmetov vašega študenta je prišlo do napake.</string>
     <string name="parentNoCourses">Ni predmetov</string>
     <string name="parentNoCoursesMessage">Predmeti vašega študenta morda še niso objavljeni.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Med nalaganjem nalog je prišlo do napake</string>
     <string name="a11y_searchAssignments">Iskanje nalog</string>
     <string name="dueAssignmentListItem">Rok %1$s</string>
+    <string name="a11y_searchAmongRecipients">Iskanje med prejemniki</string>
+    <string name="a11y_recipientIsRemoved">%1$s je odstranjen</string>
+    <string name="widgetDueDate">Rok ob %1$s</string>
+    <string name="widgetFromTo">%1$s do %2$s</string>
+    <string name="widgetAllDay">Ves dan</string>
+    <string name="widgetErrorTitle">Ojoj! Prišlo je do težav</string>
+    <string name="widgetErrorSubtitle">Trenutno imamo težave s prikazom vaših opravil. Poskusite znova čez nekaj časa ali pa uporabite aplikacijo.</string>
+    <string name="widgetToDoEmptyTitle">Zaenkrat ste končali!</string>
+    <string name="widgetToDoEmptySubtitle">Kot kaže, ste prosti naslednje 4 tedne. Ali želite dodati nekaj seznamov opravil?</string>
+    <string name="widgetNotLoggedInTitle">Naj vas prijavimo!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Če si želite ogledati svoja opravila, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Odpri zaslon s seznamom opravil</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Ustvari nov seznam opravil</string>
+    <string name="widgetGradesErrorSubtitle">Trenutno imamo težave s prikazom vaših ocen. Poskusite znova čez nekaj časa ali pa uporabite aplikacijo.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Trenutno imamo težave s prikazom vaših ocen.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji.</string>
+    <string name="widgetSingleGradeSelectCourse">Izberimo predmet</string>
+    <string name="widgetGradesErrorLoadingCourses">Med nalaganjem predmetov je prišlo do napake.</string>
 </resources>

@@ -492,4 +492,12 @@
     <string name="inboxSignatureSettingsUpdated">Đã lưu cài đặt hộp thư đến!</string>
     <string name="inboxSignatureSettingsError">Lưu cài đặt hộp thư đến không thành công</string>
     <string name="inboxSignatureTextFieldPlaceholder">Viết chữ ký của bạn ở đây</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Giờ</item>
+        <item quantity="other">%d Giờ</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Phút</item>
+        <item quantity="other">%d Phút</item>
+    </plurals>
 </resources>

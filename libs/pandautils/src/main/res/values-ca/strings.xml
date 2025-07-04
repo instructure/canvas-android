@@ -492,4 +492,12 @@
     <string name="inboxSignatureSettingsUpdated">S’ha desat la configuració de la safata d\'entrada!</string>
     <string name="inboxSignatureSettingsError">No s’ha pogut desar la configuració de la safata d\'entrada</string>
     <string name="inboxSignatureTextFieldPlaceholder">Poseu aquí la vostra signatura</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d hora</item>
+        <item quantity="other">%d hores</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minuts</item>
+    </plurals>
 </resources>

@@ -15,10 +15,12 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.file
 
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -28,11 +30,14 @@ import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.io.File
 import java.util.UUID
 import javax.inject.Inject
 
@@ -41,6 +46,8 @@ class FileDetailsViewModel @Inject constructor(
     private val fileDetailsRepository: FileDetailsRepository,
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
+    private val fileCache: FileCache,
+    private val crashlytics: FirebaseCrashlytics,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -129,25 +136,48 @@ class FileDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(filePathToOpen = null) }
     }
 
-    private fun getFilePreview(file: FileFolder, authUrl: String): FilePreviewUiState {
+    private suspend fun getFilePreview(file: FileFolder, authUrl: String): FilePreviewUiState {
         val url = file.url.orEmpty()
         val displayName = file.displayName.orEmpty()
         val contentType = file.contentType.orEmpty()
         val thumbnailUrl = file.thumbnailUrl.orEmpty()
 
-        return when {
-            contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
+        try {
+            return when {
+                contentType == "application/pdf" -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Pdf(Uri.fromFile(it))
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            contentType.startsWith("video") || contentType.startsWith("audio") -> FilePreviewUiState.Media(
-                url,
-                thumbnailUrl,
-                contentType,
-                displayName
-            )
+                contentType.startsWith("video") || contentType.startsWith("audio") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Media(
+                            Uri.fromFile(it),
+                            thumbnailUrl,
+                            contentType,
+                            displayName
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            contentType.startsWith("image") -> FilePreviewUiState.Image(displayName, url)
+                contentType.startsWith("image") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Image(
+                            displayName = displayName,
+                            uri = Uri.fromFile(it)
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            else -> FilePreviewUiState.WebView("$authUrl&preview=1")
+                else -> FilePreviewUiState.WebView("$authUrl&preview=1")
+            }
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            return FilePreviewUiState.NoPreview
         }
     }
 

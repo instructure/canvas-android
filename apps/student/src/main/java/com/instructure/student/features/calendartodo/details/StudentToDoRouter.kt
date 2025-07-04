@@ -15,7 +15,7 @@
  *
  */
 
-package com.instructure.student.features.calendartodo
+package com.instructure.student.features.calendartodo.details
 
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.models.PlannerItem

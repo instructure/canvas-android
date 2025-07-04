@@ -291,7 +291,7 @@
     <string name="Todo">Untuk Dilakukan</string>
     <string name="todoFilter">Tapis Kursus</string>
     <string name="filterByEllipsis">Tapis mengikut...</string>
-    <string name="favoritedCoursesLabel">Kursus Kegemaran</string>
+    <string name="favoriteCoursesLabel">Kursus Kegemaran</string>
     <string name="Event">Acara</string>
     <string name="eventSuccessfulDeletion">Acara berjaya dipadamkan</string>
     <string name="timeIconDescription">Ikon Masa</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Pemberitahuan</string>
     <string name="todoWidgetTitleLong">Canvas - Untuk Dilakukan</string>
     <string name="gradesWidgetTitleLong">Canvas - Gred</string>
+    <string name="gradeWidgetTitleLong">Canvas - Gred</string>
     <string name="notificationWidgetTitleLong">Canvas - Pemberitahuan</string>
     <string name="notLoggedIn">Anda tidak dilog masuk</string>
     <string name="widgetStyle">Pilih gaya widget anda</string>
@@ -1782,12 +1783,12 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Urus Pelajar</string>
     <string name="screenTitleSettings">Tetapan</string>
-    <string name="navigationDrawerSwitchUsers">Tukar Pengguna</string>
     <string name="navigationDrawerLogOut">Log Keluar</string>
     <string name="noStudentsError">Tiada Pelajar</string>
     <string name="noStudentsErrorDescription">Anda tidak memerhatikan mana-mana pelajar.</string>
     <string name="noStudentsRefresh">Segar semula</string>
     <string name="noGrade">Tiada gred</string>
+    <string name="noGrades">Tiada Gred</string>
     <string name="errorLoadingCourses">Terdapat ralat untuk memuatkan kursus pelajar anda.</string>
     <string name="parentNoCourses">Tiada Kursus</string>
     <string name="parentNoCoursesMessage">Kursus pelajar anda mungkin belum diterbitkan.</string>
@@ -2054,4 +2055,23 @@
     <string name="errorLoadingAssignments">Ralat berlaku semasa memuatkan tugasan.</string>
     <string name="a11y_searchAssignments">Cari Tugasan</string>
     <string name="dueAssignmentListItem">Cukup tempoh %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cari dalam kalangan Penerima</string>
+    <string name="a11y_recipientIsRemoved">%1$s dialih keluar</string>
+    <string name="widgetDueDate">Cukup Tempoh pada %1$s</string>
+    <string name="widgetFromTo">%1$s kepada %2$s</string>
+    <string name="widgetAllDay">Sepanjang hari</string>
+    <string name="widgetErrorTitle">Op! Sesuatu Tidak Kena</string>
+    <string name="widgetErrorSubtitle">Kami menghadapi masalah untuk menunjukkan tugas anda sekarang. Sila cuba semula sebentar lagi atau terus menuju ke aplikasi.</string>
+    <string name="widgetToDoEmptyTitle">Anda sudah selesai buat masa ini!</string>
+    <string name="widgetToDoEmptySubtitle">Nampaknya anda lapang untuk 4 minggu berikutnya. Adakah anda ingin menambah perkara untuk dilakukan?</string>
+    <string name="widgetNotLoggedInTitle">Jom Log Masuk!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Untuk melihat perkara untuk dilakukan, sila log masuk ke akaun anda dalam aplikasi. Hanya beberapa saat sahaja!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Buka skrin senarai untuk dilakukan</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Cipta perkara Untuk Dilakukan baharu</string>
+    <string name="widgetGradesErrorSubtitle">Kami menghadapi masalah untuk menunjukkan gred anda sekarang. Sila cuba semula sebentar lagi atau terus menuju ke aplikasi.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Untuk melihat gred anda, sila log masuk ke akaun anda di aplikasi. Hanya beberapa saat sahaja!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Kami menghadapi masalah untuk menunjukkan gred anda sekarang.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Untuk melihat gred anda, sila log masuk ke akaun anda di aplikasi.</string>
+    <string name="widgetSingleGradeSelectCourse">Mari pilih kursus</string>
+    <string name="widgetGradesErrorLoadingCourses">Ralat berlaku semasa memuatkan kursus.</string>
 </resources>

@@ -737,7 +737,7 @@
     <string name="removeDueDate">Bain Dáta Dlite</string>
     <string name="removeDueDateMessage">Bainfidh sé seo an dáta dlite agus na sannaithe bainteacha go léir.</string>
     <string name="email">Ríomhphost</string>
-    <string name="fullscreen">scáileán iomlán</string>
+    <string name="fullscreen">Lánscáileán</string>
     <string name="addNew">Cuir Nua leis</string>
     <string name="sendMessage">Seol Teachtaireacht</string>
     <string name="addMessage">Cuir Teachtaireacht leis</string>

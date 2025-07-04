@@ -19,25 +19,29 @@ package com.instructure.student.widget.grades
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.isInvited
 
 class GradesWidgetRepository(
     private val coursesApi: CourseAPI.CoursesInterface
 ) {
-    suspend fun getCoursesWithGradingScheme(forceNetwork: Boolean = true): List<Course> {
-        val restParams =
-            RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
+    suspend fun getCoursesWithGradingScheme(forceNetwork: Boolean = true): DataResult<List<Course>> {
+        val restParams = RestParams(
+            isForceReadFromNetwork = forceNetwork,
+            usePerPageQueryParam = true,
+            shouldLoginOnTokenError = false
+        )
 
-        val courses = coursesApi.getFirstPageCoursesWithGradingScheme(restParams)
+        return coursesApi.getFirstPageCoursesWithGradingScheme(restParams)
             .depaginate { nextUrl -> coursesApi.next(nextUrl, restParams) }
-            .dataOrNull.orEmpty()
+            .map { courses ->
+                val validCourses = courses
+                    .filter { it.isCurrentEnrolment() && !it.isInvited() }
 
-        val validCourses = courses
-            .filter { it.isCurrentEnrolment() && !it.isInvited() }
-
-        return validCourses
-            .filter { it.isFavorite }
-            .ifEmpty { validCourses }
+                validCourses
+                    .filter { it.isFavorite }
+                    .ifEmpty { validCourses }
+            }
     }
 }

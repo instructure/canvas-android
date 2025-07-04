@@ -291,7 +291,7 @@
     <string name="Todo">Elenco attività</string>
     <string name="todoFilter">Filtra corsi</string>
     <string name="filterByEllipsis">Filtra per...</string>
-    <string name="favoritedCoursesLabel">Corsi preferiti</string>
+    <string name="favoriteCoursesLabel">Corsi preferiti</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">Evento eliminato correttamente</string>
     <string name="timeIconDescription">Icona ora</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifiche</string>
     <string name="todoWidgetTitleLong">Canvas - Elenco attività</string>
     <string name="gradesWidgetTitleLong">Canvas - Voti</string>
+    <string name="gradeWidgetTitleLong">Canvas - Voto</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifiche</string>
     <string name="notLoggedIn">Non hai effettuato l\'accesso</string>
     <string name="widgetStyle">Scegli il tuo stile widget</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Guida</string>
     <string name="screenTitleManageStudents">Gestisci studenti</string>
     <string name="screenTitleSettings">Impostazioni</string>
-    <string name="navigationDrawerSwitchUsers">Cambia studenti</string>
     <string name="navigationDrawerLogOut">Disconnetti</string>
     <string name="noStudentsError">Nessuno studente</string>
     <string name="noStudentsErrorDescription">Non stati monitorando alcuno studente.</string>
     <string name="noStudentsRefresh">Aggiorna</string>
     <string name="noGrade">Nessun voto</string>
+    <string name="noGrades">Nessun voto</string>
     <string name="errorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi dello studente.</string>
     <string name="parentNoCourses">Nessun corso</string>
     <string name="parentNoCoursesMessage">I corsi dello studente potrebbero non essere stati ancora pubblicati.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Si è verificato un errore durante il caricamento dei compiti</string>
     <string name="a11y_searchAssignments">Cerca compiti</string>
     <string name="dueAssignmentListItem">Scadenza %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cerca tra i destinatari</string>
+    <string name="a11y_recipientIsRemoved">%1$s rimosso</string>
+    <string name="widgetDueDate">Scade alle %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">Tutto il giorno</string>
+    <string name="widgetErrorTitle">Spiacenti. Si è verificato un problema</string>
+    <string name="widgetErrorSubtitle">Abbiamo dei problemi a visualizzare subito le tue attività. Riprova tra un attimo o vai all’app.</string>
+    <string name="widgetToDoEmptyTitle">Hai completato il processo per adesso!</string>
+    <string name="widgetToDoEmptySubtitle">Sembra che tu sia libero per le prossime 4 settimane. Aggiungere qualche attività da fare?</string>
+    <string name="widgetNotLoggedInTitle">Accedi!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Per vedere la attività da fare, accedi al tuo account nell’app. Ci vorrà un attimo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Schermata Apri attività da fare</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Crea nuova attività da fare</string>
+    <string name="widgetGradesErrorSubtitle">Abbiamo dei problemi a visualizzare subito i tuoi voti. Riprova tra un attimo o vai all’app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Per vedere i tuoi voti, accedi al tuo account nell’app. Ci vorrà un attimo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Abbiamo dei problemi a visualizzare subito i tuoi voti.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Per vedere i tuoi voti, accedi al tuo account nell’app.</string>
+    <string name="widgetSingleGradeSelectCourse">Scegli un corso</string>
+    <string name="widgetGradesErrorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi.</string>
 </resources>

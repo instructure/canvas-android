@@ -15,7 +15,7 @@
   ~
   -->
 <resources>
-    <string name="horizon">Horizon</string>
+    <string name="horizon_app_name" translatable="false">Canvas Career</string>
     <string name="bottomNav_home">Home</string>
     <string name="bottomNav_learn">Learn</string>
     <string name="bottomNav_skillspace">Skillspace</string>
@@ -40,7 +40,8 @@
     <string name="fileDrop_acceptFileTypes">Accepted file types: %1$s</string>
     <string name="fileDropSheet_uploadFile">Upload File</string>
     <string name="fileDropSheet_choosePhotoOrVideo">Choose Photo or Video</string>
-    <string name="fileDropSheet_takePhotoOrVideo">Take Photo or Video</string>
+    <string name="fileDropSheet_takePhoto">Take Photo</string>
+    <string name="fileDropSheet_takeVideo">Take Video</string>
     <string name="fileDropSheet_chooseFile">Choose File</string>
     <string name="avatar_contentDescription">Avatar</string>
     <string name="requiredMark">" *"</string>
@@ -236,4 +237,36 @@
     <string name="assignmentDetails_submissionConfirmationMessage">Once you submit this attempt, you won’t be able to make any changes.</string>
     <string name="assignmentDetails_submissionConfirmationCancel">Cancel</string>
     <string name="assignmentDetails_submissionConfirmationConfirm">Submit Attempt</string>
+    <string name="notebookTypeConfusing">Confusing</string>
+    <string name="notebookTypeImportant">Important</string>
+    <string name="notebookTitle">Notebook</string>
+    <string name="notebookFilterLabel">Filter</string>
+    <string name="notebookNotesLabel">Notes</string>
+    <string name="notebookEmptyContentMessage">This is where all your notes, taken directly within your learning objects, are stored and organized. It\'s your personal hub for keeping track of key insights, important excerpts, and reflections as you learn. Dive in to review or expand on your notes anytime!</string>
+    <string name="addNoteHighlightlabel">Highlight</string>
+    <string name="addNoteLabelLabel">Label</string>
+    <string name="addNoteAddANoteLabel">Add a Note</string>
+    <string name="addNoteSaveLabel">Save</string>
+    <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
+    <string name="assignmentDetails_submissionError">Error submitting assignment</string>
+    <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
+    <string name="assessment_startQuiz">Start Quiz</string>
+    <string name="notesActionMenuCopy">Copy</string>
+    <string name="notesActionMenuAddNote">Add Note</string>
+    <string name="attemptCard_score">Score: %1$s/%2$s</string>
+    <string name="attemptBottomSheet_header">Attempts</string>
+    <string name="attemptBottomSheet_noAttempts">This assignment allows multiple attempts. Once you\'ve made a submission, you can view it here.</string>
+    <string name="assignmentDetails_viewingAttempt">Viewing Attempt %d</string>
+    <string name="noteHasBeenSavedMessage">Saved to Notebook.</string>
+    <string name="noteHasBeenDeletedMessage">Deleted from Notebook.</string>
+    <string name="failedToSaveNoteMessage">Error saving to Notebook.</string>
+    <string name="failedToDeleteNoteMessage">Error deleting from Notebook.</string>
+    <string name="commentsBottomSheet_header">Comments</string>
+    <string name="commentsBottomSheet_addComment">Add Comment</string>
+    <string name="commentsBottomSheet_post">Post</string>
+    <string name="commentsBottomSheet_attempt">Attempt %d</string>
+    <string name="commentsBottomSheet_failedToLoadComments">Failed to load comments.</string>
+    <string name="commentsBottomSheet_failedToLoadNextPage">Failed to load next page.</string>
+    <string name="commentsBottomSheet_failedToLoadPreviousPage">Failed to load previous page.</string>
+    <string name="commentsBottomSheet_failedToPostComment">Failed to post comment.</string>
 </resources>

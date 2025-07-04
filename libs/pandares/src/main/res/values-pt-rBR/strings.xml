@@ -291,7 +291,7 @@
     <string name="Todo">Lista de Tarefas</string>
     <string name="todoFilter">Filtrar cursos</string>
     <string name="filterByEllipsis">Filtrar por...</string>
-    <string name="favoritedCoursesLabel">Cursos Favoritos</string>
+    <string name="favoriteCoursesLabel">Cursos Favoritos</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">Evento foi excluído com sucesso</string>
     <string name="timeIconDescription">Ícone de tempo</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notificações</string>
     <string name="todoWidgetTitleLong">Canvas - Lista de tarefas</string>
     <string name="gradesWidgetTitleLong">Canvas - Notas</string>
+    <string name="gradeWidgetTitleLong">Canvas - Nota</string>
     <string name="notificationWidgetTitleLong">Canvas - Notificações</string>
     <string name="notLoggedIn">Você não está logado</string>
     <string name="widgetStyle">Escolha seu estilo de widget</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Ajuda</string>
     <string name="screenTitleManageStudents">Gerenciar alunos</string>
     <string name="screenTitleSettings">Configurações</string>
-    <string name="navigationDrawerSwitchUsers">Alternar Usuários</string>
     <string name="navigationDrawerLogOut">Sair</string>
     <string name="noStudentsError">Sem Alunos</string>
     <string name="noStudentsErrorDescription">Você não está observando quaisquer alunos.</string>
     <string name="noStudentsRefresh">Atualizar</string>
     <string name="noGrade">Sem nota</string>
+    <string name="noGrades">Nenhuma nota</string>
     <string name="errorLoadingCourses">Ocorreu um erro ao carregar os cursos dos seus alunos.</string>
     <string name="parentNoCourses">Sem Cursos</string>
     <string name="parentNoCoursesMessage">Os cursos do seu aluno podem ainda não ter sido publicados.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Ocorreu um erro ao carregar as tarefas</string>
     <string name="a11y_searchAssignments">Buscar tarefas</string>
     <string name="dueAssignmentListItem">Vencimento em %1$s</string>
+    <string name="a11y_searchAmongRecipients">Pesquisar entre destinatários</string>
+    <string name="a11y_recipientIsRemoved">%1$s foi removido</string>
+    <string name="widgetDueDate">Com vencimento às %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">O dia inteiro</string>
+    <string name="widgetErrorTitle">Ops! Algo deu errado</string>
+    <string name="widgetErrorSubtitle">Estamos tendo problemas para mostrar suas tarefas no momento. Tente novamente em breve ou acesse o aplicativo.</string>
+    <string name="widgetToDoEmptyTitle">Por enquanto, está tudo pronto!</string>
+    <string name="widgetToDoEmptySubtitle">Parece que você está livre nas próximas quatro semanas. Deseja adicionar algumas tarefas?</string>
+    <string name="widgetNotLoggedInTitle">Vamos fazer seu login!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Para ver suas tarefas, faça login em sua conta no aplicativo. É só um segundo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Abrir a tela da lista de tarefas</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Criar novas tarefas</string>
+    <string name="widgetGradesErrorSubtitle">Estamos com problemas para mostrar suas notas no momento. Tente novamente em breve ou acesse o aplicativo.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Para ver suas notas, faça login em sua conta no aplicativo. É só um segundo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Estamos com problemas para mostrar suas notas no momento.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver suas notas, faça login em sua conta no aplicativo.</string>
+    <string name="widgetSingleGradeSelectCourse">Vamos escolher um curso</string>
+    <string name="widgetGradesErrorLoadingCourses">Ocorreu um erro ao carregar os cursos.</string>
 </resources>

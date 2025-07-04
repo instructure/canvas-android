@@ -25,6 +25,9 @@ interface CreateFileSubmissionDao {
     @Insert
     suspend fun insert(createFileSubmissionEntity: CreateFileSubmissionEntity)
 
+    @Insert
+    suspend fun insertAll(createFileSubmissionEntities: List<CreateFileSubmissionEntity>)
+
     @Query("SELECT * FROM CreateFileSubmissionEntity WHERE dbSubmissionId = :id LIMIT 1")
     suspend fun findFileForSubmissionId(id: Long): CreateFileSubmissionEntity?
 

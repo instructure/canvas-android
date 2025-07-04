@@ -351,6 +351,10 @@ class EventViewModelTest {
             eventRepository.deleteCalendarEvent(scheduleItem.id)
         }
 
+        coVerify {
+            eventViewModelBehavior.updateWidget()
+        }
+
         val expectedEvent = EventViewModelAction.RefreshCalendarDays(listOf(LocalDate.of(2024, 3, 1)))
         Assert.assertEquals(expectedEvent, events.last())
     }

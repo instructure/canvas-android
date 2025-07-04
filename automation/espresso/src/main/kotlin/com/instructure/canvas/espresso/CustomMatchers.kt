@@ -330,3 +330,25 @@ fun getHintText(matcher: Matcher<View>): String {
     })
     return text
 }
+
+fun getText(matcher: Matcher<View>): String {
+    var text = ""
+
+    onView(matcher).perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(TextView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Getting text from a TextView"
+        }
+
+        override fun perform(uiController: UiController?, view: View?) {
+            val tv = view as TextView
+            text = tv.text.toString()
+        }
+    })
+
+    return text
+}
+

@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Paramètres de boîte de réception enregistrés !</string>
     <string name="inboxSignatureSettingsError">Échec d’enregistrement des paramètres de boîte de réception</string>
     <string name="inboxSignatureTextFieldPlaceholder">Signez ici</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Heure</item>
+        <item quantity="other">%d Heures</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Min</item>
+    </plurals>
 </resources>

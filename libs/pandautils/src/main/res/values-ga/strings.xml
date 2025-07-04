@@ -409,7 +409,7 @@
     <string name="utils_unsupportedFileMessage">Níorbh fhéidir an comhad seo a thaispeáint. Úsáid an cnaipe thíos chun an comhad a oscailt le haip eile ar do ghléas.</string>
     <string name="utils_openWithAnotherApp">Oscail Le&#8230;</string>
     <string name="utils_couldNotPlayFormat">Ní thacaítear leis an bhformáid meáin seo</string>
-    <string name="utils_fullscreen">scáileán iomlán</string>
+    <string name="utils_fullscreen">Lánscáileán</string>
 
     <string name="utils_dataUsageWarningTitle">Rabhadh maidir le Úsáid Sonraí</string>
     <string name="utils_dataUsageWarningMessage">D’fhéadfadh go n-ídíonn an gníomh seo cuid mhór sonraí, agus d’fhéadfadh go mbeadh táillí ró-chosúla i gceist. Ar mhaith leat leanúint ar aghaidh?</string>
@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Sábháladh socruithe an bhosca isteach!</string>
     <string name="inboxSignatureSettingsError">Theip ar shábháil socruithe an bhosca isteach</string>
     <string name="inboxSignatureTextFieldPlaceholder">Scríobh do shíniú anseo</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Uair an chloig</item>
+        <item quantity="other">%d Uair</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Nóim</item>
+        <item quantity="other">%d Nóiméad</item>
+    </plurals>
 </resources>
