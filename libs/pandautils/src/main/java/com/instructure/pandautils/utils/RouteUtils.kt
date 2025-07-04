@@ -16,10 +16,12 @@
 
 package com.instructure.pandautils.utils
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import okhttp3.Request
 
 object RouteUtils {
     fun retrieveFileUrl(route: Route, fileId: String?, block: (url: String, canvasContext: CanvasContext, needsAuth: Boolean) -> Unit) {
@@ -37,5 +39,27 @@ object RouteUtils {
         }
 
         block.invoke(fileUrl, context, needsAuth)
+    }
+
+    fun getRedirectUrl(url: String): String {
+        val client = CanvasRestAdapter.okHttpClient
+            .newBuilder()
+            .followRedirects(false)
+            .cache(null)
+            .build()
+
+        val request = Request.Builder()
+            .url(url)
+            .build()
+
+        val response = client.newCall(request).execute()
+
+        val redirectUrl: String
+        return if (response.isRedirect) {
+            redirectUrl = response.header("Location") ?: ""
+
+            // Let's parse out what we don't want
+            redirectUrl.substringBefore("/view")
+        } else ""
     }
 }

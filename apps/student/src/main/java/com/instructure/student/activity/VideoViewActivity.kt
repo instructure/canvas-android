@@ -92,9 +92,9 @@ class VideoViewActivity : BaseCanvasActivity() {
         val mediaItem = MediaItem.fromUri(uri)
         return when (val type = Util.inferContentType(uri.lastPathSegment ?: "")) {
             C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
-            C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
+            C.CONTENT_TYPE_DASH, C.CONTENT_TYPE_OTHER -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
             C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(mediaItem)
-            C.CONTENT_TYPE_OTHER -> ProgressiveMediaSource.Factory(mediaDataSourceFactory, DefaultExtractorsFactory()).createMediaSource(mediaItem)
+            //C.CONTENT_TYPE_OTHER -> ProgressiveMediaSource.Factory(mediaDataSourceFactory, DefaultExtractorsFactory()).createMediaSource(mediaItem)
             else -> throw IllegalStateException("Unsupported type: $type")
         }
     }

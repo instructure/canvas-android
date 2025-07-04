@@ -22,6 +22,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
+import androidx.lifecycle.lifecycleScope
+import androidx.media3.common.util.Log
 import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
@@ -37,6 +39,7 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -47,6 +50,8 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentMediaSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 class MediaSubmissionViewFragment : BaseCanvasFragment() {
@@ -62,6 +67,23 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_media_submission_view, container, false)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val job = lifecycleScope.launch(Dispatchers.IO) {
+            // Preload the media to avoid delays when the user clicks "Prepare Media"
+            try {
+                RouteUtils.getRedirectUrl(uri.toString()).let { redirectUrl ->
+                    if (redirectUrl.isNotEmpty()) {
+                        uri = Uri.parse(redirectUrl)
+                    }
+                }
+
+            } catch (e: Exception) {
+                Log.e("ASDF", "Error preparing media", e)
+            }
+        }
+    }
 
     override fun onStart() = with(binding) {
         super.onStart()
@@ -155,11 +177,14 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
 
     companion object {
 
-        fun newInstance(media: SubmissionDetailsContentType.MediaContent) = MediaSubmissionViewFragment().apply {
-            uri = media.uri
-            thumbnailUrl = media.thumbnailUrl
-            contentType = media.contentType!!
-            displayName = media.displayName
+        fun newInstance(media: SubmissionDetailsContentType.MediaContent): MediaSubmissionViewFragment
+        {
+            return MediaSubmissionViewFragment().apply {
+                uri = media.uri
+                thumbnailUrl = media.thumbnailUrl
+                contentType = media.contentType!!
+                displayName = media.displayName
+            }
         }
     }
 }

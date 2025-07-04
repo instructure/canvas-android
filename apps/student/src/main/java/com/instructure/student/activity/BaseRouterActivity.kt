@@ -211,9 +211,10 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     }
 
     fun openMedia(canvasContext: CanvasContext?, mime: String, url: String, filename: String, fileID: String?) {
-        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, fileID)
+        /*openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, fileID)
         LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
-            LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)
+            LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)*/
+        startActivity(VideoViewActivity.createIntent(this, url))
     }
 
     override fun onDestroy() {
