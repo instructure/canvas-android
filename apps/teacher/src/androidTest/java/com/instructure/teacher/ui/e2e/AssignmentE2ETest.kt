@@ -23,10 +23,12 @@ import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.SectionsApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
@@ -482,6 +484,81 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that '${submissionUploadInfo.fileName}' file. Navigate to Comments Tab and '${commentUploadInfo.fileName}' comment attachment is displayed.")
         speedGraderPage.selectCommentsTab()
         speedGraderPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.SECTIONS)
+    fun testFilterForAssignmentSectionsE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+        val student = data.studentsList[0]
+
+        val firstSection = SectionsApi.createSection(course.id, "First Section")
+        val secondSection = SectionsApi.createSection(course.id, "Second Section")
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val assignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
+        Log.d(PREPARATION_TAG, "Seeding 'Quiz' assignment for '${course.name}' course.")
+        val quizAssignment = seedAssignments(
+            courseId = course.id,
+            dueAt = 1.days.fromNow.iso8601,
+            submissionTypes = listOf(SubmissionType.ONLINE_QUIZ),
+            teacherToken = teacher.token,
+            pointsPossible = 15.0
+        )
+
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
+        tokenLogin(teacher)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open '${course.name}' course.")
+        dashboardPage.openCourse(course.name)
+
+        Log.d(STEP_TAG, "Navigate to '${course.name}' course's Assignments Tab.")
+        courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on '${assignment[0].name}' assignment.")
+        assignmentListPage.clickAssignment(assignment[0])
+        assignmentDetailsPage.waitForRender()
+
+        assignmentDetailsPage.openEditPage()
+
+        editAssignmentDetailsPage.editAssignees()
+
+        Log.d(STEP_TAG, "Click on 'Assigned To' spinner and select '${student.name}' besides 'Everyone'.")
+        editAssignmentDetailsPage.editAssignees()
+        assigneeListPage.assertAssigneesSelected(listOf("Everyone"))
+        assigneeListPage.toggleAssignees(listOf(student.name))
+
+        val expectedAssignees = listOf(student.name, "Everyone else")
+        Log.d(ASSERTION_TAG, "Assert that '${student.name}' and 'Everyone else' is selected as well.")
+        assigneeListPage.assertAssigneesSelected(expectedAssignees)
+
+        Log.d(STEP_TAG, "Save and close the assignee list.")
+        assigneeListPage.saveAndClose()
+        Log.d(STEP_TAG, "Open the 'All Submissions' page and click on the filter icon on the top-right corner.")
+        assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(STEP_TAG, "Filter by section (the '${course.name}' course).")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Filter by the '${firstSection.name}' section and click the 'Done' button.")
+        assignmentSubmissionListPage.filterBySection(firstSection.name)
+        assignmentSubmissionListPage.clickFilterDialogOk()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is displayed as we set some filter. Assert that the filter label text is the 'All Submissions' text plus the '${course.name}' course name.")
+        assignmentSubmissionListPage.assertFilterLabelText("First Section")
     }
 
 }

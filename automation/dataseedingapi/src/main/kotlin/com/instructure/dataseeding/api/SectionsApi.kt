@@ -38,8 +38,8 @@ object SectionsApi {
         CanvasNetworkAdapter.adminRetrofit.create(SectionsService::class.java)
     }
 
-    fun createSection(courseId: Long): SectionApiModel {
-        val section = CreateSectionWrapper(CreateSection(name = Randomizer.randomSectionName()))
+    fun createSection(courseId: Long, sectionName: String = Randomizer.randomSectionName()): SectionApiModel {
+        val section = CreateSectionWrapper(CreateSection(name = sectionName))
         return sectionsService
                 .createSection(courseId, section)
                 .execute()
