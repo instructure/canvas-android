@@ -33,6 +33,12 @@ import com.instructure.horizon.features.dashboard.DashboardViewModel
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.mainEnterTransition
+import com.instructure.horizon.horizonui.animation.mainExitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.horizonui.showroom.ShowroomContent
 import com.instructure.horizon.horizonui.showroom.ShowroomItem
 import com.instructure.horizon.horizonui.showroom.showroomItems
@@ -52,7 +58,14 @@ sealed class HomeNavigationRoute(val route: String) {
 
 @Composable
 fun HomeNavigation(navController: NavHostController, mainNavController: NavHostController, modifier: Modifier = Modifier) {
-    NavHost(navController, startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier) {
+    NavHost(
+        navController,
+        enterTransition = { mainEnterTransition },
+        exitTransition = { mainExitTransition },
+        popEnterTransition = { mainEnterTransition },
+        popExitTransition = { mainExitTransition },
+        startDestination = HomeNavigationRoute.Dashboard.route, modifier = modifier
+    ) {
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()

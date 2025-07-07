@@ -401,7 +401,11 @@ private fun ModuleItemContentScreen(
     } else {
         val navController = rememberNavController()
 
-        NavHost(navController, startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(), modifier = modifier) {
+        NavHost(
+            navController,
+            startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(),
+            modifier = modifier
+        ) {
             composable(
                 route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
