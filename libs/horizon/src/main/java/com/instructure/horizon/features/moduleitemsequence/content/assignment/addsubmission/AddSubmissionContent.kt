@@ -85,10 +85,11 @@ fun AddSubmissionContent(
     LaunchedEffect(scrollState.viewportSize, moduleHeaderHeight) {
         viewportHeight = scrollState.viewportSize + moduleHeaderHeight.value.toInt().toPx
     }
+    val paddingHeight = 32.toPx
     LaunchedEffect(viewportHeight, cursorYPosition) {
-        if (rceYPositionInRoot + cursorYPosition + 32.toPx > viewportHeight) {
+        if (rceYPositionInRoot + cursorYPosition + paddingHeight > viewportHeight) {
             //Cursor is under the viewport
-            scrollContent = rceYPositionInRoot + cursorYPosition + 32.toPx - viewportHeight
+            scrollContent = rceYPositionInRoot + cursorYPosition + paddingHeight - viewportHeight
         }
         if (rceYPositionInRoot + cursorYPosition < moduleHeaderHeight.value.toInt().toPx) {
             //Cursor is under the module header

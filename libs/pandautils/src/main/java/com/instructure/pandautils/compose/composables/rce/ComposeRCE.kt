@@ -67,7 +67,7 @@ fun ComposeRCE(
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
     onTextChangeListener: (String) -> Unit,
     onRceFocused: () -> Unit = {},
-    onCursorYCoordinateChanged: (Float) -> Unit = {},
+    onCursorYCoordinateChanged: ((Float) -> Unit)? = null,
     rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP,
     rceDialogThemeColor: Int = ThemePrefs.brandColor,
     rceDialogButtonColor: Int = ThemePrefs.textButtonColor,
@@ -91,13 +91,17 @@ fun ComposeRCE(
             onTextChangeListener(it)
             evaluateJavascript("javascript:RE.enabledEditingItems();", null)
         }
-        addJavascriptInterface(
-            RCECursorPositionInterface { y ->
-                onCursorYCoordinateChanged(y)
-            }, RCECursorPositionInterface.NAME
-        )
+        onCursorYCoordinateChanged?.let {
+            addJavascriptInterface(
+                RCECursorPositionInterface { y ->
+                    it(y)
+                }, RCECursorPositionInterface.NAME
+            )
+        }
         setOnInitialLoadListener {
-            evaluateJavascript("""
+            if (onCursorYCoordinateChanged != null) {
+                evaluateJavascript(
+                    """
             document.addEventListener("selectionchange", () => {
                 const selection = window.getSelection();
                 if (!selection || selection.rangeCount === 0) {
@@ -135,7 +139,9 @@ fun ComposeRCE(
                 }
                 ${RCECursorPositionInterface.NAME}.onCursorPositionChanged(y);
             })
-        """.trimIndent(), null)
+        """.trimIndent(), null
+                )
+            }
         }
         setOnDecorationChangeListener { text, _ ->
             if (!focused) {
