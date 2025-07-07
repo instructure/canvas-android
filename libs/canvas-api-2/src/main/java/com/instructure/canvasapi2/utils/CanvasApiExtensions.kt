@@ -57,12 +57,25 @@ fun String?.toDate(): Date? {
     this ?: return null
 
     return try {
-        var s = this.replace("Z", "+00:00")
+        var s = this
+            .removeMilliseconds()
+            .replace("Z", "+00:00")
         s = s.substring(0, 22) + s.substring(23)
         SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZ", Locale.US).parse(s)
     } catch (e: Exception) {
         null
     }
+}
+
+private fun String.removeMilliseconds(): String {
+    val dotIndex = this.indexOf('.');
+    val zIndex = this.indexOf('Z');
+
+    if (dotIndex != -1 && dotIndex < zIndex) {
+        return this.substring(0, dotIndex) + this.substring(zIndex);
+    }
+
+    return this
 }
 
 fun String?.toSimpleDate(): Date? {

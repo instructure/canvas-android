@@ -492,4 +492,12 @@
     <string name="inboxSignatureSettingsUpdated">Pengaturan kotak masuk disimpan!</string>
     <string name="inboxSignatureSettingsError">Gagal menyimpang pengaturan kotak masuk</string>
     <string name="inboxSignatureTextFieldPlaceholder">Tulis tanda tangan Anda di sini</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Jam</item>
+        <item quantity="other">%d Jam</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Mnt</item>
+        <item quantity="other">%d Mnt</item>
+    </plurals>
 </resources>

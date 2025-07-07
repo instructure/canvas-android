@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Inbox settings saved!</string>
     <string name="inboxSignatureSettingsError">Failed to save inbox settings</string>
     <string name="inboxSignatureTextFieldPlaceholder">Write your signature here</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Hour</item>
+        <item quantity="other">%d Hours</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Mins</item>
+    </plurals>
 </resources>

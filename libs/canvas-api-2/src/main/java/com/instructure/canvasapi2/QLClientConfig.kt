@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.type.GraphQLID
 import com.instructure.canvasapi2.type.URL
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.Logger
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import okhttp3.OkHttpClient
@@ -134,6 +135,15 @@ open class QLClientConfig {
             // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
             val result = config.buildClient().mutation(mutation).executeV3()
             return result
+        }
+
+        fun clearCacheDirectory(): Boolean {
+            return try {
+                cacheFile.deleteRecursively()
+            } catch (e: Exception) {
+                Logger.e("Could not delete cache $e")
+                false
+            }
         }
     }
 }

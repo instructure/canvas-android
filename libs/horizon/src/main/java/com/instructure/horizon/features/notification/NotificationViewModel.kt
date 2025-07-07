@@ -43,7 +43,7 @@ class NotificationViewModel @Inject constructor(
         NotificationUiState(
             LoadingState(
                 onRefresh = ::refresh,
-                onErrorSnackbarDismiss = ::dismissSnackbar
+                onSnackbarDismiss = ::dismissSnackbar
             ),
             decreasePageIndex = ::decreasePageIndex,
             increasePageIndex = ::increasePageIndex,
@@ -101,7 +101,7 @@ class NotificationViewModel @Inject constructor(
             }
         } catch {
             _uiState.update {
-                it.copy(screenState = it.screenState.copy(isRefreshing = false, errorSnackbar = context.getString(
+                it.copy(screenState = it.screenState.copy(isRefreshing = false, snackbarMessage = context.getString(
                     R.string.notificationsFailedToRefresh
                 )))
             }
@@ -160,7 +160,7 @@ class NotificationViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 

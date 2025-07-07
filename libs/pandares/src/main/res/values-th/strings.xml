@@ -291,7 +291,7 @@
     <string name="Todo">สิ่งที่ต้องดำเนินการ</string>
     <string name="todoFilter">กรองบทเรียน</string>
     <string name="filterByEllipsis">กรองจาก...</string>
-    <string name="favoritedCoursesLabel">บทเรียนที่เป็นรายการโปรด</string>
+    <string name="favoriteCoursesLabel">บทเรียนโปรด</string>
     <string name="Event">กิจกรรม</string>
     <string name="eventSuccessfulDeletion">ลบกิจกรรมเสร็จสิ้น</string>
     <string name="timeIconDescription">ไอคอนเวลา</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">การแจ้งข้อมูล</string>
     <string name="todoWidgetTitleLong">Canvas - สิ่งที่ต้องทำ</string>
     <string name="gradesWidgetTitleLong">Canvas - เกรด</string>
+    <string name="gradeWidgetTitleLong">Canvas - เกรด</string>
     <string name="notificationWidgetTitleLong">Canvas - การแจ้งข้อมูล</string>
     <string name="notLoggedIn">คุณไม่ได้ล็อกอิน</string>
     <string name="widgetStyle">เลือกรูปแบบวิดเจ็ตของคุณ</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">ความช่วยเหลือ</string>
     <string name="screenTitleManageStudents">จัดการผู้เรียน</string>
     <string name="screenTitleSettings">ค่าปรับตั้ง</string>
-    <string name="navigationDrawerSwitchUsers">สลับผู้ใช้</string>
     <string name="navigationDrawerLogOut">ล็อกเอาท์</string>
     <string name="noStudentsError">ไม่มีผู้เรียน</string>
     <string name="noStudentsErrorDescription">คุณไม่ได้สังเกตการณ์ผู้เรียนรายใด</string>
     <string name="noStudentsRefresh">รีเฟรช</string>
     <string name="noGrade">ไม่มีเกรด</string>
+    <string name="noGrades">ไม่มีเกรด</string>
     <string name="errorLoadingCourses">มีข้อผิดพลาดในการโหลดบทเรียนสำหรับผู้เรียน</string>
     <string name="parentNoCourses">ไม่มีบทเรียน</string>
     <string name="parentNoCoursesMessage">บทเรียนสำหรับผู้เรียนของคุณอาจยังไม่ได้เผยแพร่</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">เกิดข้อผิดพลาดขณะโหลดภารกิจ</string>
     <string name="a11y_searchAssignments">ค้นหาภารกิจ</string>
     <string name="dueAssignmentListItem">ครบกำหนด %1$s</string>
+    <string name="a11y_searchAmongRecipients">ค้นหาในกลุ่มผู้รับ</string>
+    <string name="a11y_recipientIsRemoved">%1$s ถูกลบแล้ว</string>
+    <string name="widgetDueDate">ครบกำหนดเมื่อ %1$s</string>
+    <string name="widgetFromTo">%1$s ถึง %2$s</string>
+    <string name="widgetAllDay">ทั้งวัน</string>
+    <string name="widgetErrorTitle">อุ๊ปส์! มีบางอย่างผิดปกติ</string>
+    <string name="widgetErrorSubtitle">เรามีปัญหาในการแสดงงานของคุณในตอนนี้ กรุณาลองใหม่อีกครั้งอีกสักครู่หรือเข้าไปที่แอพ</string>
+    <string name="widgetToDoEmptyTitle">เสร็จสิ้นแล้วในตอนนี้!</string>
+    <string name="widgetToDoEmptySubtitle">ดูเหมือนคุณจะว่างต่อไปอีก 4 สัปดาห์ ต้องการเพิ่มรายการดำเนินการหรือไม่</string>
+    <string name="widgetNotLoggedInTitle">ล็อกอินกันก่อนเลย!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">ดูรายการที่ต้องดำเนินการโดยล็อกอินไปยังบัญชีของคุณในแอพ แป๊ปเดียวเท่านั้น!</string>
+    <string name="a11y_widgetToDoOpenToDoList">เปิดหน้าจอรายการ สิ่งที่ต้องทำ</string>
+    <string name="a11y_widgetToDoCreateNewToDo">จัดทำรายการ สิ่งที่ต้องทำ ใหม่</string>
+    <string name="widgetGradesErrorSubtitle">เรามีปัญหาในการแสดงเกรดของคุณในตอนนี้ กรุณาลองใหม่อีกครั้งอีกสักครู่หรือเข้าไปที่แอพ</string>
+    <string name="widgetGradesNotLoggedInSubtitle">ดูรเกรดของคุณโดยล็อกอินไปยังบัญชีของคุณในแอพ แป๊ปเดียวเท่านั้น!</string>
+    <string name="widgetSingleGradeErrorSubtitle">เรามีปัญหาในการแสดงเกรดของคุณในตอนนี้</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">ดูรเกรดของคุณโดยล็อกอินไปยังบัญชีของคุณในแอพ</string>
+    <string name="widgetSingleGradeSelectCourse">เลือกบทเรียนกันเลย</string>
+    <string name="widgetGradesErrorLoadingCourses">เกิดข้อผิดพลาดขณะโหลดบทเรียน</string>
 </resources>

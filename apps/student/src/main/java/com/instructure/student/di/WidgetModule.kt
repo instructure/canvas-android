@@ -21,12 +21,12 @@ import android.appwidget.AppWidgetManager
 import android.content.Context
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.FeaturesManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.student.widget.WidgetLogger
 import com.instructure.student.widget.WidgetUpdater
@@ -69,9 +69,9 @@ class WidgetModule {
     fun provideToDoWidgetRepository(
         plannerApi: PlannerAPI.PlannerInterface,
         coursesApi: CourseAPI.CoursesInterface,
-        groupApi: GroupAPI.GroupInterface
+        calendarFilterDao: CalendarFilterDao
     ): ToDoWidgetRepository {
-        return ToDoWidgetRepository(plannerApi, coursesApi, groupApi)
+        return ToDoWidgetRepository(plannerApi, coursesApi, calendarFilterDao)
     }
 
     @Provides

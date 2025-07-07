@@ -30,4 +30,6 @@ class TeacherEventViewModelBehavior : EventViewModelBehavior {
     override fun getInboxComposeOptions(canvasContext: CanvasContext?, event: ScheduleItem): InboxComposeOptions {
         throw NotImplementedError("This method should not be called")
     }
+
+    override fun updateWidget() = Unit
 }

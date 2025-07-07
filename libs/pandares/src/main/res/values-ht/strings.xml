@@ -291,7 +291,7 @@
     <string name="Todo">Pou Fè</string>
     <string name="todoFilter">Filtè Kou</string>
     <string name="filterByEllipsis">Filtre pa</string>
-    <string name="favoritedCoursesLabel">Kou Prefere</string>
+    <string name="favoriteCoursesLabel">Kou Prefere</string>
     <string name="Event">Aktivite</string>
     <string name="eventSuccessfulDeletion">Aktivite efase kòrèkteman</string>
     <string name="timeIconDescription">Ikòn Lè</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifikasyon</string>
     <string name="todoWidgetTitleLong">Canvas - Pou Fè</string>
     <string name="gradesWidgetTitleLong">Canvas - Klas</string>
+    <string name="gradeWidgetTitleLong">Canvas - Klas</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikasyon</string>
     <string name="notLoggedIn">Ou pa konekte</string>
     <string name="widgetStyle">Chwasi stil widget ou</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Èd</string>
     <string name="screenTitleManageStudents">Jere Elèv</string>
     <string name="screenTitleSettings">Paramèt</string>
-    <string name="navigationDrawerSwitchUsers">Chanje Itilizatè</string>
     <string name="navigationDrawerLogOut">Dekonekte</string>
     <string name="noStudentsError">Pa gen Elèv</string>
     <string name="noStudentsErrorDescription">Ou pa p obsève okenn elèv.</string>
     <string name="noStudentsRefresh">Aktyalize</string>
     <string name="noGrade">Pa gen Klas</string>
+    <string name="noGrades">PA gen Nòt</string>
     <string name="errorLoadingCourses">Te gen yon erè nan chajman kou elèv ou a</string>
     <string name="parentNoCourses">Pa gen Kou</string>
     <string name="parentNoCoursesMessage">Kou elèv ou a ta dwe gentan pibliye.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Yon erè fèt pandan chajman asiyasyon yo</string>
     <string name="a11y_searchAssignments">Chèche Sesyon</string>
     <string name="dueAssignmentListItem">Delè %1$s</string>
+    <string name="a11y_searchAmongRecipients">Chèche pami Destinatè yo</string>
+    <string name="a11y_recipientIsRemoved">%1$s elimine</string>
+    <string name="widgetDueDate">Delè a %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">Tout jounen</string>
+    <string name="widgetErrorTitle">Oops! Gen yon Bagay ki Pase Mal</string>
+    <string name="widgetErrorSubtitle">Nou gen difikilte pou montre devwa ou yo pou kounye a. Eseye ankò apre yon ti tan oswa ale sou aplikasyon an.</string>
+    <string name="widgetToDoEmptyTitle">Ou fini kounye a!</string>
+    <string name="widgetToDoEmptySubtitle">Ta sanble ou lib pou pwochen 4 semèn yo. Èske w vle ajoute kèk bagay pou w fè?</string>
+    <string name="widgetNotLoggedInTitle">An n Konekte w!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Pou w wè sa w gen pou w fè yo, tanpri konekte sou kont ou nan aplikasyon an. L ap pran yon segonn!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Ouvri ekran Sa w Gen Pou w Fè</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Kreye nouvo Bagay pou w Fè</string>
+    <string name="widgetGradesErrorSubtitle">Nou gen difikilte pou montre nòt ou yo pou kounye a. Eseye ankò apre yon ti tan oswa ale sou aplikasyon an.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Pou w wè nòt ou yo, tanpri konekte sou kont ou nan aplikasyon an. L ap pran yon segonn!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Nou gen difikilte pou montre nòt ou yo pou kounye a.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Pou w wè nòt ou yo, tanpri konekte sou kont ou nan aplikasyon an.</string>
+    <string name="widgetSingleGradeSelectCourse">An n chwazi yon kou</string>
+    <string name="widgetGradesErrorLoadingCourses">Yon erè fèt pandan chajman kou yo:</string>
 </resources>

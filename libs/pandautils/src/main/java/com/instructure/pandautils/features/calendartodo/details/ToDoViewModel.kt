@@ -57,6 +57,7 @@ class ToDoViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val themePrefs: ThemePrefs,
     private val reminderManager: ReminderManager,
+    private val toDoViewModelBehavior: ToDoViewModelBehavior
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ToDoUiState())
@@ -150,6 +151,7 @@ class ToDoViewModel @Inject constructor(
                     _events.send(ToDoViewModelAction.RefreshCalendarDay(it))
                 }
             }
+            toDoViewModelBehavior.updateWidget()
         } catch {
             _uiState.update {
                 it.copy(

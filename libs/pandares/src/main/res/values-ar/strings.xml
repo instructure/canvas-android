@@ -310,7 +310,7 @@
     <string name="Todo">قائمة مهام</string>
     <string name="todoFilter">تصفية المساقات</string>
     <string name="filterByEllipsis">التصفية حسب...</string>
-    <string name="favoritedCoursesLabel">المساقات المفضلة</string>
+    <string name="favoriteCoursesLabel">المساقات المفضلة</string>
     <string name="Event">الحدث</string>
     <string name="eventSuccessfulDeletion">تم حذف الحدث بنجاح</string>
     <string name="timeIconDescription">أيقونة الوقت</string>
@@ -735,6 +735,7 @@
     <string name="notificationWidgetTitle">الإعلامات</string>
     <string name="todoWidgetTitleLong">Canvas - قائمة المهام</string>
     <string name="gradesWidgetTitleLong">Canvas - الدرجات</string>
+    <string name="gradeWidgetTitleLong">Canvas - الدرجة</string>
     <string name="notificationWidgetTitleLong">Canvas - الإعلامات</string>
     <string name="notLoggedIn">لست مسجل الدخول الآن.</string>
     <string name="widgetStyle">اختر نمط عنصر واجهة المستخدم</string>
@@ -1899,12 +1900,12 @@
     <string name="screenTitleHelp">التعليمات</string>
     <string name="screenTitleManageStudents">إدارة الطلاب</string>
     <string name="screenTitleSettings">الإعدادات</string>
-    <string name="navigationDrawerSwitchUsers">تبديل المستخدمين</string>
     <string name="navigationDrawerLogOut">تسجيل الخروج</string>
     <string name="noStudentsError">لا يوجد طلاب</string>
     <string name="noStudentsErrorDescription">أنت لا تراقب أي طالب.</string>
     <string name="noStudentsRefresh">تحديث</string>
     <string name="noGrade">لا توجد أي درجة</string>
+    <string name="noGrades">بلا درجات</string>
     <string name="errorLoadingCourses">حدث خطأ أثناء تحميل مساقات الطالب لديك.</string>
     <string name="parentNoCourses">لا يوجد أي مساق</string>
     <string name="parentNoCoursesMessage">ربما لم يتم نشر مساقات الطالب بعد.</string>
@@ -2175,4 +2176,23 @@
     <string name="errorLoadingAssignments">حدث خطأ أثناء تحميل المهام</string>
     <string name="a11y_searchAssignments">البحث عن المهام</string>
     <string name="dueAssignmentListItem">تاريخ الاستحقاق %1$s</string>
+    <string name="a11y_searchAmongRecipients">البحث بين المستلمين</string>
+    <string name="a11y_recipientIsRemoved">تمت إزالة %1$s</string>
+    <string name="widgetDueDate">مستحق في %1$s</string>
+    <string name="widgetFromTo">%1$s إلى %2$s</string>
+    <string name="widgetAllDay">طوال اليوم</string>
+    <string name="widgetErrorTitle">عذراً! حدث خطأ ما</string>
+    <string name="widgetErrorSubtitle">نواجه مشكلة في عرض مهامك في الوقت الحالي. يُرجى إعادة المحاولة بعد فترة وجيزة أو توجه إلى التطبيق.</string>
+    <string name="widgetToDoEmptyTitle">أنت جاهز تمامًا في الوقت الحالي!</string>
+    <string name="widgetToDoEmptySubtitle">يبدو أنك متفرغ للأسابيع الأربعة التالية. هل تريد أن تضيف بعض المهام؟</string>
+    <string name="widgetNotLoggedInTitle">فلنساعدك في تسجيل الدخول!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">لتر قائمة مهامك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
+    <string name="a11y_widgetToDoOpenToDoList">فتح شاشة قائمة المهام</string>
+    <string name="a11y_widgetToDoCreateNewToDo">إنشاء مهمة جديدة</string>
+    <string name="widgetGradesErrorSubtitle">نواجه مشكلة في عرض التقديرات الخاصة بك في الوقت الحالي. يُرجى إعادة المحاولة بعد فترة وجيزة أو توجه إلى التطبيق.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">لتر التقديرات الخاصة بك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
+    <string name="widgetSingleGradeErrorSubtitle">نواجه مشكلة في عرض التقديرات الخاصة بك في الوقت الحالي.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">لتر التقديرات الخاصة بك، يُرجى تسجيل الدخول في حسابك في التطبيق.</string>
+    <string name="widgetSingleGradeSelectCourse">فلنختر مساقًا</string>
+    <string name="widgetGradesErrorLoadingCourses">حدث خطأ أثناء تحميل المساقات.</string>
 </resources>

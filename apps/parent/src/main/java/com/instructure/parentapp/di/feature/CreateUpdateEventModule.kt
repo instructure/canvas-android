@@ -20,6 +20,7 @@ package com.instructure.parentapp.di.feature
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventRepository
+import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventViewModelBehavior
 import com.instructure.parentapp.features.calendarevent.ParentCreateUpdateEventRepository
 import dagger.Module
 import dagger.Provides
@@ -37,5 +38,12 @@ class CreateUpdateEventModule {
         apiPrefs: ApiPrefs
     ): CreateUpdateEventRepository {
         return ParentCreateUpdateEventRepository(calendarEventApi, apiPrefs)
+    }
+
+    @Provides
+    fun provideCreateUpdateEventViewModelBehavior(): CreateUpdateEventViewModelBehavior {
+        return object : CreateUpdateEventViewModelBehavior {
+            override fun updateWidget() = Unit
+        }
     }
 }

@@ -18,7 +18,6 @@ package com.instructure.student.ui.pages
 
 import android.app.Instrumentation
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.BundleMatchers
@@ -36,6 +35,7 @@ import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.scrollTo
@@ -91,8 +91,15 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     fun assertReportProblemDialogDisplayed() {
-        waitForViewWithText("Report A Problem").assertDisplayed()
+        waitForViewWithText("Report a problem").assertDisplayed()
+    }
+
+    fun clickCancelReportProblem() {
         onView(withId(R.id.cancelButton)).click()
+    }
+
+    fun clickSendReportProblem() {
+        onView(containsTextCaseInsensitive("Send")).scrollTo().click()
     }
 
     fun clickShareLoveLabel() {

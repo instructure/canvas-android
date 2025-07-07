@@ -291,7 +291,7 @@
     <string name="Todo">Opgaveliste</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Sorter efter &#8230;</string>
-    <string name="favoritedCoursesLabel">Foretrukne fag</string>
+    <string name="favoriteCoursesLabel">Favoritfag</string>
     <string name="Event">Begivenhed</string>
     <string name="eventSuccessfulDeletion">Begivenheden blev succefuldt slettet</string>
     <string name="timeIconDescription">Tidsikon</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifikationer</string>
     <string name="todoWidgetTitleLong">Canvas - Opgaveliste</string>
     <string name="gradesWidgetTitleLong">Canvas - Karakterer</string>
+    <string name="gradeWidgetTitleLong">Canvas – Karakter</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikationer</string>
     <string name="notLoggedIn">Du er ikke logget ind</string>
     <string name="widgetStyle">Vælg din widget stil</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Hjælp</string>
     <string name="screenTitleManageStudents">Administrer studerende</string>
     <string name="screenTitleSettings">Indstillinger</string>
-    <string name="navigationDrawerSwitchUsers">Skift brugere</string>
     <string name="navigationDrawerLogOut">Log ud</string>
     <string name="noStudentsError">Ingen studerende</string>
     <string name="noStudentsErrorDescription">Du observerer ikke nogen studerende.</string>
     <string name="noStudentsRefresh">Opdater</string>
     <string name="noGrade">Ingen karakter</string>
+    <string name="noGrades">Ingen karakterer</string>
     <string name="errorLoadingCourses">Der opstod en fejl under indlæsning af din studerendes fag.</string>
     <string name="parentNoCourses">Ingen kurser</string>
     <string name="parentNoCoursesMessage">Din studerendes fag kan muligvis ikke offentliggøres endnu.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Der opstod en fejl under indlæsning af opgaver</string>
     <string name="a11y_searchAssignments">Søg opgaver</string>
     <string name="dueAssignmentListItem">Forfalder %1$s</string>
+    <string name="a11y_searchAmongRecipients">Søg blandt modtagere</string>
+    <string name="a11y_recipientIsRemoved">%1$s er fjernet</string>
+    <string name="widgetDueDate">Forfalder %1$s</string>
+    <string name="widgetFromTo">%1$s til %2$s</string>
+    <string name="widgetAllDay">Hele dagen</string>
+    <string name="widgetErrorTitle">Ups! Noget gik galt</string>
+    <string name="widgetErrorSubtitle">Vi har problemer med at vise dine opgaver lige nu. Prøv igen om lidt, eller brug appen.</string>
+    <string name="widgetToDoEmptyTitle">Du er færdig for nu!</string>
+    <string name="widgetToDoEmptySubtitle">Det ser ud til, at du har fri de næste 4 uger. Vil du tilføje noget til opgavelisten?</string>
+    <string name="widgetNotLoggedInTitle">Lad os få dig logget ind!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">For at se din opgaveliste skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Åbn skærmen med opgavelisten</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Opret ny opgave</string>
+    <string name="widgetGradesErrorSubtitle">Vi har problemer med at vise dine karakterer lige nu. Prøv igen om lidt, eller brug appen.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">For at se dine karakterer skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Vi har problemer med at vise dine karakterer lige nu.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">For at se dine karakterer skal du logge ind på din konto i appen.</string>
+    <string name="widgetSingleGradeSelectCourse">Lad os vælge et fag</string>
+    <string name="widgetGradesErrorLoadingCourses">Der opstod en fejl under indlæsning af fag.</string>
 </resources>

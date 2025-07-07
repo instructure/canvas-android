@@ -34,7 +34,12 @@ import com.instructure.pandautils.features.elementary.grades.itemviewmodels.Grad
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
-import io.mockk.*
+import io.mockk.clearMocks
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import io.mockk.verify
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -395,6 +400,29 @@ class GradesViewModelTest {
         assertEquals(expectedGradeRow1, gradeRows[0].data)
     }
 
+    @Test
+    fun `Do not show score and hide progress when there is no active grading period and totals for all grading period is not enabled`() {
+        // Given
+        val course = createCourseWithGrades(1, "Course with Grade", "", "www.1.com", 90.0, null).copy(hasGradingPeriods = true)
+
+        every { courseManager.getCoursesWithGradesAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(course))
+        }
+
+        // When
+        viewModel = createViewModel()
+        viewModel.state.observe(lifecycleOwner, {})
+
+        // Then
+        assertTrue(viewModel.state.value is ViewState.Success)
+        assertEquals(1, viewModel.data.value!!.items.size)
+
+        val gradeRows = viewModel.data.value!!.items.map { it as GradeRowItemViewModel }
+
+        val expectedGradeRow1 = GradeRowViewData(1, "Course with Grade", ThemedColor(0), "www.1.com", 0.0, "--", hideProgress = true)
+
+        assertEquals(expectedGradeRow1, gradeRows[0].data)
+    }
 
     private fun createViewModel() = GradesViewModel(courseManager, resources, enrollmentManager, colorKeeper)
 

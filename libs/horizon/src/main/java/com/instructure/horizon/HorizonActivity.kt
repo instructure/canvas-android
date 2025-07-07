@@ -17,10 +17,14 @@ package com.instructure.horizon
 
 import android.os.Bundle
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
+import androidx.core.content.ContextCompat
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.HorizonNavigation
 import com.instructure.pandautils.base.BaseCanvasActivity
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -29,6 +33,8 @@ class HorizonActivity : BaseCanvasActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+            val activity = LocalContext.current.getActivityOrNull()
+            if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
             HorizonTheme {
                 HorizonNavigation(rememberNavController())
             }

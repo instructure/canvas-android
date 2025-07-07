@@ -40,5 +40,11 @@
     "source_path": "libs/pandares/src/main/res/values/strings.xml",
     "resource_dir": "libs/pandares/src/main/res",
     "extension": "xml"
+  },
+  {
+    "name": "horizon",
+    "source_path": "libs/horizon/src/main/res/values/strings.xml",
+    "resource_dir": "libs/horizon/src/main/res",
+    "extension": "xml"
   }
 ]

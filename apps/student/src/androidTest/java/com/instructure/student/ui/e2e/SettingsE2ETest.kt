@@ -45,6 +45,7 @@ import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Assert
+import org.junit.Assert.assertNotEquals
 import org.junit.Test
 
 @HiltAndroidTest
@@ -130,6 +131,50 @@ class SettingsE2ETest : StudentComposeTest() {
         val newSavedPandaAvatarCount = getSavedPandaAvatarCount()
         Log.d(ASSERTION_TAG, "Assert that saved panda avatar count has increased by one. Old value: '$originalSavedPandaAvatarCount', new value: '$newSavedPandaAvatarCount'.")
         Assert.assertTrue(newSavedPandaAvatarCount == originalSavedPandaAvatarCount + 1)
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.SETTINGS, TestCategory.E2E)
+    fun testPairWithObserverUIE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1)
+        val student = data.studentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Navigate to User Settings Page.")
+        leftSideNavigationDrawerPage.clickSettingsMenu()
+
+        Log.d(ASSERTION_TAG, "Assert that the Settings Page has been displayed correctly.")
+        settingsPage.assertPageObjects()
+
+        Log.d(STEP_TAG, "Click on 'Pair with Observer' settings menu to open the Pair with Observer Page.")
+        settingsPage.clickOnSettingsItem("Pair with Observer")
+
+        Log.d(ASSERTION_TAG, "Assert that the Pair with Observer Page has opened.")
+        pairObserverPage.assertPageObjects()
+
+        Log.d(ASSERTION_TAG, "Assert that the Pair with Observer Page has the proper toolbar title: 'Pair with Observer' with the corresponding description.")
+        pairObserverPage.assertToolbarTitle()
+        pairObserverPage.assertDescription()
+
+        Log.d(PREPARATION_TAG, "Get the current pairing code.")
+        val firstCode = pairObserverPage.getPairingCode()
+        pairObserverPage.hasPairingCode(firstCode)
+
+        Log.d(STEP_TAG, "Refresh the pairing code.")
+        pairObserverPage.refreshPairingCode()
+
+        Log.d(PREPARATION_TAG, "Get the new (after refresh) pairing code.")
+        val secondCode = pairObserverPage.getPairingCode()
+        pairObserverPage.hasPairingCode(secondCode)
+
+        Log.d(ASSERTION_TAG, "Assert that the pairing code has been changed after refreshing.")
+        assertNotEquals("Pairing code has not been changed after refreshing.", firstCode, secondCode)
     }
 
     @E2E
