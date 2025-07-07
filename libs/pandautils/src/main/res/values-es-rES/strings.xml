@@ -492,4 +492,12 @@
     <string name="inboxSignatureSettingsUpdated">¡Se ha guardado la configuración de la bandeja de entrada!</string>
     <string name="inboxSignatureSettingsError">No se ha podido guardar la configuración de la bandeja de entrada</string>
     <string name="inboxSignatureTextFieldPlaceholder">Escribe aquí tu firma</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d hora</item>
+        <item quantity="other">%d horas</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
 </resources>

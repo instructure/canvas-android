@@ -291,7 +291,7 @@
     <string name="Todo">Le Déanamh</string>
     <string name="todoFilter">Scag Cúrsaí</string>
     <string name="filterByEllipsis">Scag de réir&#8230;</string>
-    <string name="favoritedCoursesLabel">Cúrsaí Curtha i gCeanáin</string>
+    <string name="favoriteCoursesLabel">Cúrsaí is Fearr</string>
     <string name="Event">Imeacht</string>
     <string name="eventSuccessfulDeletion">Scriosadh an t-imeacht go rathúil</string>
     <string name="timeIconDescription">Deilbhín Ama</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Fógraí</string>
     <string name="todoWidgetTitleLong">Canvas - Le Déanamh</string>
     <string name="gradesWidgetTitleLong">Canvas - Marcanna</string>
+    <string name="gradeWidgetTitleLong">Canvas - Marc</string>
     <string name="notificationWidgetTitleLong">Canvas- Fógraí</string>
     <string name="notLoggedIn">Níl tú logáilte isteach</string>
     <string name="widgetStyle">Roghnaigh do stíl ghiuirléid</string>
@@ -827,7 +828,7 @@
     <string name="notification_cat_course_activities">Gníomhaíochtaí Cúrsa</string>
     <string name="notification_cat_discussions">Fóraim</string>
     <string name="notification_cat_conversations">Comhráite</string>
-    <string name="notification_cat_scheduling">Ag Sceidealú</string>
+    <string name="notification_cat_scheduling">Sceidealú</string>
     <string name="notification_cat_groups">Grúpaí</string>
     <string name="notification_cat_alerts">Foláirimh</string>
     <string name="notification_cat_conferences">Comhdhálacha</string>
@@ -837,7 +838,7 @@
     <string name="notification_pref_course_content">Ábhar an Chúrsa</string>
     <string name="notification_pref_files">Comhaid</string>
     <string name="notification_pref_announcement">Fógra</string>
-    <string name="notification_pref_announcement_created_by_you">Fógra Cruthaithe Agatsa</string>
+    <string name="notification_pref_announcement_created_by_you">Fógra cruthaithe agatsa</string>
     <string name="notification_pref_grading">Marcáil</string>
     <string name="notification_pref_invitation">Cuireadh</string>
     <string name="notification_pref_all_submissions">Gach Uaslódáil</string>
@@ -851,10 +852,10 @@
     <string name="notification_pref_conversation_message">Teachtaireacht Chomhrá</string>
     <string name="notification_pref_conversations_created_by_you">Comhráite Cruthaithe Agatsa</string>
 
-    <string name="notification_pref_student_appointment_signups">Clárúcháin le haghaidh Coinní Mac Léinn</string>
-    <string name="notification_pref_appointment_signups">Clárúcháin Coinne</string>
+    <string name="notification_pref_student_appointment_signups">Clarúchán le haghaidh coinní mac léinn</string>
+    <string name="notification_pref_appointment_signups">Clárúchán le haghaidh coinní</string>
     <string name="notification_pref_appointment_cancelations">Cealuithe Coinne</string>
-    <string name="notification_pref_appointment_availability">Infhaighteacht Coinne</string>
+    <string name="notification_pref_appointment_availability">Na Coinní atá ar fáil</string>
     <string name="notification_pref_calendar">Féilire</string>
 
     <string name="notification_pref_membership_update">Nuashonrú Ballraíochta</string>
@@ -1662,7 +1663,7 @@
     <string name="calendarAddNewCalendarItemContentDescription">Cuir mír fhéilire nua leis</string>
     <string name="calendarFilterCalendars">Féilirí</string>
     <string name="calendarFilterUser">Úsáideoir</string>
-    <string name="calendarFilterFavoriteCourse">Cúrsaí is Fearr</string>
+    <string name="calendarFilterFavoriteCourse">Rogha Cúrsaí</string>
     <string name="calendarFilterMoreCourse">Tuilleadh Cúrsaí</string>
     <string name="calendarFilterCourse">Cúrsaí</string>
     <string name="calendarFilterGroup">Grúpaí</string>
@@ -1791,12 +1792,12 @@
     <string name="screenTitleHelp">Cabhair</string>
     <string name="screenTitleManageStudents">Bainistigh Mic Léinn</string>
     <string name="screenTitleSettings">Socruithe</string>
-    <string name="navigationDrawerSwitchUsers">Malartaigh Úsáideoirí</string>
     <string name="navigationDrawerLogOut">Logáil Amach</string>
     <string name="noStudentsError">Níl Mic Léinn Ann</string>
     <string name="noStudentsErrorDescription">Níl tú ag breathnú ar mhac léinn ar bith.</string>
     <string name="noStudentsRefresh">Athnuaigh</string>
     <string name="noGrade">Níl aon Mharc ann</string>
+    <string name="noGrades">Gan Marcanna</string>
     <string name="errorLoadingCourses">Tharla earráid agus cúrsaí do mhic léinn á lódáil.</string>
     <string name="parentNoCourses">Níl Cúrsaí Ann</string>
     <string name="parentNoCoursesMessage">Seans nach bhfuil cúrsaí do mhic léinn foilsithe fós.</string>
@@ -2063,4 +2064,23 @@
     <string name="errorLoadingAssignments">Tharla earráid agus tascanna á lódáil</string>
     <string name="a11y_searchAssignments">Cuardaigh Tascanna</string>
     <string name="dueAssignmentListItem">Dlite %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cuardaigh i measc na bhFaighteoirí</string>
+    <string name="a11y_recipientIsRemoved">Baineadh %1$s</string>
+    <string name="widgetDueDate">Dlite ag %1$s</string>
+    <string name="widgetFromTo">%1$s go %2$s</string>
+    <string name="widgetAllDay">An lá ar fad</string>
+    <string name="widgetErrorTitle">Úps! Chuaigh rud eigin mícheart</string>
+    <string name="widgetErrorSubtitle">Tá deacrachtaí againn do thascanna a thaispeáint faoi láthair. Bain triail eile as ar ball nó téigh chuig an aip.</string>
+    <string name="widgetToDoEmptyTitle">Tá tú críochnaithe anois!</string>
+    <string name="widgetToDoEmptySubtitle">Is cosúil go bhfuil tú saor don chéad 4 seachtaine eile. An bhfuil tú ag iarraidh roinnt tascanna le cur leis?</string>
+    <string name="widgetNotLoggedInTitle">Lig dúinn tú a logáil isteach!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Chun do liosta le déanamh a fheiceáil, logáil isteach i do chuntas san aip le do thoil. Ní thógfaidh sé ach soicind!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Oscail scáileán Liosta Le Déanamh</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Cruthaigh Tasc Nua</string>
+    <string name="widgetGradesErrorSubtitle">Tá deacrachtaí againn do mharcanna a thaispeáint faoi láthair. Bain triail eile as ar ball nó téigh chuig an aip.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Chun do mharcanna a fheiceáil, logáil isteach i do chuntas san aip le do thoil. Ní thógfaidh sé ach soicind!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Tá deacrachtaí againn do mharcanna a thaispeáint faoi láthair.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Chun do mharcanna a fheiceáil, logáil isteach i do chuntas san aip le do thoil.</string>
+    <string name="widgetSingleGradeSelectCourse">Roghnaímis cúrsa</string>
+    <string name="widgetGradesErrorLoadingCourses">Tharla earráid agus cúrsaí á lódáil.</string>
 </resources>
