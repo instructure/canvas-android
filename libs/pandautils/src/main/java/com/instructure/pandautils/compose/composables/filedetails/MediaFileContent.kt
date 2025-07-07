@@ -16,6 +16,7 @@
 package com.instructure.pandautils.compose.composables.filedetails
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
@@ -43,9 +44,8 @@ import com.instructure.pandautils.utils.onClick
 
 @SuppressLint("UnsafeOptInUsageError")
 @Composable
-fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked: (String, String) -> Unit, modifier: Modifier = Modifier) {
+fun MediaFileContent(uri: Uri, contentType: String, onFullScreenClicked: (Uri, String) -> Unit, modifier: Modifier = Modifier) {
     val context = LocalContext.current
-    val uri = mediaUrl.toUri()
     val exoAgent = remember(uri) { ExoAgent.getAgentForUri(uri) }
     var playerViewInstance: PlayerView? by remember { mutableStateOf(null) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -86,7 +86,7 @@ fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked:
 
                 findViewById<View>(R.id.fullscreenButton).onClick {
                     exoAgent.flagForResume()
-                    onFullScreenClicked(mediaUrl, contentType)
+                    onFullScreenClicked(uri, contentType)
                 }
 
                 exoAgent.attach(this, object : ExoInfoListener {
@@ -110,7 +110,7 @@ fun MediaFileContent(mediaUrl: String, contentType: String, onFullScreenClicked:
 @Preview
 fun MediaFileContentPreview() {
     MediaFileContent(
-        mediaUrl = "https://www.example.com/media.mp4",
+        uri = "https://www.example.com/media.mp4".toUri(),
         contentType = "video/mp4",
         onFullScreenClicked = { _, _ -> }
     )

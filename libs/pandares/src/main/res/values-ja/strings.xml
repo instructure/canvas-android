@@ -286,7 +286,7 @@
     <string name="Todo">タスク</string>
     <string name="todoFilter">コースをフィルタする</string>
     <string name="filterByEllipsis">フィルタの基準</string>
-    <string name="favoritedCoursesLabel">お気に入りのコース</string>
+    <string name="favoriteCoursesLabel">お気に入りのコース</string>
     <string name="Event">イベント</string>
     <string name="eventSuccessfulDeletion">イベントが消去されました</string>
     <string name="timeIconDescription">時間のアイコン</string>
@@ -681,6 +681,7 @@
     <string name="notificationWidgetTitle">通知</string>
     <string name="todoWidgetTitleLong">Canvas - タスク</string>
     <string name="gradesWidgetTitleLong">Canvas - 採点</string>
+    <string name="gradeWidgetTitleLong">Canvas - 評定</string>
     <string name="notificationWidgetTitleLong">Canvas - 通知</string>
     <string name="notLoggedIn">ログインしていません</string>
     <string name="widgetStyle">ウィジェットスタイルを選択してください</string>
@@ -1745,12 +1746,12 @@
     <string name="screenTitleHelp">ヘルプ</string>
     <string name="screenTitleManageStudents">受講者を管理する</string>
     <string name="screenTitleSettings">設定</string>
-    <string name="navigationDrawerSwitchUsers">ユーザーを切り替える</string>
     <string name="navigationDrawerLogOut">ログアウト</string>
     <string name="noStudentsError">受講者はいません</string>
     <string name="noStudentsErrorDescription">どの受講者もオブザーブしていません。</string>
     <string name="noStudentsRefresh">更新</string>
     <string name="noGrade">評定はありません</string>
+    <string name="noGrades">評定なし</string>
     <string name="errorLoadingCourses">受講者のコースを読み込み中にエラーが発生しました。</string>
     <string name="parentNoCourses">コースはありません</string>
     <string name="parentNoCoursesMessage">受講者のコースはまだ公開されていない可能性があります</string>
@@ -2016,4 +2017,23 @@
     <string name="errorLoadingAssignments">課題の読み込み中にエラーが発生しました。</string>
     <string name="a11y_searchAssignments">課題の検索</string>
     <string name="dueAssignmentListItem">%1$s期限</string>
+    <string name="a11y_searchAmongRecipients">受領する受講者から検索する</string>
+    <string name="a11y_recipientIsRemoved">%1$s が削除済み</string>
+    <string name="widgetDueDate">%1$s が期限</string>
+    <string name="widgetFromTo">%1$s から %2$s</string>
+    <string name="widgetAllDay">終日</string>
+    <string name="widgetErrorTitle">おっと！なにかが失敗しました</string>
+    <string name="widgetErrorSubtitle">現在、タスクを表示できません。しばらくしてからもういちどやり直すか、アプリに移動してください。</string>
+    <string name="widgetToDoEmptyTitle">これで完了です！</string>
+    <string name="widgetToDoEmptySubtitle">次の4週間は、空き時間があるようです。するべきことを追加しますか？</string>
+    <string name="widgetNotLoggedInTitle">ログインしましょう！</string>
+    <string name="widgetToDoNotLoggedInSubtitle">するべきことを表示するには、アプリでアカウントにログインしてください。すぐに完了します！</string>
+    <string name="a11y_widgetToDoOpenToDoList">するべきことリスト画面を開く</string>
+    <string name="a11y_widgetToDoCreateNewToDo">新しいするべきことを作成する</string>
+    <string name="widgetGradesErrorSubtitle">現在、評定を表示できません。しばらくしてからもういちどやり直すか、アプリに移動してください。</string>
+    <string name="widgetGradesNotLoggedInSubtitle">評定を表示するには、アプリでアカウントにログインしてください。すぐに完了します！</string>
+    <string name="widgetSingleGradeErrorSubtitle">現在、評定を表示できません。</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">評定を表示するには、アプリでアカウントにログインしてください。</string>
+    <string name="widgetSingleGradeSelectCourse">コースを選択しましょう</string>
+    <string name="widgetGradesErrorLoadingCourses">コースの読み込み中にエラーが発生しました。</string>
 </resources>

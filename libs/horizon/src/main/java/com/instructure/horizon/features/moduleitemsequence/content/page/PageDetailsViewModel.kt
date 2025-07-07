@@ -40,7 +40,7 @@ class PageDetailsViewModel @Inject constructor(
     private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
     private val pageUrl: String = savedStateHandle[ModuleItemContent.Page.PAGE_URL] ?: ""
 
-    private val _uiState = MutableStateFlow(PageDetailsUiState(ltiButtonPressed = ::ltiButtonPressed, onUrlOpened = ::onUrlOpened))
+    private val _uiState = MutableStateFlow(PageDetailsUiState(ltiButtonPressed = ::ltiButtonPressed, onUrlOpened = ::onUrlOpened, courseId = courseId))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -54,10 +54,14 @@ class PageDetailsViewModel @Inject constructor(
             }
             val pageDetails = pageDetailsRepository.getPageDetails(courseId, pageUrl)
             val html = htmlContentFormatter.formatHtmlWithIframes(pageDetails.body.orEmpty())
+            val notes = pageDetailsRepository.getNotes(courseId, pageDetails.id)
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
-                    pageHtmlContent = html
+                    pageHtmlContent = html,
+                    notes = notes,
+                    pageId = pageDetails.id,
+                    pageUrl = pageUrl
                 )
             }
             _uiState.update {
@@ -67,6 +71,13 @@ class PageDetailsViewModel @Inject constructor(
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
+        }
+    }
+
+    fun refreshNotes() {
+        viewModelScope.launch {
+            val notes = pageDetailsRepository.getNotes(uiState.value.courseId, uiState.value.pageId)
+            _uiState.update { it.copy(notes = notes) }
         }
     }
 

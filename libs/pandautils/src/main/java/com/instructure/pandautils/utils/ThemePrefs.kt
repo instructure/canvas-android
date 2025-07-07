@@ -58,6 +58,8 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     var logoUrl by StringPref()
 
+    var mobileLogoUrl by StringPref()
+
     var isThemeApplied by BooleanPref()
 
     var appTheme by IntPref(defaultValue = 0)
@@ -120,6 +122,7 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         textButtonColor = ColorUtils.correctContrastForText(tempButtonColor, context.getColor(R.color.backgroundLightestElevated))
 
         logoUrl = theme.logoUrl
+        mobileLogoUrl = theme.mobileLogoUrl ?: ""
         isThemeApplied = true
         canvasTheme = theme
     }

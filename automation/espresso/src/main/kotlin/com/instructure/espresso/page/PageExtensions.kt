@@ -151,7 +151,7 @@ fun BasePage.waitForViewWithSpinnerText(arg0: Int): ViewInteraction = WaitForVie
 
 fun BasePage.waitForViewWithInputType(arg0: Int): ViewInteraction = WaitForViewMatcher.waitForView(ViewMatchers.withInputType(arg0))
 
-fun BasePage.getStringFromResource(stringResource: Int): String{
+fun getStringFromResource(stringResource: Int): String{
     val targetContext = InstrumentationRegistry.getInstrumentation().targetContext
     return targetContext.resources.getString(stringResource)
 }

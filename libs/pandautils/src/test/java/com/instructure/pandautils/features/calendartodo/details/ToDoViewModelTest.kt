@@ -69,6 +69,7 @@ class ToDoViewModelTest {
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val reminderManager: ReminderManager = mockk(relaxed = true)
+    private val toDoViewModelBehavior: ToDoViewModelBehavior = mockk(relaxed = true)
 
     private val plannerItem = PlannerItem(
         courseId = null,
@@ -101,6 +102,10 @@ class ToDoViewModelTest {
 
     lateinit var viewModel: ToDoViewModel
 
+    private fun createViewModel() {
+        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager, toDoViewModelBehavior)
+    }
+
     @Before
     fun setup() {
         Dispatchers.setMain(testDispatcher)
@@ -119,7 +124,7 @@ class ToDoViewModelTest {
         mockkObject(ApiPrefs)
         every { ApiPrefs.fullDomain } returns "https://canvas.instructure.com"
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
     }
 
     @After
@@ -154,6 +159,10 @@ class ToDoViewModelTest {
 
         coVerify(exactly = 1) {
             toDoRepository.deletePlannerNote(plannerItem.plannable.id)
+        }
+
+        coVerify(exactly = 1) {
+            toDoViewModelBehavior.updateWidget()
         }
 
         val expectedEvent = ToDoViewModelAction.RefreshCalendarDay(LocalDate.of(2024, 2, 12))
@@ -193,7 +202,7 @@ class ToDoViewModelTest {
         every { apiPrefs.user } returns User(1)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
         viewModel.showCreateReminderDialog(context, 1)
 
         coVerify(exactly = 1) {
@@ -215,7 +224,7 @@ class ToDoViewModelTest {
         every { apiPrefs.user } returns User(1)
         every { apiPrefs.fullDomain } returns "https://canvas.instructure.com"
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
         viewModel.showCreateReminderDialog(context, 1)
 
         coVerify(exactly = 1) {
@@ -236,7 +245,7 @@ class ToDoViewModelTest {
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
         every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns null
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
 
         val state = viewModel.uiState.value
 
@@ -258,12 +267,12 @@ class ToDoViewModelTest {
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
         every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
         viewModel.showCreateReminderDialog(context, 1)
 
         coEvery { toDoRepository.getPlannerNote(1) } returns plannerItem.plannable
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
 
         val state = viewModel.uiState.value
 
@@ -283,14 +292,14 @@ class ToDoViewModelTest {
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
         every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
         viewModel.showCreateReminderDialog(context, 1)
 
         val plannable = plannerItem.plannable.copy(courseId = 1)
         coEvery { toDoRepository.getPlannerNote(1) } returns plannable
         coEvery { toDoRepository.getCourse(1) } returns Course(1, "Course")
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
 
         val state = viewModel.uiState.value
 
@@ -310,14 +319,14 @@ class ToDoViewModelTest {
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
         every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
         viewModel.showCreateReminderDialog(context, 1)
 
         val plannable = plannerItem.plannable.copy(groupId = 1)
         coEvery { toDoRepository.getPlannerNote(1) } returns plannable
         coEvery { toDoRepository.getGroup(1) } returns Group(1, "Group")
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
 
         val state = viewModel.uiState.value
 
@@ -337,14 +346,14 @@ class ToDoViewModelTest {
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns null
         every { savedStateHandle.get<Long>(PLANNABLE_ID) } returns 1
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
         viewModel.showCreateReminderDialog(context, 1)
 
         val plannable = plannerItem.plannable.copy(userId = 1)
         coEvery { toDoRepository.getPlannerNote(1) } returns plannable
         coEvery { toDoRepository.getUser(1) } returns User(1, "User")
 
-        viewModel = ToDoViewModel(context, savedStateHandle, toDoRepository, apiPrefs, themePrefs, reminderManager)
+        createViewModel()
 
         val state = viewModel.uiState.value
 

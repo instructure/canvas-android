@@ -485,4 +485,10 @@
     <string name="inboxSignatureSettingsUpdated">受信トレイの設定が保存されました！</string>
     <string name="inboxSignatureSettingsError">受信トレイの設定を保存できませんでした</string>
     <string name="inboxSignatureTextFieldPlaceholder">ここに署名を入力してください</string>
+    <plurals name="durationHours">
+        <item quantity="other">%d時間</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="other">%d分</item>
+    </plurals>
 </resources>

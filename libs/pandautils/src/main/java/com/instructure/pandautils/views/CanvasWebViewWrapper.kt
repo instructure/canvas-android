@@ -31,7 +31,7 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import java.io.File
 
-class CanvasWebViewWrapper @JvmOverloads constructor(
+open class CanvasWebViewWrapper @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0

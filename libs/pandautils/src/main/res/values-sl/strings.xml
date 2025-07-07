@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Nastavitve pošte shranjene!</string>
     <string name="inboxSignatureSettingsError">Nastavitev pošte ni bilo mogoče shraniti</string>
     <string name="inboxSignatureTextFieldPlaceholder">Tukaj napišite svoj podpis</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d ura</item>
+        <item quantity="other">%d ur</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
 </resources>

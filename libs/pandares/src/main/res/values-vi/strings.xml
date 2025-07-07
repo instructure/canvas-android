@@ -291,7 +291,7 @@
     <string name="Todo">Việc Cần Làm</string>
     <string name="todoFilter">Lọc Khóa Học</string>
     <string name="filterByEllipsis">Lọc theo...</string>
-    <string name="favoritedCoursesLabel">Khóa Học Ưa Thích</string>
+    <string name="favoriteCoursesLabel">Khóa Học Yêu Thích</string>
     <string name="Event">Sự Kiện</string>
     <string name="eventSuccessfulDeletion">Đã xóa thành công sự kiện</string>
     <string name="timeIconDescription">Biểu Tượng Thời Gian</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Thông Báo</string>
     <string name="todoWidgetTitleLong">Canvas - Việc Cần Làm</string>
     <string name="gradesWidgetTitleLong">Canvas - Điểm</string>
+    <string name="gradeWidgetTitleLong">Canvas - Điểm</string>
     <string name="notificationWidgetTitleLong">Canvas - Thông Báo</string>
     <string name="notLoggedIn">Bạn đang không đăng nhập</string>
     <string name="widgetStyle">Hãy chọn kiểu tiện ích của bạn</string>
@@ -1777,12 +1778,12 @@
     <string name="screenTitleHelp">Trợ Giúp</string>
     <string name="screenTitleManageStudents">Quản Lý Sinh Viên</string>
     <string name="screenTitleSettings">Cài Đặt</string>
-    <string name="navigationDrawerSwitchUsers">Chuyển Người Dùng</string>
     <string name="navigationDrawerLogOut">Đăng Xuất</string>
     <string name="noStudentsError">Không Có Sinh Viên</string>
     <string name="noStudentsErrorDescription">Bạn đang không quan sát bất kỳ sinh viên nào.</string>
     <string name="noStudentsRefresh">Làm Mới</string>
     <string name="noGrade">Không Có Lớp</string>
+    <string name="noGrades">Chưa Có Điểm</string>
     <string name="errorLoadingCourses">Đã xảy ra lỗi khi tải khóa học sinh viên của bạn.</string>
     <string name="parentNoCourses">Không Có Khóa Học</string>
     <string name="parentNoCoursesMessage">Khóa học của bạn có thể chưa được phát hành.</string>
@@ -2049,4 +2050,23 @@
     <string name="errorLoadingAssignments">Đã xảy ra lỗi khi tải bài tập</string>
     <string name="a11y_searchAssignments">Tìm Kiếm Bài Tập</string>
     <string name="dueAssignmentListItem">Đến hạn vào %1$s</string>
+    <string name="a11y_searchAmongRecipients">Tìm kiếm trong số Người Nhận</string>
+    <string name="a11y_recipientIsRemoved">%1$s đã bị gỡ</string>
+    <string name="widgetDueDate">Đến hạn lúc %1$s</string>
+    <string name="widgetFromTo">%1$s đến %2$s</string>
+    <string name="widgetAllDay">Cả ngày</string>
+    <string name="widgetErrorTitle">Rất tiếc! Đã Xảy Ra Vấn Đề</string>
+    <string name="widgetErrorSubtitle">Chúng tôi đang gặp sự cố khi hiển thị các nhiệm vụ của bạn ngay lúc này. Vui lòng thử lại sau một lúc hoặc truy cập ứng dụng.</string>
+    <string name="widgetToDoEmptyTitle">Bây giờ, bạn đã hoàn tất mọi việc!</string>
+    <string name="widgetToDoEmptySubtitle">Có vẻ như bạn rảnh trong 4 tuần tới. Bạn có muốn thêm một số việc cần làm không?</string>
+    <string name="widgetNotLoggedInTitle">Hãy Tiến Hành Đăng Nhập!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Để xem các việc cần làm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng. Sẽ chỉ mất một lát thôi!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Mở màn hình danh sách Việc Cần Làm</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Tạo Việc Cần Làm mới</string>
+    <string name="widgetGradesErrorSubtitle">Chúng tôi đang gặp sự cố khi hiển thị điểm của bạn ngay lúc này. Vui lòng thử lại sau một lúc hoặc truy cập ứng dụng.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Để xem điểm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng. Sẽ chỉ mất một lát thôi!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Chúng tôi đang gặp sự cố khi hiển thị điểm của bạn ngay lúc này.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Để xem điểm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng.</string>
+    <string name="widgetSingleGradeSelectCourse">Hãy chọn một khóa học</string>
+    <string name="widgetGradesErrorLoadingCourses">Đã xảy ra lỗi khi tải các khóa học.</string>
 </resources>
