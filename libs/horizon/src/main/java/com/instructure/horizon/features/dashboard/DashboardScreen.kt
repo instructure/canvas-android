@@ -148,7 +148,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.mail,
-            onClick = uiState.onInboxClick,
+            onClick = { mainNavController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse
         )

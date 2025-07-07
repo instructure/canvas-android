@@ -291,7 +291,7 @@
     <string name="Todo">À faire</string>
     <string name="todoFilter">Filtrer les cours</string>
     <string name="filterByEllipsis">Filtrer par ....</string>
-    <string name="favoritedCoursesLabel">Cours favoris</string>
+    <string name="favoriteCoursesLabel">Cours favoris</string>
     <string name="Event">Événement</string>
     <string name="eventSuccessfulDeletion">L\'événement a été supprimé avec succès</string>
     <string name="timeIconDescription">Icône temps</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifications</string>
     <string name="todoWidgetTitleLong">Canvas – À faire</string>
     <string name="gradesWidgetTitleLong">Canvas - Notes</string>
+    <string name="gradeWidgetTitleLong">Canvas - Note</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifications</string>
     <string name="notLoggedIn">Vous n\'êtes pas connecté</string>
     <string name="widgetStyle">Choisir votre style de mini-application</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Aide</string>
     <string name="screenTitleManageStudents">Gérer les élèves</string>
     <string name="screenTitleSettings">Paramètres</string>
-    <string name="navigationDrawerSwitchUsers">Changer d\'utilisateurs</string>
     <string name="navigationDrawerLogOut">Se déconnecter</string>
     <string name="noStudentsError">Pas d\'étudiants</string>
     <string name="noStudentsErrorDescription">Vous n’observez aucun élève.</string>
     <string name="noStudentsRefresh">Actualiser</string>
     <string name="noGrade">Aucune note</string>
+    <string name="noGrades">Aucune note</string>
     <string name="errorLoadingCourses">Une erreur est survenue lors du chargement des cours de l’élève.</string>
     <string name="parentNoCourses">Aucun cours</string>
     <string name="parentNoCoursesMessage">Il est possible que les cours de l\'élève n\'aient pas encore été publiés.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Une erreur s’est produite lors du chargement des devoirs</string>
     <string name="a11y_searchAssignments">Chercher des travaux assignés</string>
     <string name="dueAssignmentListItem">À rendre le %1$s</string>
+    <string name="a11y_searchAmongRecipients">Rechercher dans les destinataires</string>
+    <string name="a11y_recipientIsRemoved">%1$s est supprimé</string>
+    <string name="widgetDueDate">Attendu le %1$s</string>
+    <string name="widgetFromTo">%1$s à %2$s</string>
+    <string name="widgetAllDay">Toute la journée</string>
+    <string name="widgetErrorTitle">Oups ! Un problème est survenu</string>
+    <string name="widgetErrorSubtitle">Nous ne parvenons pas à afficher vos tâches pour le moment. Veuillez réessayer dans un moment ou accéder à l’application.</string>
+    <string name="widgetToDoEmptyTitle">C’est tout pour le moment !</string>
+    <string name="widgetToDoEmptySubtitle">Il semble que vous soyez libre pendant les 4 prochaines semaines. Voulez-vous ajouter des choses à faire ?</string>
+    <string name="widgetNotLoggedInTitle">Connectez-vous !</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Pour afficher votre liste de choses à faire, veuillez vous connecter à votre compte dans l’application. Cela ne prendra que quelques secondes !</string>
+    <string name="a11y_widgetToDoOpenToDoList">Ouvrir l’écran de la liste de choses à faire</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Créer une liste de choses à faire</string>
+    <string name="widgetGradesErrorSubtitle">Nous ne parvenons pas à afficher vos notes pour le moment. Veuillez réessayer dans un moment ou accéder à l’application.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Pour afficher vos notes, veuillez vous connecter à votre compte dans l’application. Cela ne prendra que quelques secondes !</string>
+    <string name="widgetSingleGradeErrorSubtitle">Nous ne parvenons pas à afficher vos notes pour le moment.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Pour afficher vos notes, veuillez vous connecter à votre compte dans l’application.</string>
+    <string name="widgetSingleGradeSelectCourse">Choisissez un cours</string>
+    <string name="widgetGradesErrorLoadingCourses">Une erreur s’est produite lors du chargement des cours.</string>
 </resources>

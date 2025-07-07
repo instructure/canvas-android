@@ -505,4 +505,16 @@
     <string name="inboxSignatureSettingsUpdated">Zapisano ustawienia skrzynki odbiorczej!</string>
     <string name="inboxSignatureSettingsError">Nie udało się zapisać ustawień skrzynki odbiorczej</string>
     <string name="inboxSignatureTextFieldPlaceholder">Wpisz podpis tutaj</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d godz.</item>
+        <item quantity="few">%d godz.</item>
+        <item quantity="many">%d godz.</item>
+        <item quantity="other">%d godz.</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d min</item>
+        <item quantity="few">%d min</item>
+        <item quantity="many">%d min</item>
+        <item quantity="other">%d min</item>
+    </plurals>
 </resources>
