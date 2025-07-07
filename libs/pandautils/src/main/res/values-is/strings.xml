@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Innhólfsstillingar vistaðar!</string>
     <string name="inboxSignatureSettingsError">Mistókst að vista innhólfsstillingar</string>
     <string name="inboxSignatureTextFieldPlaceholder">Skrifaðu undirskrift þína hér</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d klukkustund</item>
+        <item quantity="other">%d klukkustundir</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d mín.</item>
+        <item quantity="other">%d mín.</item>
+    </plurals>
 </resources>

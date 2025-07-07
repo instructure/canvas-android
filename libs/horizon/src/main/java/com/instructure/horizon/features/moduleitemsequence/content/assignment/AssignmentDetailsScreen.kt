@@ -47,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.compose.NavHost
@@ -88,7 +89,12 @@ import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.views.JSInterface
 
 @Composable
-fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: ScrollState, modifier: Modifier = Modifier) {
+fun AssignmentDetailsScreen(
+    uiState: AssignmentDetailsUiState,
+    scrollState: ScrollState,
+    moduleHeaderHeight: Dp,
+    modifier: Modifier = Modifier
+) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(uiState.urlToOpen) {
         uiState.urlToOpen?.let { url ->
@@ -255,6 +261,8 @@ fun AssignmentDetailsScreen(uiState: AssignmentDetailsUiState, scrollState: Scro
                     AddSubmissionContent(
                         addSubmissionUiState,
                         snackbarHostState = snackbarHostState,
+                        scrollState = scrollState,
+                        moduleHeaderHeight = moduleHeaderHeight,
                         onRceFocused = { rceFocused = true },
                         modifier = Modifier.padding(16.dp)
                     )
@@ -325,6 +333,7 @@ fun AssignmentDetailsScreenPreview() {
             ),
             showSubmissionDetails = true
         ),
-        scrollState = ScrollState(0)
+        scrollState = ScrollState(0),
+        moduleHeaderHeight = 0.dp,
     )
 }
