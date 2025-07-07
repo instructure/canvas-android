@@ -74,7 +74,11 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
+import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.utils.launchCustomTab
 import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
 
@@ -262,7 +266,16 @@ private fun HorizonInboxHtmlContent(
     content: String,
     modifier: Modifier = Modifier
 ) {
-    ComposeCanvasWebViewWrapper(content, modifier)
+    val activity = LocalContext.current.getActivityOrNull()
+
+    ComposeCanvasWebViewWrapper(
+        content,
+        modifier,
+        embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
+            shouldLaunchInternalWebViewFragment = { _ -> true },
+            launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
+        ),
+    )
 }
 
 @Composable
