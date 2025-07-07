@@ -297,7 +297,11 @@ private fun LazyListScope.inboxContent(
         InboxContentItem(
             item,
             item != state.items.lastOrNull(),
-            { navController.navigate(HorizonInboxRoute.InboxDetails.route(item.id)) },
+            {
+                navController.navigate(
+                    HorizonInboxRoute.InboxDetails.route(item.id, item.type, item.courseId)
+                )
+            },
             Modifier
                 .then(
                     when (item) {
@@ -384,7 +388,7 @@ private fun HorizonInboxListPreview() {
     val state = HorizonInboxListUiState(
         items = listOf(
             HorizonInboxListItemState(
-                id = "1",
+                id = 1,
                 title = "Message",
                 description = "This is the first message.",
                 date = Date(),
@@ -392,7 +396,7 @@ private fun HorizonInboxListPreview() {
                 isUnread = true
             ),
             HorizonInboxListItemState(
-                id = "2",
+                id = 2,
                 title = "Announcement",
                 description = "This is the second message.",
                 date = Date(),

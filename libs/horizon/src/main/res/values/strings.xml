@@ -272,6 +272,10 @@
     <string name="noteHasBeenDeletedMessage">Deleted from Notebook.</string>
     <string name="failedToSaveNoteMessage">Error saving to Notebook.</string>
     <string name="failedToDeleteNoteMessage">Error deleting from Notebook.</string>
+    <string name="inboxReplyPlaceholder">Reply</string>
+    <string name="inboxSendLabel">Send</string>
+    <string name="inboxGlobalAnnouncementAuthorLabel">Global Announcement</string>
+    <string name="inboxFailedToRefreshLabel">Failed to refresh inbox</string>
     <string name="commentsBottomSheet_header">Comments</string>
     <string name="commentsBottomSheet_addComment">Add Comment</string>
     <string name="commentsBottomSheet_post">Post</string>
@@ -280,4 +284,6 @@
     <string name="commentsBottomSheet_failedToLoadNextPage">Failed to load next page.</string>
     <string name="commentsBottomSheet_failedToLoadPreviousPage">Failed to load previous page.</string>
     <string name="commentsBottomSheet_failedToPostComment">Failed to post comment.</string>
+    <string name="inboxFailedToSendReplyLabel">Failed to send reply</string>
+    <string name="inboxFailedtoLoadErrorMessage">Failed to load</string>
 </resources>

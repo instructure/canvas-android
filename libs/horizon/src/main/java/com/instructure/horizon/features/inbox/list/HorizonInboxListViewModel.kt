@@ -141,13 +141,14 @@ class HorizonInboxListViewModel @Inject constructor(
                 conversations
                     .map { conversation ->
                         HorizonInboxListItemState(
-                            id = conversation.id.toString(),
+                            id = conversation.id,
                             type = HorizonInboxItemType.Inbox,
                             title = conversation.subject.orEmpty(),
                             description = conversation.audience?.mapNotNull {
                                 recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
                             }?.map { it.name }?.joinToString(", ").orEmpty(),
-                            date = conversation.lastAuthoredMessageSent,
+                            courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
+                            date = conversation.lastMessageSent,
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }
@@ -156,7 +157,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 accountAnnouncements
                     .map {
                         HorizonInboxListItemState(
-                            id = it.id.toString(),
+                            id = it.id,
                             type = HorizonInboxItemType.AccountNotification,
                             title = context.getString(R.string.inboxAnnouncementTitle),
                             description = it.subject,
@@ -171,13 +172,14 @@ class HorizonInboxListViewModel @Inject constructor(
                         val course = courseAnnouncementPair.first
                         val announcement = courseAnnouncementPair.second
                         HorizonInboxListItemState(
-                            id = announcement.id.toString(),
-                            type = HorizonInboxItemType.CourseNotification(course.id.toString()),
+                            id = announcement.id,
+                            type = HorizonInboxItemType.CourseNotification,
                             title = context.getString(
                                 R.string.inboxCourseAnnouncementTitle,
                                 course.name
                             ),
                             description = announcement.title.orEmpty(),
+                            courseId = course.id,
                             date = announcement.createdDate,
                             isUnread = announcement.status == DiscussionTopicHeader.ReadState.UNREAD
                         )
