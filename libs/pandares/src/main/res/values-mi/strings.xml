@@ -291,7 +291,7 @@
     <string name="Todo">Hei mahi</string>
     <string name="todoFilter">Ngā Akoranga Tātari</string>
     <string name="filterByEllipsis">Tātari ma....</string>
-    <string name="favoritedCoursesLabel">Ngā akoranga tino pai</string>
+    <string name="favoriteCoursesLabel">Ngā akoranga makau</string>
     <string name="Event">Tauwhāinga</string>
     <string name="eventSuccessfulDeletion">I momoho te muku Tauwhāinga</string>
     <string name="timeIconDescription">Te Wā Icon</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">whakamōhiotanga</string>
     <string name="todoWidgetTitleLong">Canvas – Hei Mahi</string>
     <string name="gradesWidgetTitleLong">Canvas – ngā Kōeke</string>
+    <string name="gradeWidgetTitleLong">Canvas - Kōeke</string>
     <string name="notificationWidgetTitleLong">Canvas – ngā whakamōhiotanga</string>
     <string name="notLoggedIn">Kaore koe i te takiuru</string>
     <string name="widgetStyle">Kōwhiri tō momo widget</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Āwhina</string>
     <string name="screenTitleManageStudents">Whakahaere ngā ākonga</string>
     <string name="screenTitleSettings">Ngā Tautuhinga</string>
-    <string name="navigationDrawerSwitchUsers">Whakakā ngā Kaiwhakamahi</string>
     <string name="navigationDrawerLogOut">Takiputa</string>
     <string name="noStudentsError">Kāore he ākonga</string>
     <string name="noStudentsErrorDescription">Kaore koe e tirotiro ana ētahi ākonga.</string>
     <string name="noStudentsRefresh">Whakahouhia</string>
     <string name="noGrade">Kaore he Kōeke</string>
+    <string name="noGrades">Karekau he Tohu</string>
     <string name="errorLoadingCourses">He hapa i te wā e uta ana i tō ākonga akoranga.</string>
     <string name="parentNoCourses">Kāore he Akoranga</string>
     <string name="parentNoCoursesMessage">Kaore e pānuitia ō ākonga akoranga i tēnei wā.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">I puta he hapa i te uta i nga taumahi</string>
     <string name="a11y_searchAssignments">Rapu Ngā Whakatakanga</string>
     <string name="dueAssignmentListItem">E tika ana %1$s</string>
+    <string name="a11y_searchAmongRecipients">Rapu i waenga i nga Kaiwhiwhi</string>
+    <string name="a11y_recipientIsRemoved">%1$s ka tangohia</string>
+    <string name="widgetDueDate">Tae mai i te %1$s</string>
+    <string name="widgetFromTo">%1$s ki te %2$s</string>
+    <string name="widgetAllDay">Te ra katoa</string>
+    <string name="widgetErrorTitle">Aue! I raruraru tētahi mea</string>
+    <string name="widgetErrorSubtitle">Kei te raru matou ki te whakaatu i o mahi inaianei. Tena koa ngana ano mo te wa poto, haere ranei ki te taupānga.</string>
+    <string name="widgetToDoEmptyTitle">Kua oti katoa koe inaianei!</string>
+    <string name="widgetToDoEmptySubtitle">Te ahua nei kei te waatea koe mo nga wiki e 4 e whai ake nei. Kei te hiahia koe ki te taapiri i etahi mahi?</string>
+    <string name="widgetNotLoggedInTitle">Kia Takiuru koe!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Hei kite i o mahi, tena koa takiuru ki to putea i roto i te taupānga. He wa poto noa iho!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Whakatuwherahia te mata rarangi Mahi</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Waihanga hou Hei Mahi</string>
+    <string name="widgetGradesErrorSubtitle">Kei te raru matou ki te whakaatu i o tohu i naianei. Tena koa ngana ano mo te wa poto, haere ranei ki te taupānga.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Hei kite i o tohu, tena koa takiuru ki to putea i roto i te taupānga. He wa poto noa iho!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Kei te raru matou ki te whakaatu i o tohu i naianei.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Hei kite i o tohu, tena koa takiuru ki to putea i roto i te taupānga.</string>
+    <string name="widgetSingleGradeSelectCourse">Me whiriwhiri he akoranga</string>
+    <string name="widgetGradesErrorLoadingCourses">I puta he hapa i te wa e uta ana i nga akoranga.</string>
 </resources>
