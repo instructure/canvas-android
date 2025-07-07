@@ -251,6 +251,17 @@
     <string name="assignmentDetails_submissionError">Error submitting assignment</string>
     <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
     <string name="assessment_startQuiz">Start Quiz</string>
+    <string name="inboxAllMessagesScopeLabel">All Messages</string>
+    <string name="inboxAnnouncementsScopeLabel">Announcements</string>
+    <string name="inboxUnreadScopeLabel">Unread</string>
+    <string name="inboxSentScopeLabel">Sent</string>
+    <string name="failedToLoadInbox">Failed to load Inbox</string>
+    <string name="inboxMessageTitle">Message</string>
+    <string name="inboxAnnouncementTitle">Announcement</string>
+    <string name="inboxCourseAnnouncementTitle">Announcement For %1$s</string>
+    <string name="inboxCreateMessageLabel">Create Message</string>
+    <string name="inboxFilterByPersonLabel">Filter by person</string>
+    <string name="inboxNoMessagesLabel">No messages yet.</string>
     <string name="notesActionMenuCopy">Copy</string>
     <string name="notesActionMenuAddNote">Add Note</string>
     <string name="attemptCard_score">Score: %1$s/%2$s</string>
