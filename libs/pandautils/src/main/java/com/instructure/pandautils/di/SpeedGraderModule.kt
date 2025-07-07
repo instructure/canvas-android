@@ -17,10 +17,13 @@ package com.instructure.pandautils.di
 
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.pandautils.features.speedgrader.SpeedGraderRepository
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ViewModelComponent
+import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 
 @Module
 @InstallIn(ViewModelComponent::class)
@@ -29,5 +32,16 @@ class SpeedGraderModule {
     @Provides
     fun provideSpeedGraderRepository(assignmentDetailsManager: AssignmentDetailsManager): SpeedGraderRepository {
         return SpeedGraderRepository(assignmentDetailsManager)
+    }
+}
+
+@Module
+@InstallIn(SingletonComponent::class)
+class SpeedGraderSingletonModule {
+
+    @Provides
+    @Singleton
+    fun provideSelectedAttemptHolder(): SpeedGraderSelectedAttemptHolder {
+        return SpeedGraderSelectedAttemptHolder()
     }
 }

@@ -16,16 +16,18 @@
  */
 package com.instructure.canvasapi2.di
 
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManagerImpl
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.CommentLibraryManagerImpl
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManagerImpl
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.StudentContextManagerImpl
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManagerImpl
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManagerImpl
 import dagger.Module
@@ -69,5 +71,10 @@ class GraphQlApiModule {
     @Provides
     fun provideSubmissionGradeManager(): SubmissionGradeManager {
         return SubmissionGradeManagerImpl()
+    }
+
+    @Provides
+    fun provideSubmissionDetailsManager(): SubmissionDetailsManager {
+        return SubmissionDetailsManagerImpl()
     }
 }
