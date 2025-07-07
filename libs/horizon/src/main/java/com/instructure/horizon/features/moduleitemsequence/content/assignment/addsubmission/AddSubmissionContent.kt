@@ -17,7 +17,9 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment.a
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateContentSize
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,19 +27,28 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
@@ -56,15 +67,38 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.organisms.Modal
 import com.instructure.horizon.horizonui.organisms.ModalDialogState
+import com.instructure.pandautils.utils.toPx
 
 @Composable
 fun AddSubmissionContent(
     uiState: AddSubmissionUiState,
     snackbarHostState: SnackbarHostState,
+    scrollState: ScrollState,
+    moduleHeaderHeight: Dp,
     modifier: Modifier = Modifier,
     onRceFocused: () -> Unit = {}
 ) {
-
+    var rceYPositionInRoot by remember { mutableIntStateOf(0) }
+    var cursorYPosition by remember { mutableIntStateOf(0) }
+    var scrollContent: Int? by remember { mutableStateOf(null) }
+    var viewportHeight by remember { mutableIntStateOf(0) }
+    LaunchedEffect(scrollState.viewportSize, moduleHeaderHeight) {
+        viewportHeight = scrollState.viewportSize + moduleHeaderHeight.value.toInt().toPx
+    }
+    val paddingHeight = 32.toPx
+    LaunchedEffect(viewportHeight, cursorYPosition) {
+        if (rceYPositionInRoot + cursorYPosition + paddingHeight > viewportHeight) {
+            //Cursor is under the viewport
+            scrollContent = rceYPositionInRoot + cursorYPosition + paddingHeight - viewportHeight
+        }
+        if (rceYPositionInRoot + cursorYPosition < moduleHeaderHeight.value.toInt().toPx) {
+            //Cursor is under the module header
+            scrollContent = (rceYPositionInRoot + cursorYPosition) - moduleHeaderHeight.value.toInt().toPx
+        }
+    }
+    LaunchedEffect(scrollContent) {
+        scrollState.scrollBy(scrollContent?.toFloat() ?: 0f)
+    }
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
             val result = snackbarHostState.showSnackbar(uiState.snackbarMessage)
@@ -124,7 +158,17 @@ fun AddSubmissionContent(
                     submissionInProgress = uiState.submissionInProgress
                 )
 
-                is AddSubmissionTypeUiState.Text -> AddTextSubmissionContent(uiState = selectedSubmissionType, onRceFocused = onRceFocused)
+                is AddSubmissionTypeUiState.Text ->
+                    AddTextSubmissionContent(
+                        uiState = selectedSubmissionType,
+                        onRceFocused = onRceFocused,
+                        onCursorYCoordinateChanged = {
+                            cursorYPosition = it.toInt().toPx
+                        },
+                        modifier = Modifier.onGloballyPositioned { coordinates ->
+                            rceYPositionInRoot = coordinates.positionInRoot().y.toInt()
+                        }
+                    )
             }
             HorizonSpace(SpaceSize.SPACE_24)
             AnimatedVisibility(visible = uiState.errorMessage != null) {
@@ -218,7 +262,9 @@ fun AssignmentDetailsScreenAddSubmissionPreview() {
                 ),
                 errorMessage = "Error occurred while submitting.",
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
@@ -238,7 +284,9 @@ fun AssignmentDetailsScreenAddSubmissionSubmitEnabledPreview() {
                 ),
                 errorMessage = "Error occurred while submitting.",
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
@@ -257,7 +305,9 @@ fun AssignmentDetailsScreenAddSubmissionNoErrorPreview() {
                     )
                 )
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
@@ -273,7 +323,9 @@ fun AssignmentDetailsScreenAddSubmissionNoDraftPreview() {
                     AddSubmissionTypeUiState.File(submitEnabled = true)
                 )
             ),
-            snackbarHostState = SnackbarHostState()
+            snackbarHostState = SnackbarHostState(),
+            scrollState = rememberScrollState(),
+            moduleHeaderHeight = 0.dp
         )
     }
 }
