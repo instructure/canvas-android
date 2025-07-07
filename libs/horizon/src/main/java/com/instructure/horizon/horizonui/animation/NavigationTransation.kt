@@ -27,8 +27,7 @@ private const val animatedAlpha: Float = 0.0f
 private const val animatedScale: Float = 0.8f
 
 val enterTransition = slideInHorizontally(initialOffsetX = { it }) +
-        fadeIn(initialAlpha = animatedAlpha) +
-        scaleIn(initialScale = animatedScale)
+        fadeIn(initialAlpha = animatedAlpha)
 
 val exitTransition = slideOutHorizontally(targetOffsetX = { -it }) +
         fadeOut(targetAlpha = animatedAlpha)
@@ -37,8 +36,7 @@ val popEnterTransition = slideInHorizontally(initialOffsetX = { -it }) +
         fadeIn(initialAlpha = animatedAlpha)
 
 val popExitTransition = slideOutHorizontally(targetOffsetX = { it/2 }) +
-        fadeOut(targetAlpha = animatedAlpha) +
-        scaleOut(targetScale = animatedScale)
+        fadeOut(targetAlpha = animatedAlpha)
 
 val mainEnterTransition = fadeIn(initialAlpha = animatedAlpha) +
         scaleIn(initialScale = animatedScale)
