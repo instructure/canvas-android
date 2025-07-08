@@ -34,11 +34,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -115,7 +117,7 @@ fun <T>InputDropDownPopup(
                             modifier = Modifier
                                 .fillMaxWidth()
                         ) {
-                            SingleSelectItem("No options available")
+                            SingleSelectItem(stringResource(R.string.noOptionsAvailable))
                         }
                     } else {
                         options.forEach { selectionOption ->
