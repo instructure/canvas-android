@@ -45,6 +45,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.pandautils.utils.toPx
 
 @Composable
@@ -104,8 +105,9 @@ fun <T>InputDropDownPopup(
                             horizontalArrangement = Arrangement.Center,
                             modifier = Modifier
                                 .fillMaxWidth()
+                                .padding(16.dp)
                         ){
-                            Spinner()
+                            Spinner(size = SpinnerSize.EXTRA_SMALL)
                         }
                     } else if (options.isEmpty()) {
                         Row(

@@ -286,4 +286,20 @@
     <string name="commentsBottomSheet_failedToPostComment">Failed to post comment.</string>
     <string name="inboxFailedToSendReplyLabel">Failed to send reply</string>
     <string name="inboxFailedtoLoadErrorMessage">Failed to load</string>
+    <string name="inboxComposeTitle">Create Message</string>
+    <string name="inboxComposeCoursePickerLabel">Course</string>
+    <string name="inboxComposeRecipientPickerLabel">Recipient(s)</string>
+    <string name="inboxComposeSendIndividuallyLabel">Send an individual message to each recipient</string>
+    <string name="inboxComposeSubjectLabel">Title/Subject</string>
+    <string name="inboxComposeMessageLabel">Message</string>
+    <string name="inboxComposeCancelLabel">Cancel</string>
+    <string name="inboxComposeSendLabel">Send</string>
+    <string name="inboxComposeSelectCourseErrorMessage">Please select a course</string>
+    <string name="inboxComposeSelectRecipientErrorMessage">Please select recipients</string>
+    <string name="inboxComposeSubjectErrorMessage">Please enter a subject</string>
+    <string name="inboxComposeBodyErrorMessage">Please enter a message</string>
+    <string name="inboxComposeCourseErrorMessage">Failed to load Courses</string>
+    <string name="inboxComposeRecipientErrorMessage">Failed to load Recipients</string>
+    <string name="inboxComposeSendErrorMessage">Failed to send Message</string>
+    <string name="inboxListConversationCreatedMessage">Conversation created successfully</string>
 </resources>

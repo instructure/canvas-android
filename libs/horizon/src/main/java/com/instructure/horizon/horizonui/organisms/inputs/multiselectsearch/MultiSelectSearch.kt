@@ -137,6 +137,7 @@ fun MultiSelectSearch(
 private fun MultiSelectSearchContent(state: MultiSelectSearchState, modifier: Modifier = Modifier) {
     BasicTextField(
         value = state.searchQuery,
+        enabled = state.enabled,
         singleLine = true,
         decorationBox = { TextFieldBox(state, HorizonTypography.p1) { it() } },
         onValueChange = { newValue ->
