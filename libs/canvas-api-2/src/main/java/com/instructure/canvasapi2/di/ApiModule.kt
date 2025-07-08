@@ -13,6 +13,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
@@ -421,6 +422,11 @@ class ApiModule {
     @Singleton
     fun provideRedwoodApiPrefs(): RedwoodApiPref {
         return RedwoodApiPref()
+    }
+
+    @Provides
+    fun provideExperienceAPI(): ExperienceAPI {
+        return RestBuilder().build(ExperienceAPI::class.java, RestParams())
     }
 }
 

@@ -20,8 +20,11 @@ import android.content.Intent
 import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.HorizonActivity
+import com.instructure.loginapi.login.CANVAS_FOR_ELEMENTARY
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.loginapi.login.viewmodel.Experience
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.services.PushNotificationRegistrationWorker
@@ -39,15 +42,27 @@ class StudentLoginNavigation(
         StudentLogoutTask(LogoutTask.Type.LOGOUT, databaseProvider = databaseProvider, alarmScheduler = alarmScheduler).execute()
     }
 
-    override fun initMainActivityIntent(): Intent {
+    override fun initMainActivityIntent(experience: Experience): Intent {
         PushNotificationRegistrationWorker.scheduleJob(activity, ApiPrefs.isMasquerading)
 
         CookieManager.getInstance().flush()
 
-        val intent = Intent(activity, NavigationActivity.startActivityClass)
-        activity.intent?.extras?.let { extras ->
-            intent.putExtras(extras)
+        return when (experience) {
+            Experience.Career -> {
+                val intent = Intent(activity, HorizonActivity::class.java)
+                activity.intent?.extras?.let { extras ->
+                    intent.putExtras(extras)
+                }
+                intent
+            }
+            is Experience.Academic -> {
+                val intent = Intent(activity, NavigationActivity.startActivityClass)
+                activity.intent?.extras?.let { extras ->
+                    intent.putExtras(extras)
+                }
+                intent.putExtra(CANVAS_FOR_ELEMENTARY, experience.elementary)
+                intent
+            }
         }
-        return intent
     }
 }
