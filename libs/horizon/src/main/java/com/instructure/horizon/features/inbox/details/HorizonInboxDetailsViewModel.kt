@@ -135,7 +135,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 val accountNotification = repository.getAccountAnnouncement(id, forceRefresh)
                 uiState.value.copy(
                     title = accountNotification.subject,
-                    titleIcon = R.drawable.ic_announcement,
+                    titleIcon = R.drawable.campaign,
                     items = listOf(
                             HorizonInboxDetailsItem(
                             author = context.getString(R.string.inboxGlobalAnnouncementAuthorLabel),
@@ -158,7 +158,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 val topic = repository.getAnnouncementTopic(id, courseId.toLong(), forceRefresh)
                 uiState.value.copy(
                     title = announcement.title.orEmpty(),
-                    titleIcon = R.drawable.ic_announcement,
+                    titleIcon = R.drawable.campaign,
                     items = listOf(
                         HorizonInboxDetailsItem(
                             author = announcement.author?.displayName.orEmpty(),
