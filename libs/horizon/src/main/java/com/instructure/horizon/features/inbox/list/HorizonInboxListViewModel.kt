@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -149,7 +150,7 @@ class HorizonInboxListViewModel @Inject constructor(
                                 recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
                             }?.map { it.name }?.joinToString(", ").orEmpty(),
                             courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
-                            date = conversation.lastAuthoredMessageSent,
+                            date = conversation.lastMessageAt?.toDate() ?: conversation.lastAuthoredMessageAt?.toDate(),
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }

@@ -291,7 +291,7 @@
     <string name="Todo">A Fazer</string>
     <string name="todoFilter">Filtrar Disciplinas</string>
     <string name="filterByEllipsis">Filtrar por&#8230;</string>
-    <string name="favoritedCoursesLabel">Disciplinas Favoritas</string>
+    <string name="favoriteCoursesLabel">Disciplinas preferidas</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">O Evento foi apagado com sucesso</string>
     <string name="timeIconDescription">Ícone Hora</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notificações</string>
     <string name="todoWidgetTitleLong">Canvas - A Fazer</string>
     <string name="gradesWidgetTitleLong">Canvas - Classificações</string>
+    <string name="gradeWidgetTitleLong">Pano - Nota</string>
     <string name="notificationWidgetTitleLong">Canvas - Notificações</string>
     <string name="notLoggedIn">Não está registado</string>
     <string name="widgetStyle">Escolha o estilo do seu widget</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Ajuda</string>
     <string name="screenTitleManageStudents">Gerir alunos</string>
     <string name="screenTitleSettings">Definições</string>
-    <string name="navigationDrawerSwitchUsers">Alterar Utilizadores</string>
     <string name="navigationDrawerLogOut">Sair</string>
     <string name="noStudentsError">Não existem alunos</string>
     <string name="noStudentsErrorDescription">Você não está a observar nenhum aluno.</string>
     <string name="noStudentsRefresh">Atualizar</string>
     <string name="noGrade">Sem classificação</string>
+    <string name="noGrades">Sem notas</string>
     <string name="errorLoadingCourses">Houve um erro ao carregar as disciplinas dos seus alunos.</string>
     <string name="parentNoCourses">Sem Disciplinas</string>
     <string name="parentNoCoursesMessage">As disciplinas dos seus alunos podem ainda não ter sido publicadas.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Ocorreu um erro ao carregar as tarefas</string>
     <string name="a11y_searchAssignments">Pesquisar Tarefas</string>
     <string name="dueAssignmentListItem">Data limite %1$s</string>
+    <string name="a11y_searchAmongRecipients">Buscar entre destinatários</string>
+    <string name="a11y_recipientIsRemoved">%1$s é removido</string>
+    <string name="widgetDueDate">Previsto %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">Todo o dia</string>
+    <string name="widgetErrorTitle">Oops! Algo correu mal</string>
+    <string name="widgetErrorSubtitle">Estamos com problemas para mostrar as suas tarefas no momento. Tente novamente em alguns instantes ou aceda à app.</string>
+    <string name="widgetToDoEmptyTitle">Por enquanto, está tudo pronto!,</string>
+    <string name="widgetToDoEmptySubtitle">Parece que está livre nas próximas 4 semanas. Quer adicionar algumas tarefas?</string>
+    <string name="widgetNotLoggedInTitle">Vamos iniciar sessão!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Para ver as suas tarefas, inicie sessão na sua conta na app. É só um segundo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Abrir ecrã da lista de tarefas</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Criar nova tarefa</string>
+    <string name="widgetGradesErrorSubtitle">Estamos com problemas para mostrar as suas notas no momento. Tente novamente em alguns instantes ou aceda à app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Para ver as suas notas, inicie sessão na sua conta na aplicação. É só um segundo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Estamos com problemas para mostrar as suas notas neste momento.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver as suas notas, inicie sessão na sua conta na app.</string>
+    <string name="widgetSingleGradeSelectCourse">Vamos escolher uma disciplina</string>
+    <string name="widgetGradesErrorLoadingCourses">Ocorreu um erro ao carregar as disciplinas.</string>
 </resources>

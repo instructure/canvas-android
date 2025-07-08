@@ -291,7 +291,7 @@
     <string name="Todo">Att göra</string>
     <string name="todoFilter">Filtrera kurser</string>
     <string name="filterByEllipsis">Filtrera efter ...</string>
-    <string name="favoritedCoursesLabel">Favoritmärkta kurser</string>
+    <string name="favoriteCoursesLabel">Favoritkurser</string>
     <string name="Event">Händelse</string>
     <string name="eventSuccessfulDeletion">Händelsen togs bort</string>
     <string name="timeIconDescription">Tidsikon</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Aviseringar</string>
     <string name="todoWidgetTitleLong">Canvas - Att göra</string>
     <string name="gradesWidgetTitleLong">Canvas - Omdömen</string>
+    <string name="gradeWidgetTitleLong">Canvas – bedömning</string>
     <string name="notificationWidgetTitleLong">Canvas - Aviseringar</string>
     <string name="notLoggedIn">Du är inte inloggad</string>
     <string name="widgetStyle">Välj din widget-stil</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Hjälp</string>
     <string name="screenTitleManageStudents">Hantera elever</string>
     <string name="screenTitleSettings">Inställningar</string>
-    <string name="navigationDrawerSwitchUsers">Växla användare</string>
     <string name="navigationDrawerLogOut">Logga ut</string>
     <string name="noStudentsError">Inga elever</string>
     <string name="noStudentsErrorDescription">Du observerar inga elever.</string>
     <string name="noStudentsRefresh">Uppdatera</string>
     <string name="noGrade">Ingen bedömning</string>
+    <string name="noGrades">Inga bedömningar</string>
     <string name="errorLoadingCourses">Det gick inte att läsa in din elevs kurser.</string>
     <string name="parentNoCourses">Inga kurser</string>
     <string name="parentNoCoursesMessage">Dina elevkurser kanske inte publicerats än.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Ett fel inträffade vid inläsning av uppgifter</string>
     <string name="a11y_searchAssignments">Sök i uppgifter</string>
     <string name="dueAssignmentListItem">Förfaller %1$s</string>
+    <string name="a11y_searchAmongRecipients">Sök bland mottagare</string>
+    <string name="a11y_recipientIsRemoved">%1$s har tagits bort</string>
+    <string name="widgetDueDate">Ska lämnas in %1$s</string>
+    <string name="widgetFromTo">%1$s till %2$s</string>
+    <string name="widgetAllDay">Hela dagen</string>
+    <string name="widgetErrorTitle">Hoppsan! Något gick fel</string>
+    <string name="widgetErrorSubtitle">Vi har problem med att visa dig uppgifter för tillfället. Försök igen om en stund eller gå till appen.</string>
+    <string name="widgetToDoEmptyTitle">Du är klar för tillfället!</string>
+    <string name="widgetToDoEmptySubtitle">Det ser ut som om du är tillgänglig de kommande fyra veckorna. Vill du lägga till några att göra-uppgifter?</string>
+    <string name="widgetNotLoggedInTitle">Då loggar vi in dig!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Om du vill se dina att göra-uppgifter loggar du in på ditt konto i appen. Det tar bara en sekund!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Öppna skärmen med att göra-listan</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Skapa en ny att göra-uppgift</string>
+    <string name="widgetGradesErrorSubtitle">Vi har problem med att visa dig dina bedömningar för tillfället. Försök igen om en stund eller gå till appen.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Om du vill se dina bedömningar loggar du in på ditt konto i appen. Det tar bara en sekund!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Vi har problem med att visa dig dina bedömningar för tillfället.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Om du vill se dina bedömningar loggar du in på ditt konto i appen.</string>
+    <string name="widgetSingleGradeSelectCourse">Nu väljer vi en kurs.</string>
+    <string name="widgetGradesErrorLoadingCourses">Ett fel inträffade under inläsning av kurser.</string>
 </resources>

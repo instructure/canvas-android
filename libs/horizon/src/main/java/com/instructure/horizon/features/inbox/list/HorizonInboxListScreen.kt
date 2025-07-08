@@ -53,6 +53,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -81,7 +82,9 @@ import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.Mult
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.getActivityOrNull
 import java.util.Date
 
 const val HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED = "horizon_inbox_list_new_conversation_created"
@@ -98,6 +101,12 @@ fun HorizonInboxListScreen(
             if (result == SnackbarResult.Dismissed) {
                 state.loadingState.onSnackbarDismiss()
             }
+        }
+    }
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(Unit) {
+        if (activity != null) {
+            ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
         }
     }
 

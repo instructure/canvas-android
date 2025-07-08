@@ -66,6 +66,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -246,6 +247,7 @@ private fun ModuleItemSequenceContent(
                 onBackPressed = onBackPressed
             )
         }
+        var moduleHeaderHeight = with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() }
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -253,7 +255,7 @@ private fun ModuleItemSequenceContent(
                 .conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
                     background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
                 }
-                .padding(top = with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+                .padding(top = moduleHeaderHeight)
         ) {
             if (uiState.currentPosition != -1) {
                 val homeEntry =
@@ -278,6 +280,7 @@ private fun ModuleItemSequenceContent(
                     ModuleItemContentScreen(
                         moduleItemUiState,
                         scrollState = contentScrollState,
+                        moduleHeaderHeight = moduleHeaderHeight,
                         mainNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
@@ -375,6 +378,7 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
+    moduleHeaderHeight: Dp,
     mainNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
@@ -397,7 +401,11 @@ private fun ModuleItemContentScreen(
     } else {
         val navController = rememberNavController()
 
-        NavHost(navController, startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(), modifier = modifier) {
+        NavHost(
+            navController,
+            startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(),
+            modifier = modifier
+        ) {
             composable(
                 route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
@@ -416,7 +424,8 @@ private fun ModuleItemContentScreen(
                 }
                 AssignmentDetailsScreen(
                     uiState = uiState,
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    moduleHeaderHeight = moduleHeaderHeight,
                 )
             }
             composable(

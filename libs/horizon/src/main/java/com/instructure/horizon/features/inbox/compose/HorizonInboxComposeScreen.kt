@@ -44,8 +44,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
@@ -77,6 +79,8 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextField
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldState
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 
 @Composable
 fun HorizonInboxComposeScreen(
@@ -92,6 +96,13 @@ fun HorizonInboxComposeScreen(
             }
         }
     }
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(Unit) {
+        if (activity != null) {
+            ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pageSecondary))
+        }
+    }
+
     Scaffold(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pageSecondary(),
