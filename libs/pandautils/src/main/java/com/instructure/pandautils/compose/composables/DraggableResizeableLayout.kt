@@ -33,6 +33,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.ime
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.BottomSheetDefaults
 import androidx.compose.material3.Card
@@ -56,11 +58,13 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
-import com.instructure.pandautils.utils.toDp
 import kotlinx.coroutines.launch
+import kotlin.math.roundToInt
 
 enum class AnchorPoints {
     BOTTOM, MIDDLE, TOP
@@ -68,14 +72,14 @@ enum class AnchorPoints {
 
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun DraggableResizableLayout(
+fun TriStateBottomSheet(
     anchoredDraggableState: AnchoredDraggableState<AnchorPoints>,
     modifier: Modifier = Modifier,
     topContent: @Composable (currentAnchor: AnchorPoints) -> Unit,
     bottomContent: @Composable (currentAnchor: AnchorPoints) -> Unit,
-    minBottomHeightDp: Dp = 56.dp,
-    minTopHeightDp: Dp = 56.dp,
-    initialAnchor: AnchorPoints = AnchorPoints.TOP,
+    minBottomHeightWhileOverlappingDp: Dp = 0.dp,
+    peekHeightDp: Dp = 56.dp,
+    initialAnchor: AnchorPoints = AnchorPoints.BOTTOM,
 ) {
 
     val density = LocalDensity.current
@@ -106,64 +110,63 @@ fun DraggableResizableLayout(
                 }
             }
         } else {
-            val targetAnchor = AnchorPoints.MIDDLE
-            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor)) {
-                if (currentTarget != targetAnchor) {
-                    coroutineScope.launch {
-                        anchoredDraggableState.animateTo(targetAnchor)
-                        lastKeyboardInducedSnapTo = targetAnchor
-                    }
+            val targetAnchor = lastKeyboardInducedSnapTo?.let { AnchorPoints.MIDDLE } ?: currentTarget
+            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor) && currentTarget != targetAnchor) {
+                coroutineScope.launch {
+                    anchoredDraggableState.animateTo(targetAnchor)
+                    lastKeyboardInducedSnapTo = null
                 }
+            } else if (lastKeyboardInducedSnapTo != null) {
+                lastKeyboardInducedSnapTo = null
             }
         }
     }
 
-    val minBottomHeightPx =
-        remember(minBottomHeightDp) { with(density) { minBottomHeightDp.toPx() } }
-    val minTopHeightPx = remember(minBottomHeightDp) { with(density) { minTopHeightDp.toPx() } }
+    val minBottomVisibleHeightPx =
+        remember(minBottomHeightWhileOverlappingDp) { with(density) { minBottomHeightWhileOverlappingDp.toPx() } }
+    val peekHeightPx = remember(peekHeightDp) { with(density) { peekHeightDp.toPx() } }
 
     var totalHeightPx by remember { mutableFloatStateOf(0f) }
     var layoutReady by remember { mutableStateOf(false) }
 
-    val topAnchorTopLayoutHeightPx = remember(totalHeightPx, minBottomHeightPx) {
-        (totalHeightPx - minBottomHeightPx).coerceAtLeast(minBottomHeightPx)
+    val topAnchorY = remember(totalHeightPx, minBottomVisibleHeightPx) {
+        minBottomVisibleHeightPx
     }
-    val middleAnchorTopLayoutHeightPx =
-        remember(minTopHeightPx, topAnchorTopLayoutHeightPx) {
-            if (topAnchorTopLayoutHeightPx > minTopHeightPx) {
-                (minTopHeightPx + topAnchorTopLayoutHeightPx) / 2f
-            } else {
-                minTopHeightPx
-            }
+    val bottomAnchorY = remember(totalHeightPx, peekHeightPx) {
+        (totalHeightPx - peekHeightPx).coerceAtLeast(topAnchorY)
+    }
+    val middleAnchorY = remember(topAnchorY, bottomAnchorY) {
+        if (bottomAnchorY > topAnchorY) {
+            (topAnchorY + bottomAnchorY) / 2f
+        } else {
+            bottomAnchorY
         }
+    }
 
     fun getPixelForAnchor(anchor: AnchorPoints): Float {
         return when (anchor) {
-            AnchorPoints.BOTTOM -> minTopHeightPx
-            AnchorPoints.MIDDLE -> middleAnchorTopLayoutHeightPx
-            AnchorPoints.TOP -> topAnchorTopLayoutHeightPx
+            AnchorPoints.BOTTOM -> bottomAnchorY
+            AnchorPoints.MIDDLE -> middleAnchorY
+            AnchorPoints.TOP -> topAnchorY
         }
     }
 
     LaunchedEffect(
         layoutReady,
-        minTopHeightPx,
-        middleAnchorTopLayoutHeightPx,
-        topAnchorTopLayoutHeightPx,
+        topAnchorY,
+        middleAnchorY,
+        bottomAnchorY,
         anchoredDraggableState
     ) {
         if (layoutReady) {
             val newAnchors = DraggableAnchors {
-                AnchorPoints.BOTTOM at minTopHeightPx
-                if (middleAnchorTopLayoutHeightPx > minTopHeightPx && middleAnchorTopLayoutHeightPx < topAnchorTopLayoutHeightPx) {
-                    AnchorPoints.MIDDLE at middleAnchorTopLayoutHeightPx
+                AnchorPoints.TOP at topAnchorY
+                if (middleAnchorY > topAnchorY && middleAnchorY < bottomAnchorY) {
+                    AnchorPoints.MIDDLE at middleAnchorY
                 }
-                if (topAnchorTopLayoutHeightPx > minTopHeightPx) {
-                    AnchorPoints.TOP at topAnchorTopLayoutHeightPx
-                } else {
-                    AnchorPoints.TOP at minTopHeightPx
-                }
+                AnchorPoints.BOTTOM at bottomAnchorY
             }
+
             if (newAnchors.size > 0 && newAnchors != anchoredDraggableState.anchors) {
                 anchoredDraggableState.updateAnchors(newAnchors)
 
@@ -193,18 +196,13 @@ fun DraggableResizableLayout(
         }
     }
 
-    val currentTopSectionHeightPx by remember {
+    val currentSheetOffsetY by remember {
         derivedStateOf {
             val offset = anchoredDraggableState.offset
             val currentAnchors = anchoredDraggableState.anchors
 
-            if (offset.isNaN()) {
-                val anchor = anchoredDraggableState.targetValue
-                if (currentAnchors.hasAnchorFor(anchor)) {
-                    getPixelForAnchor(anchor)
-                } else {
-                    getPixelForAnchor(AnchorPoints.BOTTOM)
-                }
+            if (offset.isNaN() || currentAnchors.size == 0) {
+                getPixelForAnchor(initialAnchor)
             } else {
                 val minAnchorValue = currentAnchors.minAnchor()
                 val maxAnchorValue = currentAnchors.maxAnchor()
@@ -221,110 +219,115 @@ fun DraggableResizableLayout(
         val newTotalHeight = with(density) { maxHeight.toPx() }
         if (newTotalHeight != totalHeightPx || !layoutReady) {
             totalHeightPx = newTotalHeight
-            layoutReady = totalHeightPx > 0 && minBottomHeightPx < totalHeightPx
+            layoutReady = totalHeightPx > 0 && peekHeightPx < totalHeightPx && minBottomVisibleHeightPx < totalHeightPx
+        }
+
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(bottom = peekHeightDp)
+                .background(colorResource(R.color.backgroundLightest))
+        ) {
+            topContent(anchoredDraggableState.currentValue)
         }
 
         if (layoutReady && anchoredDraggableState.anchors.size > 0) {
-            Column(Modifier.fillMaxSize()) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(currentTopSectionHeightPx.toInt().toDp.coerceAtLeast(0).dp)
-                        .background(colorResource(R.color.backgroundLightest))
-                ) {
-                    topContent(anchoredDraggableState.currentValue)
-                }
+            val sheetHeightPx = (totalHeightPx - currentSheetOffsetY).coerceAtLeast(0f)
+            val sheetHeightDp = with(density) { sheetHeightPx.toDp() }
 
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(1f)
-                        .anchoredDraggable(
-                            state = anchoredDraggableState,
-                            orientation = Orientation.Vertical,
-                        ),
-                    shape = RoundedCornerShape(
-                        topStart = 16.dp,
-                        topEnd = 16.dp,
-                        bottomStart = 0.dp,
-                        bottomEnd = 0.dp
-                    ),
-                    elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
-                ) {
-                    Column {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .background(color = colorResource(R.color.backgroundLightestElevated)),
-                            horizontalArrangement = Arrangement.SpaceBetween
-                        ) {
-                            if (anchoredDraggableState.currentValue == AnchorPoints.BOTTOM) {
-                                IconButton(onClick = {
-                                    coroutineScope.launch {
-                                        anchoredDraggableState.animateTo(AnchorPoints.TOP)
-                                    }
-                                }) {
-                                    Icon(
-                                        tint = LocalCourseColor.current,
-                                        painter = painterResource(R.drawable.ic_collapse_bottomsheet),
-                                        contentDescription = stringResource(R.string.a11y_contentDescription_collapsePanel),
-                                    )
-                                }
-                            } else {
-                                IconButton(onClick = {
-                                    coroutineScope.launch {
-                                        anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
-                                    }
-                                }) {
-                                    Icon(
-                                        tint = LocalCourseColor.current,
-                                        painter = painterResource(R.drawable.ic_expand_bottomsheet),
-                                        contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
-                                    )
-                                }
-                            }
-                            BottomSheetDefaults.DragHandle()
+            Card(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(sheetHeightDp)
+                    .offset { IntOffset(0, currentSheetOffsetY.roundToInt()) }
+                    .anchoredDraggable(
+                        state = anchoredDraggableState,
+                        orientation = Orientation.Vertical,
+                    )
+                    .zIndex(1f),
+                shape = RoundedCornerShape(
+                    topStart = 16.dp,
+                    topEnd = 16.dp,
+                    bottomStart = 0.dp,
+                    bottomEnd = 0.dp
+                ),
+                elevation = CardDefaults.elevatedCardElevation(defaultElevation = 6.dp),
+            ) {
+                Column(Modifier.fillMaxSize()) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .background(color = colorResource(R.color.backgroundLightestElevated)),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        if (anchoredDraggableState.targetValue == AnchorPoints.TOP) {
                             IconButton(onClick = {
-                                when (anchoredDraggableState.currentValue) {
-                                    AnchorPoints.BOTTOM -> {
-                                        coroutineScope.launch {
-                                            anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
-                                        }
-                                    }
-
-                                    AnchorPoints.MIDDLE -> {
-                                        coroutineScope.launch {
-                                            anchoredDraggableState.animateTo(AnchorPoints.TOP)
-                                        }
-                                    }
-
-                                    AnchorPoints.TOP -> {
-                                        coroutineScope.launch {
-                                            anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
-                                        }
-                                    }
+                                coroutineScope.launch {
+                                    anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
                                 }
                             }) {
                                 Icon(
-                                    painter = painterResource(R.drawable.arrow_right),
                                     tint = LocalCourseColor.current,
+                                    painter = painterResource(R.drawable.ic_collapse_bottomsheet),
+                                    contentDescription = stringResource(R.string.a11y_contentDescription_collapsePanel),
+                                )
+                            }
+                        } else {
+                            IconButton(onClick = {
+                                coroutineScope.launch {
+                                    anchoredDraggableState.animateTo(AnchorPoints.TOP)
+                                }
+                            }) {
+                                Icon(
+                                    tint = LocalCourseColor.current,
+                                    painter = painterResource(R.drawable.ic_expand_bottomsheet),
                                     contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
-                                    modifier = Modifier.rotate(
-                                        when (anchoredDraggableState.currentValue) {
-                                            AnchorPoints.TOP -> 270f
-                                            else -> 90f
-                                        }
-                                    )
                                 )
                             }
                         }
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .background(color = colorResource(R.color.backgroundLightestElevated))
-                        ) {
-                            bottomContent(anchoredDraggableState.currentValue)
+                        BottomSheetDefaults.DragHandle()
+                        IconButton(onClick = {
+                            coroutineScope.launch {
+                                when (anchoredDraggableState.targetValue) {
+                                    AnchorPoints.BOTTOM -> {
+                                        if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.MIDDLE)) {
+                                            anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
+                                        } else {
+                                            anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
+                                        }
+                                    }
+                                    AnchorPoints.MIDDLE -> {
+                                        anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
+                                    }
+                                    AnchorPoints.TOP -> {
+                                        if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.MIDDLE)) {
+                                            anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
+                                        } else {
+                                            anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
+                                        }
+                                    }
+                                }
+                            }
+                        }) {
+                            Icon(
+                                painter = painterResource(R.drawable.ic_arrow_down),
+                                tint = LocalCourseColor.current,
+                                contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
+                                modifier = Modifier.rotate(
+                                    when (anchoredDraggableState.targetValue) {
+                                        AnchorPoints.BOTTOM -> 180f
+                                        else -> 0f
+                                    }
+                                )
+                            )
                         }
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(color = colorResource(R.color.backgroundLightestElevated))
+                    ) {
+                        bottomContent(anchoredDraggableState.currentValue)
                     }
                 }
             }

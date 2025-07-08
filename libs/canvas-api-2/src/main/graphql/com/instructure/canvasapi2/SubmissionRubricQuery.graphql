@@ -1,0 +1,59 @@
+query SubmissionRubricQuery($assignmentId: ID!, $userId: ID!, $nextCursor: String) {
+    submission(assignmentId: $assignmentId, userId: $userId) {
+        assignment {
+            rubric {
+                _id
+                buttonDisplay
+                criteriaCount
+                criteria {
+                    _id
+                    description
+                    longDescription
+                    points
+                    ratings {
+                        _id
+                        description
+                        longDescription
+                        points
+                        rubricId
+                    }
+                }
+            }
+        }
+        rubricAssessmentsConnection(after: $nextCursor) {
+            pageInfo {
+                endCursor
+                startCursor
+                hasNextPage
+                hasPreviousPage
+            }
+            edges {
+                node {
+                    _id
+                    score
+                    assessmentRatings {
+                        comments
+                        commentsEnabled
+                        commentsHtml
+                        criterion {
+                            description
+                            longDescription
+                            points
+                            ratings {
+                                description
+                                longDescription
+                                points
+                                _id
+                            }
+                            learningOutcomeId
+                        }
+                        description
+                        points
+                        rubricAssessmentId
+                    }
+                    artifactAttempt
+                }
+            }
+        }
+    }
+}
