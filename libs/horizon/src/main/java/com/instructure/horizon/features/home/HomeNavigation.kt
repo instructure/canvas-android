@@ -80,7 +80,7 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
         composable(HomeNavigationRoute.Skillspace.route) {
             val viewModel = hiltViewModel<SkillspaceViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            SkillspaceScreen(uiState, navController)
+            SkillspaceScreen(uiState)
         }
         composable(HomeNavigationRoute.Account.route) {
             AccountNavigation(mainNavController)
