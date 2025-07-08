@@ -34,7 +34,7 @@ class SubmissionRubricManagerImpl : SubmissionRubricManager {
             val query =
                 SubmissionRubricQuery(assignmentId.toString(), userId.toString(), nextCursorParam)
 
-            data = QLClientConfig.enqueueQuery(query).dataAssertNoErrors
+            data = QLClientConfig.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
             assessments.addAll(data.submission?.rubricAssessmentsConnection?.edges ?: emptyList())
 
             hasNextPage =

@@ -152,7 +152,6 @@ private fun SpeedGraderBottomSheetNavHost(
                 navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType },
-                navArgument("courseId") { type = NavType.LongType }
             )
         ) {
             SpeedGraderGradeScreen()

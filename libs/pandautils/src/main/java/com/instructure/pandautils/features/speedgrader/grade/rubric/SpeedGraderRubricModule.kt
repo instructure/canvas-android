@@ -16,6 +16,8 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.rubric
 
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import dagger.Module
 import dagger.Provides
@@ -27,7 +29,11 @@ import dagger.hilt.android.components.ViewModelComponent
 class SpeedGraderRubricModule {
 
     @Provides
-    fun provideSpeedGraderRubricRepository(submissionRubricManager: SubmissionRubricManager): SpeedGraderRubricRepository {
-        return SpeedGraderRubricRepository(submissionRubricManager)
+    fun provideSpeedGraderRubricRepository(
+        submissionRubricManager: SubmissionRubricManager,
+        assignmentApi: AssignmentAPI.AssignmentInterface,
+        submissionApi: SubmissionAPI.SubmissionInterface
+    ): SpeedGraderRubricRepository {
+        return SpeedGraderRubricRepository(submissionRubricManager, assignmentApi, submissionApi)
     }
 }

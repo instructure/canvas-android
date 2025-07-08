@@ -36,6 +36,7 @@ query SubmissionRubricQuery($assignmentId: ID!, $userId: ID!, $nextCursor: Strin
                         commentsEnabled
                         commentsHtml
                         criterion {
+                            _id
                             description
                             longDescription
                             points
@@ -48,8 +49,9 @@ query SubmissionRubricQuery($assignmentId: ID!, $userId: ID!, $nextCursor: Strin
                             learningOutcomeId
                         }
                         description
+                        _id
                         points
-                        rubricAssessmentId
+                        comments
                     }
                     artifactAttempt
                 }

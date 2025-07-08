@@ -18,8 +18,10 @@
 package com.instructure.pandautils.features.speedgrader.grade.rubric
 
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
@@ -59,10 +61,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
+import com.instructure.pandautils.utils.orDefault
 import kotlin.math.roundToInt
 
 @Composable
@@ -94,9 +98,13 @@ fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
 
         uiState.criterions.forEach {
             if (it.points != null) {
-                PointCriterion(rubricCriterion = it)
-            } else {
-                RatingCriterion(rubricCriterion = it)
+                val selectedId = uiState.assessments[it.id]?.ratingId
+                RubricCriterion(
+                    rubricCriterion = it,
+                    selectedId,
+                    uiState.hidePoints,
+                    uiState.onRubricClick
+                )
             }
         }
     }
@@ -104,8 +112,13 @@ fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalLayoutApi::class)
 @Composable
-private fun PointCriterion(rubricCriterion: RubricCriterion) {
-    var expanded by remember { mutableStateOf(false) }
+private fun RubricCriterion(
+    rubricCriterion: RubricCriterion,
+    selectedId: String?,
+    hidePoints: Boolean,
+    onRubricSelected: (Double, String, String) -> Unit
+) {
+    var expanded by remember { mutableStateOf(selectedId == null && hidePoints) }
     val rotation = remember { Animatable(0f) }
 
     LaunchedEffect(expanded) {
@@ -133,7 +146,7 @@ private fun PointCriterion(rubricCriterion: RubricCriterion) {
                     .clickable {
                         expanded = !expanded
                     }
-                    .padding(vertical = 12.dp, horizontal = 16.dp),
+                    .padding(horizontal = 16.dp, vertical = 14.dp),
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
@@ -157,140 +170,222 @@ private fun PointCriterion(rubricCriterion: RubricCriterion) {
                         Column(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp)
                         ) {
                             rubricCriterion.longDescription?.let { longDescription ->
                                 Text(
+                                    modifier = Modifier.padding(horizontal = 16.dp),
                                     text = longDescription,
                                     fontSize = 14.sp,
                                     color = colorResource(R.color.textDarkest)
                                 )
                             }
 
-                            Text(
-                                modifier = Modifier
-                                    .border(
-                                        1.dp,
-                                        LocalCourseColor.current,
-                                        RoundedCornerShape(100.dp)
-                                    )
-                                    .padding(horizontal = 16.dp, vertical = 8.dp),
-                                text = rubricCriterion.id,
-                                fontSize = 16.sp,
-                                color = LocalCourseColor.current,
-                                fontWeight = FontWeight.SemiBold
-                            )
-
-                            rubricCriterion.ratings.forEach { rating ->
-                                Column(modifier = Modifier.fillMaxWidth()) {
-                                    Row(modifier = Modifier.fillMaxWidth()) {
-                                        Box(
-                                            modifier = Modifier
-                                                .sharedElement(
-                                                    rememberSharedContentState(key = rating.id),
-                                                    animatedVisibilityScope = this@AnimatedContent
-                                                )
-                                                .border(
-                                                    width = 1.dp,
-                                                    shape = RoundedCornerShape(4.dp),
-                                                    color = colorResource(R.color.textDark)
-                                                )
-                                                .defaultMinSize(
-                                                    minWidth = 32.dp,
-                                                    minHeight = 32.dp
-                                                ),
-                                            contentAlignment = Alignment.Center
-                                        ) {
-                                            Text(
-                                                text = rating.points?.roundToInt().toString(),
-                                                color = colorResource(R.color.textDarkest),
-                                                textAlign = TextAlign.Center,
-                                                fontSize = 16.sp,
-                                                modifier = Modifier.padding(
-                                                    horizontal = 16.dp,
-                                                    vertical = 8.dp
-                                                )
+                            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
+                                Text(
+                                    modifier = Modifier
+                                        .border(
+                                            1.dp,
+                                            LocalCourseColor.current,
+                                            RoundedCornerShape(100.dp)
+                                        )
+                                        .padding(horizontal = 16.dp, vertical = 8.dp),
+                                    text = rubricCriterion.id,
+                                    fontSize = 16.sp,
+                                    color = LocalCourseColor.current,
+                                    fontWeight = FontWeight.SemiBold,
+                                )
+                            }
+                            rubricCriterion.ratings.forEachIndexed { index, rating ->
+                                val selectedIndex = rubricCriterion.ratings.indexOfFirst { it.id == selectedId }
+                                val selected = selectedId == rating.id
+                                Column(
+                                    modifier = Modifier
+                                        .clickable {
+                                            onRubricSelected(
+                                                rating.points.orDefault(),
+                                                rubricCriterion.id,
+                                                rating.id
                                             )
                                         }
-                                        Column(
-                                            modifier = Modifier
-                                                .fillMaxWidth()
-                                                .padding(horizontal = 8.dp)
-                                        ) {
-                                            Text(
-                                                modifier = Modifier
-                                                    .padding(start = 8.dp),
-                                                text = rating.description,
-                                                fontSize = 16.sp,
-                                                color = colorResource(R.color.textDarkest),
-                                                fontWeight = FontWeight.SemiBold
+                                        .fillMaxWidth()
+                                        .background(
+                                            if (selected) LocalCourseColor.current else colorResource(
+                                                R.color.backgroundLightest
+                                            ),
+                                            shape = RoundedCornerShape(24.dp)
+                                        )
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxWidth()
+                                            .padding(horizontal = 16.dp, vertical = 14.dp)
+                                    ) {
+                                        if (!hidePoints) {
+                                            PointValueBox(
+                                                rating.id,
+                                                point = rating.points?.roundToInt().toString(),
+                                                selected = selected,
+                                                sharedTransitionScope = this@SharedTransitionLayout,
+                                                animatedVisibilityScope = this@AnimatedContent
                                             )
-                                            if (!rating.longDescription.isNullOrEmpty()) {
-                                                Text(
-                                                    modifier = Modifier
-                                                        .padding(start = 8.dp),
-                                                    text = rating.longDescription,
-                                                    fontSize = 14.sp,
-                                                    color = colorResource(R.color.textDarkest)
-                                                )
-                                            }
                                         }
+                                        RatingDescription(
+                                            rating.description,
+                                            rating.longDescription,
+                                            selected = selected
+                                        )
                                     }
-                                    CanvasDivider(modifier = Modifier.padding(top = 14.dp))
+                                    if (!selected && index != rubricCriterion.ratings.lastIndex && index != selectedIndex - 1) {
+                                        CanvasDivider(modifier = Modifier.padding(horizontal = 16.dp))
+                                    }
                                 }
                             }
                         }
                     } else {
-                        FlowRow(
-                            modifier = Modifier.padding(start = 16.dp, end = 16.dp, bottom = 12.dp),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
-                            verticalArrangement = Arrangement.spacedBy(16.dp),
-                        ) {
-                            rubricCriterion.ratings.reversed().forEach { rating ->
-                                Box(
-                                    modifier = Modifier
-                                        .sharedElement(
-                                            rememberSharedContentState(key = rating.id),
-                                            animatedVisibilityScope = this@AnimatedContent
-                                        )
-                                        .border(
-                                            width = 1.dp,
-                                            shape = RoundedCornerShape(4.dp),
-                                            color = colorResource(R.color.textDark)
-                                        )
-                                        .defaultMinSize(minWidth = 32.dp, minHeight = 32.dp),
-                                    contentAlignment = Alignment.Center
+                        Column {
+                            if (!hidePoints) {
+                                FlowRow(
+                                    modifier = Modifier.padding(
+                                        start = 16.dp,
+                                        end = 16.dp,
+                                        bottom = 12.dp
+                                    ),
+                                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                                    verticalArrangement = Arrangement.spacedBy(16.dp),
                                 ) {
-                                    Text(
-                                        text = rating.points?.roundToInt().toString(),
-                                        color = colorResource(R.color.textDarkest),
-                                        textAlign = TextAlign.Center,
-                                        fontSize = 16.sp,
-                                        modifier = Modifier.padding(
-                                            horizontal = 16.dp,
-                                            vertical = 8.dp
+                                    rubricCriterion.ratings.reversed().forEach { rating ->
+                                        val selected = selectedId == rating.id
+                                        PointValueBox(
+                                            rating.id,
+                                            point = rating.points?.roundToInt().toString(),
+                                            selected = selected,
+                                            sharedTransitionScope = this@SharedTransitionLayout,
+                                            animatedVisibilityScope = this@AnimatedContent,
+                                            modifier = Modifier.clickable {
+                                                onRubricSelected(
+                                                    rating.points.orDefault(),
+                                                    rubricCriterion.id,
+                                                    rating.id
+                                                )
+                                            }
                                         )
-                                    )
+                                    }
                                 }
+                            }
+
+                            rubricCriterion.ratings.find { it.id == selectedId }?.let { rating ->
+                                RatingDescription(
+                                    rating.description,
+                                    rating.longDescription,
+                                    selected = true,
+                                    modifier = Modifier.padding(
+                                        start = 16.dp,
+                                        end = 16.dp,
+                                        bottom = 14.dp,
+                                    ),
+                                    innerModifier = Modifier.padding(
+                                        horizontal = 16.dp,
+                                        vertical = 12.dp
+                                    )
+                                )
                             }
                         }
                     }
                 }
-
             }
         }
     }
 }
 
 @Composable
-private fun RatingCriterion(rubricCriterion: RubricCriterion) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 8.dp)
+private fun RatingDescription(
+    description: String,
+    longDescription: String?,
+    selected: Boolean,
+    modifier: Modifier = Modifier,
+    innerModifier: Modifier = Modifier
+) {
+    val backgroundColor =
+        if (selected) LocalCourseColor.current else colorResource(R.color.backgroundLightest)
+    val textColor =
+        if (selected) colorResource(R.color.textLightest) else colorResource(R.color.textDarkest)
+    Box(
+        modifier = modifier
+            .background(
+                backgroundColor,
+                shape = RoundedCornerShape(24.dp)
+            ),
     ) {
+        Column(
+            modifier = innerModifier
+                .fillMaxWidth(),
+            verticalArrangement = Arrangement.Center
+        ) {
+            Text(
+                modifier = Modifier
+                    .padding(start = 8.dp),
+                text = description,
+                fontSize = 16.sp,
+                color = textColor,
+                fontWeight = FontWeight.SemiBold
+            )
+            if (!longDescription.isNullOrEmpty()) {
+                Text(
+                    modifier = Modifier
+                        .padding(start = 8.dp),
+                    text = longDescription,
+                    fontSize = 14.sp,
+                    color = textColor,
+                )
+            }
+        }
+    }
+}
 
+@OptIn(ExperimentalSharedTransitionApi::class)
+@Composable
+private fun PointValueBox(
+    id: String,
+    point: String,
+    selected: Boolean,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedVisibilityScope: AnimatedVisibilityScope,
+    modifier: Modifier = Modifier
+) {
+    with(sharedTransitionScope) {
+        Box(
+            modifier = modifier
+                .sharedElement(
+                    rememberSharedContentState(key = id),
+                    animatedVisibilityScope = animatedVisibilityScope
+                )
+                .border(
+                    width = 1.dp,
+                    shape = RoundedCornerShape(4.dp),
+                    color = if (selected) LocalCourseColor.current else colorResource(R.color.textDark)
+                )
+                .background(
+                    if (selected) LocalCourseColor.current else colorResource(
+                        R.color.backgroundLightest
+                    ),
+                    shape = RoundedCornerShape(4.dp)
+                )
+                .defaultMinSize(minWidth = 32.dp, minHeight = 32.dp),
+            contentAlignment = Alignment.Center
+        ) {
+            Text(
+                text = point,
+                color = if (selected) colorResource(R.color.textLightest) else colorResource(
+                    R.color.textDarkest
+                ),
+                textAlign = TextAlign.Center,
+                fontSize = 16.sp,
+                modifier = Modifier.padding(
+                    horizontal = 16.dp,
+                    vertical = 8.dp
+                )
+            )
+        }
     }
 }
 
@@ -300,7 +395,13 @@ private fun SpeedGraderRubricScreenPreview() {
     CanvasTheme(courseColor = Color.Blue) {
         SpeedGraderRubricContent(
             uiState = SpeedGraderRubricUiState(
+                assessments = mapOf("2" to RubricCriterionAssessment(
+                    ratingId = "3",
+                    points = 2.0,
+                    comments = "This is a comment for the assessment."
+                )),
                 loading = false,
+                onRubricClick = { _, _, _ -> },
                 criterions = listOf(
                     RubricCriterion(
                         id = "1",
@@ -312,7 +413,7 @@ private fun SpeedGraderRubricScreenPreview() {
                                 id = "1",
                                 description = "Rating 1",
                                 points = 2.0,
-                                longDescription = "This is a long description for rating 1."
+                                longDescription = "This is a longer description for rating 1. that should be displayed when the criterion is expanded."
                             ),
                             RubricRating(
                                 id = "2",
@@ -326,7 +427,7 @@ private fun SpeedGraderRubricScreenPreview() {
                         id = "2",
                         description = "Criterion 2",
                         longDescription = "This is a long description for criterion 2.",
-                        points = null,
+                        points = 5.0,
                         ratings = listOf(
                             RubricRating(
                                 id = "3",
@@ -338,7 +439,68 @@ private fun SpeedGraderRubricScreenPreview() {
                                 id = "4",
                                 description = "Rating 4",
                                 points = 4.0,
-                                longDescription = "This is a long description for rating 4."
+                                longDescription = null
+                            )
+                        )
+                    )
+                )
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SpeedGraderTextRubricScreenPreview() {
+    CanvasTheme(courseColor = Color.Blue) {
+        SpeedGraderRubricContent(
+            uiState = SpeedGraderRubricUiState(
+                assessments = mapOf("2" to RubricCriterionAssessment(
+                    ratingId = "3",
+                    points = 2.0,
+                    comments = "This is a comment for the assessment."
+                )),
+                loading = false,
+                hidePoints = true,
+                onRubricClick = { _, _, _ -> },
+                criterions = listOf(
+                    RubricCriterion(
+                        id = "1",
+                        description = "Criterion 1",
+                        longDescription = "This is a long description for criterion 1.",
+                        points = 5.0,
+                        ratings = listOf(
+                            RubricRating(
+                                id = "1",
+                                description = "Rating 1",
+                                points = 2.0,
+                                longDescription = "This is a longer description for rating 1. that should be displayed when the criterion is expanded."
+                            ),
+                            RubricRating(
+                                id = "2",
+                                description = "Rating 2",
+                                points = 3.0,
+                                longDescription = "This is a long description for rating 2."
+                            )
+                        )
+                    ),
+                    RubricCriterion(
+                        id = "2",
+                        description = "Criterion 2",
+                        longDescription = "This is a long description for criterion 2.",
+                        points = 5.0,
+                        ratings = listOf(
+                            RubricRating(
+                                id = "3",
+                                description = "Rating 3",
+                                points = 1.0,
+                                longDescription = "This is a long description for rating 3."
+                            ),
+                            RubricRating(
+                                id = "4",
+                                description = "Rating 4",
+                                points = 4.0,
+                                longDescription = null
                             )
                         )
                     )

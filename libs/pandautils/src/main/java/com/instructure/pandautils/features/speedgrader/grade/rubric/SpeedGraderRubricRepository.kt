@@ -17,11 +17,39 @@
 package com.instructure.pandautils.features.speedgrader.grade.rubric
 
 import com.instructure.canvasapi2.SubmissionRubricQuery
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Submission
 
-class SpeedGraderRubricRepository(private val submissionRubricManager: SubmissionRubricManager) {
+class SpeedGraderRubricRepository(
+    private val submissionRubricManager: SubmissionRubricManager,
+    private val assignmentApi: AssignmentAPI.AssignmentInterface,
+    private val submissionApi: SubmissionAPI.SubmissionInterface
+) {
 
     suspend fun getRubrics(assignmentId: Long, userId: Long): SubmissionRubricQuery.Data {
         return submissionRubricManager.getRubrics(assignmentId, userId)
+    }
+
+    suspend fun getAssignmentRubric(courseId: Long, assignmentId: Long): Assignment {
+        return assignmentApi.getAssignment(courseId, assignmentId, RestParams()).dataOrThrow
+    }
+
+    suspend fun postSubmissionRubricAssessment(
+        courseId: Long,
+        assignmentId: Long,
+        userId: Long,
+        rubricAssessmentMap: Map<String, String>
+    ): Submission {
+        return submissionApi.postSubmissionRubricAssessmentMap(
+            courseId,
+            assignmentId,
+            userId,
+            rubricAssessmentMap,
+            RestParams()
+        ).dataOrThrow
     }
 }
