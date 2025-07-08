@@ -262,13 +262,26 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     }
 
     fun openMedia(canvasContext: CanvasContext?, url: String, fileID: String?) {
-        openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(url, null, fileID, canvasContext)
-        LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
-            LoaderManager.getInstance(this),
-            openMediaBundle,
-            loaderCallbacks,
-            R.id.openMediaLoaderID
-        )
+        showLoadingIndicator()
+        lifecycleScope.launch {
+            if (shouldOpenInternally(url)) {
+                startActivity(
+                    VideoViewActivity.createIntent(
+                        this@BaseRouterActivity,
+                        url
+                    )
+                )
+            } else {
+                openMediaBundle =
+                    OpenMediaAsyncTaskLoader.createBundle(url, null, fileID, canvasContext)
+                LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+                    LoaderManager.getInstance(this@BaseRouterActivity),
+                    openMediaBundle,
+                    loaderCallbacks,
+                    R.id.openMediaLoaderID
+                )
+            }
+        }
     }
 
     fun openMedia(
@@ -278,13 +291,36 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
         filename: String,
         fileID: String?
     ) {
-        /*openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(canvasContext, mime, url, filename, fileID)
-        LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
-            LoaderManager.getInstance(this), openMediaBundle, loaderCallbacks, R.id.openMediaLoaderID)*/
-
         showLoadingIndicator()
-        lifecycleScope.launch(Dispatchers.IO) {
-            var mediaUrl = url
+        lifecycleScope.launch {
+            if (shouldOpenInternally(url)) {
+                startActivity(
+                    VideoViewActivity.createIntent(
+                        this@BaseRouterActivity,
+                        url
+                    )
+                )
+            } else {
+                openMediaBundle = OpenMediaAsyncTaskLoader.createBundle(
+                    canvasContext,
+                    mime,
+                    url,
+                    filename,
+                    fileID
+                )
+                LoaderUtils.restartLoaderWithBundle<LoaderManager.LoaderCallbacks<OpenMediaAsyncTaskLoader.LoadedMedia>>(
+                    LoaderManager.getInstance(this@BaseRouterActivity),
+                    openMediaBundle,
+                    loaderCallbacks,
+                    R.id.openMediaLoaderID
+                )
+            }
+        }
+    }
+
+    private suspend fun shouldOpenInternally(url: String): Boolean {
+        var mediaUrl = url
+        withContext(Dispatchers.IO) {
             try {
                 RouteUtils.getRedirectUrl(Uri.parse(url)).let { redirectUri ->
                     mediaUrl = redirectUri.toString()
@@ -292,17 +328,9 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
             } catch (e: Exception) {
                 Logger.w("Error retrieving redirect URL for media: ${e.message}")
             }
-            withContext(Dispatchers.Main) {
-                hideLoadingIndicator()
-                startActivity(
-                    VideoViewActivity.createIntent(
-                        this@BaseRouterActivity,
-                        mediaUrl
-                    )
-                )
-            }
 
         }
+        return (mediaUrl.endsWith(".mpd") || mediaUrl.endsWith(".m3u8") || mediaUrl.endsWith(".mp4"))
     }
 
     override fun onDestroy() {

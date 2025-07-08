@@ -43,7 +43,7 @@ object RouteUtils {
     }
 
     fun getRedirectUrl(uri: Uri): Uri {
-        if (false) {
+        if (!uri.toString().contains("redirect=")) {
             return uri
         }
         val client = CanvasRestAdapter.okHttpClient
@@ -58,12 +58,15 @@ object RouteUtils {
 
         val response = client.newCall(request).execute()
 
-        val redirectUrl: String
         return if (response.isRedirect) {
-            redirectUrl = response.header("Location") ?: ""
-
-            // Let's parse out what we don't want
-            Uri.parse(redirectUrl.substringBefore("/view"))
-        } else uri
+            val header = response.header("Location")
+            if (header != null) {
+                Uri.parse(header)
+            } else {
+                uri
+            }
+        } else {
+            uri
+        }
     }
 }

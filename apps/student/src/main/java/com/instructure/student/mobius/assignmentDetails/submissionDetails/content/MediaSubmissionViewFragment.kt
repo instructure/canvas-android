@@ -99,7 +99,7 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
         submissionMediaPlayerView.findViewById<View>(R.id.fullscreenButton).onClick {
             exoAgent.flagForResume()
             val bundle = BaseViewMediaActivity.makeBundle(
-                uri.toString(),
+                (mediaUri ?: uri).toString(),
                 thumbnailUrl,
                 contentType,
                 displayName,
@@ -142,6 +142,7 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
                         binding.mediaPreviewContainer.setVisible()
                         binding.mediaPlaybackErrorView.setGone()
                         binding.submissionMediaPlayerView.setGone()
+                        binding.prepareMediaButton.setVisible()
                         binding.mediaProgressBar.setGone()
                     }
 
