@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -51,7 +52,9 @@ class HorizonInboxComposeViewModel @Inject constructor(
             onSendIndividuallyChanged = ::onSendIndividuallyChanged,
             onSubjectChanged = ::onSubjectChanged,
             onBodyChanged = ::onBodyChanged,
-            onDismissSnackbar = ::onDismissSnackbar
+            onDismissSnackbar = ::onDismissSnackbar,
+            onShowAttachmentPickerChanged = ::onShowAttachmentPickerChanged,
+            onAttachmentsChanged = ::onAttachmentsChanged,
         )
     )
 
@@ -187,6 +190,18 @@ class HorizonInboxComposeViewModel @Inject constructor(
     private fun onDismissSnackbar() {
         _uiState.update {
             it.copy(snackbarMessage = null)
+        }
+    }
+
+    private fun onAttachmentsChanged(attachments: List<FileDropItemState>) {
+        _uiState.update {
+            it.copy(attachments = attachments)
+        }
+    }
+
+    private fun onShowAttachmentPickerChanged(show: Boolean) {
+        _uiState.update {
+            it.copy(showAttachmentPicker = show)
         }
     }
 }

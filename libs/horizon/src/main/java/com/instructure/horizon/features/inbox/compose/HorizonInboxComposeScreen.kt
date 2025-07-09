@@ -50,6 +50,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentState
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -65,6 +67,8 @@ import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
+import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
@@ -110,6 +114,33 @@ fun HorizonInboxComposeScreen(
             HorizonInboxComposeTopBar(navController)
         }
     ) { innerPadding ->
+        HorizonInboxAttachmentPicker(
+            showBottomSheet = state.showAttachmentPicker,
+            onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
+            onFilesChanged = { attachments ->
+                state.onAttachmentsChanged(
+                    attachments.map {
+                        when (it.state) {
+                            is HorizonInboxAttachmentState.InProgress -> {
+                                FileDropItemState.InProgress(
+                                    fileName = it.fileName,
+                                    progress = it.state.progress
+                                )
+                            }
+
+                            is HorizonInboxAttachmentState.Success -> {
+                                FileDropItemState.Success(fileName = it.fileName)
+                            }
+
+                            else -> {
+                                FileDropItemState.Error(fileName = it.fileName)
+                            }
+                        }
+                    }
+                )
+            },
+        )
+
         HorizonInboxComposeContent(
             state,
             navController,
@@ -171,6 +202,8 @@ private fun HorizonInboxComposeContent(
         CourseRecipientSendIndividuallySection(state)
 
         HorizonInboxComposeTextSection(state)
+
+        HorizonInboxComposeAttachmentSection(state)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -291,6 +324,23 @@ private fun HorizonInboxComposeTextSection(state: HorizonInboxComposeUiState) {
         )
 
         HorizonSpace(SpaceSize.SPACE_12)
+    }
+}
+
+@Composable
+private fun HorizonInboxComposeAttachmentSection(state: HorizonInboxComposeUiState) {
+    Column(
+        modifier = Modifier.padding(horizontal = 24.dp)
+    ) {
+        Button(
+            label = "Attach file",
+            color = ButtonColor.Inverse,
+            onClick = { state.onShowAttachmentPickerChanged(true) },
+        )
+
+        state.attachments.forEach { state ->
+            FileDropItem(state)
+        }
     }
 }
 

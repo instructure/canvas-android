@@ -3,6 +3,7 @@ package com.instructure.horizon.features.inbox.compose
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 
 data class HorizonInboxComposeUiState(
     val coursePickerOptions: List<Course> = emptyList(),
@@ -29,5 +30,9 @@ data class HorizonInboxComposeUiState(
     val subjectErrorMessage: String? = null,
     val bodyErrorMessage: String? = null,
     val snackbarMessage: String? = null,
-    val onDismissSnackbar: () -> Unit = {}
+    val onDismissSnackbar: () -> Unit = {},
+    val showAttachmentPicker: Boolean = false,
+    val onShowAttachmentPickerChanged: (Boolean) -> Unit = {},
+    val attachments: List<FileDropItemState> = emptyList(),
+    val onAttachmentsChanged: (List<FileDropItemState>) -> Unit = {}
 )
