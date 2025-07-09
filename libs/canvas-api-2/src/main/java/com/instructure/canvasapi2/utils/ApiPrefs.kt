@@ -147,6 +147,8 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
 
     var canvasCareerView by BooleanPref(defaultValue = false)
 
+    var canSwitchToCanvasCareer by BooleanPref(defaultValue = false)
+
     var webViewAuthenticationTimestamp by LongPref(0)
 
     /**

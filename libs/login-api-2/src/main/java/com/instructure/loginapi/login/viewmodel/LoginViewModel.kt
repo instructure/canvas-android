@@ -76,11 +76,13 @@ class LoginViewModel @Inject constructor(
     private suspend fun getExperience(checkElementary: Boolean): Experience {
         val experienceResult = experienceAPI.getExperienceSummary(RestParams(isForceReadFromNetwork = true))
         val currentExperience = experienceResult.dataOrNull?.currentApp ?: ExperienceSummary.ACADEMIC_EXPERIENCE
+        val availableExperiences = experienceResult.dataOrNull?.availableApps ?: emptyList()
         return if (currentExperience == ExperienceSummary.CAREER_LEARNER_EXPERIENCE) {
             apiPrefs.canvasCareerView = true
             Experience.Career
         } else {
             apiPrefs.canvasCareerView = false
+            apiPrefs.canSwitchToCanvasCareer = availableExperiences.contains(ExperienceSummary.CAREER_LEARNER_EXPERIENCE)
             val canvasForElementary = checkCanvasElementary(checkElementary)
             Experience.Academic(canvasForElementary)
         }

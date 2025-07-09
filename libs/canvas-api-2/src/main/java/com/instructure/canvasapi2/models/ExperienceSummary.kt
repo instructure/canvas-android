@@ -29,6 +29,7 @@ data class ExperienceSummary(
 ): CanvasModel<ExperienceSummary>() {
     companion object {
         const val ACADEMIC_EXPERIENCE = "academic"
+        const val CAREER_EXPERIENCE = "career"
         const val CAREER_LEARNER_EXPERIENCE = "career_learner"
         const val ROLE_LEARNER = "learner"
         const val ROLE_LEARNING_PROVIDER = "learning_provider"

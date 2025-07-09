@@ -75,7 +75,9 @@ import com.instructure.pandautils.compose.composables.LabelValueSwitch
 import com.instructure.pandautils.compose.composables.LabelValueVerticalItem
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.AppTheme
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.getActivityOrNull
 
 @Composable
 fun SettingsScreen(
@@ -83,6 +85,13 @@ fun SettingsScreen(
     modifier: Modifier = Modifier,
     navigationActionClick: () -> Unit
 ) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(uiState.restartApp) {
+        if (uiState.restartApp && activity != null) {
+            LocaleUtils.restartApp(activity)
+        }
+    }
+
     CanvasTheme {
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),

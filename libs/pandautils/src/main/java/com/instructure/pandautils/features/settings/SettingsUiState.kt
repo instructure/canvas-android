@@ -25,7 +25,8 @@ data class SettingsUiState(
     val scrollValue: Int = 0,
     val items: Map<Int, List<SettingsItemUiState>> = emptyMap(),
     val loading: Boolean = false,
-    val actionHandler: (SettingsAction) -> Unit
+    val actionHandler: (SettingsAction) -> Unit,
+    val restartApp: Boolean = false,
 )
 
 data class SettingsItemUiState(
