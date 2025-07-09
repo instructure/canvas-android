@@ -22,6 +22,7 @@ import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FileUploadConfig
 import com.instructure.canvasapi2.managers.FileUploadManager
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
@@ -59,7 +60,7 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
             )
             val config = FileUploadConfig.forUser(
                 fso,
-                parentFolderPath = "conversation_attachments",
+                parentFolderPath = "conversation attachments",
             )
 
             val attachmentState = HorizonInboxAttachment(
@@ -86,7 +87,8 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
                             )
                             return true
                         }
-                    }
+                    },
+                    RestParams(shouldIgnoreToken = true, disableFileVerifiers = false)
                 )
             }
 
