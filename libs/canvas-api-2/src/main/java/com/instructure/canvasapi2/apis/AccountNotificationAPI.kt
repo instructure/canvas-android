@@ -27,6 +27,7 @@ import retrofit2.Call
 import retrofit2.http.DELETE
 import retrofit2.http.GET
 import retrofit2.http.Path
+import retrofit2.http.Query
 import retrofit2.http.Tag
 import retrofit2.http.Url
 
@@ -40,8 +41,14 @@ object AccountNotificationAPI {
         @GET("accounts/self/users/self/account_notifications")
         fun getAccountNotifications(): Call<List<AccountNotification>>
 
+        @GET("accounts/self/users/self/account_notifications")
+        suspend fun getAccountNotifications(@Tag params: RestParams, @Query("include_past") includePast: Boolean = false, @Query("show_is_closed") showIsClosed: Boolean = false): DataResult<List<AccountNotification>>
+
         @GET
         fun getNextPageNotifications(@Url url: String): Call<List<AccountNotification>>
+
+        @GET
+        suspend fun getNextPageNotifications(@Url url: String, @Tag params: RestParams): DataResult<List<AccountNotification>>
 
         @DELETE("accounts/self/users/self/account_notifications/{accountNotificationId}")
         fun deleteAccountNotification(@Path("accountNotificationId") accountNotificationId: Long): Call<AccountNotification>
