@@ -52,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
@@ -65,14 +66,18 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.fragment.compose.AndroidFragment
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.utils.drawableId
+import com.instructure.pandautils.utils.getFragmentActivity
 import dagger.hilt.android.EarlyEntryPoints
 import java.util.Date
 
@@ -81,6 +86,9 @@ fun SpeedGraderContentScreen(
     expanded: Boolean,
     onExpandClick: (() -> Unit)?
 ) {
+    val activity = LocalContext.current.getFragmentActivity()
+    val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
+
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -94,7 +102,8 @@ fun SpeedGraderContentScreen(
         uiState = uiState,
         router = router,
         expanded = expanded,
-        onExpandClick = onExpandClick
+        onExpandClick = onExpandClick,
+        toggleViewPager = speedGraderSharedViewModel::enableViewPager
     )
 }
 
@@ -103,7 +112,8 @@ private fun SpeedGraderContentScreen(
     uiState: SpeedGraderContentUiState,
     router: SpeedGraderContentRouter,
     expanded: Boolean,
-    onExpandClick: (() -> Unit)?
+    onExpandClick: (() -> Unit)?,
+    toggleViewPager: (Boolean) -> Unit
 ) {
     Scaffold(
         containerColor = colorResource(id = R.color.backgroundLightest),
@@ -134,7 +144,32 @@ private fun SpeedGraderContentScreen(
                     AndroidFragment(
                         clazz = route.clazz,
                         arguments = route.bundle,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .conditional(content is PdfContent) {
+                                pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            val event = awaitPointerEvent()
+                                            if (
+                                                event.changes.any { pointerInputChange ->
+                                                    pointerInputChange.pressed
+                                                }
+                                            ) {
+                                                toggleViewPager(false)
+                                                do {
+                                                    val moveEvent = awaitPointerEvent()
+                                                } while (
+                                                    moveEvent.changes.any { pointerInputChange ->
+                                                        pointerInputChange.pressed
+                                                    }
+                                                )
+                                                toggleViewPager(true)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                     )
                 }
             }
@@ -476,6 +511,7 @@ private fun SpeedGraderContentScreenPreview() {
             }
         },
         expanded = false,
-        onExpandClick = {}
+        onExpandClick = {},
+        toggleViewPager = {}
     )
 }

@@ -67,8 +67,7 @@ class PdfTeacherSubmissionView(
     private val fragmentManager: FragmentManager,
     private val peerReviews: Boolean = false,
     private val studentAnnotationSubmit: Boolean = false,
-    private val studentAnnotationView: Boolean = false,
-    private val enableViewPager: (Boolean) -> Unit,
+    private val studentAnnotationView: Boolean = false
 ) : PdfSubmissionView(activity, studentAnnotationView, courseId),
     AnnotationManager.OnAnnotationCreationModeChangeListener,
     AnnotationManager.OnAnnotationEditingModeChangeListener {
@@ -166,13 +165,10 @@ class PdfTeacherSubmissionView(
         EventBus.getDefault().unregister(this)
     }
 
-    override fun disableViewPager() {
-        enableViewPager(false)
-    }
+    override fun disableViewPager() {}
 
-    override fun enableViewPager() {
-        enableViewPager(true)
-    }
+    override fun enableViewPager() {}
+
     override fun setIsCurrentlyAnnotating(boolean: Boolean) {}
 
     @SuppressLint("CommitTransaction")
