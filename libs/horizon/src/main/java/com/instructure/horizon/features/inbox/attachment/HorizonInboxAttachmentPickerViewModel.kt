@@ -19,6 +19,7 @@ package com.instructure.horizon.features.inbox.attachment
 import android.content.Context
 import android.net.Uri
 import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.FileUploadConfig
@@ -53,7 +54,7 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
             val fso = FileSubmitObject(
                 name = file.name,
                 size = file.length(),
-                contentType = file.extension,
+                contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension).orEmpty(),
                 fullPath = file.absolutePath,
             )
             val config = FileUploadConfig.forUser(
