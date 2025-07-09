@@ -20,7 +20,10 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -46,8 +49,10 @@ class SpeedGraderRubricViewModel @Inject constructor(
         savedStateHandle.get<Long>("courseId") ?: throw IllegalArgumentException("Missing courseId")
 
     private val _uiState =
-        MutableStateFlow(SpeedGraderRubricUiState(onRubricClick = this::saveRubricAssessment))
+        MutableStateFlow(SpeedGraderRubricUiState(onRubricSelected = this::saveRubricAssessment, onPointChanged = this::onPointChanged))
     val uiState = _uiState.asStateFlow()
+
+    private var debouncePointChangeJob: Job? = null
 
     init {
         viewModelScope.launch {
@@ -78,6 +83,7 @@ class SpeedGraderRubricViewModel @Inject constructor(
             val criterions = rubrics?.map {
                 RubricCriterion(
                     id = it.id.orEmpty(),
+                    useRange = it.criterionUseRange,
                     longDescription = it.longDescription,
                     description = it.description,
                     points = it.points,
@@ -104,7 +110,7 @@ class SpeedGraderRubricViewModel @Inject constructor(
         }
     }
 
-    private fun saveRubricAssessment(points: Double, criterionId: String, ratingId: String) {
+    private fun saveRubricAssessment(points: Double?, criterionId: String, ratingId: String?) {
         viewModelScope.launch {
             val originalAssessment = _uiState.value.assessments
             val assessments = originalAssessment.toMutableMap()
@@ -130,6 +136,50 @@ class SpeedGraderRubricViewModel @Inject constructor(
             }
         }
     }
+
+    private fun onPointChanged(points: Double, criterionId: String) {
+        debouncePointChangeJob?.cancel()
+        debouncePointChangeJob = viewModelScope.launch {
+            delay(500)
+            val criterion = _uiState.value.criterions.find { it.id == criterionId }
+                ?: return@launch
+            val ratings = criterion.ratings.reversed()
+
+            if (criterion.useRange) {
+                var selectedRating: RubricRating? = null
+                var previousRatingPoints = 0.0
+
+                for (rating in ratings) {
+                    if (points > previousRatingPoints && points <= rating.points.orDefault()) {
+                        selectedRating = rating
+                        break
+                    }
+                    previousRatingPoints = rating.points.orDefault()
+                }
+
+                if (selectedRating == null && points > 0 && ratings.isNotEmpty()) {
+                    if (points > ratings.last().points.orDefault()) {
+                        selectedRating = ratings.last()
+                    }
+                }
+
+                selectedRating?.let { rating ->
+                    saveRubricAssessment(points, criterionId, rating.id)
+                } ?: run {
+                    saveRubricAssessment(null, criterionId, null)
+                }
+
+            } else {
+                val selectedRating = ratings.find { it.points == points }
+                selectedRating?.let { rating ->
+                    saveRubricAssessment(rating.points.orDefault(), criterionId, rating.id)
+                } ?: run {
+                    saveRubricAssessment(points, criterionId, null)
+                }
+            }
+        }
+    }
+
 
     private fun generateRubricAssessmentQueryMap(rubricAssessment: Map<String, RubricCriterionAssessment>): Map<String, String> {
         val map = mutableMapOf<String, String>()

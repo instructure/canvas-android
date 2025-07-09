@@ -33,10 +33,12 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
@@ -54,8 +56,11 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,8 +70,10 @@ import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.LocalCourseColor
+import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import kotlin.math.roundToInt
 
 @Composable
@@ -98,12 +105,12 @@ fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
 
         uiState.criterions.forEach {
             if (it.points != null) {
-                val selectedId = uiState.assessments[it.id]?.ratingId
                 RubricCriterion(
                     rubricCriterion = it,
-                    selectedId,
+                    uiState.assessments[it.id],
                     uiState.hidePoints,
-                    uiState.onRubricClick
+                    uiState.onRubricSelected,
+                    uiState.onPointChanged
                 )
             }
         }
@@ -114,11 +121,12 @@ fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
 @Composable
 private fun RubricCriterion(
     rubricCriterion: RubricCriterion,
-    selectedId: String?,
+    assessment: RubricCriterionAssessment?,
     hidePoints: Boolean,
-    onRubricSelected: (Double, String, String) -> Unit
+    onRubricSelected: (Double, String, String) -> Unit,
+    onPointChanged: (Double, String) -> Unit
 ) {
-    var expanded by remember { mutableStateOf(selectedId == null && hidePoints) }
+    var expanded by remember { mutableStateOf(assessment?.ratingId == null && hidePoints) }
     val rotation = remember { Animatable(0f) }
 
     LaunchedEffect(expanded) {
@@ -196,8 +204,9 @@ private fun RubricCriterion(
                                 )
                             }
                             rubricCriterion.ratings.forEachIndexed { index, rating ->
-                                val selectedIndex = rubricCriterion.ratings.indexOfFirst { it.id == selectedId }
-                                val selected = selectedId == rating.id
+                                val selectedIndex =
+                                    rubricCriterion.ratings.indexOfFirst { it.id == assessment?.ratingId }
+                                val selected = assessment?.ratingId == rating.id
                                 Column(
                                     modifier = Modifier
                                         .clickable {
@@ -224,6 +233,7 @@ private fun RubricCriterion(
                                             PointValueBox(
                                                 rating.id,
                                                 point = rating.points?.roundToInt().toString(),
+                                                useRange = rubricCriterion.useRange,
                                                 selected = selected,
                                                 sharedTransitionScope = this@SharedTransitionLayout,
                                                 animatedVisibilityScope = this@AnimatedContent
@@ -254,11 +264,12 @@ private fun RubricCriterion(
                                     verticalArrangement = Arrangement.spacedBy(16.dp),
                                 ) {
                                     rubricCriterion.ratings.reversed().forEach { rating ->
-                                        val selected = selectedId == rating.id
+                                        val selected = assessment?.ratingId == rating.id
                                         PointValueBox(
                                             rating.id,
                                             point = rating.points?.roundToInt().toString(),
                                             selected = selected,
+                                            useRange = rubricCriterion.useRange,
                                             sharedTransitionScope = this@SharedTransitionLayout,
                                             animatedVisibilityScope = this@AnimatedContent,
                                             modifier = Modifier.clickable {
@@ -273,25 +284,68 @@ private fun RubricCriterion(
                                 }
                             }
 
-                            rubricCriterion.ratings.find { it.id == selectedId }?.let { rating ->
-                                RatingDescription(
-                                    rating.description,
-                                    rating.longDescription,
-                                    selected = true,
-                                    modifier = Modifier.padding(
-                                        start = 16.dp,
-                                        end = 16.dp,
-                                        bottom = 14.dp,
-                                    ),
-                                    innerModifier = Modifier.padding(
-                                        horizontal = 16.dp,
-                                        vertical = 12.dp
+                            rubricCriterion.ratings.find { it.id == assessment?.ratingId }
+                                ?.let { rating ->
+                                    RatingDescription(
+                                        rating.description,
+                                        rating.longDescription,
+                                        selected = true,
+                                        modifier = Modifier.padding(
+                                            start = 16.dp,
+                                            end = 16.dp,
+                                            bottom = 14.dp,
+                                        ),
+                                        innerModifier = Modifier.padding(
+                                            horizontal = 16.dp,
+                                            vertical = 12.dp
+                                        )
                                     )
-                                )
-                            }
+                                }
                         }
                     }
                 }
+            }
+        }
+        if (!hidePoints) {
+            CanvasDivider()
+
+            var enteredPoint by remember { mutableStateOf(assessment?.points) }
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
+            ) {
+                Text(
+                    stringResource(R.string.rubricScore),
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(R.color.textDarkest),
+                    fontSize = 16.sp
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                BasicTextFieldWithHintDecoration(
+                    modifier = Modifier.padding(end = 8.dp),
+                    value = enteredPoint?.stringValueWithoutTrailingZeros,
+                    onValueChange = { point ->
+                        enteredPoint = point.toDoubleOrNull()
+                        onPointChanged(enteredPoint.orDefault(), rubricCriterion.id)
+                    },
+                    hint = stringResource(R.string.rubricScoreHint),
+                    textColor = LocalCourseColor.current,
+                    hintColor = colorResource(R.color.textPlaceholder),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Decimal,
+                        imeAction = ImeAction.Done
+                    )
+                )
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.pointsPossible,
+                        rubricCriterion.points?.roundToInt().orDefault(),
+                        rubricCriterion.points.orDefault()
+                    ),
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.textPlaceholder)
+                )
             }
         }
     }
@@ -348,6 +402,7 @@ private fun PointValueBox(
     id: String,
     point: String,
     selected: Boolean,
+    useRange: Boolean,
     sharedTransitionScope: SharedTransitionScope,
     animatedVisibilityScope: AnimatedVisibilityScope,
     modifier: Modifier = Modifier
@@ -395,13 +450,16 @@ private fun SpeedGraderRubricScreenPreview() {
     CanvasTheme(courseColor = Color.Blue) {
         SpeedGraderRubricContent(
             uiState = SpeedGraderRubricUiState(
-                assessments = mapOf("2" to RubricCriterionAssessment(
-                    ratingId = "3",
-                    points = 2.0,
-                    comments = "This is a comment for the assessment."
-                )),
+                assessments = mapOf(
+                    "2" to RubricCriterionAssessment(
+                        ratingId = "3",
+                        points = 2.0,
+                        comments = "This is a comment for the assessment."
+                    )
+                ),
                 loading = false,
-                onRubricClick = { _, _, _ -> },
+                onRubricSelected = { _, _, _ -> },
+                onPointChanged = { _, _ -> },
                 criterions = listOf(
                     RubricCriterion(
                         id = "1",
@@ -425,6 +483,7 @@ private fun SpeedGraderRubricScreenPreview() {
                     ),
                     RubricCriterion(
                         id = "2",
+                        useRange = true,
                         description = "Criterion 2",
                         longDescription = "This is a long description for criterion 2.",
                         points = 5.0,
@@ -455,14 +514,17 @@ private fun SpeedGraderTextRubricScreenPreview() {
     CanvasTheme(courseColor = Color.Blue) {
         SpeedGraderRubricContent(
             uiState = SpeedGraderRubricUiState(
-                assessments = mapOf("2" to RubricCriterionAssessment(
-                    ratingId = "3",
-                    points = 2.0,
-                    comments = "This is a comment for the assessment."
-                )),
+                assessments = mapOf(
+                    "2" to RubricCriterionAssessment(
+                        ratingId = "3",
+                        points = 2.0,
+                        comments = "This is a comment for the assessment."
+                    )
+                ),
                 loading = false,
                 hidePoints = true,
-                onRubricClick = { _, _, _ -> },
+                onRubricSelected = { _, _, _ -> },
+                onPointChanged = { _, _ -> },
                 criterions = listOf(
                     RubricCriterion(
                         id = "1",

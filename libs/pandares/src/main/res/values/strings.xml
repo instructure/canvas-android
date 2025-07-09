@@ -2128,4 +2128,6 @@
     <string name="speedGraderStudentNotesErrorButtonText">Refresh</string>
     <string name="not_graded">Not Graded</string>
     <string name="rubricsTitle">Rubrics</string>
+    <string name="rubricScore">Score</string>
+    <string name="rubricScoreHint">Write score here</string>
 </resources>

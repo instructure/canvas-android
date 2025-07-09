@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import android.view.ViewTreeObserver
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -28,11 +29,9 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -43,17 +42,21 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -84,43 +87,6 @@ fun TriStateBottomSheet(
 
     val density = LocalDensity.current
     val coroutineScope = rememberCoroutineScope()
-
-    val imeInsets = WindowInsets.ime
-    val isKeyboardActuallyVisible by remember {
-        derivedStateOf { imeInsets.getBottom(density) > 0 }
-    }
-
-    var lastKeyboardInducedSnapTo by remember { mutableStateOf<AnchorPoints?>(null) }
-
-    LaunchedEffect(isKeyboardActuallyVisible, anchoredDraggableState.anchors) {
-        if (anchoredDraggableState.anchors.size == 0) {
-            return@LaunchedEffect
-        }
-
-        val currentTarget = anchoredDraggableState.targetValue
-
-        if (isKeyboardActuallyVisible) {
-            val targetAnchor = AnchorPoints.TOP
-            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor)) {
-                if (currentTarget != targetAnchor) {
-                    coroutineScope.launch {
-                        anchoredDraggableState.animateTo(targetAnchor)
-                        lastKeyboardInducedSnapTo = targetAnchor
-                    }
-                }
-            }
-        } else {
-            val targetAnchor = lastKeyboardInducedSnapTo?.let { AnchorPoints.MIDDLE } ?: currentTarget
-            if (anchoredDraggableState.anchors.hasAnchorFor(targetAnchor) && currentTarget != targetAnchor) {
-                coroutineScope.launch {
-                    anchoredDraggableState.animateTo(targetAnchor)
-                    lastKeyboardInducedSnapTo = null
-                }
-            } else if (lastKeyboardInducedSnapTo != null) {
-                lastKeyboardInducedSnapTo = null
-            }
-        }
-    }
 
     val minBottomVisibleHeightPx =
         remember(minBottomHeightWhileOverlappingDp) { with(density) { minBottomHeightWhileOverlappingDp.toPx() } }
@@ -196,6 +162,37 @@ fun TriStateBottomSheet(
         }
     }
 
+    val isKeyboardActuallyVisible by rememberKeyboardVisibilityState()
+
+    var anchorStateBeforeKeyboardWasVisible by rememberSaveable { mutableStateOf<AnchorPoints?>(null) }
+
+    LaunchedEffect(isKeyboardActuallyVisible, anchoredDraggableState.anchors, layoutReady) {
+        if (!layoutReady || anchoredDraggableState.anchors.size == 0) {
+            return@LaunchedEffect
+        }
+
+        if (isKeyboardActuallyVisible) {
+            anchorStateBeforeKeyboardWasVisible = anchoredDraggableState.targetValue
+            if (anchoredDraggableState.targetValue != AnchorPoints.TOP && anchoredDraggableState.currentValue != AnchorPoints.TOP) {
+                if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.TOP)) {
+                    coroutineScope.launch {
+                        anchoredDraggableState.animateTo(AnchorPoints.TOP)
+                    }
+                }
+            }
+        } else {
+            anchorStateBeforeKeyboardWasVisible?.let {
+                coroutineScope.launch {
+                    anchoredDraggableState.animateTo(it)
+                }
+            } ?: run {
+                coroutineScope.launch {
+                    anchoredDraggableState.animateTo(AnchorPoints.TOP)
+                }
+            }
+        }
+    }
+
     val currentSheetOffsetY by remember {
         derivedStateOf {
             val offset = anchoredDraggableState.offset
@@ -219,7 +216,8 @@ fun TriStateBottomSheet(
         val newTotalHeight = with(density) { maxHeight.toPx() }
         if (newTotalHeight != totalHeightPx || !layoutReady) {
             totalHeightPx = newTotalHeight
-            layoutReady = totalHeightPx > 0 && peekHeightPx < totalHeightPx && minBottomVisibleHeightPx < totalHeightPx
+            layoutReady =
+                totalHeightPx > 0 && peekHeightPx < totalHeightPx && minBottomVisibleHeightPx < totalHeightPx
         }
 
         Box(
@@ -296,9 +294,11 @@ fun TriStateBottomSheet(
                                             anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
                                         }
                                     }
+
                                     AnchorPoints.MIDDLE -> {
                                         anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
                                     }
+
                                     AnchorPoints.TOP -> {
                                         if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.MIDDLE)) {
                                             anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
@@ -333,4 +333,30 @@ fun TriStateBottomSheet(
             }
         }
     }
+}
+
+@Composable
+fun rememberKeyboardVisibilityState(): State<Boolean> {
+    val keyboardState = remember { mutableStateOf(false) }
+    val view = LocalView.current
+
+    DisposableEffect(view) {
+        val onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
+            val rect = android.graphics.Rect()
+            view.getWindowVisibleDisplayFrame(rect)
+            val screenHeight = view.rootView.height
+            val keypadHeight = screenHeight - rect.bottom
+
+            val isVisible = keypadHeight > screenHeight * 0.15
+            if (keyboardState.value != isVisible) {
+                keyboardState.value = isVisible
+            }
+        }
+        view.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
+
+        onDispose {
+            view.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
+        }
+    }
+    return keyboardState
 }

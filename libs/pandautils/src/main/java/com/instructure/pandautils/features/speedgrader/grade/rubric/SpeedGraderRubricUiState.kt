@@ -23,7 +23,8 @@ data class SpeedGraderRubricUiState(
     val criterions: List<RubricCriterion> = emptyList(),
     val assessments: Map<String, RubricCriterionAssessment> = emptyMap(),
     val hidePoints: Boolean = false,
-    val onRubricClick: (Double, String, String) -> Unit
+    val onRubricSelected: (Double, String, String) -> Unit,
+    val onPointChanged: (Double, String) -> Unit
 )
 
 data class RubricCriterion(
@@ -32,6 +33,7 @@ data class RubricCriterion(
     val longDescription: String? = null,
     val points: Double? = null,
     val ratings: List<RubricRating> = emptyList(),
+    val useRange: Boolean = false,
 )
 
 data class RubricRating(
