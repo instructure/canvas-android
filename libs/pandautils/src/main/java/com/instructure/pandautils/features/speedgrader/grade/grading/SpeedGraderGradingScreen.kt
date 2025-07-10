@@ -369,6 +369,7 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
 @Composable
 private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val options = uiState.letterGrades.map { it.name }
+    val notGraded = stringResource(R.string.not_graded)
 
     var selectedGrade by remember(
         uiState.enteredScore,
@@ -376,11 +377,13 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         uiState.letterGrades
     ) {
         mutableStateOf(
-            convertScoreToLetterGrade(
-                uiState.enteredScore?.toDouble().orDefault(),
-                uiState.pointsPossible.orDefault(),
-                uiState.letterGrades
-            )
+            uiState.enteredScore?.let {
+                convertScoreToLetterGrade(
+                    it.toDouble(),
+                    uiState.pointsPossible.orDefault(),
+                    uiState.letterGrades
+                )
+            } ?: notGraded
         )
     }
 
@@ -578,7 +581,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val sliderState = rememberSliderState(
         value = sliderDrivenScore.coerceAtLeast(0f),
         valueRange = 0f..maxScore,
-        steps = maxScore.roundToInt() - 1,
+        steps = (maxScore.roundToInt() - 1).coerceAtLeast(1)
     )
 
     LaunchedEffect(textFieldScore) {
