@@ -16,58 +16,51 @@
  */
 package com.instructure.horizon.features.inbox.attachment
 
-import android.content.Context
 import android.net.Uri
-import android.util.Log
-import android.webkit.MimeTypeMap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.FileUploadConfig
 import com.instructure.canvasapi2.managers.FileUploadManager
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.withContext
-import java.io.File
-import java.util.UUID
 import javax.inject.Inject
+import kotlin.random.Random
 
 @HiltViewModel
 class HorizonInboxAttachmentPickerViewModel @Inject constructor(
-    @ApplicationContext private val context: Context,
-    private val fileUploadManager: FileUploadManager
+    private val fileUploadManager: FileUploadManager,
+    private val fileUploadUtils: FileUploadUtilsHelper
 ): ViewModel() {
     private val _filesState: MutableStateFlow<List<HorizonInboxAttachment>> = MutableStateFlow(emptyList())
     val filesState = _filesState.asStateFlow()
 
     fun onFileAdded(uri: Uri) {
         viewModelScope.tryLaunch {
-            val file = uri.toFile(context)!!
+            val fso = fileUploadUtils.getFileSubmitObjectFromInputStream(
+                uri,
+                fileUploadUtils.getFileNameWithDefault(uri),
+                fileUploadUtils.getFileMimeType(uri)
+            )!!
 
-            val fso = FileSubmitObject(
-                name = file.name,
-                size = file.length(),
-                contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension).orEmpty(),
-                fullPath = file.absolutePath,
-            )
             val config = FileUploadConfig.forUser(
                 fso,
                 parentFolderPath = "conversation attachments",
             )
 
             val attachmentState = HorizonInboxAttachment(
-                id = UUID.randomUUID().toString(),
-                fileName = file.name,
-                fileSize = file.length(),
-                filePath = file.absolutePath,
+                id = Random.nextLong(),
+                fileName = fso.name,
+                fileSize = fso.size,
+                filePath = fso.fullPath,
                 state = HorizonInboxAttachmentState.InProgress(0f)
             )
             _filesState.update { it + attachmentState }
@@ -81,8 +74,9 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
                             length: Long
                         ): Boolean {
                             updateItem(
+                                attachmentState.id,
                                 attachmentState.copy(
-                                    state = HorizonInboxAttachmentState.InProgress(progressPercent)
+                                    state = HorizonInboxAttachmentState.InProgress(progressPercent / 100)
                                 )
                             )
                             return true
@@ -93,28 +87,35 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
             }
 
             if (result.isSuccess) {
+                val id = result.dataOrNull?.id ?: attachmentState.id
                 updateItem(
+                    attachmentState.id,
                     attachmentState.copy(
-                        state = HorizonInboxAttachmentState.Success
+                        id = id,
+                        state = HorizonInboxAttachmentState.Success,
+                        onActionClicked = {
+                            removeItem(id)
+                        }
                     )
                 )
             } else {
-                Log.d("AttachmentPicker", "Error uploading file: ${result.isFail}")
                 updateItem(
+                    attachmentState.id,
                     attachmentState.copy(
-                        state = HorizonInboxAttachmentState.Error
+                        state = HorizonInboxAttachmentState.Error,
+                        onActionClicked = {
+                            removeItem(attachmentState.id)
+                        }
                     )
                 )
             }
-        } catch {
-            Log.d("AttachmentPicker", "Error uploading file: ${it.message}")
-        }
+        } catch { }
     }
 
-    private fun updateItem(item: HorizonInboxAttachment) {
+    private fun updateItem(id: Long, item: HorizonInboxAttachment) {
         _filesState.update { currentList ->
             currentList.map {
-                if (it.id == item.id) {
+                if (it.id == id) {
                     item
                 } else {
                     it
@@ -122,19 +123,10 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
             }
         }
     }
-}
 
-fun Uri.toFile(context: Context): File? {
-    val inputStream = context.contentResolver.openInputStream(this)
-    val tempFile = File.createTempFile("temp", ".jpg")
-    return try {
-        tempFile.outputStream().use { fileOut ->
-            inputStream?.copyTo(fileOut)
+    private fun removeItem(id: Long) {
+        _filesState.update { currentList ->
+            currentList.filterNot { it.id == id }
         }
-        tempFile.deleteOnExit()
-        inputStream?.close()
-        tempFile
-    } catch (e: Exception) {
-        null
     }
 }

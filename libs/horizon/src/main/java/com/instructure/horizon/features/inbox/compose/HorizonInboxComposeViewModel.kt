@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.inbox.compose
 
 import android.content.Context
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -25,6 +26,8 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentState
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -119,6 +122,10 @@ class HorizonInboxComposeViewModel @Inject constructor(
             _uiState.update { it.copy(bodyErrorMessage = context.getString(R.string.inboxComposeBodyErrorMessage)) }
             isError = true
         }
+        if (!uiState.value.attachments.all { it.state is HorizonInboxAttachmentState.Success }) {
+            _uiState.update { it.copy(attachmentsErrorMessage = context.getString(R.string.inboxComposeAttachmentsErrorMessage)) }
+            isError = true
+        }
         if (isError || selectedCourse == null) {
             return
         }
@@ -130,7 +137,7 @@ class HorizonInboxComposeViewModel @Inject constructor(
                 body = uiState.value.body.text,
                 subject = uiState.value.subject.text,
                 contextCode = selectedCourse.contextId,
-                attachmentIds = emptyList<Long>().toLongArray(),
+                attachmentIds = uiState.value.attachments.map { it.id }.toLongArray(),
                 isBulkMessage = uiState.value.isSendIndividually || uiState.value.selectedRecipients.size >= 100
             )
 
@@ -193,7 +200,7 @@ class HorizonInboxComposeViewModel @Inject constructor(
         }
     }
 
-    private fun onAttachmentsChanged(attachments: List<FileDropItemState>) {
+    private fun onAttachmentsChanged(attachments: List<HorizonInboxAttachment>) {
         _uiState.update {
             it.copy(attachments = attachments)
         }

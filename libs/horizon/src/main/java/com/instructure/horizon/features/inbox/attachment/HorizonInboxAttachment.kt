@@ -16,13 +16,44 @@
  */
 package com.instructure.horizon.features.inbox.attachment
 
+import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
+
 data class HorizonInboxAttachment(
-    val id: String,
+    val id: Long,
     val fileName: String,
     val fileSize: Long,
     val filePath: String,
     val state: HorizonInboxAttachmentState,
-)
+    val onActionClicked: (() -> Unit)? = null,
+) {
+    fun toFileDropItemState(): FileDropItemState {
+        return when (this.state) {
+            is HorizonInboxAttachmentState.InProgress -> {
+                FileDropItemState.InProgress(
+                    fileName = this.fileName,
+                    progress = this.state.progress,
+                    onActionClick = this.onActionClicked
+                )
+            }
+
+            is HorizonInboxAttachmentState.Success -> {
+                FileDropItemState.Success(
+                    fileName = this.fileName,
+                    onActionClick = this.onActionClicked
+                )
+            }
+
+            else -> {
+                FileDropItemState.Error(
+                    fileName = this.fileName,
+                    onActionClick = this.onActionClicked,
+                    actionIconRes = R.drawable.delete
+                )
+            }
+        }
+    }
+}
 
 sealed class HorizonInboxAttachmentState {
     data class InProgress(val progress: Float): HorizonInboxAttachmentState()
