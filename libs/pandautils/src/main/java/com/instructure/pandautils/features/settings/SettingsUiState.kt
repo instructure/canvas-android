@@ -25,8 +25,7 @@ data class SettingsUiState(
     val scrollValue: Int = 0,
     val items: Map<Int, List<SettingsItemUiState>> = emptyMap(),
     val loading: Boolean = false,
-    val actionHandler: (SettingsAction) -> Unit,
-    val restartApp: Boolean = false,
+    val actionHandler: (SettingsAction) -> Unit
 )
 
 data class SettingsItemUiState(
@@ -38,6 +37,7 @@ sealed class SettingsViewModelAction {
     data class Navigate(val item: SettingsItem) : SettingsViewModelAction()
     data class AppThemeClickPosition(val xPos: Int, val yPos: Int, val scrollValue: Int) : SettingsViewModelAction()
     data object ShowOfflineDialog : SettingsViewModelAction()
+    data object RestartApp : SettingsViewModelAction()
 }
 
 sealed class SettingsAction {

@@ -212,9 +212,7 @@ class SettingsViewModel @Inject constructor(
     private fun switchToCanvasCareer() {
         viewModelScope.tryLaunch {
             settingsRepository.switchExperience()
-            _uiState.update {
-                it.copy(restartApp = true)
-            }
+            _events.send(SettingsViewModelAction.RestartApp)
         } catch {
             // TODO Implement this when experience switching can be tested
         }
