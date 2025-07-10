@@ -10,6 +10,7 @@ import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.features.speedgrader.grade.grading.GradeStatus
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingRepository
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingUiState
@@ -38,6 +39,7 @@ class SpeedGraderGradingViewModelTest {
     private lateinit var viewModel: SpeedGraderGradingViewModel
     private lateinit var savedStateHandle: SavedStateHandle
     private val repository: SpeedGraderGradingRepository = mockk(relaxed = true)
+    private val gradingEventHandler: SpeedGraderGradingEventHandler = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -64,7 +66,7 @@ class SpeedGraderGradingViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources)
+        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources, gradingEventHandler)
     }
 
     @After
