@@ -25,20 +25,15 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.instructure.horizon.features.account.AccountScreen
-import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.navigation.AccountNavigation
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
-import com.instructure.horizon.horizonui.animation.enterTransition
-import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.features.skillspace.SkillspaceViewModel
 import com.instructure.horizon.horizonui.animation.mainEnterTransition
 import com.instructure.horizon.horizonui.animation.mainExitTransition
-import com.instructure.horizon.horizonui.animation.popEnterTransition
-import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.horizonui.showroom.ShowroomContent
 import com.instructure.horizon.horizonui.showroom.ShowroomItem
 import com.instructure.horizon.horizonui.showroom.showroomItems
@@ -83,7 +78,9 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
             LearnScreen(uiState, mainNavController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
-            SkillspaceScreen()
+            val viewModel = hiltViewModel<SkillspaceViewModel>()
+            val uiState by viewModel.uiState.collectAsState()
+            SkillspaceScreen(uiState)
         }
         composable(HomeNavigationRoute.Account.route) {
             AccountNavigation(mainNavController)

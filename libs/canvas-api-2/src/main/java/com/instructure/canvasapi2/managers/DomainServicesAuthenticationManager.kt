@@ -20,6 +20,7 @@ import com.auth0.jwt.JWT
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.DomainService
+import com.instructure.canvasapi2.models.DomainServicesWorkflow
 import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.DomainServicesApiPref
 import com.instructure.canvasapi2.utils.PineApiPref
@@ -49,11 +50,10 @@ abstract class DomainServicesAuthenticationManager(
 
     @OptIn(ExperimentalEncodingApi::class)
     private suspend fun requestAuthenticationToken(domainService: DomainService): String {
-        val audience = domainService.audience.replace("https://", "")
-        val workflow = domainService.workflows
+        val workflow = domainService.workflow
         val params = RestParams()
         val newToken = domainServicesAuthenticationAPI
-            .getDomainServiceAuthentication(audience, workflow, params)
+            .getDomainServiceAuthentication(null, false, DomainServicesWorkflow(listOf(workflow)), params)
             .map { it.token }
             .dataOrNull
             .orEmpty()
