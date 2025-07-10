@@ -14,22 +14,24 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader
 
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.launch
+package com.instructure.pandautils.features.speedgrader.details.submissiondetails
 
-class SpeedGraderSharedViewModel : ViewModel() {
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import dagger.Module
+import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ViewModelComponent
 
-    private val _viewPagerEnabled: MutableSharedFlow<Boolean> = MutableSharedFlow()
-    val viewPagerEnabled = _viewPagerEnabled.asSharedFlow()
 
-    fun enableViewPager(enabled: Boolean) {
-        viewModelScope.launch {
-            _viewPagerEnabled.emit(enabled)
-        }
+@Module
+@InstallIn(ViewModelComponent::class)
+class SubmissionDetailsModule {
+
+    @Provides
+    fun provideSubmissionDetailsRepository(
+        submissionDetailsManager: SubmissionDetailsManager
+    ): SubmissionDetailsRepository {
+        return SubmissionDetailsRepository(submissionDetailsManager)
     }
 }
