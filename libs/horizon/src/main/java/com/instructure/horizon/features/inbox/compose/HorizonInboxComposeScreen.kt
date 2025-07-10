@@ -61,6 +61,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
@@ -311,8 +312,10 @@ private fun HorizonInboxComposeAttachmentSection(state: HorizonInboxComposeUiSta
         modifier = Modifier.padding(horizontal = 24.dp)
     ) {
         Button(
-            label = "Attach file",
+            label = stringResource(R.string.inboxComposeAttachFile),
+            iconPosition = ButtonIconPosition.Start(R.drawable.attach_file),
             color = ButtonColor.Inverse,
+            enabled = state.attachments.size < 3,
             onClick = { state.onShowAttachmentPickerChanged(true) },
         )
 

@@ -55,6 +55,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -62,6 +63,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
@@ -93,6 +95,14 @@ fun HorizonInboxDetailsScreen(
         topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, navController) },
     ) { innerPadding ->
         LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(innerPadding)) {
+            state.replyState?.let { replyState ->
+                HorizonInboxAttachmentPicker(
+                    showBottomSheet = replyState.showAttachmentPicker,
+                    onDismissBottomSheet = { replyState.onShowAttachmentPickerChanged(false) },
+                    onFilesChanged = { replyState.onAttachmentsChanged(it) },
+                )
+            }
+
             HorizonInboxDetailsContent(state)
         }
     }
@@ -299,10 +309,26 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
 
         HorizonSpace(SpaceSize.SPACE_16)
 
+        state.attachments.forEach {
+            FileDropItem(
+                it.toFileDropItemState(),
+                Modifier.padding(vertical = 12.dp)
+            )
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
+
+            Button(
+                label = stringResource(R.string.inboxDetailsReplyAttachFile),
+                iconPosition = ButtonIconPosition.Start(R.drawable.attach_file),
+                color = ButtonColor.Inverse,
+                enabled = state.attachments.size < 3,
+                onClick = { state.onShowAttachmentPickerChanged(true) },
+            )
+
             Spacer(modifier = Modifier.weight(1f))
 
             AnimatedContent(

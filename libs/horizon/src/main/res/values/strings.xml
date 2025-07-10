@@ -304,4 +304,6 @@
     <string name="inboxComposeSendErrorMessage">Failed to send Message</string>
     <string name="inboxListConversationCreatedMessage">Conversation created successfully</string>
     <string name="noOptionsAvailable">No options available</string>
+    <string name="inboxComposeAttachFile">Attach file</string>
+    <string name="inboxDetailsReplyAttachFile">Attach file</string>
 </resources>
