@@ -154,7 +154,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 // Media submission
                 SubmissionType.MEDIA_RECORDING -> submissionFields.mediaObject?.let {
                     MediaContent(
-                        uri = Uri.parse(it.mediaDownloadUrl),
+                        uri = Uri.parse(it.mediaSources?.firstOrNull()?.url),
                         contentType = it.mediaType?.rawValue ?: "",
                         displayName = it.title
                     )

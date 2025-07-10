@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.speedgrader.content
 
 import android.content.res.Resources
+import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.SubmissionContentQuery
 import com.instructure.canvasapi2.fragment.SubmissionFields
@@ -30,6 +31,7 @@ import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemp
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -86,6 +88,14 @@ class SpeedGraderContentViewModelTest {
         coEvery { submission.submissionHistoriesConnection } returns mockSubmissionHistory(submissionFields)
 
         every { resources.getString(R.string.attempt, any()) } answers { "Attempt ${secondArg<Array<Any>>()[0]}" }
+
+        mockkStatic(Uri::class)
+        every { Uri.parse(any()) } answers {
+            val input = firstArg<String>()
+            val mockUri = mockk<Uri>()
+            every { mockUri.toString() } returns input
+            mockUri
+        }
     }
 
     @After
@@ -279,6 +289,27 @@ class SpeedGraderContentViewModelTest {
         assert(viewModel.uiState.value.content is PdfContent)
         val content = viewModel.uiState.value.content as PdfContent
         assertEquals(url, content.url)
+        assertEquals(studentId, viewModel.uiState.value.assigneeId)
+    }
+
+    @Test
+    fun `fetchData updates uiState with MediaContent for MEDIA_RECORDING submission type`() = runTest {
+        val url = "https://example.com/file.mp4"
+
+        coEvery { submissionFields.submissionType } returns SubmissionType.media_recording
+        val mediaSource = mockk<SubmissionFields.MediaSource>(relaxed = true).apply {
+            every { this@apply.url } returns url
+        }
+        coEvery { submissionFields.mediaObject } returns mockk<SubmissionFields.MediaObject>(relaxed = true).apply {
+            every { mediaSources } returns listOf(mediaSource)
+        }
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assert(viewModel.uiState.value.content is MediaContent)
+        val content = viewModel.uiState.value.content as MediaContent
+        assertEquals(url, content.uri.toString())
         assertEquals(studentId, viewModel.uiState.value.assigneeId)
     }
 
