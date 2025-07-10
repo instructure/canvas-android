@@ -89,32 +89,48 @@ fun SpeedGraderRubricScreen() {
 
 @Composable
 fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(R.color.backgroundLight))
-            .padding(vertical = 12.dp, horizontal = 16.dp)
-    ) {
-        Text(
-            modifier = Modifier.padding(bottom = 14.dp),
-            text = stringResource(R.string.rubricsTitle),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = colorResource(R.color.textDarkest)
-        )
-
-        uiState.criterions.forEach {
-            if (it.points != null) {
-                RubricCriterion(
-                    rubricCriterion = it,
-                    uiState.assessments[it.id],
-                    uiState.hidePoints,
-                    uiState.onRubricSelected,
-                    uiState.onPointChanged
+    when {
+        uiState.loading -> {
+            Box(
+                modifier = Modifier.fillMaxWidth(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(text = stringResource(R.string.loading))
+            }
+        }
+        uiState.error -> {
+            //We don't show the rubric if there is an error
+        }
+        else -> {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .background(colorResource(R.color.backgroundLight))
+                    .padding(vertical = 12.dp, horizontal = 16.dp)
+            ) {
+                Text(
+                    modifier = Modifier.padding(bottom = 14.dp),
+                    text = stringResource(R.string.rubricsTitle),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    color = colorResource(R.color.textDarkest)
                 )
+
+                uiState.criterions.forEach {
+                    if (it.points != null) {
+                        RubricCriterion(
+                            rubricCriterion = it,
+                            uiState.assessments[it.id],
+                            uiState.hidePoints,
+                            uiState.onRubricSelected,
+                            uiState.onPointChanged
+                        )
+                    }
+                }
             }
         }
     }
+
 }
 
 @OptIn(ExperimentalSharedTransitionApi::class, ExperimentalLayoutApi::class)
@@ -309,7 +325,7 @@ private fun RubricCriterion(
         if (!hidePoints) {
             CanvasDivider()
 
-            var enteredPoint by remember { mutableStateOf(assessment?.points) }
+            var enteredPoint by remember(assessment) { mutableStateOf(assessment?.points) }
             Row(
                 modifier = Modifier
                     .fillMaxWidth()

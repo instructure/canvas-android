@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.models.RubricCriterionAssessment
 
 data class SpeedGraderRubricUiState(
     val loading: Boolean = false,
+    val error: Boolean = false,
     val criterions: List<RubricCriterion> = emptyList(),
     val assessments: Map<String, RubricCriterionAssessment> = emptyMap(),
     val hidePoints: Boolean = false,

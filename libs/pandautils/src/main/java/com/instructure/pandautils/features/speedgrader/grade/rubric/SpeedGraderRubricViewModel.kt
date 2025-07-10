@@ -20,6 +20,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
@@ -38,7 +40,8 @@ private const val commentsPostFix = "][comments]"
 @HiltViewModel
 class SpeedGraderRubricViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: SpeedGraderRubricRepository
+    private val repository: SpeedGraderRubricRepository,
+    private val gradingEventHandler: SpeedGraderGradingEventHandler
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle.get<Long>("assignmentId")
@@ -53,6 +56,7 @@ class SpeedGraderRubricViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private var debouncePointChangeJob: Job? = null
+    private var useRubricForGrading = false
 
     init {
         viewModelScope.launch {
@@ -79,6 +83,7 @@ class SpeedGraderRubricViewModel @Inject constructor(
                     } ?: RubricCriterionAssessment())
                 } ?: emptyMap()
             val assignment = repository.getAssignmentRubric(courseId, assignmentId)
+            useRubricForGrading = assignment.isUseRubricForGrading
             val rubrics = assignment.rubric
             val criterions = rubrics?.map {
                 RubricCriterion(
@@ -104,7 +109,9 @@ class SpeedGraderRubricViewModel @Inject constructor(
                 hidePoints = assignment.rubricSettings?.hidePoints ?: false
             )
         } catch (e: Exception) {
-            // Handle exceptions, possibly update UI state to show error
+            _uiState.value = _uiState.value.copy(
+                error = true
+            )
         } finally {
             _uiState.value = _uiState.value.copy(loading = false)
         }
@@ -129,6 +136,9 @@ class SpeedGraderRubricViewModel @Inject constructor(
                     userId,
                     rubricAssessmentMap
                 )
+                if (useRubricForGrading) {
+                    gradingEventHandler.postEvent(GradingEvent.RubricUpdated)
+                }
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(assessments = originalAssessment)
