@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderCommentSection
 
+// Class to handle expanded/hidden state of the comments section
 @Composable
 fun SpeedGraderCommentsScreen() {
 

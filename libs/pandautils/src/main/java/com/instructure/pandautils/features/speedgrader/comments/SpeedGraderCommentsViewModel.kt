@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.speedgrader.comments
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
@@ -122,15 +121,14 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                                 displayName = attachment.displayName ?: "",
                                 contentType = attachment.contentType ?: "",
                                 size = attachment.size ?: "",
-
-                                )
+                            )
                         } ?: emptyList(),
                         mediaObject = it.mediaObject?.let { mediaObject ->
                             SpeedGraderMediaObject(
-                                id = mediaObject._id ?: "",
+                                id = mediaObject._id,
                                 mediaDownloadUrl = mediaObject.mediaDownloadUrl,
                                 title = mediaObject.title,
-                                mediaType = if (mediaObject.title?.endsWith(".mp4") == true) { // TODO Check mediaType field if the query is fixed
+                                mediaType = if (mediaObject.title?.endsWith(".mp4") == true) { // TODO Check mediaType field if the query is fixed in ticket EVAL-5640
                                     MediaType.VIDEO
                                 } else {
                                     MediaType.AUDIO
@@ -362,14 +360,13 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         commentText = TextFieldValue("")
                     )
                 }
-                /*viewCallback?.scrollToBottom()
-                SubmissionCommentsUpdated().post()*/
+                // TODO clear cache
             }
         }
     }
 
     private suspend fun handleFileUploadFailure(workInfo: WorkInfo) {
-
+        // TODO Handle file upload failure
     }
 
     private suspend fun dbCleanUp(submissionComment: SubmissionCommentWithAttachments) {
@@ -392,12 +389,12 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 attemptId = attempt.toLong(),
                 mediaCommentId = id
             ).collect { result ->
-                Log.d("ASDF", "Worker result: $result")
                 when (result.state) {
                     WorkInfo.State.SUCCEEDED -> {
                         pendingSubmissionCommentDao.findById(id)?.let {
                             pendingSubmissionCommentDao.delete(it)
                         }
+                        // TODO add the new comment to the UI state
                     }
 
                     WorkInfo.State.FAILED -> {
@@ -415,12 +412,14 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         }
     }
 
-    suspend fun createPendingMediaComment(filePath: String): Long {
+    private suspend fun createPendingMediaComment(filePath: String): Long {
+
         val newComment = PendingSubmissionComment(pageId).apply {
             attemptId = attempt.toLong().takeIf { assignmentEnhancementsEnabled }
         }
         newComment.filePath = filePath
         newComment.status = CommentSendStatus.SENDING
+        // TODO fix this
         val id = pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
         return id
     }
@@ -478,7 +477,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 pendingSubmissionCommentDao.update(it)
             }
 
-            // TODO implement error state in UI and in SpeedGraderComment class, use here
+            // TODO implement error state in UI and in SpeedGraderComment class
             viewModelScope.ensureActive()
         }
     }
@@ -493,7 +492,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                     )
                 }
 
-                val id = createPendingComment(_uiState.value.commentText.text)
+                val id = createPendingComment(comment)
                 sendComment(id, comment)
             }
         }

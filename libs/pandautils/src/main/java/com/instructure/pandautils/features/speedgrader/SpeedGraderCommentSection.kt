@@ -19,8 +19,6 @@
 package com.instructure.pandautils.features.speedgrader
 
 import android.util.Log
-import android.widget.RelativeLayout
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,14 +39,17 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Divider
-import androidx.compose.material.Icon
+import androidx.compose.material3.Divider
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -77,7 +78,6 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -147,7 +147,7 @@ fun SpeedGraderCommentSection(
                 modifier = Modifier.weight(1f),
                 gradingAnonymously = gradingAnonymously
             )
-            Divider(color = colorResource(id = R.color.backgroundMedium))
+            HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
             SpeedGraderCommentCreator(
                 commentText = state.commentText, actionHandler = actionHandler
             )
@@ -158,15 +158,11 @@ fun SpeedGraderCommentSection(
         if (state.showRecordFloatingView != null) {
             var offsetX by remember { mutableFloatStateOf(0f) }
             var offsetY by remember { mutableFloatStateOf(0f) }
+            // TODO Handle permissions for recording audio/video
+            // Permission request is sent if not granted, but we should handle the result
             AndroidView(
                 factory = { context ->
-                    RelativeLayout(context).apply {
-                        /*layoutParams = RelativeLayout.LayoutParams(
-                            RelativeLayout.LayoutParams.MATCH_PARENT,
-                            RelativeLayout.LayoutParams.MATCH_PARENT
-                        )
-                        requestDisallowInterceptTouchEvent(true)*/
-                        addView(FloatingRecordingView(context).apply {
+                    FloatingRecordingView(context).apply {
                             setContentType(state.showRecordFloatingView)
                             setVisible()
                             if (state.showRecordFloatingView == RecordingMediaType.Video) {
@@ -184,10 +180,9 @@ fun SpeedGraderCommentSection(
                                     )
                                 }
                             }
-                        })
-                    }
+                        }
                 },
-                modifier = Modifier//.align(Alignment.BottomEnd)
+                modifier = Modifier.align(Alignment.BottomEnd)
                     .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
                     .pointerInput(Unit) {
                         detectDragGestures { change, dragAmount ->
@@ -325,8 +320,13 @@ fun SpeedGraderCommentItems(
     modifier: Modifier = Modifier,
     gradingAnonymously: Boolean = false
 ) {
+    val listState = rememberLazyListState()
+    LaunchedEffect(comments.size) {
+        listState.scrollToItem(comments.size)
+    }
     LazyColumn(
-        modifier = modifier.padding(8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
+        state = listState,
+        modifier = modifier.padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         items(comments) { comment ->
             if (comment.isOwnComment) {
@@ -565,13 +565,13 @@ fun SpeedGraderMediaAttachmentComponent(
 fun SpeedGraderUserCommentItem(
     comment: SpeedGraderComment, modifier: Modifier = Modifier, gradingAnonymously: Boolean = false
 ) {
-    Row(modifier = modifier) {
+    Row(modifier = modifier.padding(horizontal = 8.dp)) {
         GlideImage(
             model = comment.authorAvatarUrl,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = Modifier
-                .padding(start = 8.dp, top = 8.dp)
+                .padding(top = 8.dp)
                 .size(36.dp)
                 .clip(CircleShape)
                 .background(colorResource(id = R.color.backgroundLight))
@@ -580,21 +580,26 @@ fun SpeedGraderUserCommentItem(
         Column(
             modifier = Modifier.padding(top = 16.dp)
         ) {
-            Text(
-                text = comment.authorName,
-                fontSize = 16.sp,
-                lineHeight = 21.sp,
-                fontWeight = FontWeight(600),
-                color = colorResource(id = R.color.textDarkest)
-            )
-            Text(
-                text = DateHelper.getDateTimeString(
-                    LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
-                ) ?: "",
-                fontSize = 12.sp,
-                lineHeight = 16.sp,
-                color = colorResource(id = R.color.textDark)
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    text = comment.authorName,
+                    fontSize = 16.sp,
+                    lineHeight = 21.sp,
+                    fontWeight = FontWeight(600),
+                    color = colorResource(id = R.color.textDarkest)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                Text(
+                    text = DateHelper.getDateTimeString(
+                        LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                    ) ?: "",
+                    fontSize = 12.sp,
+                    lineHeight = 16.sp,
+                    color = colorResource(id = R.color.textDark)
+                )
+            }
             if (comment.content.isNotEmpty()) {
                 Text(
                     text = comment.content,
