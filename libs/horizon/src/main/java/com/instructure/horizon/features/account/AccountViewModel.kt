@@ -19,6 +19,7 @@ package com.instructure.horizon.features.account
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -49,8 +50,11 @@ class AccountViewModel @Inject constructor(
         ),
         updateUserName = ::updateUserName,
         performLogout = ::performLogout,
+        switchExperience = ::switchExperience
     ))
     val uiState = _uiState.asStateFlow()
+
+    private var showExperienceSwitcher = false
 
     init {
         initData()
@@ -60,14 +64,25 @@ class AccountViewModel @Inject constructor(
     private fun initOptions() {
         _uiState.update {
             it.copy(
-                accountGroups = listOf(
-                    getSettingsGroup(),
-                    getSupportGroup(),
-                    getLogOutGroup()
-                )
+                accountGroups = buildList {
+                    if (showExperienceSwitcher) add(getExperienceGroup())
+                    add(getSettingsGroup())
+                    add(getSupportGroup())
+                    add(getLogOutGroup())
+                }
             )
         }
     }
+
+    private fun getExperienceGroup() = AccountGroupState(
+        title = context.getString(R.string.accountExperienceHeading),
+        items = listOf(
+            AccountItemState(
+                title = context.getString(R.string.accountSwitchToAcademicLabel),
+                type = AccountItemType.SwitchExperience,
+            ),
+        )
+    )
 
     private fun getSettingsGroup() = AccountGroupState(
         title = context.getString(R.string.accountSettingsHeading),
@@ -137,6 +152,9 @@ class AccountViewModel @Inject constructor(
     private suspend fun loadData(forceRefresh: Boolean = false) {
         val user = repository.getUserDetails(forceRefresh = forceRefresh)
 
+        val experiences = repository.getExperiences(forceRefresh = forceRefresh)
+        showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
+
         _uiState.update {
             it.copy(
                 userName = user.name,
@@ -160,6 +178,17 @@ class AccountViewModel @Inject constructor(
 
     private fun performLogout() {
         logoutHelper.logout(databaseProvider, alarmScheduler)
+    }
+
+    private fun switchExperience() {
+        viewModelScope.tryLaunch {
+            repository.switchExperience()
+            _uiState.update {
+                it.copy(restartApp = true)
+            }
+        } catch {
+            // TODO Implement this when experience switching can be tested
+        }
     }
 
     companion object {

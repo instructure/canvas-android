@@ -106,6 +106,8 @@
     <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
     <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
     <string name="failedToLoadAccount">Failed to load Account</string>
+    <string name="accountExperienceHeading">Experience</string>
+    <string name="accountSwitchToAcademicLabel">Switch to Canvas Academic</string>
     <string name="accountSettingsHeading">Settings</string>
     <string name="accountProfileLabel">Profile</string>
     <string name="accountPasswordLabel">Password</string>

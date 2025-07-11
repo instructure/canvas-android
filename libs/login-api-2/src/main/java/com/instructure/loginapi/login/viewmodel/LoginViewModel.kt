@@ -20,14 +20,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.apis.ExperienceAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
+import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -42,6 +44,7 @@ class LoginViewModel @Inject constructor(
     private val userManager: UserManager,
     private val oauthManager: OAuthManager,
     private val apiPrefs: ApiPrefs,
+    private val experienceAPI: ExperienceAPI,
     private val networkStateProvider: NetworkStateProvider) : ViewModel() {
 
     private val loginResultAction = MutableLiveData<Event<LoginResultAction>>()
@@ -54,14 +57,14 @@ class LoginViewModel @Inject constructor(
                 if (checkToken && !offlineLogin) {
                     val selfResult = userManager.getSelfAsync(true).await()
                     if (selfResult.isSuccess) {
-                        val canvasForElementary = checkCanvasElementary(checkElementary)
-                        checkTermsAcceptance(canvasForElementary)
+                        val experience = getExperience(checkElementary)
+                        checkTermsAcceptance(experience)
                     } else {
                         loginResultAction.value = Event(LoginResultAction.TokenNotValid)
                     }
                 } else {
-                    val canvasForElementary = checkCanvasElementary(checkElementary)
-                    checkTermsAcceptance(canvasForElementary, offlineLogin)
+                    val experience = getExperience(checkElementary)
+                    checkTermsAcceptance(experience, offlineLogin)
                 }
             } catch (e: Exception) {
                 loginResultAction.value = Event(LoginResultAction.TokenNotValid)
@@ -70,14 +73,29 @@ class LoginViewModel @Inject constructor(
         return loginResultAction
     }
 
-    private suspend fun checkTermsAcceptance(canvasForElementary: Boolean, offlineLogin: Boolean = false) {
+    private suspend fun getExperience(checkElementary: Boolean): Experience {
+        val experienceResult = experienceAPI.getExperienceSummary(RestParams(isForceReadFromNetwork = true))
+        val currentExperience = experienceResult.dataOrNull?.currentApp ?: ExperienceSummary.ACADEMIC_EXPERIENCE
+        val availableExperiences = experienceResult.dataOrNull?.availableApps ?: emptyList()
+        return if (currentExperience == ExperienceSummary.CAREER_LEARNER_EXPERIENCE) {
+            apiPrefs.canvasCareerView = true
+            Experience.Career
+        } else {
+            apiPrefs.canvasCareerView = false
+            apiPrefs.canSwitchToCanvasCareer = availableExperiences.contains(ExperienceSummary.CAREER_LEARNER_EXPERIENCE)
+            val canvasForElementary = checkCanvasElementary(checkElementary)
+            Experience.Academic(canvasForElementary)
+        }
+    }
+
+    private suspend fun checkTermsAcceptance(experience: Experience, offlineLogin: Boolean = false) {
         val authenticatedSession = oauthManager.getAuthenticatedSessionAsync("${apiPrefs.fullDomain}/users/self").await()
         val requiresTermsAcceptance = authenticatedSession.dataOrNull?.requiresTermsAcceptance ?: false
         if (requiresTermsAcceptance) {
-            loginResultAction.value = Event(LoginResultAction.ShouldAcceptPolicy(canvasForElementary))
+            loginResultAction.value = Event(LoginResultAction.ShouldAcceptPolicy(experience))
         } else {
             apiPrefs.checkTokenAfterOfflineLogin = offlineLogin
-            loginResultAction.value = Event(LoginResultAction.Login(canvasForElementary))
+            loginResultAction.value = Event(LoginResultAction.Login(experience))
         }
     }
 
@@ -88,8 +106,13 @@ class LoginViewModel @Inject constructor(
     }
 }
 
-sealed class LoginResultAction() {
+sealed class LoginResultAction {
     object TokenNotValid : LoginResultAction()
-    data class ShouldAcceptPolicy(val elementary: Boolean) : LoginResultAction()
-    data class Login(val elementary: Boolean) : LoginResultAction()
+    data class ShouldAcceptPolicy(val experience: Experience) : LoginResultAction()
+    data class Login(val experience: Experience) : LoginResultAction()
+}
+
+sealed class Experience {
+    data class Academic(val elementary: Boolean) : Experience()
+    data object Career : Experience()
 }

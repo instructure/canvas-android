@@ -39,6 +39,9 @@ class StudentSettingsBehaviour(
             if (apiPrefs.user?.calendar?.ics != null) {
                 preferencesList.add(SettingsItem.SUBSCRIBE_TO_CALENDAR)
             }
+            if (apiPrefs.canSwitchToCanvasCareer) {
+                preferencesList.add(1, SettingsItem.SWITCH_EXPERIENCE)
+            }
             if (apiPrefs.canvasForElementary) {
                 preferencesList.add(1, SettingsItem.HOMEROOM_VIEW)
             }

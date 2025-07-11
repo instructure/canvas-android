@@ -16,15 +16,18 @@
 package com.instructure.pandautils.features.settings
 
 import androidx.annotation.StringRes
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.pandautils.R
 
 class SettingsRepository(
     private val featuresApi: FeaturesAPI.FeaturesInterface,
     private val inboxSettingsManager: InboxSettingsManager,
-    private val settingsBehaviour: SettingsBehaviour
+    private val settingsBehaviour: SettingsBehaviour,
+    private val experienceAPI: ExperienceAPI
 ) {
 
     suspend fun getInboxSignatureState(): InboxSignatureState {
@@ -39,6 +42,10 @@ class SettingsRepository(
         } else {
             return InboxSignatureState.HIDDEN
         }
+    }
+
+    suspend fun switchExperience() {
+        experienceAPI.switchExperience(RestParams(), ExperienceSummary.CAREER_EXPERIENCE).dataOrThrow
     }
 }
 
