@@ -67,6 +67,16 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
+     * Assert that the student submission is not displayed.
+     *
+     * @param canvasUser
+     */
+    fun assertStudentSubmissionNotDisplayed(canvasUser: CanvasUserApiModel) {
+        composeTestRule.onNode(hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name), useUnmergedTree = true)
+            .assertDoesNotExist()
+    }
+
+    /**
      * Type the 'searchText' to the search input field.
      */
     fun searchSubmission(searchText: String) {

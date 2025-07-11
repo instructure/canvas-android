@@ -20,6 +20,7 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CreateSection
 import com.instructure.dataseeding.model.CreateSectionWrapper
+import com.instructure.dataseeding.model.EnrollmentApiModel
 import com.instructure.dataseeding.model.SectionApiModel
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
@@ -27,11 +28,15 @@ import retrofit2.Call
 import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 object SectionsApi {
     interface SectionsService {
         @POST("courses/{courseId}/sections")
         fun createSection(@Path("courseId") courseId: Long, @Body createSection: CreateSectionWrapper): Call<SectionApiModel>
+
+        @POST("sections/{sectionId}/enrollments")
+        fun enrollUserToSection(@Path("sectionId") sectionId: Long, @Query("enrollment[user_id]") userId: Long, @Query("enrollment[type]") type: String): Call<EnrollmentApiModel>
     }
 
     private val sectionsService: SectionsService by lazy {
@@ -44,5 +49,12 @@ object SectionsApi {
                 .createSection(courseId, section)
                 .execute()
                 .body()!!
+    }
+
+    fun enrollUserToSection(sectionId: Long, userId: Long, enrollmentType: String = "StudentEnrollment"): EnrollmentApiModel {
+        return sectionsService
+            .enrollUserToSection(sectionId, userId, enrollmentType)
+            .execute()
+            .body()!!
     }
 }

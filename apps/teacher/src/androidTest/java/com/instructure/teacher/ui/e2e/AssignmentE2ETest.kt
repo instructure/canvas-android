@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.SectionsApi
 import com.instructure.dataseeding.api.SubmissionsApi
@@ -492,10 +493,11 @@ class AssignmentE2ETest : TeacherComposeTest() {
     fun testFilterForAssignmentSectionsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val data = seedData(teachers = 1, courses = 1, students = 2)
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
         val student = data.studentsList[0]
+        val student2 = data.studentsList[1]
 
         val firstSection = SectionsApi.createSection(course.id, "First Section")
         val secondSection = SectionsApi.createSection(course.id, "Second Section")
@@ -509,14 +511,11 @@ class AssignmentE2ETest : TeacherComposeTest() {
             pointsPossible = 15.0
         )
 
-        Log.d(PREPARATION_TAG, "Seeding 'Quiz' assignment for '${course.name}' course.")
-        val quizAssignment = seedAssignments(
-            courseId = course.id,
-            dueAt = 1.days.fromNow.iso8601,
-            submissionTypes = listOf(SubmissionType.ONLINE_QUIZ),
-            teacherToken = teacher.token,
-            pointsPossible = 15.0
-        )
+        Log.d(PREPARATION_TAG, "Enroll '${student.name}' user to '$firstSection' section in the '${course.name}' course.")
+        SectionsApi.enrollUserToSection(firstSection.id, student.id)
+
+        Log.d(PREPARATION_TAG, "Enroll '${student2.name}' user to '$secondSection' section in the '${course.name}' course.")
+        SectionsApi.enrollUserToSection(secondSection.id, student2.id)
 
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
@@ -532,33 +531,103 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment[0])
         assignmentDetailsPage.waitForRender()
 
+        Log.d(STEP_TAG, "Open the Edit Page and click on the 'Assign To' spinner to edit assignees.")
         assignmentDetailsPage.openEditPage()
-
         editAssignmentDetailsPage.editAssignees()
 
-        Log.d(STEP_TAG, "Click on 'Assigned To' spinner and select '${student.name}' besides 'Everyone'.")
-        editAssignmentDetailsPage.editAssignees()
+        Log.d(ASSERTION_TAG, "Assert that the 'Everyone' string is displayed as selected.")
         assigneeListPage.assertAssigneesSelected(listOf("Everyone"))
-        assigneeListPage.toggleAssignees(listOf(student.name))
 
-        val expectedAssignees = listOf(student.name, "Everyone else")
-        Log.d(ASSERTION_TAG, "Assert that '${student.name}' and 'Everyone else' is selected as well.")
+        Log.d(STEP_TAG, "Click on 'Assign To' spinner and select '${student.name}', besides this, deselect 'Everyone'.")
+        assigneeListPage.toggleAssignees(listOf(student.name, "Everyone else"))
+
+        val expectedAssignees = listOf(student.name)
+        Log.d(ASSERTION_TAG, "Assert that the '${student.name}' student is displayed as selected.")
         assigneeListPage.assertAssigneesSelected(expectedAssignees)
 
-        Log.d(STEP_TAG, "Save and close the assignee list.")
+        Log.d(STEP_TAG, "Save and close the assignee list. Save the assignment as well.")
         assigneeListPage.saveAndClose()
-        Log.d(STEP_TAG, "Open the 'All Submissions' page and click on the filter icon on the top-right corner.")
+        editAssignmentDetailsPage.saveAssignment()
+
+        Log.d(ASSERTION_TAG, "Assert that the within the 'Due' section the 'For' part displays '1 student' as we are explicitly assigned to a particular student.")
+        assignmentDetailsPage.assertDueForString("1 student")
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Not Submitted' section counter is 1 (out of 1).")
+        refresh() // This should be removed once MBL-18991 bug will be fixed (because this should be refreshed automatically after saving the assignment)
+        assignmentDetailsPage.assertNotSubmitted(1,1)
+
+        Log.d(STEP_TAG, "Open the 'All Submissions' page.")
         assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
 
         Log.d(STEP_TAG, "Filter by section (the '${course.name}' course).")
         assignmentSubmissionListPage.clickFilterButton()
 
-        Log.d(STEP_TAG, "Filter by the '${firstSection.name}' section and click the 'Done' button.")
-        assignmentSubmissionListPage.filterBySection(firstSection.name)
+        Log.d(STEP_TAG, "Filter by the '${secondSection.name}' section and click the 'Done' button.")
+        assignmentSubmissionListPage.filterBySection(secondSection.name)
         assignmentSubmissionListPage.clickFilterDialogOk()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is displayed as we set some filter. Assert that the filter label text is the 'All Submissions' text plus the '${course.name}' course name.")
-        assignmentSubmissionListPage.assertFilterLabelText("First Section")
+        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions' text.")
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
+
+        Log.d(STEP_TAG, "Navigate back to the Assignment Details Page. Open the Edit Page and click on the 'Assign To' spinner to edit assignees.")
+        Espresso.pressBack()
+        assignmentDetailsPage.openEditPage()
+        editAssignmentDetailsPage.editAssignees()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${student.name}' student is displayed as selected.")
+        assigneeListPage.assertAssigneesSelected(listOf(student.name))
+
+        Log.d(STEP_TAG, "Click on 'Assigned To' spinner and select '${secondSection.name}' and '${firstSection.name}' sections and deselect '${student.name}' student.")
+        assigneeListPage.toggleAssignees(listOf(secondSection.name, firstSection.name, student.name))
+
+        Log.d(ASSERTION_TAG, "Assert that '${secondSection.name}' and '${firstSection.name}' sections are displayed as selected.")
+        assigneeListPage.assertAssigneesSelected(listOf(secondSection.name, firstSection.name))
+
+        Log.d(STEP_TAG, "Save and close the assignee list. Save the assignment as well.")
+        assigneeListPage.saveAndClose()
+        editAssignmentDetailsPage.saveAssignment()
+
+        Log.d(ASSERTION_TAG, "Assert that the within the 'Due' section displays 'Multiple Due Dates' as we assigned to both sections.")
+        assignmentDetailsPage.assertMultipleDueDates()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Not Submitted' section counter is 1 (out of 1).")
+        refresh() // This should be removed once MBL-18991 bug will be fixed (because this should be refreshed automatically after saving the assignment)
+        retryWithIncreasingDelay(times = 20, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry logic here because sometimes the 'Assign To' update on an assignment needs some time to propagate.
+            assignmentDetailsPage.assertNotSubmitted(2, 2)
+        }
+
+        Log.d(STEP_TAG, "Open the 'All Submissions' page.")
+        assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(ASSERTION_TAG, "Assert that there are 2 submissions displayed, and they are for '${student.name}' and '${student2.name}' students since we does not apply any section filter yet.")
+        assignmentSubmissionListPage.assertHasSubmission(2)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+
+        Log.d(STEP_TAG, "Filter by section (the '${course.name}' course).")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Filter by the '${secondSection.name}' section and click the 'Done' button.")
+        assignmentSubmissionListPage.filterBySection(secondSection.name)
+        assignmentSubmissionListPage.clickFilterDialogOk()
+
+        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions") // I'm not sure if this is right to show this?! Shouldn't we someone display that there is a filter applied for a particular section?
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student2.name}' student since we applied a filter to the '${secondSection.name}' section which the '${student2.name}' student is in, and the submission of the '${student.name}' student is filtered out because it's not in the '${secondSection.name}' section.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student)
     }
 
 }
