@@ -81,7 +81,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         score = submission.score,
                         grade = submission.grade,
                         excused = submission.excused.orDefault(),
-                        enteredGrade = submission.enteredGrade,
+                        enteredGrade = submission.enteredGrade ?: resources.getString(R.string.not_graded),
                         enteredScore = submission.enteredScore?.toFloat(),
                         pointsDeducted = submission.deductedPoints,
                         gradingType = submission.assignment?.gradingType,
