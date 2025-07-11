@@ -395,4 +395,16 @@ class LoginE2ETest : ParentComposeTest() {
         manageStudentsPage.assertEmptyContent()
     }
 
+    @Test
+    @E2E
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.CANVAS_NETWORK)
+    fun testCanvasNetworkSignInPageE2E() {
+
+        Log.d(STEP_TAG, "Click on the 'Canvas Network' link on the Login Landing Page to open the Canvas Network Page (learn.canvas.net).")
+        loginLandingPage.clickCanvasNetworkButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the Canvas Network Page has been displayed.")
+        canvasNetworkSignInPage.assertPageObjects()
+    }
+
 }
