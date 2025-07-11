@@ -16,19 +16,22 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
-import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricScreen
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-@Composable
-fun SpeedGraderGradeScreen() {
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
-        SpeedGraderGradingScreen()
-        SpeedGraderRubricScreen()
+sealed class GradingEvent {
+    data object RubricUpdated : GradingEvent()
+}
+
+@Singleton
+class SpeedGraderGradingEventHandler @Inject constructor() {
+
+    private val _events = MutableSharedFlow<GradingEvent>(replay = 0)
+    val events = _events.asSharedFlow()
+
+    suspend fun postEvent(event: GradingEvent) {
+        _events.emit(event)
     }
 }

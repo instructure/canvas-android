@@ -2130,4 +2130,7 @@
     <string name="speedGraderSubmissionDetails">Submission Details</string>
     <string name="speedGraderSubmissionDetailsLoading">Loading Submission details</string>
     <string name="speedGraderWordCount">Word Count</string>
+    <string name="rubricsTitle">Rubrics</string>
+    <string name="rubricScore">Score</string>
+    <string name="rubricScoreHint">Write score here</string>
 </resources>

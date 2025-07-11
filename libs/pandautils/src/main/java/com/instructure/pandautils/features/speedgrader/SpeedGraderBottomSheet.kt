@@ -106,7 +106,7 @@ fun SpeedGraderBottomSheet(
                     selected = selectedTab == tab.ordinal,
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                        if (anchoredDraggableState?.currentValue == AnchorPoints.TOP) {
+                        if (anchoredDraggableState?.currentValue == AnchorPoints.BOTTOM) {
                             coroutineScope.launch {
                                 anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
                             }
@@ -152,7 +152,6 @@ private fun SpeedGraderBottomSheetNavHost(
                 navArgument("courseId") { type = NavType.LongType },
                 navArgument("assignmentId") { type = NavType.LongType },
                 navArgument("submissionId") { type = NavType.LongType },
-                navArgument("courseId") { type = NavType.LongType }
             )
         ) {
             SpeedGraderGradeScreen()

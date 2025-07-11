@@ -96,6 +96,15 @@ object SubmissionAPI {
         ): Call<Submission>
 
         @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
+        suspend fun postSubmissionRubricAssessmentMap(
+            @Path("courseId") courseId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("userId") userId: Long,
+            @QueryMap rubricAssessment: Map<String, String>,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
+        @PUT("courses/{courseId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionComment(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
