@@ -16,10 +16,13 @@
 
 package com.instructure.pandautils.utils
 
+import android.net.Uri
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import okhttp3.Request
 
 object RouteUtils {
     fun retrieveFileUrl(route: Route, fileId: String?, block: (url: String, canvasContext: CanvasContext, needsAuth: Boolean) -> Unit) {
@@ -37,5 +40,33 @@ object RouteUtils {
         }
 
         block.invoke(fileUrl, context, needsAuth)
+    }
+
+    fun getRedirectUrl(uri: Uri): Uri {
+        if (!uri.toString().contains("redirect=")) {
+            return uri
+        }
+        val client = CanvasRestAdapter.okHttpClient
+            .newBuilder()
+            .followRedirects(false)
+            .cache(null)
+            .build()
+
+        val request = Request.Builder()
+            .url(uri.toString())
+            .build()
+
+        val response = client.newCall(request).execute()
+
+        return if (response.isRedirect) {
+            val header = response.header("Location")
+            if (header != null) {
+                Uri.parse(header)
+            } else {
+                uri
+            }
+        } else {
+            uri
+        }
     }
 }
