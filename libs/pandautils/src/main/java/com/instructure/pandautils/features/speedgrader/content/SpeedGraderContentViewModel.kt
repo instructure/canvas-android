@@ -161,11 +161,14 @@ class SpeedGraderContentViewModel @Inject constructor(
                 } ?: UnsupportedContent
 
                 // File uploads
-                SubmissionType.ONLINE_UPLOAD -> submissionFields.attachments?.find { it._id.toLong() == selectedAttachmentId }?.let {
+                SubmissionType.ONLINE_UPLOAD -> submissionFields.attachments?.find {
+                    it._id.toLong() == selectedAttachmentId
+                }?.let {
                     getAttachmentContent(
                         it,
                         submissionFields.assignment?.courseId?.toLong(),
-                        (submissionFields.groupId ?: submission?.userId)?.toLong()
+                        (submissionFields.groupId ?: submission?.userId)?.toLong(),
+                        selectedAttempt?.toLong()
                     )
                 } ?: UnsupportedContent
 
@@ -203,11 +206,14 @@ class SpeedGraderContentViewModel @Inject constructor(
     private suspend fun getAttachmentContent(
         attachment: SubmissionFields.Attachment,
         courseId: Long?,
-        assigneeId: Long?
+        assigneeId: Long?,
+        attemptId: Long?
     ): GradeableContent {
         // TODO remove; We need this now, because the GraphQL query doesn't return file verifiers.
         val submission = courseId?.let {
             repository.getSingleSubmission(courseId, assignmentId, studentId)
+        }?.submissionHistory?.find {
+            it?.attempt == attemptId
         }
 
         val attachmentWithVerifiers = submission?.attachments?.firstOrNull { it.id == attachment._id.toLongOrNull() }
