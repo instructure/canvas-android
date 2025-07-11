@@ -18,6 +18,7 @@ package com.instructure.horizon.features.inbox.details
 
 import androidx.annotation.DrawableRes
 import androidx.compose.ui.text.input.TextFieldValue
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import java.util.Date
@@ -36,6 +37,10 @@ data class HorizonInboxReplyState(
     val replyTextValue: TextFieldValue = TextFieldValue(""),
     val onReplyTextValueChange: (TextFieldValue) -> Unit = {},
     val onSendReply: () -> Unit = {},
+    val showAttachmentPicker: Boolean = false,
+    val onShowAttachmentPickerChanged: (Boolean) -> Unit = {},
+    val attachments: List<HorizonInboxAttachment> = emptyList(),
+    val onAttachmentsChanged: (List<HorizonInboxAttachment>) -> Unit = {}
 )
 
 data class HorizonInboxDetailsItem(

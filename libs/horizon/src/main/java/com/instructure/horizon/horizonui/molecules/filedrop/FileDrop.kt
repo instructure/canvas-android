@@ -115,38 +115,42 @@ fun FileDrop(
 
 sealed class FileDropItemState(
     open val fileName: String,
-    val actionIconRes: Int,
+    open val actionIconRes: Int,
     open val onActionClick: (() -> Unit)? = null,
     open val onClick: (() -> Unit)? = null
 ) {
     data class Success(
         override val fileName: String,
         override val onActionClick: (() -> Unit)? = null,
-        override val onClick: (() -> Unit)? = null
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.delete
     ) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.delete)
+        FileDropItemState(fileName, actionIconRes)
 
     data class InProgress(
         override val fileName: String,
         val progress: Float? = null,
         override val onActionClick: (() -> Unit)? = null,
-        override val onClick: (() -> Unit)? = null
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.close
     ) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.close)
+        FileDropItemState(fileName, actionIconRes)
 
     data class NoLongerEditable(
         override val fileName: String,
         override val onActionClick: (() -> Unit)? = null,
-        override val onClick: (() -> Unit)? = null
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.download
     ) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.download)
+        FileDropItemState(fileName, actionIconRes)
 
     data class Error(
         override val fileName: String,
         override val onActionClick: (() -> Unit)? = null,
-        override val onClick: (() -> Unit)? = null
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.refresh
     ) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.refresh)
+        FileDropItemState(fileName, actionIconRes)
 
 }
 
