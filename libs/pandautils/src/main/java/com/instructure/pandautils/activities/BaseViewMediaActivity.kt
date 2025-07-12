@@ -27,7 +27,6 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.annotation.OptIn
-import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
@@ -37,6 +36,7 @@ import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import com.bumptech.glide.Glide
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.ActivityViewMediaBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
@@ -55,9 +55,7 @@ import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.utils.viewExternally
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -94,18 +92,9 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
             mediaProgressBar.announceForAccessibility(getString(R.string.loading))
             mediaProgressBar.setVisible()
         }
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                RouteUtils.getRedirectUrl(mUri).let { redirectUri ->
-                    mediaUri = redirectUri
-                }
-            } catch (e: Exception) {
-                mediaUri = mUri
-            }
-
-            withContext(Dispatchers.Main) {
-                attachMediaPlayer()
-            }
+        lifecycleScope.launch {
+            mediaUri = RouteUtils.getRedirectUrl(mUri)
+            attachMediaPlayer()
         }
     }
 

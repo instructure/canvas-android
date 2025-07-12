@@ -65,9 +65,7 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.MediaContent
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
@@ -145,19 +143,10 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     }
 
     private fun fetchMediaUri() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                RouteUtils.getRedirectUrl(mUri).let { redirectUri ->
-                    mediaUri = redirectUri
-                }
-            } catch (e: Exception) {
-                mediaUri = mUri
-            }
-
-            withContext(Dispatchers.Main) {
-                if (isResumed) {
-                    attachMediaPlayer()
-                }
+        lifecycleScope.launch {
+            mediaUri = RouteUtils.getRedirectUrl(mUri)
+            if (isResumed) {
+                attachMediaPlayer()
             }
         }
     }

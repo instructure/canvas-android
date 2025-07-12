@@ -45,10 +45,8 @@ import com.instructure.student.R
 import com.instructure.student.fragment.InternalWebviewFragment
 import com.instructure.student.router.RouteMatcher
 import com.instructure.student.util.FileUtils
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 //Intended to handle all routing to fragments from links both internal and external
 abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
@@ -319,17 +317,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     }
 
     private suspend fun shouldOpenInternally(url: String): Boolean {
-        var mediaUrl = url
-        withContext(Dispatchers.IO) {
-            try {
-                RouteUtils.getRedirectUrl(Uri.parse(url)).let { redirectUri ->
-                    mediaUrl = redirectUri.toString()
-                }
-            } catch (e: Exception) {
-                Logger.w("Error retrieving redirect URL for media: ${e.message}")
-            }
-
-        }
+        val mediaUrl = RouteUtils.getRedirectUrl(Uri.parse(url)).toString()
         return (mediaUrl.endsWith(".mpd") || mediaUrl.endsWith(".m3u8") || mediaUrl.endsWith(".mp4"))
     }
 

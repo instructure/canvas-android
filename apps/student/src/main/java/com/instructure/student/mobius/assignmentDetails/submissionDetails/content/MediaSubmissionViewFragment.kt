@@ -49,9 +49,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentMediaSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @OptIn(UnstableApi::class)
 class MediaSubmissionViewFragment : BaseCanvasFragment() {
@@ -117,19 +115,10 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
     }
 
     private fun fetchMediaUri() {
-        lifecycleScope.launch(Dispatchers.IO) {
-            try {
-                RouteUtils.getRedirectUrl(uri).let { redirectUri ->
-                    mediaUri = redirectUri
-                }
-            } catch (e: Exception) {
-                mediaUri = uri
-            }
-
-            withContext(Dispatchers.Main) {
-                if (isResumed) {
-                    attachMediaPlayer()
-                }
+        lifecycleScope.launch {
+            mediaUri = RouteUtils.getRedirectUrl(uri)
+            if (isResumed) {
+                attachMediaPlayer()
             }
         }
     }

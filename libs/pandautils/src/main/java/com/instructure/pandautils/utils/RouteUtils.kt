@@ -22,10 +22,16 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.Request
 
 object RouteUtils {
-    fun retrieveFileUrl(route: Route, fileId: String?, block: (url: String, canvasContext: CanvasContext, needsAuth: Boolean) -> Unit) {
+    fun retrieveFileUrl(
+        route: Route,
+        fileId: String?,
+        block: (url: String, canvasContext: CanvasContext, needsAuth: Boolean) -> Unit
+    ) {
         var needsAuth = true
         var fileUrl = ApiPrefs.fullDomain
         var context = CanvasContext.currentUserContext(ApiPrefs.user!!)
@@ -42,31 +48,38 @@ object RouteUtils {
         block.invoke(fileUrl, context, needsAuth)
     }
 
-    fun getRedirectUrl(uri: Uri): Uri {
+    suspend fun getRedirectUrl(uri: Uri): Uri {
         if (!uri.toString().contains("redirect=")) {
             return uri
         }
-        val client = CanvasRestAdapter.okHttpClient
-            .newBuilder()
-            .followRedirects(false)
-            .cache(null)
-            .build()
+        return withContext(Dispatchers.IO) {
+            try {
+                val client = CanvasRestAdapter.okHttpClient
+                    .newBuilder()
+                    .followRedirects(false)
+                    .cache(null)
+                    .build()
 
-        val request = Request.Builder()
-            .url(uri.toString())
-            .build()
+                val request = Request.Builder()
+                    .url(uri.toString())
+                    .build()
 
-        val response = client.newCall(request).execute()
-
-        return if (response.isRedirect) {
-            val header = response.header("Location")
-            if (header != null) {
-                Uri.parse(header)
-            } else {
-                uri
+                val response = client.newCall(request).execute()
+                response.use {
+                    return@withContext if (response.isRedirect) {
+                        val header = response.header("Location")
+                        if (header != null) {
+                            Uri.parse(header)
+                        } else {
+                            uri
+                        }
+                    } else {
+                        uri
+                    }
+                }
+            } catch (e: Exception) {
+                return@withContext uri
             }
-        } else {
-            uri
         }
     }
 }
