@@ -38,6 +38,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,11 +47,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -114,10 +120,13 @@ fun HorizonInboxComposeScreen(
             HorizonInboxComposeTopBar(navController)
         }
     ) { innerPadding ->
+        val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
+        val pickerState by viewModel.uiState.collectAsState()
         HorizonInboxAttachmentPicker(
             showBottomSheet = state.showAttachmentPicker,
             onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
-            onFilesChanged = { state.onAttachmentsChanged(it) },
+            state = pickerState,
+            onFilesChanged = state.onAttachmentsChanged
         )
 
         HorizonInboxComposeContent(
@@ -385,4 +394,14 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
             }
         }
     }
+}
+
+@Composable
+@Preview
+private fun HorizonInboxComposePreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = HorizonInboxComposeUiState()
+
+    HorizonInboxComposeScreen(state, rememberNavController())
 }

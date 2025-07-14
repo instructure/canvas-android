@@ -40,10 +40,14 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
     private val fileUploadManager: FileUploadManager,
     private val fileUploadUtils: FileUploadUtilsHelper
 ): ViewModel() {
-    private val _filesState: MutableStateFlow<List<HorizonInboxAttachment>> = MutableStateFlow(emptyList())
-    val filesState = _filesState.asStateFlow()
+    private val _uiState: MutableStateFlow<HorizonInboxAttachmentPickerUiState> = MutableStateFlow(
+        HorizonInboxAttachmentPickerUiState(
+            onFileSelected = ::onFileAdded
+        )
+    )
+    val uiState = _uiState.asStateFlow()
 
-    fun onFileAdded(uri: Uri) {
+    private fun onFileAdded(uri: Uri) {
         viewModelScope.tryLaunch {
             val fso = fileUploadUtils.getFileSubmitObjectFromInputStream(
                 uri,
@@ -63,7 +67,7 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
                 filePath = fso.fullPath,
                 state = HorizonInboxAttachmentState.InProgress(0f)
             )
-            _filesState.update { it + attachmentState }
+            _uiState.update { it.copy(files = it.files + attachmentState) }
 
             val result = withContext(Dispatchers.IO) {
                 fileUploadManager.uploadFile(
@@ -113,20 +117,24 @@ class HorizonInboxAttachmentPickerViewModel @Inject constructor(
     }
 
     private fun updateItem(id: Long, item: HorizonInboxAttachment) {
-        _filesState.update { currentList ->
-            currentList.map {
-                if (it.id == id) {
-                    item
-                } else {
-                    it
+        _uiState.update {
+            it.copy(
+                files = it.files.map { file ->
+                    if (file.id == id) {
+                        item
+                    } else {
+                        file
+                    }
                 }
-            }
+            )
         }
     }
 
     private fun removeItem(id: Long) {
-        _filesState.update { currentList ->
-            currentList.filterNot { it.id == id }
+        _uiState.update {
+            it.copy(
+                files = it.files.filterNot { file -> file.id == id }
+            )
         }
     }
 }

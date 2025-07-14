@@ -31,13 +31,20 @@ import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Multipart
+import retrofit2.http.POST
+import retrofit2.http.Part
+import retrofit2.http.PartMap
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.Tag
+import retrofit2.http.Url
 import java.io.File
 
 
-internal object FileUploadAPI {
+object FileUploadAPI {
 
-    private interface FileUploadInterface {
+    interface FileUploadInterface {
         @POST("{context}/files")
         fun getUploadParams(
             @Path("context", encoded = true) uploadContext: String,
@@ -56,6 +63,27 @@ internal object FileUploadAPI {
             @PartMap uploadParams: Map<String, @JvmSuppressWildcards RequestBody>,
             @Part file: MultipartBody.Part
         ): Call<Attachment>
+
+        @POST("{context}/files")
+        suspend fun getUploadParams(
+            @Path("context", encoded = true) uploadContext: String,
+            @Query("name") fileName: String,
+            @Query("size") fileSize: Long,
+            @Query("content_type") contentType: String,
+            @Query("parent_folder_id") parentId: Long?,
+            @Query("parent_folder_path") parentPath: String?,
+            @Query("on_duplicate") actionOnDuplicate: String,
+            @Tag params: RestParams
+        ): DataResult<FileUploadParams>
+
+        @Multipart
+        @POST
+        suspend fun uploadFile(
+            @Url url: String,
+            @PartMap uploadParams: Map<String, @JvmSuppressWildcards RequestBody>,
+            @Part file: MultipartBody.Part,
+            @Tag params: RestParams,
+        ): DataResult<Attachment>
     }
 
     @Suppress("LiftReturnOrAssignment")

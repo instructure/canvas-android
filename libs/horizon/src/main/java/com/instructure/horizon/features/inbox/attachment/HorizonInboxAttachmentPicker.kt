@@ -26,7 +26,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -34,7 +33,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropBottomSheet
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropBottomSheetCallbacks
 import com.instructure.pandautils.utils.Const
@@ -45,12 +43,11 @@ import java.io.File
 fun HorizonInboxAttachmentPicker(
     showBottomSheet: Boolean,
     onDismissBottomSheet: () -> Unit,
-    onFilesChanged: (List<HorizonInboxAttachment>) -> Unit,
-    viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
+    state: HorizonInboxAttachmentPickerUiState,
+    onFilesChanged: (List<HorizonInboxAttachment>) -> Unit
 ) {
-    val files by viewModel.filesState.collectAsState()
-    LaunchedEffect(files) {
-        onFilesChanged(files)
+    LaunchedEffect(state.files) {
+        onFilesChanged(state.files)
     }
 
     val context = LocalContext.current
@@ -61,7 +58,7 @@ fun HorizonInboxAttachmentPicker(
     val photoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             mediaUri?.let {
-                viewModel.onFileAdded(it)
+                state.onFileSelected(it)
             }
         }
     }
@@ -88,7 +85,7 @@ fun HorizonInboxAttachmentPicker(
     val videoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CaptureVideo()) { success ->
         if (success) {
             mediaUri?.let {
-                viewModel.onFileAdded(it)
+                state.onFileSelected(it)
             }
         }
     }
@@ -115,7 +112,7 @@ fun HorizonInboxAttachmentPicker(
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { viewModel.onFileAdded(it) }
+        uri?.let { state.onFileSelected(it) }
     }
 
     if (showBottomSheet) {
