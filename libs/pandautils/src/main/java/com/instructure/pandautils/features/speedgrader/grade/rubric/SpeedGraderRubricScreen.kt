@@ -88,7 +88,7 @@ fun SpeedGraderRubricScreen() {
 }
 
 @Composable
-fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
+private fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
     when {
         uiState.loading -> {
             Box(
