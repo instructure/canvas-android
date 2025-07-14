@@ -10,6 +10,8 @@ import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.features.speedgrader.grade.grading.GradeStatus
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingRepository
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingUiState
@@ -38,6 +40,7 @@ class SpeedGraderGradingViewModelTest {
     private lateinit var viewModel: SpeedGraderGradingViewModel
     private lateinit var savedStateHandle: SavedStateHandle
     private val repository: SpeedGraderGradingRepository = mockk(relaxed = true)
+    private val gradingEventHandler = SpeedGraderGradingEventHandler()
     private val resources: Resources = mockk(relaxed = true)
 
     private val testDispatcher = UnconfinedTestDispatcher()
@@ -64,7 +67,7 @@ class SpeedGraderGradingViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources)
+        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources, gradingEventHandler)
     }
 
     @After
@@ -616,5 +619,28 @@ class SpeedGraderGradingViewModelTest {
         val finalUiState = viewModel.uiState.first()
         assertEquals(false, finalUiState.error)
         assertEquals("Custom Status", finalUiState.gradingStatus)
+    }
+
+    @Test
+    fun `update screen on rubric event`() = runTest {
+        val submission = createMockSubmission()
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals("graded", uiState.gradingStatus)
+
+        val updatedSubmission = submission.copy(
+            submission = submission.submission?.copy(
+                status = "missing"
+            )
+        )
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns updatedSubmission
+        gradingEventHandler.postEvent(GradingEvent.RubricUpdated)
+
+        assertEquals("missing", viewModel.uiState.first().gradingStatus)
     }
 }

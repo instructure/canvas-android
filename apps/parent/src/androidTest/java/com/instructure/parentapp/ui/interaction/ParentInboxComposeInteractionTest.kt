@@ -15,9 +15,11 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
@@ -67,6 +69,10 @@ class ParentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     @BindValue
     @JvmField
     val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
 
     @BindValue
     @JvmField

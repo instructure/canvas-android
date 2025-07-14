@@ -23,6 +23,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
@@ -39,7 +41,8 @@ import kotlin.math.roundToInt
 class SpeedGraderGradingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderGradingRepository,
-    private val resources: Resources
+    private val resources: Resources,
+    private val gradingEventHandler: SpeedGraderGradingEventHandler
 ) : ViewModel() {
 
     private val assignmentId = savedStateHandle.get<Long>("assignmentId")
@@ -66,6 +69,15 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     init {
         loadData()
+        viewModelScope.launch {
+            gradingEventHandler.events.collect {
+                when (it) {
+                    is GradingEvent.RubricUpdated -> {
+                        loadData(forceNetwork = true)
+                    }
+                }
+            }
+        }
     }
 
     private fun loadData(forceNetwork: Boolean = false) {

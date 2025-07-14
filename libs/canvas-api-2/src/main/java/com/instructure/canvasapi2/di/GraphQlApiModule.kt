@@ -22,6 +22,8 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManagerImpl
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.StudentContextManagerImpl
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManagerImpl
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
@@ -76,5 +78,10 @@ class GraphQlApiModule {
     @Provides
     fun provideSubmissionDetailsManager(): SubmissionDetailsManager {
         return SubmissionDetailsManagerImpl()
+    }
+
+    @Provides
+    fun provideSubmissionRubricManager(): SubmissionRubricManager {
+        return SubmissionRubricManagerImpl()
     }
 }
