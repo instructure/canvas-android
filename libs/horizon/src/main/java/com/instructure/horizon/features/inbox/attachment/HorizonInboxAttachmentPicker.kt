@@ -115,9 +115,15 @@ fun HorizonInboxAttachmentPicker(
         uri?.let { state.onFileSelected(it) }
     }
 
+    val onGalleryClick: () -> Unit = {
+        onDismissBottomSheet()
+        filePickerLauncher.launch("image/*")
+    }
+
     if (showBottomSheet) {
         FileDropBottomSheet(
             onDismiss = onDismissBottomSheet, callbacks = FileDropBottomSheetCallbacks(
+                onChoosePhoto = onGalleryClick,
                 onTakePhoto = onCameraPhotoClick,
                 onTakeVideo = onCameraVideoClick,
                 onUploadFile = {

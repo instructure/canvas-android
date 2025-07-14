@@ -329,11 +329,13 @@ private fun HorizonInboxComposeAttachmentSection(state: HorizonInboxComposeUiSta
         )
 
         state.attachments.forEach { state ->
+            HorizonSpace(SpaceSize.SPACE_4)
             FileDropItem(
                 state.toFileDropItemState(),
-                Modifier.padding(vertical = 12.dp)
             )
         }
+
+        HorizonSpace(SpaceSize.SPACE_12)
 
         state.attachmentsErrorMessage?.let {
             InputErrorText(it)
