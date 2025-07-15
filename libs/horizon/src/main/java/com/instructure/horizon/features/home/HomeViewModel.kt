@@ -22,6 +22,9 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.pandautils.utils.LocaleUtils
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -35,11 +38,14 @@ class HomeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val apiPrefs: ApiPrefs,
     private val homeRepository: HomeRepository,
-    private val localeUtils: LocaleUtils
+    private val localeUtils: LocaleUtils,
+    private val aiAssistContextProvider: AiAssistContextProvider,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(HomeUiState(updateShowAiAssist = ::updateShowAiAssist))
     val uiState = _uiState.asStateFlow()
+
+    private var courseIds = emptyList<Long>()
 
     init {
         viewModelScope.tryLaunch {
@@ -49,6 +55,8 @@ class HomeViewModel @Inject constructor(
             val theme = homeRepository.getTheme()
             theme?.let { themeArg -> _uiState.update { it.copy(theme = themeArg) } }
 
+            courseIds = homeRepository.getCourses().map { it.course.id }
+
             _uiState.update { it.copy(initialDataLoading = false) }
         } catch {
             _uiState.update { it.copy(initialDataLoading = false) }
@@ -56,6 +64,9 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun updateShowAiAssist(showAiAssist: Boolean) {
+        aiAssistContextProvider.aiAssistContext = AiAssistContext(
+            contextSources = courseIds.map { AiAssistContextSource.CourseId(it.toString()) },
+        )
         _uiState.update { it.copy(showAiAssist = showAiAssist) }
     }
 

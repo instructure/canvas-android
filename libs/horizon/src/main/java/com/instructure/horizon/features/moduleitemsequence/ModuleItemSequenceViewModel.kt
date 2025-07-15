@@ -28,7 +28,9 @@ import com.instructure.canvasapi2.utils.isLocked
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageItem
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageUiState
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
@@ -51,6 +53,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: ModuleItemSequenceRepository,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
+    private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
@@ -74,12 +77,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 onAssignmentToolsClick = ::onAssignmentToolsClicked,
                 assignmentToolsOpened = ::assignmentToolsOpened,
                 updateShowAiAssist = ::updateShowAiAssist,
-                aiContext = AiAssistContext(
-                    contextSources = mapOf(
-                        "course-id" to courseId.toString(),
-                    )
-                ),
-                updateAiContextString = ::updateAiContext,
                 updateShowNotebook = ::updateShowNotebook,
                 updateObjectTypeAndId = ::updateNotebookObjectTypeAndId,
             )
@@ -151,15 +148,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     pages = progressPages,
                     currentPosition = getProgressPosition(moduleItemId, progressPages)
                 ),
-                aiContext = it.aiContext.copy(
-                    contextSources = it.aiContext.contextSources.toMutableMap().apply {
-                        this += "title" to currentModuleItem?.title.orEmpty()
-                        this += "module-id" to currentModuleItem?.id.orDefault().toString()
-                    }
-                ),
                 hasUnreadComments = hasUnreadComments
             )
         }
+        updateAiAssistContextModuleItem(currentModuleItem)
     }
 
     private fun createProgressPage(module: ModuleObject): ProgressPageUiState {
@@ -301,15 +293,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 it.copy(
                     items = newItems,
                     currentItem = currentItem,
-                    aiContext = it.aiContext.copy(
-                        contextSources = it.aiContext.contextSources.toMutableMap().apply {
-                            this += "title" to currentModuleItem?.title.orEmpty()
-                            this += "module-id" to currentModuleItem?.id.orDefault().toString()
-                        }
-                    ),
                     hasUnreadComments = hasUnreadComments
                 )
             }
+            updateAiAssistContextModuleItem(currentModuleItem)
         } catch {
             // TODO Handle error
             val currentItem = getCurrentItem()
@@ -338,15 +325,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     movingDirection = 0,
                     selectedModuleItemId = currentModuleItemId
                 ),
-                aiContext = it.aiContext.copy(
-                    contextSources = it.aiContext.contextSources.toMutableMap().apply {
-                        this += "title" to currentModuleItem?.title.orEmpty()
-                        this += "module-id" to currentModuleItem?.id.orDefault().toString()
-                    }
-                )
             )
         }
         reloadData()
+        updateAiAssistContextModuleItem(currentModuleItem)
     }
 
     private fun getProgressPosition(
@@ -539,15 +521,20 @@ class ModuleItemSequenceViewModel @Inject constructor(
         _uiState.update { it.copy(showAiAssist = show) }
     }
 
-    private fun updateAiContext(value: String) {
-        _uiState.update { it.copy(aiContext = it.aiContext.copy(contextString = value)) }
-    }
-
     private fun updateShowNotebook(show: Boolean) {
         _uiState.update { it.copy(showNotebook = show) }
     }
 
-    private fun updateNotebookObjectTypeAndId(value: Pair<String, String>) {
-        _uiState.update { it.copy(objectTypeAndId = value) }
+    private fun updateNotebookObjectTypeAndId(objectTypeAndId: Pair<String, String>) {
+        _uiState.update { it.copy(objectTypeAndId = objectTypeAndId) }
+    }
+
+    private fun updateAiAssistContextModuleItem(item: ModuleItem?) {
+        aiAssistContextProvider.aiAssistContext = AiAssistContext(
+            contextSources = listOf(
+                AiAssistContextSource.CourseId(courseId.toString()),
+                AiAssistContextSource.ModuleId(item?.moduleId.toString()),
+            )
+        )
     }
 }

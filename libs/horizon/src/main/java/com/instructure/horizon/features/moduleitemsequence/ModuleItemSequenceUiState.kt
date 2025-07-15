@@ -16,7 +16,6 @@
 package com.instructure.horizon.features.moduleitemsequence
 
 import android.net.Uri
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.Const
@@ -38,10 +37,8 @@ data class ModuleItemSequenceUiState(
     val showNotebook: Boolean = false,
     val updateShowAiAssist: (Boolean) -> Unit,
     val updateShowNotebook: (Boolean) -> Unit,
-    val aiContext: AiAssistContext = AiAssistContext(),
-    val updateAiContextString: (String) -> Unit,
     val objectTypeAndId: Pair<String, String> = Pair("", ""),
-    val updateObjectTypeAndId: (Pair<String, String>) -> Unit,
+    val updateObjectTypeAndId: (Pair<String, String>) -> Unit = {},
     val hasUnreadComments: Boolean = false
 )
 
