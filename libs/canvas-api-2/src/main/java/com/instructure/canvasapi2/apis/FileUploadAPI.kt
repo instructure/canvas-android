@@ -37,14 +37,13 @@ import retrofit2.http.Part
 import retrofit2.http.PartMap
 import retrofit2.http.Path
 import retrofit2.http.Query
-import retrofit2.http.Tag
 import retrofit2.http.Url
 import java.io.File
 
 
-object FileUploadAPI {
+internal object FileUploadAPI {
 
-    interface FileUploadInterface {
+    private interface FileUploadInterface {
         @POST("{context}/files")
         fun getUploadParams(
             @Path("context", encoded = true) uploadContext: String,
@@ -63,27 +62,6 @@ object FileUploadAPI {
             @PartMap uploadParams: Map<String, @JvmSuppressWildcards RequestBody>,
             @Part file: MultipartBody.Part
         ): Call<Attachment>
-
-        @POST("{context}/files")
-        suspend fun getUploadParams(
-            @Path("context", encoded = true) uploadContext: String,
-            @Query("name") fileName: String,
-            @Query("size") fileSize: Long,
-            @Query("content_type") contentType: String,
-            @Query("parent_folder_id") parentId: Long?,
-            @Query("parent_folder_path") parentPath: String?,
-            @Query("on_duplicate") actionOnDuplicate: String,
-            @Tag params: RestParams
-        ): DataResult<FileUploadParams>
-
-        @Multipart
-        @POST
-        suspend fun uploadFile(
-            @Url url: String,
-            @PartMap uploadParams: Map<String, @JvmSuppressWildcards RequestBody>,
-            @Part file: MultipartBody.Part,
-            @Tag params: RestParams,
-        ): DataResult<Attachment>
     }
 
     @Suppress("LiftReturnOrAssignment")
