@@ -20,6 +20,7 @@ data class LearnScoreUiState(
 )
 
 data class AssignmentScoreItem(
+    val assignmentId: Long,
     val name: String,
     val status: AssignmentStatus,
     val pointsPossible: Double,
@@ -28,11 +29,12 @@ data class AssignmentScoreItem(
     val dueDate: Date?
 ) {
     constructor(assignment: Assignment): this(
+        assignmentId = assignment.id,
         name = assignment.name.orEmpty(),
         status = assignment.getStatus(),
         pointsPossible = assignment.pointsPossible,
         lastScore = assignment.submission?.score,
-        submissionCommentsCount = assignment.lastActualSubmission?.submissionComments?.size ?: 0,
+        submissionCommentsCount = assignment.lastGradedOrSubmittedSubmission?.submissionComments?.size ?: 0,
         dueDate = assignment.dueDate
     )
 }

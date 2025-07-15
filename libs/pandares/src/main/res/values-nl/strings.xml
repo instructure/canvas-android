@@ -291,7 +291,7 @@
     <string name="Todo">To-do lijst</string>
     <string name="todoFilter">Cursussen filteren</string>
     <string name="filterByEllipsis">Filteren op...</string>
-    <string name="favoritedCoursesLabel">Favoriete cursussen</string>
+    <string name="favoriteCoursesLabel">Favoriete cursussen</string>
     <string name="Event">Gebeurtenis</string>
     <string name="eventSuccessfulDeletion">Evenement was succesvol verwijderd</string>
     <string name="timeIconDescription">Tijdpictogram</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Meldingen</string>
     <string name="todoWidgetTitleLong">Canvas - To-do</string>
     <string name="gradesWidgetTitleLong">Canvas - Cijfers</string>
+    <string name="gradeWidgetTitleLong">Canvas – Cijfer</string>
     <string name="notificationWidgetTitleLong">Canvas - Berichtgevingen</string>
     <string name="notLoggedIn">Je bent niet ingelogd</string>
     <string name="widgetStyle">Kies de stijl van je widget</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Cursisten beheren</string>
     <string name="screenTitleSettings">Instellingen</string>
-    <string name="navigationDrawerSwitchUsers">Wissel van gebruikers</string>
     <string name="navigationDrawerLogOut">Afmelden</string>
     <string name="noStudentsError">Geen cursisten</string>
     <string name="noStudentsErrorDescription">Je observeert geen cursisten.</string>
     <string name="noStudentsRefresh">Vernieuwen</string>
     <string name="noGrade">Geen cijfer</string>
+    <string name="noGrades">Geen cijfers</string>
     <string name="errorLoadingCourses">Er is een fout opgetreden bij het laden van de cursussen van je cursist.</string>
     <string name="parentNoCourses">Geen cursussen</string>
     <string name="parentNoCoursesMessage">De cursussen van je cursist zijn mogelijk nog niet gepubliceerd.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Er is een fout opgetreden bij het laden van de opdrachten</string>
     <string name="a11y_searchAssignments">Opdrachten zoeken</string>
     <string name="dueAssignmentListItem">Inleverdatum %1$s</string>
+    <string name="a11y_searchAmongRecipients">Zoeken onder de ontvangers</string>
+    <string name="a11y_recipientIsRemoved">%1$s is verwijderd</string>
+    <string name="widgetDueDate">In te leveren op %1$s</string>
+    <string name="widgetFromTo">%1$s tot %2$s</string>
+    <string name="widgetAllDay">De hele dag</string>
+    <string name="widgetErrorTitle">Oeps! Er is iets misgegaan</string>
+    <string name="widgetErrorSubtitle">We kunnen je taken op dit moment niet weergeven. Probeer het wat later nog een keer of open de app.</string>
+    <string name="widgetToDoEmptyTitle">Voor nu ben je klaar!</string>
+    <string name="widgetToDoEmptySubtitle">Het lijkt erop dat je de komende 4 weken vrij hebt. Wil je een paar opdrachten toevoegen?</string>
+    <string name="widgetNotLoggedInTitle">Laten we je aanmelden!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Meld je in de app aan bij je account om je lijst met opdrachten te bekijken. Het kost je maar een momentje!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Open het scherm van de lijst met opdrachten</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Nieuwe opdracht maken</string>
+    <string name="widgetGradesErrorSubtitle">We kunnen je cijfers op dit moment niet weergeven. Probeer het wat later nog een keer of open de app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Meld je in de app aan bij je account om je cijfers te bekijken. Het kost je maar een momentje!</string>
+    <string name="widgetSingleGradeErrorSubtitle">We kunnen je cijfers op dit moment niet weergeven.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Meld je in de app aan bij je account om je cijfers te bekijken.</string>
+    <string name="widgetSingleGradeSelectCourse">Laten we cursus kiezen</string>
+    <string name="widgetGradesErrorLoadingCourses">Er is een fout opgetreden tijdens het laden van cursussen.</string>
 </resources>

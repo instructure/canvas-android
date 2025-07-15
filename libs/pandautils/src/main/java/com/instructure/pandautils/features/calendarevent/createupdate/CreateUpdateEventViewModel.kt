@@ -64,7 +64,8 @@ class CreateUpdateEventViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val resources: Resources,
     private val repository: CreateUpdateEventRepository,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val createUpdateEventViewModelBehavior: CreateUpdateEventViewModelBehavior
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateUpdateEventUiState())
@@ -514,6 +515,8 @@ class CreateUpdateEventViewModel @Inject constructor(
                 val daysToRefresh = listOfNotNull(scheduleItem?.startDate?.toLocalDate()) + result.mapNotNull { it.startDate?.toLocalDate() }
                 _events.send(CreateUpdateEventViewModelAction.RefreshCalendarDays(daysToRefresh))
             }
+
+            createUpdateEventViewModelBehavior.updateWidget()
         } catch {
             _uiState.update {
                 it.copy(

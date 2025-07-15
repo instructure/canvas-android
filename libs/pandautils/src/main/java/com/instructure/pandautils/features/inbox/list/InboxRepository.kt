@@ -123,6 +123,6 @@ abstract class InboxRepository(
     suspend fun getInboxSignature() {
         // We are just prefetching the signature settings here
         featuresApi.getAccountSettingsFeatures(RestParams())
-        inboxSettingsManager.getInboxSignatureSettings(true)
+        inboxSettingsManager.getInboxSignatureSettings()
     }
 }

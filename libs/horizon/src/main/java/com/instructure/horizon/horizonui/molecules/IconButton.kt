@@ -48,29 +48,75 @@ enum class IconButtonSize(val size: Dp, val badgeOffset: Dp) {
     NORMAL(44.dp, 5.dp),
 }
 
-enum class IconButtonColor(
-    val backgroundColor: Color,
-    val iconColor: Color,
-    val borderColor: Color = Color.Transparent,
-    val secondaryBackgroundColor: Color? = null
+sealed class IconButtonColor(
+    open val backgroundColor: Color,
+    open val iconColor: Color,
+    open val borderColor: Color = Color.Transparent,
+    open val secondaryBackgroundColor: Color? = null
 ) {
-    BLACK(HorizonColors.Surface.inversePrimary(), HorizonColors.Icon.surfaceColored()),
-    INVERSE(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.default()),
-    INVERSE_DANGER(HorizonColors.Surface.pageSecondary(), HorizonColors.Icon.error()),
-    INSTITUTION(HorizonColors.Surface.institution(), HorizonColors.Icon.surfaceColored()),
-    BEIGE(HorizonColors.Surface.pagePrimary(), HorizonColors.Icon.default()),
-    GHOST(Color.Transparent, HorizonColors.Icon.default()),
-    BLACK_GHOST(Color.Transparent, HorizonColors.Icon.surfaceColored()),
-    WHITE_GREY_OUTLINE(
+    data object Black : IconButtonColor(
+        HorizonColors.Surface.inversePrimary(),
+        HorizonColors.Icon.surfaceColored()
+    )
+
+    data object Inverse : IconButtonColor(
+        HorizonColors.Surface.pageSecondary(),
+        HorizonColors.Icon.default()
+    )
+
+    data object Danger : IconButtonColor(
+        HorizonColors.Icon.error(),
+        HorizonColors.Surface.pageSecondary()
+    )
+
+    data object InverseDanger : IconButtonColor(
+        HorizonColors.Surface.pageSecondary(),
+        HorizonColors.Icon.error()
+    )
+
+    data object Institution : IconButtonColor(
+        HorizonColors.Surface.institution(),
+        HorizonColors.Icon.surfaceColored()
+    )
+
+    data object Beige : IconButtonColor(
+        HorizonColors.Surface.pagePrimary(),
+        HorizonColors.Icon.default()
+    )
+
+    data object Ghost : IconButtonColor(
+        Color.Transparent,
+        HorizonColors.Icon.default()
+    )
+
+    data object BlackGhost : IconButtonColor(
+        Color.Transparent,
+        HorizonColors.Icon.surfaceColored()
+    )
+
+    data object WhiteGreyOutline : IconButtonColor(
         HorizonColors.Surface.pagePrimary(),
         HorizonColors.Icon.default(),
         HorizonColors.LineAndBorder.lineStroke()
-    ),
-    AI(
+    )
+
+    data object Ai : IconButtonColor(
         HorizonColors.Surface.aiGradientStart(),
         HorizonColors.Icon.surfaceColored(),
         secondaryBackgroundColor = HorizonColors.Surface.aiGradientEnd()
-    ),
+    )
+
+    data object White : IconButtonColor(
+        HorizonColors.Surface.pageSecondary(),
+        HorizonColors.Icon.default()
+    )
+
+    data class Custom(
+        override val backgroundColor: Color,
+        override val iconColor: Color,
+        override val borderColor: Color = Color.Transparent,
+        override val secondaryBackgroundColor: Color? = null
+    ) : IconButtonColor(backgroundColor, iconColor, borderColor, secondaryBackgroundColor)
 }
 
 @Composable
@@ -78,7 +124,7 @@ fun IconButton(
     @DrawableRes iconRes: Int,
     modifier: Modifier = Modifier,
     size: IconButtonSize = IconButtonSize.NORMAL,
-    color: IconButtonColor = IconButtonColor.BLACK,
+    color: IconButtonColor = IconButtonColor.Black,
     elevation: Dp? = null,
     enabled: Boolean = true,
     contentDescription: String? = null,
@@ -148,19 +194,19 @@ private fun IconButtonWithBadgePreview() {
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun IconButtonInversePreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INVERSE)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.Inverse)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun IconButtonInverseDisabledPreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INVERSE, enabled = false)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.Inverse, enabled = false)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun IconButtonInverseDangerPreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INVERSE_DANGER)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.InverseDanger)
 }
 
 @Composable
@@ -180,35 +226,35 @@ private fun IconButtonDisabledPreview() {
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun IconButtonBeigePreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.BEIGE)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.Beige)
 }
 
 @Composable
 @Preview(showBackground = true, backgroundColor = 0xFF000000)
 private fun IconButtonInstitutionPreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.INSTITUTION)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.Institution)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun IconButtonOutlinePreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.WHITE_GREY_OUTLINE)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.WhiteGreyOutline)
 }
 
 @Composable
 @Preview(showBackground = true)
 private fun IconButtonGhostPreview() {
-    IconButton(iconRes = R.drawable.add, color = IconButtonColor.GHOST)
+    IconButton(iconRes = R.drawable.add, color = IconButtonColor.Ghost)
 }
 
 @Composable
 @Preview
 private fun IconButtonAiPreview() {
-    IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI)
+    IconButton(iconRes = R.drawable.ai, color = IconButtonColor.Ai)
 }
 
 @Composable
 @Preview
 private fun IconButtonAiSmallPreview() {
-    IconButton(iconRes = R.drawable.ai, color = IconButtonColor.AI, size = IconButtonSize.SMALL)
+    IconButton(iconRes = R.drawable.ai, color = IconButtonColor.Ai, size = IconButtonSize.SMALL)
 }

@@ -1,0 +1,11 @@
+query GetUnreadCommentCountQuery(
+    $assignmentId: ID!,
+    $userId: ID!
+) {
+    submission(assignmentId: $assignmentId, userId: $userId) {
+        ...on Submission {
+            id: _id
+            unreadCommentCount
+        }
+    }
+}

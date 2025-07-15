@@ -21,6 +21,7 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 data class FileSubmissionContentUiState(
     val files: List<FileItemUiState> = emptyList(),
     val filePreview: FilePreviewUiState? = null,
+    val filePreviewLoading: Boolean = false,
     val filePathToOpen: String? = null,
     val mimeTypeToOpen: String? = null,
     val onFileOpened: () -> Unit = {},

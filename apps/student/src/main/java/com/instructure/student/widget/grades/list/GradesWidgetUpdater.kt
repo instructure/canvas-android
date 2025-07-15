@@ -18,6 +18,8 @@ package com.instructure.student.widget.grades.list
 import androidx.glance.GlanceId
 import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.widget.glance.WidgetState
 import com.instructure.student.widget.grades.GradesWidgetRepository
 import com.instructure.student.widget.grades.toWidgetCourseItem
@@ -40,7 +42,13 @@ class GradesWidgetUpdater(
 
     suspend fun updateData(widgetIds: List<Int>) {
         for (widgetId in widgetIds) {
-            val glanceId = glanceAppWidgetManager.getGlanceIdBy(widgetId)
+            val glanceId = try {
+                glanceAppWidgetManager.getGlanceIdBy(widgetId)
+            } catch (e: IllegalArgumentException) {
+                // Invalid AppWidget ID (widget deleted)
+                continue
+            }
+
             val user = apiPrefs.user
             if (user == null) {
                 _uiState.emit(Pair(glanceId, GradesWidgetUiState(WidgetState.NotLoggedIn)))
@@ -48,7 +56,15 @@ class GradesWidgetUpdater(
             }
 
             try {
-                val courses = repository.getCoursesWithGradingScheme(true)
+                val coursesDataResult = repository.getCoursesWithGradingScheme(true)
+
+                if (coursesDataResult is DataResult.Fail && coursesDataResult.failure is Failure.Authorization) {
+                    _uiState.emit(Pair(glanceId, GradesWidgetUiState(WidgetState.NotLoggedIn)))
+                    continue
+                }
+                // Other errors are handled in catch
+                val courses = coursesDataResult.dataOrThrow
+
                 if (courses.isEmpty()) {
                     _uiState.emit(Pair(glanceId, GradesWidgetUiState(WidgetState.Empty)))
                     continue
