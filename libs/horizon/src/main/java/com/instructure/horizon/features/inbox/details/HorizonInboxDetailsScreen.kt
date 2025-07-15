@@ -38,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -51,10 +52,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -62,6 +66,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
@@ -93,6 +98,17 @@ fun HorizonInboxDetailsScreen(
         topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, navController) },
     ) { innerPadding ->
         LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(innerPadding)) {
+            state.replyState?.let { replyState ->
+                val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
+                val pickerState by viewModel.uiState.collectAsState()
+                HorizonInboxAttachmentPicker(
+                    showBottomSheet = replyState.showAttachmentPicker,
+                    onDismissBottomSheet = { replyState.onShowAttachmentPickerChanged(false) },
+                    state = pickerState,
+                    onFilesChanged = replyState.onAttachmentsChanged
+                )
+            }
+
             HorizonInboxDetailsContent(state)
         }
     }
@@ -299,10 +315,29 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
 
         HorizonSpace(SpaceSize.SPACE_16)
 
+        state.attachments.forEach {
+            FileDropItem(
+                it.toFileDropItemState(),
+            )
+        }
+
+        if (state.attachments.isNotEmpty()) {
+            HorizonSpace(SpaceSize.SPACE_8)
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
         ) {
+
+            Button(
+                label = stringResource(R.string.inboxDetailsReplyAttachFile),
+                iconPosition = ButtonIconPosition.Start(R.drawable.attach_file),
+                color = ButtonColor.Inverse,
+                enabled = state.attachments.size < 3,
+                onClick = { state.onShowAttachmentPickerChanged(true) },
+            )
+
             Spacer(modifier = Modifier.weight(1f))
 
             AnimatedContent(
