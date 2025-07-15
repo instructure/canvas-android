@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.DashboardCourse
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.weave.catch
@@ -70,7 +71,7 @@ class DashboardViewModel @Inject constructor(
 
     private suspend fun loadData(forceNetwork: Boolean) {
         _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) }
-        val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
+        val courses = dashboardRepository.getDashboardCourses(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
             val coursesResult = courses.dataOrThrow
             val courseUiStates = coursesResult.map { course ->
@@ -84,15 +85,15 @@ class DashboardViewModel @Inject constructor(
         }
     }
 
-    private suspend fun mapCourse(course: CourseWithProgress, forceNetwork: Boolean): DashboardCourseUiState? {
-        val nextModuleId = course.nextUpModuleId
-        val nextModuleItemId = course.nextUpModuleItemId
+    private suspend fun mapCourse(dashboardCourse: DashboardCourse, forceNetwork: Boolean): DashboardCourseUiState? {
+        val nextModuleId = dashboardCourse.nextUpModuleId
+        val nextModuleItemId = dashboardCourse.nextUpModuleItemId
         return if (nextModuleId != null && nextModuleItemId != null) {
-            createCourseUiState(course)
-        } else if (course.progress == 0.0) {
+            createCourseUiState(dashboardCourse)
+        } else if (dashboardCourse.course.progress == 0.0) {
 
             val modules = dashboardRepository.getFirstPageModulesWithItems(
-                course.course.id,
+                dashboardCourse.course.courseId,
                 forceNetwork = forceNetwork
             )
 
@@ -103,18 +104,18 @@ class DashboardViewModel @Inject constructor(
                 if (nextModuleItemResult == null || nextModuleResult == null) {
                     return null
                 }
-                createCourseUiState(course, nextModuleResult, nextModuleItemResult)
+                createCourseUiState(dashboardCourse.course, nextModuleResult, nextModuleItemResult)
             } else {
                 handleError()
                 null
             }
-        } else if (course.progress == 100.0) {
+        } else if (dashboardCourse.course.progress == 100.0) {
             DashboardCourseUiState(
-                courseId = course.course.id,
-                courseName = course.course.name,
-                courseProgress = course.progress,
+                courseId = dashboardCourse.course.courseId,
+                courseName = dashboardCourse.course.courseName,
+                courseProgress = dashboardCourse.course.progress,
                 completed = true,
-                progressLabel = getProgressLabel(course.progress),
+                progressLabel = getProgressLabel(dashboardCourse.course.progress),
             )
         } else {
             handleError()
@@ -123,35 +124,37 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun createCourseUiState(
-        course: CourseWithProgress
+        dashboardCourse: DashboardCourse
     ) = DashboardCourseUiState(
-        courseId = course.course.id,
-        courseName = course.course.name,
-        courseProgress = course.progress,
-        nextModuleName = course.nextUpModuleTitle ?: "",
-        nextModuleItemId = course.nextUpModuleItemId,
-        nextModuleItemName = course.nextUpModuleItemTitle ?: "",
-        progressLabel = getProgressLabel(course.progress),
-        remainingTime = course.nextModuleItemEstimatedDuration?.formatIsoDuration(context),
-        learningObjectType = if (course.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(course.nextModuleItemType.orEmpty()),
-        dueDate = course.nextModuleItemDueDate
+        courseId = dashboardCourse.course.courseId,
+        courseName = dashboardCourse.course.courseName,
+        courseProgress = dashboardCourse.course.progress,
+        nextModuleName = dashboardCourse.nextUpModuleTitle ?: "",
+        nextModuleItemId = dashboardCourse.nextUpModuleItemId,
+        nextModuleItemName = dashboardCourse.nextUpModuleItemTitle ?: "",
+        progressLabel = getProgressLabel(dashboardCourse.course.progress),
+        remainingTime = dashboardCourse.nextModuleItemEstimatedDuration?.formatIsoDuration(context),
+        learningObjectType = if (dashboardCourse.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(
+            dashboardCourse.nextModuleItemType.orEmpty()
+        ),
+        dueDate = dashboardCourse.nextModuleItemDueDate
     )
 
     private fun createCourseUiState(
         course: CourseWithProgress,
-        nextModuleResult: ModuleObject?,
-        nextModuleItemResult: ModuleItem
+        nextModule: ModuleObject?,
+        nextModuleItem: ModuleItem
     ) = DashboardCourseUiState(
-        courseId = course.course.id,
-        courseName = course.course.name,
+        courseId = course.courseId,
+        courseName = course.courseName,
         courseProgress = course.progress,
-        nextModuleName = nextModuleResult?.name ?: "",
-        nextModuleItemId = nextModuleItemResult.id,
-        nextModuleItemName = nextModuleItemResult.title ?: "",
+        nextModuleName = nextModule?.name ?: "",
+        nextModuleItemId = nextModuleItem.id,
+        nextModuleItemName = nextModuleItem.title ?: "",
         progressLabel = getProgressLabel(course.progress),
-        remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
-        learningObjectType = if (course.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(course.nextModuleItemType.orEmpty()),
-        dueDate = nextModuleItemResult.moduleDetails?.dueDate
+        remainingTime = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
+        learningObjectType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
+        dueDate = nextModuleItem.moduleDetails?.dueDate
     )
 
     private fun getProgressLabel(progress: Double): String {

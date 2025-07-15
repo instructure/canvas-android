@@ -17,12 +17,11 @@ package com.instructure.canvasapi2.managers
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.QLClientConfig
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import java.util.Date
 
-class GetCoursesManager {
+class HorizonGetCoursesManager {
 
     suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
         return try {
@@ -41,28 +40,51 @@ class GetCoursesManager {
         val courseId = course?.id?.toLong()
         val courseName = course?.name
         val courseSyllabus = course?.syllabus_body
+
+        return if (courseId != null && courseName != null) {
+            CourseWithProgress(courseId, courseName, courseSyllabus, progress)
+        } else {
+            null
+        }
+    }
+
+    suspend fun getDashboardCourses(userId: Long, forceNetwork: Boolean): DataResult<List<DashboardCourse>> {
+        return try {
+            val query = GetCoursesQuery(userId.toString())
+            val result = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
+
+            val coursesList = result.legacyNode?.onUser?.enrollments?.mapNotNull { mapDashboardCourse(it.course) } ?: emptyList()
+            return DataResult.Success(coursesList)
+        } catch (e: Exception) {
+            DataResult.Fail(Failure.Exception(e))
+        }
+    }
+
+    private fun mapDashboardCourse(course: GetCoursesQuery.Course?): DashboardCourse? {
+        val courseWithProgress = mapCourse(course)
         val institutionName = course?.account?.name
         val incompleteModulesConnection =
             course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.incompleteModulesConnection?.nodes?.firstOrNull()
-        val moduleId = incompleteModulesConnection?.module?.id?.toLong()
-        val moduleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.id?.toLong()
+        val nextModuleId = incompleteModulesConnection?.module?.id?.toLong()
+        val nextModuleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.id?.toLong()
 
         val nextModuleTitle = incompleteModulesConnection?.module?.name
 
         val nextModuleItemEstimatedDuration =
             incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.estimatedDuration
-        val nextModuleItemDueDate = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.dueAt
+        val nextModuleItemDueDate =
+            incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.dueAt
         val nextModuleItemType = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.__typename
         val nextModuleItemTitle = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.title
-        val isNewQuiz = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.isNewQuiz ?: false
+        val isNewQuiz =
+            incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.isNewQuiz ?: false
 
-        return if (courseId != null && courseName != null) {
-            CourseWithProgress(
-                Course(courseId, courseName, syllabusBody = courseSyllabus),
-                progress,
+        return if (courseWithProgress != null) {
+            DashboardCourse(
+                courseWithProgress,
                 institutionName,
-                moduleItemId,
-                moduleId,
+                nextModuleItemId,
+                nextModuleId,
                 nextModuleTitle,
                 nextModuleItemTitle,
                 nextModuleItemType,
@@ -77,8 +99,14 @@ class GetCoursesManager {
 }
 
 data class CourseWithProgress(
-    val course: Course,
+    val courseId: Long,
+    val courseName: String,
+    val courseSyllabus: String? = null,
     val progress: Double,
+)
+
+data class DashboardCourse(
+    val course: CourseWithProgress,
     val institutionName: String?,
     val nextUpModuleItemId: Long?,
     val nextUpModuleId: Long?,
