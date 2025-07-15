@@ -318,7 +318,6 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
         state.attachments.forEach {
             FileDropItem(
                 it.toFileDropItemState(),
-                Modifier.padding(vertical = 12.dp)
             )
         }
 
