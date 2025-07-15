@@ -140,7 +140,12 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
                     progress = 0.0,
                     nextUpModuleItemId = null,
                     nextUpModuleId = null,
-                    institutionName = null
+                    institutionName = null,
+                    nextModuleItemEstimatedDuration = null,
+                    nextModuleItemDueDate = null,
+                    nextModuleItemType = null,
+                    nextUpModuleTitle = null,
+                    nextUpModuleItemTitle = null
                 ),
                 onSelect = { state.onSelectedCourseChanged(it) },
             )
@@ -395,6 +400,11 @@ fun LearnScreenContentPreview() {
             institutionName = null,
             nextUpModuleItemId = null,
             nextUpModuleId = null,
+            nextModuleItemEstimatedDuration = null,
+            nextModuleItemDueDate = null,
+            nextModuleItemType = null,
+            nextUpModuleTitle = null,
+            nextUpModuleItemTitle = null
         ),
         availableTabs = LearnTab.entries
     )

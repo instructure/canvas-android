@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import java.util.Date
 
 class GetCoursesManager {
 
@@ -46,8 +47,29 @@ class GetCoursesManager {
         val moduleId = incompleteModulesConnection?.module?.id?.toLong()
         val moduleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.id?.toLong()
 
+        val nextModuleTitle = incompleteModulesConnection?.module?.name
+
+        val nextModuleItemEstimatedDuration =
+            incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.estimatedDuration
+        val nextModuleItemDueDate = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.dueAt
+        val nextModuleItemType = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.__typename
+        val nextModuleItemTitle = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.title
+        val isNewQuiz = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.isNewQuiz ?: false
+
         return if (courseId != null && courseName != null) {
-            CourseWithProgress(Course(courseId, courseName, syllabusBody = courseSyllabus), progress, institutionName, moduleItemId, moduleId)
+            CourseWithProgress(
+                Course(courseId, courseName, syllabusBody = courseSyllabus),
+                progress,
+                institutionName,
+                moduleItemId,
+                moduleId,
+                nextModuleTitle,
+                nextModuleItemTitle,
+                nextModuleItemType,
+                nextModuleItemDueDate,
+                nextModuleItemEstimatedDuration,
+                isNewQuiz
+            )
         } else {
             null
         }
@@ -59,5 +81,11 @@ data class CourseWithProgress(
     val progress: Double,
     val institutionName: String?,
     val nextUpModuleItemId: Long?,
-    val nextUpModuleId: Long?
+    val nextUpModuleId: Long?,
+    val nextUpModuleTitle: String?,
+    val nextUpModuleItemTitle: String?,
+    val nextModuleItemType: String?,
+    val nextModuleItemDueDate: Date?,
+    val nextModuleItemEstimatedDuration: String?,
+    val isNewQuiz: Boolean = false
 )

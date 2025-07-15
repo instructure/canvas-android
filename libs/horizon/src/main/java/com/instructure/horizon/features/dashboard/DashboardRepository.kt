@@ -20,7 +20,6 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.managers.GetCoursesManager
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -33,16 +32,6 @@ class DashboardRepository @Inject constructor(
 ) {
     suspend fun getCoursesWithProgress(forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
         return getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork)
-    }
-
-    suspend fun getNextModule(courseId: Long, moduleId: Long, forceNetwork: Boolean): DataResult<ModuleObject> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return moduleApi.getModuleObject(CanvasContext.Type.COURSE.apiString, courseId, moduleId, params)
-    }
-
-    suspend fun getNextModuleItem(courseId: Long, moduleId: Long, moduleItemId: Long, forceNetwork: Boolean): DataResult<ModuleItem> {
-        val params = RestParams(isForceReadFromNetwork = forceNetwork)
-        return moduleApi.getModuleItem(CanvasContext.Type.COURSE.apiString, courseId, moduleId, moduleItemId, params)
     }
 
     suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): DataResult<List<ModuleObject>> {

@@ -88,25 +88,7 @@ class DashboardViewModel @Inject constructor(
         val nextModuleId = course.nextUpModuleId
         val nextModuleItemId = course.nextUpModuleItemId
         return if (nextModuleId != null && nextModuleItemId != null) {
-            val nextModule = dashboardRepository.getNextModule(
-                course.course.id,
-                nextModuleId,
-                forceNetwork = forceNetwork
-            )
-            val nextModuleItem = dashboardRepository.getNextModuleItem(
-                course.course.id,
-                nextModuleId,
-                nextModuleItemId,
-                forceNetwork = forceNetwork
-            )
-            if (nextModuleItem.isSuccess) {
-                val nextModuleResult = nextModule.dataOrNull
-                val nextModuleItemResult = nextModuleItem.dataOrThrow
-                createCourseUiState(course, nextModuleResult, nextModuleItemResult)
-            } else {
-                handleError()
-                null
-            }
+            createCourseUiState(course)
         } else if (course.progress == 0.0) {
 
             val modules = dashboardRepository.getFirstPageModulesWithItems(
@@ -141,6 +123,21 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun createCourseUiState(
+        course: CourseWithProgress
+    ) = DashboardCourseUiState(
+        courseId = course.course.id,
+        courseName = course.course.name,
+        courseProgress = course.progress,
+        nextModuleName = course.nextUpModuleTitle ?: "",
+        nextModuleItemId = course.nextUpModuleItemId,
+        nextModuleItemName = course.nextUpModuleItemTitle ?: "",
+        progressLabel = getProgressLabel(course.progress),
+        remainingTime = course.nextModuleItemEstimatedDuration?.formatIsoDuration(context),
+        learningObjectType = if (course.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(course.nextModuleItemType.orEmpty()),
+        dueDate = course.nextModuleItemDueDate
+    )
+
+    private fun createCourseUiState(
         course: CourseWithProgress,
         nextModuleResult: ModuleObject?,
         nextModuleItemResult: ModuleItem
@@ -153,14 +150,14 @@ class DashboardViewModel @Inject constructor(
         nextModuleItemName = nextModuleItemResult.title ?: "",
         progressLabel = getProgressLabel(course.progress),
         remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
-        learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
+        learningObjectType = if (course.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(course.nextModuleItemType.orEmpty()),
         dueDate = nextModuleItemResult.moduleDetails?.dueDate
     )
 
     private fun getProgressLabel(progress: Double): String {
         return when (progress) {
-            in 0.0..<100.0 -> {
-                context.getString(R.string.learningObject_pillStatusInProgress).uppercase()
+            0.0 -> {
+                context.getString(R.string.learningObject_pillStatusNotStarted).uppercase()
             }
 
             100.0 -> {
@@ -168,7 +165,7 @@ class DashboardViewModel @Inject constructor(
             }
 
             else -> {
-                context.getString(R.string.learningObject_pillStatusNotStarted).uppercase()
+                context.getString(R.string.learningObject_pillStatusInProgress).uppercase()
             }
         }
     }
