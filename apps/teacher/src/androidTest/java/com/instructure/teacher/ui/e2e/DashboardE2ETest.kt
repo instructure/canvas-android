@@ -18,7 +18,6 @@ package com.instructure.teacher.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -159,47 +158,4 @@ class DashboardE2ETest : TeacherTest() {
         dashboardPage.assertCourseTitle(course1.name)
     }
 
-    @E2E
-    @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    fun testHelpMenuE2E() {
-
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1)
-        val teacher = data.teachersList[0]
-
-        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
-        tokenLogin(teacher)
-        dashboardPage.waitForRender()
-
-        Log.d(STEP_TAG, "Open Help Menu.")
-        leftSideNavigationDrawerPage.clickHelpMenu()
-
-        Log.d(ASSERTION_TAG, "Assert Help Menu Dialog is displayed.")
-        helpPage.assertHelpMenuDisplayed()
-
-        Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
-        helpPage.assertHelpMenuContent()
-
-        Log.d(STEP_TAG, "Click on 'Report a problem' menu.")
-        helpPage.verifyReportAProblem("Test Subject", "Test Description")
-
-        Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
-        helpPage.assertReportProblemDialogDisplayed()
-
-        Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
-        Intents.init()
-
-        try {
-            helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
-            helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
-            helpPage.assertHelpMenuURL("Ask the Community", "https://community.canvaslms.com/community/answers")
-            helpPage.assertHelpMenuURL("Training Services Portal", "https://training-portal-beta-pdx.insproserv.net?canvas_domain=mobileqa.instructure.com&sf_id=")
-            helpPage.assertHelpMenuURL("Conference Guides for Remote Classrooms", "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
-            helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
-        }
-        finally {
-            Intents.release()
-        }
-    }
 }

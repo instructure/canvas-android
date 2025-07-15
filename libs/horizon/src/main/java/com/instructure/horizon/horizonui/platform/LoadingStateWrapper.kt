@@ -51,9 +51,9 @@ data class LoadingState(
     val isError: Boolean = false,
     val isPullToRefreshEnabled: Boolean = true,
     val errorMessage: String? = null,
-    val errorSnackbar: String? = null,
+    val snackbarMessage: String? = null,
     val onRefresh: () -> Unit = {},
-    val onErrorSnackbarDismiss: () -> Unit = {},
+    val onSnackbarDismiss: () -> Unit = {},
 )
 
 @ExperimentalMaterial3Api
@@ -62,16 +62,17 @@ fun LoadingStateWrapper(
     loadingState: LoadingState,
     modifier: Modifier = Modifier,
     containerColor: Color = HorizonColors.Surface.pagePrimary(),
+    snackbarHostState: SnackbarHostState = remember { SnackbarHostState() },
+    spinnerColor: Color = HorizonColors.Surface.institution(),
     content: @Composable BoxScope.() -> Unit,
 ) {
     val state = rememberPullToRefreshState()
-    val snackbarHostState = remember { SnackbarHostState() }
 
-    LaunchedEffect(loadingState.errorSnackbar) {
-        if (loadingState.errorSnackbar != null) {
-            val result = snackbarHostState.showSnackbar(loadingState.errorSnackbar)
+    LaunchedEffect(loadingState.snackbarMessage) {
+        if (loadingState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(loadingState.snackbarMessage)
             if (result == SnackbarResult.Dismissed) {
-                loadingState.onErrorSnackbarDismiss()
+                loadingState.onSnackbarDismiss()
             }
         }
     }
@@ -96,7 +97,7 @@ fun LoadingStateWrapper(
                 },
                 content = {
                     when {
-                        loadingState.isLoading -> LoadingContent()
+                        loadingState.isLoading -> LoadingContent(spinnerColor = spinnerColor)
                         loadingState.isError -> ErrorContent(
                             loadingState.errorMessage
                                 ?: stringResource(R.string.loadingStateWrapper_errorOccurred)
@@ -123,9 +124,10 @@ fun LoadingStateWrapper(
 }
 
 @Composable
-private fun BoxScope.LoadingContent(modifier: Modifier = Modifier) {
+private fun BoxScope.LoadingContent(modifier: Modifier = Modifier, spinnerColor: Color = HorizonColors.Surface.institution()) {
     Spinner(
-        modifier
+        color = spinnerColor,
+        modifier = modifier
             .fillMaxSize()
             .align(Alignment.Center)
     )

@@ -15,24 +15,27 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
-import androidx.annotation.StringRes
-import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class AssignmentDetailsUiState(
+    val assignmentId: Long,
     val loadingState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
     val instructions: String = "",
     val ltiUrl: String = "",
     val submissionDetailsUiState: SubmissionDetailsUiState = SubmissionDetailsUiState(),
-    val addSubmissionUiState: AddSubmissionUiState = AddSubmissionUiState(),
     val showSubmissionDetails: Boolean = false,
     val showAddSubmission: Boolean = false,
     val toolsBottomSheetUiState: ToolsBottomSheetUiState = ToolsBottomSheetUiState(),
     val ltiButtonPressed: ((String) -> Unit)? = null,
     val urlToOpen: String? = null,
     val onUrlOpened: () -> Unit = {},
+    val onSubmissionSuccess: suspend () -> Unit = {},
     val submissionConfirmationUiState: SubmissionConfirmationUiState = SubmissionConfirmationUiState(),
+    val attemptSelectorUiState: AttemptSelectorUiState = AttemptSelectorUiState(),
+    val openCommentsBottomSheetParams: OpenCommentsBottomSheetParams? = null,
+    val onCommentsBottomSheetDismissed: () -> Unit = {},
+    val viewingAttemptText: String? = null,
 )
 
 data class SubmissionDetailsUiState(
@@ -61,41 +64,28 @@ data class FileItem(
     val fileId: Long
 )
 
-data class AddSubmissionUiState(
-    val submissionTypes: List<AddSubmissionTypeUiState> = emptyList(),
-    val selectedSubmissionTypeIndex: Int = 0,
-    val onSubmissionTypeSelected: (Int) -> Unit = {},
-    val onSubmissionButtonClicked: () -> Unit = {},
-    val draftDateString: String = "",
-    val onDeleteDraftClicked: () -> Unit = {},
-    val showDeleteDraftConfirmation: Boolean = false,
-    val onDismissDeleteDraftConfirmation: () -> Unit = {},
-    val onDraftDeleted: () -> Unit = {},
-    val showSubmissionConfirmation: Boolean = false,
-    val onDismissSubmissionConfirmation: () -> Unit = {},
-    val onSubmitAssignment: () -> Unit = {},
-    val submissionInProgress: Boolean = false,
-    val submitEnabled: Boolean = false,
-)
-
-sealed class AddSubmissionTypeUiState(@StringRes val labelRes: Int) {
-    data class Text(
-        val text: String = "",
-        val onTextChanged: (String) -> Unit = {},
-    ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeText)
-
-    data class File(val fileName: String) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload)
-}
-
 data class ToolsBottomSheetUiState(
     val show: Boolean = false,
+    val showAttemptSelector: Boolean = false,
     val onDismiss: () -> Unit = {},
     val onAttemptsClick: () -> Unit = {},
     val onCommentsClick: () -> Unit = {},
+    val hasUnreadComments: Boolean = false,
 )
 
 data class SubmissionConfirmationUiState(
     val show: Boolean = false,
     val onDismiss: () -> Unit = {},
     val attemptCardState: AttemptCardState? = null
+)
+
+data class AttemptSelectorUiState(
+    val show: Boolean = false,
+    val attempts: List<AttemptCardState> = emptyList(),
+    val onDismiss: () -> Unit = {}
+)
+
+data class OpenCommentsBottomSheetParams(
+    val assignmentId: Long = -1L,
+    val courseId: Long = -1L
 )

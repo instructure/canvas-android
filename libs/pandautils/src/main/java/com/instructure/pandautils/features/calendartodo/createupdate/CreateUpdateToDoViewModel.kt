@@ -50,7 +50,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
     private val resources: Resources,
     private val repository: CreateUpdateToDoRepository,
     private val apiPrefs: ApiPrefs,
-    private val createUpdateToDoBehavior: CreateUpdateToDoBehavior
+    private val createUpdateToDoViewModelBehavior: CreateUpdateToDoViewModelBehavior
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CreateUpdateToDoUiState())
@@ -225,7 +225,7 @@ class CreateUpdateToDoViewModel @Inject constructor(
                     listOfNotNull(plannerItem?.plannable?.todoDate?.toDate()?.toLocalDate(), uiState.value.date)
                 )
             )
-            createUpdateToDoBehavior.updateWidget()
+            createUpdateToDoViewModelBehavior.updateWidget()
         } catch {
             _uiState.update {
                 it.copy(

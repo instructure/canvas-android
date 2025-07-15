@@ -81,7 +81,7 @@ fun AiAssistToolbar(
                     iconRes = R.drawable.arrow_back,
                     contentDescription = stringResource(R.string.a11yNavigateBack),
                     size = IconButtonSize.SMALL,
-                    color = IconButtonColor.INVERSE,
+                    color = IconButtonColor.Inverse,
                     onClick = onBackPressed,
                 )
             }
@@ -91,7 +91,7 @@ fun AiAssistToolbar(
                 iconRes = R.drawable.close,
                 contentDescription = stringResource(R.string.aiAssistDismissContentDescription),
                 size = IconButtonSize.SMALL,
-                color = IconButtonColor.INVERSE,
+                color = IconButtonColor.Inverse,
                 onClick = onDismissPressed,
             )
         }

@@ -15,22 +15,9 @@
  *
  */
 
-package com.instructure.student.features.calendartodo
-
-import android.appwidget.AppWidgetManager
-import android.content.Context
-import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoBehavior
-import com.instructure.student.widget.WidgetUpdater
-import dagger.hilt.android.qualifiers.ApplicationContext
+package com.instructure.pandautils.features.calendartodo.details
 
 
-class StudentCreateUpdateToDoBehavior(
-    @ApplicationContext private val context: Context,
-    private val widgetUpdater: WidgetUpdater,
-    private val appWidgetManager: AppWidgetManager
-) : CreateUpdateToDoBehavior {
-
-    override fun updateWidget() {
-        context.sendBroadcast(widgetUpdater.getTodoWidgetUpdateIntent(appWidgetManager))
-    }
+interface ToDoViewModelBehavior {
+    fun updateWidget()
 }

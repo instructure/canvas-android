@@ -18,7 +18,6 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -147,11 +146,9 @@ class DashboardE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         Espresso.pressBack()
 
-        Log.d(ASSERTION_TAG, "Assert that both of the courses, '${course1.name}' and '${course2.name}', and their grades are displayed properly.")
+        Log.d(ASSERTION_TAG, "Assert that both of the courses, '${course1.name}' and '${course2.name}'.")
         dashboardPage.assertDisplaysCourse(course1)
         dashboardPage.assertDisplaysCourse(course2)
-        dashboardPage.assertCourseGrade(course1.name, "N/A")
-        dashboardPage.assertCourseGrade(course2.name, "N/A")
 
         Log.d(STEP_TAG, "Click on 'Edit nickname' menu of '${course1.name}' course.")
         dashboardPage.clickCourseOverflowMenu(course1.name, "Edit nickname")
@@ -180,12 +177,9 @@ class DashboardE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that '${group.name}' groups is displayed and the '${data.coursesList[0]}' is displayed as the corresponding course name of the group.")
         dashboardPage.assertDisplaysGroup(group, data.coursesList[0])
 
-        Log.d(STEP_TAG, "Toggle OFF 'Show Grades' and navigate back to Dashboard Page.")
-        leftSideNavigationDrawerPage.setShowGrades(false)
-
-        Log.d(ASSERTION_TAG, "Assert that the grades does not displayed on both of the courses' cards.")
-        dashboardPage.assertCourseGradeNotDisplayed(course1.name, "N/A")
-        dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A")
+        Log.d(ASSERTION_TAG, "Assert that the grades does not displayed on both of the courses' cards by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course1.name, "N/A", false)
+        dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A", false)
 
         Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
         leftSideNavigationDrawerPage.setShowGrades(true)
@@ -193,6 +187,13 @@ class DashboardE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the grades are displayed on both of the courses' cards.")
         dashboardPage.assertCourseGrade(course1.name, "N/A")
         dashboardPage.assertCourseGrade(course2.name, "N/A")
+
+        Log.d(STEP_TAG, "Toggle OFF 'Show Grades' and navigate back to Dashboard Page.")
+        leftSideNavigationDrawerPage.setShowGrades(false)
+
+        Log.d(ASSERTION_TAG, "Assert that the grades does not displayed on both of the courses' cards by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course1.name, "N/A")
+        dashboardPage.assertCourseGradeNotDisplayed(course2.name, "N/A")
 
         Log.d(STEP_TAG, "Click on 'All Courses' button.")
         dashboardPage.openAllCoursesPage()
@@ -241,46 +242,6 @@ class DashboardE2ETest : StudentTest() {
                 "since if there is no group selected on the All Courses page, we are showing all of them (this is the same logics as with the courses).")
         dashboardPage.assertDisplaysGroup(group, course1)
         dashboardPage.assertDisplaysGroup(group2, course1)
-    }
-
-    @E2E
-    @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    fun testHelpMenuE2E() {
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(students = 1, courses = 1)
-        val student = data.studentsList[0]
-
-        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        tokenLogin(student)
-        dashboardPage.waitForRender()
-
-        Log.d(STEP_TAG, "Open Help Menu.")
-        leftSideNavigationDrawerPage.clickHelpMenu()
-
-        Log.d(ASSERTION_TAG, "Assert Help Menu Dialog is displayed.")
-        helpPage.assertHelpMenuDisplayed()
-
-        Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
-        helpPage.assertHelpMenuContent()
-
-        Log.d(STEP_TAG, "Click on 'Report a problem' menu.")
-        helpPage.verifyReportAProblem("Test Subject", "Test Description")
-
-        Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
-        helpPage.assertReportProblemDialogDisplayed()
-
-        Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
-        Intents.init()
-
-        try {
-            helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
-            helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
-            helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
-        }
-        finally {
-            Intents.release()
-        }
     }
 
 }

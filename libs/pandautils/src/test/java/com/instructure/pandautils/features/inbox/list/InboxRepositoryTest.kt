@@ -203,6 +203,6 @@ class InboxRepositoryTest {
         inboxRepository.getInboxSignature()
 
         coVerify { featuresApi.getAccountSettingsFeatures(any()) }
-        coVerify { inboxSettingsManager.getInboxSignatureSettings(true) }
+        coVerify { inboxSettingsManager.getInboxSignatureSettings() }
     }
 }

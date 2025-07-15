@@ -20,6 +20,8 @@ import androidx.glance.appwidget.GlanceAppWidgetManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.student.widget.glance.WidgetState
@@ -62,8 +64,25 @@ class GradesWidgetUpdaterTest {
     }
 
     @Test
+    fun `emits NotLoggedIn when api call `() = runTest {
+        every { apiPrefs.user } returns null
+        updater.updateData(listOf(1))
+        val state = updater.uiState.first().second
+        assertEquals(WidgetState.NotLoggedIn, state.state)
+    }
+
+    @Test
+    fun `emits NotLoggedIn state when api call gets authorization error`() = runTest {
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Fail(Failure.Authorization())
+
+        updater.updateData(listOf(1))
+        val state = updater.uiState.first().second
+        assertEquals(WidgetState.NotLoggedIn, state.state)
+    }
+
+    @Test
     fun `emits Empty when repository returns empty list`() = runTest {
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns emptyList()
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Success(emptyList())
 
         updater.updateData(listOf(1))
         val state = updater.uiState.first().second
@@ -79,7 +98,7 @@ class GradesWidgetUpdaterTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any()) } returns themedColor
         val course = mockk<Course>(relaxed = true)
-        coEvery { repository.getCoursesWithGradingScheme(any()) } returns listOf(course)
+        coEvery { repository.getCoursesWithGradingScheme(any()) } returns DataResult.Success(listOf(course))
 
         updater.updateData(listOf(1))
         val state = updater.uiState.first().second

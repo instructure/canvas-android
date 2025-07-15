@@ -93,7 +93,9 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
     }
     Scaffold(content = { padding ->
         if (uiState.initialDataLoading) {
-            Spinner(modifier = Modifier.fillMaxSize())
+            val spinnerColor =
+                if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
+            Spinner(modifier = Modifier.fillMaxSize(), color = spinnerColor)
         } else {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(AiAssistContext(), navController, { uiState.updateShowAiAssist(false) })
@@ -146,7 +148,7 @@ fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier:
         onClick = onClick,
         contentDescription = stringResource(item.label),
         iconRes = R.drawable.ai,
-        color = IconButtonColor.AI
+        color = IconButtonColor.Ai
     )
 }
 

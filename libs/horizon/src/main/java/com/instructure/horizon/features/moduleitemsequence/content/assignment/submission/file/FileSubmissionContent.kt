@@ -41,6 +41,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
@@ -69,26 +70,31 @@ fun FileSubmissionContent(
         Column {
             uiState.files.forEach { file ->
                 val borderColor = if (file.selected) HorizonColors.Surface.institution() else HorizonColors.LineAndBorder.lineStroke()
-                val fileDropItemState = if (file.downloadState == FileDownloadProgressState.STARTING || file.downloadState == FileDownloadProgressState.IN_PROGRESS) {
-                    FileDropItemState.InProgress(
-                        fileName = file.fileName,
-                        progress = file.downloadProgress,
-                        onActionClick = { file.onCancelDownloadClick(file.fileId) },
-                        onClick = file.onClick
-                    )
-                } else {
-                    FileDropItemState.NoLongerEditable(
-                        fileName = file.fileName,
-                        onActionClick = { file.onDownloadClick(file) },
-                        onClick = file.onClick
-                    )
-                }
+                val fileDropItemState =
+                    if (file.downloadState == FileDownloadProgressState.STARTING || file.downloadState == FileDownloadProgressState.IN_PROGRESS) {
+                        FileDropItemState.InProgress(
+                            fileName = file.fileName,
+                            progress = file.downloadProgress,
+                            onActionClick = { file.onCancelDownloadClick(file.fileId) },
+                            onClick = file.onClick
+                        )
+                    } else {
+                        FileDropItemState.NoLongerEditable(
+                            fileName = file.fileName,
+                            onActionClick = { file.onDownloadClick(file) },
+                            onClick = file.onClick
+                        )
+                    }
                 FileDropItem(
                     state = fileDropItemState, borderColor = borderColor
                 )
             }
             HorizonSpace(SpaceSize.SPACE_8)
-            if (uiState.filePreview != null) {
+            if (uiState.filePreviewLoading) {
+                HorizonSpace(SpaceSize.SPACE_8)
+                Spinner(Modifier.fillMaxWidth())
+            }
+            if (uiState.filePreview != null && !uiState.filePreviewLoading) {
                 FilePreview(filePreviewUiState = uiState.filePreview, modifier = Modifier.fillMaxWidth().then(
                     if (uiState.filePreview is FilePreviewUiState.Text) Modifier.fillMaxHeight() else Modifier.heightIn(0.dp, 400.dp)
                 ))

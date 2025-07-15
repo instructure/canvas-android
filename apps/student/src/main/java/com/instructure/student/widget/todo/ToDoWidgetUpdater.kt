@@ -22,11 +22,14 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.student.R
 import com.instructure.student.widget.glance.WidgetState
@@ -52,22 +55,23 @@ class ToDoWidgetUpdater(
             }
 
             try {
-                val courses = repository.getFavouriteCourses(true)
-                val groups = repository.getFavouriteGroups(true)
-
-                val contextCodes = buildList {
-                    addAll(courses.map { it.contextId })
-                    addAll(groups.map { it.contextId })
-                    apiPrefs.user?.contextId?.let { add(it) }
-                }
+                val courses = repository.getCourses(true)
+                val calendarFilters = repository.getCalendarFilters(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
 
                 val startDateTime = LocalDate.now().atStartOfDay()
-                val plannerItems = repository.getPlannerItems(
+                val plannerItemsDataResult = repository.getPlannerItems(
                     startDateTime.toApiString().orEmpty(),
                     startDateTime.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
-                    contextCodes,
+                    calendarFilters?.filters.orEmpty().toList(),
                     true
                 )
+
+                if (plannerItemsDataResult is DataResult.Fail && plannerItemsDataResult.failure is Failure.Authorization) {
+                    emit(ToDoWidgetUiState(WidgetState.NotLoggedIn))
+                    return@flow
+                }
+                // Other errors are handled in catch
+                val plannerItems = plannerItemsDataResult.dataOrThrow
 
                 val toDoWidgetUiState = ToDoWidgetUiState(
                     if (plannerItems.isEmpty()) {
