@@ -321,6 +321,10 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
             )
         }
 
+        if (state.attachments.isNotEmpty()) {
+            HorizonSpace(SpaceSize.SPACE_8)
+        }
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.fillMaxWidth()
