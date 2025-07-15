@@ -31,13 +31,7 @@ import okhttp3.RequestBody
 import org.greenrobot.eventbus.EventBus
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.Multipart
-import retrofit2.http.POST
-import retrofit2.http.Part
-import retrofit2.http.PartMap
-import retrofit2.http.Path
-import retrofit2.http.Query
-import retrofit2.http.Url
+import retrofit2.http.*
 import java.io.File
 
 
