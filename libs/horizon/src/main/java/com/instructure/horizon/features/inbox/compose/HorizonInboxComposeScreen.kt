@@ -38,7 +38,6 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -50,13 +49,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
-import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerUiState
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -92,9 +90,11 @@ import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldSta
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizonInboxComposeScreen(
     state: HorizonInboxComposeUiState,
+    pickerState: HorizonInboxAttachmentPickerUiState,
     navController: NavHostController
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -120,8 +120,6 @@ fun HorizonInboxComposeScreen(
             HorizonInboxComposeTopBar(navController)
         }
     ) { innerPadding ->
-        val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
-        val pickerState by viewModel.uiState.collectAsState()
         HorizonInboxAttachmentPicker(
             showBottomSheet = state.showAttachmentPicker,
             onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
@@ -381,13 +379,22 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                         )
                     }
                 } else {
-                    val listEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry(HorizonInboxRoute.InboxList.route) }
+                    val listEntry = remember(navController.currentBackStackEntry) {
+                        try {
+                            navController.getBackStackEntry(HorizonInboxRoute.InboxList.route)
+                        } catch (e: IllegalArgumentException) {
+                            // If the back stack entry doesn't exist, we can safely ignore it
+                            null
+                        }
+                    }
                     Button(
                         label = stringResource(R.string.inboxComposeSendLabel),
                         color = ButtonColor.Institution,
                         onClick = {
                             state.onSendConversation {
-                                listEntry.savedStateHandle[HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED] = true
+                                listEntry?.savedStateHandle?.set(HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED,
+                                    true
+                                )
                                 navController.popBackStack()
                             }
                         }
@@ -404,6 +411,7 @@ private fun HorizonInboxComposePreview() {
     ContextKeeper.appContext = LocalContext.current
 
     val state = HorizonInboxComposeUiState()
+    val pickerState = HorizonInboxAttachmentPickerUiState()
 
-    HorizonInboxComposeScreen(state, rememberNavController())
+    HorizonInboxComposeScreen(state, pickerState, rememberNavController())
 }
