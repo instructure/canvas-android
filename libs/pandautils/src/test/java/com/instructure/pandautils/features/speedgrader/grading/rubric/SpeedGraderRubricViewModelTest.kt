@@ -92,6 +92,7 @@ class SpeedGraderRubricViewModelTest {
             loading = false,
             onPointChanged = { _, _ -> },
             onRubricSelected = { _, _, _ -> },
+            onCommentChange = { _, _ -> },
             criterions = listOf(
                 RubricCriterion(
                     id = "criterionId",
@@ -445,6 +446,84 @@ class SpeedGraderRubricViewModelTest {
         val uiState = viewModel.uiState.first()
 
         uiState.onPointChanged(15.0, "criterionId")
+
+        dispatcher.scheduler.advanceTimeBy(600)
+
+        val updatedUiState = viewModel.uiState.first()
+
+        assertEquals(
+            expected,
+            updatedUiState.assessments
+        )
+    }
+
+    @Test
+    fun `update rubric comment`() = runTest {
+        coEvery { repository.getAssignmentRubric(any(), any()) } returns createMockAssignment()
+        coEvery { repository.getRubrics(any(), any()) } returns createMockRubrics()
+        coEvery { repository.postSubmissionRubricAssessment(any(), any(), any(), any()) } returns mockk()
+
+        val viewModel = createViewModel()
+        val uiState = viewModel.uiState.first()
+
+        uiState.onCommentChange("Updated comment", "criterionId")
+
+        dispatcher.scheduler.advanceTimeBy(600)
+
+        val updatedUiState = viewModel.uiState.first()
+
+        val expected = mapOf(
+            "criterionId" to RubricCriterionAssessment(
+                ratingId = "ratingId",
+                points = 5.0,
+                comments = "Updated comment"
+            ),
+            "criterionId2" to RubricCriterionAssessment(
+                ratingId = "ratingId2",
+                points = 3.0,
+                comments = "Needs improvement"
+            )
+        )
+
+        assertEquals(
+            expected,
+            updatedUiState.assessments
+        )
+
+        coVerify {
+            repository.postSubmissionRubricAssessment(
+                1L,
+                1L,
+                1L,
+                any()
+            )
+        }
+    }
+
+    @Test
+    fun `reset state if comment update fails`() = runTest {
+        coEvery { repository.getAssignmentRubric(any(), any()) } returns createMockAssignment()
+        coEvery { repository.getRubrics(any(), any()) } returns createMockRubrics()
+        coEvery { repository.postSubmissionRubricAssessment(any(), any(), any(), any()) } throws Exception("Network error")
+
+        val viewModel = createViewModel()
+
+        val expected = mapOf(
+            "criterionId" to RubricCriterionAssessment(
+                ratingId = "ratingId",
+                points = 5.0,
+                comments = "Good job"
+            ),
+            "criterionId2" to RubricCriterionAssessment(
+                ratingId = "ratingId2",
+                points = 3.0,
+                comments = "Needs improvement"
+            )
+        )
+
+        val uiState = viewModel.uiState.first()
+
+        uiState.onCommentChange("Updated comment", "criterionId")
 
         dispatcher.scheduler.advanceTimeBy(600)
 
