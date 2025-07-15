@@ -16,19 +16,19 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade
 
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
-import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
-import com.instructure.pandautils.utils.getFragmentActivity
+import androidx.compose.ui.Modifier
+import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
+import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricScreen
 
 @Composable
 fun SpeedGraderGradeScreen() {
-    val activity = LocalContext.current.getFragmentActivity()
-    val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
-    val selectedAttemptId = speedGraderSharedViewModel.selectedAttemptId.collectAsStateWithLifecycle(null)
-
-    Text("SpeedGrader Grade Screen - Selected attempt id: ${selectedAttemptId.value}")
+    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+        SpeedGraderGradingScreen()
+        SpeedGraderRubricScreen()
+    }
 }

@@ -24,7 +24,6 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -35,12 +34,29 @@ import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIEW_MEDIA
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.features.speedgrader.content.MediaContent
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.models.EditableFile
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.ExoAgent
+import com.instructure.pandautils.utils.ExoAgentState
+import com.instructure.pandautils.utils.ExoInfoListener
+import com.instructure.pandautils.utils.FileFolderDeletedEvent
+import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.IntArg
+import com.instructure.pandautils.utils.NullableParcelableArg
+import com.instructure.pandautils.utils.NullableStringArg
+import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.StringArg
+import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.viewExternally
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderMediaBinding
 import com.instructure.teacher.router.RouteMatcher
@@ -209,6 +225,10 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     override fun onDetach() {
         exoAgent.release()
         super.onDetach()
+    }
+
+    fun pauseVideo() {
+        binding.speedGraderMediaPlayerView.player?.pause()
     }
 
     companion object {

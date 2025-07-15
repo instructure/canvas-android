@@ -28,14 +28,12 @@ import com.instructure.canvasapi2.fragment.SubmissionFields
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
-import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -50,7 +48,8 @@ import javax.inject.Inject
 class SpeedGraderContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderContentRepository,
-    private val resources: Resources
+    private val resources: Resources,
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderContentUiState())
@@ -79,6 +78,8 @@ class SpeedGraderContentViewModel @Inject constructor(
 
         val attempts = mapAttempts(submissionHistory)
 
+        speedGraderSelectedAttemptHolder.setSelectedAttemptId(studentId, attempts.firstOrNull()?.id)
+
         val attachments = mapAttachments(submissionHistory.firstOrNull()?.node)
 
         val initialContent = getContent(
@@ -105,10 +106,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                     items = attempts,
                     selectedItemId = attempts.firstOrNull()?.id,
                     onItemSelected = { onAttemptSelected(submission, submissionHistory, it) }
-                ),
-                courseColor = CanvasContext.emptyCourseContext(
-                    submissionFields?.assignment?.courseId?.toLongOrNull().orDefault()
-                ).color
+                )
             )
         }
     }
@@ -156,18 +154,21 @@ class SpeedGraderContentViewModel @Inject constructor(
                 // Media submission
                 SubmissionType.MEDIA_RECORDING -> submissionFields.mediaObject?.let {
                     MediaContent(
-                        uri = Uri.parse(it.mediaDownloadUrl),
+                        uri = Uri.parse(it.mediaSources?.firstOrNull()?.url),
                         contentType = it.mediaType?.rawValue ?: "",
                         displayName = it.title
                     )
                 } ?: UnsupportedContent
 
                 // File uploads
-                SubmissionType.ONLINE_UPLOAD -> submissionFields.attachments?.find { it._id.toLong() == selectedAttachmentId }?.let {
+                SubmissionType.ONLINE_UPLOAD -> submissionFields.attachments?.find {
+                    it._id.toLong() == selectedAttachmentId
+                }?.let {
                     getAttachmentContent(
                         it,
                         submissionFields.assignment?.courseId?.toLong(),
-                        (submissionFields.groupId ?: submission?.userId)?.toLong()
+                        (submissionFields.groupId ?: submission?.userId)?.toLong(),
+                        selectedAttempt?.toLong()
                     )
                 } ?: UnsupportedContent
 
@@ -205,11 +206,14 @@ class SpeedGraderContentViewModel @Inject constructor(
     private suspend fun getAttachmentContent(
         attachment: SubmissionFields.Attachment,
         courseId: Long?,
-        assigneeId: Long?
+        assigneeId: Long?,
+        attemptId: Long?
     ): GradeableContent {
         // TODO remove; We need this now, because the GraphQL query doesn't return file verifiers.
         val submission = courseId?.let {
             repository.getSingleSubmission(courseId, assignmentId, studentId)
+        }?.submissionHistory?.find {
+            it?.attempt == attemptId
         }
 
         val attachmentWithVerifiers = submission?.attachments?.firstOrNull { it.id == attachment._id.toLongOrNull() }
@@ -317,6 +321,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 )
             )
         }
+        speedGraderSelectedAttemptHolder.setSelectedAttemptId(studentId, attemptId)
     }
 
     private fun mapAttachments(submissionNode: SubmissionContentQuery.Node?) = submissionNode?.submissionFields?.attachments

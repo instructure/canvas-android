@@ -36,9 +36,7 @@ class PdfSubmissionFragment : BaseCanvasFragment() {
     private var assigneeId by LongArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return PdfTeacherSubmissionView(requireActivity(), pdfUrl, courseId, assigneeId, childFragmentManager) {
-            sharedViewModel.enableViewPager(it)
-        }
+        return PdfTeacherSubmissionView(requireActivity(), pdfUrl, courseId, assigneeId, childFragmentManager)
     }
 
     companion object {

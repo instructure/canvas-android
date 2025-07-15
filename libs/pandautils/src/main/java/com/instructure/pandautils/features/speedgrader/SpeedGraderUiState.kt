@@ -13,15 +13,14 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.pandautils.features.speedgrader
-
-import androidx.annotation.ColorInt
+ */
+package com.instructure.pandautils.features.speedgrader
 
 data class SpeedGraderUiState(
+    val courseId: Long,
     val assignmentId: Long,
     val submissionIds: List<Long>,
     val selectedItem: Int,
     val courseName: String = "",
-    val assignmentName: String = "",
-    @ColorInt val courseColor: Int = 0
+    val assignmentName: String = ""
 )

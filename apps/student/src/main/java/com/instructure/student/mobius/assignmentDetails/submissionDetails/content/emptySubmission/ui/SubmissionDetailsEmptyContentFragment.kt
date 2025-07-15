@@ -27,8 +27,8 @@ import com.instructure.student.mobius.assignmentDetails.submissionDetails.conten
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentEvent
 import com.instructure.student.mobius.common.LiveDataSource
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
-import com.instructure.student.room.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.StudentDb
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 

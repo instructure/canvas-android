@@ -19,10 +19,7 @@ package com.instructure.pandautils.features.speedgrader
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.pandautils.utils.Const
-import com.instructure.pandautils.utils.color
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -42,9 +39,12 @@ class SpeedGraderViewModel @Inject constructor(
     private val submissionIds: LongArray = savedStateHandle[SpeedGraderFragment.FILTERED_SUBMISSION_IDS]
         ?: throw IllegalStateException("Submission IDs are required")
 
+    private val courseId: Long = savedStateHandle[Const.COURSE_ID]
+        ?: throw IllegalStateException("Course ID is required")
+
     private val selectedItem: Int = savedStateHandle[Const.SELECTED_ITEM] ?: 0
 
-    private val _uiState = MutableStateFlow(SpeedGraderUiState(assignmentId, submissionIds.toList(), selectedItem))
+    private val _uiState = MutableStateFlow(SpeedGraderUiState(courseId, assignmentId, submissionIds.toList(), selectedItem))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -58,10 +58,7 @@ class SpeedGraderViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 assignmentName = assignmentDetails.assignment?.title.orEmpty(),
-                courseName = assignmentDetails.assignment?.course?.name.orEmpty(),
-                courseColor = CanvasContext.emptyCourseContext(
-                    assignmentDetails.assignment?.course?._id?.toLong().orDefault()
-                ).color
+                courseName = assignmentDetails.assignment?.course?.name.orEmpty()
             )
         }
     }

@@ -19,9 +19,7 @@ package com.instructure.pandautils.features.speedgrader
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
 class SpeedGraderSharedViewModel : ViewModel() {
@@ -29,18 +27,9 @@ class SpeedGraderSharedViewModel : ViewModel() {
     private val _viewPagerEnabled: MutableSharedFlow<Boolean> = MutableSharedFlow()
     val viewPagerEnabled = _viewPagerEnabled.asSharedFlow()
 
-    private val _selectedAttemptId: MutableStateFlow<Long?> = MutableStateFlow(null)
-    val selectedAttemptId = _selectedAttemptId.asStateFlow()
-
     fun enableViewPager(enabled: Boolean) {
         viewModelScope.launch {
             _viewPagerEnabled.emit(enabled)
-        }
-    }
-
-    fun setSelectedAttemptId(attemptId: Long?) = attemptId?.let {
-        viewModelScope.launch {
-            _selectedAttemptId.emit(it)
         }
     }
 }

@@ -28,7 +28,6 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
-import com.instructure.annotations.awaitFileDownload
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryWeave
@@ -49,6 +48,8 @@ import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.Utils.copyToClipboard
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.filecache.FileCache
+import com.instructure.pandautils.utils.filecache.awaitFileDownload
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.setGone
@@ -206,13 +207,22 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
         super.onStart()
         binding.progressBar.announceForAccessibility(getString(R.string.loading))
 
-        load(url) {
+        uri?.let {
             Glide.with(requireContext())
                 .asBitmap()
                 .load(it)
                 .listener(requestListener)
                 .into(binding.photoView)
+        } ?: run {
+            load(url) {
+                Glide.with(requireContext())
+                    .asBitmap()
+                    .load(it)
+                    .listener(requestListener)
+                    .into(binding.photoView)
+            }
         }
+
     }
 
     override fun viewExternally() {
@@ -236,7 +246,7 @@ class ViewImageFragment : BaseCanvasFragment(), ShareableFile {
         tryWeave {
             val authUrl = OAuthManager.getAuthenticatedSessionAsync(url!!).await().dataOrNull!!.sessionUrl
             // If we don't have a url we'll display an error
-            val tempFile: File? = com.instructure.annotations.FileCaching.FileCache.awaitFileDownload(authUrl) {}
+            val tempFile: File? = FileCache.awaitFileDownload(authUrl) {}
 
             if (tempFile != null) {
                 onFinished(Uri.fromFile(tempFile))

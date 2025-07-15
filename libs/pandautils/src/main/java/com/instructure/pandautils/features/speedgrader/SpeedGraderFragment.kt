@@ -22,6 +22,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.ComposeView
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
@@ -63,7 +64,7 @@ class SpeedGraderFragment : BaseCanvasFragment() {
     ): View? {
         return ComposeView(requireContext()).apply {
             setContent {
-                CanvasTheme {
+                CanvasTheme(courseColor = Color(CanvasContext.emptyCourseContext(courseId).color)) {
                     val uiState by viewModel.uiState.collectAsState()
                     SpeedGraderScreen(uiState, sharedViewModel) {
                         requireActivity().onBackPressedDispatcher.onBackPressed()

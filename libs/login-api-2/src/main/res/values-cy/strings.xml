@@ -99,7 +99,7 @@
     <string name="findMySchool">Dod o hyd i fy ysgol</string>
     <string name="loginWithQRCode">Cod QR</string>
     <string name="locateQRCode">Dod o hyd i God QR</string>
-    <string name="qrCodeExplanation">Fe ddewch chi o hyd i’r cod QR ar y we yn eich proffil cyfrif. Cliciwch \'QR ar gyfer Mewngofnodi Symudol\' yn y rhestr.</string>
+    <string name="qrCodeExplanation">Dewch o hyd i\'r cod QR ym mhroffil eich cyfrif ar y we o dan \'QR for Mobile Login\'.</string>
     <string name="qrCodeScanningPrompt">Sganiwch god QR o Canvas i fewngofnodi.</string>
     <string name="loginWithQRCodeError">Gwall wrth fewngofnodi. Crëwch God QR arall a rhoi cynnig arall arni.</string>
     <string name="invalidQRCodeError">Sganiwch god QR sydd wedi cael ei greu gan Canvas.</string>
@@ -126,4 +126,5 @@
     <string name="weMadeChanges">Rydyn ni wedi gwneud ychydig o newidiadau.</string>
     <string name="whatsNewText">Dewch i weld beth sy’n newydd</string>
     <string name="findAnotherSchool">Dod o hyd i ysgol arall</string>
+    <string name="qrCodeDisabledExplanation">Os nad yw\'r cod QR yno, mae eich sefydliad wedi analluogi\'r opsiwn hwn.</string>
 </resources>

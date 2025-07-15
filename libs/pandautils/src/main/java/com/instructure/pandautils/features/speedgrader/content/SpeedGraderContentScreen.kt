@@ -42,7 +42,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
@@ -53,6 +52,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
@@ -70,8 +70,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSharedViewModel
 import com.instructure.pandautils.utils.drawableId
@@ -86,6 +88,7 @@ fun SpeedGraderContentScreen(
 ) {
     val activity = LocalContext.current.getFragmentActivity()
     val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
+
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
@@ -96,15 +99,12 @@ fun SpeedGraderContentScreen(
             .speedGraderContentRouter()
     }
 
-    LaunchedEffect(uiState.attemptSelectorUiState.selectedItemId) {
-        speedGraderSharedViewModel.setSelectedAttemptId(uiState.attemptSelectorUiState.selectedItemId)
-    }
-
     SpeedGraderContentScreen(
         uiState = uiState,
         router = router,
         expanded = expanded,
-        onExpandClick = onExpandClick
+        onExpandClick = onExpandClick,
+        toggleViewPager = speedGraderSharedViewModel::enableViewPager
     )
 }
 
@@ -113,7 +113,8 @@ private fun SpeedGraderContentScreen(
     uiState: SpeedGraderContentUiState,
     router: SpeedGraderContentRouter,
     expanded: Boolean,
-    onExpandClick: (() -> Unit)?
+    onExpandClick: (() -> Unit)?,
+    toggleViewPager: (Boolean) -> Unit
 ) {
     Scaffold(
         containerColor = colorResource(id = R.color.backgroundLightest),
@@ -127,14 +128,14 @@ private fun SpeedGraderContentScreen(
                 dueDate = uiState.dueDate,
                 expanded = expanded,
                 onExpandClick = onExpandClick,
-                courseColor = Color(uiState.courseColor)
+                courseColor = LocalCourseColor.current
             )
             CanvasDivider()
             if (uiState.attemptSelectorUiState.items.size > 1 || uiState.attachmentSelectorUiState.items.isNotEmpty()) {
                 SelectorContent(
                     attemptSelectorUiState = uiState.attemptSelectorUiState,
                     attachmentSelectorUiState = uiState.attachmentSelectorUiState,
-                    courseColor = Color(uiState.courseColor)
+                    courseColor = LocalCourseColor.current
                 )
                 CanvasDivider()
             }
@@ -144,7 +145,32 @@ private fun SpeedGraderContentScreen(
                     AndroidFragment(
                         clazz = route.clazz,
                         arguments = route.bundle,
-                        modifier = Modifier.fillMaxSize()
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .conditional(content is PdfContent) {
+                                pointerInput(Unit) {
+                                    awaitPointerEventScope {
+                                        while (true) {
+                                            val event = awaitPointerEvent()
+                                            if (
+                                                event.changes.any { pointerInputChange ->
+                                                    pointerInputChange.pressed
+                                                }
+                                            ) {
+                                                toggleViewPager(false)
+                                                do {
+                                                    val moveEvent = awaitPointerEvent()
+                                                } while (
+                                                    moveEvent.changes.any { pointerInputChange ->
+                                                        pointerInputChange.pressed
+                                                    }
+                                                )
+                                                toggleViewPager(true)
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                     )
                 }
             }
@@ -278,6 +304,7 @@ private fun SelectorContent(
             Selector(
                 selectorUiState = attemptSelectorUiState,
                 color = courseColor,
+                showBadge = false,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -288,6 +315,7 @@ private fun SelectorContent(
             Selector(
                 selectorUiState = attachmentSelectorUiState,
                 color = courseColor,
+                showBadge = true,
                 modifier = Modifier.weight(1f)
             )
         }
@@ -298,6 +326,7 @@ private fun SelectorContent(
 private fun Selector(
     selectorUiState: SelectorUiState,
     color: Color,
+    showBadge: Boolean,
     modifier: Modifier = Modifier
 ) {
     val haptic = LocalHapticFeedback.current
@@ -326,23 +355,25 @@ private fun Selector(
                 modifier = Modifier.size(28.dp),
                 tint = color
             )
-            Box(
-                modifier = Modifier
-                    .offset(x = 10.dp, y = (-6).dp)
-                    .size(16.dp)
-                    .border(1.dp, colorResource(R.color.textLightest), CircleShape)
-                    .background(color, CircleShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Text(
-                    text = selectorUiState.items.size.toString(),
-                    color = colorResource(id = R.color.textLightest),
-                    fontSize = 10.sp,
-                    fontWeight = FontWeight.Bold
-                )
+            if (showBadge) {
+                Box(
+                    modifier = Modifier
+                        .offset(x = 10.dp, y = (-6).dp)
+                        .size(16.dp)
+                        .border(1.dp, colorResource(R.color.textLightest), CircleShape)
+                        .background(color, CircleShape),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Text(
+                        text = selectorUiState.items.size.toString(),
+                        color = colorResource(id = R.color.textLightest),
+                        fontSize = 10.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.width(18.dp))
+        Spacer(modifier = Modifier.width(if (showBadge) 18.dp else 8.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.weight(1f)
@@ -438,7 +469,8 @@ fun SelectorContentPreview() {
     SelectorContent(
         attemptSelectorUiState = SelectorUiState(
             items = listOf(
-                SelectorItem(1, "Attempt 1")
+                SelectorItem(1, "Attempt 1"),
+                SelectorItem(2, "Attempt 2")
             ),
             selectedItemId = 1
         ),
@@ -469,8 +501,7 @@ private fun SpeedGraderContentScreenPreview() {
                 SelectorItem(3, "Item 3")
             ),
             selectedItemId = 2
-        ),
-        courseColor = android.graphics.Color.RED
+        )
     )
 
     SpeedGraderContentScreen(
@@ -481,6 +512,7 @@ private fun SpeedGraderContentScreenPreview() {
             }
         },
         expanded = false,
-        onExpandClick = {}
+        onExpandClick = {},
+        toggleViewPager = {}
     )
 }

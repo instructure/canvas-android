@@ -22,13 +22,19 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManage
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.DashboardPage
@@ -63,6 +69,18 @@ class TeacherInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
+
+    @BindValue
+    @JvmField
+    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
+
+    @BindValue
+    @JvmField
+    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
 
     private val dashboardPage = DashboardPage()
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()

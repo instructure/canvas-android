@@ -2005,6 +2005,33 @@
     <string name="inboxSignatureSwitchLabel">Podpis</string>
     <string name="inboxSignatureTextfieldHeader">Besedilo podpisa</string>
     <string name="due_dateTime">Rok: %1$s, %2$s</string>
+    <string name="noDueDate">Ni roka</string>
+    <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
+    <string name="needsGradingCount">%1$s je treba oceniti</string>
+    <string name="assignmentListTitle">Seznam nalog</string>
+    <plurals name="assignmentListMaxpoints">
+        <item quantity="one">%d točka</item>
+        <item quantity="other">%d točk</item>
+    </plurals>
+    <string name="noAssignments">Ni nalog</string>
+    <string name="assignmentGroup">Skupina nalog</string>
+    <string name="assignmentType">Vrsta naloge</string>
+    <string name="dueDate">Rok</string>
+    <string name="needsGrading">Je treba oceniti.</string>
+    <string name="published">Objavljeno</string>
+    <string name="unpublished">Neobjavljeno</string>
+    <string name="notYetSubmitted">Še ni oddano</string>
+    <string name="toBeGraded">Za ocenjevanje</string>
+    <string name="graded">Ocenjeno</string>
+    <string name="other">Drugo</string>
+    <string name="a11y_filterAssignments">Dodelitve filtrov</string>
+    <string name="assignmentFilter">Filter nalog</string>
+    <string name="groupedBy">Razvrščeno po</string>
+    <string name="gradingPeriod">Ocenjevalno obdobje:</string>
+    <string name="gradingPeriodHeading">Ocenjevalno obdobje</string>
+    <string name="gradePreferences">Nastavitve ocenjevanja</string>
+    <string name="allAssignments">Vse naloge</string>
+    <string name="statusFilter">Filter stanja</string>
     <string name="a11y_contentDescription_filter">Filter</string>
     <string name="a11y_contentDescription_postPolicy">Pravila o objavah</string>
     <string name="late">Zamuda</string>
@@ -2013,4 +2040,12 @@
     <string name="submissionFilter">Filter oddaje</string>
     <string name="submissionMessageSubject">%1$s za nalogo %2$s</string>
     <string name="all">Vse</string>
+    <string name="loginRequired">Zahtevana je prijava</string>
+    <string name="loginRequiredMessage">Zaradi varnostne politike vaše ustanove se morate znova prijaviti. Ko se prijavite, lahko nemoteno nadaljujete z delom.</string>
+    <string name="login">Prijava</string>
+    <string name="logout">Odjava</string>
+    <string name="loginRefreshSameUserError">Prijaviti se morate z istim uporabnikom.</string>
+    <string name="errorLoadingAssignments">Med nalaganjem nalog je prišlo do napake</string>
+    <string name="a11y_searchAssignments">Iskanje nalog</string>
+    <string name="dueAssignmentListItem">Rok %1$s</string>
 </resources>

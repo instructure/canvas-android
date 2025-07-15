@@ -41,7 +41,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.compose.composables.AnchorPoints
-import com.instructure.pandautils.compose.composables.DraggableResizableLayout
+import com.instructure.pandautils.compose.composables.TriStateBottomSheet
 import com.instructure.pandautils.compose.composables.HorizontalDraggableResizeableLayout
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
@@ -49,34 +49,54 @@ import com.instructure.pandautils.features.speedgrader.content.SpeedGraderConten
 @Composable
 fun SpeedGraderSubmissionScreen(
     assignmentId: Long,
-    submissionId: Long
+    submissionId: Long,
+    courseId: Long
+) {
+    var expanded by remember { mutableStateOf(false) }
+
+    SpeedGraderSubmissionContent(
+        expanded = expanded,
+        submissionContent = {
+            NavHost(
+                navController = rememberNavController(),
+                modifier = Modifier.fillMaxSize(),
+                startDestination = "speedGraderContent/$assignmentId/$submissionId"
+            ) {
+                speedGraderContentScreen(expanded) {
+                    expanded = !expanded
+                }
+            }
+        },
+        bottomSheetContent = { anchoredDraggableState ->
+            NavHost(
+                navController = rememberNavController(),
+                modifier = Modifier.fillMaxSize(),
+                startDestination = "speedGraderBottomSheet/$courseId/$assignmentId/$submissionId"
+            ) {
+                speedGraderBottomSheet(anchoredDraggableState)
+            }
+        }
+    )
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun SpeedGraderSubmissionContent(
+    expanded: Boolean,
+    submissionContent: @Composable () -> Unit,
+    bottomSheetContent: @Composable (AnchoredDraggableState<AnchorPoints>?) -> Unit
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
 
     if (horizontal) {
-        var expanded by remember { mutableStateOf(false) }
         HorizontalDraggableResizeableLayout(
             modifier = Modifier,
             leftContent = {
-                NavHost(
-                    navController = rememberNavController(),
-                    modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderContent/$assignmentId/$submissionId"
-                ) {
-                    speedGraderContentScreen(expanded) {
-                        expanded = !expanded
-                    }
-                }
+                submissionContent()
             },
             rightContent = {
-                NavHost(
-                    navController = rememberNavController(),
-                    modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
-                ) {
-                    speedGraderBottomSheet()
-                }
+                bottomSheetContent(null)
             },
             fixedSplit = windowClass != WindowWidthSizeClass.EXPANDED,
             expanded = expanded
@@ -84,7 +104,7 @@ fun SpeedGraderSubmissionScreen(
     } else {
         val density = LocalDensity.current
         val defaultDecayAnimationSpec = rememberSplineBasedDecay<Float>()
-        val initialAnchor = AnchorPoints.TOP
+        val initialAnchor = AnchorPoints.BOTTOM
         val velocityThresholdDps = 125.dp
         val positionalThresholdFraction = 0.5f
         val snapAnimationSpec = spring<Float>(
@@ -109,28 +129,15 @@ fun SpeedGraderSubmissionScreen(
                 confirmValueChange = confirmValueChange
             )
         }
-        DraggableResizableLayout(
+        TriStateBottomSheet(
             anchoredDraggableState = anchoredDraggableState,
             modifier = Modifier,
-            minTopHeightDp = 64.dp,
-            minBottomHeightDp = 96.dp,
+            peekHeightDp = 96.dp,
             topContent = {
-                NavHost(
-                    navController = rememberNavController(),
-                    modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderContent/$assignmentId/$submissionId"
-                ) {
-                    speedGraderContentScreen()
-                }
+                submissionContent()
             },
             bottomContent = {
-                NavHost(
-                    navController = rememberNavController(),
-                    modifier = Modifier.fillMaxSize(),
-                    startDestination = "speedGraderBottomSheet/$assignmentId/$submissionId"
-                ) {
-                    speedGraderBottomSheet(anchoredDraggableState)
-                }
+                bottomSheetContent(anchoredDraggableState)
             }
         )
     }
@@ -138,20 +145,20 @@ fun SpeedGraderSubmissionScreen(
 
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
-fun SpeedGraderSubmissionScreenTabletPreview() {
-    SpeedGraderSubmissionScreen(1L, 1L)
+private fun SpeedGraderSubmissionScreenTabletPreview() {
+    SpeedGraderSubmissionScreen(1L, 1L, 1L)
 }
 
 @Preview
 @Composable
-fun SpeedGraderSubmissionScreenPhonePreview() {
-    SpeedGraderSubmissionScreen(2L, 2L)
+private fun SpeedGraderSubmissionScreenPhonePreview() {
+    SpeedGraderSubmissionScreen(2L, 2L, 2L)
 }
 
 @Preview(device = "spec:width=411dp,height=891dp,orientation=landscape")
 @Composable
-fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
-    SpeedGraderSubmissionScreen(3L, 3L)
+private fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
+    SpeedGraderSubmissionScreen(3L, 3L, 3L)
 }
 
 private fun NavGraphBuilder.speedGraderContentScreen(expanded: Boolean = false, onExpandClick: (() -> Unit)? = null) {
@@ -169,14 +176,17 @@ private fun NavGraphBuilder.speedGraderContentScreen(expanded: Boolean = false, 
 @OptIn(ExperimentalFoundationApi::class)
 private fun NavGraphBuilder.speedGraderBottomSheet(anchoredDraggableState: AnchoredDraggableState<AnchorPoints>? = null) {
     composable(
-        route = "speedGraderBottomSheet/{assignmentId}/{submissionId}",
+        route = "speedGraderBottomSheet/{courseId}/{assignmentId}/{submissionId}",
         arguments = listOf(
+            navArgument("courseId") { type = NavType.LongType },
             navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType }
+            navArgument("submissionId") { type = NavType.LongType },
+            navArgument("courseId") { type = NavType.LongType }
         )
     ) {
         SpeedGraderBottomSheet(
             anchoredDraggableState = anchoredDraggableState,
+            courseId = it.arguments?.getLong("courseId") ?: 0L,
             assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
             submissionId = it.arguments?.getLong("submissionId") ?: 0L
         )

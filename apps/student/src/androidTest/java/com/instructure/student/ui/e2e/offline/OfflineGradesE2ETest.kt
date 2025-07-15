@@ -126,7 +126,7 @@ class OfflineGradesE2ETest : StudentTest() {
         manageOfflineContentPage.changeItemSelectionState("Grades")
         manageOfflineContentPage.clickOnSyncButtonAndConfirm()
 
-        Log.d(STEP_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
         device.waitForIdle()
 
@@ -141,10 +141,10 @@ class OfflineGradesE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate to Grades Page.")
         courseBrowserPage.selectGrades()
 
-        Log.d(STEP_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Grades Page.")
+        Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Grades Page.")
         OfflineTestUtils.assertOfflineIndicator()
 
-        Log.d(STEP_TAG, "Assert that the total grade is 60 because there is only one graded assignment and it's graded to 60% and we have the 'Base on graded assignments' checkbox enabled.")
+        Log.d(ASSERTION_TAG, "Assert that the total grade is 60 because there is only one graded assignment and it's graded to 60% and we have the 'Base on graded assignments' checkbox enabled.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("60"))
 
         Log.d(ASSERTION_TAG, "Assert that 'Base on graded assignment' checkbox is checked and the 'Show What-If Score' checkbox is NOT checked by default.")
@@ -152,30 +152,30 @@ class OfflineGradesE2ETest : StudentTest() {
         courseGradesPage.assertWhatIfUnChecked()
 
         val dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
-        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name} assignment's due date is tomorrow ($dueDateInCanvasFormat).")
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment's due date is tomorrow ('$dueDateInCanvasFormat').")
         courseGradesPage.assertAssignmentDueDate(assignment.name, dueDateInCanvasFormat)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${assignment2.name} assignment's due date is tomorrow ($dueDateInCanvasFormat).")
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment2.name}' assignment's due date is tomorrow ('$dueDateInCanvasFormat').")
         courseGradesPage.assertAssignmentDueDate(assignment2.name, dueDateInCanvasFormat)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title} quiz's due date has not set.")
+        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz's due date has not set.")
         courseGradesPage.assertAssignmentDueDate(quiz.title, "No due date")
 
         Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz status is 'Not Submitted'.")
         courseGradesPage.assertAssignmentStatus(quiz.title, "Not Submitted")
 
         val assignmentMatcher = ViewMatchers.withText(assignment.name)
-        Log.d(STEP_TAG, "Assert that the '${assignment.name}' assignment is displayed and there is 60% grade for it.")
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment is displayed and there is 60% grade for it.")
         courseGradesPage.assertItemDisplayed(assignmentMatcher)
         courseGradesPage.assertGradeDisplayed(assignmentMatcher, containsTextCaseInsensitive("60"))
 
         val quizMatcher = ViewMatchers.withText(quiz.title)
-        Log.d(STEP_TAG, "Assert that the '${quiz.title}' quiz is displayed and there is no grade for it.")
+        Log.d(ASSERTION_TAG, "Assert that the '${quiz.title}' quiz is displayed and there is no grade for it.")
         courseGradesPage.assertItemDisplayed(quizMatcher)
         courseGradesPage.assertGradeNotDisplayed(quizMatcher)
 
         val assignmentMatcher2 = ViewMatchers.withText(assignment2.name)
-        Log.d(STEP_TAG, "Assert that the '${assignment2.name}' assignment is displayed it's graded is 'Excused'.")
+        Log.d(ASSERTION_TAG, "Assert that the '${assignment2.name}' assignment is displayed it's graded is 'Excused'.")
         courseGradesPage.assertItemDisplayed(assignmentMatcher2)
         courseGradesPage.assertGradeDisplayed(assignmentMatcher2, containsTextCaseInsensitive("EX/15"))
 
@@ -188,13 +188,13 @@ class OfflineGradesE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Enter '12' as a what-if grade for '${assignment.name}' assignment.")
         courseGradesPage.enterWhatIfGrade(assignmentMatcher, "12")
 
-        Log.d(STEP_TAG, "Assert that 'Total Grade' contains the score '80'.")
+        Log.d(ASSERTION_TAG, "Assert that 'Total Grade' contains the score '80'.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("80"))
 
         Log.d(STEP_TAG, "Enter '4' (of 10) as a what-if grade for '${quiz.title}' quiz.")
         courseGradesPage.enterWhatIfGrade(quizMatcher, "4")
 
-        Log.d(STEP_TAG, "Assert that 'Total Grade' contains the score '64'.")
+        Log.d(ASSERTION_TAG, "Assert that 'Total Grade' contains the score '64'.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("64"))
 
         Log.d(STEP_TAG, "Uncheck 'Base on graded assignments' checkbox (while What-If Score is still enabled!).")
@@ -210,7 +210,8 @@ class OfflineGradesE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Show What-If Score' checkbox is unchecked.")
         courseGradesPage.assertWhatIfUnChecked()
 
-        Log.d(STEP_TAG, "Assert that the Total Grade is becoming 36% because there is still only one 'real' grade, but since the 'Base on graded assignments' is not checked, the score will be lower than 60% (9/30 is 36% as the 'Not Submitted' is still not counted). Also assert that the '${assignment.name}' assignment's grades has been set back to 60% as we disabled the 'Show What-If Score' checkbox.")
+        Log.d(ASSERTION_TAG, "Assert that the Total Grade is becoming 36% because there is still only one 'real' grade, but since the 'Base on graded assignments' is not checked," +
+                " the score will be lower than 60% (9/30 is 36% as the 'Not Submitted' is still not counted). Also assert that the '${assignment.name}' assignment's grades has been set back to 60% as we disabled the 'Show What-If Score' checkbox.")
         courseGradesPage.assertTotalGrade(containsTextCaseInsensitive("36"))
         courseGradesPage.assertGradeDisplayed(assignmentMatcher, containsTextCaseInsensitive("60"))
 
@@ -221,18 +222,26 @@ class OfflineGradesE2ETest : StudentTest() {
         courseGradesPage.assertBaseOnGradedAssignmentsChecked()
         courseGradesPage.refreshUntilAssertTotalGrade(containsTextCaseInsensitive("60%"))
 
-        Log.d(STEP_TAG, "Open '${assignment.name}' assignment and assert if the Assignment Details Page is displayed with the corresponding grade." + "Navigate back to Course Grades Page.")
+        Log.d(STEP_TAG, "Open '${assignment.name}' assignment.")
         courseGradesPage.openAssignment(assignment.name)
+
+        Log.d(ASSERTION_TAG, "Assert if the Assignment Details Page is displayed with the corresponding grade.")
         assignmentDetailsPage.assertPageObjects()
         assignmentDetailsPage.assertAssignmentGraded("9")
+
+        Log.d(STEP_TAG, "Navigate back to Course Grades Page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on the expand/collapse button to collapse the list and assert that the assignment will disappear from the list view.")
+        Log.d(STEP_TAG, "Click on the expand/collapse button to collapse the list.")
         courseGradesPage.clickOnExpandCollapseButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment will disappear from the list view.")
         courseGradesPage.assertAssignmentCount(0)
 
-        Log.d(STEP_TAG, "Click on the expand/collapse button again to expand the list and assert that the assignment will disappear from the list view.")
+        Log.d(STEP_TAG, "Click on the expand/collapse button again to expand the list.")
         courseGradesPage.clickOnExpandCollapseButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the assignment will disappear from the list view.")
         courseGradesPage.assertAssignmentCount(3)
     }
 

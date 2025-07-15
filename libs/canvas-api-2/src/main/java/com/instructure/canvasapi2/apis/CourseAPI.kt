@@ -48,6 +48,9 @@ object CourseAPI {
         @get:GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&include[]=grading_scheme")
         val firstPageCoursesWithGradingScheme: Call<List<Course>>
 
+        @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&include[]=settings&state[]=completed&state[]=available&include[]=grading_scheme")
+        suspend fun getFirstPageCoursesWithGradingScheme(@Tag params: RestParams): DataResult<List<Course>>
+
         @GET("courses?include[]=term&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=banner_image&include[]=sections&state[]=completed&state[]=available&include[]=tabs&include[]=settings&include[]=grading_scheme")
         suspend fun getFirstPageCourses(@Tag params: RestParams): DataResult<List<Course>>
 
@@ -187,6 +190,16 @@ object CourseAPI {
 
         @GET("courses?include[]=term&include[]=syllabus_body&include[]=total_scores&include[]=license&include[]=is_public&include[]=needs_grading_count&include[]=permissions&include[]=favorites&include[]=current_grading_period_scores&include[]=course_image&include[]=sections&include[]=observed_users&include[]=settings&include[]=grading_scheme&enrollment_state=active&include[]=grading_scheme")
         suspend fun firstPageObserveeCourses(@Tag params: RestParams): DataResult<List<Course>>
+
+        @GET("courses/{courseId}/custom_gradebook_columns")
+        suspend fun getCustomGradeBookColumns(@Path("courseId") courseId: Long, @Tag params: RestParams): DataResult<List<CustomColumn>>
+
+        @GET("courses/{courseId}/custom_gradebook_columns/{columnId}/data")
+        suspend fun getCustomGradeBookColumnsEntries(
+            @Path("courseId") courseId: Long,
+            @Path("columnId") columnId: Long,
+            @Tag params: RestParams
+        ): DataResult<List<ColumnDatum>>
     }
 
     @Throws(IOException::class)
