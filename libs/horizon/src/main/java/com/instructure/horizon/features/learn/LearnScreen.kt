@@ -42,6 +42,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -120,8 +121,12 @@ private fun LearnScreenWrapper(
 ) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
-    var appBarHeight by remember { mutableIntStateOf(0) }
-    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(appBarHeight)) }
+    var appBarHeight by rememberSaveable { mutableIntStateOf(0) }
+    var appBarOffset by rememberSaveable { mutableIntStateOf(0) }
+    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(appBarHeight, appBarOffset)) }
+    LaunchedEffect(nestedScrollConnection.appBarOffset) {
+        appBarOffset = nestedScrollConnection.appBarOffset
+    }
 
     Box(
         modifier = modifier
@@ -135,7 +140,7 @@ private fun LearnScreenWrapper(
                     if (appBarHeight == 0) {
                         appBarHeight = coordinates.size.height
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(appBarHeight)
+                            CollapsingAppBarNestedScrollConnection(appBarHeight, appBarOffset)
                     }
                 }
         ) {
@@ -156,7 +161,7 @@ private fun LearnScreenWrapper(
         val density = LocalDensity.current
         Column(
             modifier = Modifier
-                .padding(top = with(density) { appBarHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+                .padding(top = with(density) { appBarHeight.toDp() } + with(density) { appBarOffset.toDp() })
         ) {
             TabRow(
                 tabs = state.availableTabs,
@@ -341,10 +346,11 @@ private fun ErrorContent(errorText: String) {
 }
 
 private class CollapsingAppBarNestedScrollConnection(
-    val appBarMaxHeight: Int
+    val appBarMaxHeight: Int,
+    initialAppbarOffset: Int = 0,
 ) : NestedScrollConnection {
 
-    var appBarOffset: Int by mutableIntStateOf(0)
+    var appBarOffset: Int by mutableIntStateOf(initialAppbarOffset)
         private set
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
