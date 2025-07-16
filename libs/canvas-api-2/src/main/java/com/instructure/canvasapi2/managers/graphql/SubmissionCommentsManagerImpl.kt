@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
 
-    override suspend fun getSubmissionComments(submissionId: Long): SubmissionCommentsResponseWrapper {
+    override suspend fun getSubmissionComments(userId: Long, assignmentId: Long): SubmissionCommentsResponseWrapper {
         var hasNextPage = true
         var nextCursor: String? = null
         val allComments = mutableListOf<SubmissionCommentsQuery.Node>()
@@ -31,7 +31,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
 
         while (hasNextPage) {
             val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
-            val query = SubmissionCommentsQuery(submissionId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
+            val query = SubmissionCommentsQuery(userId.toString(), assignmentId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
             data = QLClientConfig.enqueueQuery(query).data
             val comments = data?.submission?.commentsConnection?.edges?.mapNotNull { edge ->
                 edge?.node

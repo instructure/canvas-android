@@ -94,11 +94,10 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
-        val response = speedGraderCommentsRepository.getSubmissionComments(submissionId)
+        val response = speedGraderCommentsRepository.getSubmissionComments(submissionId, assignmentId)
         courseId = response.data.submission?.assignment?.courseId?.toLong() ?: -1L
         userId = response.data.submission?.userId?.toLong() ?: -1L
-        pageId =
-            "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
+        pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
         collectPendingComments()
         fetchedComments = response.comments
             .map { node ->

@@ -37,19 +37,14 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -144,7 +139,7 @@ fun SpeedGraderCommentSection(
         Column {
             SpeedGraderCommentItems(
                 comments = state.comments,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.fillMaxSize(),
                 gradingAnonymously = gradingAnonymously
             )
             HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
@@ -163,26 +158,27 @@ fun SpeedGraderCommentSection(
             AndroidView(
                 factory = { context ->
                     FloatingRecordingView(context).apply {
-                            setContentType(state.showRecordFloatingView)
-                            setVisible()
-                            if (state.showRecordFloatingView == RecordingMediaType.Video) {
-                                startVideoView()
-                            }
-                            stoppedCallback = {
-                                actionHandler(SpeedGraderCommentsAction.AttachmentRecordDialogClosed)
-                            }
-                            recordingCallback = { mediaFile ->
-                                mediaFile?.let {
-                                    actionHandler(
-                                        SpeedGraderCommentsAction.MediaRecorded(
-                                            mediaFile
-                                        )
+                        setContentType(state.showRecordFloatingView)
+                        setVisible()
+                        if (state.showRecordFloatingView == RecordingMediaType.Video) {
+                            startVideoView()
+                        }
+                        stoppedCallback = {
+                            actionHandler(SpeedGraderCommentsAction.AttachmentRecordDialogClosed)
+                        }
+                        recordingCallback = { mediaFile ->
+                            mediaFile?.let {
+                                actionHandler(
+                                    SpeedGraderCommentsAction.MediaRecorded(
+                                        mediaFile
                                     )
-                                }
+                                )
                             }
                         }
+                    }
                 },
-                modifier = Modifier.align(Alignment.BottomEnd)
+                modifier = Modifier
+                    .align(Alignment.BottomEnd)
                     .offset { IntOffset(offsetX.roundToInt(), offsetY.roundToInt()) }
                     .pointerInput(Unit) {
                         detectDragGestures { change, dragAmount ->
@@ -320,15 +316,14 @@ fun SpeedGraderCommentItems(
     modifier: Modifier = Modifier,
     gradingAnonymously: Boolean = false
 ) {
-    val listState = rememberLazyListState()
-    LaunchedEffect(comments.size) {
-        listState.scrollToItem(comments.size)
-    }
-    LazyColumn(
-        state = listState,
+//    val listState = rememberLazyListState()
+//    LaunchedEffect(comments.size) {
+//        listState.scrollToItem(comments.size)
+//    }
+    Column(
         modifier = modifier.padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(comments) { comment ->
+        comments.forEach { comment ->
             if (comment.isOwnComment) {
                 SpeedGraderOwnCommentItem(
                     comment = comment, gradingAnonymously = gradingAnonymously
@@ -338,7 +333,6 @@ fun SpeedGraderCommentItems(
                     comment = comment, gradingAnonymously = gradingAnonymously
                 )
             }
-
         }
     }
 }
@@ -421,7 +415,8 @@ fun SpeedGraderAttachmentsComponent(
                             color = colorResource(id = R.color.backgroundMedium),
                             shape = RoundedCornerShape(size = 16.dp)
                         )
-                        .fillMaxWidth(if (isOwn) 0.7f else 1f).clickable { onSelect(attachment) },
+                        .fillMaxWidth(if (isOwn) 0.7f else 1f)
+                        .clickable { onSelect(attachment) },
 
                     gradingAnonymously = gradingAnonymously,
                 )
@@ -746,7 +741,8 @@ fun SpeedGraderCommentSectionPreview() {
                 mediaDownloadUrl = "https://example.com/media.mp4",
                 title = "Recorded Video",
                 mediaType = MediaType.VIDEO,
-                thumbnailUrl = "https://example.com/thumbnail.jpg")
+                thumbnailUrl = "https://example.com/thumbnail.jpg"
+            )
         ),
         SpeedGraderComment(
             content = "",
@@ -758,7 +754,8 @@ fun SpeedGraderCommentSectionPreview() {
                 mediaDownloadUrl = "https://example.com/media.amr",
                 title = "Recorded Video",
                 mediaType = MediaType.AUDIO,
-                thumbnailUrl = "https://example.com/thumbnail.jpg")
+                thumbnailUrl = "https://example.com/thumbnail.jpg"
+            )
         )
     )
     SpeedGraderCommentSection(state = SpeedGraderCommentsUiState(

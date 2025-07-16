@@ -16,18 +16,96 @@
  */
 package com.instructure.pandautils.features.speedgrader.comments
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.material.Icon
+import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.features.speedgrader.SpeedGraderCommentSection
 
-// Class to handle expanded/hidden state of the comments section
 @Composable
-fun SpeedGraderCommentsScreen() {
-
+fun SpeedGraderCommentsScreen(
+    expanded: Boolean,
+    onExpandToggle: () -> Unit
+) {
     val viewModel: SpeedGraderCommentsViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
 
-    SpeedGraderCommentSection(uiState, actionHandler = viewModel::handleAction)
+    val haptic = LocalHapticFeedback.current
+    val iconRotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f, label = "expandedIconRotation")
+
+    Column {
+        CanvasDivider(modifier = Modifier.fillMaxWidth())
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .height(50.dp)
+                .clickable {
+                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                    onExpandToggle()
+                }
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_discussion),
+                contentDescription = null,
+                tint = LocalCourseColor.current,
+                modifier = Modifier.size(24.dp)
+            )
+            Spacer(modifier = Modifier.width(16.dp))
+            Text(
+                text = stringResource(R.string.speedGraderCommentsTitle, uiState.comments.size),
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.weight(1f)
+            )
+            Icon(
+                painter = painterResource(id = R.drawable.ic_arrow_down),
+                tint = colorResource(id = R.color.textDarkest),
+                contentDescription = null,
+                modifier = Modifier
+                    .size(24.dp)
+                    .rotate(iconRotation)
+            )
+        }
+        CanvasDivider(modifier = Modifier.fillMaxWidth())
+        AnimatedVisibility(
+            visible = expanded,
+            enter = expandVertically(expandFrom = Alignment.Top),
+            exit = shrinkVertically(shrinkTowards = Alignment.Top),
+            label = "GroupExpandAnimation"
+        ) {
+            SpeedGraderCommentSection(uiState, actionHandler = viewModel::handleAction)
+        }
+    }
 }

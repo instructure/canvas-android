@@ -45,7 +45,6 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -65,7 +64,6 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -77,18 +75,7 @@ import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import kotlin.math.roundToInt
 
 @Composable
-fun SpeedGraderRubricScreen() {
-
-    val viewModel = hiltViewModel<SpeedGraderRubricViewModel>()
-    val uiState by viewModel.uiState.collectAsState()
-
-    SpeedGraderRubricContent(
-        uiState = uiState
-    )
-}
-
-@Composable
-private fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
+fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
     when {
         uiState.loading -> {
             Box(

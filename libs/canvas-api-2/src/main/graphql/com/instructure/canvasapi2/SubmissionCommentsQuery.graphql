@@ -14,8 +14,8 @@
 #     limitations under the License.
 #
 
-query SubmissionCommentsQuery($submissionId: ID!, $pageSize: Int!, $nextCursor: String) {
-    submission(id: $submissionId) {
+query SubmissionCommentsQuery($userId: ID!, $assignmentId: ID!, $pageSize: Int!, $nextCursor: String) {
+    submission(userId: $userId, assignmentId: $assignmentId) {
         _id
         userId
         attempt
