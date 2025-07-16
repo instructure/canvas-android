@@ -135,7 +135,7 @@ data class GradeCellViewData(
                 )
             } else if (restrictQuantitativeData) {
                 val grade = if (assignment.isGradingTypeQuantitative) {
-                    convertScoreToLetterGrade(submission.score.orDefault(), assignment.pointsPossible, gradingScheme)
+                    convertScoreToLetterGrade(submission.score, assignment.pointsPossible, gradingScheme)
                 } else {
                     submission.grade ?: ""
                 }
@@ -155,7 +155,7 @@ data class GradeCellViewData(
                     gradeCellContentDescription = contentDescription,
                 )
             } else {
-                val score = NumberHelper.formatDecimal(submission.score.orDefault(), 2, true)
+                val score = NumberHelper.formatDecimal(submission.score, 2, true)
                 val chartPercent = (submission.enteredScore / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
                 // If grading type is Points, don't show the grade since we're already showing it as the score
                 var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
@@ -194,7 +194,7 @@ data class GradeCellViewData(
 
                 val stats = assignment.scoreStatistics?.let { stats ->
                     GradeCellViewState.GradeStats(
-                        score = submission.score.orDefault(),
+                        score = submission.score,
                         outOf = assignment.pointsPossible,
                         min = stats.min,
                         max = stats.max,

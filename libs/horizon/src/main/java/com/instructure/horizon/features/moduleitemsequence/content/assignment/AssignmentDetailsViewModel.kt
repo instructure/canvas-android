@@ -29,7 +29,6 @@ import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.format
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -285,7 +284,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         onClick: (() -> Unit)? = null
     ): AttemptCardState {
         val score = if (showScore && submission.isGraded) {
-            val formattedScore = formatScore(submission.score.orDefault())
+            val formattedScore = formatScore(submission.score)
             val formattedPossibleScore = formatScore(possibleScore)
             context.getString(R.string.attemptCard_score, formattedScore, formattedPossibleScore)
         } else {

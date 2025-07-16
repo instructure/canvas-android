@@ -477,7 +477,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                     .takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
-                    earnedPoints += tempSub.score.orDefault()
+                    earnedPoints += tempSub.score
                 }
                 if (tempAssignment != null) totalPoints += tempAssignment.pointsPossible
             }
@@ -515,7 +515,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
                     assignCount++ // Determines if a group contains assignments
                     totalPoints += tempAssignment.pointsPossible
-                    earnedPoints += tempSub.score.orDefault()
+                    earnedPoints += tempSub.score
                 }
             }
 
@@ -563,7 +563,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                     .takeIf { !it?.omitFromFinalGrade.orDefault() }
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty() && Const.PENDING_REVIEW != tempSub.workflowState) {
-                    earnedPoints += tempSub.score.orDefault()
+                    earnedPoints += tempSub.score
                 }
                 if (tempAssignment != null) totalPoints += tempAssignment.pointsPossible
             }
@@ -599,7 +599,7 @@ class GradesListFragment : ParentFragment(), Bookmarkable {
                 val tempSub = tempAssignment?.submission
                 if (tempSub?.grade != null && tempAssignment.submissionTypesRaw.isNotEmpty()) {
                     totalPoints += tempAssignment.pointsPossible
-                    earnedPoints += tempSub.score.orDefault()
+                    earnedPoints += tempSub.score
                 }
             }
         }

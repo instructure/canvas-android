@@ -234,7 +234,7 @@ private fun AssignmentItem(
             .fillMaxWidth()
     ) {
         Text(
-            text = stringResource(R.string.scoresItemassignmentName, assignment.name),
+            text = stringResource(R.string.scoresItemassignmentName, assignment.name.orEmpty()),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body()
         )
@@ -284,29 +284,28 @@ private fun AssignmentItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = stringResource(R.string.learnScoreFeedbackLabel),
+                text = "Feedback:",
                 style = HorizonTypography.p1,
-                color = HorizonColors.Text.body(),
-                modifier = Modifier.padding(end = 4.dp)
+                color = HorizonColors.Text.body()
             )
 
             if (assignment.submissionCommentsCount > 0) {
                 Icon(
-                    painter = painterResource(R.drawable.chat),
+                    painter = painterResource(R.drawable.mark_unread_chat_alt),
                     contentDescription = null,
                     tint = HorizonColors.Icon.default(),
-                    modifier = Modifier.padding(end = 4.dp)
+                    modifier = Modifier.padding(vertical = 4.dp)
                 )
                 Text(
                     text = (assignment.submissionCommentsCount).toString(),
                     style = HorizonTypography.p1,
-                    color = HorizonColors.Text.body(),
+                    color = HorizonColors.Text.body()
                 )
             } else {
                 Text(
                     text = stringResource(R.string.noFeedback),
                     style = HorizonTypography.p1,
-                    color = HorizonColors.Text.body(),
+                    color = HorizonColors.Text.body()
                 )
             }
         }
@@ -356,7 +355,7 @@ private fun GroupWeightItem(assignmentGroup: AssignmentGroupScoreItem) {
             modifier = Modifier.padding(horizontal = 24.dp),
         ) {
             Text(
-                text = assignmentGroup.name,
+                text = assignmentGroup.name.orEmpty(),
                 style = HorizonTypography.p1,
                 color = HorizonColors.Text.body()
             )

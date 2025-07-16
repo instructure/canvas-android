@@ -25,9 +25,9 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
-import com.instructure.pandautils.utils.orDefault
 
 sealed class GradeCellViewState {
     object Empty : GradeCellViewState()
@@ -135,8 +135,8 @@ sealed class GradeCellViewState {
                 )
             }
 
-            val score = NumberHelper.formatDecimal(submission.score.orDefault(), 2, true)
-            val graphPercent = (submission.score.orDefault() / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
+            val score = NumberHelper.formatDecimal(submission.score, 2, true)
+            val graphPercent = (submission.score / assignment.pointsPossible).coerceIn(0.0, 1.0).toFloat()
 
             // If grading type is Points, don't show the grade since we're already showing it as the score
             var grade = if (assignment.gradingType != Assignment.POINTS_TYPE) submission.grade.orEmpty() else ""
@@ -166,7 +166,7 @@ sealed class GradeCellViewState {
             // Grade statistics
             val stats = assignment.scoreStatistics?.let { stats ->
                 GradeStats(
-                    score = submission.score.orDefault(),
+                    score = submission.score,
                     outOf = assignment.pointsPossible,
                     min = stats.min,
                     max = stats.max,

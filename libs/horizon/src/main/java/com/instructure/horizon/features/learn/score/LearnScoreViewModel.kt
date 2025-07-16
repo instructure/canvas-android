@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -85,7 +86,7 @@ class LearnScoreViewModel @Inject constructor(
             it.copy(
                 sortedAssignments = sortedAssignments,
                 assignmentGroups = assignmentGroupItems,
-                currentScore = grades?.currentScore?.stringValueWithoutTrailingZeros,
+                currentScore = grades?.currentScore.orDefault().stringValueWithoutTrailingZeros,
             )
         }
     }
