@@ -67,8 +67,6 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ThemePrefs
 
-const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
-
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
 
