@@ -30,6 +30,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -59,9 +62,12 @@ fun LearnProgressScreen(
     viewModel: LearnProgressViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-
+    var previousCourseId: Long? by rememberSaveable { mutableStateOf(null) }
     LaunchedEffect(courseId) {
-        viewModel.loadState(courseId)
+        if (courseId != previousCourseId) {
+            previousCourseId = courseId
+            viewModel.loadState(courseId)
+        }
     }
 
     LoadingStateWrapper(state.screenState) {

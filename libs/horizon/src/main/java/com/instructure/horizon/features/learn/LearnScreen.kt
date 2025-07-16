@@ -64,7 +64,6 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.note.LearnNotesScreen
@@ -85,7 +84,10 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.launch
 
 @Composable
-fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
+fun LearnScreen(
+    state: LearnUiState,
+    mainNavController: NavHostController
+) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
@@ -111,7 +113,11 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
 }
 
 @Composable
-private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostController, modifier: Modifier = Modifier) {
+private fun LearnScreenWrapper(
+    state: LearnUiState,
+    mainNavController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
     var appBarHeight by remember { mutableIntStateOf(0) }
@@ -164,7 +170,6 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
             HorizontalPager(
                 pagerState,
                 pageSpacing = 16.dp,
-                beyondViewportPageCount = 4
             ) { index ->
                 val scaleAnimation by animateFloatAsState(
                     if (index == pagerState.currentPage) 1f else 0.8f,
