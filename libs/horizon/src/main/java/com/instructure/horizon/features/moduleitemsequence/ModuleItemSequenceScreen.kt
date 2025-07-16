@@ -422,10 +422,12 @@ private fun ModuleItemContentScreen(
                         assignmentToolsOpened()
                     }
                 }
+                val assignment = moduleItemUiState.moduleItemContent as? ModuleItemContent.Assignment
                 AssignmentDetailsScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     moduleHeaderHeight = moduleHeaderHeight,
+                    assignmentSubmitted = assignment?.onSubmitted ?: {},
                 )
             }
             composable(
@@ -495,7 +497,8 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<AssessmentViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                AssessmentContentScreen(uiState)
+                val assessment = moduleItemUiState.moduleItemContent as? ModuleItemContent.Assessment
+                AssessmentContentScreen(uiState, onAssessmentSubmitted = assessment?.onSubmitted ?: {})
             }
         }
     }

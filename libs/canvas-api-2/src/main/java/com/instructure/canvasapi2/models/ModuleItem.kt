@@ -68,6 +68,7 @@ data class ModuleItem(
     companion object {
         const val MUST_MARK_DONE = "must_mark_done"
         const val MUST_VIEW = "must_view"
+        const val MUST_SUBMIT = "must_submit"
     }
 }
 
