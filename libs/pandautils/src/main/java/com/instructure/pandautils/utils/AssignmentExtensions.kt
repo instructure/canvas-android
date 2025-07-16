@@ -100,7 +100,7 @@ fun Assignment.getGrade(
         if (restrictQuantitativeData) {
             return DisplayGrade(grade, gradeContentDescription)
         } else {
-            val scoreText = NumberHelper.formatDecimal(submission.score, 2, true)
+            val scoreText = NumberHelper.formatDecimal(submission.score.orDefault(), 2, true)
             val possiblePointsText = NumberHelper.formatDecimal(possiblePoints, 2, true)
             return DisplayGrade(
                 context.getString(
@@ -120,7 +120,7 @@ fun Assignment.getGrade(
     }
 
     if (restrictQuantitativeData && this.isGradingTypeQuantitative) {
-        val letterGrade = convertScoreToLetterGrade(submission.score, this.pointsPossible, gradingScheme)
+        val letterGrade = convertScoreToLetterGrade(submission.score.orDefault(), this.pointsPossible, gradingScheme)
         return DisplayGrade(letterGrade, getContentDescriptionForMinusGradeString(letterGrade, context).validOrNull() ?: letterGrade)
     }
 

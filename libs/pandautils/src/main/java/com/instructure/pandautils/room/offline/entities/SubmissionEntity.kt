@@ -80,7 +80,7 @@ data class SubmissionEntity(
     constructor(submission: Submission, groupId: Long?, mediaCommentId: String?) : this(
         id = submission.id,
         grade = submission.grade,
-        score = submission.score,
+        score = submission.score.orDefault(),
         attempt = submission.attempt,
         submittedAt = submission.submittedAt,
         commentCreated = submission.commentCreated,

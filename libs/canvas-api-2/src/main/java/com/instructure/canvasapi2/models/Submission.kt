@@ -19,14 +19,14 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @JvmSuppressWildcards
 @Parcelize
 data class Submission(
         override var id: Long = 0,
         val grade: String? = null,
-        val score: Double = 0.0,
+        val score: Double? = null,
         val attempt: Long = 0,
         @SerializedName("submitted_at")
         var submittedAt: Date? = null,
