@@ -136,11 +136,7 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
             DropDownTitle(
                 courses = state.courses,
                 selectedCourse = state.selectedCourse ?: CourseWithProgress(
-                    course = Course(id = -1, name = "", syllabusBody = ""),
-                    progress = 0.0,
-                    nextUpModuleItemId = null,
-                    nextUpModuleId = null,
-                    institutionName = null
+                    courseId = -1, courseName = "", courseSyllabus = "", progress = 0.0
                 ),
                 onSelect = { state.onSelectedCourseChanged(it) },
             )
@@ -189,24 +185,25 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
                 ) {
                     when (index) {
                         0 -> LearnOverviewScreen(
-                            state.selectedCourse?.course?.syllabusBody,
+                            state.selectedCourse?.courseSyllabus,
                             Modifier
                                 .clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         1 -> LearnProgressScreen(
-                            state.selectedCourse?.course?.id ?: -1,
+                            state.selectedCourse?.courseId ?: -1,
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
+
                         2 -> LearnScoreScreen(
-                            state.selectedCourse?.course?.id ?: -1,
+                            state.selectedCourse?.courseId ?: -1,
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
                         3 -> LearnNotesScreen(
-                            state.selectedCourse?.course?.id ?: -1,
+                            state.selectedCourse?.courseId ?: -1,
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
@@ -263,7 +260,7 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
                 .clickable { isMenuOpen = !isMenuOpen }
         ) {
             AnimatedContent(
-                selectedCourse.course.name,
+                selectedCourse.courseName,
                 label = "SelectedCourseName",
                 modifier = Modifier
                     .weight(1f, fill = false)
@@ -289,12 +286,12 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
 
         InputDropDownPopup(
             isMenuOpen = isMenuOpen,
-            options = courses.map { it.course.name },
+            options = courses.map { it.courseName },
             width = width,
             verticalOffsetPx = heightInPx,
             onMenuOpenChanged = { isMenuOpen = it },
             onOptionSelected = { selectedCourse ->
-                onSelect(courses.first { it.course.name == selectedCourse })
+                onSelect(courses.first { it.courseName == selectedCourse })
             },
             item = { courseName ->
                 Row(
@@ -302,7 +299,7 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
                     modifier = Modifier
                         .padding(horizontal = 11.dp, vertical = 6.dp)
                 ) {
-                    if (courseName == selectedCourse.course.name) {
+                    if (courseName == selectedCourse.courseName) {
                         Icon(
                             painter = painterResource(R.drawable.check),
                             contentDescription = stringResource(R.string.a11y_selectedCourse),
@@ -386,15 +383,10 @@ fun LearnScreenContentPreview() {
     val state = LearnUiState(
         screenState = LoadingState(),
         selectedCourse = CourseWithProgress(
-            course = Course(
-                id = 123,
-                name = "Course Name",
-                syllabusBody = "Course Overview",
-            ),
+            courseId = 123,
+            courseName = "Course Name",
+            courseSyllabus = "Course Overview",
             progress = 0.5,
-            institutionName = null,
-            nextUpModuleItemId = null,
-            nextUpModuleId = null,
         ),
         availableTabs = LearnTab.entries
     )
