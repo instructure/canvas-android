@@ -234,7 +234,7 @@ private fun AssignmentItem(
             .fillMaxWidth()
     ) {
         Text(
-            text = stringResource(R.string.scoresItemassignmentName, assignment.name.orEmpty()),
+            text = stringResource(R.string.scoresItemassignmentName, assignment.name),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body()
         )
@@ -271,7 +271,7 @@ private fun AssignmentItem(
         Text(
             text = stringResource(
                 R.string.scoresItemResult,
-                assignment.lastScore?.stringValueWithoutTrailingZeros ?: "-",
+                assignment.lastScore ?: "-",
                 assignment.pointsPossible.stringValueWithoutTrailingZeros
             ),
             style = HorizonTypography.p1,
@@ -284,17 +284,18 @@ private fun AssignmentItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Feedback:",
+                text = stringResource(R.string.learnScoreFeedbackLabel),
                 style = HorizonTypography.p1,
-                color = HorizonColors.Text.body()
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.padding(end = 4.dp)
             )
 
             if (assignment.submissionCommentsCount > 0) {
                 Icon(
-                    painter = painterResource(R.drawable.mark_unread_chat_alt),
+                    painter = painterResource(R.drawable.chat),
                     contentDescription = null,
                     tint = HorizonColors.Icon.default(),
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp)
                 )
                 Text(
                     text = (assignment.submissionCommentsCount).toString(),

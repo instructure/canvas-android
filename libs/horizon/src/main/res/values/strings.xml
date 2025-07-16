@@ -308,4 +308,5 @@
     <string name="noOptionsAvailable">No options available</string>
     <string name="inboxComposeAttachFile">Attach file</string>
     <string name="inboxDetailsReplyAttachFile">Attach file</string>
+    <string name="learnScoreFeedbackLabel">Feedback:</string>
 </resources>
