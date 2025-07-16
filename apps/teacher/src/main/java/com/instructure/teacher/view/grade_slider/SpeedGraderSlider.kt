@@ -27,6 +27,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.utils.accessibleTouchTarget
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
@@ -108,9 +109,9 @@ class SpeedGraderSlider @JvmOverloads constructor(
 
         if (assignment.gradingType?.let { Assignment.getGradingTypeFromAPIString(it) } == Assignment.GradingType.POINTS) {
             if (isOverGraded) {
-                if (slider.max < this@SpeedGraderSlider.submission!!.score.toInt()) {
-                    slider.max = this@SpeedGraderSlider.submission!!.score.toInt()
-                    maxGrade.text = NumberHelper.formatDecimal(this@SpeedGraderSlider.submission!!.score, 0, true)
+                if (slider.max < this@SpeedGraderSlider.submission!!.score.orDefault().toInt()) {
+                    slider.max = this@SpeedGraderSlider.submission!!.score.orDefault().toInt()
+                    maxGrade.text = NumberHelper.formatDecimal(this@SpeedGraderSlider.submission!!.score.orDefault(), 0, true)
                 }
                 showPointsPossibleView()
             } else {

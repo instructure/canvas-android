@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.blueprint.Presenter
 import com.instructure.pandautils.utils.AssignmentUtils2
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
 import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
@@ -132,8 +133,8 @@ class SpeedGraderPresenter(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
                     SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
                         AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED)  && it.isGradeMatchesCurrentSubmission} ?: false
-                    SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
-                    SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
+                    SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score.orDefault() >= filterValue } ?: false
+                    SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score.orDefault() < filterValue } ?: false
                     SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
                 }
             }

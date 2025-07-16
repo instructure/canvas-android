@@ -33,6 +33,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
@@ -125,9 +126,9 @@ class SpeedGraderGradeFragment : BasePresenterFragment<
         binding.hiddenIcon.setVisible(showHiddenIcon)
 
         presenter.submission?.let {
-            if (it.score > presenter.assignment.pointsPossible) {
+            if (it.score.orDefault() > presenter.assignment.pointsPossible) {
                 val numberFormatter = DecimalFormat("##.##")
-                binding.gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score - presenter.assignment.pointsPossible))
+                binding.gradeText.text = getString(R.string.speed_grader_overgraded_by, numberFormatter.format(it.score.orDefault() - presenter.assignment.pointsPossible))
                 binding.gradeText.setTextColor(ContextCompat.getColor(requireContext(), R.color.textWarning))
             } else {
                 binding.gradeText.setText(R.string.grade)

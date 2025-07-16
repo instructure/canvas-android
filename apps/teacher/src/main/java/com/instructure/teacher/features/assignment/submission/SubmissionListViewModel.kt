@@ -141,10 +141,10 @@ class SubmissionListViewModel @Inject constructor(
                     ) && it.isGradeMatchesCurrentSubmission
                 } ?: false
 
-                SubmissionListFilter.ABOVE_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() }
+                SubmissionListFilter.ABOVE_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score.orDefault() >= filterValue.orDefault() }
                     ?: false
 
-                SubmissionListFilter.BELOW_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score < filterValue.orDefault() }
+                SubmissionListFilter.BELOW_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score.orDefault() < filterValue.orDefault() }
                     ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
