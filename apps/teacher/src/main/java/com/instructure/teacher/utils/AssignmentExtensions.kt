@@ -42,7 +42,6 @@ import com.instructure.pandautils.utils.AssignmentUtils2.ASSIGNMENT_STATE_SUBMIT
 import com.instructure.pandautils.utils.AssignmentUtils2.getAssignmentState
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.getContentDescriptionForMinusGradeString
-import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
 import com.instructure.teacher.models.CoreDates
 import com.instructure.teacher.models.DueDateGroup
@@ -173,7 +172,7 @@ fun Assignment.getDisplayGrade(
                 if(includeLatePenalty) {
                     getPointsFraction(context, submission.enteredScore, this.pointsPossible)
                 } else {
-                    getPointsFraction(context, submission.score.orDefault(), this.pointsPossible)
+                    getPointsFraction(context, submission.score, this.pointsPossible)
                 }
             //edge case, NOT_GRADED type with grade, it COULD happen
             Assignment.GradingType.NOT_GRADED -> DisplayGrade(context.getString(R.string.not_graded))
@@ -195,7 +194,7 @@ fun Assignment.getDisplayGrade(
                     if(includeLatePenalty) {
                         getPointsFractionWithGrade(context, submission.enteredScore, this.pointsPossible, grade)
                     } else {
-                        getPointsFractionWithGrade(context, submission.score.orDefault(), this.pointsPossible, grade)
+                        getPointsFractionWithGrade(context, submission.score, this.pointsPossible, grade)
                     }
                 } else {
                     DisplayGrade(grade)
