@@ -95,7 +95,7 @@ import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentAttachment
+import com.instructure.pandautils.features.speedgrader.grade.comments.SpeedGraderCommentAttachment
 import kotlinx.coroutines.delay
 import java.lang.reflect.Field
 import java.util.Locale

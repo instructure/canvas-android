@@ -48,6 +48,7 @@ query SubmissionCommentsQuery($userId: ID!, $assignmentId: ID!, $pageSize: Int!,
                     attempt
                     read
                     attachments {
+                        _id
                         id
                         contentType
                         createdAt

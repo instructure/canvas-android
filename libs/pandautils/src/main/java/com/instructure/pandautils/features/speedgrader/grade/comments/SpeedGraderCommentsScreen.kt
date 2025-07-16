@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader.comments
+package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateFloatAsState
@@ -49,7 +49,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
-import com.instructure.pandautils.features.speedgrader.SpeedGraderCommentSection
 
 @Composable
 fun SpeedGraderCommentsScreen(
@@ -105,7 +104,7 @@ fun SpeedGraderCommentsScreen(
             exit = shrinkVertically(shrinkTowards = Alignment.Top),
             label = "GroupExpandAnimation"
         ) {
-            SpeedGraderCommentSection(uiState, actionHandler = viewModel::handleAction)
+            SpeedGraderCommentsSection(uiState, actionHandler = viewModel::handleAction)
         }
     }
 }

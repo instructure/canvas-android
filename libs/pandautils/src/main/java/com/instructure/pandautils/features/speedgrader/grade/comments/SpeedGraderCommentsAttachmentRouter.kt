@@ -14,22 +14,12 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader.comments
 
-import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.components.ViewModelComponent
+package com.instructure.pandautils.features.speedgrader.grade.comments
 
-@Module
-@InstallIn(ViewModelComponent::class)
-class SpeedGraderCommentsModule {
+import androidx.fragment.app.FragmentActivity
 
-    @Provides
-    fun provideSpeedGraderCommentsRepository(
-        submissionCommentsManager: SubmissionCommentsManager
-    ): SpeedGraderCommentsRepository {
-        return SpeedGraderCommentsRepository(submissionCommentsManager)
-    }
+
+interface SpeedGraderCommentsAttachmentRouter {
+    fun openAttachment(activity: FragmentActivity, attachment: SpeedGraderCommentAttachment)
 }

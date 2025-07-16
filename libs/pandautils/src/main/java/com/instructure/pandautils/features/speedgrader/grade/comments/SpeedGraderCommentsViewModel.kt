@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader.comments
+package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import android.content.Context
 import android.net.Uri
@@ -25,6 +25,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
+import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
@@ -42,6 +43,7 @@ import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntit
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.appdatabase.model.SubmissionCommentWithAttachments
 import com.instructure.pandautils.services.NotoriousUploadWorker
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -74,8 +76,8 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
     private val submissionId: Long = savedStateHandle.get<Long>(SUBMISSION_ID_KEY) ?: -1L
+    private val courseId: Long = savedStateHandle.get<Long>(Const.COURSE_ID) ?: -1L
 
-    private var courseId = -1L
     private var userId = -1L
     private var pageId: String = ""
     private var attempt: Int = -1
@@ -95,7 +97,6 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         val response = speedGraderCommentsRepository.getSubmissionComments(submissionId, assignmentId)
-        courseId = response.data.submission?.assignment?.courseId?.toLong() ?: -1L
         userId = response.data.submission?.userId?.toLong() ?: -1L
         pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
         collectPendingComments()
@@ -110,18 +111,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         content = it.comment ?: "",
                         createdAt = it.createdAt.toString(),
                         isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id,
-                        attachments = it.attachments?.map { attachment ->
-                            SpeedGraderCommentAttachment(
-                                id = attachment.id,
-                                url = attachment.url ?: "",
-                                thumbnailUrl = attachment.thumbnailUrl,
-                                createdAt = attachment.createdAt.toString(),
-                                title = attachment.title ?: "",
-                                displayName = attachment.displayName ?: "",
-                                contentType = attachment.contentType ?: "",
-                                size = attachment.size ?: "",
-                            )
-                        } ?: emptyList(),
+                        attachments = getAttachments(it.attachments.orEmpty()),
                         mediaObject = it.mediaObject?.let { mediaObject ->
                             SpeedGraderMediaObject(
                                 id = mediaObject._id,
@@ -146,6 +136,25 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 isLoading = false,
             )
         }
+    }
+
+    // TODO remove; We need this now, because the GraphQL query doesn't return file verifiers.
+    private suspend fun getAttachments(attachments: List<SubmissionCommentsQuery.Attachment>) = attachments.map {
+        val submission = speedGraderCommentsRepository.getSingleSubmission(courseId, assignmentId, userId)
+        val attachmentWithVerifier = submission?.submissionComments
+            ?.flatMap { attachmentsWithVerifier -> attachmentsWithVerifier.attachments }
+            ?.find { attachmentWithVerifier -> attachmentWithVerifier.id == it._id.toLongOrNull() }
+
+        SpeedGraderCommentAttachment(
+            id = it.id,
+            url = attachmentWithVerifier?.url ?: it.url ?: "",
+            thumbnailUrl = it.thumbnailUrl,
+            createdAt = it.createdAt.toString(),
+            title = it.title ?: "",
+            displayName = it.displayName ?: "",
+            contentType = it.contentType ?: "",
+            size = it.size ?: "",
+        )
     }
 
     private fun collectPendingComments() {

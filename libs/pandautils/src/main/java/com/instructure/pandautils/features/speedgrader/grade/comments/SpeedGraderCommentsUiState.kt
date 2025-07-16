@@ -1,4 +1,4 @@
-package com.instructure.pandautils.features.speedgrader.comments
+package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData

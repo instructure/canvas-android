@@ -16,7 +16,7 @@
  */
 @file:OptIn(ExperimentalGlideComposeApi::class)
 
-package com.instructure.pandautils.features.speedgrader
+package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import android.util.Log
 import androidx.compose.foundation.background
@@ -82,28 +82,32 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.features.speedgrader.comments.MediaType
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderComment
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentAttachment
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentsAction
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentsUiState
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderMediaObject
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.FloatingRecordingView
 import com.instructure.pandautils.views.RecordingMediaType
+import dagger.hilt.android.EarlyEntryPoints
 import java.util.UUID
 import kotlin.math.roundToInt
 
 
 @Composable
-fun SpeedGraderCommentSection(
+fun SpeedGraderCommentsSection(
     state: SpeedGraderCommentsUiState,
     modifier: Modifier = Modifier,
     gradingAnonymously: Boolean = false,
     actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
 ) {
+    val activity = LocalContext.current.getFragmentActivity()
+    val context = LocalContext.current.applicationContext
+    val attachmentRouter: SpeedGraderCommentsAttachmentRouter by lazy {
+        EarlyEntryPoints.get(
+            context,
+            SpeedGraderCommentsAttachmentRouterEntryPoint::class.java
+        ).speedGraderCommentsAttachmentRouter()
+    }
+
     val fileDialogShown = remember { mutableStateOf(false) }
     val dialogParent = remember {
         object : FileUploadDialogParent {
@@ -140,7 +144,8 @@ fun SpeedGraderCommentSection(
             SpeedGraderCommentItems(
                 comments = state.comments,
                 modifier = Modifier.fillMaxSize(),
-                gradingAnonymously = gradingAnonymously
+                gradingAnonymously = gradingAnonymously,
+                onAttachmentClick = { attachmentRouter.openAttachment(activity, it) }
             )
             HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
             SpeedGraderCommentCreator(
@@ -311,8 +316,9 @@ private fun AttachmentTypeSelectorDialog(
 }
 
 @Composable
-fun SpeedGraderCommentItems(
+private fun SpeedGraderCommentItems(
     comments: List<SpeedGraderComment>,
+    onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
     modifier: Modifier = Modifier,
     gradingAnonymously: Boolean = false
 ) {
@@ -326,11 +332,15 @@ fun SpeedGraderCommentItems(
         comments.forEach { comment ->
             if (comment.isOwnComment) {
                 SpeedGraderOwnCommentItem(
-                    comment = comment, gradingAnonymously = gradingAnonymously
+                    comment = comment,
+                    gradingAnonymously = gradingAnonymously,
+                    onAttachmentClick = onAttachmentClick
                 )
             } else {
                 SpeedGraderUserCommentItem(
-                    comment = comment, gradingAnonymously = gradingAnonymously
+                    comment = comment,
+                    gradingAnonymously = gradingAnonymously,
+                    onAttachmentClick = onAttachmentClick
                 )
             }
         }
@@ -339,7 +349,10 @@ fun SpeedGraderCommentItems(
 
 @Composable
 fun SpeedGraderOwnCommentItem(
-    comment: SpeedGraderComment, modifier: Modifier = Modifier, gradingAnonymously: Boolean = false
+    comment: SpeedGraderComment,
+    onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
+    modifier: Modifier = Modifier,
+    gradingAnonymously: Boolean = false,
 ) {
     Column(
         modifier = modifier
@@ -378,7 +391,7 @@ fun SpeedGraderOwnCommentItem(
             )
         }
         SpeedGraderAttachmentsComponent(
-            attachments = comment.attachments, gradingAnonymously = gradingAnonymously, isOwn = true
+            attachments = comment.attachments, gradingAnonymously = gradingAnonymously, isOwn = true, onSelect = onAttachmentClick
         )
         SpeedGraderMediaAttachmentComponent(
             mediaObject = comment.mediaObject,
@@ -558,7 +571,10 @@ fun SpeedGraderMediaAttachmentComponent(
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun SpeedGraderUserCommentItem(
-    comment: SpeedGraderComment, modifier: Modifier = Modifier, gradingAnonymously: Boolean = false
+    comment: SpeedGraderComment,
+    onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
+    modifier: Modifier = Modifier,
+    gradingAnonymously: Boolean = false
 ) {
     Row(modifier = modifier.padding(horizontal = 8.dp)) {
         GlideImage(
@@ -606,7 +622,8 @@ fun SpeedGraderUserCommentItem(
             SpeedGraderAttachmentsComponent(
                 attachments = comment.attachments,
                 gradingAnonymously = gradingAnonymously,
-                isOwn = false
+                isOwn = false,
+                onSelect = onAttachmentClick
             )
             SpeedGraderMediaAttachmentComponent(
                 mediaObject = comment.mediaObject,
@@ -758,7 +775,7 @@ fun SpeedGraderCommentSectionPreview() {
             )
         )
     )
-    SpeedGraderCommentSection(state = SpeedGraderCommentsUiState(
+    SpeedGraderCommentsSection(state = SpeedGraderCommentsUiState(
         comments = comments,
         commentText = TextFieldValue(""),
         isLoading = false,

@@ -28,7 +28,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.instructure.pandautils.features.speedgrader.comments.SpeedGraderCommentsScreen
+import com.instructure.pandautils.features.speedgrader.grade.comments.SpeedGraderCommentsScreen
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
 import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricContent
 import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricViewModel
