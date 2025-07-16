@@ -34,10 +34,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-private const val CRASHLYTICS_EXPERIENCE_KEY = "experience"
-private const val ACADEMIC_EXPERIENCE = "academic"
-private const val CAREER_EXPERIENCE = "career"
-private const val ELEMENTARY_EXPERIENCE = "elementary"
+const val CRASHLYTICS_EXPERIENCE_KEY = "experience"
+const val ACADEMIC_EXPERIENCE = "academic"
+const val CAREER_EXPERIENCE = "career"
+const val ELEMENTARY_EXPERIENCE = "elementary"
 
 
 /**
