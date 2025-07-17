@@ -61,6 +61,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val moduleItemAssetType = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetType
     private val moduleItemAssetId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemAssetId
 
+    private var courseProgressChanged = false
+
     private val _uiState =
         MutableStateFlow(
             ModuleItemSequenceUiState(
@@ -116,14 +118,14 @@ class ModuleItemSequenceViewModel @Inject constructor(
             moduleItemSequence.items?.firstOrNull()?.current?.id ?: -1L
         }
 
-        modules = repository.getModulesWithItems(courseId)
+        modules = repository.getModulesWithItems(courseId, forceNetwork = true)
         moduleItems = modules.flatMap { it.items }
 
         currentModuleItem = moduleItems.find { it.id == moduleItemId }
 
-        val assignment = getAssignment(currentModuleItem)
+        val assignment = getAssignment(currentModuleItem, forceNetwork = true)
         val attempts = getAttemptCount(assignment)
-        val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
+        val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
 
         val items = modules
             .flatMap { it.items }.mapNotNull {
@@ -181,10 +183,20 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
             item.type == Type.Page.name -> ModuleItemContent.Page(courseId, item.pageUrl.orEmpty())
             item.type == Type.Assignment.name -> {
+                val completed = item.completionRequirement?.completed ?: false
+                val mustSubmit = item.completionRequirement?.type == ModuleItem.MUST_SUBMIT
                 if (item.quizLti) {
-                    ModuleItemContent.Assessment(courseId, item.contentId)
+                    ModuleItemContent.Assessment(courseId, item.contentId) {
+                        if (mustSubmit && !completed) {
+                            courseProgressChanged = true
+                        }
+                    }
                 } else {
-                    ModuleItemContent.Assignment(courseId, item.contentId)
+                    ModuleItemContent.Assignment(courseId, item.contentId) {
+                        if (mustSubmit && !completed) {
+                            courseProgressChanged = true
+                        }
+                    }
                 }
             }
 
@@ -276,9 +288,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
             val moduleItem =
                 repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
 
-            val assignment = getAssignment(currentModuleItem)
+            val assignment = getAssignment(currentModuleItem, forceNetwork = true)
             val attempts = getAttemptCount(assignment)
-            val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
+            val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
 
             markItemAsRead(moduleItem)
             val newItems = _uiState.value.items.mapNotNull {
@@ -318,7 +330,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         val progressPosition = getProgressPosition(currentModuleItemId)
         _uiState.update {
             it.copy(
-                loadingState = it.loadingState.copy(isLoading = true),
+                loadingState = it.loadingState.copy(isLoading = courseProgressChanged),
                 progressScreenState = it.progressScreenState.copy(
                     visible = true,
                     currentPosition = progressPosition,
@@ -329,6 +341,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
         }
         reloadData()
         updateAiAssistContextModuleItem(currentModuleItem)
+        if (courseProgressChanged) {
+            reloadData()
+        }
     }
 
     private fun getProgressPosition(
@@ -347,12 +362,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun reloadData() {
         viewModelScope.tryLaunch {
-            modules = repository.getModulesWithItems(courseId)
+            modules = repository.getModulesWithItems(courseId, forceNetwork = true)
             moduleItems = modules.flatMap { it.items }
 
-            val assignment = getAssignment(currentModuleItem)
+            val assignment = getAssignment(currentModuleItem, forceNetwork = true)
             val attempts = getAttemptCount(assignment)
-            val hasUnreadComments = repository.hasUnreadComments(assignment?.id)
+            val hasUnreadComments = repository.hasUnreadComments(assignment?.id, forceNetwork = true)
 
             val items = modules
                 .flatMap { it.items }.mapNotNull { createModuleItemUiState(it, modules, attempts) }
@@ -371,6 +386,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     hasUnreadComments = hasUnreadComments
                 )
             }
+
+            courseProgressChanged = false
         } catch {
             // TODO Handle error
             _uiState.update {
@@ -443,6 +460,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
             val result = if (markDone) repository.markAsDone(courseId, item) else repository.markAsNotDone(courseId, item)
             if (result.isSuccess) {
                 updateMarkAsDoneStateForItem(item, loading = false, done = markDone)
+                courseProgressChanged = true
             } else {
                 updateMarkAsDoneStateForItem(item, loading = false)
             }
@@ -483,17 +501,18 @@ class ModuleItemSequenceViewModel @Inject constructor(
         if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
             viewModelScope.launch {
                 repository.markAsRead(courseId, item.moduleId, item.id)
+                courseProgressChanged = true
             }
         }
     }
 
-    private suspend fun getAssignment(item: ModuleItem?): Assignment? {
+    private suspend fun getAssignment(item: ModuleItem?, forceNetwork: Boolean): Assignment? {
         if (item?.type != Type.Assignment.name) return null
 
-        return repository.getAssignment(item.contentId, courseId, forceNetwork = true)
+        return repository.getAssignment(item.contentId, courseId, forceNetwork = forceNetwork)
     }
 
-    private suspend fun getAttemptCount(assignment: Assignment?): String? {
+    private fun getAttemptCount(assignment: Assignment?): String? {
         if (assignment == null) return null
 
         return if (assignment.allowedAttempts > 0) {

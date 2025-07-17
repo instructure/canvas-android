@@ -61,16 +61,17 @@ data class MarkAsDoneUiState(
 )
 
 sealed class ModuleItemContent(val routeWithArgs: String) {
-    data class Assignment(val courseId: Long, val assignmentId: Long) : ModuleItemContent(
-        "courses/$courseId/assignments/$assignmentId"
-    ) {
+    data class Assignment(val courseId: Long, val assignmentId: Long, val onSubmitted: () -> Unit = {}) :
+        ModuleItemContent(
+            "courses/$courseId/assignments/$assignmentId"
+        ) {
         companion object {
             const val ASSIGNMENT_ID = "assignmentId"
             const val ROUTE = "courses/{${Const.COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
         }
     }
 
-    data class Page(val courseId: Long, val pageUrl: String):
+    data class Page(val courseId: Long, val pageUrl: String) :
         ModuleItemContent(
             "courses/$courseId/pages/$pageUrl"
         ) {
@@ -111,7 +112,7 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         }
     }
 
-    data class Assessment(val courseId: Long, val assignmentId: Long) : ModuleItemContent(
+    data class Assessment(val courseId: Long, val assignmentId: Long, val onSubmitted: () -> Unit = {}) : ModuleItemContent(
         "courses/$courseId/quizzes/$assignmentId"
     ) {
         companion object {

@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.features.file.download.FileDownloadWorker
@@ -67,7 +68,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
         HorizonInboxDetailsUiState(
             loadingState = LoadingState(
                 onSnackbarDismiss = ::dismissSnackbar,
-                onRefresh = ::refresh
+                onRefresh = ::refresh,
             ),
         )
     )
@@ -190,6 +191,8 @@ class HorizonInboxDetailsViewModel @Inject constructor(
             HorizonInboxItemType.Inbox -> HorizonInboxReplyState(
                 onReplyTextValueChange = ::replyValueChanged,
                 onSendReply = ::sendReply,
+                onShowAttachmentPickerChanged = ::onShowAttachmentPickerChanged,
+                onAttachmentsChanged = ::onAttachmentsChanged,
             )
             HorizonInboxItemType.AccountNotification, HorizonInboxItemType.CourseNotification -> null
             else -> null
@@ -338,7 +341,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 recipientIds = recipientIds,
                 body = uiState.value.replyState!!.replyTextValue.text,
                 includedMessageIds = messageIds,
-                attachmentIds = emptyList()
+                attachmentIds = uiState.value.replyState!!.attachments.map { it.id }
             )
 
             _uiState.update {
@@ -356,7 +359,8 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     } + it.items,
                     replyState = it.replyState?.copy(
                         replyTextValue = TextFieldValue(""),
-                        isLoading = false
+                        isLoading = false,
+                        attachments = emptyList(),
                     )
                 )
             }
@@ -371,6 +375,18 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     )
                 )
             }
+        }
+    }
+
+    private fun onShowAttachmentPickerChanged(show: Boolean) {
+        _uiState.update {
+            it.copy(replyState = it.replyState?.copy(showAttachmentPicker = show))
+        }
+    }
+
+    private fun onAttachmentsChanged(attachments: List<HorizonInboxAttachment>) {
+        _uiState.update {
+            it.copy(replyState = it.replyState?.copy(attachments = attachments))
         }
     }
 }

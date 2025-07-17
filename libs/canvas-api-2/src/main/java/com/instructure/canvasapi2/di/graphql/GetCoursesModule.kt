@@ -15,7 +15,7 @@
  */
 package com.instructure.canvasapi2.di.graphql
 
-import com.instructure.canvasapi2.managers.GetCoursesManager
+import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -26,7 +26,7 @@ import dagger.hilt.components.SingletonComponent
 class GetCoursesModule {
 
     @Provides
-    fun provideGetCoursesManager(): GetCoursesManager {
-        return GetCoursesManager()
+    fun provideGetCoursesManager(): HorizonGetCoursesManager {
+        return HorizonGetCoursesManager()
     }
 }
