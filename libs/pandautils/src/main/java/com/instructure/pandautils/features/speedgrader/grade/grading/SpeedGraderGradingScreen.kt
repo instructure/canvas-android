@@ -80,7 +80,7 @@ import java.util.Date
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-private val numberFormatter = DecimalFormat("0.#")
+private val numberFormatter = DecimalFormat("0.##")
 
 @Composable
 fun SpeedGraderGradingScreen() {
@@ -575,10 +575,16 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         )
     }
+
+    val pointScale = when {
+        maxScore <= 10.0 -> 4f
+        maxScore <= 20.0 -> 2f
+        else -> 1f
+    }
     val sliderState = rememberSliderState(
         value = sliderDrivenScore.coerceAtLeast(0f),
-        valueRange = 0f..maxScore,
-        steps = (maxScore.roundToInt() - 1).coerceAtLeast(1)
+        valueRange = 0f..maxScore * pointScale,
+        steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt())-1
     )
 
     LaunchedEffect(textFieldScore) {
@@ -601,7 +607,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
     LaunchedEffect(sliderState.value) {
         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-        val newScoreFromSlider = sliderState.value.roundToInt().toFloat()
+        val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
         if (sliderDrivenScore != newScoreFromSlider) {
             sliderDrivenScore = newScoreFromSlider
             uiState.onScoreChange(newScoreFromSlider)
