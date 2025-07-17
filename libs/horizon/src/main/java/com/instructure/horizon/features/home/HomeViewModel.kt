@@ -55,7 +55,7 @@ class HomeViewModel @Inject constructor(
             val theme = homeRepository.getTheme()
             theme?.let { themeArg -> _uiState.update { it.copy(theme = themeArg) } }
 
-            courseIds = homeRepository.getCourses().map { it.course.id }
+            courseIds = homeRepository.getCourses().map { it.courseId }
 
             _uiState.update { it.copy(initialDataLoading = false) }
         } catch {

@@ -38,7 +38,7 @@ class AiAssistMainViewModel @Inject constructor(
     )
     val uiState = _uiState.asStateFlow()
 
-    fun updateAiContextMessage(message: AiAssistMessage) {
+    private fun updateAiContextMessage(message: AiAssistMessage) {
         aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
             chatHistory = listOf(message)
         )

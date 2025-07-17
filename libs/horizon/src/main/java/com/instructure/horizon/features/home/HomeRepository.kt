@@ -19,7 +19,7 @@ import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.GetCoursesManager
+import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -29,7 +29,7 @@ class HomeRepository @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val themeApi: ThemeAPI.ThemeInterface,
     private val userApi: UserAPI.UsersInterface,
-    private val getCoursesManager: GetCoursesManager,
+    private val getCoursesManager: HorizonGetCoursesManager,
 ) {
 
     suspend fun getTheme(): CanvasTheme? {
