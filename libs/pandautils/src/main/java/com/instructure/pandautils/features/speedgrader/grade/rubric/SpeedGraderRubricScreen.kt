@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.rubric
 
+import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibilityScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
@@ -24,6 +25,11 @@ import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.animation.core.Animatable
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -42,6 +48,9 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -54,10 +63,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
@@ -98,9 +110,11 @@ private fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
                 Text(text = stringResource(R.string.loading))
             }
         }
+
         uiState.error -> {
             //We don't show the rubric if there is an error
         }
+
         else -> {
             Column(
                 modifier = Modifier
@@ -123,7 +137,8 @@ private fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
                             uiState.assessments[it.id],
                             uiState.hidePoints,
                             uiState.onRubricSelected,
-                            uiState.onPointChanged
+                            uiState.onPointChanged,
+                            uiState.onCommentChange
                         )
                     }
                 }
@@ -140,7 +155,8 @@ private fun RubricCriterion(
     assessment: RubricCriterionAssessment?,
     hidePoints: Boolean,
     onRubricSelected: (Double, String, String) -> Unit,
-    onPointChanged: (Double, String) -> Unit
+    onPointChanged: (Double, String) -> Unit,
+    onCommentChange: (String, String) -> Unit
 ) {
     var expanded by remember { mutableStateOf(assessment?.ratingId == null && hidePoints) }
     val rotation = remember { Animatable(0f) }
@@ -323,7 +339,9 @@ private fun RubricCriterion(
             }
         }
         if (!hidePoints) {
-            CanvasDivider()
+            if (expanded) {
+                CanvasDivider()
+            }
 
             var enteredPoint by remember(assessment) { mutableStateOf(assessment?.points) }
             Row(
@@ -364,6 +382,89 @@ private fun RubricCriterion(
                 )
             }
         }
+        CanvasDivider()
+        RubricNote(rubricCriterion.id, assessment, onCommentChange = onCommentChange)
+    }
+}
+
+@Composable
+private fun RubricNote(
+    criterionId: String,
+    assessment: RubricCriterionAssessment?,
+    onCommentChange: (String, String) -> Unit
+) {
+    var editMode by remember { mutableStateOf(assessment?.comments.isNullOrEmpty()) }
+    val haptic = LocalHapticFeedback.current
+    Column {
+        Text(
+            modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp),
+            text = stringResource(R.string.rubricNote),
+            color = colorResource(R.color.textDark)
+        )
+        AnimatedContent(
+            targetState = editMode,
+            transitionSpec = {
+                if (targetState) {
+                    slideInHorizontally { height -> height } + fadeIn() togetherWith
+                            slideOutHorizontally { height -> -height } + fadeOut()
+                } else {
+                    slideInHorizontally { height -> -height } + fadeIn() togetherWith
+                            slideOutHorizontally { height -> height } + fadeOut()
+                }
+            },
+            label = "EditModeAnimation"
+        ) { targetEditMode ->
+            if (targetEditMode) {
+                RubricNoteField(
+                    initialValue = assessment?.comments.orEmpty(),
+                    onCommentChange = { comment ->
+                        onCommentChange(comment, criterionId)
+                        if (comment.isNotBlank()) {
+                            editMode = false
+                        }
+                    }
+                )
+            } else {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .weight(1f)
+                            .padding(start = 16.dp, end = 8.dp)
+                            .background(
+                                color = colorResource(R.color.backgroundLight),
+                                shape = RoundedCornerShape(16.dp)
+                            )
+                    ) {
+                        Text(
+                            modifier = Modifier
+                                .padding(16.dp),
+                            text = assessment?.comments.orEmpty(),
+                            color = colorResource(R.color.textDarkest),
+                            lineHeight = 19.sp
+                        )
+                    }
+
+                    IconButton(
+                        modifier = Modifier.padding(end = 16.dp),
+                        onClick = {
+                            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                            editMode = true
+                        }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_edit),
+                            contentDescription = stringResource(R.string.content_description_edit_rubric_comment),
+                            tint = LocalCourseColor.current
+                        )
+                    }
+                }
+            }
+        }
+
     }
 }
 
@@ -460,6 +561,60 @@ private fun PointValueBox(
     }
 }
 
+@Composable
+private fun RubricNoteField(
+    modifier: Modifier = Modifier,
+    onCommentChange: (String) -> Unit,
+    initialValue: String = ""
+) {
+    var commentText by remember(initialValue) { mutableStateOf(initialValue) }
+    val haptic = LocalHapticFeedback.current
+    OutlinedTextField(
+        modifier = modifier
+            .padding(start = 16.dp, end = 16.dp, bottom = 12.dp)
+            .fillMaxWidth()
+            .background(Color.Transparent),
+        label = {
+            Text(stringResource(R.string.rubricNoteHint))
+        },
+        shape = RoundedCornerShape(16.dp),
+        value = commentText,
+        maxLines = 5,
+        onValueChange = {
+            commentText = it
+        },
+        textStyle = TextStyle(
+            fontSize = 14.sp,
+            lineHeight = 17.sp,
+            color = colorResource(id = R.color.textDarkest),
+        ),
+        colors = OutlinedTextFieldDefaults.colors(
+            cursorColor = LocalCourseColor.current,
+            focusedContainerColor = Color.Transparent,
+            unfocusedContainerColor = Color.Transparent,
+            focusedLabelColor = colorResource(R.color.textDarkest),
+            unfocusedLabelColor = colorResource(R.color.textDark),
+            disabledLabelColor = colorResource(R.color.textDark),
+            errorLabelColor = colorResource(R.color.textDark),
+            focusedTrailingIconColor = LocalCourseColor.current,
+            unfocusedTrailingIconColor = LocalCourseColor.current,
+            focusedBorderColor = colorResource(R.color.textDarkest),
+            unfocusedBorderColor = colorResource(R.color.textDark)
+        ),
+        trailingIcon = {
+            IconButton(onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                onCommentChange(commentText)
+            }) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_send_outlined),
+                    contentDescription = stringResource(R.string.a11y_sendRubricNoteContentDescription)
+                )
+            }
+        }
+    )
+}
+
 @Preview
 @Composable
 private fun SpeedGraderRubricScreenPreview() {
@@ -476,6 +631,7 @@ private fun SpeedGraderRubricScreenPreview() {
                 loading = false,
                 onRubricSelected = { _, _, _ -> },
                 onPointChanged = { _, _ -> },
+                onCommentChange = { _, _ -> },
                 criterions = listOf(
                     RubricCriterion(
                         id = "1",
@@ -524,23 +680,24 @@ private fun SpeedGraderRubricScreenPreview() {
     }
 }
 
-@Preview
+@Preview(showBackground = true, uiMode = Configuration.UI_MODE_NIGHT_YES)
 @Composable
 private fun SpeedGraderTextRubricScreenPreview() {
-    CanvasTheme(courseColor = Color.Blue) {
+    CanvasTheme(courseColor = Color.Yellow) {
         SpeedGraderRubricContent(
             uiState = SpeedGraderRubricUiState(
                 assessments = mapOf(
                     "2" to RubricCriterionAssessment(
                         ratingId = "3",
                         points = 2.0,
-                        comments = "This is a comment for the assessment."
+                        comments = "This is a comment for the assessment"
                     )
                 ),
                 loading = false,
                 hidePoints = true,
                 onRubricSelected = { _, _, _ -> },
                 onPointChanged = { _, _ -> },
+                onCommentChange = { _, _ -> },
                 criterions = listOf(
                     RubricCriterion(
                         id = "1",
