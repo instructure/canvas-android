@@ -19,16 +19,22 @@ import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.HorizonNavigation
 import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.getActivityOrNull
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class HorizonActivity : BaseCanvasActivity() {
+
+    @Inject
+    lateinit var webViewAuthenticator: WebViewAuthenticator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,5 +45,10 @@ class HorizonActivity : BaseCanvasActivity() {
                 HorizonNavigation(rememberNavController())
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
     }
 }
