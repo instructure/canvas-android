@@ -63,16 +63,24 @@ class HorizonInboxListRepository @Inject constructor(
     suspend fun getCourseAnnouncements(forceNetwork: Boolean): List<Pair<Course, DiscussionTopicHeader>> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
         val courses = getAllInboxCourses(forceNetwork)
-        return announcementsApi.getFirstPageAnnouncements(
-            courseCode = courses.map { it.contextId }.toTypedArray(),
-            startDate = Calendar.getInstance().apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
-            endDate = Date().toApiString(),
-            params = params
-        )
-        .depaginate { announcementsApi.getNextPageAnnouncementsList(it, params) }
-        .dataOrThrow
-        .map { announcement ->
-            Pair(courses.first { course -> course.contextId == announcement.contextCode }, announcement)
+        return if (courses.isEmpty()) {
+            return emptyList()
+        } else {
+            announcementsApi.getFirstPageAnnouncements(
+                courseCode = courses.map { it.contextId }.toTypedArray(),
+                startDate = Calendar.getInstance()
+                    .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
+                endDate = Date().toApiString(),
+                params = params
+            )
+            .depaginate { announcementsApi.getNextPageAnnouncementsList(it, params) }
+            .dataOrThrow
+            .map { announcement ->
+                Pair(
+                    courses.first { course -> course.contextId == announcement.contextCode },
+                    announcement
+                )
+            }
         }
     }
 
