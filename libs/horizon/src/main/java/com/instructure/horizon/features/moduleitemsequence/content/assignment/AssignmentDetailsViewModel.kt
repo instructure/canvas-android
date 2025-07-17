@@ -62,7 +62,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
                 submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed),
-                onCommentsBottomSheetDismissed = ::dismissComments
+                onCommentsBottomSheetDismissed = ::dismissComments,
+                onAssignmentUpdatedForAddSubmission = ::onAssignmentUpdatedForAddSubmission,
             )
         )
 
@@ -344,5 +345,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             isGroupingUsed = false
         }
         return formatter.format(value)
+    }
+
+    private fun onAssignmentUpdatedForAddSubmission() {
+        _assignmentFlow.value = null
     }
 }
