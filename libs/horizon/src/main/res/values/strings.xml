@@ -106,6 +106,8 @@
     <string name="dashboard_courseCompleted">Congrats! You\'ve completed your course.</string>
     <string name="dashboard_courseCompletedDescription">View your progress and scores on the Learn page.</string>
     <string name="failedToLoadAccount">Failed to load Account</string>
+    <string name="accountExperienceHeading">Experience</string>
+    <string name="accountSwitchToAcademicLabel">Switch to Canvas Academic</string>
     <string name="accountSettingsHeading">Settings</string>
     <string name="accountProfileLabel">Profile</string>
     <string name="accountPasswordLabel">Password</string>
@@ -298,9 +300,12 @@
     <string name="inboxComposeSelectRecipientErrorMessage">Please select recipients</string>
     <string name="inboxComposeSubjectErrorMessage">Please enter a subject</string>
     <string name="inboxComposeBodyErrorMessage">Please enter a message</string>
+    <string name="inboxComposeAttachmentsErrorMessage">Please wait for all attachments to upload</string>
     <string name="inboxComposeCourseErrorMessage">Failed to load Courses</string>
     <string name="inboxComposeRecipientErrorMessage">Failed to load Recipients</string>
     <string name="inboxComposeSendErrorMessage">Failed to send Message</string>
     <string name="inboxListConversationCreatedMessage">Conversation created successfully</string>
     <string name="noOptionsAvailable">No options available</string>
+    <string name="inboxComposeAttachFile">Attach file</string>
+    <string name="inboxDetailsReplyAttachFile">Attach file</string>
 </resources>

@@ -49,8 +49,8 @@ class ModuleItemSequenceRepository @Inject constructor(
         ).dataOrThrow
     }
 
-    suspend fun getModulesWithItems(courseId: Long): List<ModuleObject> {
-        val params = RestParams(isForceReadFromNetwork = true)
+    suspend fun getModulesWithItems(courseId: Long, forceNetwork: Boolean): List<ModuleObject> {
+        val params = RestParams(isForceReadFromNetwork = forceNetwork)
         val modules = moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,

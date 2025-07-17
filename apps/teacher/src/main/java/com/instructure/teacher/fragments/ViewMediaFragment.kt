@@ -24,6 +24,7 @@ import android.view.ViewGroup
 import android.widget.ImageButton
 import androidx.annotation.OptIn
 import androidx.appcompat.widget.Toolbar
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -49,6 +50,7 @@ import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
@@ -63,6 +65,7 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.view.MediaContent
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 
 @ScreenView(SCREEN_VIEW_VIEW_MEDIA)
@@ -77,8 +80,9 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     private var isInModulesPager by BooleanArg()
     private var toolbarColor by IntArg()
     private var editableFile: EditableFile? by NullableParcelableArg()
+    private var mediaUri: Uri? = null
 
-    private val mExoAgent get() = ExoAgent.getAgentForUri(mUri)
+    private val mExoAgent get() = ExoAgent.getAgentForUri(mediaUri ?: mUri)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_speed_grader_media, container, false)
@@ -86,6 +90,11 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         binding.speedGraderMediaPlayerView.findViewById<Toolbar>(R.id.toolbar).setGone()
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fetchMediaUri()
     }
 
     override fun onStart() = with(binding) {
@@ -108,7 +117,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
 
         speedGraderMediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).onClick {
             mExoAgent.flagForResume()
-            val bundle = BaseViewMediaActivity.makeBundle(mUri.toString(), mThumbnailUrl, mContentType, mDisplayName, false)
+            val bundle = BaseViewMediaActivity.makeBundle((mediaUri ?: mUri).toString(), mThumbnailUrl, mContentType, mDisplayName, false)
             RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.MEDIA))
         }
     }
@@ -117,7 +126,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
         mUri.viewExternally(requireContext(), mContentType)
     }
 
-    override fun onResume() = with(binding) {
+    override fun onResume()  {
         super.onResume()
 
         // If returning from editing this file, check if it was deleted so we can immediately go back
@@ -128,6 +137,21 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
 
         setupToolbar()
 
+        if (mediaUri != null) {
+            attachMediaPlayer()
+        }
+    }
+
+    private fun fetchMediaUri() {
+        lifecycleScope.launch {
+            mediaUri = RouteUtils.getRedirectUrl(mUri)
+            if (isResumed) {
+                attachMediaPlayer()
+            }
+        }
+    }
+
+    private fun attachMediaPlayer() = with(binding){
         mExoAgent.attach(speedGraderMediaPlayerView, object : ExoInfoListener {
             override fun onStateChanged(newState: ExoAgentState) {
                 when (newState) {
@@ -135,6 +159,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
                         mediaPreviewContainer.setVisible()
                         mediaPlaybackErrorView.setGone()
                         speedGraderMediaPlayerView.setGone()
+                        prepareMediaButton.setVisible()
                         mediaProgressBar.setGone()
                     }
                     ExoAgentState.PREPARING,

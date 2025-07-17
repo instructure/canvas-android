@@ -46,10 +46,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
+import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerUiState
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -60,14 +65,17 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
+import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
+import com.instructure.horizon.horizonui.organisms.inputs.common.InputErrorText
 import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.MultiSelectSearch
 import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.MultiSelectSearchInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch.MultiSelectSearchState
@@ -82,9 +90,11 @@ import com.instructure.horizon.horizonui.organisms.inputs.textfield.TextFieldSta
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HorizonInboxComposeScreen(
     state: HorizonInboxComposeUiState,
+    pickerState: HorizonInboxAttachmentPickerUiState,
     navController: NavHostController
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -110,6 +120,13 @@ fun HorizonInboxComposeScreen(
             HorizonInboxComposeTopBar(navController)
         }
     ) { innerPadding ->
+        HorizonInboxAttachmentPicker(
+            showBottomSheet = state.showAttachmentPicker,
+            onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
+            state = pickerState,
+            onFilesChanged = state.onAttachmentsChanged
+        )
+
         HorizonInboxComposeContent(
             state,
             navController,
@@ -171,6 +188,8 @@ private fun HorizonInboxComposeContent(
         CourseRecipientSendIndividuallySection(state)
 
         HorizonInboxComposeTextSection(state)
+
+        HorizonInboxComposeAttachmentSection(state)
 
         Spacer(modifier = Modifier.weight(1f))
 
@@ -295,6 +314,34 @@ private fun HorizonInboxComposeTextSection(state: HorizonInboxComposeUiState) {
 }
 
 @Composable
+private fun HorizonInboxComposeAttachmentSection(state: HorizonInboxComposeUiState) {
+    Column(
+        modifier = Modifier.padding(horizontal = 24.dp)
+    ) {
+        Button(
+            label = stringResource(R.string.inboxComposeAttachFile),
+            iconPosition = ButtonIconPosition.Start(R.drawable.attach_file),
+            color = ButtonColor.Inverse,
+            enabled = state.attachments.size < 3,
+            onClick = { state.onShowAttachmentPickerChanged(true) },
+        )
+
+        state.attachments.forEach { state ->
+            HorizonSpace(SpaceSize.SPACE_4)
+            FileDropItem(
+                state.toFileDropItemState(),
+            )
+        }
+
+        HorizonSpace(SpaceSize.SPACE_12)
+
+        state.attachmentsErrorMessage?.let {
+            InputErrorText(it)
+        }
+    }
+}
+
+@Composable
 private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState, navController: NavHostController) {
     Column {
         HorizonDivider()
@@ -332,13 +379,22 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                         )
                     }
                 } else {
-                    val listEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry(HorizonInboxRoute.InboxList.route) }
+                    val listEntry = remember(navController.currentBackStackEntry) {
+                        try {
+                            navController.getBackStackEntry(HorizonInboxRoute.InboxList.route)
+                        } catch (e: IllegalArgumentException) {
+                            // If the back stack entry doesn't exist, we can safely ignore it
+                            null
+                        }
+                    }
                     Button(
                         label = stringResource(R.string.inboxComposeSendLabel),
                         color = ButtonColor.Institution,
                         onClick = {
                             state.onSendConversation {
-                                listEntry.savedStateHandle[HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED] = true
+                                listEntry?.savedStateHandle?.set(HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED,
+                                    true
+                                )
                                 navController.popBackStack()
                             }
                         }
@@ -347,4 +403,15 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
             }
         }
     }
+}
+
+@Composable
+@Preview
+private fun HorizonInboxComposePreview() {
+    ContextKeeper.appContext = LocalContext.current
+
+    val state = HorizonInboxComposeUiState()
+    val pickerState = HorizonInboxAttachmentPickerUiState()
+
+    HorizonInboxComposeScreen(state, pickerState, rememberNavController())
 }

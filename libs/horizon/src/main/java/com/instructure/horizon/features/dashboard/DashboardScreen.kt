@@ -52,6 +52,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -66,8 +67,6 @@ import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ThemePrefs
-
-const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {

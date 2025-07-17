@@ -13,20 +13,21 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvasapi2.di.graphql
+package com.instructure.canvasapi2.apis
 
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.ExperienceSummary
+import com.instructure.canvasapi2.utils.DataResult
+import retrofit2.http.Field
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.Tag
 
-@Module
-@InstallIn(SingletonComponent::class)
-class GetCoursesModule {
+interface ExperienceAPI {
 
-    @Provides
-    fun provideGetCoursesManager(): HorizonGetCoursesManager {
-        return HorizonGetCoursesManager()
-    }
+    @GET("career/experience_summary")
+    suspend fun getExperienceSummary(@Tag params: RestParams): DataResult<ExperienceSummary>
+
+    @POST("career/switch_experience")
+    suspend fun switchExperience(@Tag params: RestParams, @Field("experience") experience: String): DataResult<ExperienceSummary>
 }
