@@ -20,6 +20,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
@@ -60,6 +61,7 @@ class LoginViewModelTest {
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
     private val experienceApi: ExperienceAPI = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: LoginViewModel
 
@@ -170,6 +172,7 @@ class LoginViewModelTest {
 
         // Then
         verify { apiPrefs.canvasCareerView = true }
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, CAREER_EXPERIENCE) }
         assertEquals(LoginResultAction.Login(Experience.Career), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
@@ -192,6 +195,7 @@ class LoginViewModelTest {
 
         // Then
         verify { apiPrefs.canvasCareerView = false }
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ACADEMIC_EXPERIENCE) }
         assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
@@ -240,6 +244,7 @@ class LoginViewModelTest {
         loginStatus.observe(lifecycleOwner, {})
 
         // Then
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ELEMENTARY_EXPERIENCE) }
         assertEquals(LoginResultAction.Login(Experience.Academic(true)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
@@ -333,7 +338,7 @@ class LoginViewModelTest {
     }
 
     private fun createViewModel(): LoginViewModel {
-        return LoginViewModel(featureFlagProvider, userManager, oauthManager, apiPrefs, experienceApi, networkStateProvider)
+        return LoginViewModel(featureFlagProvider, userManager, oauthManager, apiPrefs, experienceApi, networkStateProvider, crashlytics)
     }
 
 }
