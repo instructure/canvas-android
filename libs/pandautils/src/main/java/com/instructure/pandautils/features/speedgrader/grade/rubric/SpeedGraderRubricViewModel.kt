@@ -127,7 +127,8 @@ class SpeedGraderRubricViewModel @Inject constructor(
             val assessments = originalAssessment.toMutableMap()
             assessments[criterionId] = RubricCriterionAssessment(
                 ratingId,
-                points
+                points,
+                comments = originalAssessment[criterionId]?.comments ?: ""
             )
             _uiState.update {
                 it.copy(assessments = assessments)
@@ -215,8 +216,6 @@ class SpeedGraderRubricViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(assessments = originalAssessment)
                 }
-            } finally {
-                loadData()
             }
         }
     }

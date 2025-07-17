@@ -192,7 +192,7 @@ class SpeedGraderRubricViewModelTest {
             "criterionId" to RubricCriterionAssessment(
                 ratingId = "ratingId",
                 points = 10.0,
-                comments = null
+                comments = "Good job"
             ),
             "criterionId2" to RubricCriterionAssessment(
                 ratingId = "ratingId2",
@@ -226,7 +226,7 @@ class SpeedGraderRubricViewModelTest {
             "criterionId" to RubricCriterionAssessment(
                 ratingId = null,
                 points = 15.0,
-                comments = null
+                comments = "Good job"
             ),
             "criterionId2" to RubricCriterionAssessment(
                 ratingId = "ratingId2",
@@ -312,7 +312,7 @@ class SpeedGraderRubricViewModelTest {
             "criterionId" to RubricCriterionAssessment(
                 ratingId = "ratingId2",
                 points = 12.0,
-                comments = null
+                comments = "Good job"
             ),
             "criterionId2" to RubricCriterionAssessment(
                 ratingId = "ratingId2",
@@ -398,7 +398,7 @@ class SpeedGraderRubricViewModelTest {
             "criterionId" to RubricCriterionAssessment(
                 ratingId = "ratingId2",
                 points = 22.0,
-                comments = null
+                comments = "Good job"
             ),
             "criterionId2" to RubricCriterionAssessment(
                 ratingId = "ratingId2",
