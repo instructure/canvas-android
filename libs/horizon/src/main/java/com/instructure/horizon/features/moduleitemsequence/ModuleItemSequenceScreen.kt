@@ -79,7 +79,6 @@ import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
-import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentViewModel
@@ -122,6 +121,9 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
+
+const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
+const val SHOULD_REFRESH_LEARN_SCREEN = "shouldRefreshLearnScreen"
 
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
@@ -262,6 +264,7 @@ private fun ModuleItemSequenceContent(
                     remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
                 LaunchedEffect(Unit) {
                     homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                    homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
                 }
 
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
@@ -422,10 +425,12 @@ private fun ModuleItemContentScreen(
                         assignmentToolsOpened()
                     }
                 }
+                val assignment = moduleItemUiState.moduleItemContent as? ModuleItemContent.Assignment
                 AssignmentDetailsScreen(
                     uiState = uiState,
                     scrollState = scrollState,
                     moduleHeaderHeight = moduleHeaderHeight,
+                    assignmentSubmitted = assignment?.onSubmitted ?: {},
                 )
             }
             composable(
@@ -495,7 +500,8 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<AssessmentViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                AssessmentContentScreen(uiState)
+                val assessment = moduleItemUiState.moduleItemContent as? ModuleItemContent.Assessment
+                AssessmentContentScreen(uiState, onAssessmentSubmitted = assessment?.onSubmitted ?: {})
             }
         }
     }

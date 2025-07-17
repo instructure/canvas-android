@@ -93,7 +93,8 @@ fun AssignmentDetailsScreen(
     uiState: AssignmentDetailsUiState,
     scrollState: ScrollState,
     moduleHeaderHeight: Dp,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    assignmentSubmitted: () -> Unit = {}
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(uiState.urlToOpen) {
@@ -250,7 +251,10 @@ fun AssignmentDetailsScreen(
                 if (uiState.showAddSubmission) {
                     val addSubmissionViewModel = hiltViewModel<AddSubmissionViewModel>()
                     val addSubmissionUiState by addSubmissionViewModel.uiState.collectAsState()
-                    addSubmissionViewModel.setOnSubmissionSuccessListener(uiState.onSubmissionSuccess)
+                    addSubmissionViewModel.setOnSubmissionSuccessListener {
+                        uiState.onSubmissionSuccess()
+                        assignmentSubmitted()
+                    }
 
                     val assignment by hiltViewModel<AssignmentDetailsViewModel>().assignmentFlow.collectAsState()
                     LaunchedEffect(assignment) {
