@@ -562,7 +562,7 @@ private fun PointValueBox(
 }
 
 @Composable
-fun RubricNoteField(
+private fun RubricNoteField(
     modifier: Modifier = Modifier,
     onCommentChange: (String) -> Unit,
     initialValue: String = ""

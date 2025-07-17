@@ -211,6 +211,8 @@ class SpeedGraderRubricViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(assessments = originalAssessment)
                 }
+            } finally {
+                loadData()
             }
         }
     }
