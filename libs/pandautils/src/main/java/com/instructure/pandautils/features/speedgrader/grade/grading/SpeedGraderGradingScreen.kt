@@ -558,14 +558,6 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Composable
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
-    var sliderDrivenScore by remember { mutableFloatStateOf(uiState.enteredScore ?: 0f) }
-    var textFieldScore by remember {
-        mutableStateOf(uiState.enteredScore?.let {
-            numberFormatter.format(
-                it
-            )
-        }.orEmpty())
-    }
 
     val maxScore by remember {
         mutableFloatStateOf(
@@ -581,6 +573,16 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         maxScore <= 20.0 -> 2f
         else -> 1f
     }
+
+    var sliderDrivenScore by remember { mutableFloatStateOf((uiState.enteredScore ?: 0f) * pointScale) }
+    var textFieldScore by remember {
+        mutableStateOf(uiState.enteredScore?.let {
+            numberFormatter.format(
+                it
+            )
+        }.orEmpty())
+    }
+
     val sliderState = rememberSliderState(
         value = sliderDrivenScore.coerceAtLeast(0f),
         valueRange = 0f..maxScore * pointScale,
@@ -600,8 +602,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
         }
         if (sliderDrivenScore != (newScore ?: 0f)) {
-            sliderDrivenScore = newScore ?: 0f
-            sliderState.value = (newScore ?: 0f).coerceAtLeast(0f)
+            sliderDrivenScore = (newScore ?: 0f) * pointScale
+            sliderState.value = sliderDrivenScore.coerceAtLeast(0f)
         }
     }
 
