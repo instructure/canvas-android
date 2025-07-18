@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import dagger.Module
@@ -32,9 +33,10 @@ class SpeedGraderCommentsModule {
     @Provides
     fun provideSpeedGraderCommentsRepository(
         submissionCommentsManager: SubmissionCommentsManager,
-        submissionApi: SubmissionAPI.SubmissionInterface
+        submissionApi: SubmissionAPI.SubmissionInterface,
+        featuresApi: FeaturesAPI.FeaturesInterface
     ): SpeedGraderCommentsRepository {
-        return SpeedGraderCommentsRepository(submissionCommentsManager, submissionApi)
+        return SpeedGraderCommentsRepository(submissionCommentsManager, submissionApi, featuresApi)
     }
 }
 

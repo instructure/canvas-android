@@ -13,50 +13,64 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 #
-
-query SubmissionCommentsQuery($userId: ID!, $assignmentId: ID!, $pageSize: Int!, $nextCursor: String) {
+query SubmissionCommentsQuery(
+    $userId: ID!,
+    $assignmentId: ID!,
+    $historyCursor: String,
+    $commentCursor: String
+) {
     submission(userId: $userId, assignmentId: $assignmentId) {
         _id
         userId
-        attempt
-        commentsConnection(first: $pageSize, after: $nextCursor) {
+        submissionHistoriesConnection(first: 20, after: $historyCursor) {
             edges {
                 node {
-                    author {
-                        _id
-                        name
-                        email
-                        avatarUrl
-                        pronouns
-                    }
-                    mediaObject {
-                        _id
-                        mediaDownloadUrl
-                        title
-                        mediaType
-                        thumbnailUrl
-                        mediaSources {
-                            contentType
-                            fileExt
-                        }
-                    }
-                    comment
-                    mediaCommentId
-                    createdAt
-                    canReply
-                    draft
                     attempt
-                    read
-                    attachments {
-                        _id
-                        id
-                        contentType
-                        createdAt
-                        displayName
-                        title
-                        size
-                        thumbnailUrl
-                        url
+                    commentsConnection(first: 20, after: $commentCursor) {
+                        edges {
+                            node {
+                                author {
+                                    _id
+                                    name
+                                    email
+                                    avatarUrl
+                                    pronouns
+                                }
+                                mediaObject {
+                                    _id
+                                    mediaDownloadUrl
+                                    title
+                                    mediaType
+                                    thumbnailUrl
+                                    mediaSources {
+                                        contentType
+                                        fileExt
+                                    }
+                                }
+                                comment
+                                mediaCommentId
+                                createdAt
+                                canReply
+                                draft
+                                attempt
+                                read
+                                attachments {
+                                    _id
+                                    id
+                                    contentType
+                                    createdAt
+                                    displayName
+                                    title
+                                    size
+                                    thumbnailUrl
+                                    url
+                                }
+                            }
+                        }
+                        pageInfo {
+                            hasNextPage
+                            endCursor
+                        }
                     }
                 }
             }
@@ -64,11 +78,6 @@ query SubmissionCommentsQuery($userId: ID!, $assignmentId: ID!, $pageSize: Int!,
                 hasNextPage
                 endCursor
             }
-        }
-        assignment {
-            courseId
-            groupCategoryId
-            gradeGroupStudentsIndividually
         }
     }
 }

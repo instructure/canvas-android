@@ -17,6 +17,7 @@
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
+import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
@@ -25,7 +26,8 @@ import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 class SpeedGraderCommentsRepository(
     private val submissionCommentsManager: SubmissionCommentsManager,
-    private val submissionApi: SubmissionAPI.SubmissionInterface
+    private val submissionApi: SubmissionAPI.SubmissionInterface,
+    private val featuresApi: FeaturesAPI.FeaturesInterface
 ) {
     suspend fun getSubmissionComments(userId: Long, assignmentId: Long): SubmissionCommentsResponseWrapper {
         return submissionCommentsManager.getSubmissionComments(userId, assignmentId)
@@ -42,5 +44,10 @@ class SpeedGraderCommentsRepository(
 
     suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long): Submission? {
         return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, RestParams()).dataOrNull
+    }
+
+    suspend fun getCourseFeatures(courseId: Long): List<String> {
+        val params = RestParams(isForceReadFromNetwork = true)
+        return featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull.orEmpty()
     }
 }

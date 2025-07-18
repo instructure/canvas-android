@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
+import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
@@ -52,6 +53,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.ensureActive
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
@@ -68,7 +70,8 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private val attachmentDao: AttachmentDao,
     private val authorDao: AuthorDao,
     private val mediaCommentDao: MediaCommentDao,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderCommentsUiState())
@@ -80,27 +83,30 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private var userId = -1L
     private var pageId: String = ""
-    private var attempt: Int = -1
+    private var selectedAttemptId: Long? = null
 
     private var fetchedComments: MutableList<SpeedGraderComment> = mutableListOf()
     private var pendingComments: List<SpeedGraderComment> = emptyList()
     private var selectedFilePaths: List<String>? = null
-
-    // TODO use actual value from feature flag
-    val assignmentEnhancementsEnabled = true
+    private var assignmentEnhancementsEnabled = false
 
     init {
         viewModelScope.launch {
-            fetchData()
+            speedGraderSelectedAttemptHolder.selectedAttemptIdFlowFor(submissionId).collectLatest { attemptId ->
+                selectedAttemptId = attemptId
+                fetchData()
+            }
         }
     }
 
     private suspend fun fetchData() {
+        assignmentEnhancementsEnabled = speedGraderCommentsRepository.getCourseFeatures(courseId).contains("assignments_2_student")
         val response = speedGraderCommentsRepository.getSubmissionComments(submissionId, assignmentId)
         userId = response.data.submission?.userId?.toLong() ?: -1L
         pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
         collectPendingComments()
         fetchedComments = response.comments
+            .filter { it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
             .map { node ->
                 node.let {
                     SpeedGraderComment(
@@ -129,7 +135,6 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 }
             }.toMutableList()
 
-        attempt = response.data.submission?.attempt ?: -1
         _uiState.update { state ->
             state.copy(
                 comments = fetchedComments + pendingComments,
@@ -224,7 +229,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                             assignmentId = assignmentId,
                             courseId = courseId,
                             userId = userId,
-                            attempt = attempt.toLong()
+                            attempt = selectedAttemptId
                         )
                     )
                 }
@@ -304,7 +309,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 userId = userId,
                 filePaths = selectedFilePaths.orEmpty(),
                 action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
-                attemptId = attempt.takeIf { assignmentEnhancementsEnabled }?.toLong()
+                attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
             )
             fileUploadInputDao.insert(fileUploadInput)
         }
@@ -322,7 +327,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                     assignmentId,
                     userId
                 )
-                this.attemptId = attempt.takeIf { assignmentEnhancementsEnabled }?.toLong()
+                this.attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
             }
             pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
         }
@@ -394,7 +399,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 studentId = userId,
                 isGroupComment = false, // TODO handle group comments
                 pageId = pageId,
-                attemptId = attempt.toLong(),
+                attemptId = selectedAttemptId,
                 mediaCommentId = id
             ).collect { result ->
                 when (result.state) {
@@ -421,9 +426,8 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     }
 
     private suspend fun createPendingMediaComment(filePath: String): Long {
-
         val newComment = PendingSubmissionComment(pageId).apply {
-            attemptId = attempt.toLong().takeIf { assignmentEnhancementsEnabled }
+            attemptId = selectedAttemptId?.takeIf { assignmentEnhancementsEnabled }
         }
         newComment.filePath = filePath
         newComment.status = CommentSendStatus.SENDING
@@ -438,7 +442,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }
         pendingSubmissionCommentDao.deleteAll(drafts.map { it.pendingSubmissionCommentEntity })
         val newComment = PendingSubmissionComment(pageId, commentText).apply {
-            attemptId = attempt.toLong().takeIf { assignmentEnhancementsEnabled }
+            attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
         }
         pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
         return newComment.id

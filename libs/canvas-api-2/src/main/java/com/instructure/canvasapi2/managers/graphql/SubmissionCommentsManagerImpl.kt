@@ -24,27 +24,86 @@ import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
 
     override suspend fun getSubmissionComments(userId: Long, assignmentId: Long): SubmissionCommentsResponseWrapper {
-        var hasNextPage = true
-        var nextCursor: String? = null
-        val allComments = mutableListOf<SubmissionCommentsQuery.Node>()
-        var data: SubmissionCommentsQuery.Data? = null
+        val allComments = mutableListOf<SubmissionCommentsQuery.Node1>()
+        var historyCursor: String? = null
+        var hasMoreHistories = true
+        var initialData: SubmissionCommentsQuery.Data? = null
 
-        while (hasNextPage) {
-            val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
-            val query = SubmissionCommentsQuery(userId.toString(), assignmentId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
-            data = QLClientConfig.enqueueQuery(query).data
-            val comments = data?.submission?.commentsConnection?.edges?.mapNotNull { edge ->
-                edge?.node
-            } ?: emptyList()
-            allComments.addAll(comments)
+        while (hasMoreHistories) {
+            val historyCursorOpt = if (historyCursor != null) Optional.present(historyCursor) else Optional.absent()
 
-            hasNextPage = data?.submission?.commentsConnection?.pageInfo?.hasNextPage ?: false
-            nextCursor = data?.submission?.commentsConnection?.pageInfo?.endCursor
+            val query = SubmissionCommentsQuery(
+                userId = userId.toString(),
+                assignmentId = assignmentId.toString(),
+                historyCursor = historyCursorOpt,
+                commentCursor = Optional.absent()
+            )
+
+            val historyData = QLClientConfig.enqueueQuery(query).data
+            if (initialData == null) initialData = historyData
+
+            val historyEdges = historyData
+                ?.submission
+                ?.submissionHistoriesConnection
+                ?.edges
+                .orEmpty()
+
+            for (historyEdge in historyEdges) {
+                val historyNode = historyEdge?.node ?: continue
+                val attempt = historyNode.attempt
+
+                val commentEdges = historyNode.commentsConnection?.edges.orEmpty().mapNotNull { it?.node }
+                allComments.addAll(commentEdges)
+
+                var commentPageInfo = historyNode.commentsConnection?.pageInfo
+                var commentCursor = commentPageInfo?.endCursor
+                var hasMoreComments = commentPageInfo?.hasNextPage == true
+
+                while (hasMoreComments) {
+                    val commentQuery = SubmissionCommentsQuery(
+                        userId = userId.toString(),
+                        assignmentId = assignmentId.toString(),
+                        historyCursor = historyCursorOpt,
+                        commentCursor = Optional.present(commentCursor)
+                    )
+
+                    val commentData = QLClientConfig.enqueueQuery(commentQuery).data
+
+                    val matchedHistory = commentData
+                        ?.submission
+                        ?.submissionHistoriesConnection
+                        ?.edges
+                        ?.mapNotNull { it?.node }
+                        ?.find { it.attempt == attempt }
+
+                    val newComments = matchedHistory
+                        ?.commentsConnection
+                        ?.edges
+                        ?.mapNotNull { it?.node }
+                        .orEmpty()
+
+                    allComments.addAll(newComments)
+
+                    commentPageInfo = matchedHistory?.commentsConnection?.pageInfo
+                    hasMoreComments = commentPageInfo?.hasNextPage == true
+                    commentCursor = commentPageInfo?.endCursor
+                }
+            }
+
+            val pageInfo = historyData
+                ?.submission
+                ?.submissionHistoriesConnection
+                ?.pageInfo
+
+            hasMoreHistories = pageInfo?.hasNextPage == true
+            historyCursor = pageInfo?.endCursor
         }
-        if (data == null) {
+
+        if (initialData == null) {
             throw Exception("No data returned from SubmissionCommentsQuery")
         }
-        return SubmissionCommentsResponseWrapper(data, allComments)
+
+        return SubmissionCommentsResponseWrapper(initialData, allComments)
     }
 
     override suspend fun createSubmissionComment(

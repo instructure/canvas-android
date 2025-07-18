@@ -59,7 +59,7 @@ data class SpeedGraderFileSelectorDialogData(
     val assignmentId: Long = 0L,
     val courseId: Long = 0L,
     val userId: Long = 0L,
-    val attempt: Long = 0L,
+    val attempt: Long? = null,
 )
 
 sealed class SpeedGraderCommentsAction {
