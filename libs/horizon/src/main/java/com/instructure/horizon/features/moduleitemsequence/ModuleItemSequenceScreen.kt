@@ -147,8 +147,6 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
-                    aiContext = uiState.aiContext,
-                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
@@ -287,8 +285,6 @@ private fun ModuleItemSequenceContent(
                         mainNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
-                        uiState.updateAiContextString,
-                        uiState.updateObjectTypeAndId
                     )
                 }
             }
@@ -385,8 +381,6 @@ private fun ModuleItemContentScreen(
     mainNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
-    updateAiContext: (String) -> Unit,
-    updateObjectTypeAndId: (Pair<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -416,8 +410,6 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                updateAiContext(uiState.instructions)
-                updateObjectTypeAndId(Pair("Assignment", uiState.assignmentId.toString()))
                 LaunchedEffect(assignmentToolsForId) {
                     val assignmentId = it.arguments?.getLong(ModuleItemContent.Assignment.ASSIGNMENT_ID) ?: -1L
                     if (assignmentId == assignmentToolsForId) {
@@ -440,8 +432,6 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                updateAiContext(uiState.pageHtmlContent.orEmpty())
-                updateObjectTypeAndId(Pair("Page", uiState.pageId.toString()))
                 viewModel.refreshNotes()
                 PageDetailsContentScreen(
                     uiState = uiState,
@@ -620,8 +610,6 @@ private fun ModuleItemSequenceScreenPreview() {
             ),
             updateShowAiAssist = {},
             updateShowNotebook = {},
-            updateAiContextString = {},
-            updateObjectTypeAndId = {},
         )
     )
 }

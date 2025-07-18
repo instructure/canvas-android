@@ -47,7 +47,6 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.molecules.IconButton
@@ -98,7 +97,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
             Spinner(modifier = Modifier.fillMaxSize(), color = spinnerColor)
         } else {
             if (uiState.showAiAssist) {
-                AiAssistantScreen(AiAssistContext(), navController, { uiState.updateShowAiAssist(false) })
+                AiAssistantScreen({ uiState.updateShowAiAssist(false) })
             }
             HomeNavigation(navController, parentNavController, Modifier.padding(padding))
         }

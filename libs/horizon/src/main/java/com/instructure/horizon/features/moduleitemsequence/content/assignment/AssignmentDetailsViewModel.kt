@@ -24,6 +24,9 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
@@ -43,6 +46,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -94,6 +98,12 @@ class AssignmentDetailsViewModel @Inject constructor(
             val showAttemptSelector = assignment.allowedAttempts != 1L
 
             val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
+
+            aiAssistContextProvider.aiAssistContext = AiAssistContext(
+                contextString = assignment.description.orEmpty(),
+                contextSources = aiAssistContextProvider.aiAssistContext.contextSources +
+                    AiAssistContextSource.Assignment(assignment.id.toString())
+            )
 
             _uiState.update {
                 it.copy(
