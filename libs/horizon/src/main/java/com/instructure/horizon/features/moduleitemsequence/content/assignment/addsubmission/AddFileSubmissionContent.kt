@@ -141,7 +141,7 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
         }
     }, onUploadClick = {
         showBottomSheet = true
-    }, modifier = modifier)
+    }, modifier = modifier, uploadButtonEnabled = uiState.uploadFileEnabled)
 }
 
 private fun takePictureWithFileProvider(
