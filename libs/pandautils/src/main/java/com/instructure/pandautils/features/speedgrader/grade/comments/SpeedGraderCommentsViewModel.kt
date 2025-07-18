@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
@@ -78,12 +79,13 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
-    private val submissionId: Long = savedStateHandle.get<Long>(SUBMISSION_ID_KEY) ?: -1L
+    private val studentId: Long = savedStateHandle.get<Long>(SUBMISSION_ID_KEY) ?: -1L
     private val courseId: Long = savedStateHandle.get<Long>(Const.COURSE_ID) ?: -1L
 
     private var userId = -1L
     private var pageId: String = ""
     private var selectedAttemptId: Long? = null
+    private var submissionId: Long? = null
 
     private var fetchedComments: MutableList<SpeedGraderComment> = mutableListOf()
     private var pendingComments: List<SpeedGraderComment> = emptyList()
@@ -92,7 +94,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            speedGraderSelectedAttemptHolder.selectedAttemptIdFlowFor(submissionId).collectLatest { attemptId ->
+            speedGraderSelectedAttemptHolder.selectedAttemptIdFlowFor(studentId).collectLatest { attemptId ->
                 selectedAttemptId = attemptId
                 fetchData()
             }
@@ -101,9 +103,10 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private suspend fun fetchData() {
         assignmentEnhancementsEnabled = speedGraderCommentsRepository.getCourseFeatures(courseId).contains("assignments_2_student")
-        val response = speedGraderCommentsRepository.getSubmissionComments(submissionId, assignmentId)
+        val response = speedGraderCommentsRepository.getSubmissionComments(studentId, assignmentId)
         userId = response.data.submission?.userId?.toLong() ?: -1L
         pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
+        submissionId = response.data.submission?._id?.toLongOrNull()
         collectPendingComments()
         fetchedComments = response.comments
             .filter { it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
@@ -458,12 +461,11 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             // TODO remove after testing, this is just to simulate a delay for the UI
             delay(3000)
             val newComment = speedGraderCommentsRepository.createSubmissionComment(
-                submissionId,
-                comment
+                submissionId ?: throw IllegalStateException("Submission ID is null"),
+                comment,
+                selectedAttemptId?.toInt()
             )
-            pendingSubmissionCommentDao.findById(id)?.let {
-                pendingSubmissionCommentDao.delete(it)
-            }
+            pendingSubmissionCommentDao.deleteById(id)
             fetchedComments.add(
                 SpeedGraderComment(
                     id = newComment.createSubmissionComment?.submissionComment?._id ?: "",

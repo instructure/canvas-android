@@ -1,6 +1,11 @@
 package com.instructure.pandautils.room.appdatabase.daos
 
-import androidx.room.*
+import androidx.room.Dao
+import androidx.room.Delete
+import androidx.room.Insert
+import androidx.room.Query
+import androidx.room.Transaction
+import androidx.room.Update
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.appdatabase.model.PendingSubmissionCommentWithFileUploadInput
 import kotlinx.coroutines.flow.Flow
@@ -42,4 +47,6 @@ interface PendingSubmissionCommentDao {
     @Query("SELECT * FROM PendingSubmissionCommentEntity WHERE status=:status AND workerId IS NOT NULL")
     suspend fun findByStatus(status: String): List<PendingSubmissionCommentWithFileUploadInput>?
 
+    @Query("DELETE FROM PendingSubmissionCommentEntity WHERE id = :id")
+    suspend fun deleteById(id: Long)
 }

@@ -39,7 +39,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
                 commentCursor = Optional.absent()
             )
 
-            val historyData = QLClientConfig.enqueueQuery(query).data
+            val historyData = QLClientConfig.enqueueQuery(query, true).data
             if (initialData == null) initialData = historyData
 
             val historyEdges = historyData
@@ -67,7 +67,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
                         commentCursor = Optional.present(commentCursor)
                     )
 
-                    val commentData = QLClientConfig.enqueueQuery(commentQuery).data
+                    val commentData = QLClientConfig.enqueueQuery(commentQuery, true).data
 
                     val matchedHistory = commentData
                         ?.submission
