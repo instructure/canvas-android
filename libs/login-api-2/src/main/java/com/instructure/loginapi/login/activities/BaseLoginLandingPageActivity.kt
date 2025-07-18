@@ -26,7 +26,6 @@ import android.view.MotionEvent
 import android.view.View
 import androidx.activity.viewModels
 import androidx.annotation.ColorInt
-import androidx.annotation.StringRes
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.PopupMenu
 import androidx.core.content.ContextCompat
@@ -35,9 +34,7 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.gson.Gson
-import com.instructure.canvasapi2.apis.ErrorReportAPI
 import com.instructure.canvasapi2.models.AccountDomain
-import com.instructure.canvasapi2.models.ErrorReportPreFill
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -47,7 +44,6 @@ import com.instructure.loginapi.login.R
 import com.instructure.loginapi.login.adapter.PreviousUsersAdapter
 import com.instructure.loginapi.login.adapter.SnickerDoodleAdapter
 import com.instructure.loginapi.login.databinding.ActivityLoginLandingPageBinding
-import com.instructure.loginapi.login.dialog.ErrorReportDialog
 import com.instructure.loginapi.login.dialog.NoInternetConnectionDialog
 import com.instructure.loginapi.login.model.SignedInUser
 import com.instructure.loginapi.login.snicker.SnickerDoodle
@@ -86,8 +82,7 @@ abstract class BaseLoginLandingPageActivity : BaseCanvasActivity() {
     @ColorInt
     protected abstract fun themeColor(): Int
 
-    @StringRes
-    protected abstract fun appTypeName(): Int
+    protected abstract fun appTypeName(): String
 
     protected open fun appChangesLink(): String? = null
 
@@ -137,21 +132,6 @@ abstract class BaseLoginLandingPageActivity : BaseCanvasActivity() {
     protected open fun qrLoginClicked() {
         Analytics.logEvent(AnalyticsEventConstants.QR_CODE_LOGIN_CLICKED)
         startActivity(loginWithQRIntent())
-    }
-
-    private fun requestLoginHelp() {
-        ErrorReportDialog().also {
-            it.arguments = ErrorReportDialog.createBundle(
-                appName = getString(appTypeName()),
-                fromLogin = true,
-                useDefaultDomain = true,
-                preFill = ErrorReportPreFill(
-                    title = getString(R.string.requestLoginHelp),
-                    subject = getString(R.string.loginHelpSubject),
-                    severity = ErrorReportAPI.Severity.BLOCKING
-                )
-            )
-        }.show(supportFragmentManager, ErrorReportDialog.TAG)
     }
 
     private fun loadPreviousUsers() = with(binding) {

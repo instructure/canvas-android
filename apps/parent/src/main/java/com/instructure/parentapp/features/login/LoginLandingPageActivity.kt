@@ -45,8 +45,8 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return ContextCompat.getColor(this, R.color.login_parentAppTheme)
     }
 
-    override fun appTypeName(): Int {
-        return R.string.appUserTypeParent
+    override fun appTypeName(): String {
+        return getString(R.string.appUserTypeParent)
     }
 
     override fun loginWithQRCodeEnabled() = true

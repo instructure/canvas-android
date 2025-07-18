@@ -114,7 +114,7 @@ class QrPairingFragment : BaseCanvasFragment() {
     private fun onNextClicked() {
         barcodeLauncher.launch(
             ScanOptions()
-                .setPrompt(getString(R.string.qrCodePairingPrompt))
+                .setPrompt(getString(R.string.qrCodePairingPromptCanvas))
                 .setOrientationLocked(true)
                 .setBeepEnabled(false)
                 .setDesiredBarcodeFormats(ScanOptions.QR_CODE)
