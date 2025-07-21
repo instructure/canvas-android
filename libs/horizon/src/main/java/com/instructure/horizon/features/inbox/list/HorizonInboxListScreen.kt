@@ -269,13 +269,13 @@ private fun LazyListScope.inboxHeader(
                 onOptionSelected = { option ->
                     val recipient = state.allRecipients.firstOrNull { it.name == option }
                     if (recipient != null) {
-                        state.updateSelectedRecipients(state.selectedRecipients + recipient)
+                        state.onRecipientSelected(recipient)
                     }
                 },
                 onOptionRemoved = { option ->
                     val recipient = state.allRecipients.firstOrNull { it.name == option }
                     if (recipient != null) {
-                        state.updateSelectedRecipients(state.selectedRecipients - recipient)
+                        state.onRecipientRemoved(recipient)
                     }
                 },
                 isMenuOpen = isRecipientFilterOpen,
@@ -287,7 +287,8 @@ private fun LazyListScope.inboxHeader(
                 onSearchQueryChanged = { query ->
                     state.updateRecipientSearchQuery(query)
                 },
-                isOptionListLoading = state.isOptionListLoading
+                isOptionListLoading = state.isOptionListLoading,
+                minSearchQueryLengthForMenu = state.minQueryLength
             )
             MultiSelectSearch(state = multiSelectState)
 
@@ -432,7 +433,8 @@ private fun HorizonInboxListPreview() {
         allRecipients = emptyList(),
         selectedRecipients = emptyList(),
         updateScopeFilter = {},
-        updateSelectedRecipients = {},
+        onRecipientSelected = {},
+        onRecipientRemoved = {},
         updateRecipientSearchQuery = {}
     )
     HorizonInboxListScreen(state, rememberNavController(), rememberNavController())
