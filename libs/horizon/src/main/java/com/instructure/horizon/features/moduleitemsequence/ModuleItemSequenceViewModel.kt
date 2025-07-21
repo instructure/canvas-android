@@ -81,6 +81,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 updateShowAiAssist = ::updateShowAiAssist,
                 updateShowNotebook = ::updateShowNotebook,
                 updateObjectTypeAndId = ::updateNotebookObjectTypeAndId,
+                updateAiAssistContext = ::updateAiAssistContext,
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -153,7 +154,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 hasUnreadComments = hasUnreadComments
             )
         }
-        updateAiAssistContextModuleItem(currentModuleItem)
     }
 
     private fun createProgressPage(module: ModuleObject): ProgressPageUiState {
@@ -308,7 +308,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
                     hasUnreadComments = hasUnreadComments
                 )
             }
-            updateAiAssistContextModuleItem(currentModuleItem)
         } catch {
             // TODO Handle error
             val currentItem = getCurrentItem()
@@ -340,7 +339,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
             )
         }
         reloadData()
-        updateAiAssistContextModuleItem(currentModuleItem)
         if (courseProgressChanged) {
             reloadData()
         }
@@ -548,12 +546,15 @@ class ModuleItemSequenceViewModel @Inject constructor(
         _uiState.update { it.copy(objectTypeAndId = objectTypeAndId) }
     }
 
-    private fun updateAiAssistContextModuleItem(item: ModuleItem?) {
+    private fun updateAiAssistContext(source: AiAssistContextSource, content: String) {
         aiAssistContextProvider.aiAssistContext = AiAssistContext(
             contextSources = listOf(
                 AiAssistContextSource.CourseId(courseId.toString()),
-                AiAssistContextSource.ModuleId(item?.moduleId.toString()),
-            )
+                AiAssistContextSource.ModuleId(currentModuleItem?.moduleId.toString()),
+                AiAssistContextSource.ModuleItemId(currentModuleItem?.id.toString()),
+                source
+            ),
+            contextString = content
         )
     }
 }

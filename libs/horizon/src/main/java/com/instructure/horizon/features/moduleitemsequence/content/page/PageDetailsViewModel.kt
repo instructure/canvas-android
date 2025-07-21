@@ -20,8 +20,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
@@ -37,7 +35,6 @@ class PageDetailsViewModel @Inject constructor(
     private val pageDetailsRepository: PageDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
     savedStateHandle: SavedStateHandle,
-    private val aiAssistContextProvider: AiAssistContextProvider,
 ) : ViewModel() {
 
     private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
@@ -62,11 +59,6 @@ class PageDetailsViewModel @Inject constructor(
             } catch (e: Exception) {
                 emptyList()
             }
-            aiAssistContextProvider.aiAssistContext = aiAssistContextProvider.aiAssistContext.copy(
-                contextString = pageDetails.body.orEmpty(),
-                contextSources = aiAssistContextProvider.aiAssistContext.contextSources +
-                        AiAssistContextSource.Page(pageDetails.id.toString()),
-            )
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),

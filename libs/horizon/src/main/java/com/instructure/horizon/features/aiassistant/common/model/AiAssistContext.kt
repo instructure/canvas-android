@@ -15,6 +15,7 @@ sealed class AiAssistContextSource(val rawValue: String, open val id: String) {
     class Page(id: String): AiAssistContextSource("Page", id)
     class CourseId(id: String): AiAssistContextSource("course-id", id)
     class ModuleId(id: String): AiAssistContextSource("module-id", id)
+    class ModuleItemId(id: String): AiAssistContextSource("module-item-id", id)
 
     fun toPair(): Pair<String, String> {
         return Pair(rawValue, id)

@@ -79,6 +79,7 @@ import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentViewModel
@@ -285,6 +286,7 @@ private fun ModuleItemSequenceContent(
                         mainNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
+                        updateAiContext = uiState.updateAiAssistContext,
                     )
                 }
             }
@@ -381,6 +383,7 @@ private fun ModuleItemContentScreen(
     mainNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
+    updateAiContext: (AiAssistContextSource, String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -423,6 +426,7 @@ private fun ModuleItemContentScreen(
                     scrollState = scrollState,
                     moduleHeaderHeight = moduleHeaderHeight,
                     assignmentSubmitted = assignment?.onSubmitted ?: {},
+                    updateAiContext = { source, content -> updateAiContext(source, content) }
                 )
             }
             composable(
@@ -436,6 +440,7 @@ private fun ModuleItemContentScreen(
                 PageDetailsContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
+                    updateAiContext = { source, content -> updateAiContext(source, content) },
                     mainNavController = mainNavController
                 )
             }
