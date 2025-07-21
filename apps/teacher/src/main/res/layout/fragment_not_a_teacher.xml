@@ -56,15 +56,9 @@
 
         <ImageView
             android:id="@+id/canvasWordmarkStudent"
+            android:layout_centerVertical="true"
             style="@style/NotATeacher.CanvasWordmark"
             android:layout_toEndOf="@id/studentCanvasLogo"/>
-
-        <TextView
-            style="@style/NotATeacher.SubText"
-            android:layout_below="@+id/canvasWordmarkStudent"
-            android:layout_toEndOf="@id/studentCanvasLogo"
-            android:text="@string/appUserTypeStudent"
-            android:textColor="@color/textDarkest"/>
 
     </RelativeLayout>
 
