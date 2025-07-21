@@ -94,6 +94,10 @@
         <item quantity="one">%d pt</item>
         <item quantity="other">%d pts</item>
     </plurals>
+    <plurals name="moduleItemCard_pointsPossibleWithRequirement">
+        <item quantity="one">%1$d pt | Score at least %2$s</item>
+        <item quantity="other">%1$d pts | Score at least %2$s</item>
+    </plurals>
     <string name="notSubmittedStatusLabel">Not submitted</string>
     <string name="submittedStatusLabel">Submitted</string>
     <string name="gradedStatusLabel">Graded</string>
@@ -249,6 +253,7 @@
     <string name="addNoteLabelLabel">Label</string>
     <string name="addNoteAddANoteLabel">Add a note</string>
     <string name="addNoteSaveLabel">Save</string>
+    <string name="addNoteDeleteLabel">Delete</string>
     <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
     <string name="assignmentDetails_submissionError">Error submitting assignment</string>
     <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
@@ -308,4 +313,5 @@
     <string name="noOptionsAvailable">No options available</string>
     <string name="inboxComposeAttachFile">Attach file</string>
     <string name="inboxDetailsReplyAttachFile">Attach file</string>
+    <string name="learnScoreFeedbackLabel">Feedback:</string>
 </resources>

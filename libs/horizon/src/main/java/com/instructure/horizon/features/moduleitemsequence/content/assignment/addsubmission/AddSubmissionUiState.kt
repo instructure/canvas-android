@@ -31,7 +31,8 @@ data class AddSubmissionUiState(
     val submissionInProgress: Boolean = false,
     val errorMessage: String? = null,
     val snackbarMessage: String? = null,
-    val onSnackbarDismiss: () -> Unit = {}
+    val onSnackbarDismiss: () -> Unit = {},
+    val onAssignmentUpdated: (Assignment) -> Unit = {},
 )
 
 sealed class AddSubmissionTypeUiState(

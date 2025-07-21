@@ -130,7 +130,7 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         addStudentBottomPage.clickOnQRCode()
 
-        composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Open Canvas app").assertIsDisplayed()
     }
 
     private fun initData(): MockCanvas {

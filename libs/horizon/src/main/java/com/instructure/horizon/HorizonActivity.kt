@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon
 
+import android.content.pm.ShortcutManager
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.compose.ui.platform.LocalContext
@@ -38,6 +39,8 @@ class HorizonActivity : BaseCanvasActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val manager = getSystemService(ShortcutManager::class.java)
+        manager?.removeAllDynamicShortcuts()
         setContent {
             val activity = LocalContext.current.getActivityOrNull()
             if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))

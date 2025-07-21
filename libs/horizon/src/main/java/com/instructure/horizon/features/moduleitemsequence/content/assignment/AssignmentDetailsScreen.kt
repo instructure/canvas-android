@@ -259,7 +259,8 @@ fun AssignmentDetailsScreen(
                     val assignment by hiltViewModel<AssignmentDetailsViewModel>().assignmentFlow.collectAsState()
                     LaunchedEffect(assignment) {
                         assignment?.let {
-                            addSubmissionViewModel.updateAssignment(it)
+                            addSubmissionUiState.onAssignmentUpdated(it)
+                            uiState.onAssignmentUpdatedForAddSubmission()
                         }
                     }
                     AddSubmissionContent(
