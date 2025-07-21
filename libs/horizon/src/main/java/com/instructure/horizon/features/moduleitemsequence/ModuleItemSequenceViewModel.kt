@@ -338,7 +338,6 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 ),
             )
         }
-        reloadData()
         if (courseProgressChanged) {
             reloadData()
         }
