@@ -96,7 +96,7 @@ class DashboardViewModel @Inject constructor(
         val nextModuleItemId = dashboardCourse.nextUpModuleItemId
         return if (nextModuleId != null && nextModuleItemId != null) {
             createCourseUiState(dashboardCourse)
-        } else if (dashboardCourse.course.progress == 0.0) {
+        } else if (dashboardCourse.course.progress < 100.0) {
 
             val modules = dashboardRepository.getFirstPageModulesWithItems(
                 dashboardCourse.course.courseId,
