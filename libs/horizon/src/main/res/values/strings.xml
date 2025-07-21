@@ -253,6 +253,7 @@
     <string name="addNoteLabelLabel">Label</string>
     <string name="addNoteAddANoteLabel">Add a Note</string>
     <string name="addNoteSaveLabel">Save</string>
+    <string name="addNoteDeleteLabel">Delete</string>
     <string name="assignmentDetails_fileTypeNotSupported">File type is not allowed</string>
     <string name="assignmentDetails_submissionError">Error submitting assignment</string>
     <string name="assignmentDetails_draftDeleted">Your draft was deleted.</string>
