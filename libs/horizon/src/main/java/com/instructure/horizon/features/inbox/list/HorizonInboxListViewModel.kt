@@ -130,7 +130,6 @@ class HorizonInboxListViewModel @Inject constructor(
         } else {
             emptyList()
         }
-        val recipients = repository.getRecipients(uiState.value.recipientSearchQuery.text, forceRefresh)
 
         val items = buildList {
             addAll(
@@ -140,9 +139,7 @@ class HorizonInboxListViewModel @Inject constructor(
                             id = conversation.id,
                             type = HorizonInboxItemType.Inbox,
                             title = conversation.subject.orEmpty(),
-                            description = conversation.audience?.mapNotNull {
-                                recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
-                            }?.map { it.name }?.joinToString(", ").orEmpty(),
+                            description = conversation.participants?.map { it.name }?.joinToString(", ").orEmpty(),
                             courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
                             date = conversation.lastMessageAt?.toDate() ?: conversation.lastAuthoredMessageAt?.toDate(),
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
@@ -185,7 +182,6 @@ class HorizonInboxListViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 items = items.sortedByDescending { item -> item.date },
-                allRecipients = recipients
             )
         }
     }
