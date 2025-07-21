@@ -271,18 +271,37 @@ class AddSubmissionViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     submissionInProgress = false,
-                    errorMessage = context.getString(R.string.assignmentDetails_submissionError)
+                    errorMessage = context.getString(R.string.assignmentDetails_submissionError),
+                    submissionTypes = getUpdatedSubmissionTypesWithUploadFileEnabled(it.submissionTypes, true)
                 )
             }
         } else if (progress == 100.0f) {
             onSubmissionSuccess?.invoke()
             onTextSubmissionChanged("")
             _uiState.update {
-                it.copy(submissionInProgress = showProgress)
+                it.copy(
+                    submissionInProgress = showProgress,
+                    submissionTypes = getUpdatedSubmissionTypesWithUploadFileEnabled(it.submissionTypes, !showProgress))
             }
         } else if (progress > 0f) {
             _uiState.update {
-                it.copy(submissionInProgress = showProgress)
+                it.copy(
+                    submissionInProgress = showProgress,
+                    submissionTypes = getUpdatedSubmissionTypesWithUploadFileEnabled(it.submissionTypes, !showProgress)
+                )
+            }
+        }
+    }
+
+    private fun getUpdatedSubmissionTypesWithUploadFileEnabled(
+        submissionTypes: List<AddSubmissionTypeUiState>,
+        enabled: Boolean
+    ): List<AddSubmissionTypeUiState> {
+        return submissionTypes.map { submissionTypeUiState ->
+            if (submissionTypeUiState is AddSubmissionTypeUiState.File) {
+                submissionTypeUiState.copy(uploadFileEnabled = enabled)
+            } else {
+                submissionTypeUiState
             }
         }
     }

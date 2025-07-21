@@ -65,6 +65,7 @@ sealed class AddSubmissionTypeUiState(
         val galleryPickerAllowed: Boolean = false,
         val files: List<AddSubmissionFileUiState> = emptyList(),
         val onFileAdded: (Uri) -> Unit = {},
+        val uploadFileEnabled: Boolean = true,
         override val draftUiState: DraftUiState = DraftUiState(),
         override val submitEnabled: Boolean = false
     ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload, Assignment.SubmissionType.ONLINE_UPLOAD) {
