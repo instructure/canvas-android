@@ -67,7 +67,8 @@ class AddSubmissionViewModel @Inject constructor(
                 onSubmissionTypeSelected = ::submissionTypeSelected,
                 onSubmissionButtonClicked = ::showSubmissionConfirmation,
                 onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
-                onSubmitAssignment = ::sendSubmission
+                onSubmitAssignment = ::sendSubmission,
+                onAssignmentUpdated = ::updateAssignment
             )
         )
 
@@ -78,7 +79,7 @@ class AddSubmissionViewModel @Inject constructor(
         onSubmissionSuccess = listener
     }
 
-    fun updateAssignment(assignment: Assignment) {
+    private fun updateAssignment(assignment: Assignment) {
         viewModelScope.tryLaunch {
             assignmentName = assignment.name.orEmpty()
             assignmentId = assignment.id
@@ -109,14 +110,14 @@ class AddSubmissionViewModel @Inject constructor(
                     AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged, draftUiState, text.isNotEmpty())
                 } else {
                     val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
-                    this@AddSubmissionViewModel.files.addAll(files.map { file ->
+                    this@AddSubmissionViewModel.files = files.map { file ->
                         FileSubmitObject(
                             name = file.name.orEmpty(),
                             fullPath = file.fullPath.orEmpty(),
                             contentType = file.contentType.orEmpty(),
                             size = file.size.orDefault()
                         )
-                    })
+                    }.toMutableList()
 
                     val fileUiStates = files.map { file ->
                         AddSubmissionFileUiState(
