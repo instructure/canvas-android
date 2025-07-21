@@ -94,6 +94,10 @@
         <item quantity="one">%d pt</item>
         <item quantity="other">%d pts</item>
     </plurals>
+    <plurals name="moduleItemCard_pointsPossibleWithRequirement">
+        <item quantity="one">%1$d pt | Score at least %2$s</item>
+        <item quantity="other">%1$d pts | Score at least %2$s</item>
+    </plurals>
     <string name="notSubmittedStatusLabel">Not Submitted</string>
     <string name="submittedStatusLabel">Submitted</string>
     <string name="gradedStatusLabel">Graded</string>
