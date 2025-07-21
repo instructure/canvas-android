@@ -39,7 +39,6 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -67,7 +66,7 @@ class HorizonInboxListViewModel @Inject constructor(
     init {
         loadData()
 
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             recipientSearchQueryFlow
                 .debounce(200)
                 .collectLatest {
@@ -75,6 +74,8 @@ class HorizonInboxListViewModel @Inject constructor(
                     fetchData()
                     _uiState.update { it.copy(isOptionListLoading = false) }
                 }
+        } catch {
+            showErrorState()
         }
     }
 
@@ -90,14 +91,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
         } catch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    loadingState = currentState.loadingState.copy(
-                        isLoading = false,
-                        snackbarMessage = context.getString(R.string.failedToLoadInbox)
-                    )
-                )
-            }
+            showErrorState()
         }
     }
 
@@ -208,14 +202,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isRefreshing = false))
             }
         } catch {
-            _uiState.update { currentState ->
-                currentState.copy(
-                    loadingState = currentState.loadingState.copy(
-                        isRefreshing = false,
-                        snackbarMessage = context.getString(R.string.failedToLoadInbox)
-                    )
-                )
-            }
+            showErrorState()
         }
     }
 
@@ -249,6 +236,18 @@ class HorizonInboxListViewModel @Inject constructor(
     private fun showSnackbar(message: String) {
         _uiState.update {
             it.copy(loadingState = it.loadingState.copy(snackbarMessage = message))
+        }
+    }
+
+    private fun showErrorState() {
+        _uiState.update { currentState ->
+            currentState.copy(
+                loadingState = currentState.loadingState.copy(
+                    isRefreshing = false,
+                    isLoading = false,
+                    snackbarMessage = context.getString(R.string.failedToLoadInbox)
+                )
+            )
         }
     }
 }
