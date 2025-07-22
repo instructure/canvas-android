@@ -47,7 +47,8 @@ data class SpeedGraderMediaObject(
     val mediaDownloadUrl: String?,
     val title: String?,
     val mediaType: MediaType?,
-    val thumbnailUrl: String?
+    val thumbnailUrl: String?,
+    val contentType: String?
 )
 
 enum class MediaType {
