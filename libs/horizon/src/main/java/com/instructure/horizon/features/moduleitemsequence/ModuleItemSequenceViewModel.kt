@@ -37,7 +37,7 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.formatDayMonth
+import com.instructure.pandautils.utils.formatMonthDay
 import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -243,7 +243,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
             detailTags.add(it.formatIsoDuration(context))
         }
         item.moduleDetails?.dueDate?.let {
-            detailTags.add(context.getString(R.string.modulePager_dueDate, it.formatDayMonth()))
+            detailTags.add(context.getString(R.string.modulePager_dueDate, it.formatMonthDay()))
         }
         item.moduleDetails?.pointsPossible?.let {
             val points = it.toDoubleOrNull()?.toInt() ?: 0

@@ -360,7 +360,7 @@ class AddSubmissionViewModel @Inject constructor(
         return if (date == null) {
             ""
         } else {
-            context.getString(R.string.assignmentDetails_draftSaved, date.format("dd/MM, h:mm a"))
+            context.getString(R.string.assignmentDetails_draftSaved, date.format("MM/dd, h:mm a"))
         }
     }
 

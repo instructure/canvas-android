@@ -304,7 +304,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         return AttemptCardState(
             attemptNumber = submission.attempt,
             attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
-            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty(),
+            date = submission.submittedAt?.format("MM/dd, h:mm a").orEmpty(),
             score = score,
             selected = selected,
             onClick = onClick
