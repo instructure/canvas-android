@@ -102,7 +102,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
             HomeNavigation(navController, parentNavController, Modifier.padding(padding))
         }
     }, containerColor = HorizonColors.Surface.pagePrimary(), bottomBar = {
-        BottomNavigationBar(navController, currentDestination, parentNavController, { uiState.updateShowAiAssist(it) })
+        BottomNavigationBar(navController, currentDestination, !uiState.initialDataLoading, { uiState.updateShowAiAssist(it) })
     })
 }
 
@@ -110,7 +110,7 @@ fun HomeScreen(parentNavController: NavHostController, viewModel: HomeViewModel)
 private fun BottomNavigationBar(
     homeNavController: NavController,
     currentDestination: NavDestination?,
-    mainNavController: NavHostController,
+    buttonsEnabled: Boolean,
     updateShowAiAssist: (Boolean) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -119,11 +119,11 @@ private fun BottomNavigationBar(
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any { it.route == item.route } == true
                 if (item.route == null) {
-                    AiAssistantItem(item, onClick = {
+                    AiAssistantItem(item, buttonsEnabled, onClick = {
                         updateShowAiAssist(true)
                     })
                 } else {
-                    SelectableNavigationItem(item, selected, onClick = {
+                    SelectableNavigationItem(item, selected, buttonsEnabled, onClick = {
                         homeNavController.navigate(item.route) {
                             popUpTo(homeNavController.graph.findStartDestination().id) {
                                 saveState = true
@@ -139,7 +139,7 @@ private fun BottomNavigationBar(
 }
 
 @Composable
-fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun RowScope.AiAssistantItem(item: BottomNavItem, enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(
         modifier = modifier
             .requiredSize(44.dp)
@@ -147,7 +147,8 @@ fun RowScope.AiAssistantItem(item: BottomNavItem, onClick: () -> Unit, modifier:
         onClick = onClick,
         contentDescription = stringResource(item.label),
         iconRes = R.drawable.ai,
-        color = IconButtonColor.Ai
+        color = IconButtonColor.Ai,
+        enabled = enabled
     )
 }
 

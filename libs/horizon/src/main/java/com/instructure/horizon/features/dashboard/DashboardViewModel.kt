@@ -29,6 +29,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.formatIsoDuration
+import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
@@ -70,7 +71,12 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceNetwork: Boolean) {
-        _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) }
+        // We need to poll for the logo URL because the Dashboard already starts to load when the canvas theme is not yet applied at the first launch.
+        poll(
+            pollInterval = 50,
+            maxAttempts = 10,
+            block = { _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) } },
+            validate = { themePrefs.mobileLogoUrl.isNotEmpty() })
         val courses = dashboardRepository.getDashboardCourses(forceNetwork = forceNetwork)
         if (courses.isSuccess) {
             val coursesResult = courses.dataOrThrow
@@ -90,7 +96,7 @@ class DashboardViewModel @Inject constructor(
         val nextModuleItemId = dashboardCourse.nextUpModuleItemId
         return if (nextModuleId != null && nextModuleItemId != null) {
             createCourseUiState(dashboardCourse)
-        } else if (dashboardCourse.course.progress == 0.0) {
+        } else if (dashboardCourse.course.progress < 100.0) {
 
             val modules = dashboardRepository.getFirstPageModulesWithItems(
                 dashboardCourse.course.courseId,
