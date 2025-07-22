@@ -51,13 +51,10 @@ class HorizonInboxListRepository @Inject constructor(
 
     suspend fun getRecipients(searchQuery: String?, forceNetwork: Boolean): List<Recipient> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
-        val courses = getAllInboxCourses(forceNetwork)
-        return courses.map { course ->
-            recipientsApi.getFirstPageRecipientList(searchQuery, course.id.toString(), params)
-                .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
-                .dataOrThrow
-                .filter { it.recipientType == Recipient.Type.Person }
-        }.flatten().distinct()
+        return recipientsApi.getFirstPageRecipientList(searchQuery, apiPrefs.user!!.contextId, params)
+            .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
+            .dataOrThrow
+            .filter { it.recipientType == Recipient.Type.Person }
     }
 
     suspend fun getCourseAnnouncements(forceNetwork: Boolean): List<Pair<Course, DiscussionTopicHeader>> {

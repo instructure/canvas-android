@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.inbox.compose
 
 import android.content.Context
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -28,7 +27,6 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentState
-import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.FlowPreview
@@ -36,6 +34,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -74,9 +73,12 @@ class HorizonInboxComposeViewModel @Inject constructor(
                 )
             }
 
-            searchQuery.debounce(200).collectLatest { query ->
-                fetchRecipients()
-            }
+            searchQuery
+                .debounce(200)
+                .filter { it.length >= uiState.value.minQueryLength }
+                .collectLatest { query ->
+                    fetchRecipients()
+                }
         } catch {
             _uiState.update { it.copy(snackbarMessage = context.getString(R.string.inboxComposeCourseErrorMessage)) }
         }
@@ -154,7 +156,6 @@ class HorizonInboxComposeViewModel @Inject constructor(
         _uiState.update {
             it.copy(selectedCourse = course, courseErrorMessage = null)
         }
-        fetchRecipients()
     }
 
     private fun onRecipientSearchQueryChanged(query: TextFieldValue) {
@@ -166,13 +167,20 @@ class HorizonInboxComposeViewModel @Inject constructor(
 
     private fun onRecipientSelected(recipient: Recipient) {
         _uiState.update {
-            it.copy(selectedRecipients = it.selectedRecipients + recipient, recipientErrorMessage = null)
+            it.copy(
+                recipientSearchQuery = TextFieldValue(""),
+                selectedRecipients = it.selectedRecipients + recipient,
+                recipientErrorMessage = null
+            )
         }
     }
 
     fun onRecipientRemoved(recipient: Recipient) {
         _uiState.update {
-            it.copy(selectedRecipients = it.selectedRecipients - recipient, recipientErrorMessage = null)
+            it.copy(
+                selectedRecipients = it.selectedRecipients - recipient,
+                recipientErrorMessage = null
+            )
         }
     }
 

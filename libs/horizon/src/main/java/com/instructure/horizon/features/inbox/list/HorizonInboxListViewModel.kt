@@ -38,6 +38,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
+import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
@@ -55,7 +56,8 @@ class HorizonInboxListViewModel @Inject constructor(
             ),
             updateRecipientSearchQuery = ::updateRecipientSearchQuery,
             updateScopeFilter = ::updateScopeFilter,
-            updateSelectedRecipients = ::updateSelectedRecipients,
+            onRecipientSelected = ::onRecipientSelected,
+            onRecipientRemoved = ::onRecipientRemoved,
             showSnackbar = ::showSnackbar
         )
     )
@@ -69,9 +71,10 @@ class HorizonInboxListViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             recipientSearchQueryFlow
                 .debounce(200)
-                .collectLatest {
+                .filter { it.length >= uiState.value.minQueryLength }
+                .collectLatest { query ->
                     _uiState.update { it.copy(isOptionListLoading = true) }
-                    fetchData()
+                    fetchRecipients(query)
                     _uiState.update { it.copy(isOptionListLoading = false) }
                 }
         } catch {
@@ -92,6 +95,13 @@ class HorizonInboxListViewModel @Inject constructor(
             }
         } catch {
             showErrorState()
+        }
+    }
+
+    private suspend fun fetchRecipients(query: String) {
+        val recipients = repository.getRecipients(query, false)
+        _uiState.update {
+            it.copy(allRecipients = recipients)
         }
     }
 
@@ -130,7 +140,6 @@ class HorizonInboxListViewModel @Inject constructor(
         } else {
             emptyList()
         }
-        val recipients = repository.getRecipients(uiState.value.recipientSearchQuery.text, forceRefresh)
 
         val items = buildList {
             addAll(
@@ -140,9 +149,7 @@ class HorizonInboxListViewModel @Inject constructor(
                             id = conversation.id,
                             type = HorizonInboxItemType.Inbox,
                             title = conversation.subject.orEmpty(),
-                            description = conversation.audience?.mapNotNull {
-                                recipientId -> recipients.firstOrNull { it.stringId == recipientId.toString() }
-                            }?.map { it.name }?.joinToString(", ").orEmpty(),
+                            description = conversation.participants?.map { it.name }?.joinToString(", ").orEmpty(),
                             courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
                             date = conversation.lastMessageAt?.toDate() ?: conversation.lastAuthoredMessageAt?.toDate(),
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
@@ -185,7 +192,6 @@ class HorizonInboxListViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 items = items.sortedByDescending { item -> item.date },
-                allRecipients = recipients
             )
         }
     }
@@ -226,9 +232,21 @@ class HorizonInboxListViewModel @Inject constructor(
         loadData()
     }
 
-    private fun updateSelectedRecipients(value: List<Recipient>) {
+    private fun onRecipientSelected(value: Recipient) {
         _uiState.update {
-            it.copy(selectedRecipients = value)
+            it.copy(
+                selectedRecipients = it.selectedRecipients + value,
+                recipientSearchQuery = TextFieldValue(""),
+            )
+        }
+        loadData()
+    }
+
+    private fun onRecipientRemoved(value: Recipient) {
+        _uiState.update {
+            it.copy(
+                selectedRecipients = it.selectedRecipients - value,
+            )
         }
         loadData()
     }

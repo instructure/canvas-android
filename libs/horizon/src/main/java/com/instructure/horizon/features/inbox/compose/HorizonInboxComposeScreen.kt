@@ -250,6 +250,7 @@ private fun CourseRecipientPickerSection(state: HorizonInboxComposeUiState) {
             },
             onFocusChanged = { isRecipientPickerFocused = it },
             onMenuOpenChanged = { isRecipientPickerOpened = it },
+            minSearchQueryLengthForMenu = state.minQueryLength
         )
         MultiSelectSearch(recipientPickerState)
 

@@ -22,5 +22,6 @@ data class MultiSelectSearchState(
     val searchPlaceHolder: String? = null,
     val searchQuery: TextFieldValue = TextFieldValue(""),
     val onSearchQueryChanged: (TextFieldValue) -> Unit = {},
-    val isOptionListLoading: Boolean = false
+    val isOptionListLoading: Boolean = false,
+    val minSearchQueryLengthForMenu: Int = 1,
 )
