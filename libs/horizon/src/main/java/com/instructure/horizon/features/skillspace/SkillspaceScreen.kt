@@ -15,9 +15,7 @@
  */
 package com.instructure.horizon.features.skillspace
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Color
 import android.view.ViewGroup
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -33,7 +31,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.core.content.ContextCompat
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebView
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
@@ -47,14 +44,6 @@ import com.instructure.pandautils.views.CanvasWebView
 fun SkillspaceScreen(state: SkillspaceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
     var webView: CanvasWebView? by remember { mutableStateOf(null) }
-
-    val externalStoragePermission = Manifest.permission.WRITE_EXTERNAL_STORAGE
-    val photoPermissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission(),
-        onResult = {
-            webView?.clearPickerCallback()
-        }
-    )
 
     var request by remember { mutableIntStateOf(0) }
     val launchPicker = rememberLauncherForActivityResult(
@@ -89,15 +78,7 @@ fun SkillspaceScreen(state: SkillspaceUiState) {
                                 launchPicker.launch(intent)
                             }
 
-                            override fun permissionsGranted(): Boolean {
-                                if (activity == null) return false
-                                return if (ContextCompat.checkSelfPermission(activity, externalStoragePermission) == PackageManager.PERMISSION_GRANTED) {
-                                    true
-                                } else {
-                                    photoPermissionLauncher.launch(externalStoragePermission)
-                                    false
-                                }
-                            }
+                            override fun permissionsGranted(): Boolean = true
                         })
                         webView = this
                     }
