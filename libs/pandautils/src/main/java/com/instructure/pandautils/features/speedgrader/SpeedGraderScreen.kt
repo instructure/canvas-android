@@ -68,6 +68,7 @@ fun SpeedGraderScreen(
         contentWindowInsets = WindowInsets.ime
     ) { padding ->
         HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
+            uiState.onPageChange(page)
             val submissionId = uiState.submissionIds[page]
             NavHost(
                 navController = rememberNavController(),

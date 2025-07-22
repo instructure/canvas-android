@@ -44,7 +44,7 @@ class SpeedGraderViewModel @Inject constructor(
 
     private val selectedItem: Int = savedStateHandle[Const.SELECTED_ITEM] ?: 0
 
-    private val _uiState = MutableStateFlow(SpeedGraderUiState(courseId, assignmentId, submissionIds.toList(), selectedItem))
+    private val _uiState = MutableStateFlow(SpeedGraderUiState(courseId, assignmentId, submissionIds.toList(), selectedItem, onPageChange = this::onPageChange))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -60,6 +60,12 @@ class SpeedGraderViewModel @Inject constructor(
                 assignmentName = assignmentDetails.assignment?.title.orEmpty(),
                 courseName = assignmentDetails.assignment?.course?.name.orEmpty()
             )
+        }
+    }
+
+    private fun onPageChange(position: Int) {
+        _uiState.update { currentState ->
+            currentState.copy(selectedItem = position)
         }
     }
 }
