@@ -18,7 +18,7 @@ package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
+import android.webkit.MimeTypeMap
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
@@ -58,6 +58,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import java.io.File
+import java.util.Date
 import javax.inject.Inject
 
 @HiltViewModel
@@ -122,16 +123,18 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id,
                         attachments = getAttachments(it.attachments.orEmpty()),
                         mediaObject = it.mediaObject?.let { mediaObject ->
+                            val mediaSource = mediaObject.mediaSources?.firstOrNull()
                             SpeedGraderMediaObject(
                                 id = mediaObject._id,
-                                mediaDownloadUrl = mediaObject.mediaDownloadUrl,
+                                mediaDownloadUrl = mediaSource?.url,
                                 title = mediaObject.title,
                                 mediaType = if (mediaObject.title?.endsWith(".mp4") == true) { // TODO Check mediaType field if the query is fixed in ticket EVAL-5640
                                     MediaType.VIDEO
                                 } else {
                                     MediaType.AUDIO
                                 },
-                                thumbnailUrl = mediaObject.thumbnailUrl
+                                thumbnailUrl = mediaObject.thumbnailUrl,
+                                contentType = mediaSource?.contentType
                             )
                         }
                     )
@@ -407,17 +410,39 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             ).collect { result ->
                 when (result.state) {
                     WorkInfo.State.SUCCEEDED -> {
-                        pendingSubmissionCommentDao.findById(id)?.let {
-                            pendingSubmissionCommentDao.delete(it)
+                        fetchedComments.add(
+                            SpeedGraderComment(
+                                id = id.toString(),
+                                authorName = apiPrefs.user?.name.orEmpty(),
+                                authorId = apiPrefs.user?.id?.toString().orEmpty(),
+                                authorAvatarUrl = apiPrefs.user?.avatarUrl.orEmpty(),
+                                createdAt = DateHelper.longToSpeedGraderDateString(Date().time).orEmpty(),
+                                isOwnComment = true,
+                                mediaObject = SpeedGraderMediaObject(
+                                    id = id.toString(),
+                                    mediaDownloadUrl = file.path,
+                                    title = null,
+                                    mediaType = if (file.extension == "mp4") {
+                                        MediaType.VIDEO
+                                    } else {
+                                        MediaType.AUDIO
+                                    },
+                                    thumbnailUrl = null,
+                                    contentType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(file.extension)
+                                ),
+                                isPending = false
+                            )
+                        )
+                        _uiState.update { state ->
+                            state.copy(
+                                comments = fetchedComments + pendingComments
+                            )
                         }
-                        // TODO add the new comment to the UI state
+                        // TODO: Silent refresh
                     }
 
                     WorkInfo.State.FAILED -> {
-                        pendingSubmissionCommentDao.findById(id)?.let {
-                            it.status = CommentSendStatus.ERROR.toString()
-                            pendingSubmissionCommentDao.update(it)
-                        }
+                        // Handled in SGPendingMediaCommentReceiver
                     }
 
                     else -> {
@@ -430,11 +455,10 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private suspend fun createPendingMediaComment(filePath: String): Long {
         val newComment = PendingSubmissionComment(pageId).apply {
+            this.filePath = filePath
+            status = CommentSendStatus.SENDING
             attemptId = selectedAttemptId?.takeIf { assignmentEnhancementsEnabled }
         }
-        newComment.filePath = filePath
-        newComment.status = CommentSendStatus.SENDING
-        // TODO fix this
         val id = pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
         return id
     }

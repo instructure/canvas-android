@@ -39,6 +39,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -80,6 +81,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.utils.getFragmentActivity
@@ -380,7 +382,7 @@ fun SpeedGraderOwnCommentItem(
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.End)
                     .background(
-                        color = colorResource(id = R.color.messageBackground),
+                        color = LocalCourseColor.current,
                         shape = RoundedCornerShape(size = 16.dp)
                     )
                     .padding(8.dp),
@@ -390,8 +392,20 @@ fun SpeedGraderOwnCommentItem(
                 textAlign = TextAlign.Right
             )
         }
+        if (comment.isPending && comment.content.isEmpty()) {
+            CircularProgressIndicator(
+                color = LocalCourseColor.current,
+                strokeWidth = 3.dp,
+                modifier = Modifier
+                    .size(24.dp)
+                    .align(Alignment.End)
+            )
+        }
         SpeedGraderAttachmentsComponent(
-            attachments = comment.attachments, gradingAnonymously = gradingAnonymously, isOwn = true, onSelect = onAttachmentClick
+            attachments = comment.attachments,
+            gradingAnonymously = gradingAnonymously,
+            isOwn = true,
+            onSelect = onAttachmentClick
         )
         SpeedGraderMediaAttachmentComponent(
             mediaObject = comment.mediaObject,
@@ -399,7 +413,8 @@ fun SpeedGraderOwnCommentItem(
                 .fillMaxWidth(0.7f)
                 .align(Alignment.End),
             gradingAnonymously = gradingAnonymously,
-            isOwn = true
+            isOwn = true,
+            onAttachmentClick = onAttachmentClick
         )
     }
 }
@@ -513,13 +528,13 @@ fun SpeedGraderAttachmentComponent(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun SpeedGraderMediaAttachmentComponent(
     mediaObject: SpeedGraderMediaObject?,
     modifier: Modifier = Modifier,
     gradingAnonymously: Boolean = false,
-    isOwn: Boolean
+    isOwn: Boolean,
+    onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
 ) {
     if (mediaObject == null) return
     Row(
@@ -532,6 +547,15 @@ fun SpeedGraderMediaAttachmentComponent(
                 color = colorResource(id = R.color.backgroundMedium),
                 shape = RoundedCornerShape(size = 16.dp)
             )
+            .clickable {
+                onAttachmentClick(
+                    SpeedGraderCommentAttachment().copy(
+                        contentType = mediaObject.contentType.orEmpty(),
+                        title = mediaObject.title.orEmpty(),
+                        url = mediaObject.mediaDownloadUrl.orEmpty()
+                    )
+                )
+            }
     ) {
         Box(
             contentAlignment = Alignment.Center,
@@ -628,7 +652,8 @@ fun SpeedGraderUserCommentItem(
             SpeedGraderMediaAttachmentComponent(
                 mediaObject = comment.mediaObject,
                 gradingAnonymously = gradingAnonymously,
-                isOwn = false
+                isOwn = false,
+                onAttachmentClick = onAttachmentClick
             )
         }
     }
@@ -758,7 +783,8 @@ fun SpeedGraderCommentSectionPreview() {
                 mediaDownloadUrl = "https://example.com/media.mp4",
                 title = "Recorded Video",
                 mediaType = MediaType.VIDEO,
-                thumbnailUrl = "https://example.com/thumbnail.jpg"
+                thumbnailUrl = "https://example.com/thumbnail.jpg",
+                contentType = "audio/amr"
             )
         ),
         SpeedGraderComment(
@@ -771,7 +797,8 @@ fun SpeedGraderCommentSectionPreview() {
                 mediaDownloadUrl = "https://example.com/media.amr",
                 title = "Recorded Video",
                 mediaType = MediaType.AUDIO,
-                thumbnailUrl = "https://example.com/thumbnail.jpg"
+                thumbnailUrl = "https://example.com/thumbnail.jpg",
+                contentType = "audio/amr"
             )
         )
     )

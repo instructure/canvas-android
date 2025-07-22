@@ -45,6 +45,7 @@ query SubmissionCommentsQuery(
                                     mediaSources {
                                         contentType
                                         fileExt
+                                        url
                                     }
                                 }
                                 comment
