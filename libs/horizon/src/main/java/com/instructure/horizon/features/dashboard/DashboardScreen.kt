@@ -104,7 +104,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                 saveState = true
                             }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = false
                         }
                     })
                     if (index < uiState.coursesUiState.size - 1) {
