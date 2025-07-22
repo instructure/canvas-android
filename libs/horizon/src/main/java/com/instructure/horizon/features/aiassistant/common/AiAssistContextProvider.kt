@@ -14,11 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.aiassistant.navigation
+package com.instructure.horizon.features.aiassistant.common
 
-sealed class AiAssistRoute(val route: String) {
-    data object AiAssistMain: AiAssistRoute("main")
-    data object AiAssistChat: AiAssistRoute("chat")
-    data object AiAssistQuiz: AiAssistRoute("quiz")
-    data object AiAssistFlashcard: AiAssistRoute("flashcard")
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import javax.inject.Inject
+import javax.inject.Singleton
+
+@Singleton
+class AiAssistContextProvider @Inject constructor() {
+    var aiAssistContext = AiAssistContext()
 }

@@ -14,11 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.aiassistant.navigation
+package com.instructure.horizon.features.aiassistant.main
 
-sealed class AiAssistRoute(val route: String) {
-    data object AiAssistMain: AiAssistRoute("main")
-    data object AiAssistChat: AiAssistRoute("chat")
-    data object AiAssistQuiz: AiAssistRoute("quiz")
-    data object AiAssistFlashcard: AiAssistRoute("flashcard")
-}
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
+
+data class AiAssistMainUiState(
+    val isAiContextEmpty: Boolean,
+    val onSetAiAssistContextMessage: (AiAssistMessage) -> Unit,
+)
