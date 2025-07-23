@@ -87,13 +87,8 @@ fun NavGraphBuilder.submissionScreen() {
             navArgument("courseId") { type = NavType.LongType },
             navArgument("assignmentId") { type = NavType.LongType },
             navArgument("submissionId") { type = NavType.LongType },
-            navArgument("courseId") { type = NavType.LongType }
         )
     ) {
-        SpeedGraderSubmissionScreen(
-            courseId = it.arguments?.getLong("courseId") ?: 0L,
-            assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
-            submissionId = it.arguments?.getLong("submissionId") ?: 0L,
-        )
+        SpeedGraderSubmissionScreen()
     }
 }
