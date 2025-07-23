@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs.multiselectsearch
 
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -28,7 +27,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,18 +36,14 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Tag
@@ -64,7 +58,6 @@ fun MultiSelectSearch(
     state: MultiSelectSearchState,
     modifier: Modifier = Modifier
 ) {
-    val focusManager = LocalFocusManager.current
     Input(
         label = state.label,
         helperText = state.helperText,
@@ -85,10 +78,6 @@ fun MultiSelectSearch(
                 isFocused = state.isFocused || state.isMenuOpen,
                 isError = state.errorText != null,
                 enabled = state.enabled,
-                onClick = {
-                    focusManager.clearFocus()
-                    state.onMenuOpenChanged(!state.isMenuOpen)
-              },
                 modifier = Modifier
                     .onGloballyPositioned {
                         heightInPx = it.size.height
@@ -102,13 +91,6 @@ fun MultiSelectSearch(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         MultiSelectSearchContent(state, Modifier.weight(1f))
-
-                        if (state.selectedOptions.isEmpty()) {
-                            DropDownIcon(
-                                state,
-                                Modifier.padding(horizontal = state.size.horizontalContentPadding)
-                            )
-                        }
                     }
                 }
             }
@@ -119,7 +101,7 @@ fun MultiSelectSearch(
                 isFocusable = false,
                 verticalOffsetPx = heightInPx,
                 width = width,
-                onMenuOpenChanged = {},
+                onMenuOpenChanged = { state.onMenuOpenChanged(it) },
                 onOptionSelected = { selectedOption ->
                     if (state.selectedOptions.contains(selectedOption)) {
                         state.onOptionRemoved(selectedOption)
@@ -142,7 +124,11 @@ private fun MultiSelectSearchContent(state: MultiSelectSearchState, modifier: Mo
         decorationBox = { TextFieldBox(state, HorizonTypography.p1) { it() } },
         onValueChange = { newValue ->
             state.onSearchQueryChanged(newValue)
-            state.onMenuOpenChanged(true)
+            if (newValue.text.length >= state.minSearchQueryLengthForMenu) {
+                state.onMenuOpenChanged(true)
+            } else {
+                state.onMenuOpenChanged(false)
+            }
         },
         modifier = modifier
             .padding(
@@ -205,24 +191,7 @@ private fun MultiSelectContent(state: MultiSelectSearchState) {
         }
 
         Spacer(modifier = Modifier.weight(1f))
-
-        DropDownIcon(state)
     }
-}
-
-@Composable
-private fun DropDownIcon(state: MultiSelectSearchState, modifier: Modifier = Modifier) {
-    val iconRotation = animateIntAsState(
-        targetValue = if (state.isMenuOpen) 180 else 0,
-        label = "iconRotation"
-    )
-    Icon(
-        painter = painterResource(R.drawable.keyboard_arrow_down),
-        tint = HorizonColors.Icon.default(),
-        contentDescription = null,
-        modifier = modifier
-            .rotate(iconRotation.value.toFloat())
-    )
 }
 
 @Composable

@@ -16,9 +16,11 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs.common
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -97,40 +99,45 @@ fun <T>InputDropDownPopup(
                     draggedElevation = HorizonElevation.level3
                 ),
             ) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    if (isLoading) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.Center,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp)
-                        ){
-                            Spinner(size = SpinnerSize.EXTRA_SMALL)
-                        }
-                    } else if (options.isEmpty()) {
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                        ) {
-                            SingleSelectItem(stringResource(R.string.noOptionsAvailable))
-                        }
-                    } else {
-                        options.forEach { selectionOption ->
+                AnimatedContent(
+                    isLoading,
+                    transitionSpec = { expandVertically() togetherWith shrinkVertically() }
+                ) { isLoading ->
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        if (isLoading) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                Spinner(size = SpinnerSize.EXTRA_SMALL)
+                            }
+                        } else if (options.isEmpty()) {
                             Row(
                                 verticalAlignment = Alignment.CenterVertically,
                                 modifier = Modifier
                                     .fillMaxWidth()
-                                    .clickable {
-                                        onOptionSelected(selectionOption)
-                                        onMenuOpenChanged(false)
-                                    }
                             ) {
-                                item(selectionOption)
+                                SingleSelectItem(stringResource(R.string.noOptionsAvailable))
+                            }
+                        } else {
+                            options.forEach { selectionOption ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onOptionSelected(selectionOption)
+                                            onMenuOpenChanged(false)
+                                        }
+                                ) {
+                                    item(selectionOption)
+                                }
                             }
                         }
                     }

@@ -20,6 +20,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -33,6 +34,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val CRASHLYTICS_EXPERIENCE_KEY = "experience"
+const val ACADEMIC_EXPERIENCE = "academic"
+const val CAREER_EXPERIENCE = "career"
+const val ELEMENTARY_EXPERIENCE = "elementary"
+
+
 /**
  * Currently we are using this class to handle login flow specific checks.
  * The only reason this is shared (only the code, but both have it's own instance) between different Activities of the login process is that we don't have proper MVVM in the login screens.
@@ -45,7 +52,9 @@ class LoginViewModel @Inject constructor(
     private val oauthManager: OAuthManager,
     private val apiPrefs: ApiPrefs,
     private val experienceAPI: ExperienceAPI,
-    private val networkStateProvider: NetworkStateProvider) : ViewModel() {
+    private val networkStateProvider: NetworkStateProvider,
+    private val crashlytics: FirebaseCrashlytics
+) : ViewModel() {
 
     private val loginResultAction = MutableLiveData<Event<LoginResultAction>>()
 
@@ -79,11 +88,14 @@ class LoginViewModel @Inject constructor(
         val availableExperiences = experienceResult.dataOrNull?.availableApps ?: emptyList()
         return if (currentExperience == ExperienceSummary.CAREER_LEARNER_EXPERIENCE) {
             apiPrefs.canvasCareerView = true
+            crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, CAREER_EXPERIENCE)
             Experience.Career
         } else {
             apiPrefs.canvasCareerView = false
             apiPrefs.canSwitchToCanvasCareer = availableExperiences.contains(ExperienceSummary.CAREER_LEARNER_EXPERIENCE)
             val canvasForElementary = checkCanvasElementary(checkElementary)
+            val experience = if (canvasForElementary) ELEMENTARY_EXPERIENCE else ACADEMIC_EXPERIENCE
+            crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, experience)
             Experience.Academic(canvasForElementary)
         }
     }

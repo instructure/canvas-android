@@ -70,6 +70,7 @@ import com.instructure.pandautils.utils.toPx
 fun FileDrop(
     acceptedFileTypes: List<String>,
     modifier: Modifier = Modifier,
+    uploadButtonEnabled: Boolean = true,
     fileItems: @Composable ColumnScope.() -> Unit = {},
     onUploadClick: () -> Unit = {}
 ) {
@@ -97,7 +98,8 @@ fun FileDrop(
                 height = ButtonHeight.NORMAL,
                 width = ButtonWidth.RELATIVE,
                 color = ButtonColor.Institution,
-                onClick = onUploadClick
+                onClick = onUploadClick,
+                enabled = uploadButtonEnabled,
             )
             HorizonSpace(SpaceSize.SPACE_16)
             if (acceptedFileTypes.isNotEmpty()) {

@@ -56,6 +56,7 @@ fun AiAssistInput(
             iconRes = R.drawable.arrow_upward,
             contentDescription = stringResource(R.string.aiAssistSubmitPrompt),
             color = IconButtonColor.Inverse,
+            enabled = value.text.isNotBlank(),
             onClick = onSubmitPressed,
         )
     }

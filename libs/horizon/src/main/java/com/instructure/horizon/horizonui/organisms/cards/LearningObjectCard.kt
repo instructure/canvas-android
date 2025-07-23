@@ -45,7 +45,7 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillStyle
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.model.LearningObjectType
-import com.instructure.pandautils.utils.formatDayMonth
+import com.instructure.pandautils.utils.formatMonthDay
 import java.util.Date
 
 data class LearningObjectCardState(
@@ -100,7 +100,7 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                     }
                     if (learningObjectCardState.dueDate != null) {
                         LearningObjectPill(
-                            stringResource(R.string.learningobject_dueDate, learningObjectCardState.dueDate.formatDayMonth()),
+                            stringResource(R.string.learningobject_dueDate, learningObjectCardState.dueDate.formatMonthDay()),
                             iconRes = R.drawable.calendar_today
                         )
                     }

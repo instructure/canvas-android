@@ -51,28 +51,33 @@ class HorizonInboxListRepository @Inject constructor(
 
     suspend fun getRecipients(searchQuery: String?, forceNetwork: Boolean): List<Recipient> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
-        val courses = getAllInboxCourses(forceNetwork)
-        return courses.map { course ->
-            recipientsApi.getFirstPageRecipientList(searchQuery, course.id.toString(), params)
-                .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
-                .dataOrThrow
-                .filter { it.recipientType == Recipient.Type.Person }
-        }.flatten().distinct()
+        return recipientsApi.getFirstPageRecipientList(searchQuery, apiPrefs.user!!.contextId, params)
+            .depaginate { recipientsApi.getNextPageRecipientList(it, params) }
+            .dataOrThrow
+            .filter { it.recipientType == Recipient.Type.Person }
     }
 
     suspend fun getCourseAnnouncements(forceNetwork: Boolean): List<Pair<Course, DiscussionTopicHeader>> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
         val courses = getAllInboxCourses(forceNetwork)
-        return announcementsApi.getFirstPageAnnouncements(
-            courseCode = courses.map { it.contextId }.toTypedArray(),
-            startDate = Calendar.getInstance().apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
-            endDate = Date().toApiString(),
-            params = params
-        )
-        .depaginate { announcementsApi.getNextPageAnnouncementsList(it, params) }
-        .dataOrThrow
-        .map { announcement ->
-            Pair(courses.first { course -> course.contextId == announcement.contextCode }, announcement)
+        return if (courses.isEmpty()) {
+            return emptyList()
+        } else {
+            announcementsApi.getFirstPageAnnouncements(
+                courseCode = courses.map { it.contextId }.toTypedArray(),
+                startDate = Calendar.getInstance()
+                    .apply { set(Calendar.YEAR, get(Calendar.YEAR) - 1) }.time.toApiString(),
+                endDate = Date().toApiString(),
+                params = params
+            )
+            .depaginate { announcementsApi.getNextPageAnnouncementsList(it, params) }
+            .dataOrThrow
+            .map { announcement ->
+                Pair(
+                    courses.first { course -> course.contextId == announcement.contextCode },
+                    announcement
+                )
+            }
         }
     }
 

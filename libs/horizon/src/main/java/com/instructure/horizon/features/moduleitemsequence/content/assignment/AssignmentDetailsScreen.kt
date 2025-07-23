@@ -55,6 +55,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionContent
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission.AddSubmissionViewModel
 import com.instructure.horizon.features.moduleitemsequence.content.assignment.attempts.AttemptSelectorBottomSheet
@@ -93,7 +94,9 @@ fun AssignmentDetailsScreen(
     uiState: AssignmentDetailsUiState,
     scrollState: ScrollState,
     moduleHeaderHeight: Dp,
-    modifier: Modifier = Modifier
+    updateAiContext: (AiAssistContextSource, String) -> Unit,
+    modifier: Modifier = Modifier,
+    assignmentSubmitted: () -> Unit = {}
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(uiState.urlToOpen) {
@@ -106,6 +109,11 @@ fun AssignmentDetailsScreen(
     if (uiState.attemptSelectorUiState.show) {
         AttemptSelectorBottomSheet(uiState.attemptSelectorUiState)
     }
+
+    updateAiContext(
+        AiAssistContextSource.Assignment(uiState.assignmentId.toString()),
+        uiState.instructions
+    )
 
     if (uiState.openCommentsBottomSheetParams != null) {
         val commentsViewModel = hiltViewModel<CommentsViewModel>()
@@ -250,12 +258,16 @@ fun AssignmentDetailsScreen(
                 if (uiState.showAddSubmission) {
                     val addSubmissionViewModel = hiltViewModel<AddSubmissionViewModel>()
                     val addSubmissionUiState by addSubmissionViewModel.uiState.collectAsState()
-                    addSubmissionViewModel.setOnSubmissionSuccessListener(uiState.onSubmissionSuccess)
+                    addSubmissionViewModel.setOnSubmissionSuccessListener {
+                        uiState.onSubmissionSuccess()
+                        assignmentSubmitted()
+                    }
 
                     val assignment by hiltViewModel<AssignmentDetailsViewModel>().assignmentFlow.collectAsState()
                     LaunchedEffect(assignment) {
                         assignment?.let {
-                            addSubmissionViewModel.updateAssignment(it)
+                            addSubmissionUiState.onAssignmentUpdated(it)
+                            uiState.onAssignmentUpdatedForAddSubmission()
                         }
                     }
                     AddSubmissionContent(
@@ -335,5 +347,6 @@ fun AssignmentDetailsScreenPreview() {
         ),
         scrollState = ScrollState(0),
         moduleHeaderHeight = 0.dp,
+        updateAiContext = { _, _ -> },
     )
 }

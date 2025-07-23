@@ -18,7 +18,7 @@
 
 <resources>
 
-    <string name="student_app_name" translatable="false">Canvas Student</string>
+    <string name="student_app_name" translatable="false">Canvas</string>
 
     <string name="patched_appbar_scrolling_view_behavior" translatable="false">com.instructure.student.view.PatchedScrollingViewBehavior</string>
 

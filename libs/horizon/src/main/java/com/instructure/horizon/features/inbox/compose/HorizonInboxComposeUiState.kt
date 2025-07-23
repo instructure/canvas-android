@@ -35,5 +35,6 @@ data class HorizonInboxComposeUiState(
     val showAttachmentPicker: Boolean = false,
     val onShowAttachmentPickerChanged: (Boolean) -> Unit = {},
     val attachments: List<HorizonInboxAttachment> = emptyList(),
-    val onAttachmentsChanged: (List<HorizonInboxAttachment>) -> Unit = {}
+    val onAttachmentsChanged: (List<HorizonInboxAttachment>) -> Unit = {},
+    val minQueryLength: Int = 3
 )
