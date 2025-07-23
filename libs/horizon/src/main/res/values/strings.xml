@@ -314,4 +314,8 @@
     <string name="inboxComposeAttachFile">Attach file</string>
     <string name="inboxDetailsReplyAttachFile">Attach file</string>
     <string name="learnScoreFeedbackLabel">Feedback:</string>
+    <string name="exitConfirmationTitle">Exit confirmation</string>
+    <string name="exitConfirmationMessage">Are you sure you want to exit? Your changes will not be saved.</string>
+    <string name="exitConfirmationExitButtonLabel">Exit</string>
+    <string name="exitConfirmationCancelButtonLabel">Cancel</string>
 </resources>

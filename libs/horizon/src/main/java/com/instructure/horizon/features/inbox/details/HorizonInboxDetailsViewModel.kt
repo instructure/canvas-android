@@ -193,6 +193,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 onSendReply = ::sendReply,
                 onShowAttachmentPickerChanged = ::onShowAttachmentPickerChanged,
                 onAttachmentsChanged = ::onAttachmentsChanged,
+                updateShowExitConfirmationDialog = ::updateShowExitConfirmationDialog,
             )
             HorizonInboxItemType.AccountNotification, HorizonInboxItemType.CourseNotification -> null
             else -> null
@@ -387,6 +388,12 @@ class HorizonInboxDetailsViewModel @Inject constructor(
     private fun onAttachmentsChanged(attachments: List<HorizonInboxAttachment>) {
         _uiState.update {
             it.copy(replyState = it.replyState?.copy(attachments = attachments))
+        }
+    }
+
+    private fun updateShowExitConfirmationDialog(show: Boolean) {
+        _uiState.update {
+            it.copy(replyState = it.replyState?.copy(showExitConfirmationDialog = show))
         }
     }
 }

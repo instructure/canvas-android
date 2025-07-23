@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.details
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -57,6 +58,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.HorizonInboxExitConfirmationDialog
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -84,6 +86,7 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
 
@@ -95,9 +98,11 @@ fun HorizonInboxDetailsScreen(
 ) {
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, navController) },
+        topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, state, navController) },
     ) { innerPadding ->
         LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(innerPadding)) {
+            BackHandler { onExit(state, navController) }
+
             state.replyState?.let { replyState ->
                 val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
                 val pickerState by viewModel.uiState.collectAsState()
@@ -107,6 +112,16 @@ fun HorizonInboxDetailsScreen(
                     state = pickerState,
                     onFilesChanged = replyState.onAttachmentsChanged
                 )
+
+                if (replyState.showExitConfirmationDialog) {
+                    HorizonInboxExitConfirmationDialog(
+                        onConfirm = {
+                            replyState.updateShowExitConfirmationDialog(false)
+                            navController.popBackStack()
+                        },
+                        onCancel = { replyState.updateShowExitConfirmationDialog(false) }
+                    )
+                }
             }
 
             HorizonInboxDetailsContent(state)
@@ -119,6 +134,7 @@ fun HorizonInboxDetailsScreen(
 private fun HorizonInboxDetailsHeader(
     title: String,
     @DrawableRes titleIcon: Int?,
+    state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
     CenterAlignedTopAppBar(
@@ -151,7 +167,7 @@ private fun HorizonInboxDetailsHeader(
                 iconRes = R.drawable.arrow_back,
                 contentDescription = stringResource(R.string.a11yNavigateBack),
                 color = IconButtonColor.Ghost,
-                onClick = { navController.popBackStack() },
+                onClick = { onExit(state, navController) },
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
         },
@@ -367,6 +383,17 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
                 }
             }
         }
+    }
+}
+
+private fun onExit(
+    state: HorizonInboxDetailsUiState,
+    navController: NavHostController
+) {
+    if (state.replyState?.replyTextValue?.text?.isNotBlank().orDefault()) {
+        state.replyState?.updateShowExitConfirmationDialog?.let { it(true) }
+    } else {
+        navController.popBackStack()
     }
 }
 
