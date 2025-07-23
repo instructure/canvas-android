@@ -26,6 +26,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderStateMapper
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -81,7 +82,7 @@ class LearnProgressViewModel @Inject constructor(
                 module,
                 modules,
                 ::moduleHeaderSelected
-            ) to module.items.mapNotNull { moduleItem ->
+            ).copy(expanded = uiState.value.moduleItemStates[module.id]?.first?.expanded.orDefault()) to module.items.mapNotNull { moduleItem ->
                 if (moduleItem.type == ModuleItem.Type.SubHeader.name) {
                     ModuleItemState.SubHeader(moduleItem.title ?: "")
                 } else {

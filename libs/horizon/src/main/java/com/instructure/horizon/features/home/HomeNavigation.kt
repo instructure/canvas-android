@@ -30,6 +30,7 @@ import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
 import com.instructure.horizon.features.learn.LearnScreen
 import com.instructure.horizon.features.learn.LearnViewModel
+import com.instructure.horizon.features.notebook.NotebookViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.features.skillspace.SkillspaceViewModel
 import com.instructure.horizon.horizonui.animation.mainEnterTransition

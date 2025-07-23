@@ -42,6 +42,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -64,7 +65,6 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.note.LearnNotesScreen
@@ -85,7 +85,10 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.launch
 
 @Composable
-fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
+fun LearnScreen(
+    state: LearnUiState,
+    mainNavController: NavHostController
+) {
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
@@ -111,11 +114,19 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
 }
 
 @Composable
-private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostController, modifier: Modifier = Modifier) {
+private fun LearnScreenWrapper(
+    state: LearnUiState,
+    mainNavController: NavHostController,
+    modifier: Modifier = Modifier
+) {
     val pagerState = rememberPagerState(initialPage = 0) { state.availableTabs.size }
     val coroutineScope = rememberCoroutineScope()
-    var appBarHeight by remember { mutableIntStateOf(0) }
-    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(appBarHeight)) }
+    var appBarHeight by rememberSaveable { mutableIntStateOf(0) }
+    var appBarOffset by rememberSaveable { mutableIntStateOf(0) }
+    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(appBarHeight, appBarOffset)) }
+    LaunchedEffect(nestedScrollConnection.appBarOffset) {
+        appBarOffset = nestedScrollConnection.appBarOffset
+    }
 
     Box(
         modifier = modifier
@@ -129,7 +140,7 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
                     if (appBarHeight == 0) {
                         appBarHeight = coordinates.size.height
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(appBarHeight)
+                            CollapsingAppBarNestedScrollConnection(appBarHeight, appBarOffset)
                     }
                 }
         ) {
@@ -150,7 +161,7 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
         val density = LocalDensity.current
         Column(
             modifier = Modifier
-                .padding(top = with(density) { appBarHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+                .padding(top = with(density) { appBarHeight.toDp() } + with(density) { appBarOffset.toDp() })
         ) {
             TabRow(
                 tabs = state.availableTabs,
@@ -164,7 +175,6 @@ private fun LearnScreenWrapper(state: LearnUiState, mainNavController: NavHostCo
             HorizontalPager(
                 pagerState,
                 pageSpacing = 16.dp,
-                beyondViewportPageCount = 4
             ) { index ->
                 val scaleAnimation by animateFloatAsState(
                     if (index == pagerState.currentPage) 1f else 0.8f,
@@ -336,10 +346,11 @@ private fun ErrorContent(errorText: String) {
 }
 
 private class CollapsingAppBarNestedScrollConnection(
-    val appBarMaxHeight: Int
+    val appBarMaxHeight: Int,
+    initialAppbarOffset: Int = 0,
 ) : NestedScrollConnection {
 
-    var appBarOffset: Int by mutableIntStateOf(0)
+    var appBarOffset: Int by mutableIntStateOf(initialAppbarOffset)
         private set
 
     override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {

@@ -44,11 +44,7 @@ class NotebookViewModel @Inject constructor(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
-        updateContent = { courseId, objectTypeAndId ->
-            this.courseId = courseId
-            this.objectTypeAndId = objectTypeAndId
-            loadData()
-        }
+        updateContent = ::updateContent
     ))
     val uiState = _uiState.asStateFlow()
 
@@ -113,5 +109,20 @@ class NotebookViewModel @Inject constructor(
             currentState.copy(selectedFilter = newFilter)
         }
         loadData()
+    }
+
+    private fun updateContent(courseId: Long?, objectTypeAndId: Pair<String, String>?) {
+        if (courseId != this.courseId || objectTypeAndId != this.objectTypeAndId) {
+            this.courseId = courseId
+            this.objectTypeAndId = objectTypeAndId
+            loadData()
+        }
+    }
+
+    fun updateCourseId(courseId: Long?) {
+        if (courseId != this.courseId) {
+            this.courseId = courseId
+            loadData()
+        }
     }
 }
