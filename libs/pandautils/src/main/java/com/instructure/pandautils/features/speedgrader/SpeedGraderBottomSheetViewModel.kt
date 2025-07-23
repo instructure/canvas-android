@@ -29,7 +29,7 @@ class SpeedGraderBottomSheetViewModel @Inject constructor() : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     private fun selectTab(tabOrdinal: Int) {
-        _uiState.value = _uiState.value.copy(selectedTab = tabOrdinal)
+        _uiState.update { it.copy(selectedTab = tabOrdinal) }
     }
 }
 
