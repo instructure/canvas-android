@@ -17,9 +17,12 @@
 package com.instructure.pandautils.features.speedgrader
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -29,7 +32,9 @@ class SpeedGraderBottomSheetViewModel @Inject constructor() : ViewModel() {
     val uiState = _uiState.asStateFlow()
 
     private fun selectTab(tabOrdinal: Int) {
-        _uiState.update { it.copy(selectedTab = tabOrdinal) }
+        viewModelScope.launch {
+            _uiState.update { it.copy(selectedTab = tabOrdinal) }
+        }
     }
 }
 
