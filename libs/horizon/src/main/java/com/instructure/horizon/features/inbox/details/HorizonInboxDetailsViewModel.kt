@@ -24,6 +24,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -38,6 +39,7 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
+import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -157,6 +159,24 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 }
                 val announcement = repository.getAnnouncement(id, courseId.toLong(), forceRefresh)
                 val topic = repository.getAnnouncementTopic(id, courseId.toLong(), forceRefresh)
+
+                if (announcement.status == DiscussionTopicHeader.ReadState.UNREAD) {
+                    viewModelScope.async {
+                        val result = repository.markAnnouncementAsRead(
+                            courseId = courseId.toLong(),
+                            announcementId = id,
+                            entries = topic.views.map { it.id }.toSet()
+                        )
+
+                        if (result.isSuccess) {
+                            _uiState.update { it.copy(announcementMarkedAsRead = true) }
+                        }
+
+                        // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread
+                        repository.getAnnouncement(id, courseId.toLong(), true)
+                    }
+                }
+
                 uiState.value.copy(
                     title = announcement.title.orEmpty(),
                     titleIcon = R.drawable.campaign,

@@ -38,6 +38,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -59,6 +60,9 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
+import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_ANNOUNCEMENT_READ
+import com.instructure.horizon.features.inbox.list.HORIZON_REFRESH_INBOX_LIST
+import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -93,6 +97,21 @@ fun HorizonInboxDetailsScreen(
     state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
+    val listEntry = remember(navController.currentBackStackEntry) {
+        try {
+            navController.getBackStackEntry(HorizonInboxRoute.InboxList.route)
+        } catch (e: IllegalArgumentException) {
+            // If the back stack entry doesn't exist, we can safely ignore it
+            null
+        }
+    }
+
+    LaunchedEffect(state.announcementMarkedAsRead) {
+        if (state.announcementMarkedAsRead) {
+            listEntry?.savedStateHandle?.set(HORIZON_REFRESH_INBOX_LIST, HORIZON_INBOX_LIST_ANNOUNCEMENT_READ)
+        }
+    }
+
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
         topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, navController) },
@@ -174,7 +193,7 @@ private fun HorizonInboxDetailsContent(
             .fillMaxSize()
             .clip(HorizonCornerRadius.level4Top)
             .background(HorizonColors.Surface.pageSecondary())
-    ){
+    ) {
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
@@ -188,7 +207,7 @@ private fun HorizonInboxDetailsContent(
             items(state.items) {
                 Column {
                     HorizonInboxDetailsItem(it)
-                    if ((state.bottomLayout && it != state.items.firstOrNull()) ||(!state.bottomLayout && it != state.items.lastOrNull())) {
+                    if ((state.bottomLayout && it != state.items.firstOrNull()) || (!state.bottomLayout && it != state.items.lastOrNull())) {
                         HorizonDivider()
                     }
                 }
@@ -213,7 +232,7 @@ private fun HorizonInboxDetailsItem(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 24.dp)
-        ){
+        ) {
             Text(
                 text = item.author,
                 style = HorizonTypography.labelLargeBold,
@@ -240,19 +259,20 @@ private fun HorizonInboxDetailsItem(
         item.attachments.forEach { attachment ->
             HorizonSpace(SpaceSize.SPACE_8)
 
-            val fileState = if (attachment.downloadState == FileDownloadProgressState.STARTING || attachment.downloadState == FileDownloadProgressState.IN_PROGRESS) {
-                FileDropItemState.InProgress(
-                    fileName = attachment.name,
-                    progress = attachment.downloadProgress,
-                    onActionClick = { attachment.onCancelDownloadClick(attachment.id) },
-                )
-            } else {
-                FileDropItemState.NoLongerEditable(
-                    fileName = attachment.name,
-                    onActionClick = { attachment.onDownloadClick(attachment) },
-                    onClick = { attachment.onDownloadClick(attachment) }
-                )
-            }
+            val fileState =
+                if (attachment.downloadState == FileDownloadProgressState.STARTING || attachment.downloadState == FileDownloadProgressState.IN_PROGRESS) {
+                    FileDropItemState.InProgress(
+                        fileName = attachment.name,
+                        progress = attachment.downloadProgress,
+                        onActionClick = { attachment.onCancelDownloadClick(attachment.id) },
+                    )
+                } else {
+                    FileDropItemState.NoLongerEditable(
+                        fileName = attachment.name,
+                        onActionClick = { attachment.onDownloadClick(attachment) },
+                        onClick = { attachment.onDownloadClick(attachment) }
+                    )
+                }
 
             FileDropItem(
                 state = fileState,

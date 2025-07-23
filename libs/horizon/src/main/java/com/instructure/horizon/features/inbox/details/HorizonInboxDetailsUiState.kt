@@ -30,6 +30,7 @@ data class HorizonInboxDetailsUiState(
     val items: List<HorizonInboxDetailsItem> = emptyList(),
     val replyState: HorizonInboxReplyState? = null,
     val bottomLayout: Boolean = false,
+    val announcementMarkedAsRead: Boolean = false,
 )
 
 data class HorizonInboxReplyState(

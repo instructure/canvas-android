@@ -56,6 +56,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerUiState
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
+import com.instructure.horizon.features.inbox.list.HORIZON_REFRESH_INBOX_LIST
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -393,8 +394,9 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                         color = ButtonColor.Institution,
                         onClick = {
                             state.onSendConversation {
-                                listEntry?.savedStateHandle?.set(HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED,
-                                    true
+                                listEntry?.savedStateHandle?.set(
+                                    HORIZON_REFRESH_INBOX_LIST,
+                                    HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
                                 )
                                 navController.popBackStack()
                             }
