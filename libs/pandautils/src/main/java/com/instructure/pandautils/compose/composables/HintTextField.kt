@@ -59,9 +59,7 @@ fun BasicTextFieldWithHintDecoration(
     BasicTextField(
         value = value.orEmpty(),
         onValueChange = onValueChange,
-        modifier = modifier.then(
-            if (testTag.isNotEmpty()) Modifier.testTag(testTag) else Modifier
-        ),
+        modifier = modifier.then(Modifier.testTag(testTag)),
         keyboardOptions = keyboardOptions,
         textStyle = textStyle.copy(
             color = textColor,
