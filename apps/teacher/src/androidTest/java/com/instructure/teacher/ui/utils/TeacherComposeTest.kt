@@ -35,6 +35,7 @@ import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.teacher.activities.LoginActivity
 import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
 import com.instructure.teacher.ui.pages.ProgressPage
+import com.instructure.teacher.ui.pages.SpeedGraderPage
 
 import org.junit.Rule
 
@@ -59,4 +60,5 @@ abstract class TeacherComposeTest : TeacherTest() {
     val assignmentSubmissionListPage = AssignmentSubmissionListPage(composeTestRule)
     val assignmentListPage = AssignmentListPage(composeTestRule)
     val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
+    val speedGraderPage = SpeedGraderPage(composeTestRule)
 }

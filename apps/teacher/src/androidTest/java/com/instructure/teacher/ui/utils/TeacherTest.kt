@@ -75,7 +75,6 @@ import com.instructure.teacher.ui.pages.RemoteConfigSettingsPage
 import com.instructure.teacher.ui.pages.SpeedGraderCommentsPage
 import com.instructure.teacher.ui.pages.SpeedGraderFilesPage
 import com.instructure.teacher.ui.pages.SpeedGraderGradePage
-import com.instructure.teacher.ui.pages.SpeedGraderPage
 import com.instructure.teacher.ui.pages.SpeedGraderQuizSubmissionPage
 import com.instructure.teacher.ui.pages.StudentContextPage
 import com.instructure.teacher.ui.pages.SyllabusPage
@@ -140,7 +139,6 @@ abstract class TeacherTest : CanvasTest() {
     val speedGraderCommentsPage = SpeedGraderCommentsPage()
     val speedGraderFilesPage = SpeedGraderFilesPage()
     val speedGraderGradePage = SpeedGraderGradePage()
-    val speedGraderPage = SpeedGraderPage()
     val speedGraderQuizSubmissionPage = SpeedGraderQuizSubmissionPage()
     val personContextPage = PersonContextPage()
     val studentContextPage = StudentContextPage()
