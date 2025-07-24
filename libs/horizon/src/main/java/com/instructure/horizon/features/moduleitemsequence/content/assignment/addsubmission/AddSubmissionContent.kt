@@ -155,7 +155,11 @@ fun AddSubmissionContent(
             when (selectedSubmissionType) {
                 is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
                     uiState = selectedSubmissionType,
-                    submissionInProgress = uiState.submissionInProgress
+                    submissionInProgress = uiState.submissionInProgress,
+                    onFileAdded = {
+                        selectedSubmissionType.onFileAdded(it)
+                        scrollContent = scrollState.maxValue
+                    }
                 )
 
                 is AddSubmissionTypeUiState.Text ->
