@@ -54,7 +54,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.inbox.HorizonInboxExitConfirmationDialog
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerUiState
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED
@@ -74,6 +73,8 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
@@ -132,12 +133,18 @@ fun HorizonInboxComposeScreen(
         )
 
         if (state.showExitConfirmationDialog) {
-            HorizonInboxExitConfirmationDialog(
-                onConfirm = {
-                    state.updateShowExitConfirmationDialog(false)
-                    navController.popBackStack()
-                },
-                onCancel = { state.updateShowExitConfirmationDialog(false) }
+            Modal(
+                dialogState = ModalDialogState(
+                    title = stringResource(R.string.exitConfirmationTitle),
+                    message = stringResource(R.string.exitConfirmationMessage),
+                    primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                    secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                    primaryButtonClick = {
+                        state.updateShowExitConfirmationDialog(false)
+                        navController.popBackStack()
+                    },
+                    secondaryButtonClick = { state.updateShowExitConfirmationDialog(false) }
+                )
             )
         }
 

@@ -58,7 +58,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.inbox.HorizonInboxExitConfirmationDialog
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -76,6 +75,8 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -114,12 +115,18 @@ fun HorizonInboxDetailsScreen(
                 )
 
                 if (replyState.showExitConfirmationDialog) {
-                    HorizonInboxExitConfirmationDialog(
-                        onConfirm = {
-                            replyState.updateShowExitConfirmationDialog(false)
-                            navController.popBackStack()
-                        },
-                        onCancel = { replyState.updateShowExitConfirmationDialog(false) }
+                    Modal(
+                        dialogState = ModalDialogState(
+                            title = stringResource(R.string.exitConfirmationTitle),
+                            message = stringResource(R.string.exitConfirmationMessage),
+                            primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                            secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                            primaryButtonClick = {
+                                replyState.updateShowExitConfirmationDialog(false)
+                                navController.popBackStack()
+                            },
+                            secondaryButtonClick = { replyState.updateShowExitConfirmationDialog(false) }
+                        )
                     )
                 }
             }
