@@ -16,12 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
-data class SpeedGraderUiState(
-    val courseId: Long,
-    val assignmentId: Long,
-    val submissionIds: List<Long>,
-    val selectedItem: Int,
-    val courseName: String = "",
-    val assignmentName: String = "",
-    val onPageChange: (Int) -> Unit,
+data class SpeedGraderBottomSheetUiState(
+    val selectedTab: Int = SpeedGraderTab.GRADE.ordinal,
+    val onTabSelected: (Int) -> Unit
 )

@@ -22,7 +22,6 @@ import androidx.compose.animation.rememberSplineBasedDecay
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.gestures.AnchoredDraggableState
 import androidx.compose.foundation.gestures.DraggableAnchors
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -33,48 +32,26 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavGraphBuilder
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.compose.composables.AnchorPoints
-import com.instructure.pandautils.compose.composables.TriStateBottomSheet
 import com.instructure.pandautils.compose.composables.HorizontalDraggableResizeableLayout
+import com.instructure.pandautils.compose.composables.TriStateBottomSheet
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentScreen
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpeedGraderSubmissionScreen(
-    assignmentId: Long,
-    submissionId: Long,
-    courseId: Long
-) {
+fun SpeedGraderSubmissionScreen() {
     var expanded by remember { mutableStateOf(false) }
 
     SpeedGraderSubmissionContent(
         expanded = expanded,
         submissionContent = {
-            NavHost(
-                navController = rememberNavController(),
-                modifier = Modifier.fillMaxSize(),
-                startDestination = "speedGraderContent/$assignmentId/$submissionId"
-            ) {
-                speedGraderContentScreen(expanded) {
-                    expanded = !expanded
-                }
+            SpeedGraderContentScreen(expanded) {
+                expanded = !expanded
             }
         },
         bottomSheetContent = { anchoredDraggableState ->
-            NavHost(
-                navController = rememberNavController(),
-                modifier = Modifier.fillMaxSize(),
-                startDestination = "speedGraderBottomSheet/$courseId/$assignmentId/$submissionId"
-            ) {
-                speedGraderBottomSheet(anchoredDraggableState)
-            }
+            SpeedGraderBottomSheet(anchoredDraggableState)
         }
     )
 }
@@ -89,6 +66,34 @@ private fun SpeedGraderSubmissionContent(
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
 
+    val density = LocalDensity.current
+    val defaultDecayAnimationSpec = rememberSplineBasedDecay<Float>()
+    val initialAnchor = AnchorPoints.BOTTOM
+    val velocityThresholdDps = 125.dp
+    val positionalThresholdFraction = 0.5f
+    val snapAnimationSpec = spring<Float>(
+        stiffness = Spring.StiffnessMedium,
+        dampingRatio = Spring.DampingRatioNoBouncy
+    )
+    val confirmValueChange: (AnchorPoints) -> Boolean = { newAnchor ->
+        true
+    }
+
+    val velocityThresholdPx =
+        remember(velocityThresholdDps) { with(density) { velocityThresholdDps.toPx() } }
+
+    val anchoredDraggableState = remember(initialAnchor, confirmValueChange) {
+        AnchoredDraggableState(
+            initialValue = initialAnchor,
+            anchors = DraggableAnchors { },
+            positionalThreshold = { distance -> distance * positionalThresholdFraction },
+            velocityThreshold = { velocityThresholdPx },
+            snapAnimationSpec = snapAnimationSpec,
+            decayAnimationSpec = defaultDecayAnimationSpec,
+            confirmValueChange = confirmValueChange
+        )
+    }
+
     if (horizontal) {
         HorizontalDraggableResizeableLayout(
             modifier = Modifier,
@@ -102,33 +107,7 @@ private fun SpeedGraderSubmissionContent(
             expanded = expanded
         )
     } else {
-        val density = LocalDensity.current
-        val defaultDecayAnimationSpec = rememberSplineBasedDecay<Float>()
-        val initialAnchor = AnchorPoints.BOTTOM
-        val velocityThresholdDps = 125.dp
-        val positionalThresholdFraction = 0.5f
-        val snapAnimationSpec = spring<Float>(
-            stiffness = Spring.StiffnessMedium,
-            dampingRatio = Spring.DampingRatioNoBouncy
-        )
-        val confirmValueChange: (AnchorPoints) -> Boolean = { newAnchor ->
-            true
-        }
 
-        val velocityThresholdPx =
-            remember(velocityThresholdDps) { with(density) { velocityThresholdDps.toPx() } }
-
-        val anchoredDraggableState = remember(initialAnchor, confirmValueChange) {
-            AnchoredDraggableState(
-                initialValue = initialAnchor,
-                anchors = DraggableAnchors { },
-                positionalThreshold = { distance -> distance * positionalThresholdFraction },
-                velocityThreshold = { velocityThresholdPx },
-                snapAnimationSpec = snapAnimationSpec,
-                decayAnimationSpec = defaultDecayAnimationSpec,
-                confirmValueChange = confirmValueChange
-            )
-        }
         TriStateBottomSheet(
             anchoredDraggableState = anchoredDraggableState,
             modifier = Modifier,
@@ -146,49 +125,17 @@ private fun SpeedGraderSubmissionContent(
 @Preview(device = "spec:width=1280dp,height=800dp,dpi=240")
 @Composable
 private fun SpeedGraderSubmissionScreenTabletPreview() {
-    SpeedGraderSubmissionScreen(1L, 1L, 1L)
+    SpeedGraderSubmissionScreen()
 }
 
 @Preview
 @Composable
 private fun SpeedGraderSubmissionScreenPhonePreview() {
-    SpeedGraderSubmissionScreen(2L, 2L, 2L)
+    SpeedGraderSubmissionScreen()
 }
 
 @Preview(device = "spec:width=411dp,height=891dp,orientation=landscape")
 @Composable
 private fun SpeedGraderSubmissionScreenPhoneLandscapePreview() {
-    SpeedGraderSubmissionScreen(3L, 3L, 3L)
-}
-
-private fun NavGraphBuilder.speedGraderContentScreen(expanded: Boolean = false, onExpandClick: (() -> Unit)? = null) {
-    composable(
-        route = "speedGraderContent/{assignmentId}/{submissionId}",
-        arguments = listOf(
-            navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType }
-        )
-    ) {
-        SpeedGraderContentScreen(expanded, onExpandClick)
-    }
-}
-
-@OptIn(ExperimentalFoundationApi::class)
-private fun NavGraphBuilder.speedGraderBottomSheet(anchoredDraggableState: AnchoredDraggableState<AnchorPoints>? = null) {
-    composable(
-        route = "speedGraderBottomSheet/{courseId}/{assignmentId}/{submissionId}",
-        arguments = listOf(
-            navArgument("courseId") { type = NavType.LongType },
-            navArgument("assignmentId") { type = NavType.LongType },
-            navArgument("submissionId") { type = NavType.LongType },
-            navArgument("courseId") { type = NavType.LongType }
-        )
-    ) {
-        SpeedGraderBottomSheet(
-            anchoredDraggableState = anchoredDraggableState,
-            courseId = it.arguments?.getLong("courseId") ?: 0L,
-            assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
-            submissionId = it.arguments?.getLong("submissionId") ?: 0L
-        )
-    }
+    SpeedGraderSubmissionScreen()
 }
