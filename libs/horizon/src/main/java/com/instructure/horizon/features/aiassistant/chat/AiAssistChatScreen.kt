@@ -23,7 +23,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
@@ -55,8 +57,13 @@ fun AiAssistChatScreen(
         onInputTextSubmitted = { state.onInputTextSubmitted() },
     ) { modifier ->
         val context = LocalContext.current
+        val scrollState = rememberLazyListState()
+        LaunchedEffect(state.messages) {
+            scrollState.animateScrollToItem(state.messages.size)
+        }
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
+            state = scrollState,
             modifier = modifier
         ) {
             items(state.messages) { message ->

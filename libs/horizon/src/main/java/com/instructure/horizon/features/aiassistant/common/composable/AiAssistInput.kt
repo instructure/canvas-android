@@ -47,6 +47,7 @@ fun AiAssistInput(
             value = value,
             onValueChange = onValueChange,
             label = label,
+            onSend = { onSubmitPressed() },
             modifier = Modifier.weight(1f),
         )
 
