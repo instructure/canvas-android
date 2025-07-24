@@ -280,7 +280,7 @@ fun TriStateBottomSheet(
                                 }
                             },
                                 modifier = Modifier.testTag("expandPanelButton")
-                                ) {
+                            ) {
                                 Icon(
                                     tint = LocalCourseColor.current,
                                     painter = painterResource(R.drawable.ic_expand_bottomsheet),
