@@ -2135,6 +2135,7 @@
     <string name="rubricScoreHint">Write score here</string>
     <string name="speedGraderCommentsTitle">Comments (%s)</string>
     <string name="anonymousGradingStudentLabel">Student</string>
+    <string name="anonymousGradingUserLabel">Anonymous User</string>
     <string name="rubricNote">Rubric Note</string>
     <string name="content_description_edit_rubric_comment">Edit rubric note</string>
     <string name="rubricNoteHint">Note</string>

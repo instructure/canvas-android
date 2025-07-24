@@ -22,7 +22,7 @@ data class SpeedGraderComment(
     val id: String = "",
     val authorName: String = "",
     val authorId: String = "",
-    val authorAvatarUrl: String = "",
+    val authorAvatarUrl: String? = null,
     val content: String = "",
     val createdAt: String = "",
     val isOwnComment: Boolean = false,
