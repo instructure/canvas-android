@@ -18,7 +18,6 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -115,17 +114,13 @@ fun SpeedGraderCommentsSection(
         object : FileUploadDialogParent {
             override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
                 if (event == FileUploadDialogFragment.EVENT_DIALOG_CANCELED) {
-                    Log.d("FileUploadDialog", "Dialog canceled")
                     fileDialogShown.value = false
                     actionHandler(SpeedGraderCommentsAction.FileUploadDialogClosed)
-                } else if (event == FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN) {
-                    Log.d("FileUploadDialog", "Upload started")
                 }
             }
 
             override fun selectedUriStringsCallback(filePaths: List<String>) {
                 actionHandler(SpeedGraderCommentsAction.FilesSelected(filePaths))
-                Log.d("FileUploadDialog", "Selected file paths: $filePaths")
             }
 
             override fun workInfoLiveDataCallback(
@@ -133,7 +128,6 @@ fun SpeedGraderCommentsSection(
                 workInfoLiveData: LiveData<WorkInfo>
             ) {
                 actionHandler(SpeedGraderCommentsAction.FileUploadStarted(workInfoLiveData))
-                Log.d("FileUploadDialog", "WorkInfoLiveData callback with UUID: $uuid")
 
             }
         }
@@ -194,7 +188,6 @@ fun SpeedGraderCommentsSection(
 
                             offsetX += dragAmount.x
                             offsetY += dragAmount.y
-                            Log.d("ASpeedGraderCommentSection", "offset: $offsetX, $offsetY")
                         }
                     }
             )
