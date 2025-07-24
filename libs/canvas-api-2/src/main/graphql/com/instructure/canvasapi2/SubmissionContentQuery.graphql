@@ -13,12 +13,26 @@
 #     See the License for the specific language governing permissions and
 #     limitations under the License.
 #
-query SubmissionContent($userId: ID!, $assignmentId: ID!) {
+query SubmissionContent(
+    $userId: ID!,
+    $assignmentId: ID!,
+    $pageSize: Int!,
+    $nextCursor: String
+) {
     submission(userId: $userId, assignmentId: $assignmentId) {
         _id
         userId
         ...SubmissionFields
-        submissionHistoriesConnection(filter: {}) {
+        submissionHistoriesConnection(
+            first: $pageSize,
+            after: $nextCursor
+        ) {
+            pageInfo {
+                hasNextPage
+                endCursor
+                startCursor
+                hasPreviousPage
+            }
             edges {
                 node {
                     ...SubmissionFields
