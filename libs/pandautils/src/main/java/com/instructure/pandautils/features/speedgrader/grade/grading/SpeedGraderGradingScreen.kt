@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -623,7 +624,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 stringResource(R.string.grade),
                 fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
