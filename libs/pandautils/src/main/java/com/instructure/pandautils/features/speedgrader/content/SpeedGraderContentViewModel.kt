@@ -88,13 +88,15 @@ class SpeedGraderContentViewModel @Inject constructor(
             attachments.firstOrNull()?.id
         )
 
+        val anonymousGrading = submissionFields?.assignment?.anonymousGrading ?: false
+
         _uiState.update { state ->
             state.copy(
                 content = initialContent,
                 assigneeId = submissionFields?.groupId?.toLongOrNull()
                     ?: submission.submission?.userId?.toLongOrNull(),
-                userName = user?.name,
-                userUrl = user?.avatarUrl,
+                userName = if (anonymousGrading) resources.getString(R.string.anonymousGradingStudentLabel) else user?.name,
+                userUrl = if (!anonymousGrading) user?.avatarUrl else null,
                 submissionState = getSubmissionStateLabel(submissionFields?.state),
                 dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(

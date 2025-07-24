@@ -25,7 +25,8 @@ data class SpeedGraderRubricUiState(
     val assessments: Map<String, RubricCriterionAssessment> = emptyMap(),
     val hidePoints: Boolean = false,
     val onRubricSelected: (Double, String, String) -> Unit,
-    val onPointChanged: (Double, String) -> Unit
+    val onPointChanged: (Double, String) -> Unit,
+    val onCommentChange: (String, String) -> Unit
 )
 
 data class RubricCriterion(
