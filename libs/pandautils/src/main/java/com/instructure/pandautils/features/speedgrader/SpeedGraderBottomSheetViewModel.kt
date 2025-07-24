@@ -16,12 +16,24 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
-data class SpeedGraderUiState(
-    val courseId: Long,
-    val assignmentId: Long,
-    val submissionIds: List<Long>,
-    val selectedItem: Int,
-    val courseName: String = "",
-    val assignmentName: String = "",
-    val onPageChange: (Int) -> Unit,
-)
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+@HiltViewModel
+class SpeedGraderBottomSheetViewModel @Inject constructor() : ViewModel() {
+
+    private val _uiState = MutableStateFlow(SpeedGraderBottomSheetUiState(onTabSelected = this::selectTab))
+    val uiState = _uiState.asStateFlow()
+
+    private fun selectTab(tabOrdinal: Int) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(selectedTab = tabOrdinal) }
+        }
+    }
+}

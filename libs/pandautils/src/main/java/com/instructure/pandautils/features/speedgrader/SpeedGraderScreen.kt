@@ -52,7 +52,7 @@ fun SpeedGraderScreen(
     val context = LocalContext.current
     val window = (context.getFragmentActivity()).window
 
-    val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size })
+    val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size }, initialPage = uiState.selectedItem)
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
 
     DisposableEffect(Unit) {
@@ -64,10 +64,6 @@ fun SpeedGraderScreen(
                 window.setSoftInputMode(originalMode)
             }
         }
-    }
-
-    LaunchedEffect(Unit) {
-        pagerState.scrollToPage(uiState.selectedItem)
     }
 
     Scaffold(
@@ -85,6 +81,7 @@ fun SpeedGraderScreen(
         contentWindowInsets = WindowInsets.ime
     ) { padding ->
         HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
+            uiState.onPageChange(page)
             val submissionId = uiState.submissionIds[page]
             NavHost(
                 navController = rememberNavController(),
@@ -105,10 +102,6 @@ fun NavGraphBuilder.submissionScreen() {
             navArgument("submissionId") { type = NavType.LongType },
         )
     ) {
-        SpeedGraderSubmissionScreen(
-            courseId = it.arguments?.getLong("courseId") ?: 0L,
-            assignmentId = it.arguments?.getLong("assignmentId") ?: 0L,
-            submissionId = it.arguments?.getLong("submissionId") ?: 0L,
-        )
+        SpeedGraderSubmissionScreen()
     }
 }
