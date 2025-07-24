@@ -24,7 +24,6 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -46,12 +45,8 @@ fun SpeedGraderScreen(
     navigationActionClick: () -> Unit
 ) {
 
-    val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size })
+    val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size }, initialPage = uiState.selectedItem)
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
-
-    LaunchedEffect(Unit) {
-        pagerState.scrollToPage(uiState.selectedItem)
-    }
 
     Scaffold(
         topBar = {
