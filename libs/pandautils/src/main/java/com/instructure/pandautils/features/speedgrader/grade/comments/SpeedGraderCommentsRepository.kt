@@ -29,8 +29,8 @@ class SpeedGraderCommentsRepository(
     private val submissionApi: SubmissionAPI.SubmissionInterface,
     private val featuresApi: FeaturesAPI.FeaturesInterface
 ) {
-    suspend fun getSubmissionComments(userId: Long, assignmentId: Long): SubmissionCommentsResponseWrapper {
-        return submissionCommentsManager.getSubmissionComments(userId, assignmentId)
+    suspend fun getSubmissionComments(userId: Long, assignmentId: Long, forceNetwork: Boolean = false): SubmissionCommentsResponseWrapper {
+        return submissionCommentsManager.getSubmissionComments(userId, assignmentId, forceNetwork)
     }
 
     suspend fun createSubmissionComment(

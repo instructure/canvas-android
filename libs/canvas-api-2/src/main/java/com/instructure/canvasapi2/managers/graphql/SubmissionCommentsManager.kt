@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 interface SubmissionCommentsManager {
 
-    suspend fun getSubmissionComments(userId: Long, assignmentId: Long): SubmissionCommentsResponseWrapper
+    suspend fun getSubmissionComments(userId: Long, assignmentId: Long, forceNetwork: Boolean = false): SubmissionCommentsResponseWrapper
 
     suspend fun createSubmissionComment(
         submissionId: Long,

@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
 class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
 
-    override suspend fun getSubmissionComments(userId: Long, assignmentId: Long): SubmissionCommentsResponseWrapper {
+    override suspend fun getSubmissionComments(userId: Long, assignmentId: Long, forceNetwork: Boolean): SubmissionCommentsResponseWrapper {
         val allComments = mutableListOf<SubmissionCommentsQuery.Node1>()
         var historyCursor: String? = null
         var hasMoreHistories = true
@@ -67,7 +67,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
                         commentCursor = Optional.present(commentCursor)
                     )
 
-                    val commentData = QLClientConfig.enqueueQuery(commentQuery, true).data
+                    val commentData = QLClientConfig.enqueueQuery(commentQuery, forceNetwork).data
 
                     val matchedHistory = commentData
                         ?.submission

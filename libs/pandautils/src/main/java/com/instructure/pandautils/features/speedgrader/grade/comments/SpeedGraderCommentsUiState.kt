@@ -28,7 +28,8 @@ data class SpeedGraderComment(
     val isOwnComment: Boolean = false,
     val attachments: List<SpeedGraderCommentAttachment> = emptyList(),
     val mediaObject: SpeedGraderMediaObject? = null,
-    val isPending: Boolean = false
+    val isPending: Boolean = false,
+    val isFailed: Boolean = false,
 )
 
 data class SpeedGraderCommentAttachment(
@@ -70,6 +71,7 @@ sealed class SpeedGraderCommentsAction {
     data object AttachmentTypeSelectorDialogClosed : SpeedGraderCommentsAction()
     data object AttachmentRecordDialogClosed : SpeedGraderCommentsAction()
     data object SendCommentClicked : SpeedGraderCommentsAction()
+    data class RetryCommentUpload(val comment: SpeedGraderComment) : SpeedGraderCommentsAction()
     data object RecordAudioClicked : SpeedGraderCommentsAction()
     data object RecordVideoClicked : SpeedGraderCommentsAction()
     data object ChooseFilesClicked : SpeedGraderCommentsAction()

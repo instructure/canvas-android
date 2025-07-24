@@ -39,7 +39,7 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -147,7 +147,8 @@ fun SpeedGraderCommentsSection(
                 comments = state.comments,
                 modifier = Modifier.fillMaxSize(),
                 gradingAnonymously = gradingAnonymously,
-                onAttachmentClick = { attachmentRouter.openAttachment(activity, it) }
+                onAttachmentClick = { attachmentRouter.openAttachment(activity, it) },
+                actionHandler = actionHandler
             )
             HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
             SpeedGraderCommentCreator(
@@ -322,6 +323,7 @@ private fun SpeedGraderCommentItems(
     comments: List<SpeedGraderComment>,
     onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
     modifier: Modifier = Modifier,
+    actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
     gradingAnonymously: Boolean = false
 ) {
 //    val listState = rememberLazyListState()
@@ -336,7 +338,8 @@ private fun SpeedGraderCommentItems(
                 SpeedGraderOwnCommentItem(
                     comment = comment,
                     gradingAnonymously = gradingAnonymously,
-                    onAttachmentClick = onAttachmentClick
+                    onAttachmentClick = onAttachmentClick,
+                    actionHandler = actionHandler,
                 )
             } else {
                 SpeedGraderUserCommentItem(
@@ -354,67 +357,106 @@ fun SpeedGraderOwnCommentItem(
     comment: SpeedGraderComment,
     onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
     modifier: Modifier = Modifier,
+    actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
     gradingAnonymously: Boolean = false,
 ) {
     Column(
         modifier = modifier
             .padding(8.dp)
-            .alpha(if (comment.isPending) 0.5f else 1f)
     ) {
-        Text(
-            text = DateHelper.getDateTimeString(
-                LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
-            ) ?: "",
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.End),
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            color = colorResource(id = R.color.textDark),
-            textAlign = TextAlign.Right
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        if (comment.content.isNotEmpty()) {
+        Column(
+            modifier = modifier
+                .alpha(if (comment.isPending) 0.5f else 1f)
+        ) {
             Text(
-                text = comment.content,
+                text = DateHelper.getDateTimeString(
+                    LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                ) ?: "",
                 modifier = Modifier
-                    .padding(start = 36.dp)
                     .fillMaxWidth()
-                    .wrapContentWidth(Alignment.End)
-                    .background(
-                        color = LocalCourseColor.current,
-                        shape = RoundedCornerShape(size = 16.dp)
-                    )
-                    .padding(8.dp),
-                fontSize = 14.sp,
-                lineHeight = 19.sp,
-                color = colorResource(id = R.color.textLightest),
+                    .wrapContentWidth(Alignment.End),
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                color = colorResource(id = R.color.textDark),
                 textAlign = TextAlign.Right
             )
-        }
-        if (comment.isPending && comment.content.isEmpty()) {
-            CircularProgressIndicator(
-                color = LocalCourseColor.current,
-                strokeWidth = 3.dp,
+            Spacer(modifier = Modifier.height(2.dp))
+            if (comment.content.isNotEmpty()) {
+                Text(
+                    text = comment.content,
+                    modifier = Modifier
+                        .padding(start = 36.dp)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.End)
+                        .background(
+                            color = LocalCourseColor.current,
+                            shape = RoundedCornerShape(size = 16.dp)
+                        )
+                        .padding(8.dp),
+                    fontSize = 14.sp,
+                    lineHeight = 19.sp,
+                    color = colorResource(id = R.color.textLightest),
+                    textAlign = TextAlign.Right
+                )
+            }
+            if (comment.isPending && comment.content.isEmpty()) {
+                CircularProgressIndicator(
+                    color = LocalCourseColor.current,
+                    strokeWidth = 3.dp,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.End)
+                )
+            }
+            SpeedGraderAttachmentsComponent(
+                attachments = comment.attachments,
+                gradingAnonymously = gradingAnonymously,
+                isOwn = true,
+                onSelect = onAttachmentClick
+            )
+            SpeedGraderMediaAttachmentComponent(
+                mediaObject = comment.mediaObject,
                 modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.End)
+                    .fillMaxWidth(0.7f)
+                    .align(Alignment.End),
+                gradingAnonymously = gradingAnonymously,
+                isOwn = true,
+                onAttachmentClick = onAttachmentClick
             )
         }
-        SpeedGraderAttachmentsComponent(
-            attachments = comment.attachments,
-            gradingAnonymously = gradingAnonymously,
-            isOwn = true,
-            onSelect = onAttachmentClick
+        if (comment.isFailed) {
+            Spacer(modifier = Modifier.height(4.dp))
+            SpeedGraderCommentErrorComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.End)
+                    .clickable { actionHandler(SpeedGraderCommentsAction.RetryCommentUpload(comment)) }
+            )
+        }
+    }
+}
+
+@Composable
+fun SpeedGraderCommentErrorComponent(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_warning_red),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = colorResource(id = R.color.textDanger)
         )
-        SpeedGraderMediaAttachmentComponent(
-            mediaObject = comment.mediaObject,
-            modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .align(Alignment.End),
-            gradingAnonymously = gradingAnonymously,
-            isOwn = true,
-            onAttachmentClick = onAttachmentClick
+        Spacer(modifier = Modifier.width(2.dp))
+        Text(
+            text = "This message could not be sent. Tap to try again.",
+            fontSize = 14.sp,
+            lineHeight = 19.sp,
+            fontWeight = FontWeight(400),
+            color = colorResource(id = R.color.textDanger)
         )
     }
 }
