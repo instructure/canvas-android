@@ -49,6 +49,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
@@ -243,6 +244,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     ),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 16.sp,
+                    modifier = Modifier.testTag("finalGradeDisplay")
                 )
 
             }
