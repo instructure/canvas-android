@@ -22,6 +22,9 @@ query SubmissionCommentsQuery(
     submission(userId: $userId, assignmentId: $assignmentId) {
         _id
         userId
+        assignment {
+            anonymousGrading
+        }
         submissionHistoriesConnection(first: 20, after: $historyCursor) {
             edges {
                 node {

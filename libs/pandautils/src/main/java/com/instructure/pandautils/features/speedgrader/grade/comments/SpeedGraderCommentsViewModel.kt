@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
@@ -111,18 +112,26 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
         submissionId = response.data.submission?._id?.toLongOrNull()
         collectPendingComments()
+        val isAnonymousGrading = response.data.submission?.assignment?.anonymousGrading ?: false
         fetchedComments = response.comments
             .filter { it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
             .map { node ->
                 node.let {
+                    val isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id
                     SpeedGraderComment(
-                        id = it.mediaCommentId ?: "",
-                        authorName = it.author?.name ?: "Unknown",
-                        authorId = it.author?._id ?: "",
-                        authorAvatarUrl = it.author?.avatarUrl ?: "",
-                        content = it.comment ?: "",
+                        id = it.mediaCommentId.orEmpty(),
+                        authorName = getAuthorName(
+                            authorName = it.author?.name,
+                            anonymousGrading = isAnonymousGrading,
+                            isOwnComment = isOwnComment
+                        ),
+                        authorId = it.author?._id.orEmpty(),
+                        authorAvatarUrl = it.author?.avatarUrl.takeIf {
+                            isOwnComment || !isAnonymousGrading
+                        },
+                        content = it.comment.orEmpty(),
                         createdAt = it.createdAt.toString(),
-                        isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id,
+                        isOwnComment = isOwnComment,
                         attachments = getAttachments(it.attachments.orEmpty()),
                         mediaObject = it.mediaObject?.let { mediaObject ->
                             val mediaSource = mediaObject.mediaSources?.firstOrNull()
@@ -149,6 +158,15 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 isLoading = false,
             )
         }
+    }
+
+    private fun getAuthorName(
+        authorName: String?,
+        anonymousGrading: Boolean,
+        isOwnComment: Boolean
+    ) = when {
+        isOwnComment || !anonymousGrading -> authorName.orEmpty()
+        else -> context.getString(R.string.anonymousGradingUserLabel)
     }
 
     private suspend fun silentRefresh() {
