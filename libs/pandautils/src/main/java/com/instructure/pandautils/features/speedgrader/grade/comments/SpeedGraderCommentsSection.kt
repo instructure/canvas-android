@@ -43,26 +43,23 @@ import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
@@ -84,6 +81,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
+import com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary.SpeedGraderCommentLibraryScreen
+import com.instructure.pandautils.features.speedgrader.grade.comments.composables.SpeedGraderCommentInput
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.setVisible
@@ -139,6 +138,22 @@ fun SpeedGraderCommentsSection(
         }
     }
 
+    var showCommentLibrary by rememberSaveable { mutableStateOf(false) }
+    if (showCommentLibrary) {
+        SpeedGraderCommentLibraryScreen(
+            onDismissRequest = {
+                showCommentLibrary = false
+                actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it))
+            },
+            initialCommentValue = state.commentText,
+            onSendCommentClicked = {
+                showCommentLibrary = false
+                actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it))
+                actionHandler(SpeedGraderCommentsAction.SendCommentClicked)
+            }
+        )
+    }
+
     Box(
         modifier = modifier.background(colorResource(id = R.color.backgroundLightest))
     ) {
@@ -150,8 +165,12 @@ fun SpeedGraderCommentsSection(
                 onAttachmentClick = { attachmentRouter.openAttachment(activity, it) }
             )
             HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
-            SpeedGraderCommentCreator(
-                commentText = state.commentText, actionHandler = actionHandler
+            SpeedGraderCommentInput(
+                commentText = state.commentText,
+                onCommentFieldChanged = { actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it)) },
+                onCommentLibraryClicked = { showCommentLibrary = true },
+                onAttachmentClicked = { actionHandler(SpeedGraderCommentsAction.AddAttachmentClicked) },
+                sendCommentClicked = { actionHandler(SpeedGraderCommentsAction.SendCommentClicked) },
             )
             if (state.showAttachmentTypeDialog) {
                 AttachmentTypeSelectorDialog(actionHandler = actionHandler)
@@ -659,90 +678,6 @@ fun SpeedGraderUserCommentItem(
     }
 }
 
-@Composable
-fun SpeedGraderCommentCreator(
-    modifier: Modifier = Modifier,
-    commentText: TextFieldValue = TextFieldValue(""),
-    actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
-) {
-    Column(
-        modifier = modifier
-            .fillMaxWidth()
-            .wrapContentHeight()
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
-            .border(
-                width = 1.dp,
-                color = colorResource(id = R.color.backgroundMedium),
-                shape = RoundedCornerShape(size = 16.dp)
-            )
-    ) {
-        TextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentHeight()
-                .background(Color.Transparent),
-            label = { Text("Comment") },
-            value = commentText,
-            maxLines = 5,
-            onValueChange = {
-                actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it))
-            },
-            textStyle = TextStyle(
-                fontSize = 14.sp,
-                lineHeight = 17.sp,
-                fontWeight = FontWeight(400),
-                color = colorResource(id = R.color.textDarkest),
-            ),
-            colors = TextFieldDefaults.colors(
-                focusedContainerColor = Color.Transparent,
-                unfocusedContainerColor = Color.Transparent,
-                disabledContainerColor = Color.Transparent,
-                errorContainerColor = Color.Transparent,
-                focusedIndicatorColor = Color.Transparent,
-                unfocusedIndicatorColor = Color.Transparent,
-                disabledIndicatorColor = Color.Transparent,
-                focusedLabelColor = colorResource(R.color.textDark),
-                unfocusedLabelColor = colorResource(R.color.textDark),
-                disabledLabelColor = colorResource(R.color.textDark),
-                errorLabelColor = colorResource(R.color.textDark),
-            )
-        )
-
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
-                .wrapContentHeight()
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_message),
-                contentDescription = "Comment Library",
-                modifier = Modifier
-                    .height(24.dp)
-                    .clickable { /* Handle open comment library action */ },
-                tint = colorResource(id = R.color.textDark)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_attachment),
-                contentDescription = "Add Attachment",
-                modifier = Modifier
-                    .height(24.dp)
-                    .clickable { actionHandler(SpeedGraderCommentsAction.AddAttachmentClicked) },
-                tint = colorResource(id = R.color.textDark)
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Icon(painter = painterResource(id = R.drawable.ic_send_outlined),
-                contentDescription = "Send Comment",
-                modifier = Modifier
-                    .height(24.dp)
-                    .clickable { actionHandler(SpeedGraderCommentsAction.SendCommentClicked) }
-                    .alpha(if (commentText.text.isEmpty()) 0.5f else 1f),
-                tint = colorResource(id = R.color.messageBackground))
-        }
-    }
-}
-
 @Preview
 @Composable
 fun SpeedGraderCommentSectionPreview() {
@@ -816,4 +751,3 @@ fun SpeedGraderCommentSectionPreview() {
 fun AttachmentTypeSelectorDialogPreview() {
     AttachmentTypeSelectorDialog(actionHandler = {})
 }
-

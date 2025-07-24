@@ -39,7 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.GroupHeader
-import com.instructure.pandautils.features.speedgrader.composables.Loading
+import com.instructure.pandautils.features.speedgrader.composables.SpeedGraderDetailsSectionLoading
 import com.instructure.pandautils.utils.ScreenState
 
 
@@ -74,7 +74,7 @@ internal fun SubmissionDetails(
         ) {
             when (uiState.state) {
                 ScreenState.Loading -> {
-                    Loading(stringResource(R.string.speedGraderSubmissionDetailsLoading))
+                    SpeedGraderDetailsSectionLoading(stringResource(R.string.speedGraderSubmissionDetailsLoading))
                 }
 
                 ScreenState.Content -> {

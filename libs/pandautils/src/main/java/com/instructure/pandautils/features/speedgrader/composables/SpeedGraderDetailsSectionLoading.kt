@@ -37,7 +37,7 @@ import com.instructure.pandautils.R
 
 
 @Composable
-internal fun Loading(
+internal fun SpeedGraderDetailsSectionLoading(
     loadingText: String,
     modifier: Modifier = Modifier
 ) {
@@ -64,6 +64,6 @@ internal fun Loading(
 
 @Preview(showBackground = true)
 @Composable
-private fun LoadingPreview() {
-    Loading("Loading...")
+private fun SpeedGraderDetailsSectionLoadingPreview() {
+    SpeedGraderDetailsSectionLoading("Loading...")
 }

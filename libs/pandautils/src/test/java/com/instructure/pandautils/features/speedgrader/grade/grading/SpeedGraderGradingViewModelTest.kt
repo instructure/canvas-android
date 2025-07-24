@@ -1,4 +1,4 @@
-package com.instructure.pandautils.features.speedgrader.grading
+package com.instructure.pandautils.features.speedgrader.grade.grading
 
 import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
@@ -12,10 +12,6 @@ import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
-import com.instructure.pandautils.features.speedgrader.grade.grading.GradeStatus
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingRepository
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingUiState
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
