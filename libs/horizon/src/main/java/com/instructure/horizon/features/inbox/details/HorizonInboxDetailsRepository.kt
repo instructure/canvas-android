@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.DiscussionTopic
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
+import com.instructure.canvasapi2.utils.DataResult
 import javax.inject.Inject
 
 class HorizonInboxDetailsRepository @Inject constructor(
@@ -53,6 +54,30 @@ class HorizonInboxDetailsRepository @Inject constructor(
     suspend fun getAnnouncementTopic(id: Long, courseId: Long, forceRefresh: Boolean): DiscussionTopic {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
         return discussionApi.getFullDiscussionTopic(CanvasContext.Type.COURSE.apiString, courseId, id, 1, params).dataOrThrow
+    }
+
+    suspend fun markAnnouncementAsRead(
+        courseId: Long,
+        announcementId: Long,
+        entries: Set<Long>,
+    ): DataResult<Unit> {
+        val params = RestParams()
+        val result = discussionApi.markDiscussionTopicRead(CanvasContext.Type.COURSE.apiString, courseId, announcementId, params)
+        if (result is DataResult.Fail) return result
+
+        val successfullyMarkedAsReadIds: MutableSet<Long> = mutableSetOf()
+        entries.forEach { entryId ->
+            val entryResult =
+                discussionApi.markDiscussionTopicEntryRead(CanvasContext.Type.COURSE.apiString, courseId, announcementId, entryId, params)
+            if (entryResult is DataResult.Success) {
+                successfullyMarkedAsReadIds.add(entryId)
+            }
+        }
+        return if (successfullyMarkedAsReadIds == entries) {
+            DataResult.Success(Unit)
+        } else {
+            DataResult.Fail()
+        }
     }
 
     suspend fun addMessageToConversation(

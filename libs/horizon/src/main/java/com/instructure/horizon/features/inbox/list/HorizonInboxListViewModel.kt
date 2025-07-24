@@ -123,7 +123,7 @@ class HorizonInboxListViewModel @Inject constructor(
                     ).orDefault()
                 }
         }
-        val accountAnnouncements = if (uiState.value.selectedScope == HorizonInboxScope.All || uiState.value.selectedScope == HorizonInboxScope.Announcements) {
+        val accountAnnouncements = if (uiState.value.selectedScope != HorizonInboxScope.Sent) {
              repository.getAccountAnnouncements(forceRefresh)
                  .filter {
                      uiState.value.selectedRecipients.isEmpty()
@@ -131,12 +131,13 @@ class HorizonInboxListViewModel @Inject constructor(
         } else {
             emptyList()
         }
-        val courseAnnouncements = if (uiState.value.selectedScope == HorizonInboxScope.All || uiState.value.selectedScope == HorizonInboxScope.Announcements) {
+        val courseAnnouncements = if (uiState.value.selectedScope != HorizonInboxScope.Sent) {
             repository.getCourseAnnouncements(forceRefresh)
                 .filter {
                     uiState.value.selectedRecipients.isEmpty()
-                            || listOf(it.second.author?.id?.toString()) == uiState.value.selectedRecipients.map { it.stringId }
+                            || listOf(it.second.author?.id?.toString()) == uiState.value.selectedRecipients.map { recipient -> recipient.stringId }
                 }
+                .filter { uiState.value.selectedScope != HorizonInboxScope.Unread || it.second.status == DiscussionTopicHeader.ReadState.UNREAD }
         } else {
             emptyList()
         }
