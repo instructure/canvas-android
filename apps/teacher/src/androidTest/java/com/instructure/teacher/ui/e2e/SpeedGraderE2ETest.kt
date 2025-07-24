@@ -20,7 +20,6 @@ import android.util.Log
 import androidx.compose.ui.test.onRoot
 import androidx.compose.ui.test.printToLog
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -169,8 +168,8 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         val grade = "10"
         Log.d(STEP_TAG, "Enter '$grade' as the new grade and close the keyboard.")
         speedGraderGradePage.enterNewGrade(composeTestRule, grade)
-        closeSoftKeyboard()
-        Thread.sleep(5000)
+        Espresso.pressBack()
+        Thread.sleep(2000) // Wait for the keyboard to close, and the bottom panel to collapse.
 
         Log.d(STEP_TAG, "Click on the 'Expand Panel Button'.")
         speedGraderGradePage.clickExpandPanelButton(composeTestRule)
