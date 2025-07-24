@@ -102,6 +102,7 @@ apollo {
         mapScalar("URL", "kotlin.String")
         mapScalar("DateTime", "java.util.Date")
         mapScalar("ID", "kotlin.String")
+        mapScalar("ISO8601Duration", "kotlin.String")
 
         generateKotlinModels.set(true)
 

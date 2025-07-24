@@ -286,7 +286,7 @@
     <string name="Todo">待辦事項</string>
     <string name="todoFilter">篩選課程</string>
     <string name="filterByEllipsis">篩選條件為...</string>
-    <string name="favoritedCoursesLabel">已標記為最喜愛的課程</string>
+    <string name="favoriteCoursesLabel">最喜愛的課程</string>
     <string name="Event">活動</string>
     <string name="eventSuccessfulDeletion">活動已成功刪除</string>
     <string name="timeIconDescription">時間圖示</string>
@@ -681,6 +681,7 @@
     <string name="notificationWidgetTitle">通知</string>
     <string name="todoWidgetTitleLong">Canvas - 待辦事項</string>
     <string name="gradesWidgetTitleLong">Canvas - 評分</string>
+    <string name="gradeWidgetTitleLong">Canvas - 評分</string>
     <string name="notificationWidgetTitleLong">Canvas - 通知</string>
     <string name="notLoggedIn">您尚未登入</string>
     <string name="widgetStyle">選擇您的小部件風格</string>
@@ -1745,12 +1746,12 @@
     <string name="screenTitleHelp">支援</string>
     <string name="screenTitleManageStudents">管理學生</string>
     <string name="screenTitleSettings">設定</string>
-    <string name="navigationDrawerSwitchUsers">切換使用者</string>
     <string name="navigationDrawerLogOut">登出</string>
     <string name="noStudentsError">無學生</string>
     <string name="noStudentsErrorDescription">您未正在觀察任何學生。</string>
     <string name="noStudentsRefresh">重新整理</string>
     <string name="noGrade">無評分</string>
+    <string name="noGrades">沒有成績</string>
     <string name="errorLoadingCourses">載入您的學生的課程時發生錯誤。</string>
     <string name="parentNoCourses">無課程</string>
     <string name="parentNoCoursesMessage">您的學生的課程可能尚未發佈。</string>
@@ -2016,4 +2017,23 @@
     <string name="errorLoadingAssignments">載入作業時發生錯誤</string>
     <string name="a11y_searchAssignments">搜尋作業</string>
     <string name="dueAssignmentListItem">截止於 %1$s</string>
+    <string name="a11y_searchAmongRecipients">搜尋收件人</string>
+    <string name="a11y_recipientIsRemoved">已移除 %1$s</string>
+    <string name="widgetDueDate">截止於 %1$s</string>
+    <string name="widgetFromTo">%1$s 至 %2$s</string>
+    <string name="widgetAllDay">全天</string>
+    <string name="widgetErrorTitle">抱歉！發生問題</string>
+    <string name="widgetErrorSubtitle">我們現在無法顯示您的任務。請稍後重試或前往應用程式。</string>
+    <string name="widgetToDoEmptyTitle">您現在已全部完成！</string>
+    <string name="widgetToDoEmptySubtitle">您似乎在接下來的 4 週內都有空。您想添加一些待辦事項嗎？</string>
+    <string name="widgetNotLoggedInTitle">讓我們幫您登入！</string>
+    <string name="widgetToDoNotLoggedInSubtitle">若要查看您的待辦事項，請在應用程式中登入您的帳戶。只需一秒鐘！</string>
+    <string name="a11y_widgetToDoOpenToDoList">開啟待辦事項清單畫面</string>
+    <string name="a11y_widgetToDoCreateNewToDo">建立新的待辦事項</string>
+    <string name="widgetGradesErrorSubtitle">我們現在無法顯示您的成績。請稍後重試或前往應用程式。</string>
+    <string name="widgetGradesNotLoggedInSubtitle">要查看您的成績，請在應用程式中登入您的帳戶。只需一秒鐘！</string>
+    <string name="widgetSingleGradeErrorSubtitle">我們現在無法顯示您的成績。</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">要查看您的成績，請在應用程式中登入您的帳戶。</string>
+    <string name="widgetSingleGradeSelectCourse">讓我們選擇課程</string>
+    <string name="widgetGradesErrorLoadingCourses">載入課程時發生錯誤。</string>
 </resources>

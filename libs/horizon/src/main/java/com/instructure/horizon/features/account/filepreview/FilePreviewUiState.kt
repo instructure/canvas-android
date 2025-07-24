@@ -19,7 +19,7 @@ import android.net.Uri
 
 sealed class FilePreviewUiState {
     data class Pdf(
-        val url: String,
+        val uri: Uri,
     ) : FilePreviewUiState()
 
     data class Media(

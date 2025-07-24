@@ -16,16 +16,28 @@
  */
 package com.instructure.horizon.features.account
 
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.models.User
 import javax.inject.Inject
 
 class AccountRepository @Inject constructor(
     private val userApi: UserAPI.UsersInterface,
+    private val experienceAPI: ExperienceAPI
 ) {
     suspend fun getUserDetails(forceRefresh: Boolean): User {
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
         return userApi.getSelf(restParams).dataOrThrow
+    }
+
+    suspend fun getExperiences(forceRefresh: Boolean): List<String> {
+        val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
+        return experienceAPI.getExperienceSummary(restParams).dataOrNull?.availableApps ?: emptyList()
+    }
+
+    suspend fun switchExperience() {
+        experienceAPI.switchExperience(RestParams(), ExperienceSummary.ACADEMIC_EXPERIENCE).dataOrThrow
     }
 }

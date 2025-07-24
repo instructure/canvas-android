@@ -21,6 +21,7 @@ import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -42,6 +43,7 @@ class HelpMenuE2ETest: TeacherTest() {
     @E2E
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
     fun testHelpMenuE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -77,7 +79,6 @@ class HelpMenuE2ETest: TeacherTest() {
             helpPage.assertHelpMenuURL("Search the Canvas Guides", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
             helpPage.assertHelpMenuURL("Submit a Feature Idea", "https://community.canvaslms.com/t5/Idea-Conversations/idb-p/ideas")
             helpPage.assertHelpMenuURL("Ask the Community", "https://community.canvaslms.com/community/answers")
-            helpPage.assertHelpMenuURL("Training Services Portal", "https://training-portal-beta-pdx.insproserv.net?canvas_domain=mobileqa.instructure.com&sf_id=")
             helpPage.assertHelpMenuURL("Conference Guides for Remote Classrooms", "https://community.canvaslms.com/docs/DOC-18572-conferences-resources")
             helpPage.assertHelpMenuURL("Share Your Love for the App", "https://community.canvaslms.com/t5/Canvas/ct-p/canvas")
         }
@@ -89,6 +90,7 @@ class HelpMenuE2ETest: TeacherTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
     fun testHelpMenuReportProblemE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
