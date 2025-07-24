@@ -17,7 +17,7 @@
 package com.instructure.teacher.factory
 
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.presenters.SpeedGraderPresenter
 import com.instructure.teacher.viewinterface.SpeedGraderView

@@ -41,6 +41,7 @@ class SpeedGraderViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: SpeedGraderViewModel
     private lateinit var repository: SpeedGraderRepository
+    private lateinit var assignmentSubmissionRepository: AssignmentSubmissionRepository
     private lateinit var savedStateHandle: SavedStateHandle
 
     @Before
@@ -48,6 +49,7 @@ class SpeedGraderViewModelTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         Dispatchers.setMain(testDispatcher)
         repository = mockk()
+        assignmentSubmissionRepository = mockk()
         savedStateHandle = SavedStateHandle(
             mapOf(
                 Const.COURSE_ID to 1L,
@@ -69,7 +71,7 @@ class SpeedGraderViewModelTest {
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
 
-        viewModel = SpeedGraderViewModel(savedStateHandle, repository)
+        viewModel = SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Assert
@@ -84,7 +86,7 @@ class SpeedGraderViewModelTest {
         savedStateHandle = SavedStateHandle()
 
         assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(savedStateHandle, repository)
+            SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
         }
     }
 
@@ -93,7 +95,7 @@ class SpeedGraderViewModelTest {
         savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L))
 
         assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(savedStateHandle, repository)
+            SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
         }
     }
 
@@ -111,7 +113,7 @@ class SpeedGraderViewModelTest {
             )
         )
 
-        viewModel = SpeedGraderViewModel(savedStateHandle, repository)
+        viewModel = SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
 
         // Assert
         val uiState = viewModel.uiState.value
@@ -133,7 +135,7 @@ class SpeedGraderViewModelTest {
             )
         )
 
-        viewModel = SpeedGraderViewModel(savedStateHandle, repository)
+        viewModel = SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
 
         // Assert
         val uiState = viewModel.uiState.value

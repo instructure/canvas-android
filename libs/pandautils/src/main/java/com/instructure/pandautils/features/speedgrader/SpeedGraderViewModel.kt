@@ -30,21 +30,30 @@ import javax.inject.Inject
 @HiltViewModel
 class SpeedGraderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
-    private val repository: SpeedGraderRepository
+    private val repository: SpeedGraderRepository,
+    private val assignmentSubmissionRepository: AssignmentSubmissionRepository
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle[Const.ASSIGNMENT_ID]
         ?: throw IllegalStateException("Assignment ID is required")
 
-    private val submissionIds: LongArray = savedStateHandle[SpeedGraderFragment.FILTERED_SUBMISSION_IDS]
-        ?: throw IllegalStateException("Submission IDs are required")
+    private val submissionIds: LongArray =
+        savedStateHandle[SpeedGraderFragment.FILTERED_SUBMISSION_IDS] ?: longArrayOf()
 
     private val courseId: Long = savedStateHandle[Const.COURSE_ID]
         ?: throw IllegalStateException("Course ID is required")
 
     private val selectedItem: Int = savedStateHandle[Const.SELECTED_ITEM] ?: 0
 
-    private val _uiState = MutableStateFlow(SpeedGraderUiState(courseId, assignmentId, submissionIds.toList(), selectedItem, onPageChange = this::onPageChange))
+    private val _uiState = MutableStateFlow(
+        SpeedGraderUiState(
+            courseId,
+            assignmentId,
+            submissionIds.toList(),
+            selectedItem,
+            onPageChange = this::onPageChange
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -54,11 +63,25 @@ class SpeedGraderViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
+        _uiState.update {
+            it.copy(loading = true)
+        }
+        val ids = if (submissionIds.isEmpty()) {
+            assignmentSubmissionRepository.getGradeableStudentSubmissions(
+                assignmentId,
+                courseId,
+                false
+            ).map { it.id }
+        } else {
+            submissionIds.toList()
+        }
         val assignmentDetails = repository.getAssignmentDetails(assignmentId)
         _uiState.update {
             it.copy(
                 assignmentName = assignmentDetails.assignment?.title.orEmpty(),
-                courseName = assignmentDetails.assignment?.course?.name.orEmpty()
+                courseName = assignmentDetails.assignment?.course?.name.orEmpty(),
+                loading = false,
+                submissionIds = ids
             )
         }
     }

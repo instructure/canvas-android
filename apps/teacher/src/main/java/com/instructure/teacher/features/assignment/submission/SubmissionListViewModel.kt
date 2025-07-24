@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.color

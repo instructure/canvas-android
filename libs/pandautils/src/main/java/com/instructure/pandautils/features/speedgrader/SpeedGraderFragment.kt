@@ -99,7 +99,7 @@ class SpeedGraderFragment : BaseCanvasFragment() {
         fun makeBundle(
             courseId: Long,
             assignmentId: Long,
-            selectedIdx: Int,
+            selectedIdx: Int = 0,
             anonymousGrading: Boolean? = null,
             filteredSubmissionIds: LongArray = longArrayOf(),
             filter: SubmissionListFilter? = null,
