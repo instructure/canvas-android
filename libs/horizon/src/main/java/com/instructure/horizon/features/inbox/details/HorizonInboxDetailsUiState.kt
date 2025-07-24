@@ -41,7 +41,9 @@ data class HorizonInboxReplyState(
     val showAttachmentPicker: Boolean = false,
     val onShowAttachmentPickerChanged: (Boolean) -> Unit = {},
     val attachments: List<HorizonInboxAttachment> = emptyList(),
-    val onAttachmentsChanged: (List<HorizonInboxAttachment>) -> Unit = {}
+    val onAttachmentsChanged: (List<HorizonInboxAttachment>) -> Unit = {},
+    val showExitConfirmationDialog: Boolean = false,
+    val updateShowExitConfirmationDialog: (Boolean) -> Unit = {},
 )
 
 data class HorizonInboxDetailsItem(

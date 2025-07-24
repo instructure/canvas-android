@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -73,6 +74,8 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItem
 import com.instructure.horizon.horizonui.organisms.controls.CheckboxItemState
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
@@ -118,15 +121,33 @@ fun HorizonInboxComposeScreen(
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         containerColor = HorizonColors.Surface.pageSecondary(),
         topBar = {
-            HorizonInboxComposeTopBar(navController)
+            HorizonInboxComposeTopBar(state, navController)
         }
     ) { innerPadding ->
+        BackHandler { onExit(state, navController) }
+
         HorizonInboxAttachmentPicker(
             showBottomSheet = state.showAttachmentPicker,
             onDismissBottomSheet = { state.onShowAttachmentPickerChanged(false) },
             state = pickerState,
             onFilesChanged = state.onAttachmentsChanged
         )
+
+        if (state.showExitConfirmationDialog) {
+            Modal(
+                dialogState = ModalDialogState(
+                    title = stringResource(R.string.exitConfirmationTitle),
+                    message = stringResource(R.string.exitConfirmationMessage),
+                    primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                    secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                    primaryButtonClick = {
+                        state.updateShowExitConfirmationDialog(false)
+                        navController.popBackStack()
+                    },
+                    secondaryButtonClick = { state.updateShowExitConfirmationDialog(false) }
+                )
+            )
+        }
 
         HorizonInboxComposeContent(
             state,
@@ -139,6 +160,7 @@ fun HorizonInboxComposeScreen(
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun HorizonInboxComposeTopBar(
+    state: HorizonInboxComposeUiState,
     navController: NavHostController,
 ) {
     TopAppBar(
@@ -157,7 +179,7 @@ private fun HorizonInboxComposeTopBar(
                 color = IconButtonColor.Inverse,
                 elevation = HorizonElevation.level4,
                 onClick = {
-                    navController.popBackStack()
+                    onExit(state, navController)
                 },
                 modifier = Modifier.padding(horizontal = 24.dp)
             )
@@ -359,7 +381,7 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                 label = stringResource(R.string.inboxComposeCancelLabel),
                 color = ButtonColor.Inverse,
                 onClick = {
-                    navController.popBackStack()
+                    onExit(state, navController)
                 },
             )
 
@@ -405,6 +427,17 @@ private fun HorizonInboxComposeControlsSection(state: HorizonInboxComposeUiState
                 }
             }
         }
+    }
+}
+
+private fun onExit(
+    state: HorizonInboxComposeUiState,
+    navController: NavHostController
+) {
+    if (state.body.text.isNotBlank() || state.subject.text.isNotBlank() || state.selectedCourse != null || state.selectedRecipients.isNotEmpty() || state.attachments.isNotEmpty() || state.isSendIndividually) {
+        state.updateShowExitConfirmationDialog(true)
+    } else {
+        navController.popBackStack()
     }
 }
 

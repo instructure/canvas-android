@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.details
 
+import androidx.activity.compose.BackHandler
 import androidx.annotation.DrawableRes
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.ExperimentalFoundationApi
@@ -78,6 +79,8 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItem
 import com.instructure.horizon.horizonui.molecules.filedrop.FileDropItemState
+import com.instructure.horizon.horizonui.organisms.Modal
+import com.instructure.horizon.horizonui.organisms.ModalDialogState
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -88,6 +91,7 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
 
@@ -114,9 +118,11 @@ fun HorizonInboxDetailsScreen(
 
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, navController) },
+        topBar = { HorizonInboxDetailsHeader(state.title, state.titleIcon, state, navController) },
     ) { innerPadding ->
         LoadingStateWrapper(state.loadingState, modifier = Modifier.padding(innerPadding)) {
+            BackHandler { onExit(state, navController) }
+
             state.replyState?.let { replyState ->
                 val viewModel: HorizonInboxAttachmentPickerViewModel = hiltViewModel()
                 val pickerState by viewModel.uiState.collectAsState()
@@ -126,6 +132,22 @@ fun HorizonInboxDetailsScreen(
                     state = pickerState,
                     onFilesChanged = replyState.onAttachmentsChanged
                 )
+
+                if (replyState.showExitConfirmationDialog) {
+                    Modal(
+                        dialogState = ModalDialogState(
+                            title = stringResource(R.string.exitConfirmationTitle),
+                            message = stringResource(R.string.exitConfirmationMessage),
+                            primaryButtonTitle = stringResource(R.string.exitConfirmationExitButtonLabel),
+                            secondaryButtonTitle = stringResource(R.string.exitConfirmationCancelButtonLabel),
+                            primaryButtonClick = {
+                                replyState.updateShowExitConfirmationDialog(false)
+                                navController.popBackStack()
+                            },
+                            secondaryButtonClick = { replyState.updateShowExitConfirmationDialog(false) }
+                        )
+                    )
+                }
             }
 
             HorizonInboxDetailsContent(state)
@@ -138,6 +160,7 @@ fun HorizonInboxDetailsScreen(
 private fun HorizonInboxDetailsHeader(
     title: String,
     @DrawableRes titleIcon: Int?,
+    state: HorizonInboxDetailsUiState,
     navController: NavHostController
 ) {
     CenterAlignedTopAppBar(
@@ -170,7 +193,7 @@ private fun HorizonInboxDetailsHeader(
                 iconRes = R.drawable.arrow_back,
                 contentDescription = stringResource(R.string.a11yNavigateBack),
                 color = IconButtonColor.Ghost,
-                onClick = { navController.popBackStack() },
+                onClick = { onExit(state, navController) },
                 modifier = Modifier.padding(horizontal = 10.dp)
             )
         },
@@ -387,6 +410,17 @@ private fun HorizonInboxReplyContent(state: HorizonInboxReplyState) {
                 }
             }
         }
+    }
+}
+
+private fun onExit(
+    state: HorizonInboxDetailsUiState,
+    navController: NavHostController
+) {
+    if (state.replyState?.replyTextValue?.text?.isNotBlank().orDefault()) {
+        state.replyState?.updateShowExitConfirmationDialog?.let { it(true) }
+    } else {
+        navController.popBackStack()
     }
 }
 

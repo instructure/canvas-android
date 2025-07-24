@@ -57,6 +57,7 @@ class HorizonInboxComposeViewModel @Inject constructor(
             onDismissSnackbar = ::onDismissSnackbar,
             onShowAttachmentPickerChanged = ::onShowAttachmentPickerChanged,
             onAttachmentsChanged = ::onAttachmentsChanged,
+            updateShowExitConfirmationDialog = ::updateShowExitConfirmationDialog
         )
     )
 
@@ -217,6 +218,12 @@ class HorizonInboxComposeViewModel @Inject constructor(
     private fun onShowAttachmentPickerChanged(show: Boolean) {
         _uiState.update {
             it.copy(showAttachmentPicker = show)
+        }
+    }
+
+    private fun updateShowExitConfirmationDialog(show: Boolean) {
+        _uiState.update {
+            it.copy(showExitConfirmationDialog = show)
         }
     }
 }
