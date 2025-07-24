@@ -15,6 +15,12 @@
  */
 package com.instructure.teacher.ui.pages
 
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isEnabled
@@ -227,4 +233,37 @@ class SpeedGraderGradePage : BasePage() {
         onViewWithId(R.id.addGradeIcon).assertVisible()
     }
 
+    /**
+     * Clicks the expand panel button in the Compose UI.
+     */
+    fun clickExpandPanelButton(composeTestRule: ComposeTestRule) {
+        composeTestRule
+            .onNodeWithTag("expandPanelButton", useUnmergedTree = true)
+            .performClick()
+    }
+
+    /**
+     * Enters a new grade in the Compose grade input field.
+     *
+     * @param composeTestRule The ComposeTestRule instance.
+     * @param grade The grade value to input.
+     */
+    fun enterNewGrade(composeTestRule: ComposeTestRule, grade: String) {
+        composeTestRule
+            .onNodeWithTag("gradeInputField")
+            .performTextInput(grade)
+    }
+
+    /**
+     * Asserts that the final grade is displayed in the Compose UI.
+     *
+     * @param composeTestRule The ComposeTestRule instance.
+     * @param grade The expected grade value to be displayed.
+     */
+    fun assertFinalGradeIsDisplayed(composeTestRule: ComposeTestRule, grade: String) {
+        composeTestRule
+            .onNodeWithTag("finalGradeDisplay")
+            .assertTextContains(grade, substring = true)
+            .assertIsDisplayed()
+    }
 }

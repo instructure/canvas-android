@@ -29,11 +29,9 @@ import androidx.compose.material3.TabRowDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.adaptive.currentWindowAdaptiveInfo
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -45,12 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.navigation.NavHostController
-import androidx.navigation.NavType
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
-import androidx.navigation.navArgument
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.core.layout.WindowWidthSizeClass
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
@@ -62,32 +55,39 @@ import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun SpeedGraderBottomSheet(
-    anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?,
-    assignmentId: Long,
-    submissionId: Long,
-    courseId: Long
+fun SpeedGraderBottomSheet(anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?) {
+    val viewModel: SpeedGraderBottomSheetViewModel = hiltViewModel()
+    val uiState by viewModel.uiState.collectAsState()
+
+    SpeedGraderBottomSheetContent(uiState, anchoredDraggableState)
+}
+
+@OptIn(ExperimentalFoundationApi::class)
+@Composable
+private fun SpeedGraderBottomSheetContent(
+    uiState: SpeedGraderBottomSheetUiState,
+    anchoredDraggableState: AnchoredDraggableState<AnchorPoints>?
 ) {
     val windowClass = currentWindowAdaptiveInfo().windowSizeClass.windowWidthSizeClass
     val horizontal = windowClass != WindowWidthSizeClass.COMPACT
 
-    val navController = rememberNavController()
-    val startDestination = SpeedGraderTab.GRADE
-    var selectedTab by rememberSaveable { mutableIntStateOf(startDestination.ordinal) }
-
     val coroutineScope = rememberCoroutineScope()
     val haptic = LocalHapticFeedback.current
+
     Column {
         PrimaryTabRow(
             modifier = Modifier
                 .padding(horizontal = if (horizontal) 0.dp else 16.dp, vertical = 9.dp)
                 .requiredHeight(64.dp),
-            selectedTabIndex = selectedTab,
+            selectedTabIndex = uiState.selectedTab,
             containerColor = colorResource(R.color.backgroundLightestElevated),
             contentColor = LocalCourseColor.current,
             indicator = {
                 TabRowDefaults.PrimaryIndicator(
-                    modifier = Modifier.tabIndicatorOffset(selectedTab, matchContentSize = false),
+                    modifier = Modifier.tabIndicatorOffset(
+                        uiState.selectedTab,
+                        matchContentSize = false
+                    ),
                     width = Dp.Unspecified,
                     height = 1.5.dp,
                     color = LocalCourseColor.current
@@ -103,7 +103,7 @@ fun SpeedGraderBottomSheet(
                             fontWeight = FontWeight.SemiBold
                         )
                     },
-                    selected = selectedTab == tab.ordinal,
+                    selected = uiState.selectedTab == tab.ordinal,
                     onClick = {
                         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                         if (anchoredDraggableState?.currentValue == AnchorPoints.BOTTOM) {
@@ -111,61 +111,19 @@ fun SpeedGraderBottomSheet(
                                 anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
                             }
                         }
-                        val route = tab.route
-                            .replace("{courseId}", courseId.toString())
-                            .replace("{assignmentId}", assignmentId.toString())
-                            .replace("{submissionId}", submissionId.toString())
-                            .replace("{courseId}", courseId.toString())
-                        navController.navigate(route) {
-                            popUpTo(route) { inclusive = true }
-                        }
-                        selectedTab = tab.ordinal
+                        uiState.onTabSelected(tab.ordinal)
                     }
                 )
             }
         }
-        SpeedGraderBottomSheetNavHost(
-            navController = navController,
-            startDestination = startDestination.route
-                .replace("{courseId}", courseId.toString())
-                .replace("{assignmentId}", assignmentId.toString())
-                .replace("{submissionId}", submissionId.toString())
-                .replace("{courseId}", courseId.toString()),
-        )
-    }
-}
+        when (uiState.selectedTab) {
+            SpeedGraderTab.GRADE.ordinal -> {
+                SpeedGraderGradeScreen()
+            }
 
-@Composable
-private fun SpeedGraderBottomSheetNavHost(
-    navController: NavHostController,
-    startDestination: String,
-    modifier: Modifier = Modifier
-) {
-    NavHost(
-        navController = navController,
-        startDestination = startDestination,
-        modifier = modifier
-    ) {
-        composable(
-            route = SpeedGraderTab.GRADE.route,
-            arguments = listOf(
-                navArgument("courseId") { type = NavType.LongType },
-                navArgument("assignmentId") { type = NavType.LongType },
-                navArgument("submissionId") { type = NavType.LongType },
-            )
-        ) {
-            SpeedGraderGradeScreen()
-        }
-
-        composable(
-            route = SpeedGraderTab.DETAILS.route,
-            arguments = listOf(
-                navArgument("courseId") { type = NavType.LongType },
-                navArgument("assignmentId") { type = NavType.LongType },
-                navArgument("submissionId") { type = NavType.LongType }
-            )
-        ) {
-            SpeedGraderDetailsScreen()
+            SpeedGraderTab.DETAILS.ordinal -> {
+                SpeedGraderDetailsScreen()
+            }
         }
     }
 }
@@ -189,6 +147,6 @@ enum class SpeedGraderTab(
 @Composable
 private fun SpeedGraderBottomSheetPreview() {
     CanvasTheme(courseColor = Color.Blue) {
-        SpeedGraderBottomSheet(null, 1L, 1L, 1L)
+        SpeedGraderBottomSheetContent(uiState = SpeedGraderBottomSheetUiState(0, {}), null)
     }
 }
