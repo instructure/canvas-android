@@ -291,7 +291,7 @@
     <string name="Todo">करने के लिए</string>
     <string name="todoFilter">पाठ्यक्रम फ़िल्टर करें</string>
     <string name="filterByEllipsis">इसके अनुसार फ़िल्टर करें...</string>
-    <string name="favoritedCoursesLabel">पसंदीदा किए गए पाठ्यक्रम</string>
+    <string name="favoriteCoursesLabel">पसंदीदा पाठ्यक्रम</string>
     <string name="Event">घटना</string>
     <string name="eventSuccessfulDeletion">घटना सफलतापूर्वक मिटाई गई थी</string>
     <string name="timeIconDescription">समय आइकन</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">सूचनाएं</string>
     <string name="todoWidgetTitleLong">Canvas - करने के लिए</string>
     <string name="gradesWidgetTitleLong">Canvas - ग्रेड</string>
+    <string name="gradeWidgetTitleLong">Canvas - ग्रेड</string>
     <string name="notificationWidgetTitleLong">Canvas - सूचनाएं</string>
     <string name="notLoggedIn">आपने लॉग इन नहीं किया है</string>
     <string name="widgetStyle">अपना विजेट स्टाइल चुनें</string>
@@ -1784,12 +1785,12 @@
     <string name="screenTitleHelp">मदद</string>
     <string name="screenTitleManageStudents">छात्र प्रबंधित करें</string>
     <string name="screenTitleSettings">सेटिंग्स</string>
-    <string name="navigationDrawerSwitchUsers">उपयोगकर्ता स्विच करें</string>
     <string name="navigationDrawerLogOut">लॉग आउट करें</string>
     <string name="noStudentsError">कोई छात्र नहीं</string>
     <string name="noStudentsErrorDescription">आप किसी भी छात्र की समीक्षा नहीं कर रहे हैं।</string>
     <string name="noStudentsRefresh">रीफ़्रेश करें</string>
     <string name="noGrade">कोई ग्रेड नहीं</string>
+    <string name="noGrades">कोई ग्रेड नहीं</string>
     <string name="errorLoadingCourses">आपके छात्र के पाठ्यक्रम लोड करने में त्रुटि हुई।</string>
     <string name="parentNoCourses">कोई पाठ्यक्रम नहीं</string>
     <string name="parentNoCoursesMessage">हो सकता है कि आपके छात्र के पाठ्यक्रम अभी तक प्रकाशित न हुए हों।</string>
@@ -2056,4 +2057,23 @@
     <string name="errorLoadingAssignments">असाइनमेंट लोड करते समय एक त्रुटि उत्पन्न हुई</string>
     <string name="a11y_searchAssignments">असाइनमेंट खोजें</string>
     <string name="dueAssignmentListItem">%1$s को नियत</string>
+    <string name="a11y_searchAmongRecipients">प्राप्तकर्ताओं के बीच खोजें</string>
+    <string name="a11y_recipientIsRemoved">%1$s को निकाल दिया गया</string>
+    <string name="widgetDueDate">%1$s बजे नियत</string>
+    <string name="widgetFromTo">%1$s से %2$s तक</string>
+    <string name="widgetAllDay">सारा दिन</string>
+    <string name="widgetErrorTitle">ओह! कुछ गड़बड़ हुई</string>
+    <string name="widgetErrorSubtitle">हमें अभी आपके कार्य दिखाने में समस्या हो रही है। कृपया थोड़ी देर में फिर से कोशिश करें या ऐप पर जाएं।</string>
+    <string name="widgetToDoEmptyTitle">अब आपका काम पूरा हो गया!</string>
+    <string name="widgetToDoEmptySubtitle">ऐसा लगता है कि आप अगले 4 सप्ताह के लिए खाली हैं। क्या आप करने के लिए कुछ कार्य जोड़ना चाहते हैं?</string>
+    <string name="widgetNotLoggedInTitle">आइए, आपको लॉग इन करते हैं!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">अपने कार्य देखने के लिए कृपया ऐप में अपने खाते में लॉग इन करें। इसमें बस एक सेकंड का समय लगेगा!</string>
+    <string name="a11y_widgetToDoOpenToDoList">करने के लिए सूची स्क्रीन खोलें</string>
+    <string name="a11y_widgetToDoCreateNewToDo">नया करने के लिए बनाएं</string>
+    <string name="widgetGradesErrorSubtitle">हमें अभी आपके ग्रेड दिखाने में समस्या हो रही है। कृपया थोड़ी देर में फिर से कोशिश करें या ऐप पर जाएं।</string>
+    <string name="widgetGradesNotLoggedInSubtitle">अपने ग्रेड देखने के लिए कृपया ऐप में अपने खाते में लॉग इन करें। इसमें बस एक सेकंड का समय लगेगा!</string>
+    <string name="widgetSingleGradeErrorSubtitle">हमें अभी आपके ग्रेड दिखाने में समस्या हो रही है।</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">अपने ग्रेड देखने के लिए कृपया ऐप में अपने खाते में लॉग इन करें।</string>
+    <string name="widgetSingleGradeSelectCourse">आइए, एक पाठ्यक्रम चुनें</string>
+    <string name="widgetGradesErrorLoadingCourses">पाठ्यक्रम लोड करते समय त्रुटि उत्पन्न हुई।</string>
 </resources>

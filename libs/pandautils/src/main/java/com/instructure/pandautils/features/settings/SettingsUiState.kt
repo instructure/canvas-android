@@ -37,6 +37,7 @@ sealed class SettingsViewModelAction {
     data class Navigate(val item: SettingsItem) : SettingsViewModelAction()
     data class AppThemeClickPosition(val xPos: Int, val yPos: Int, val scrollValue: Int) : SettingsViewModelAction()
     data object ShowOfflineDialog : SettingsViewModelAction()
+    data object RestartApp : SettingsViewModelAction()
 }
 
 sealed class SettingsAction {

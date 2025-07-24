@@ -82,7 +82,7 @@ class NotAParentInteractionsTest : ParentComposeTest() {
             )
         )
         Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-        notAParentPage.clickApp("STUDENT")
+        notAParentPage.clickApp("Canvas")
         Intents.intended(expectedIntent)
     }
 
@@ -101,7 +101,7 @@ class NotAParentInteractionsTest : ParentComposeTest() {
             )
         )
         Intents.intending(expectedIntent).respondWith(Instrumentation.ActivityResult(0, null))
-        notAParentPage.clickApp("TEACHER")
+        notAParentPage.clickApp("Canvas Teacher")
         Intents.intended(expectedIntent)
     }
 

@@ -22,11 +22,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +44,8 @@ fun AiAssistTextArea(
     label: String,
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onSend: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
@@ -70,6 +74,10 @@ fun AiAssistTextArea(
                 cursorBrush = SolidColor(HorizonColors.Text.surfaceColored()),
                 textStyle = HorizonTypography.buttonTextLarge.copy(color = HorizonColors.Text.surfaceColored()),
                 decorationBox = { TextAreaBox { it() } },
+                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
+                keyboardActions = KeyboardActions(
+                    onSend = { onSend() }
+                )
             )
         }
     }

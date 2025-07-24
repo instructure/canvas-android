@@ -63,7 +63,7 @@ fun QrPairingScreen(
                         id = if (uiState.isError) {
                             R.string.studentPairing
                         } else {
-                            R.string.qrPairingTitle
+                            R.string.qrPairingTitleCanvas
                         }
                     ),
                     navigationActionClick = onBackClicked,
@@ -166,7 +166,7 @@ private fun QrPairingContent() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(
-            text = stringResource(id = R.string.qrPairingDescription),
+            text = stringResource(id = R.string.qrPairingDescriptionCanvas),
             color = colorResource(id = R.color.textDarkest),
             fontSize = 18.sp
         )

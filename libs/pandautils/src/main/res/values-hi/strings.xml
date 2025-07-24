@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">इनबॉक्स सेटिंग्स सहेजी गईं!</string>
     <string name="inboxSignatureSettingsError">इनबॉक्स सेटिंग्स सहेजने में विफल</string>
     <string name="inboxSignatureTextFieldPlaceholder">अपने हस्ताक्षर यहाँ लिखें</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d घंटा</item>
+        <item quantity="other">%d घंटे</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d मिनट</item>
+        <item quantity="other">%d मिनट</item>
+    </plurals>
 </resources>

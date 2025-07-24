@@ -31,7 +31,7 @@ import javax.inject.Inject
 class LearnViewModel @Inject constructor(
     private val learnRepository: LearnRepository,
     savedStateHandle: SavedStateHandle,
-): ViewModel() {
+) : ViewModel() {
     private val _state = MutableStateFlow(
         LearnUiState(
             onSelectedCourseChanged = ::onSelectedCourseChanged,
@@ -48,7 +48,7 @@ class LearnViewModel @Inject constructor(
     private fun getCourses(forceRefresh: Boolean = false) = viewModelScope.tryLaunch {
         _state.value = state.value.copy(screenState = state.value.screenState.copy(isLoading = true))
         val courses = learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
-        val selectedCourse = courses.find { it.course.id == courseId } ?: courses.firstOrNull()
+        val selectedCourse = courses.find { it.courseId == courseId } ?: courses.firstOrNull()
         _state.value = state.value.copy(
             screenState = state.value.screenState.copy(isLoading = false),
             courses = courses,
