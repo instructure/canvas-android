@@ -21,7 +21,6 @@ import android.media.MediaPlayer
 import android.media.MediaRecorder
 import android.os.Handler
 import android.util.AttributeSet
-import android.util.Log
 import android.view.InflateException
 import android.view.LayoutInflater
 import android.view.MotionEvent
@@ -160,7 +159,6 @@ class FloatingRecordingView @JvmOverloads constructor(
 
 
             override fun onTouch(v: View, event: MotionEvent): Boolean {
-                Log.d("aFloatingRecordingView", "onTouch: action=${event.action}, x=${event.rawX}, y=${event.rawY}")
                 when (event.action) {
                     MotionEvent.ACTION_DOWN -> {
 
@@ -192,7 +190,6 @@ class FloatingRecordingView @JvmOverloads constructor(
                         val newY = (initialY + (event.rawY - initialTouchY)).coerceIn(0f, size.y - v.height.toFloat())
                         binding.root.x = newX
                         binding.root.y = newY
-                        Log.d("FloatingRecordingView", "X: $newX, Y: $newY")
                         lastAction = event.action
                         return true
                     }
