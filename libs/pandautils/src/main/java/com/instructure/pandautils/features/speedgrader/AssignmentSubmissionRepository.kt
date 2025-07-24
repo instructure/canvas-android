@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.assignment.submission
+package com.instructure.pandautils.features.speedgrader
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -39,6 +39,15 @@ class AssignmentSubmissionRepository(
     private val courseApi: CourseAPI.CoursesInterface,
     private val sectionApi: SectionAPI.SectionsInterface
 ) {
+
+    suspend fun getGradeableStudentSubmissions(
+        assignmentId: Long,
+        courseId: Long,
+        forceNetwork: Boolean
+    ): List<GradeableStudentSubmission> {
+        val assignment = assignmentApi.getAssignment(assignmentId = assignmentId, courseId = courseId, params = RestParams(isForceReadFromNetwork = forceNetwork)).dataOrThrow
+        return getGradeableStudentSubmissions(assignment = assignment, courseId = courseId, forceNetwork = forceNetwork)
+    }
 
     suspend fun getGradeableStudentSubmissions(
         assignment: Assignment,

@@ -36,10 +36,13 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -58,7 +61,6 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentDeletedEvent
@@ -67,7 +69,6 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
-import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -135,14 +136,11 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
 
                 R.id.menu_speedGrader -> {
-                    SpeedGraderActivity.createIntent(
-                        requireContext(),
-                        course.id,
-                        assignment.id,
-                        -1
-                    ).let {
-                        startActivity(it)
-                    }
+                    val bundle = SpeedGraderFragment.makeBundle(
+                        courseId = course.id,
+                        assignmentId = assignment.id
+                    )
+                    RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
                 }
             }
         }

@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.BottomSheetInteractions
 import com.instructure.interactions.InitActivityInteractions
 import com.instructure.interactions.MasterDetailInteractions
@@ -413,8 +415,13 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun handleSpeedGraderRoute(context: Context, route: Route) {
         Logger.i("RouteMatcher:handleSpeedGraderRoute()")
-        route.primaryClass = SpeedGraderFragment::class.java
-        handleFullscreenRoute(context, route)
+        val isV2Enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2)
+        if (isV2Enabled) {
+            route.primaryClass = SpeedGraderFragment::class.java
+            handleFullscreenRoute(context, route)
+        } else {
+            context.startActivity(SpeedGraderActivity.createIntent(context, route))
+        }
     }
 
     private fun handleWebViewRoute(context: Context, route: Route) {
