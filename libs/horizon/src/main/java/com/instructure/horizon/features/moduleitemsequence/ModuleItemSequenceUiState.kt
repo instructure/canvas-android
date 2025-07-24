@@ -42,6 +42,7 @@ data class ModuleItemSequenceUiState(
     val updateObjectTypeAndId: (Pair<String, String>) -> Unit = {},
     val hasUnreadComments: Boolean = false,
     val updateAiAssistContext: (AiAssistContextSource, String) -> Unit = { _, _ -> },
+    val shouldRefreshPreviousScreen: Boolean = false,
 )
 
 data class ModuleItemUiState(
