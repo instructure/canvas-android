@@ -45,6 +45,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
+import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -55,6 +56,8 @@ import org.junit.Test
 @HiltAndroidTest
 @UninstallModules(GraphQlApiModule::class)
 class SpeedGraderGradePageTest : TeacherComposeTest() {
+
+    override fun displaysPageObjects()  = Unit
 
     @BindValue
     @JvmField
@@ -87,13 +90,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
-
-    @Stub
-    @Test
-    override fun displaysPageObjects() {
-        goToSpeedGraderGradePage()
-        speedGraderGradePage.assertPageObjects()
-    }
 
     @Stub
     @Test
@@ -292,6 +288,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectGradesTab()
+        composeTestRule.waitForIdle()
+        speedGraderPage.selectTab(R.string.speedGraderGradeTabTitle)
     }
 }

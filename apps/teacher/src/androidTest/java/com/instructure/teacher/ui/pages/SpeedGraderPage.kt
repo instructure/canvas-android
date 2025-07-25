@@ -166,9 +166,8 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     /**
      * Selects the "Grades" tab.
      */
-    fun selectGradesTab() {
-        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault())
-        onView(allOf((withText(gradesTabText)), isDisplayed())).click()
+    fun selectTab(tabTitle: Int) {
+        composeTestRule.onNode(hasTestTag("speedGraderTab-${tabTitle}"), useUnmergedTree = true).performClick()
     }
 
     /**
