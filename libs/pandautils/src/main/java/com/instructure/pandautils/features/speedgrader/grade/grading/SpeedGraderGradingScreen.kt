@@ -625,7 +625,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 stringResource(R.string.grade),
                 fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(

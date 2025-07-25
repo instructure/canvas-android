@@ -144,6 +144,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         composeTestRule.onNodeWithText(student.name, useUnmergedTree = true)
             .performScrollTo()
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**

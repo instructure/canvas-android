@@ -52,6 +52,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -228,8 +229,10 @@ fun TriStateBottomSheet(
                                 coroutineScope.launch {
                                     anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
                                 }
-                            }) {
-                                Icon(
+                            },
+                                modifier = Modifier.testTag("collapsePanelButton")
+                            ) {
+                            Icon(
                                     tint = LocalCourseColor.current,
                                     painter = painterResource(R.drawable.ic_collapse_bottomsheet),
                                     contentDescription = stringResource(R.string.a11y_contentDescription_collapsePanel),
@@ -241,7 +244,7 @@ fun TriStateBottomSheet(
                                     anchoredDraggableState.animateTo(AnchorPoints.TOP)
                                 }
                             },
-                                    modifier = Modifier.testTag("expandPanelButton")
+                                modifier = Modifier.testTag("expandPanelButton")
                             ) {
                                 Icon(
                                     tint = LocalCourseColor.current,

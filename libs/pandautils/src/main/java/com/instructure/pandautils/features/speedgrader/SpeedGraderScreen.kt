@@ -32,6 +32,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -77,6 +78,7 @@ fun SpeedGraderScreen(
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_back_arrow,
                 textColor = colorResource(id = R.color.textLightest),
+                modifier = Modifier.testTag("speedGraderAppBar")
             )
         },
         modifier = Modifier.imePadding(),

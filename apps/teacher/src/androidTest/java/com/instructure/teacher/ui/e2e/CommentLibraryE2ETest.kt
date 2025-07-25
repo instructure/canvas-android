@@ -47,7 +47,7 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Stub
+    @Stub //Need to wait for the comments to be developed in the new SpeedGrader
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)

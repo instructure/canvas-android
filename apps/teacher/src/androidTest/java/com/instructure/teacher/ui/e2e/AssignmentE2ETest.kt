@@ -62,7 +62,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         android.Manifest.permission.CAMERA
     )
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
@@ -140,8 +139,14 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Open '${student.name}' student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)
 
-        Log.d(ASSERTION_TAG, "Assert that the speed grader page of '${student.name}' student is displayed and the title is the student's name, the subtitle is 'Not submitted yet'.")
-        speedGraderPage.assertSpeedGraderToolbarTitle(student.name, "Not submitted yet")
+        Log.d(STEP_TAG, "Click on the 'Expand' button (arrow icon) to expand the 'Grade & Rubric' tab details")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Grade' label is displayed.")
+        speedGraderPage.assertSpeedGraderLabelDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that the speed grader page of '${assignment[0].name}' assignment's name is displayed as title's name and the '${course.name}' course's name as subtitle.")
+        speedGraderPage.assertSpeedGraderToolbarTitle(assignment[0].name, course.name)
 
         Log.d(STEP_TAG, "Navigate back to the Assignment Submission List Page and clear the filter.")
         Espresso.pressBack()
