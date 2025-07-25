@@ -76,7 +76,6 @@ fun AddSubmissionContent(
     scrollState: ScrollState,
     moduleHeaderHeight: Dp,
     modifier: Modifier = Modifier,
-    onRceFocused: () -> Unit = {}
 ) {
     var rceYPositionInRoot by remember { mutableIntStateOf(0) }
     var cursorYPosition by remember { mutableIntStateOf(0) }
@@ -161,7 +160,6 @@ fun AddSubmissionContent(
                 is AddSubmissionTypeUiState.Text ->
                     AddTextSubmissionContent(
                         uiState = selectedSubmissionType,
-                        onRceFocused = onRceFocused,
                         onCursorYCoordinateChanged = {
                             cursorYPosition = it.toInt().toPx
                         },

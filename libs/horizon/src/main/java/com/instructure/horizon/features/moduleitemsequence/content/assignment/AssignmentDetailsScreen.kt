@@ -188,8 +188,6 @@ fun AssignmentDetailsScreen(
                 .background(HorizonColors.Surface.cardPrimary())
         ) {
 
-            var rceFocused by remember { mutableStateOf(false) }
-
             Column(
                 modifier = Modifier
                     .fillMaxSize()
@@ -275,7 +273,6 @@ fun AssignmentDetailsScreen(
                         snackbarHostState = snackbarHostState,
                         scrollState = scrollState,
                         moduleHeaderHeight = moduleHeaderHeight,
-                        onRceFocused = { rceFocused = true },
                         modifier = Modifier.padding(16.dp)
                     )
                 }
