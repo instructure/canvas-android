@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import android.view.WindowManager
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
@@ -25,9 +26,12 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
@@ -39,6 +43,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
 fun SpeedGraderScreen(
@@ -46,9 +51,22 @@ fun SpeedGraderScreen(
     sharedViewModel: SpeedGraderSharedViewModel,
     navigationActionClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val window = (context.getFragmentActivity()).window
 
     val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size }, initialPage = uiState.selectedItem)
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
+
+    DisposableEffect(Unit) {
+        val originalMode = window?.attributes?.softInputMode
+        window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+        onDispose {
+            if (originalMode != null) {
+                window.setSoftInputMode(originalMode)
+            }
+        }
+    }
 
     Scaffold(
         topBar = {

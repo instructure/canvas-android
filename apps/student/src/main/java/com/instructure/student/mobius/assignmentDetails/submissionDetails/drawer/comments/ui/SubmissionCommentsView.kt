@@ -27,6 +27,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -170,7 +173,20 @@ class SubmissionCommentsView(
     }
 
     fun openMedia(canvasContext: CanvasContext, contentType: String, url: String, fileName: String) {
-        (activity as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName, null)
+        if (contentType.startsWith("video") || contentType.startsWith("audio")) {
+            val bundle = BaseViewMediaActivity.makeBundle(url, null, contentType, null, true, null)
+            (activity as? BaseRouterActivity)?.let {
+                RouteMatcher.route(it as FragmentActivity, Route(bundle, RouteContext.MEDIA))
+            }
+        } else {
+            (activity as? BaseRouterActivity)?.openMedia(
+                canvasContext,
+                contentType,
+                url,
+                fileName,
+                null
+            )
+        }
     }
 
     fun showPermissionDeniedToast() {

@@ -16,10 +16,13 @@
  */
 package com.instructure.horizon.horizonui.organisms.inputs.common
 
+import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -33,16 +36,20 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Popup
 import androidx.compose.ui.window.PopupProperties
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Spinner
+import com.instructure.horizon.horizonui.molecules.SpinnerSize
 import com.instructure.pandautils.utils.toPx
 
 @Composable
@@ -54,6 +61,8 @@ fun <T>InputDropDownPopup(
     onMenuOpenChanged: (Boolean) -> Unit,
     onOptionSelected: (T) -> Unit,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
+    isFocusable: Boolean = true,
     item: @Composable (T) -> Unit = { selectionOption ->
         SingleSelectItem(selectionOption.toString())
     },
@@ -65,7 +74,7 @@ fun <T>InputDropDownPopup(
             verticalOffsetPx + SpaceSize.SPACE_8.value.toPx
         ),
         onDismissRequest = { onMenuOpenChanged(false) },
-        properties = PopupProperties(focusable = isMenuOpen)
+        properties = PopupProperties(focusable = isMenuOpen && isFocusable)
     ) {
         AnimatedVisibility(
             isMenuOpen,
@@ -90,21 +99,46 @@ fun <T>InputDropDownPopup(
                     draggedElevation = HorizonElevation.level3
                 ),
             ) {
-                Column(
-                    modifier = Modifier
-                        .verticalScroll(rememberScrollState())
-                ) {
-                    options.forEach { selectionOption ->
-                        Row(
-                            verticalAlignment = Alignment.CenterVertically,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .clickable {
-                                    onOptionSelected(selectionOption)
-                                    onMenuOpenChanged(false)
+                AnimatedContent(
+                    isLoading,
+                    transitionSpec = { expandVertically() togetherWith shrinkVertically() }
+                ) { isLoading ->
+                    Column(
+                        modifier = Modifier
+                            .verticalScroll(rememberScrollState())
+                    ) {
+                        if (isLoading) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Center,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(16.dp)
+                            ) {
+                                Spinner(size = SpinnerSize.EXTRA_SMALL)
+                            }
+                        } else if (options.isEmpty()) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                            ) {
+                                SingleSelectItem(stringResource(R.string.noOptionsAvailable))
+                            }
+                        } else {
+                            options.forEach { selectionOption ->
+                                Row(
+                                    verticalAlignment = Alignment.CenterVertically,
+                                    modifier = Modifier
+                                        .fillMaxWidth()
+                                        .clickable {
+                                            onOptionSelected(selectionOption)
+                                            onMenuOpenChanged(false)
+                                        }
+                                ) {
+                                    item(selectionOption)
                                 }
-                        ) {
-                            item(selectionOption)
+                            }
                         }
                     }
                 }

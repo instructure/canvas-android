@@ -31,17 +31,18 @@ import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentSettingsBinding
 import com.instructure.pandautils.features.about.AboutFragment
 import com.instructure.pandautils.features.legal.LegalDialogFragment
+import com.instructure.pandautils.utils.LocaleUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
@@ -173,6 +174,7 @@ class SettingsFragment : BaseCanvasFragment() {
             }
 
             SettingsViewModelAction.ShowOfflineDialog -> showNoConnectionDialog(requireContext())
+            SettingsViewModelAction.RestartApp -> LocaleUtils.restartApp(requireContext())
         }
     }
 

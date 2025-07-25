@@ -34,12 +34,14 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
+import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -264,6 +266,61 @@ class SettingsViewModelTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun `Switch experience click calls switch experience and restarts app`() = runTest {
+        val items = mapOf(
+            R.string.preferences to listOf(
+                SettingsItem.SWITCH_EXPERIENCE
+            )
+        )
+        every { settingsBehaviour.settingsItems } returns items
+        every { networkStateProvider.isOnline() } returns true
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.items[R.string.preferences]?.firstOrNull { it.item == SettingsItem.SWITCH_EXPERIENCE }?.let { item ->
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
+        }
+
+        val events = mutableListOf<SettingsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+            assertEquals(SettingsViewModelAction.RestartApp, events.last())
+        }
+
+        coVerify { settingsRepository.switchExperience() }
+    }
+
+    @Test
+    fun `Do not restart app when switch experience fails`() = runTest {
+        val items = mapOf(
+            R.string.preferences to listOf(
+                SettingsItem.SWITCH_EXPERIENCE
+            )
+        )
+        every { settingsBehaviour.settingsItems } returns items
+        every { networkStateProvider.isOnline() } returns true
+        coEvery { settingsRepository.switchExperience() } throws Exception("Switch experience failed")
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.items[R.string.preferences]?.firstOrNull { it.item == SettingsItem.SWITCH_EXPERIENCE }?.let { item ->
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
+        }
+
+        val events = mutableListOf<SettingsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+            assertTrue(events.isEmpty())
+        }
+
+        coVerify { settingsRepository.switchExperience() }
     }
 
     @Test

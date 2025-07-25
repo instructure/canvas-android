@@ -291,7 +291,7 @@
     <string name="Todo">Tasgau i’w Gwneud</string>
     <string name="todoFilter">Hidlo Cyrsiau</string>
     <string name="filterByEllipsis">Hidlo yn ôl&#8230;</string>
-    <string name="favoritedCoursesLabel">Cyrsiau wedi’u hoffi</string>
+    <string name="favoriteCoursesLabel">Hoff Gyrsiau</string>
     <string name="Event">Digwyddiad</string>
     <string name="eventSuccessfulDeletion">Wedi llwyddo i ddileu digwyddiad</string>
     <string name="timeIconDescription">Eicon Amser</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Hysbysiadau</string>
     <string name="todoWidgetTitleLong">Canvas - Tasgau i’w Gwneud</string>
     <string name="gradesWidgetTitleLong">Canvas - Graddau</string>
+    <string name="gradeWidgetTitleLong">Canvas - Gradd</string>
     <string name="notificationWidgetTitleLong">Canvas - Hysbysiadau</string>
     <string name="notLoggedIn">Dydych chi ddim wedi’ch mewngofnodi</string>
     <string name="widgetStyle">Dewiswch arddull eich teclyn</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Rheoli Myfyrwyr</string>
     <string name="screenTitleSettings">Gosodiadau</string>
-    <string name="navigationDrawerSwitchUsers">Newid Defnyddwyr</string>
     <string name="navigationDrawerLogOut">Allgofnodi</string>
     <string name="noStudentsError">Dim Myfyrwyr</string>
     <string name="noStudentsErrorDescription">Dydych chi ddim yn arsyllu unrhyw fyfyrwyr.</string>
     <string name="noStudentsRefresh">Adnewyddu</string>
     <string name="noGrade">Dim Gradd</string>
+    <string name="noGrades">Dim graddau</string>
     <string name="errorLoadingCourses">Gwall wrth lwytho cyrsiau eich myfyriwr.</string>
     <string name="parentNoCourses">Dim Cyrsiau</string>
     <string name="parentNoCoursesMessage">Efallai nad yw cyrsiau eich myfyriwr wedi cael eu cyhoeddi eto.</string>
@@ -2048,4 +2049,23 @@
     <string name="errorLoadingAssignments">Gwall wrth lwytho\'r aseiniadau</string>
     <string name="a11y_searchAssignments">Chwilio Aseiniadau</string>
     <string name="dueAssignmentListItem">Erbyn %1$s</string>
+    <string name="a11y_searchAmongRecipients">Chwilio ymysg Derbynwyr</string>
+    <string name="a11y_recipientIsRemoved">Wedi tynnu %1$s</string>
+    <string name="widgetDueDate">Erbyn %1$s</string>
+    <string name="widgetFromTo">%1$s i %2$s</string>
+    <string name="widgetAllDay">Drwy’r dydd</string>
+    <string name="widgetErrorTitle">Wps! Aeth rhywbeth o’i le</string>
+    <string name="widgetErrorSubtitle">Rydyn ni’n cael trafferth dangos eich tasgau ar hyn o bryd. Rhowch gynnig arall arni nes ymlaen neu ewch i’r ap.</string>
+    <string name="widgetToDoEmptyTitle">Rydych chi wedi gorffen popeth am y tro!</string>
+    <string name="widgetToDoEmptySubtitle">Mae’n ymddangos eich bod chi’n rhydd am y 4 wythnos nesaf. Ydych chi am ychwanegu pethau i’w gwneud?</string>
+    <string name="widgetNotLoggedInTitle">Dewch i ni Fewngofnodi!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">I weld eich pethau i’w gwneud, mewngofnodwch i’ch cyfrif ar yr ap. Fyddwch chi ddim chwinciad!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Agor sgrin y rhestr I’w Gwneud</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Creu Tasg newydd i’w Gwneud</string>
+    <string name="widgetGradesErrorSubtitle">Rydyn ni’n cael trafferth dangos eich graddau ar hyn o bryd. Rhowch gynnig arall arni nes ymlaen neu ewch i’r ap.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">I weld eich graddau, mewngofnodwch i’ch cyfrif ar yr ap. Fyddwch chi ddim chwinciad!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Rydyn ni’n cael trafferth dangos eich graddau ar hyn o bryd.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">I weld eich graddau, mewngofnodwch i’ch cyfrif ar yr ap.</string>
+    <string name="widgetSingleGradeSelectCourse">Dewch i ni ddewis cwrs</string>
+    <string name="widgetGradesErrorLoadingCourses">Gwall wrth lwytho cyrsiau.</string>
 </resources>

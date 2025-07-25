@@ -50,8 +50,8 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
         return SignInActivity.createIntent(this, AccountDomain(url))
     }
 
-    override fun appTypeName(): Int {
-        return R.string.appUserTypeStudent
+    override fun appTypeName(): String {
+        return ""
     }
 
     override fun themeColor(): Int {

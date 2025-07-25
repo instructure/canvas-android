@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Configurações da caixa de entrada salvas!</string>
     <string name="inboxSignatureSettingsError">Falha ao salvar as configurações da caixa de entrada</string>
     <string name="inboxSignatureTextFieldPlaceholder">Escreva sua assinatura aqui</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Hora</item>
+        <item quantity="other">%d Horas</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Mins</item>
+    </plurals>
 </resources>

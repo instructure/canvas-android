@@ -156,8 +156,8 @@ class SpeedGraderContentViewModel @Inject constructor(
                 // Media submission
                 SubmissionType.MEDIA_RECORDING -> submissionFields.mediaObject?.let {
                     MediaContent(
-                        uri = Uri.parse(it.mediaSources?.firstOrNull()?.url),
-                        contentType = it.mediaType?.rawValue ?: "",
+                        uri = Uri.parse(it.mediaSources?.firstOrNull()?.url.orEmpty()),
+                        contentType = it.mediaType?.rawValue,
                         displayName = it.title
                     )
                 } ?: UnsupportedContent

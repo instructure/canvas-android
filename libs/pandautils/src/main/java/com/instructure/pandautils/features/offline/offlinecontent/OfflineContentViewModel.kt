@@ -461,7 +461,7 @@ class OfflineContentViewModel @Inject constructor(
         val totalSpaceText = Formatter.formatShortFileSize(context, totalSpace)
         val storageInfoText = context.getString(R.string.offline_content_storage_info, usedSpaceText, totalSpaceText)
         val contentDescription = context.getString(
-            R.string.offline_content_storage_info_a11y_description,
+            R.string.offline_content_storage_info_a11y_description_canvas,
             usedSpaceText,
             totalSpaceText,
             otherPercent,
