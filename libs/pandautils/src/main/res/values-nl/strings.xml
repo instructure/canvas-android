@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Inbox-instellingen zijn opgeslagen!</string>
     <string name="inboxSignatureSettingsError">Inbox-instellingen opslaan mislukt</string>
     <string name="inboxSignatureTextFieldPlaceholder">Zet hier je handtekening</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d uur</item>
+        <item quantity="other">%d uur</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minuut</item>
+        <item quantity="other">%d minuten</item>
+    </plurals>
 </resources>

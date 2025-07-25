@@ -22,5 +22,6 @@ data class SpeedGraderUiState(
     val submissionIds: List<Long>,
     val selectedItem: Int,
     val courseName: String = "",
-    val assignmentName: String = ""
+    val assignmentName: String = "",
+    val onPageChange: (Int) -> Unit,
 )

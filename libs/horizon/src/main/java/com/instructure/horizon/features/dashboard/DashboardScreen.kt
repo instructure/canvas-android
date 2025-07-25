@@ -52,6 +52,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -66,8 +67,6 @@ import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.ThemePrefs
-
-const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
@@ -104,7 +103,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                 saveState = true
                             }
                             launchSingleTop = true
-                            restoreState = true
+                            restoreState = false
                         }
                     })
                     if (index < uiState.coursesUiState.size - 1) {
@@ -148,7 +147,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.mail,
-            onClick = uiState.onInboxClick,
+            onClick = { mainNavController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse
         )

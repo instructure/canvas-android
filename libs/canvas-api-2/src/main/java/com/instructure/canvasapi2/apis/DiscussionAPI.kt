@@ -97,6 +97,9 @@ object DiscussionAPI {
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/read")
         fun markDiscussionTopicRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long): Call<Void>
 
+        @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/read")
+        suspend fun markDiscussionTopicRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Tag params: RestParams): DataResult<Unit>
+
         @PUT("{contextType}/{contextId}/discussion_topics/{topicId}/entries/{entryId}/read")
         suspend fun markDiscussionTopicEntryRead(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Path("topicId") topicId: Long, @Path("entryId") entryId: Long, @Tag params: RestParams): DataResult<Unit>
 

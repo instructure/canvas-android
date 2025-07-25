@@ -291,7 +291,7 @@
     <string name="Todo">Å gjøre</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Filtrer etter &#8230;</string>
-    <string name="favoritedCoursesLabel">Fagfavoritter</string>
+    <string name="favoriteCoursesLabel">Favorittfag</string>
     <string name="Event">Hendelse</string>
     <string name="eventSuccessfulDeletion">Event ble vellykket slettet</string>
     <string name="timeIconDescription">Tids-ikon</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Varslinger</string>
     <string name="todoWidgetTitleLong">Canvas - Gjøremål</string>
     <string name="gradesWidgetTitleLong">Canvas - klasser</string>
+    <string name="gradeWidgetTitleLong">Canvas – vurdering</string>
     <string name="notificationWidgetTitleLong">Canvas - varsler</string>
     <string name="notLoggedIn">Du er ikke innlogget</string>
     <string name="widgetStyle">Velg din widget-stil</string>
@@ -1777,12 +1778,12 @@
     <string name="screenTitleHelp">Hjelp</string>
     <string name="screenTitleManageStudents">Administrer elever</string>
     <string name="screenTitleSettings">Innstillinger</string>
-    <string name="navigationDrawerSwitchUsers">Bytt brukere</string>
     <string name="navigationDrawerLogOut">Logg Ut</string>
     <string name="noStudentsError">Ingen elever</string>
     <string name="noStudentsErrorDescription">Du har ingen elever under observasjon.</string>
     <string name="noStudentsRefresh">Oppdater</string>
     <string name="noGrade">Ingen vurdering</string>
+    <string name="noGrades">Ingen vurderinger</string>
     <string name="errorLoadingCourses">Det oppsto en feil under lasting av elevfagene dine.</string>
     <string name="parentNoCourses">Ingen fag</string>
     <string name="parentNoCoursesMessage">Fagene til elevene dine er kanskje upublisert enda.</string>
@@ -2049,4 +2050,23 @@
     <string name="errorLoadingAssignments">Det oppsto en feil under lasting av oppgaver</string>
     <string name="a11y_searchAssignments">Oppgavesøk</string>
     <string name="dueAssignmentListItem">Forfall: %1$s</string>
+    <string name="a11y_searchAmongRecipients">Søk etter mottakere</string>
+    <string name="a11y_recipientIsRemoved">%1$s er fjernet</string>
+    <string name="widgetDueDate">Innleveringsfrist %1$s</string>
+    <string name="widgetFromTo">%1$s til %2$s</string>
+    <string name="widgetAllDay">Hele dagen</string>
+    <string name="widgetErrorTitle">Obs! Noe gikk galt</string>
+    <string name="widgetErrorSubtitle">Vi har problemer med å vise oppgavene dine akkurat nå. Prøv igjen om litt eller gå til appen.</string>
+    <string name="widgetToDoEmptyTitle">Du er ferdig for nå!</string>
+    <string name="widgetToDoEmptySubtitle">Det ser ut til at du har fri de neste fire ukene. Vil du legge til noen gjøremål?</string>
+    <string name="widgetNotLoggedInTitle">La oss logge deg inn!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">For å se gjøremålene dine, logg inn på kontoen din i appen. Det tar bare et øyeblikk!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Åpne gjøremålsliste-skjermen</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Opprett nytt gjøremål</string>
+    <string name="widgetGradesErrorSubtitle">Vi har problemer med å vise vurderingene dine akkurat nå. Prøv igjen om litt eller gå til appen.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">For å se vurderinger, logg inn på kontoen din i appen. Det tar bare et øyeblikk!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Vi har problemer med å vise vurderingene dine akkurat nå.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">For å se vurderinger, logg inn på kontoen din i appen.</string>
+    <string name="widgetSingleGradeSelectCourse">La oss velge et fag</string>
+    <string name="widgetGradesErrorLoadingCourses">Det oppsto en feil ved lasting av fag.</string>
 </resources>

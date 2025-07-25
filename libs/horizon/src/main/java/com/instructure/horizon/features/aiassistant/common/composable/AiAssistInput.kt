@@ -47,6 +47,7 @@ fun AiAssistInput(
             value = value,
             onValueChange = onValueChange,
             label = label,
+            onSend = { onSubmitPressed() },
             modifier = Modifier.weight(1f),
         )
 
@@ -56,6 +57,7 @@ fun AiAssistInput(
             iconRes = R.drawable.arrow_upward,
             contentDescription = stringResource(R.string.aiAssistSubmitPrompt),
             color = IconButtonColor.Inverse,
+            enabled = value.text.isNotBlank(),
             onClick = onSubmitPressed,
         )
     }

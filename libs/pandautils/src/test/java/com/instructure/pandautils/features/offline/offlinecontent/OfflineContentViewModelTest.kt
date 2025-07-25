@@ -592,7 +592,7 @@ class OfflineContentViewModelTest {
             "Used ${secondArg<Array<Any>>().first()} of ${secondArg<Array<Any>>().last()}"
         }
         every {
-            context.getString(R.string.offline_content_storage_info_a11y_description, any(), any(), any(), any(), any())
+            context.getString(R.string.offline_content_storage_info_a11y_description_canvas, any(), any(), any(), any(), any())
         } answers {
             "Storage Info: ${secondArg<Array<Any>>()[0]} of ${secondArg<Array<Any>>()[1]} used, Other Apps ${secondArg<Array<Any>>()[2]}%, Canvas Student ${secondArg<Array<Any>>()[3]}%, Remaining ${secondArg<Array<Any>>()[4]}%"
         }

@@ -78,7 +78,7 @@ class CourseBrowserViewHolder(private val binding: AdapterCourseBrowserBinding, 
             label.text = itemView.context.getText(R.string.tab_student_view)
             endIcon.setImageDrawable(itemView.context.getDrawable(R.drawable.ic_open_externally))
             description.setVisible()
-            description.text = itemView.context.getText(R.string.opensInCanvasStudent)
+            description.text = itemView.context.getText(R.string.opensInCanvasApp)
         } else {
             label.text = tab.label
             endIcon.setImageDrawable(null)

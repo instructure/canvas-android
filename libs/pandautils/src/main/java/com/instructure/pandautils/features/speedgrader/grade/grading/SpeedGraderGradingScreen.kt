@@ -244,6 +244,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     ),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 16.sp,
+                    modifier = Modifier.testTag("finalGradeDisplay")
                 )
 
             }

@@ -32,6 +32,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
+import com.instructure.horizon.features.inbox.HorizonInboxScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
 import com.instructure.horizon.features.notebook.NotebookScreen
@@ -41,6 +42,10 @@ import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
 import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -49,6 +54,7 @@ sealed class MainNavigationRoute(val route: String) {
     data object Home : MainNavigationRoute("home")
     data object Notification : MainNavigationRoute("notification")
     data object Notebook : MainNavigationRoute("notebook")
+    data object Inbox : MainNavigationRoute("inbox")
 
     @Serializable
     data class AddNotebook(
@@ -96,6 +102,10 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
         snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
     ) { innerPadding ->
         NavHost(
+            enterTransition = { enterTransition },
+            exitTransition = { exitTransition },
+            popEnterTransition = { popEnterTransition },
+            popExitTransition = { popExitTransition },
             modifier = modifier.padding(innerPadding),
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
@@ -145,6 +155,9 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                         }
                     }
                 }
+            }
+            composable(MainNavigationRoute.Inbox.route) {
+                HorizonInboxScreen(navController)
             }
         }
     }

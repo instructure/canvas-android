@@ -939,6 +939,12 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 12 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade =  "12")
 
+        Log.d(ASSERTION_TAG, "Assert that the grade is not displayed on the course's card by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course.name, "N/A", false)
+
+        Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
+        leftSideNavigationDrawerPage.setShowGrades(true)
+
         Log.d(ASSERTION_TAG, "Refresh the Dashboard page. Assert that the course grade is 80%.")
         dashboardPage.refresh()
         dashboardPage.assertCourseGrade(course.name, "80%")
@@ -1136,6 +1142,15 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 12 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "12")
+
+        Log.d(ASSERTION_TAG, "Assert that the grade is not displayed on the course's card by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course.name, "N/A", false)
+
+        Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
+        leftSideNavigationDrawerPage.setShowGrades(true)
+
+        Log.d(ASSERTION_TAG, "Assert that the grade is displayed on the course's card.")
+        dashboardPage.assertCourseGrade(course.name, "N/A")
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
         val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()
