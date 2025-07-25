@@ -33,8 +33,10 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -87,7 +89,8 @@ fun SpeedGraderContentScreen(
     onExpandClick: (() -> Unit)?
 ) {
     val activity = LocalContext.current.getFragmentActivity()
-    val speedGraderSharedViewModel: SpeedGraderSharedViewModel = viewModel(viewModelStoreOwner = activity)
+    val speedGraderSharedViewModel: SpeedGraderSharedViewModel =
+        viewModel(viewModelStoreOwner = activity)
 
     val viewModel: SpeedGraderContentViewModel = hiltViewModel()
     val uiState by viewModel.uiState.collectAsState()
@@ -95,7 +98,8 @@ fun SpeedGraderContentScreen(
     val context = LocalContext.current.applicationContext
 
     val router: SpeedGraderContentRouter by lazy {
-        EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java).speedGraderContentRouter()
+        EarlyEntryPoints.get(context, SpeedGraderContentRouterEntryPoint::class.java)
+            .speedGraderContentRouter()
     }
 
     SpeedGraderContentScreen(
@@ -321,6 +325,7 @@ private fun SelectorContent(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun Selector(
     selectorUiState: SelectorUiState,
@@ -331,119 +336,127 @@ private fun Selector(
     val haptic = LocalHapticFeedback.current
     var expanded by remember { mutableStateOf(false) }
 
-    Row(
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center,
+    ExposedDropdownMenuBox(
         modifier = modifier
-            .fillMaxWidth()
             .clickable {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 expanded = true
             }
-            .padding(8.dp)
+            .padding(8.dp),
+        expanded = expanded,
+        onExpandedChange = { expanded = !expanded },
     ) {
-        Box(
-            modifier = Modifier
-                .padding(start = 8.dp)
-                .size(18.dp),
-            contentAlignment = Alignment.TopEnd
-        ) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_reset_history),
-                contentDescription = null,
-                modifier = Modifier.size(28.dp),
-                tint = color
-            )
-            if (showBadge) {
-                Box(
-                    modifier = Modifier
-                        .offset(x = 10.dp, y = (-6).dp)
-                        .size(16.dp)
-                        .border(1.dp, colorResource(R.color.textLightest), CircleShape)
-                        .background(color, CircleShape),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Text(
-                        text = selectorUiState.items.size.toString(),
-                        color = colorResource(id = R.color.textLightest),
-                        fontSize = 10.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                }
-            }
-        }
-        Spacer(modifier = Modifier.width(if (showBadge) 18.dp else 8.dp))
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.weight(1f)
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable)
         ) {
-            Text(
-                text = selectorUiState.items.find { it.id == selectorUiState.selectedItemId }?.title.orEmpty(),
-                color = color,
-                fontSize = 16.sp,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-                modifier = Modifier.weight(1f)
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_down),
-                contentDescription = null,
-                tint = color
-            )
-        }
-    }
-
-    DropdownMenu(
-        expanded = expanded,
-        onDismissRequest = {
-            haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-            expanded = false
-        },
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(R.color.backgroundLightest))
-    ) {
-        selectorUiState.items.forEach { item ->
-            DropdownMenuItem(
-                onClick = {
-                    if (item.id != selectorUiState.selectedItemId) {
-                        selectorUiState.onItemSelected(item.id)
+            Box(
+                modifier = Modifier
+                    .padding(start = 8.dp)
+                    .size(18.dp),
+                contentAlignment = Alignment.TopEnd
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_reset_history),
+                    contentDescription = null,
+                    modifier = Modifier.size(28.dp),
+                    tint = color
+                )
+                if (showBadge) {
+                    Box(
+                        modifier = Modifier
+                            .offset(x = 10.dp, y = (-6).dp)
+                            .size(16.dp)
+                            .border(1.dp, colorResource(R.color.textLightest), CircleShape)
+                            .background(color, CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = selectorUiState.items.size.toString(),
+                            color = colorResource(id = R.color.textLightest),
+                            fontSize = 10.sp,
+                            fontWeight = FontWeight.Bold
+                        )
                     }
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    expanded = false
-                },
-                text = {
-                    Row(verticalAlignment = Alignment.CenterVertically) {
-                        Column(modifier = Modifier.weight(1f)) {
-                            Text(
-                                text = item.title,
-                                fontSize = 16.sp,
-                                color = colorResource(R.color.textDarkest),
-                                maxLines = 2,
-                                overflow = TextOverflow.Ellipsis
-                            )
-                            item.subtitle?.let {
+                }
+            }
+            Spacer(modifier = Modifier.width(if (showBadge) 18.dp else 8.dp))
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = selectorUiState.items.find { it.id == selectorUiState.selectedItemId }?.title.orEmpty(),
+                    color = color,
+                    fontSize = 16.sp,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.weight(1f)
+                )
+                Spacer(modifier = Modifier.width(4.dp))
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    contentDescription = null,
+                    tint = color
+                )
+            }
+        }
+
+        ExposedDropdownMenu(
+            expanded = expanded,
+            onDismissRequest = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                expanded = false
+            },
+            modifier = Modifier
+                .background(colorResource(R.color.backgroundLightest))
+        ) {
+            selectorUiState.items.forEach { item ->
+                DropdownMenuItem(
+                    onClick = {
+                        if (item.id != selectorUiState.selectedItemId) {
+                            selectorUiState.onItemSelected(item.id)
+                        }
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        expanded = false
+                    },
+                    text = {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
-                                    text = it,
-                                    fontSize = 14.sp,
-                                    color = colorResource(R.color.textDark),
-                                    maxLines = 1,
+                                    text = item.title,
+                                    fontSize = 16.sp,
+                                    color = colorResource(R.color.textDarkest),
+                                    maxLines = 2,
                                     overflow = TextOverflow.Ellipsis
+                                )
+                                item.subtitle?.let {
+                                    Text(
+                                        text = it,
+                                        fontSize = 14.sp,
+                                        color = colorResource(R.color.textDark),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis
+                                    )
+                                }
+                            }
+                            if (item.id == selectorUiState.selectedItemId) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.ic_checkmark_lined),
+                                    contentDescription = null,
+                                    tint = colorResource(R.color.textDarkest),
+                                    modifier = Modifier.padding(start = 8.dp)
                                 )
                             }
                         }
-                        if (item.id == selectorUiState.selectedItemId) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_checkmark_lined),
-                                contentDescription = null,
-                                tint = colorResource(R.color.textDarkest),
-                                modifier = Modifier.padding(start = 8.dp)
-                            )
-                        }
                     }
-                }
-            )
+                )
+            }
         }
     }
 }
