@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.teacher.features.postpolicies.PostGradeEffect
 import com.instructure.teacher.features.postpolicies.PostGradeEffectHandler
 import com.instructure.teacher.features.postpolicies.PostGradeEvent
@@ -61,12 +62,14 @@ class PostGradeEffectHandlerTest : Assert() {
 
     private val progressId = "135"
 
+    private val speedGraderGradingEventHandler: SpeedGraderGradingEventHandler = mockk(relaxed = true)
+
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         view = mockk(relaxed = true)
-        effectHandler = PostGradeEffectHandler().apply { view = this@PostGradeEffectHandlerTest.view }
+        effectHandler = PostGradeEffectHandler(speedGraderGradingEventHandler).apply { view = this@PostGradeEffectHandlerTest.view }
         consumer = mockk(relaxed = true)
         connection = effectHandler.connect(consumer)
     }
