@@ -157,7 +157,7 @@ class AccountViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                userName = user.name,
+                userName = user.shortName ?: user.name,
             )
         }
     }
