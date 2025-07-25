@@ -16,9 +16,16 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -27,6 +34,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 import com.instructure.pandautils.utils.ThemePrefs
@@ -36,21 +44,41 @@ fun AddTextSubmissionContent(
     uiState: AddSubmissionTypeUiState.Text,
     modifier: Modifier = Modifier,
     onCursorYCoordinateChanged: (Float) -> Unit = {},
-    onRceFocused: () -> Unit = {},
 ) {
-    ComposeRCE(
-        html = uiState.text,
-        hint = stringResource(R.string.assignmentDetails_textEntryHint),
-        modifier = modifier
-            .fillMaxWidth()
-            .border(HorizonBorder.level1(HorizonColors.LineAndBorder.containerStroke()), HorizonCornerRadius.level1_5)
-            .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp),
-        onRceFocused = onRceFocused,
-        onCursorYCoordinateChanged = onCursorYCoordinateChanged,
-        onTextChangeListener = uiState.onTextChanged,
-        rceControlsPosition = RceControlsPosition.BOTTOM,
-        rceDialogThemeColor = ThemePrefs.brandColor,
-        rceDialogButtonColor = ThemePrefs.brandColor,
-        fileUploadRestParams = RestParams(shouldIgnoreToken = true, disableFileVerifiers = false)
-    )
+    var isFocused by remember { mutableStateOf(false) }
+    Box(
+        contentAlignment = Alignment.CenterStart
+    ) {
+        ComposeRCE(
+            html = uiState.text,
+            modifier = modifier
+                .fillMaxWidth()
+                .border(
+                    HorizonBorder.level1(HorizonColors.LineAndBorder.containerStroke()),
+                    HorizonCornerRadius.level1_5
+                )
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp),
+            onRceFocused = { isFocused = true },
+            onCursorYCoordinateChanged = onCursorYCoordinateChanged,
+            onTextChangeListener = uiState.onTextChanged,
+            rceControlsPosition = RceControlsPosition.BOTTOM,
+            rceDialogThemeColor = ThemePrefs.brandColor,
+            rceDialogButtonColor = ThemePrefs.brandColor,
+            fileUploadRestParams = RestParams(
+                shouldIgnoreToken = true,
+                disableFileVerifiers = false
+            )
+        )
+
+        // Display hint text when the RCE is empty
+        // This is a workaround for the RCE, because it's not handling placeholders correctly. (Keyboard won't open automatically on the first click)
+        if (uiState.text.isEmpty() && !isFocused) {
+            Text(
+                text = stringResource(R.string.assignmentDetails_textEntryHint),
+                style = HorizonTypography.p1,
+                color = HorizonColors.Text.placeholder(),
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+            )
+        }
+    }
 }
