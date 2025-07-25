@@ -18,6 +18,10 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -71,6 +75,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -82,6 +87,7 @@ import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
+import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.setVisible
@@ -227,6 +233,19 @@ private fun AttachmentTypeSelectorDialog(
                     .background(colorResource(id = R.color.backgroundLightest)),
                 horizontalAlignment = Alignment.Start
             ) {
+                val audioPermissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+                    // Not working, needs to fixed in MBL-19070
+                    if (result) {
+                        actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
+                    }
+                }
+                val videoPermissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { results ->
+                    // Not working, needs to fixed in MBL-19070
+                    if (results.all { it.value }) {
+                        actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
+                    }
+                }
+                val context = LocalContext.current
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -241,7 +260,13 @@ private fun AttachmentTypeSelectorDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { actionHandler(SpeedGraderCommentsAction.RecordAudioClicked) }
+                        .clickable {
+                            if (isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
+                                actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
+                            } else {
+                                audioPermissionRequest.launch(PermissionUtils.RECORD_AUDIO)
+                            }
+                        }
                         .padding(horizontal = 22.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -263,7 +288,19 @@ private fun AttachmentTypeSelectorDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { actionHandler(SpeedGraderCommentsAction.RecordVideoClicked) }
+                        .clickable {
+                            if (isPermissionGranted(context, PermissionUtils.CAMERA) &&
+                                isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
+                                actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
+                            } else {
+                                videoPermissionRequest.launch(
+                                    arrayOf(
+                                        PermissionUtils.CAMERA,
+                                        PermissionUtils.RECORD_AUDIO
+                                    )
+                                )
+                            }
+                        }
                         .padding(horizontal = 22.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -307,6 +344,10 @@ private fun AttachmentTypeSelectorDialog(
             }
         }
     }
+}
+
+private fun isPermissionGranted(context: Context, permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
 }
 
 @Composable
