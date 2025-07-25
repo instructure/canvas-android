@@ -68,8 +68,14 @@ class HorizonInboxComposeViewModel @Inject constructor(
     init {
         viewModelScope.tryLaunch {
             val courses = repository.getAllInboxCourses(forceNetwork = true)
+            val selectedCourse = if (courses.size == 1) {
+                courses.firstOrNull()
+            } else {
+                null
+            }
             _uiState.update {
                 it.copy(
+                    selectedCourse = selectedCourse,
                     coursePickerOptions = courses,
                 )
             }
