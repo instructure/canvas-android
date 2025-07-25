@@ -54,6 +54,7 @@ class SpeedGraderViewModelTest {
         repository = mockk(relaxed = true)
         assignmentSubmissionRepository = mockk(relaxed = true)
         speedGraderPostPolicyRouter = mockk(relaxed = true)
+        assignmentSubmissionRepository = mockk()
         savedStateHandle = SavedStateHandle(
             mapOf(
                 Const.COURSE_ID to 1L,
