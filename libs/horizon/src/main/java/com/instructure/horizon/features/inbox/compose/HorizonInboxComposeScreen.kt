@@ -434,7 +434,7 @@ private fun onExit(
     state: HorizonInboxComposeUiState,
     navController: NavHostController
 ) {
-    if (state.body.text.isNotBlank() || state.subject.text.isNotBlank() || state.selectedCourse != null || state.selectedRecipients.isNotEmpty() || state.attachments.isNotEmpty() || state.isSendIndividually) {
+    if (state.body.text.isNotBlank() || state.subject.text.isNotBlank() || (state.selectedCourse != null && state.coursePickerOptions.size > 1 ) || state.selectedRecipients.isNotEmpty() || state.attachments.isNotEmpty() || state.isSendIndividually) {
         state.updateShowExitConfirmationDialog(true)
     } else {
         navController.popBackStack()
