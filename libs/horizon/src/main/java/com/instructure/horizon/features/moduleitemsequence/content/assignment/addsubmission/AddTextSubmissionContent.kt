@@ -15,8 +15,8 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission
 
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -25,16 +25,16 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.horizon.R
-import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 import com.instructure.pandautils.utils.ThemePrefs
@@ -46,7 +46,9 @@ fun AddTextSubmissionContent(
     onCursorYCoordinateChanged: (Float) -> Unit = {},
 ) {
     var isFocused by remember { mutableStateOf(false) }
-    Box {
+    Box(
+        contentAlignment = Alignment.CenterStart
+    ) {
         ComposeRCE(
             html = uiState.text,
             modifier = modifier
