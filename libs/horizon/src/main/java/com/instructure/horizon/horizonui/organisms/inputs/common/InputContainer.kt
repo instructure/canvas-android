@@ -58,8 +58,8 @@ fun InputContainer(
                     val strokeColor =
                         if (isError) HorizonColors.Surface.error() else HorizonColors.Surface.institution()
                     val stroke = HorizonBorder.level2(strokeColor)
-                    val radius = 12.dp
                     val borderPadding = 2.dp
+                    val radius = 12.dp + borderPadding
 
                     drawRoundRect(
                         color = strokeColor, // your "selected" outer border
@@ -110,6 +110,7 @@ fun InputContainerFocusedPreview() {
         isFocused = true,
         isError = false,
         enabled = true,
+        modifier = Modifier.padding(8.dp)
     ) {
         Text(
             "Placeholder",
@@ -126,6 +127,7 @@ fun InputContainerErrorFocusedPreview() {
         isFocused = true,
         isError = true,
         enabled = true,
+        modifier = Modifier.padding(8.dp)
     ) {
         Text(
             "Placeholder",
