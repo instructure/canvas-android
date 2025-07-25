@@ -75,6 +75,10 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     is GradingEvent.RubricUpdated -> {
                         loadData(forceNetwork = true)
                     }
+
+                    is GradingEvent.PostPolicyUpdated -> {
+                        loadData(forceNetwork = true)
+                    }
                 }
             }
         }
@@ -99,6 +103,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         gradingType = submission.assignment?.gradingType,
                         loading = false,
                         error = false,
+                        gradeHidden = submission.hideGradeFromStudent.orDefault(),
                         daysLate = getDaysLate(submission.secondsLate),
                         dueDate = submission.assignment?.dueAt,
                         gradingStatuses = submission.assignment?.course?.gradeStatuses
