@@ -24,4 +24,5 @@ data class SpeedGraderUiState(
     val courseName: String = "",
     val assignmentName: String = "",
     val onPageChange: (Int) -> Unit,
+    val loading: Boolean = true
 )

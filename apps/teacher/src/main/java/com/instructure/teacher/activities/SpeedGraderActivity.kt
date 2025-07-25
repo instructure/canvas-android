@@ -70,7 +70,7 @@ import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.databinding.ActivitySpeedgraderBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction

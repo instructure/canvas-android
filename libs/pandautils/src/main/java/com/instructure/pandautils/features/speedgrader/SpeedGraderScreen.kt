@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.speedgrader
 
 import android.view.WindowManager
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -41,6 +42,7 @@ import androidx.navigation.navArgument
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
@@ -80,14 +82,22 @@ fun SpeedGraderScreen(
         modifier = Modifier.imePadding(),
         contentWindowInsets = WindowInsets.ime
     ) { padding ->
-        HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
-            uiState.onPageChange(page)
-            val submissionId = uiState.submissionIds[page]
-            NavHost(
-                navController = rememberNavController(),
-                startDestination = "${uiState.courseId}/assignments/${uiState.assignmentId}/submission/$submissionId"
-            ) {
-                submissionScreen()
+        when {
+            uiState.loading -> {
+                Loading(modifier = Modifier.fillMaxSize())
+            }
+
+            else -> {
+                HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
+                    uiState.onPageChange(page)
+                    val submissionId = uiState.submissionIds[page]
+                    NavHost(
+                        navController = rememberNavController(),
+                        startDestination = "${uiState.courseId}/assignments/${uiState.assignmentId}/submission/$submissionId"
+                    ) {
+                        submissionScreen()
+                    }
+                }
             }
         }
     }
