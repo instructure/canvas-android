@@ -44,7 +44,6 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
@@ -115,7 +114,7 @@ class SubmissionListFragment : BaseCanvasFragment() {
             is SubmissionListViewModelAction.ShowPostPolicy -> {
                 RouteMatcher.route(
                     requireActivity(),
-                    PostPolicyFragment.makeRoute(action.course, action.assignment)
+                    PostPolicyFragment.makeRoute(action.course.id, action.assignment)
                 )
             }
 

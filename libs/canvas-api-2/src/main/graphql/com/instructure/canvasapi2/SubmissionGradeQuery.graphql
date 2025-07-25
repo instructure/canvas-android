@@ -19,6 +19,7 @@ query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!, $nextCursor: String
         gradingStatus
         grade
         gradeHidden
+        hideGradeFromStudent
         _id
         submissionStatus
         status

@@ -15,6 +15,7 @@
  */
 package com.instructure.student.di
 
+import com.instructure.pandautils.features.speedgrader.SpeedGraderPostPolicyRouter
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
 import dagger.Module
 import dagger.Provides
@@ -27,6 +28,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideSpeedGraderRouter(): SpeedGraderContentRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideSpeedGraderPostPolicyRouter(): SpeedGraderPostPolicyRouter {
         throw NotImplementedError()
     }
 }

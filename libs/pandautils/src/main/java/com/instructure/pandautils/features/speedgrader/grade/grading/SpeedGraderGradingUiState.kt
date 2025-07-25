@@ -37,6 +37,7 @@ data class SpeedGraderGradingUiState(
     val letterGrades: List<GradingSchemeRow> = emptyList(),
     val gradingStatuses: List<GradeStatus> = emptyList(),
     val gradingStatus: String? = null,
+    val gradeHidden: Boolean = false,
     val onScoreChange: (Float?) -> Unit,
     val onExcuse: () -> Unit,
     val onPercentageChange: (Float?) -> Unit,

@@ -45,8 +45,28 @@ class AssignmentSubmissionRepository(
         courseId: Long,
         forceNetwork: Boolean
     ): List<GradeableStudentSubmission> {
-        val assignment = assignmentApi.getAssignment(assignmentId = assignmentId, courseId = courseId, params = RestParams(isForceReadFromNetwork = forceNetwork)).dataOrThrow
-        return getGradeableStudentSubmissions(assignment = assignment, courseId = courseId, forceNetwork = forceNetwork)
+        val assignment = assignmentApi.getAssignment(
+            assignmentId = assignmentId,
+            courseId = courseId,
+            params = RestParams(isForceReadFromNetwork = forceNetwork)
+        ).dataOrThrow
+        return getGradeableStudentSubmissions(
+            assignment = assignment,
+            courseId = courseId,
+            forceNetwork = forceNetwork
+        )
+    }
+
+    suspend fun getAssignment(
+        assignmentId: Long,
+        courseId: Long,
+        forceNetwork: Boolean
+    ): Assignment {
+        return assignmentApi.getAssignment(
+            assignmentId = assignmentId,
+            courseId = courseId,
+            params = RestParams(isForceReadFromNetwork = forceNetwork)
+        ).dataOrThrow
     }
 
     suspend fun getGradeableStudentSubmissions(
@@ -98,7 +118,8 @@ class AssignmentSubmissionRepository(
                 }
             }.sortedBy {
                 (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(
-                    Locale.getDefault())
+                    Locale.getDefault()
+                )
             }
 
         return allSubmissions

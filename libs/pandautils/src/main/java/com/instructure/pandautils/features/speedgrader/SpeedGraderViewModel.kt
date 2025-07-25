@@ -16,9 +16,11 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,7 +33,8 @@ import javax.inject.Inject
 class SpeedGraderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderRepository,
-    private val assignmentSubmissionRepository: AssignmentSubmissionRepository
+    private val assignmentSubmissionRepository: AssignmentSubmissionRepository,
+    private val postPolicyRouter: SpeedGraderPostPolicyRouter
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle[Const.ASSIGNMENT_ID]
@@ -45,13 +48,16 @@ class SpeedGraderViewModel @Inject constructor(
 
     private val selectedItem: Int = savedStateHandle[Const.SELECTED_ITEM] ?: 0
 
+    private var assignment: Assignment? = null
+
     private val _uiState = MutableStateFlow(
         SpeedGraderUiState(
             courseId,
             assignmentId,
             submissionIds.toList(),
             selectedItem,
-            onPageChange = this::onPageChange
+            onPageChange = this::onPageChange,
+            navigateToPostPolicy = this::navigateToPostPolicy,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -62,10 +68,25 @@ class SpeedGraderViewModel @Inject constructor(
         }
     }
 
+    private fun navigateToPostPolicy(context: Context) {
+        assignment?.let {
+            postPolicyRouter.navigateToPostPolicies(
+                context,
+                courseId,
+                it,
+            )
+        }
+    }
+
     private suspend fun fetchData() {
         _uiState.update {
             it.copy(loading = true)
         }
+        assignment = assignmentSubmissionRepository.getAssignment(
+            assignmentId = assignmentId,
+            courseId = courseId,
+            forceNetwork = false
+        )
         val ids = if (submissionIds.isEmpty()) {
             assignmentSubmissionRepository.getGradeableStudentSubmissions(
                 assignmentId,

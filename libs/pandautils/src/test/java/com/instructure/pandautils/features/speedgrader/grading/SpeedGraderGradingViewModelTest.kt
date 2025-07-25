@@ -387,6 +387,7 @@ class SpeedGraderGradingViewModelTest {
                 excused = false,
                 enteredGrade = "A",
                 enteredScore = 95.0,
+                hideGradeFromStudent = false,
                 assignment = SubmissionGradeQuery.Assignment(
                     dueAt = dueDate,
                     gradingType = GradingType.points,
