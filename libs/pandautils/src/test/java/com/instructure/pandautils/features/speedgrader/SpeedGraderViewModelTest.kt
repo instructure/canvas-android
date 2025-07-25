@@ -18,10 +18,12 @@ package com.instructure.pandautils.features.speedgrader
 
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.AssignmentDetailsQuery
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
 import io.mockk.mockk
+import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -42,14 +44,16 @@ class SpeedGraderViewModelTest {
     private lateinit var viewModel: SpeedGraderViewModel
     private lateinit var repository: SpeedGraderRepository
     private lateinit var assignmentSubmissionRepository: AssignmentSubmissionRepository
+    private lateinit var speedGraderPostPolicyRouter: SpeedGraderPostPolicyRouter
     private lateinit var savedStateHandle: SavedStateHandle
 
     @Before
-    fun setUp() {
+    fun setUp() = runTest {
         ContextKeeper.appContext = mockk(relaxed = true)
         Dispatchers.setMain(testDispatcher)
-        repository = mockk()
-        assignmentSubmissionRepository = mockk()
+        repository = mockk(relaxed = true)
+        assignmentSubmissionRepository = mockk(relaxed = true)
+        speedGraderPostPolicyRouter = mockk(relaxed = true)
         savedStateHandle = SavedStateHandle(
             mapOf(
                 Const.COURSE_ID to 1L,
@@ -57,6 +61,14 @@ class SpeedGraderViewModelTest {
                 SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(1L)
             )
         )
+
+        coEvery {
+            assignmentSubmissionRepository.getAssignment(
+                any(),
+                any(),
+                any()
+            )
+        } returns Assignment()
     }
 
     @After
@@ -67,11 +79,17 @@ class SpeedGraderViewModelTest {
     @Test
     fun `fetchData updates uiState correctly`() = runTest(testDispatcher) {
         val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
-        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignment =
+            AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
 
-        viewModel = SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
+        viewModel = SpeedGraderViewModel(
+            savedStateHandle,
+            repository,
+            assignmentSubmissionRepository,
+            speedGraderPostPolicyRouter
+        )
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Assert
@@ -86,7 +104,12 @@ class SpeedGraderViewModelTest {
         savedStateHandle = SavedStateHandle()
 
         assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
+            SpeedGraderViewModel(
+                savedStateHandle,
+                repository,
+                assignmentSubmissionRepository,
+                speedGraderPostPolicyRouter
+            )
         }
     }
 
@@ -95,14 +118,20 @@ class SpeedGraderViewModelTest {
         savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L))
 
         assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
+            SpeedGraderViewModel(
+                savedStateHandle,
+                repository,
+                assignmentSubmissionRepository,
+                speedGraderPostPolicyRouter
+            )
         }
     }
 
     @Test
     fun `init sets selectedItem to 0 when it is missing`() {
         val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
-        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignment =
+            AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
         savedStateHandle = SavedStateHandle(
@@ -113,7 +142,12 @@ class SpeedGraderViewModelTest {
             )
         )
 
-        viewModel = SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
+        viewModel = SpeedGraderViewModel(
+            savedStateHandle,
+            repository,
+            assignmentSubmissionRepository,
+            speedGraderPostPolicyRouter
+        )
 
         // Assert
         val uiState = viewModel.uiState.value
@@ -123,7 +157,8 @@ class SpeedGraderViewModelTest {
     @Test
     fun `init sets selectedItem to provided value`() {
         val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
-        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignment =
+            AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
         savedStateHandle = SavedStateHandle(
@@ -135,10 +170,31 @@ class SpeedGraderViewModelTest {
             )
         )
 
-        viewModel = SpeedGraderViewModel(savedStateHandle, repository, assignmentSubmissionRepository)
+        viewModel = SpeedGraderViewModel(
+            savedStateHandle,
+            repository,
+            assignmentSubmissionRepository,
+            speedGraderPostPolicyRouter
+        )
 
         // Assert
         val uiState = viewModel.uiState.value
         assertEquals(2, uiState.selectedItem)
+    }
+
+    @Test
+    fun `Navigating to the post policy screen calls the router`() = runTest {
+        viewModel = SpeedGraderViewModel(
+            savedStateHandle,
+            repository,
+            assignmentSubmissionRepository,
+            speedGraderPostPolicyRouter
+        )
+
+        val uiState = viewModel.uiState.first()
+
+        uiState.navigateToPostPolicy(mockk())
+
+        verify { speedGraderPostPolicyRouter.navigateToPostPolicies(any(), any(), any()) }
     }
 }

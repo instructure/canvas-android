@@ -232,7 +232,7 @@ class SpeedGraderActivity : BasePresenterActivity<SpeedGraderPresenter, SpeedGra
                 R.id.menuPostPolicies -> {
                     RouteMatcher.route(
                         this@SpeedGraderActivity,
-                        PostPolicyFragment.makeRoute(presenter!!.course, assignment)
+                        PostPolicyFragment.makeRoute(presenter!!.course.id, assignment)
                     )
                 }
             }

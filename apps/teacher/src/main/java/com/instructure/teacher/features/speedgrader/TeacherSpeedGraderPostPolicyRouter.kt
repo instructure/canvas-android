@@ -16,25 +16,19 @@
  */
 package com.instructure.teacher.features.speedgrader
 
-import android.content.res.Resources
+import android.content.Context
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.features.speedgrader.SpeedGraderPostPolicyRouter
-import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.instructure.pandautils.utils.getFragmentActivity
+import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
+import com.instructure.teacher.router.RouteMatcher
 
-@Module
-@InstallIn(SingletonComponent::class)
-class SpeedGraderContentRouterModule {
+class TeacherSpeedGraderPostPolicyRouter : SpeedGraderPostPolicyRouter {
 
-    @Provides
-    fun provideSpeedGraderContentRouter(resources: Resources): SpeedGraderContentRouter {
-        return TeacherSpeedGraderContentRouter(resources)
-    }
-
-    @Provides
-    fun provideSpeedGraderPostPolicyRouter(): SpeedGraderPostPolicyRouter {
-        return TeacherSpeedGraderPostPolicyRouter()
+    override fun navigateToPostPolicies(context: Context, courseId: Long, assignment: Assignment) {
+        RouteMatcher.route(
+            context.getFragmentActivity(),
+            PostPolicyFragment.makeRoute(courseId, assignment)
+        )
     }
 }

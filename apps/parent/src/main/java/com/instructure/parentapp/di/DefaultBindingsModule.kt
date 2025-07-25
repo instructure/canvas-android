@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.elementary.schedule.ScheduleRouter
 import com.instructure.pandautils.features.offline.sync.SyncRouter
 import com.instructure.pandautils.features.shareextension.ShareExtensionRouter
 import com.instructure.pandautils.features.smartsearch.SmartSearchRouter
+import com.instructure.pandautils.features.speedgrader.SpeedGraderPostPolicyRouter
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
 import dagger.Module
 import dagger.Provides
@@ -120,6 +121,11 @@ class DefaultBindingsModule {
 
     @Provides
     fun provideSpeedGraderRouter(): SpeedGraderContentRouter {
+        throw NotImplementedError()
+    }
+
+    @Provides
+    fun provideSpeedGraderPostPolicyRouter(): SpeedGraderPostPolicyRouter {
         throw NotImplementedError()
     }
 }
