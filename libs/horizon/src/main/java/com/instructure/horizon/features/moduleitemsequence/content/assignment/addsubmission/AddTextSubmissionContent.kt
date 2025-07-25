@@ -16,6 +16,7 @@
 package com.instructure.horizon.features.moduleitemsequence.content.assignment.addsubmission
 
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
@@ -31,6 +32,9 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.HorizonBorder
+import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.pandautils.compose.composables.rce.ComposeRCE
 import com.instructure.pandautils.compose.composables.rce.RceControlsPosition
 import com.instructure.pandautils.utils.ThemePrefs
@@ -47,7 +51,11 @@ fun AddTextSubmissionContent(
             html = uiState.text,
             modifier = modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp),
+                .border(
+                    HorizonBorder.level1(HorizonColors.LineAndBorder.containerStroke()),
+                    HorizonCornerRadius.level1_5
+                )
+                .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 12.dp),
             onRceFocused = { isFocused = true },
             onCursorYCoordinateChanged = onCursorYCoordinateChanged,
             onTextChangeListener = uiState.onTextChanged,

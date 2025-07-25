@@ -211,7 +211,6 @@ fun AssignmentDetailsScreen(
                     style = HorizonTypography.h3,
                     modifier = Modifier.padding(horizontal = 24.dp)
                 )
-                HorizonSpace(SpaceSize.SPACE_8)
                 ComposeCanvasWebViewWrapper(
                     content = uiState.instructions,
                     applyOnWebView = {
@@ -225,7 +224,7 @@ fun AssignmentDetailsScreen(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }
                     ),
-                    modifier = Modifier.padding(16.dp)
+                    modifier = Modifier.padding(horizontal = 16.dp)
                 )
                 if (uiState.ltiUrl.isNotEmpty()) {
                     HorizonSpace(SpaceSize.SPACE_24)

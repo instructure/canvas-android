@@ -188,13 +188,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
                 if (item.quizLti) {
                     ModuleItemContent.Assessment(courseId, item.contentId) {
                         if (mustSubmit && !completed) {
-                            courseProgressChanged = true
+                            courseProgressChanged()
                         }
                     }
                 } else {
                     ModuleItemContent.Assignment(courseId, item.contentId) {
                         if (mustSubmit && !completed) {
-                            courseProgressChanged = true
+                            courseProgressChanged()
                         }
                     }
                 }
@@ -457,7 +457,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
             val result = if (markDone) repository.markAsDone(courseId, item) else repository.markAsNotDone(courseId, item)
             if (result.isSuccess) {
                 updateMarkAsDoneStateForItem(item, loading = false, done = markDone)
-                courseProgressChanged = true
+                courseProgressChanged()
             } else {
                 updateMarkAsDoneStateForItem(item, loading = false)
             }
@@ -498,7 +498,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
         if (completionRequirement?.type == ModuleItem.MUST_VIEW && !completionRequirement.completed && !item.isLocked()) {
             viewModelScope.launch {
                 repository.markAsRead(courseId, item.moduleId, item.id)
-                courseProgressChanged = true
+                courseProgressChanged()
             }
         }
     }
@@ -555,5 +555,10 @@ class ModuleItemSequenceViewModel @Inject constructor(
             ),
             contextString = content
         )
+    }
+
+    private fun courseProgressChanged() {
+        courseProgressChanged = true
+        _uiState.update { it.copy(shouldRefreshPreviousScreen = true) }
     }
 }

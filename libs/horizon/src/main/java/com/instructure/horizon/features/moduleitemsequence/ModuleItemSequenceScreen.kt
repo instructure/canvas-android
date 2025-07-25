@@ -261,9 +261,11 @@ private fun ModuleItemSequenceContent(
             if (uiState.currentPosition != -1) {
                 val homeEntry =
                     remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
-                LaunchedEffect(Unit) {
-                    homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
-                    homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
+                LaunchedEffect(uiState.shouldRefreshPreviousScreen) {
+                    if (uiState.shouldRefreshPreviousScreen) {
+                        homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                        homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
+                    }
                 }
 
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
