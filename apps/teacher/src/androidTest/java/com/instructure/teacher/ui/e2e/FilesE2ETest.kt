@@ -147,17 +147,17 @@ class FilesE2ETest: TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Click on '${student.name}' student's submission and navigate to Files Tab.")
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectFilesTab(1)
 
-        Log.d(ASSERTION_TAG, "Assert that '${submissionUploadInfo.fileName}' file is displayed.")
-        speedGraderPage.assertFileDisplayed(submissionUploadInfo.fileName)
+        Log.d(ASSERTION_TAG, "Assert that the '${submissionUploadInfo.fileName}' file has selected.")
+        speedGraderPage.assertSelectedAttachmentItemDisplayed(submissionUploadInfo.fileName)
 
-        Log.d(STEP_TAG, "Select 'Comments' tab")
+        //TODO: Re-enable this and refactor when comments will be ready.
+        /*Log.d(STEP_TAG, "Select 'Comments' tab")
         speedGraderPage.selectCommentsTab()
 
         Log.d(ASSERTION_TAG, "Assert that '${commentUploadInfo.fileName}' comment attachment is displayed.")
         speedGraderPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
-
+        */
         Log.d(STEP_TAG, "Navigate back to Dashboard Page.")
         ViewUtils.pressBackButton(5)
 

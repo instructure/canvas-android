@@ -139,6 +139,9 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Open '${student.name}' student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)
 
+        Log.d(STEP_TAG, "Click on the 'Expand' button (arrow icon) to expand the 'Grade & Rubric' tab details")
+        speedGraderPage.clickExpandPanelButton()
+
         Log.d(ASSERTION_TAG, "Assert that the 'Grade' label is displayed.")
         speedGraderPage.assertSpeedGraderLabelDisplayed()
 

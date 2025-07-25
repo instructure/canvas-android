@@ -87,7 +87,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      * Assert that the 'Grade' label is displayed on the SpeedGrader page's 'Grade & Rubric' tab.
      */
     fun assertSpeedGraderLabelDisplayed() {
-        composeTestRule.onNodeWithTag("speedGraderGradeLabel").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("speedGraderGradeLabel", useUnmergedTree = true).assertIsDisplayed()
     }
 
     /**
@@ -322,6 +322,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
         Espresso.onView(matcher).assertDisplayed()
     }
+
     /**
 
     Asserts that the comment attachment with the given filename and display name is displayed.
