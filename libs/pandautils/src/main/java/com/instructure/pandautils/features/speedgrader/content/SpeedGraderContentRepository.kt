@@ -35,7 +35,7 @@ class SpeedGraderContentRepository(
         return submissionContentManager.getSubmissionContent(studentId, assignmentId)
     }
 
-    suspend fun getSingleSubmission(courseId: Long,assignmentId: Long, studentId: Long): Submission? {
+    suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long): Submission? {
         return submissionApi.getSingleSubmission(courseId, assignmentId, studentId, RestParams()).dataOrNull
     }
 

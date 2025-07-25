@@ -40,6 +40,6 @@ class SpeedGraderSelectedAttemptHolder {
     }
 
     fun selectedAttemptIdFlowFor(studentId: Long): Flow<Long?> {
-        return selectedAttemptIds.map { it[studentId] }.distinctUntilChanged()
+        return _selectedAttemptIds.map { it[studentId] }.distinctUntilChanged()
     }
 }
