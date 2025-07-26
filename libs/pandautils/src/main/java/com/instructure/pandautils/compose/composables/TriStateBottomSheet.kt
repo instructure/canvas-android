@@ -232,7 +232,7 @@ fun TriStateBottomSheet(
                             },
                                 modifier = Modifier.testTag("collapsePanelButton")
                             ) {
-                            Icon(
+                                Icon(
                                     tint = LocalCourseColor.current,
                                     painter = painterResource(R.drawable.ic_collapse_bottomsheet),
                                     contentDescription = stringResource(R.string.a11y_contentDescription_collapsePanel),

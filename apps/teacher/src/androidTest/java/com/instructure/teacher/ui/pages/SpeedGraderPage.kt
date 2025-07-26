@@ -30,6 +30,7 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
+import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -169,9 +170,8 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     /**
      * Selects the "Grades" tab.
      */
-    fun selectGradesTab() {
-        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault())
-        onView(allOf((withText(gradesTabText)), isDisplayed())).click()
+    fun selectTab(tabTitle: Int) {
+        composeTestRule.onNode(hasTestTag("speedGraderTab-${tabTitle}"), useUnmergedTree = true).performClick()
     }
 
     /**
@@ -324,10 +324,9 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-
-    Asserts that the comment attachment with the given filename and display name is displayed.
-    @param fileName The name of the attachment file.
-    @param displayName The display name of the attachment.
+    * Asserts that the comment attachment with the given filename and display name is displayed.
+    * @param fileName The name of the attachment file.
+    * @param displayName The display name of the attachment.
      */
     fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
         val commentMatcher = Matchers.allOf(

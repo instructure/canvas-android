@@ -15,10 +15,13 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.fakes
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.SubmissionGradeQuery
 import com.instructure.canvasapi2.UpdateSubmissionGradeMutation
 import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
+import com.instructure.canvasapi2.type.LatePolicyStatusType
+import com.instructure.canvasapi2.type.SubmissionGradingStatus
 
 class FakeSubmissionGradeManager : SubmissionGradeManager {
     override suspend fun getSubmissionGrade(
@@ -26,7 +29,27 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
         studentId: Long,
         forceNetwork: Boolean
     ): SubmissionGradeQuery.Data {
-        TODO("Not yet implemented")
+        val assignment = MockCanvas.data.assignments[assignmentId]
+        val course = MockCanvas.data.courses[assignment?.courseId]
+        val submission = MockCanvas.data.submissions[assignmentId]?.get(0)
+        val dummySubmission = SubmissionGradeQuery.Submission(
+            gradingStatus = SubmissionGradingStatus.needs_grading,
+            grade = submission?.grade ?: "A",
+            gradeHidden = false,
+            _id = submission?.id.toString(),
+            submissionStatus = "on_time",
+            status = "submitted",
+            latePolicyStatus = LatePolicyStatusType.none,
+            late = false,
+            secondsLate = 0.0,
+            deductedPoints = 0.0,
+            score = submission?.score ?: 100.0,
+            excused = submission?.excused ?: false,
+            enteredGrade = submission?.enteredGrade ?: "A",
+            enteredScore = submission?.score ?: 100.0,
+            assignment = null,
+        )
+        return SubmissionGradeQuery.Data(submission = dummySubmission)
     }
 
     override suspend fun updateSubmissionGrade(

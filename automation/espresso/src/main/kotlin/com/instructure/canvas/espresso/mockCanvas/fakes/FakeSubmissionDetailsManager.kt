@@ -16,11 +16,32 @@
 
 package com.instructure.canvas.espresso.mockCanvas.fakes
 
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvasapi2.SubmissionDetailsQuery
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.type.SubmissionType
 
 class FakeSubmissionDetailsManager : SubmissionDetailsManager {
     override suspend fun getSubmissionDetails(userId: Long, assignmentId: Long): SubmissionDetailsQuery.Data {
-        throw NotImplementedError("FakeSubmissionDetailsManager.getSubmissionDetails() not implemented")
+
+        val assignment = MockCanvas.data.assignments[assignmentId]
+        val course = MockCanvas.data.courses[assignment?.courseId]
+        val submission = MockCanvas.data.submissions[assignmentId]?.get(0)
+
+        val dummyNode = SubmissionDetailsQuery.Node(
+            attempt = submission?.attempt?.toInt() ?: 1,
+            wordCount = 123.0,
+            submissionType = SubmissionType.online_text_entry,
+        )
+        val dummyEdge = SubmissionDetailsQuery.Edge(
+            node = dummyNode
+        )
+        val dummyHistoriesConnection = SubmissionDetailsQuery.SubmissionHistoriesConnection(
+            edges = listOf(dummyEdge)
+        )
+        val dummySubmission = SubmissionDetailsQuery.Submission(
+            submissionHistoriesConnection = dummyHistoriesConnection
+        )
+        return SubmissionDetailsQuery.Data(submission = dummySubmission)
     }
 }
