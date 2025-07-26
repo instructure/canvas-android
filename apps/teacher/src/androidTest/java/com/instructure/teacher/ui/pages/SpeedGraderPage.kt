@@ -52,6 +52,7 @@ import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
+import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.pageToItem
 import com.instructure.espresso.swipeToTop
@@ -70,7 +71,7 @@ import java.util.Locale
  * of the comment library. This page extends the BasePage class.
  */
 @Suppress("unused")
-class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage() {
+class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage() { // TODO: YET this is a 'hybrid' page because it's highly used in tests, we'll eliminate the non-compose parts step by step.
 
     private val speedGraderActivityToolbar by OnViewWithId(R.id.speedGraderToolbar)
     private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout,false)
@@ -83,8 +84,11 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     private val submissionVersionDialogTitle by WaitForViewWithText(R.string.submission_versions)
     private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
+    /**
+     * Assert that the 'Grade' label is displayed on the SpeedGrader page's 'Grade & Rubric' tab.
+     */
     fun assertSpeedGraderLabelDisplayed() {
-        composeTestRule.onNodeWithTag("speedGraderGradeLabel").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("speedGraderGradeLabel", useUnmergedTree = true).assertIsDisplayed()
     }
 
     /**
@@ -308,7 +312,6 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
     }
 
-
     /**
      *
      * Asserts that the file with the given filename is displayed.
@@ -319,11 +322,11 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
         Espresso.onView(matcher).assertDisplayed()
     }
-    /**
 
-    Asserts that the comment attachment with the given filename and display name is displayed.
-    @param fileName The name of the attachment file.
-    @param displayName The display name of the attachment.
+    /**
+    * Asserts that the comment attachment with the given filename and display name is displayed.
+    * @param fileName The name of the attachment file.
+    * @param displayName The display name of the attachment.
      */
     fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
         val commentMatcher = Matchers.allOf(

@@ -16,7 +16,9 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import android.view.WindowManager
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
@@ -24,9 +26,13 @@ import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.navigation.NavGraphBuilder
@@ -38,6 +44,8 @@ import androidx.navigation.navArgument
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.utils.getFragmentActivity
 
 @Composable
 fun SpeedGraderScreen(
@@ -45,9 +53,22 @@ fun SpeedGraderScreen(
     sharedViewModel: SpeedGraderSharedViewModel,
     navigationActionClick: () -> Unit
 ) {
+    val context = LocalContext.current
+    val window = (context.getFragmentActivity()).window
 
     val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size }, initialPage = uiState.selectedItem)
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
+
+    DisposableEffect(Unit) {
+        val originalMode = window?.attributes?.softInputMode
+        window?.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN)
+
+        onDispose {
+            if (originalMode != null) {
+                window.setSoftInputMode(originalMode)
+            }
+        }
+    }
 
     Scaffold(
         topBar = {
@@ -64,14 +85,22 @@ fun SpeedGraderScreen(
         modifier = Modifier.imePadding(),
         contentWindowInsets = WindowInsets.ime
     ) { padding ->
-        HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
-            uiState.onPageChange(page)
-            val submissionId = uiState.submissionIds[page]
-            NavHost(
-                navController = rememberNavController(),
-                startDestination = "${uiState.courseId}/assignments/${uiState.assignmentId}/submission/$submissionId"
-            ) {
-                submissionScreen()
+        when {
+            uiState.loading -> {
+                Loading(modifier = Modifier.fillMaxSize())
+            }
+
+            else -> {
+                HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
+                    uiState.onPageChange(page)
+                    val submissionId = uiState.submissionIds[page]
+                    NavHost(
+                        navController = rememberNavController(),
+                        startDestination = "${uiState.courseId}/assignments/${uiState.assignmentId}/submission/$submissionId"
+                    ) {
+                        submissionScreen()
+                    }
+                }
             }
         }
     }

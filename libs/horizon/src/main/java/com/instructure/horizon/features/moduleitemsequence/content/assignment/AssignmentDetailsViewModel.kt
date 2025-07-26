@@ -24,6 +24,9 @@ import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
@@ -43,6 +46,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -62,7 +66,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
                 submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed),
-                onCommentsBottomSheetDismissed = ::dismissComments
+                onCommentsBottomSheetDismissed = ::dismissComments,
+                onAssignmentUpdatedForAddSubmission = ::onAssignmentUpdatedForAddSubmission,
             )
         )
 
@@ -94,6 +99,12 @@ class AssignmentDetailsViewModel @Inject constructor(
             val showAttemptSelector = assignment.allowedAttempts != 1L
 
             val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
+
+            aiAssistContextProvider.aiAssistContext = AiAssistContext(
+                contextString = assignment.description.orEmpty(),
+                contextSources = aiAssistContextProvider.aiAssistContext.contextSources +
+                    AiAssistContextSource.Assignment(assignment.id.toString())
+            )
 
             _uiState.update {
                 it.copy(
@@ -293,7 +304,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         return AttemptCardState(
             attemptNumber = submission.attempt,
             attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
-            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty(),
+            date = submission.submittedAt?.format("MM/dd, h:mm a").orEmpty(),
             score = score,
             selected = selected,
             onClick = onClick
@@ -344,5 +355,9 @@ class AssignmentDetailsViewModel @Inject constructor(
             isGroupingUsed = false
         }
         return formatter.format(value)
+    }
+
+    private fun onAssignmentUpdatedForAddSubmission() {
+        _assignmentFlow.value = null
     }
 }

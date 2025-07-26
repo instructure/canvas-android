@@ -491,4 +491,12 @@
     <string name="inboxSignatureSettingsUpdated">Posteingangseinstellungen gespeichert!</string>
     <string name="inboxSignatureSettingsError">Speichern der Posteingangseinstellungen fehlgeschlagen</string>
     <string name="inboxSignatureTextFieldPlaceholder">Schreiben Sie Ihre Signatur hier</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Stunde</item>
+        <item quantity="other">%d Stunden</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Min</item>
+    </plurals>
 </resources>

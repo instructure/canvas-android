@@ -291,7 +291,7 @@
     <string name="Todo">Harus Dilakukan</string>
     <string name="todoFilter">Filter Kursus</string>
     <string name="filterByEllipsis">Filter menurut...</string>
-    <string name="favoritedCoursesLabel">Kursus Difavoritkan</string>
+    <string name="favoriteCoursesLabel">Kursus Favorit</string>
     <string name="Event">Acara</string>
     <string name="eventSuccessfulDeletion">Acara berhasil dihapus</string>
     <string name="timeIconDescription">Ikon Waktu</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifikasi</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Nilai</string>
+    <string name="gradeWidgetTitleLong">Canvas - Nilai</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikasi</string>
     <string name="notLoggedIn">Anda tidak login</string>
     <string name="widgetStyle">Pilih gaya widget Anda</string>
@@ -1779,12 +1780,12 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Kelola Siswa</string>
     <string name="screenTitleSettings">Pengaturan</string>
-    <string name="navigationDrawerSwitchUsers">Ganti Pengguna</string>
     <string name="navigationDrawerLogOut">Logout</string>
     <string name="noStudentsError">Tidak Ada Siswa</string>
     <string name="noStudentsErrorDescription">Anda tidak mengamati siswa manapun.</string>
     <string name="noStudentsRefresh">Muat Ulang</string>
     <string name="noGrade">Tanpa Nilai</string>
+    <string name="noGrades">Tidak Ada Nilai</string>
     <string name="errorLoadingCourses">Terjadi kesalahan ketika memuat kursus siswa Anda.</string>
     <string name="parentNoCourses">Tidak Ada Kursus</string>
     <string name="parentNoCoursesMessage">Kursus siswa Anda mungkin belum diterbitkan.</string>
@@ -2051,4 +2052,23 @@
     <string name="errorLoadingAssignments">Kesalahan terjadi saat memuat tugas</string>
     <string name="a11y_searchAssignments">Cari Tugas</string>
     <string name="dueAssignmentListItem">Batas %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cari di antara Penerima</string>
+    <string name="a11y_recipientIsRemoved">%1$s dihapus</string>
+    <string name="widgetDueDate">Sampai batas waktu pada %1$s</string>
+    <string name="widgetFromTo">%1$s hingga %2$s</string>
+    <string name="widgetAllDay">Sepanjang hari</string>
+    <string name="widgetErrorTitle">Waduh! Ada Sesuatu yang Salah</string>
+    <string name="widgetErrorSubtitle">Kami kesulitan menampilkan tugas Anda saat ini. Silakan coba lagi sebentar lagi atau pergi ke app.</string>
+    <string name="widgetToDoEmptyTitle">Anda hampir selesai saat ini!</string>
+    <string name="widgetToDoEmptySubtitle">Sepertinya Anda bebas selama 4 minggu berikutnya. Mau menambah beberapa to-do?</string>
+    <string name="widgetNotLoggedInTitle">Ayo Kita Log In!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Untuk melihat to-do Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Buka layar To Do</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Buat To Do baru</string>
+    <string name="widgetGradesErrorSubtitle">Kami kesulitan menampilkan nilai Anda saat ini. Silakan coba lagi sebentar lagi atau pergi ke app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Untuk melihat nilai Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Kami kesulitan menampilkan nilai Anda saat ini.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Untuk melihat nilai Anda, silakan login ke akun Anda di aplikasi.</string>
+    <string name="widgetSingleGradeSelectCourse">Ayo pilih kursus</string>
+    <string name="widgetGradesErrorLoadingCourses">Kesalahan terjadi saat memuat kursus.</string>
 </resources>

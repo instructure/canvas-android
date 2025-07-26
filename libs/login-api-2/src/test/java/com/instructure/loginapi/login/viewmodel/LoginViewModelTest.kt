@@ -20,13 +20,15 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.managers.OAuthManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
+import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.utils.FEATURE_FLAG_OFFLINE
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import io.mockk.coEvery
@@ -58,6 +60,8 @@ class LoginViewModelTest {
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
     private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
     private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val experienceApi: ExperienceAPI = mockk(relaxed = true)
+    private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: LoginViewModel
 
@@ -66,6 +70,7 @@ class LoginViewModelTest {
     @Before
     fun setUp() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
+        coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Fail()
         Dispatchers.setMain(testDispatcher)
 
         every { apiPrefs.user } returns mockk()
@@ -91,7 +96,7 @@ class LoginViewModelTest {
         loginStatus.observe(lifecycleOwner, {})
 
         // Then
-        assertEquals(LoginResultAction.Login(true), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(Experience.Academic(true)), loginStatus.value!!.getContentIfNotHandled()!!)
         verify(exactly = 0) { userManager.getSelfAsync(any()) }
     }
 
@@ -108,7 +113,7 @@ class LoginViewModelTest {
         loginStatus.observe(lifecycleOwner, {})
 
         // Then
-        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
         coVerify(exactly = 0) { featureFlagProvider.getCanvasForElementaryFlag() }
     }
 
@@ -145,7 +150,81 @@ class LoginViewModelTest {
         loginStatus.observe(lifecycleOwner, {})
 
         // Then
-        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event with career experience when career experience is enabled`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.CAREER_LEARNER_EXPERIENCE))
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { apiPrefs.canvasCareerView = true }
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, CAREER_EXPERIENCE) }
+        assertEquals(LoginResultAction.Login(Experience.Career), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event with academic experience when the current app is academic`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.ACADEMIC_EXPERIENCE))
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { apiPrefs.canvasCareerView = false }
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ACADEMIC_EXPERIENCE) }
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event with academic experience and set canSwitchToCanvasCareer when the current app is academic but career is possible`() {
+        // Given
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(
+            ExperienceSummary(
+                currentApp = ExperienceSummary.ACADEMIC_EXPERIENCE,
+                availableApps = listOf(ExperienceSummary.ACADEMIC_EXPERIENCE, ExperienceSummary.CAREER_LEARNER_EXPERIENCE)
+            )
+        )
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { apiPrefs.canvasCareerView = false }
+        verify { apiPrefs.canSwitchToCanvasCareer = true }
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     @Test
@@ -165,7 +244,8 @@ class LoginViewModelTest {
         loginStatus.observe(lifecycleOwner, {})
 
         // Then
-        assertEquals(LoginResultAction.Login(true), loginStatus.value!!.getContentIfNotHandled()!!)
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ELEMENTARY_EXPERIENCE) }
+        assertEquals(LoginResultAction.Login(Experience.Academic(true)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     @Test
@@ -185,7 +265,7 @@ class LoginViewModelTest {
         loginStatus.observe(lifecycleOwner, {})
 
         // Then
-        assertEquals(LoginResultAction.ShouldAcceptPolicy(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.ShouldAcceptPolicy(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     @Test
@@ -208,7 +288,7 @@ class LoginViewModelTest {
 
         // Then
         verify { apiPrefs.checkTokenAfterOfflineLogin = true }
-        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     @Test
@@ -231,7 +311,7 @@ class LoginViewModelTest {
 
         // Then
         verify { apiPrefs.checkTokenAfterOfflineLogin = false }
-        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     @Test
@@ -254,11 +334,11 @@ class LoginViewModelTest {
 
         // Then
         verify { apiPrefs.checkTokenAfterOfflineLogin = false }
-        assertEquals(LoginResultAction.Login(false), loginStatus.value!!.getContentIfNotHandled()!!)
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
     private fun createViewModel(): LoginViewModel {
-        return LoginViewModel(featureFlagProvider, userManager, oauthManager, apiPrefs, networkStateProvider)
+        return LoginViewModel(featureFlagProvider, userManager, oauthManager, apiPrefs, experienceApi, networkStateProvider, crashlytics)
     }
 
 }

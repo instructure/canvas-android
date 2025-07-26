@@ -36,6 +36,7 @@ data class AssignmentDetailsUiState(
     val openCommentsBottomSheetParams: OpenCommentsBottomSheetParams? = null,
     val onCommentsBottomSheetDismissed: () -> Unit = {},
     val viewingAttemptText: String? = null,
+    val onAssignmentUpdatedForAddSubmission: () -> Unit = {},
 )
 
 data class SubmissionDetailsUiState(

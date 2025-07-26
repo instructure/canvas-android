@@ -31,6 +31,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 fun AddTextSubmissionContent(
     uiState: AddSubmissionTypeUiState.Text,
     modifier: Modifier = Modifier,
+    onCursorYCoordinateChanged: (Float) -> Unit = {},
     onRceFocused: () -> Unit = {},
 ) {
     ComposeRCE(
@@ -40,6 +41,7 @@ fun AddTextSubmissionContent(
             .fillMaxWidth()
             .padding(horizontal = 16.dp),
         onRceFocused = onRceFocused,
+        onCursorYCoordinateChanged = onCursorYCoordinateChanged,
         onTextChangeListener = uiState.onTextChanged,
         rceControlsPosition = RceControlsPosition.BOTTOM,
         rceDialogThemeColor = ThemePrefs.brandColor,

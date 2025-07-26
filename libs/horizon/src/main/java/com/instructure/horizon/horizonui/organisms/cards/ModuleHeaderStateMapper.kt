@@ -20,7 +20,7 @@ import android.content.Context
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.horizon.R
-import com.instructure.pandautils.utils.formatDayMonthYear
+import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.util.Date
@@ -89,7 +89,7 @@ class ModuleHeaderStateMapper @Inject constructor(
 
         val unlockDate = module.unlockDate
         if (unlockDate != null && unlockDate > Date()) {
-            return context.getString(R.string.moduleWillUnlockExplanation, unlockDate.formatDayMonthYear())
+            return context.getString(R.string.moduleWillUnlockExplanation, unlockDate.formatMonthDayYear())
         }
 
         val prerequisiteIds = module.prerequisiteIds

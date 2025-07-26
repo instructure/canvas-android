@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
 import com.instructure.horizon.features.notebook.common.webview.NotesCallback
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -48,6 +49,7 @@ import com.instructure.pandautils.views.JSInterface
 fun PageDetailsContentScreen(
     uiState: PageDetailsUiState,
     scrollState: ScrollState,
+    updateAiContext: (AiAssistContextSource, String) -> Unit,
     mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -58,6 +60,10 @@ fun PageDetailsContentScreen(
             uiState.onUrlOpened()
         }
     }
+    updateAiContext(
+        AiAssistContextSource.Page(uiState.pageHtmlContent.orEmpty()),
+        uiState.pageHtmlContent.orEmpty()
+    )
     uiState.pageHtmlContent?.let {
         Box(
             contentAlignment = Alignment.Center,
