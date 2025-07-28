@@ -143,7 +143,7 @@
     <string name="accountNotificationsScoresHeader">Scores</string>
     <string name="accountNotificationsScoresDescription">Get a notification anytime an assignment is scored or the score is changed, and anytime the score weight is changed.</string>
     <string name="accountNotificationsTitle">Notifications</string>
-    <string name="accountNotificationEmailToggleLabel">Email</string>
+    <string name="accountNotificationEmailToggleLabel">E-mail</string>
     <string name="accountNotificationPushToggleLabel">Push notification</string>
     <string name="accountNotificationSmsToggleLabel">Sms notification</string>
     <string name="accountNotificationsFailedToUpdate">Failed to update notification preference</string>
