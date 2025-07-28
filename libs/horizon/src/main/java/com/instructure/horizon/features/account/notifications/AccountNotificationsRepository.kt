@@ -41,14 +41,6 @@ class AccountNotificationsRepository @Inject constructor(
         ).dataOrThrow
     }
 
-    suspend fun registerPushNotification() {
-
-    }
-
-    suspend fun unregisterPushNotification() {
-
-    }
-
     suspend fun getNotificationPreferences(userId: Long): List<AccountNotificationPreference> {
         val communicationChannels = getNotificationChannels(userId)
         val settings = communicationChannels.flatMap { channel ->

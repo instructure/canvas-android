@@ -16,10 +16,7 @@
  */
 package com.instructure.horizon.features.account.notifications
 
-import android.Manifest
 import android.content.Context
-import android.content.pm.PackageManager
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -48,16 +45,6 @@ class AccountNotificationsViewModel @Inject constructor(
         )
     ))
     val uiState = _uiState.asStateFlow()
-
-    private val isPermissionGranted: Boolean
-        get() {
-            return ContextCompat.checkSelfPermission(
-                context,
-                Manifest.permission.POST_NOTIFICATIONS
-            ) == PackageManager.PERMISSION_GRANTED
-        }
-    // This is a temporary flag to disable push notifications on beta
-    private val isPushEnabledOnBeta: Boolean = false
 
     init {
         loadData()
@@ -117,7 +104,7 @@ class AccountNotificationsViewModel @Inject constructor(
                     val typeLabel = it.channel.type.label()
                     AccountNotificationTypeState(
                         label = typeLabel,
-                        enabled = (it.channel.type == AccountNotificationType.PUSH && (isPermissionGranted && isPushEnabledOnBeta)) || it.channel.type == AccountNotificationType.EMAIL,
+                        enabled = it.channel.type == AccountNotificationType.EMAIL,
                         checked = it.frequency == AccountNotificationFrequency.IMMEDIATELY,
                         onClick = { checked ->
                             viewModelScope.tryLaunch {
