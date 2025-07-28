@@ -318,4 +318,6 @@
     <string name="exitConfirmationMessage">Are you sure you want to exit? Your changes will not be saved.</string>
     <string name="exitConfirmationExitButtonLabel">Exit</string>
     <string name="exitConfirmationCancelButtonLabel">Cancel</string>
+    <string name="dashboard_courseInvite">You have been invited to join %s</string>
+    <string name="dashboard_courseInviteAccept">Accept</string>
 </resources>

@@ -108,6 +108,9 @@ fun Alert(
                 modifier = Modifier.padding(vertical = 16.dp),
                 onClick = onDismiss
             )
+        } else {
+            // If no onDismiss is provided, we still need to add some space to keep the layout consistent
+            HorizonSpace(SpaceSize.SPACE_40)
         }
         HorizonSpace(SpaceSize.SPACE_16)
     }

@@ -15,9 +15,10 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.DashboardCourse
+import com.instructure.canvasapi2.managers.DashboardContent
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleObject
@@ -28,10 +29,11 @@ import javax.inject.Inject
 class DashboardRepository @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
     private val moduleApi: ModuleAPI.ModuleInterface,
-    private val apiPrefs: ApiPrefs
+    private val apiPrefs: ApiPrefs,
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
 ) {
-    suspend fun getDashboardCourses(forceNetwork: Boolean): DataResult<List<DashboardCourse>> {
-        return horizonGetCoursesManager.getDashboardCourses(apiPrefs.user?.id ?: -1, forceNetwork)
+    suspend fun getDashboardContent(forceNetwork: Boolean): DataResult<DashboardContent> {
+        return horizonGetCoursesManager.getDashboardContent(apiPrefs.user?.id ?: -1, forceNetwork)
     }
 
     suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
@@ -42,5 +44,9 @@ class DashboardRepository @Inject constructor(
             params,
             includes = listOf("estimated_durations")
         )
+    }
+
+    suspend fun acceptInvite(courseId: Long, enrollmentId: Long): DataResult<Unit> {
+        return enrollmentApi.acceptInvite(courseId, enrollmentId, RestParams())
     }
 }

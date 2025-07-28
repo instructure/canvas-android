@@ -26,6 +26,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
@@ -59,9 +60,13 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.ProgressBar
+import com.instructure.horizon.horizonui.organisms.Alert
+import com.instructure.horizon.horizonui.organisms.AlertType
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -93,6 +98,18 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 item {
                     HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
                     HorizonSpace(SpaceSize.SPACE_36)
+                }
+                items(uiState.invitesUiState) { inviteItem ->
+                    Alert(stringResource(R.string.dashboard_courseInvite, inviteItem.courseName), alertType = AlertType.Info, buttons = {
+                        LoadingButton(
+                            label = stringResource(R.string.dashboard_courseInviteAccept),
+                            contentAlignment = Alignment.CenterStart,
+                            color = ButtonColor.Black,
+                            onClick = inviteItem.onAccept,
+                            loading = inviteItem.acceptLoading
+                        )
+                    }, onDismiss = if (inviteItem.acceptLoading) null else inviteItem.onDismiss)
+                    HorizonSpace(SpaceSize.SPACE_16)
                 }
                 itemsIndexed(uiState.coursesUiState) { index, courseItem ->
                     DashboardCourseItem(courseItem, onClick = {

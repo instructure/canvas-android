@@ -86,7 +86,9 @@ class LoginViewModel @Inject constructor(
         val experienceResult = experienceAPI.getExperienceSummary(RestParams(isForceReadFromNetwork = true))
         val currentExperience = experienceResult.dataOrNull?.currentApp ?: ExperienceSummary.ACADEMIC_EXPERIENCE
         val availableExperiences = experienceResult.dataOrNull?.availableApps ?: emptyList()
-        return if (currentExperience == ExperienceSummary.CAREER_LEARNER_EXPERIENCE) {
+        val isLearningProviderAndCanBeLearner =
+            currentExperience == ExperienceSummary.CAREER_LEARNING_PROVIDER && availableExperiences.contains(ExperienceSummary.CAREER_LEARNER_EXPERIENCE)
+        return if (currentExperience == ExperienceSummary.CAREER_LEARNER_EXPERIENCE || isLearningProviderAndCanBeLearner) {
             apiPrefs.canvasCareerView = true
             crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, CAREER_EXPERIENCE)
             Experience.Career
