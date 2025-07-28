@@ -48,6 +48,7 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             enteredGrade = submission?.enteredGrade ?: "A",
             enteredScore = submission?.score ?: 100.0,
             assignment = null,
+            hideGradeFromStudent = false,
         )
         return SubmissionGradeQuery.Data(submission = dummySubmission)
     }
