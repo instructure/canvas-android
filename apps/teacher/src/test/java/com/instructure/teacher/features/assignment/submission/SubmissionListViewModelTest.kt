@@ -31,6 +31,8 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
@@ -38,14 +40,18 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -178,6 +184,12 @@ class SubmissionListViewModelTest {
         } returns submissions
 
         setupString()
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
@@ -662,6 +674,8 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Route to submission`() = runTest {
+        mockkObject(RemoteConfigUtils)
+        every { RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2) } returns true
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
                 any<Assignment>(),
