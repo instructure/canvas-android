@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
@@ -157,7 +159,7 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
             showToast(R.string.toDoNoSubmissions)
             return
         }
-        val submissionIds = submissions.map { it.id }.toLongArray()
+        val submissionIds = submissions.map { if (RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2)) it.assigneeId else it.id }.toLongArray()
         val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
         val bundle = SpeedGraderFragment.makeBundle(courseId = course.id, assignmentId = assignment.id, filteredSubmissionIds = submissionIds, anonymousGrading = anonymousGrading, selectedIdx = 0)
         RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))

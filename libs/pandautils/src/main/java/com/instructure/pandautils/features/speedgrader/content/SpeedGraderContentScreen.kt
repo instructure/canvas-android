@@ -58,7 +58,6 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -133,7 +132,9 @@ private fun SpeedGraderContentScreen(
                 dueDate = uiState.dueDate,
                 expanded = expanded,
                 onExpandClick = onExpandClick,
-                courseColor = LocalCourseColor.current
+                courseColor = LocalCourseColor.current,
+                anonymous = uiState.anonymous,
+                group = uiState.group
             )
             CanvasDivider()
             if (uiState.attemptSelectorUiState.items.size > 1 || uiState.attachmentSelectorUiState.items.isNotEmpty()) {
@@ -187,6 +188,8 @@ private fun SpeedGraderContentScreen(
 private fun UserHeader(
     userUrl: String?,
     userName: String?,
+    anonymous: Boolean,
+    group: Boolean,
     submissionStatus: SubmissionStateLabel,
     dueDate: Date?,
     expanded: Boolean,
@@ -207,6 +210,8 @@ private fun UserHeader(
             modifier = Modifier.size(40.dp),
             imageUrl = userUrl,
             name = userName.orEmpty(),
+            anonymous = anonymous,
+            group = group
         )
         Column(
             modifier = Modifier.padding(start = 12.dp)
@@ -473,7 +478,9 @@ fun UserHeaderPreview() {
         submissionStatus = SubmissionStateLabel.GRADED,
         expanded = false,
         onExpandClick = null,
-        courseColor = Color(color = android.graphics.Color.BLUE)
+        courseColor = Color(color = android.graphics.Color.BLUE),
+        anonymous = false,
+        group = false
     )
 }
 

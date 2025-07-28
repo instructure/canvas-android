@@ -52,7 +52,8 @@ data class SubmissionUiState(
     val avatarUrl: String?,
     val tags: List<SubmissionTag>,
     val grade: String? = null,
-    val hidden: Boolean = false
+    val hidden: Boolean = false,
+    val group: Boolean = false
 )
 
 enum class SubmissionTag(

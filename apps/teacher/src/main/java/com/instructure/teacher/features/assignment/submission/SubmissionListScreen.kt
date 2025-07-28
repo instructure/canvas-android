@@ -269,6 +269,7 @@ private fun SubmissionListItem(
                 anonymous = anonymousGrading,
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,
+                group = submissionListUiState.group
             )
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
