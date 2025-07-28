@@ -23,20 +23,27 @@ import com.instructure.canvasapi2.managers.SectionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.exhaustive
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.features.postpolicies.ui.PostGradeView
 import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PostGradeEffectHandler : EffectHandler<PostGradeView, PostGradeEvent, PostGradeEffect>() {
+class PostGradeEffectHandler(private val speedGraderGradingEffectHandler: SpeedGraderGradingEventHandler) : EffectHandler<PostGradeView, PostGradeEvent, PostGradeEffect>() {
     override fun accept(effect: PostGradeEffect) {
         launch {
             when (effect) {
                 is PostGradeEffect.LoadData -> loadData(effect.assignment)
                 is PostGradeEffect.HideGrades -> hideGrades(effect.assignmentId, effect.sectionIds)
                 is PostGradeEffect.PostGrades -> postGrades(effect.assignmentId, effect.sectionIds, effect.gradedOnly)
-                is PostGradeEffect.ShowGradesPosted -> view?.showGradesPosted(effect.isHidingGrades, effect.assignmentId)
+                is PostGradeEffect.ShowGradesPosted -> {
+                    launch {
+                        speedGraderGradingEffectHandler.postEvent(GradingEvent.PostPolicyUpdated)
+                    }
+                    view?.showGradesPosted(effect.isHidingGrades, effect.assignmentId)
+                }
                 is PostGradeEffect.ShowPostFailed -> view?.showPostFailed(effect.isHidingGrades)
                 is PostGradeEffect.WatchForProgress -> watchProgress(effect.progressId)
             }.exhaustive
