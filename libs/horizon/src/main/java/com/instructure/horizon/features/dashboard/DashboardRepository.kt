@@ -46,7 +46,7 @@ class DashboardRepository @Inject constructor(
         )
     }
 
-    suspend fun acceptInvite(courseId: Long, enrollmentId: Long): DataResult<Unit> {
-        return enrollmentApi.acceptInvite(courseId, enrollmentId, RestParams())
+    suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {
+        return enrollmentApi.acceptInvite(courseId, enrollmentId, RestParams()).dataOrThrow
     }
 }

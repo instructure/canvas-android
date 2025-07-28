@@ -93,6 +93,7 @@ class DashboardViewModel @Inject constructor(
                         dashboardRepository.acceptInvite(courseInvite.courseId, courseInvite.enrollmentId)
                         refresh()
                     } catch {
+                        _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.dashboard_courseInviteFailed))) }
                         updateAcceptLoadingForInvite(courseInvite.courseId, false)
                     }
                 }, onDismiss = {

@@ -320,4 +320,5 @@
     <string name="exitConfirmationCancelButtonLabel">Cancel</string>
     <string name="dashboard_courseInvite">You have been invited to join %s</string>
     <string name="dashboard_courseInviteAccept">Accept</string>
+    <string name="dashboard_courseInviteFailed">Failed to accept course invite</string>
 </resources>
