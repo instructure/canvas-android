@@ -85,7 +85,13 @@ class FakeSubmissionContentManager : SubmissionContentManager {
         )
         val dummyEdge = SubmissionContentQuery.Edge(node = dummyNode)
         val dummyHistoriesConnection = SubmissionContentQuery.SubmissionHistoriesConnection(
-            edges = listOf(dummyEdge)
+            edges = listOf(dummyEdge),
+            pageInfo = SubmissionContentQuery.PageInfo(
+                hasNextPage = false,
+                hasPreviousPage = false,
+                startCursor = "start-cursor",
+                endCursor = "end-cursor"
+            )
         )
         val dummySubmission = if (submission == null) null else SubmissionContentQuery.Submission(
             __typename = "Submission",
