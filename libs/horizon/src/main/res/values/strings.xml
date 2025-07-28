@@ -145,6 +145,7 @@
     <string name="accountNotificationsTitle">Notifications</string>
     <string name="accountNotificationEmailToggleLabel">Email</string>
     <string name="accountNotificationPushToggleLabel">Push notification</string>
+    <string name="accountNotificationSmsToggleLabel">Sms notification</string>
     <string name="accountNotificationsFailedToUpdate">Failed to update notification preference</string>
     <string name="moduleItemCompleteAllItems">Complete all items</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>

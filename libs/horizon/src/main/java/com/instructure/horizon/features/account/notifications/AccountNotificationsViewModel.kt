@@ -42,7 +42,6 @@ class AccountNotificationsViewModel @Inject constructor(
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(AccountNotificationsUiState(
-        updateNotificationItem = ::updateNotificationItem,
         screenState = LoadingState(
             isPullToRefreshEnabled = false,
             onSnackbarDismiss = ::dismissSnackbar
@@ -67,10 +66,11 @@ class AccountNotificationsViewModel @Inject constructor(
     private fun loadData() {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = true)) }
-
             val settings = repository.getNotificationPreferences(apiPrefs.user!!.id)
-            val items = mapAccountNotificationPreferencesToItems(settings)
-            _uiState.update { it.copy(notificationItems = items) }
+            val horizonSettings = getHorizonSettings(settings)
+            val uiGroups = getUiGroupStates(horizonSettings)
+
+            _uiState.update { it.copy(notificationItems = uiGroups) }
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false, isError = true, errorMessage = context.getString(
@@ -79,156 +79,127 @@ class AccountNotificationsViewModel @Inject constructor(
         }
     }
 
-    private fun mapAccountNotificationPreferencesToItems(preferences: List<AccountNotificationPreference>): List<AccountNotificationGroup> {
-        val items = mutableListOf<AccountNotificationGroup>()
-
-        val announcementsAndMessages = preferences.filter {
-            it.category == AccountNotificationCategory.ANNOUNCEMENT
-                    || it.category == AccountNotificationCategory.ACCOUNT_NOTIFICATION
-                    || it.category == AccountNotificationCategory.CONVERSATION_MESSAGE
-        }
-        val dueDates = preferences.filter { it.category == AccountNotificationCategory.DUE_DATE }
-
-        val scores = preferences.filter { it.category == AccountNotificationCategory.GRADING }
-
-        items.add(
-            AccountNotificationGroup(
-                title = context.getString(R.string.accountNotificationsAnnouncementsAndMessagesHeader),
-                description = context.getString(R.string.accountNotificationsAnnouncementsAndMessagesDescription),
-                items = listOf(
-                    getNotificationItemByType(announcementsAndMessages, AccountNotificationType.EMAIL),
-                    getNotificationItemByType(announcementsAndMessages, AccountNotificationType.PUSH),
-                )
-            )
-        )
-
-        items.add(
-            AccountNotificationGroup(
-                title = context.getString(R.string.accountNotificationsDueDatesHeader),
-                description = context.getString(R.string.accountNotificationsDueDatesDescription),
-                items = listOf(
-                    getNotificationItemByType(dueDates, AccountNotificationType.EMAIL),
-                    getNotificationItemByType(dueDates, AccountNotificationType.PUSH),
-                )
-            )
-        )
-
-        items.add(
-            AccountNotificationGroup(
-                title = context.getString(R.string.accountNotificationsScoresHeader),
-                description = context.getString(R.string.accountNotificationsScoresDescription),
-                items = listOf(
-                    getNotificationItemByType(scores, AccountNotificationType.EMAIL),
-                    getNotificationItemByType(scores, AccountNotificationType.PUSH),
-                )
-            )
-        )
-
-        return items
-    }
-
-    private fun updateNotificationItem(item: AccountNotificationItem, checked: Boolean) {
-        viewModelScope.tryLaunch {
-            _uiState.update {
-                it.copy(
-                    notificationItems = it.notificationItems.map { group ->
-                        group.copy(
-                            items = group.items.map { notificationItem ->
-                                if (notificationItem == item) {
-                                    notificationItem.copy(enabled = false, checked = checked)
-                                } else {
-                                    notificationItem
-                                }
-                            }
-                        )
-                    }
-                )
-            }
-
-            item.onClick(checked)
-
-            _uiState.update {
-                it.copy(
-                    notificationItems = it.notificationItems.map { groups ->
-                        groups.copy(
-                            items = groups.items.map { notificationItem ->
-                                if (notificationItem.title == item.title) {
-                                    notificationItem.copy(enabled = true)
-                                } else {
-                                    notificationItem
-                                }
-                            }
-                        )
-                    }
-                )
-            }
-        } catch {
-            _uiState.update {
-                it.copy(
-                    screenState = it.screenState.copy(
-                        snackbarMessage = context.getString(R.string.accountNotificationsFailedToUpdate)
-                    )
-                )
-            }
-
-            _uiState.update {
-                it.copy(
-                    notificationItems = it.notificationItems.map { groups ->
-                        groups.copy(
-                            items = groups.items.map { notificationItem ->
-                                if (notificationItem.title == item.title) {
-                                    notificationItem.copy(enabled = true, checked = !checked)
-                                } else {
-                                    notificationItem
-                                }
-                            }
-                        )
-                    }
-                )
-            }
-        }
-    }
-
-    private fun getNotificationItemByType(preferences: List<AccountNotificationPreference>, type: AccountNotificationType): AccountNotificationItem {
-        val filteredPreferences = preferences.filter { it.type == type }
-        return AccountNotificationItem(
-            title = type.label(context),
-            checked = filteredPreferences.isNotEmpty() && filteredPreferences.any { it.frequency == AccountNotificationFrequency.IMMEDIATELY },
-            enabled = if (type == AccountNotificationType.PUSH) isPermissionGranted && isPushEnabledOnBeta else true,
-            onClick = { checked ->
-                if (filteredPreferences.isEmpty() && type == AccountNotificationType.PUSH && checked) {
-                    repository.registerPushNotification()
-                } else {
-                    filteredPreferences.forEach { preference ->
-                        repository.updateNotificationPreference(
-                            preference.category,
-                            preference.channelId,
-                            checked.frequency()
-                        )
-                    }
-                }
-            }
-        )
-    }
-
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
-}
 
-private fun Boolean.frequency(): AccountNotificationFrequency {
-    return if (this) {
-        AccountNotificationFrequency.IMMEDIATELY
-    } else {
-        AccountNotificationFrequency.NEVER
+    private fun updatePreference(groupTitle: String, typeLabel: String, checked: Boolean? = null, enabled: Boolean? = null) {
+        _uiState.update {
+            it.copy(
+                notificationItems = it.notificationItems.map { group ->
+                    if (group.title == groupTitle) {
+                        group.copy(
+                            items = group.items.map { item ->
+                                if (item.label == typeLabel) {
+                                    item.copy(checked = checked ?: item.checked, enabled = enabled ?: item.enabled)
+                                } else {
+                                    item
+                                }
+                            }
+                        )
+                    } else {
+                        group
+                    }
+                }
+            )
+        }
+    }
+
+    private fun getUiGroupStates(preferences: List<HorizonAccountNotificationPreference>): List<AccountNotificationGroup> {
+        return preferences.distinctBy { it.category }.map { preference ->
+            val groupTitle = preference.category.title()
+            AccountNotificationGroup(
+                title = groupTitle,
+                description = preference.category.description(),
+                items = preferences.filter { it.category == preference.category }.map {
+                    val typeLabel = it.channel.type.label()
+                    AccountNotificationTypeState(
+                        label = typeLabel,
+                        enabled = (it.channel.type == AccountNotificationType.PUSH && (isPermissionGranted && isPushEnabledOnBeta)) || it.channel.type == AccountNotificationType.EMAIL,
+                        checked = it.frequency == AccountNotificationFrequency.IMMEDIATELY,
+                        onClick = { checked ->
+                            viewModelScope.tryLaunch {
+                                updatePreference(groupTitle, typeLabel, enabled = false)
+                                preference.category.categories.forEach { category ->
+                                    repository.updateNotificationPreference(
+                                        category = category,
+                                        channelId = it.channel.id,
+                                        frequency = if (checked) {
+                                            AccountNotificationFrequency.IMMEDIATELY
+                                        } else {
+                                            AccountNotificationFrequency.NEVER
+                                        }
+                                    )
+                                }
+                                updatePreference(groupTitle, typeLabel, enabled = true, checked = checked)
+                            } catch {
+                                updatePreference(groupTitle, typeLabel, enabled = true)
+                                _uiState.update { it.copy(screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.accountNotificationsFailedToUpdate))) }
+                            }
+                        }
+                    )
+                }
+            )
+        }
+    }
+
+    private fun getHorizonSettings(preferences: List<AccountNotificationPreference>): List<HorizonAccountNotificationPreference> {
+        val mappedSettings = preferences.map { preference ->
+            HorizonAccountNotificationPreference(
+                channel = preference.channel,
+                category = HorizonAccountNotificationCategory.entries.first {
+                    it.categories.contains(
+                        preference.category
+                    )
+                },
+                frequency = preference.frequency,
+            )
+        }
+        return buildList {
+            HorizonAccountNotificationCategory.entries.forEach { category ->
+                val categorySettings = mappedSettings.filter { it.category == category }
+                val categoryChannels = categorySettings.map { it.channel }.distinct()
+                val items = categoryChannels.map { channel ->
+                    val prefs = categorySettings.filter { it.channel == channel }
+                    HorizonAccountNotificationPreference(
+                        channel = channel,
+                        category = category,
+                        frequency = if (prefs.all { it.frequency == AccountNotificationFrequency.IMMEDIATELY }) {
+                            AccountNotificationFrequency.IMMEDIATELY
+                        } else {
+                            AccountNotificationFrequency.NEVER
+                        }
+                    )
+                }
+                addAll(items)
+            }
+        }
+    }
+
+    private fun AccountNotificationType.label(): String {
+        return when (this) {
+            AccountNotificationType.EMAIL -> context.getString(R.string.accountNotificationEmailToggleLabel)
+            AccountNotificationType.PUSH -> context.getString(R.string.accountNotificationPushToggleLabel)
+            AccountNotificationType.SMS -> context.getString(R.string.accountNotificationPushToggleLabel)
+        }
+    }
+
+    private fun HorizonAccountNotificationCategory.title(): String {
+        return when (this) {
+            HorizonAccountNotificationCategory.ANNOUNCEMENTS_AND_MESSAGES -> context.getString(R.string.accountNotificationsAnnouncementsAndMessagesHeader)
+            HorizonAccountNotificationCategory.ASSIGNMENT_DUE_DATE -> context.getString(R.string.accountNotificationsDueDatesHeader)
+            HorizonAccountNotificationCategory.SCORES -> context.getString(R.string.accountNotificationsScoresHeader)
+        }
+    }
+
+    private fun HorizonAccountNotificationCategory.description(): String {
+        return when (this) {
+            HorizonAccountNotificationCategory.ANNOUNCEMENTS_AND_MESSAGES -> context.getString(R.string.accountNotificationsAnnouncementsAndMessagesDescription)
+            HorizonAccountNotificationCategory.ASSIGNMENT_DUE_DATE -> context.getString(R.string.accountNotificationsDueDatesDescription)
+            HorizonAccountNotificationCategory.SCORES -> context.getString(R.string.accountNotificationsScoresDescription)
+        }
     }
 }
 
-private fun AccountNotificationType.label(context: Context): String {
-    return when (this) {
-        AccountNotificationType.EMAIL -> context.getString(R.string.accountNotificationEmailToggleLabel)
-        AccountNotificationType.PUSH -> context.getString(R.string.accountNotificationPushToggleLabel)
-    }
-}
