@@ -17,15 +17,13 @@
 package com.instructure.pandautils.features.speedgrader
 
 import android.content.Context
+import com.instructure.canvasapi2.models.Assignment
 
-data class SpeedGraderUiState(
-    val courseId: Long,
-    val assignmentId: Long,
-    val submissionIds: List<Long>,
-    val selectedItem: Int,
-    val courseName: String = "",
-    val assignmentName: String = "",
-    val onPageChange: (Int) -> Unit,
-    val navigateToPostPolicy: (Context) -> Unit,
-    val loading: Boolean = true
-)
+interface SpeedGraderPostPolicyRouter {
+
+    fun navigateToPostPolicies(
+        context: Context,
+        courseId: Long,
+        assignment: Assignment
+    )
+}

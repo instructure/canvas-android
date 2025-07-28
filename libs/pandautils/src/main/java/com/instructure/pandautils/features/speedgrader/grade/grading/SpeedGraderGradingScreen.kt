@@ -30,6 +30,7 @@ import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
@@ -51,6 +52,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -153,7 +155,11 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                                 disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
                             )
                         ) {
-                            Text(stringResource(R.string.noGrade), fontSize = 16.sp, lineHeight = 19.sp)
+                            Text(
+                                stringResource(R.string.noGrade),
+                                fontSize = 16.sp,
+                                lineHeight = 19.sp
+                            )
                         }
                         Spacer(modifier = Modifier.width(16.dp))
                     }
@@ -306,7 +312,6 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     .fillMaxWidth()
                     .padding(top = 12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Text(
                     text = stringResource(R.string.finalGrade),
@@ -315,12 +320,23 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     fontWeight = FontWeight.SemiBold
                 )
 
+                Spacer(modifier = Modifier.weight(1f))
+
                 Text(
                     text = finalGrade,
                     color = colorResource(R.color.textDarkest),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold
                 )
+
+                if (uiState.gradeHidden) {
+                    Icon(
+                        modifier = Modifier.padding(start = 8.dp),
+                        painter = painterResource(R.drawable.ic_eye_off),
+                        tint = colorResource(R.color.textDanger),
+                        contentDescription = stringResource(R.string.gradesAreHidden)
+                    )
+                }
             }
         }
     }
@@ -576,7 +592,11 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         else -> 1f
     }
 
-    var sliderDrivenScore by remember { mutableFloatStateOf((uiState.enteredScore ?: 0f) * pointScale) }
+    var sliderDrivenScore by remember {
+        mutableFloatStateOf(
+            (uiState.enteredScore ?: 0f) * pointScale
+        )
+    }
     var textFieldScore by remember {
         mutableStateOf(uiState.enteredScore?.let {
             numberFormatter.format(
@@ -588,7 +608,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val sliderState = rememberSliderState(
         value = sliderDrivenScore.coerceAtLeast(0f),
         valueRange = 0f..maxScore * pointScale,
-        steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt())-1
+        steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt()) - 1
     )
 
     LaunchedEffect(textFieldScore) {
@@ -709,11 +729,12 @@ private fun SpeedGraderGradingContentPercentagePreview() {
     CanvasTheme(courseColor = Color.Blue) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
+                gradeHidden = true,
                 loading = false,
                 pointsPossible = 20.0,
-                enteredGrade = "95.5%",
+                enteredGrade = "90%",
                 enteredScore = 18f,
-                grade = "A",
+                grade = "90%",
                 score = 15.0,
                 onScoreChange = {},
                 dueDate = Date(),

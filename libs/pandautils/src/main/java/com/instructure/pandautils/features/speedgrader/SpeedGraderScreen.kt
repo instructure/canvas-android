@@ -24,16 +24,19 @@ import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
@@ -55,7 +58,10 @@ fun SpeedGraderScreen(
     val context = LocalContext.current
     val window = (context.getFragmentActivity()).window
 
-    val pagerState = rememberPagerState(pageCount = { uiState.submissionIds.size }, initialPage = uiState.selectedItem)
+    val pagerState = rememberPagerState(
+        pageCount = { uiState.submissionIds.size },
+        initialPage = uiState.selectedItem
+    )
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
 
     DisposableEffect(Unit) {
@@ -78,7 +84,18 @@ fun SpeedGraderScreen(
                 navigationActionClick = navigationActionClick,
                 navIconRes = R.drawable.ic_back_arrow,
                 textColor = colorResource(id = R.color.textLightest),
-                modifier = Modifier.testTag("speedGraderAppBar")
+                modifier = Modifier.testTag("speedGraderAppBar"),
+                actions = {
+                    IconButton(onClick = {
+                        uiState.navigateToPostPolicy(context)
+                    }) {
+                        Icon(
+                            painter = painterResource(R.drawable.ic_eye_filled),
+                            tint = colorResource(R.color.textLightest),
+                            contentDescription = stringResource(R.string.a11y_contentDescription_postPolicy)
+                        )
+                    }
+                }
             )
         },
         modifier = Modifier.imePadding(),
@@ -90,7 +107,11 @@ fun SpeedGraderScreen(
             }
 
             else -> {
-                HorizontalPager(modifier = Modifier.padding(padding), state = pagerState, userScrollEnabled = viewPagerEnabled) { page ->
+                HorizontalPager(
+            modifier = Modifier.padding(padding),
+            state = pagerState,
+            userScrollEnabled = viewPagerEnabled
+        ) { page ->
                     uiState.onPageChange(page)
                     val submissionId = uiState.submissionIds[page]
                     NavHost(
