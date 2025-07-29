@@ -168,6 +168,7 @@ private fun LearnScreenWrapper(
                 selectedIndex = pagerState.currentPage,
                 onTabSelected = { coroutineScope.launch { pagerState.animateScrollToPage(it) } },
                 tab = { tab, isSelected, modifier -> Tab(tab, isSelected, modifier) },
+                tabAlignment = Alignment.Start,
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 24.dp)
