@@ -21,7 +21,7 @@ import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
@@ -45,7 +45,7 @@ fun ComposeCanvasWebViewWrapper(
     webViewCallbacks: ComposeWebViewCallbacks? = null,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
-    val webViewState = rememberSaveable { bundleOf() }
+    val webViewState = remember { bundleOf() }
 
     if (LocalInspectionMode.current) {
         Text(text = content)
