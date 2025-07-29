@@ -83,7 +83,7 @@ class NotAParentScreenTest {
             .performScrollTo()
             .assertIsDisplayed()
             .assertHasClickAction()
-        composeTestRule.onNodeWithText("TEACHER")
+        composeTestRule.onNodeWithContentDescription("Canvas Teacher")
             .performScrollTo()
             .assertIsDisplayed()
             .assertHasClickAction()

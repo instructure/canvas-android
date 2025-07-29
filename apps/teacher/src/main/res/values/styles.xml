@@ -185,7 +185,6 @@
         <item name="android:adjustViewBounds">true</item>
         <item name="android:importantForAccessibility">no</item>
         <item name="android:tint">@color/textDarkest</item>
-        <item name="android:src">@drawable/ic_canvas_wordmark</item>
     </style>
 
     <style name="NotATeacher.SubText" parent="TextFont.Medium">

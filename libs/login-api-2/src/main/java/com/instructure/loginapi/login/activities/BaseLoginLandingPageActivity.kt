@@ -207,9 +207,6 @@ abstract class BaseLoginLandingPageActivity : BaseCanvasActivity() {
         // Icon
         ColorUtils.colorIt(color, canvasLogo)
 
-        // App Name/Type. Will not be present in all layout versions
-        appDescriptionType.setText(appTypeName())
-
         ViewStyler.themeStatusBar(this@BaseLoginLandingPageActivity)
     }
 

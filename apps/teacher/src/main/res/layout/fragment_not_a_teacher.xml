@@ -58,7 +58,8 @@
             android:id="@+id/canvasWordmarkStudent"
             android:layout_centerVertical="true"
             style="@style/NotATeacher.CanvasWordmark"
-            android:layout_toEndOf="@id/studentCanvasLogo"/>
+            android:layout_toEndOf="@id/studentCanvasLogo"
+            app:srcCompat="@drawable/canvas_wordmark_leftaligned_student"/>
 
     </RelativeLayout>
 
@@ -77,15 +78,10 @@
 
         <ImageView
             android:id="@+id/canvasWordmarkParent"
+            android:layout_centerVertical="true"
             style="@style/NotATeacher.CanvasWordmark"
-            android:layout_toEndOf="@id/parentCanvasLogo"/>
-
-        <TextView
-            style="@style/NotATeacher.SubText"
-            android:layout_below="@+id/canvasWordmarkParent"
             android:layout_toEndOf="@id/parentCanvasLogo"
-            android:text="@string/appUserTypeParent"
-            android:textColor="@color/textDarkest"/>
+            app:srcCompat="@drawable/canvas_wordmark_leftaligned_parent"/>
 
     </RelativeLayout>
 
