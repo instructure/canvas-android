@@ -107,7 +107,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param currentScore The expected current score to be displayed.
      */
     fun assertCurrentEnteredScore(currentScore: String) {
-        composeTestRule.onNode(hasTestTag("speedGraderPointsGradeTextField") and hasText(currentScore), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("speedGraderCurrentGradeTextField") and hasText(currentScore), useUnmergedTree = true).assertIsDisplayed()
     }
 
     /**
