@@ -167,11 +167,10 @@ fun LoadingButton(
     iconPosition: ButtonIconPosition = ButtonIconPosition.NoIcon,
     enabled: Boolean = true,
     loading: Boolean = true,
-    dimmed: Boolean = !enabled,
     onClick: () -> Unit = {},
     badge: @Composable (() -> Unit)? = null
 ) {
-    val alpha = if (dimmed) 0.5f else 1f
+    val alpha = if (enabled) 1f else 0.5f
     Box(
         contentAlignment = contentAlignment,
         modifier = modifier
