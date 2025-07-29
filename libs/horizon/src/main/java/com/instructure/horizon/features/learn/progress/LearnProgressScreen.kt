@@ -105,7 +105,7 @@ private fun LearnProgressContent(
             .fillMaxSize()
     ){
         LazyColumn(
-            contentPadding = PaddingValues(24.dp),
+            contentPadding = PaddingValues(bottom = 24.dp, start = 24.dp, end = 24.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             items(state.moduleItemStates.values.toList()) { moduleHeaderState ->
