@@ -50,7 +50,7 @@ class NotAParentPage(private val composeTestRule: ComposeTestRule) {
     }
 
     fun assertTeacherAppDisplayed() {
-        composeTestRule.onNodeWithText("TEACHER").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Canvas Teacher").assertIsDisplayed().assertHasClickAction()
     }
 
     fun assertOtherAppSubtitleDisplayed() {

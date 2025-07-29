@@ -21,7 +21,6 @@ import androidx.annotation.DrawableRes
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -134,18 +133,18 @@ private fun AppOptions(
         )
         Spacer(modifier = Modifier.height(16.dp))
         AppOption(
-            null,
             stringResource(id = R.string.canvasAppName),
             colorResource(id = R.color.login_studentAppTheme),
             R.drawable.ic_canvas_logo_student,
+            R.drawable.canvas_wordmark_leftaligned_student,
             { onStudentClick() }
         )
         Spacer(modifier = Modifier.height(12.dp))
         AppOption(
-            stringResource(id = R.string.teacherApp),
             stringResource(id = R.string.canvasTeacherApp),
             colorResource(id = R.color.login_teacherAppTheme),
             R.drawable.ic_canvas_logo_teacher,
+            R.drawable.canvas_wordmark_leftaligned_teacher,
             { onTeacherClick() }
         )
     }
@@ -153,10 +152,10 @@ private fun AppOptions(
 
 @Composable
 private fun AppOption(
-    name: String?,
     label: String,
     color: Color,
     @DrawableRes iconRes: Int,
+    @DrawableRes wordmarkRes: Int,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -175,22 +174,12 @@ private fun AppOption(
             modifier = Modifier.size(48.dp)
         )
         Spacer(modifier = Modifier.width(8.dp))
-        Column(verticalArrangement = Arrangement.Center) {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_canvas_wordmark),
-                tint = colorResource(id = R.color.backgroundMedium),
-                contentDescription = null,
-                modifier = Modifier.height(24.dp)
-            )
-            if (name != null) {
-                Text(
-                    text = name,
-                    color = color,
-                    fontSize = 10.sp,
-                    textAlign = TextAlign.Center
-                )
-            }
-        }
+        Icon(
+            painter = painterResource(id = wordmarkRes),
+            tint = colorResource(id = R.color.textDarkest),
+            contentDescription = null,
+            modifier = Modifier.height(24.dp)
+        )
     }
 }
 
