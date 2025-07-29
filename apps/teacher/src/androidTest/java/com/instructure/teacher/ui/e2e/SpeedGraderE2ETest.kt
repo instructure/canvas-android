@@ -167,15 +167,15 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         val grade = "10"
         Log.d(STEP_TAG, "Enter '$grade' as the new grade and close the keyboard.")
-        speedGraderGradePage.enterNewGrade(composeTestRule, grade)
+        speedGraderGradePage.enterNewGrade(grade)
         Espresso.pressBack()
         Thread.sleep(2000) // Wait for the keyboard to close, and the bottom panel to collapse.
 
         Log.d(STEP_TAG, "Click on the 'Expand Panel Button'.")
-        speedGraderGradePage.clickExpandPanelButton(composeTestRule)
+        speedGraderPage.clickExpandPanelButton()
 
         Log.d(ASSERTION_TAG, "Assert that the grade has applied.")
-        speedGraderGradePage.assertFinalGradeIsDisplayed(composeTestRule, grade)
+        speedGraderGradePage.assertFinalGradeIsDisplayed(grade)
 
         Log.d(STEP_TAG, "Navigate back to the Assignment Submission List Page and refresh the page to apply the new grade changes.")
         Espresso.pressBack()

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.ui.pages
+package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.test.assertIsDisplayed
@@ -30,7 +30,6 @@ import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withId
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.dataseeding.model.CanvasUserApiModel
@@ -85,19 +84,13 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
     /**
-     * Assert that the 'Grade' label is displayed on the SpeedGrader page's 'Grade & Rubric' tab.
-     */
-    fun assertSpeedGraderLabelDisplayed() {
-        composeTestRule.onNodeWithTag("speedGraderGradeLabel", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    /**
      * Clicks the expand panel button in the Compose UI.
      */
     fun clickExpandPanelButton() {
         composeTestRule
             .onNodeWithTag("expandPanelButton", useUnmergedTree = true)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -107,6 +100,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         composeTestRule
             .onNodeWithTag("collapsePanelButton", useUnmergedTree = true)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -127,7 +121,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      */
     fun assertFinalGradeIsDisplayed(grade: String) {
         composeTestRule
-            .onNodeWithTag("finalGradeDisplay")
+            .onNodeWithTag("finalGradeValue")
             .assertTextContains(grade, substring = true)
             .assertIsDisplayed()
     }
@@ -168,10 +162,11 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-     * Selects the "Grades" tab.
+     * Selects the "Grades & Rubric" tab.
      */
-    fun selectTab(tabTitle: Int) {
+    fun selectTab(tabTitle: String) {
         composeTestRule.onNode(hasTestTag("speedGraderTab-${tabTitle}"), useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**

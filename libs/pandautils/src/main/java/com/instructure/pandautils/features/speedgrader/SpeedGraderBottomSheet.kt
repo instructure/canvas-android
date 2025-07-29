@@ -102,7 +102,7 @@ private fun SpeedGraderBottomSheetContent(
                             stringResource(id = tab.title),
                             fontSize = 16.sp,
                             fontWeight = FontWeight.SemiBold,
-                            modifier = Modifier.testTag("speedGraderTab-${R.string.speedGraderGradeTabTitle}")
+                            modifier = Modifier.testTag("speedGraderTab-${stringResource(id = tab.title)}")
                         )
                     },
                     selected = uiState.selectedTab == tab.ordinal,

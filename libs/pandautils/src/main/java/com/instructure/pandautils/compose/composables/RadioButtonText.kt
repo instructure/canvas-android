@@ -24,6 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.sp
@@ -33,6 +34,7 @@ import com.instructure.pandautils.R
 fun RadioButtonText(
     text: String,
     selected: Boolean,
+    testtag: String = "radioButtonText",
     color: Color,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -47,7 +49,8 @@ fun RadioButtonText(
             colors = RadioButtonDefaults.colors(
                 selectedColor = color,
                 unselectedColor = color
-            )
+            ),
+            modifier = Modifier.testTag(testtag)
         )
         Text(
             text = text,

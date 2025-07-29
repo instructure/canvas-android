@@ -145,7 +145,6 @@ class SpeedGraderFilesPageTest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.clickCollapsePanelButton()
         composeTestRule.waitForIdle()
 
         return data
