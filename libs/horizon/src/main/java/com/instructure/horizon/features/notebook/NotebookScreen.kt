@@ -86,7 +86,7 @@ fun NotebookScreen(
                 .padding(padding),
             contentPadding = PaddingValues(24.dp)
         ) {
-            if (state.showFilters) {
+            if (state.showFilters && state.notes.isNotEmpty()) {
                 item {
                     FilterContent(
                         state.selectedFilter,
@@ -95,15 +95,17 @@ fun NotebookScreen(
                 }
             }
 
-            item {
-                Column {
-                    Text(
-                        text = stringResource(R.string.notebookNotesLabel),
-                        style = HorizonTypography.labelLargeBold,
-                        color = HorizonColors.Text.title()
-                    )
+            if (state.notes.isNotEmpty()){
+                item {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.notebookNotesLabel),
+                            style = HorizonTypography.labelLargeBold,
+                            color = HorizonColors.Text.title()
+                        )
 
-                    HorizonSpace(SpaceSize.SPACE_12)
+                        HorizonSpace(SpaceSize.SPACE_12)
+                    }
                 }
             }
 
@@ -379,27 +381,29 @@ private fun NotesPager(
     onNavigateBack: () -> Unit,
     onNavigateForward: () -> Unit,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        IconButton(
-            iconRes = R.drawable.chevron_left,
-            color = IconButtonColor.Black,
-            size = IconButtonSize.SMALL,
-            onClick = onNavigateBack,
-            enabled = canNavigateBack && !isLoading
-        )
+    if (canNavigateBack || canNavigateForward) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            IconButton(
+                iconRes = R.drawable.chevron_left,
+                color = IconButtonColor.Black,
+                size = IconButtonSize.SMALL,
+                onClick = onNavigateBack,
+                enabled = canNavigateBack && !isLoading
+            )
 
-        HorizonSpace(SpaceSize.SPACE_8)
+            HorizonSpace(SpaceSize.SPACE_8)
 
-        IconButton(
-            iconRes = R.drawable.chevron_right,
-            color = IconButtonColor.Black,
-            size = IconButtonSize.SMALL,
-            onClick = onNavigateForward,
-            enabled = canNavigateForward && !isLoading
-        )
+            IconButton(
+                iconRes = R.drawable.chevron_right,
+                color = IconButtonColor.Black,
+                size = IconButtonSize.SMALL,
+                onClick = onNavigateForward,
+                enabled = canNavigateForward && !isLoading
+            )
+        }
     }
 }
 
