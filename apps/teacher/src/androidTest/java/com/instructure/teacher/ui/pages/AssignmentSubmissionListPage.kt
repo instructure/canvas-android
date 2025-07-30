@@ -276,12 +276,12 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
-
     Clicks on the "OK" button in the filter dialog.
      */
     fun clickFilterDialogOk() {
         composeTestRule.onNodeWithText("Done")
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     fun filterBySection(name: String) {

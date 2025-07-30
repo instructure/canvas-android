@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.ui.pages
+package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
 import androidx.compose.ui.test.assertIsDisplayed
@@ -84,19 +84,13 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
     /**
-     * Assert that the 'Grade' label is displayed on the SpeedGrader page's 'Grade & Rubric' tab.
-     */
-    fun assertSpeedGraderLabelDisplayed() {
-        composeTestRule.onNodeWithTag("speedGraderGradeLabel", useUnmergedTree = true).assertIsDisplayed()
-    }
-
-    /**
      * Clicks the expand panel button in the Compose UI.
      */
     fun clickExpandPanelButton() {
         composeTestRule
             .onNodeWithTag("expandPanelButton", useUnmergedTree = true)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -106,6 +100,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
         composeTestRule
             .onNodeWithTag("collapsePanelButton", useUnmergedTree = true)
             .performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -126,7 +121,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      */
     fun assertFinalGradeIsDisplayed(grade: String) {
         composeTestRule
-            .onNodeWithTag("finalGradeDisplay")
+            .onNodeWithTag("finalGradeValue")
             .assertTextContains(grade, substring = true)
             .assertIsDisplayed()
     }
@@ -167,11 +162,11 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-     * Selects the "Grades" tab.
+     * Selects the "Grades & Rubric" tab.
      */
-    fun selectGradesTab() {
-        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault())
-        onView(allOf((withText(gradesTabText)), isDisplayed())).click()
+    fun selectTab(tabTitle: String) {
+        composeTestRule.onNode(hasTestTag("speedGraderTab-${tabTitle}"), useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -324,10 +319,9 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     }
 
     /**
-
-    Asserts that the comment attachment with the given filename and display name is displayed.
-    @param fileName The name of the attachment file.
-    @param displayName The display name of the attachment.
+    * Asserts that the comment attachment with the given filename and display name is displayed.
+    * @param fileName The name of the attachment file.
+    * @param displayName The display name of the attachment.
      */
     fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
         val commentMatcher = Matchers.allOf(

@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -55,6 +56,7 @@ fun TextDropdown(
     onSelection: (String) -> Unit,
     title: String,
     modifier: Modifier = Modifier,
+    testTag: String = "textDropdown",
     selectedOption: String? = null,
     color: Color = colorResource(R.color.textDarkest)
 ) {
@@ -86,7 +88,7 @@ fun TextDropdown(
             TextButton(
                 colors = ButtonDefaults.textButtonColors()
                     .copy(contentColor = color),
-                modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable),
+                modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable).testTag(testTag),
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     expanded = true

@@ -145,7 +145,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                         OutlinedButton(
                             enabled = uiState.enteredScore != null || uiState.excused,
                             onClick = { uiState.onScoreChange(null) },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f).testTag("speedGraderNoGradeButton"),
                             border = BorderStroke(
                                 1.dp,
                                 LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
@@ -170,7 +170,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                             1.dp,
                             LocalCourseColor.current.copy(alpha = if (uiState.excused) 0.5f else 1f)
                         ),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).testTag("speedGraderExcuseButton"),
                         colors = ButtonDefaults.outlinedButtonColors().copy(
                             contentColor = LocalCourseColor.current,
                             disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
@@ -193,7 +193,8 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                     onSelection = { selected ->
                         val status = uiState.gradingStatuses.first { it.name == selected }
                         uiState.onStatusChange(status)
-                    }
+                    },
+                    testTag = "speedGraderStatusDropdown"
                 )
 
                 uiState.daysLate?.let {
@@ -239,6 +240,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     text = stringResource(R.string.points),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 16.sp,
+                    modifier = Modifier.testTag("finalGradePointsLabel")
                 )
 
                 Text(
@@ -250,7 +252,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     ),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 16.sp,
-                    modifier = Modifier.testTag("finalGradeDisplay")
+                    modifier = Modifier.testTag("finalGradePointsValue")
                 )
 
             }
@@ -268,6 +270,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                         text = stringResource(R.string.speedGraderLatePenaltyTitle),
                         color = colorResource(id = R.color.textDanger),
                         fontSize = 16.sp,
+                        modifier = Modifier.testTag("speedGraderLatePenaltyLabel")
                     )
 
                     Text(
@@ -278,6 +281,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                         ),
                         color = colorResource(R.color.textDanger),
                         fontSize = 16.sp,
+                        modifier = Modifier.testTag("speedGraderLatePenaltyValue")
                     )
                 }
                 CanvasDivider()
@@ -317,7 +321,8 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     text = stringResource(R.string.finalGrade),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("finalGradeLabel")
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -326,7 +331,8 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     text = finalGrade,
                     color = colorResource(R.color.textDarkest),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("finalGradeValue")
                 )
 
                 if (uiState.gradeHidden) {
@@ -357,10 +363,11 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.testTag("speedGraderDaysLateLabel")
             )
             dueDate?.let {
                 Text(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = 4.dp).testTag("speedGraderDueDateValue"),
                     text = DateHelper.getDateAtTimeString(
                         LocalContext.current,
                         R.string.due_dateTime,
@@ -376,7 +383,8 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
             text = daysLate.toString(),
             color = LocalCourseColor.current,
             fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.testTag("speedGraderDaysLateValue")
         )
     }
 }
@@ -497,7 +505,8 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
                 stringResource(R.string.grade),
                 fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -508,7 +517,7 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
                 ),
                 fontSize = 16.sp,
                 color = colorResource(R.color.textPlaceholder),
-                modifier = Modifier.padding(start = 8.dp)
+                modifier = Modifier.padding(start = 8.dp).testTag("speedGraderCurrentPassFailPointsGradeText")
             )
         }
         RadioButtonText(
@@ -520,7 +529,8 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 grade = "complete"
                 uiState.onScoreChange(uiState.pointsPossible?.toFloat() ?: 0f)
-            })
+            },
+            testtag = "speedGraderCompleteRadioButton")
         CanvasDivider()
         RadioButtonText(
             modifier = Modifier.fillMaxWidth(),
@@ -531,7 +541,9 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 grade = "incomplete"
                 uiState.onScoreChange(0f)
-            })
+            },
+            testtag = "speedGraderIncompleteRadioButton")
+
     }
 }
 
@@ -583,7 +595,8 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 stringResource(R.string.grade),
                 fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest),
-                fontSize = 16.sp
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
             )
             Text(
                 text = pluralStringResource(
@@ -591,7 +604,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                     uiState.pointsPossible.orDefault().roundToInt(),
                     uiState.pointsPossible.orDefault()
                 ),
-                modifier = Modifier.padding(start = 8.dp),
+                modifier = Modifier.padding(start = 8.dp).testTag("speedGraderPercentagePossibleGradeLabel"),
                 color = colorResource(R.color.textDark),
                 fontSize = 16.sp
             )
@@ -606,6 +619,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 hint = stringResource(R.string.percentageGradeHint),
                 hintColor = colorResource(R.color.textPlaceholder),
                 textColor = LocalCourseColor.current,
+                testTag = "speedGraderCurrentGradeTextField"
             )
             Text(
                 text = "%",
@@ -615,7 +629,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         }
 
         Slider(
-            modifier = Modifier.padding(top = 16.dp),
+            modifier = Modifier.padding(top = 16.dp).testTag("speedGraderSlider"),
             state = sliderState,
             colors = SliderDefaults.colors(
                 thumbColor = LocalCourseColor.current,
@@ -707,12 +721,13 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest),
                 fontSize = 16.sp,
-                modifier = Modifier.testTag("speedGraderGradeLabel")
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
                     .padding(end = 8.dp),
+                testTag = "speedGraderCurrentGradeTextField",
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -737,13 +752,15 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                     uiState.pointsPossible.orDefault()
                 ),
                 fontSize = 16.sp,
-                color = colorResource(R.color.textPlaceholder)
+                color = colorResource(R.color.textPlaceholder),
+                modifier = Modifier.testTag("speedGraderPointsPossibleText")
             )
         }
 
         if ((uiState.enteredScore ?: 0f) <= 100.0) {
             Slider(
-                modifier = Modifier.padding(top = 16.dp), state = sliderState,
+                modifier = Modifier.padding(top = 16.dp).testTag("speedGraderSlider"),
+                state = sliderState,
                 colors = SliderDefaults.colors(
                     thumbColor = LocalCourseColor.current,
                     activeTrackColor = LocalCourseColor.current,
