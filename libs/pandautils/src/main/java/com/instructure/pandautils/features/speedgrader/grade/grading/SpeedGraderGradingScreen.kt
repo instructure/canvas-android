@@ -34,8 +34,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -386,6 +386,14 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val options = uiState.letterGrades.map { it.name }
     val notGraded = stringResource(R.string.not_graded)
 
+    var textFieldScore by remember(uiState.enteredScore) {
+        mutableStateOf(uiState.enteredScore?.let {
+            numberFormatter.format(
+                it
+            )
+        }.orEmpty())
+    }
+
     var selectedGrade by remember(
         uiState.enteredScore,
         uiState.pointsPossible,
@@ -400,6 +408,13 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 )
             } ?: notGraded
         )
+    }
+
+    LaunchedEffect(textFieldScore) {
+        val scoreAsFloat = textFieldScore.toFloatOrNull()
+        if (scoreAsFloat != uiState.enteredScore) {
+            uiState.onScoreChange(scoreAsFloat)
+        }
     }
 
     LaunchedEffect(selectedGrade) {
@@ -426,7 +441,45 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 color = LocalCourseColor.current,
             )
         }
-        PointGradingTypeInput(uiState)
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.grade),
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderGradeLabel")
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            BasicTextFieldWithHintDecoration(
+                modifier = Modifier
+                    .padding(end = 8.dp),
+                value = textFieldScore,
+                onValueChange = {
+                    textFieldScore = it
+                },
+                hint = stringResource(R.string.pointGradeHint),
+                hintColor = colorResource(R.color.textPlaceholder),
+                textColor = LocalCourseColor.current,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Done
+                ),
+                decorationText = pluralStringResource(
+                    R.plurals.pointsPts,
+                    textFieldScore.toFloatOrNull()?.toInt().orDefault()
+                )
+            )
+
+            Text(
+                text = pluralStringResource(
+                    R.plurals.pointsPossible,
+                    uiState.pointsPossible?.toInt().orDefault(),
+                    uiState.pointsPossible.orDefault()
+                ),
+                fontSize = 16.sp,
+                color = colorResource(R.color.textPlaceholder)
+            )
+        }
     }
 }
 
@@ -487,13 +540,15 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
 private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
     var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
-    var textFieldScore by remember { mutableStateOf(grade) }
+    var textFieldScore by remember(uiState.enteredGrade) { mutableStateOf(grade) }
 
-    val maxScore = 100f
-    val sliderState = rememberSliderState(
-        value = sliderDrivenScore.coerceAtLeast(0f),
-        valueRange = 0f..maxScore,
-    )
+    val maxScore by remember(uiState.enteredGrade) { mutableFloatStateOf(max(grade.toFloatOrNull() ?: 0f, 100f)) }
+    val sliderState =  remember(maxScore) {
+        SliderState(
+            value = sliderDrivenScore.coerceAtLeast(0f),
+            valueRange = 0f..maxScore,
+        )
+    }
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
@@ -577,7 +632,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
 
-    val maxScore by remember {
+    val maxScore by remember(uiState.enteredScore) {
         mutableFloatStateOf(
             max(
                 (uiState.pointsPossible?.toFloat() ?: 10f),
@@ -586,18 +641,22 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         )
     }
 
-    val pointScale = when {
-        maxScore <= 10.0 -> 4f
-        maxScore <= 20.0 -> 2f
-        else -> 1f
+    val pointScale by remember(maxScore) {
+        mutableFloatStateOf(
+            when {
+                maxScore <= 10.0 -> 4f
+                maxScore <= 20.0 -> 2f
+                else -> 1f
+            }
+        )
     }
 
-    var sliderDrivenScore by remember {
+    var sliderDrivenScore by remember(uiState.enteredScore) {
         mutableFloatStateOf(
             (uiState.enteredScore ?: 0f) * pointScale
         )
     }
-    var textFieldScore by remember {
+    var textFieldScore by remember(uiState.enteredScore) {
         mutableStateOf(uiState.enteredScore?.let {
             numberFormatter.format(
                 it
@@ -605,11 +664,13 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         }.orEmpty())
     }
 
-    val sliderState = rememberSliderState(
-        value = sliderDrivenScore.coerceAtLeast(0f),
-        valueRange = 0f..maxScore * pointScale,
-        steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt()) - 1
-    )
+    val sliderState = remember(maxScore) {
+        SliderState(
+            value = sliderDrivenScore.coerceAtLeast(0f),
+            valueRange = 0f..maxScore * pointScale,
+            steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt()) - 1
+        )
+    }
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
