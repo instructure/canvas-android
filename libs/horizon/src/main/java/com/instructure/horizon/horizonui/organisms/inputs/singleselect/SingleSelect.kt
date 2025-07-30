@@ -17,10 +17,13 @@
 package com.instructure.horizon.horizonui.organisms.inputs.singleselect
 
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -37,6 +40,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -46,6 +50,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
+import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun SingleSelect(
@@ -93,6 +98,41 @@ fun SingleSelect(
                     state.onOptionSelected(selectedOption)
                     state.onMenuOpenChanged(false)
                 },
+                item = { option ->
+                    SingleSelectItem(option, state)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+private fun <T>SingleSelectItem(option: T, state: SingleSelectState) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .conditional(option == state.selectedOption) {
+                background(HorizonColors.Surface.pagePrimary())
+            }
+    ) {
+        Text(
+            text = option.toString(),
+            style = HorizonTypography.p1,
+            color = HorizonColors.Text.body(),
+            fontWeight = if (option == state.selectedOption) FontWeight.SemiBold else FontWeight.Normal,
+            modifier = Modifier
+                .padding(horizontal = 11.dp, vertical = 6.dp)
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        if (option == state.selectedOption) {
+            Icon(
+                painter = painterResource(R.drawable.check),
+                contentDescription = null,
+                tint = HorizonColors.Icon.default(),
+                modifier = Modifier
+                    .padding(end = 11.dp)
+                    .size(24.dp)
             )
         }
     }

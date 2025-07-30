@@ -77,15 +77,30 @@ class DashboardViewModel @Inject constructor(
             maxAttempts = 10,
             block = { _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) } },
             validate = { themePrefs.mobileLogoUrl.isNotEmpty() })
-        val courses = dashboardRepository.getDashboardCourses(forceNetwork = forceNetwork)
-        if (courses.isSuccess) {
-            val coursesResult = courses.dataOrThrow
+        val dashboardContent = dashboardRepository.getDashboardContent(forceNetwork = forceNetwork)
+        if (dashboardContent.isSuccess) {
+            val coursesResult = dashboardContent.dataOrThrow.courses
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
                     mapCourse(course, forceNetwork)
                 }
             }.awaitAll().filterNotNull()
-            _uiState.update { it.copy(coursesUiState = courseUiStates, loadingState = it.loadingState.copy(isError = false)) }
+            val inviteResults = dashboardContent.dataOrThrow.courseInvites
+            val invites = inviteResults.map { courseInvite ->
+                CourseInviteUiState(courseId = courseInvite.courseId, courseName = courseInvite.courseName, onAccept = {
+                    updateAcceptLoadingForInvite(courseInvite.courseId, true)
+                    viewModelScope.tryLaunch {
+                        dashboardRepository.acceptInvite(courseInvite.courseId, courseInvite.enrollmentId)
+                        refresh()
+                    } catch {
+                        _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.dashboard_courseInviteFailed))) }
+                        updateAcceptLoadingForInvite(courseInvite.courseId, false)
+                    }
+                }, onDismiss = {
+                    dismissInvite(courseInvite.courseId)
+                })
+            }
+            _uiState.update { it.copy(coursesUiState = courseUiStates, invitesUiState = invites, loadingState = it.loadingState.copy(isError = false)) }
         } else {
             handleError()
         }
@@ -192,6 +207,26 @@ class DashboardViewModel @Inject constructor(
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun updateAcceptLoadingForInvite(courseId: Long, isLoading: Boolean) {
+        _uiState.update { currentState ->
+            val updatedInvites = currentState.invitesUiState.map { invite ->
+                if (invite.courseId == courseId) {
+                    invite.copy(acceptLoading = isLoading)
+                } else {
+                    invite
+                }
+            }
+            currentState.copy(invitesUiState = updatedInvites)
+        }
+    }
+
+    private fun dismissInvite(courseId: Long) {
+        _uiState.update { currentState ->
+            val updatedInvites = currentState.invitesUiState.filterNot { it.courseId == courseId }
+            currentState.copy(invitesUiState = updatedInvites)
         }
     }
 }
