@@ -77,8 +77,6 @@ sealed class SpeedGraderCommentsAction {
     data object ChooseFilesClicked : SpeedGraderCommentsAction()
     data object FileUploadDialogClosed : SpeedGraderCommentsAction()
     data class FilesSelected(val filePaths: List<String>) : SpeedGraderCommentsAction()
-    data class FileUploadStarted(val workInfoLiveData: LiveData<WorkInfo>) :
-        SpeedGraderCommentsAction()
-
+    data class FileUploadStarted(val workInfoLiveData: LiveData<WorkInfo>) : SpeedGraderCommentsAction()
     data class MediaRecorded(val file: File) : SpeedGraderCommentsAction()
 }

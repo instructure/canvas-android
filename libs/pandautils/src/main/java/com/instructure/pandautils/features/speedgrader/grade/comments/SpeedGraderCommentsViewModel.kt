@@ -50,6 +50,7 @@ import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCom
 import com.instructure.pandautils.room.appdatabase.model.SubmissionCommentWithAttachments
 import com.instructure.pandautils.services.NotoriousUploadWorker
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -106,6 +107,10 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
+        _uiState.update {
+            it.copy(isLoading = true)
+        }
+
         assignmentEnhancementsEnabled = speedGraderCommentsRepository.getCourseFeatures(courseId).contains("assignments_2_student")
         val response = speedGraderCommentsRepository.getSubmissionComments(studentId, assignmentId)
         userId = response.data.submission?.userId?.toLong() ?: -1L
@@ -200,24 +205,34 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             pendingSubmissionCommentDao.findByPageIdFlow(pageId)
                 .collect { pendingCommentsEntities ->
-                    pendingComments = pendingCommentsEntities
+                    val (drafts, pending) = pendingCommentsEntities
                         .orEmpty()
                         .map { it.pendingSubmissionCommentEntity.toApiModel() }
-                        .map { pendingComment ->
-                            SpeedGraderComment(
-                                id = pendingComment.id.toString(),
-                                authorName = apiPrefs.user?.name ?: "",
-                                authorId = apiPrefs.user?.id?.toString() ?: "",
-                                authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
-                                content = pendingComment.comment ?: "",
-                                createdAt = DateHelper.longToSpeedGraderDateString(pendingComment.date.time)
-                                    ?: "",
-                                isOwnComment = true,
-                                attachments = emptyList(),
-                                isPending = pendingComment.status == CommentSendStatus.SENDING,
-                                isFailed = pendingComment.status == CommentSendStatus.ERROR,
-                            )
+                        .partition { it.status == CommentSendStatus.DRAFT }
+
+                    drafts.firstOrNull()?.let { draft ->
+                        if (draft.comment != _uiState.value.commentText.text) {
+                            _uiState.update {
+                                it.copy(commentText = TextFieldValue(draft.comment.orEmpty()))
+                            }
                         }
+                    }
+
+                    val pendingComments = pending.map { pendingComment ->
+                        SpeedGraderComment(
+                            id = pendingComment.id.toString(),
+                            authorName = apiPrefs.user?.name.orEmpty(),
+                            authorId = apiPrefs.user?.id?.toString().orEmpty(),
+                            authorAvatarUrl = apiPrefs.user?.avatarUrl.orEmpty(),
+                            content = pendingComment.comment.orEmpty(),
+                            createdAt = DateHelper.longToSpeedGraderDateString(pendingComment.date.time).orEmpty(),
+                            isOwnComment = true,
+                            attachments = emptyList(),
+                            isPending = pendingComment.status == CommentSendStatus.SENDING,
+                            isFailed = pendingComment.status == CommentSendStatus.ERROR,
+                        )
+                    }
+
                     _uiState.update { state ->
                         state.copy(
                             comments = fetchedComments + pendingComments,
@@ -231,6 +246,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     fun handleAction(action: SpeedGraderCommentsAction) {
         when (action) {
             is SpeedGraderCommentsAction.CommentFieldChanged -> {
+                debouncedSaveDraft(action.commentText.text)
                 _uiState.update { state ->
                     state.copy(commentText = action.commentText)
                 }
@@ -630,6 +646,27 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 val id = createPendingComment(comment)
                 sendComment(id, comment)
             }
+        }
+    }
+
+    private val debouncedSaveDraft = debounce<String>(
+        waitMs = 300,
+        coroutineScope = viewModelScope
+    ) {
+        val commentText = _uiState.value.commentText.text
+
+        val currentDrafts = pendingSubmissionCommentDao.findByPageId(pageId)
+            .orEmpty()
+            .filter { it.pendingSubmissionCommentEntity.status == CommentSendStatus.DRAFT.toString() }
+
+        pendingSubmissionCommentDao.deleteAll(currentDrafts.map { it.pendingSubmissionCommentEntity })
+
+        val newComment = PendingSubmissionComment(pageId, commentText).apply {
+            attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
+        }
+
+        if (commentText.isNotBlank()) {
+            pendingSubmissionCommentDao.insert(PendingSubmissionCommentEntity(newComment))
         }
     }
 

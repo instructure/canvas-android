@@ -29,6 +29,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -69,7 +70,9 @@ fun SpeedGraderCommentsScreen(
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp)
                 .height(50.dp)
-                .clickable {
+                .clickable(
+                    enabled = !uiState.isLoading
+                ) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onExpandToggle()
                 }
@@ -88,14 +91,22 @@ fun SpeedGraderCommentsScreen(
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.weight(1f)
             )
-            Icon(
-                painter = painterResource(id = R.drawable.ic_arrow_down),
-                tint = colorResource(id = R.color.textDarkest),
-                contentDescription = null,
-                modifier = Modifier
-                    .size(24.dp)
-                    .rotate(iconRotation)
-            )
+            if (uiState.isLoading) {
+                CircularProgressIndicator(
+                    strokeWidth = 2.dp,
+                    color = LocalCourseColor.current,
+                    modifier = Modifier.size(24.dp)
+                )
+            } else {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    tint = colorResource(id = R.color.textDarkest),
+                    contentDescription = null,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .rotate(iconRotation)
+                )
+            }
         }
         CanvasDivider(modifier = Modifier.fillMaxWidth())
         AnimatedVisibility(
