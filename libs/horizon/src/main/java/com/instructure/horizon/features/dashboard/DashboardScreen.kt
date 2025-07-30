@@ -109,7 +109,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         .height(IntrinsicSize.Max)
                 ) {
                     HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
-                    HorizonSpace(SpaceSize.SPACE_36)
+                    HorizonSpace(SpaceSize.SPACE_24)
                     Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                         Text(
                             stringResource(R.string.dashboard_emptyMessage),
@@ -124,7 +124,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     content = {
                         item {
                             HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
-                            HorizonSpace(SpaceSize.SPACE_36)
+                            HorizonSpace(SpaceSize.SPACE_24)
                         }
                         items(uiState.invitesUiState) { inviteItem ->
                             Alert(
@@ -224,7 +224,7 @@ private fun DashboardCourseItem(
                     onCourseClick()
                 }) {
             Text(text = courseItem.courseName, style = HorizonTypography.h1)
-            HorizonSpace(SpaceSize.SPACE_24)
+            HorizonSpace(SpaceSize.SPACE_12)
             ProgressBar(progress = courseItem.courseProgress)
             HorizonSpace(SpaceSize.SPACE_36)
         }
