@@ -168,6 +168,7 @@ private fun LearnScreenWrapper(
                 selectedIndex = pagerState.currentPage,
                 onTabSelected = { coroutineScope.launch { pagerState.animateScrollToPage(it) } },
                 tab = { tab, isSelected, modifier -> Tab(tab, isSelected, modifier) },
+                tabAlignment = Alignment.Start,
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 24.dp)
@@ -251,6 +252,8 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
         modifier = Modifier
             .padding(start = 24.dp, end = 24.dp, top = 24.dp)
     ) {
+        val showDropDown = courses.size > 1
+
         val localDensity = LocalDensity.current
         var heightInPx by remember { mutableIntStateOf(0) }
         var width by remember { mutableStateOf(0.dp) }
@@ -267,7 +270,7 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
                     heightInPx = it.size.height
                     width = with(localDensity) { it.size.width.toDp() }
                 }
-                .clickable { isMenuOpen = !isMenuOpen }
+                .clickable(enabled = showDropDown) { isMenuOpen = !isMenuOpen }
         ) {
             AnimatedContent(
                 selectedCourse.courseName,
@@ -284,14 +287,16 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
 
             HorizonSpace(SpaceSize.SPACE_8)
 
-            Icon(
-                painter = painterResource(R.drawable.keyboard_arrow_down),
-                contentDescription = null,
-                tint = HorizonColors.Icon.default(),
-                modifier = Modifier
-                    .size(24.dp)
-                    .rotate(iconRotation)
-            )
+            if (showDropDown) {
+                Icon(
+                    painter = painterResource(R.drawable.keyboard_arrow_down),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.default(),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .rotate(iconRotation)
+                )
+            }
         }
 
         InputDropDownPopup(

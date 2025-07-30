@@ -50,13 +50,13 @@ class NotebookViewModel @Inject constructor(
 
     init {
         loadData()
+        updateScreenState()
     }
 
     private fun loadData(
         after: String? = null,
         before: String? = null,
         courseId: Long? = this.courseId,
-        objectTypeAndId: Pair<String, String>? = this.objectTypeAndId
     ) {
         viewModelScope.tryLaunch {
             _uiState.update {
@@ -117,12 +117,27 @@ class NotebookViewModel @Inject constructor(
             this.objectTypeAndId = objectTypeAndId
             loadData()
         }
+        updateScreenState()
     }
 
     fun updateCourseId(courseId: Long?) {
         if (courseId != this.courseId) {
             this.courseId = courseId
             loadData()
+        }
+        updateScreenState()
+    }
+
+    private fun updateScreenState() {
+        if (courseId != null) {
+            _uiState.update { it.copy(showTopBar = false) }
+            if (objectTypeAndId != null) {
+                _uiState.update { it.copy(showFilters = false) }
+            } else {
+                _uiState.update { it.copy(showFilters = true) }
+            }
+        } else {
+            _uiState.update { it.copy(showTopBar = true, showFilters = true) }
         }
     }
 }
