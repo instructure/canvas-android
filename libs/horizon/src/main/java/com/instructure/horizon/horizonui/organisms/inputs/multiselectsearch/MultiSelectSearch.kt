@@ -96,7 +96,7 @@ fun MultiSelectSearch(
             }
             InputDropDownPopup(
                 isMenuOpen = state.isMenuOpen,
-                options = state.options,
+                options = state.options.filterNot { state.selectedOptions.contains(it) },
                 isLoading = state.isOptionListLoading,
                 isFocusable = false,
                 verticalOffsetPx = heightInPx,
