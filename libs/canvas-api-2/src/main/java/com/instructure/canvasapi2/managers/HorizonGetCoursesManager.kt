@@ -17,6 +17,7 @@ package com.instructure.canvasapi2.managers
 
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import java.util.Date
@@ -28,7 +29,9 @@ class HorizonGetCoursesManager {
             val query = GetCoursesQuery(userId.toString())
             val result = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
 
-            val coursesList = result.legacyNode?.onUser?.enrollments?.mapNotNull { mapCourse(it.course) } ?: emptyList()
+            val coursesList = result.legacyNode?.onUser?.enrollments
+                ?.filter { it.state == EnrollmentWorkflowState.active }
+                ?.mapNotNull { mapCourse(it.course) } ?: emptyList()
             return DataResult.Success(coursesList)
         } catch (e: Exception) {
             DataResult.Fail(Failure.Exception(e))
@@ -48,13 +51,18 @@ class HorizonGetCoursesManager {
         }
     }
 
-    suspend fun getDashboardCourses(userId: Long, forceNetwork: Boolean): DataResult<List<DashboardCourse>> {
+    suspend fun getDashboardContent(userId: Long, forceNetwork: Boolean): DataResult<DashboardContent> {
         return try {
             val query = GetCoursesQuery(userId.toString())
             val result = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
 
-            val coursesList = result.legacyNode?.onUser?.enrollments?.mapNotNull { mapDashboardCourse(it.course) } ?: emptyList()
-            return DataResult.Success(coursesList)
+            val coursesList = result.legacyNode?.onUser?.enrollments
+                ?.filter { it.state == EnrollmentWorkflowState.active }
+                ?.mapNotNull { mapDashboardCourse(it.course) } ?: emptyList()
+            val invites = result.legacyNode?.onUser?.enrollments
+                ?.filter { it.state == EnrollmentWorkflowState.invited }
+                ?.mapNotNull { mapInvites(it.course, it.id) } ?: emptyList()
+            return DataResult.Success(DashboardContent(coursesList, invites))
         } catch (e: Exception) {
             DataResult.Fail(Failure.Exception(e))
         }
@@ -96,6 +104,17 @@ class HorizonGetCoursesManager {
             null
         }
     }
+
+    private fun mapInvites(course: GetCoursesQuery.Course?, enrollmentId: String?): CourseInvite? {
+        val courseId = course?.id?.toLong()
+        val courseName = course?.name
+
+        return if (courseId != null && courseName != null) {
+            CourseInvite(courseId, courseName, enrollmentId?.toLong() ?: -1L)
+        } else {
+            null
+        }
+    }
 }
 
 data class CourseWithProgress(
@@ -103,6 +122,11 @@ data class CourseWithProgress(
     val courseName: String,
     val courseSyllabus: String? = null,
     val progress: Double,
+)
+
+data class DashboardContent(
+    val courses: List<DashboardCourse>,
+    val courseInvites: List<CourseInvite>
 )
 
 data class DashboardCourse(
@@ -116,4 +140,11 @@ data class DashboardCourse(
     val nextModuleItemDueDate: Date?,
     val nextModuleItemEstimatedDuration: String?,
     val isNewQuiz: Boolean = false
+)
+
+data class CourseInvite(
+    val courseId: Long,
+    val courseName: String,
+    val enrollmentId: Long,
+    val acceptLoading: Boolean = false,
 )
