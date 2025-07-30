@@ -41,14 +41,6 @@ class AccountNotificationsRepository @Inject constructor(
         ).dataOrThrow
     }
 
-    suspend fun registerPushNotification() {
-
-    }
-
-    suspend fun unregisterPushNotification() {
-
-    }
-
     suspend fun getNotificationPreferences(userId: Long): List<AccountNotificationPreference> {
         val communicationChannels = getNotificationChannels(userId)
         val settings = communicationChannels.flatMap { channel ->
@@ -59,8 +51,10 @@ class AccountNotificationsRepository @Inject constructor(
                 val category = AccountNotificationCategory.fromApiString(notificationPreference.category)
                 if (type != null && category != null) {
                     AccountNotificationPreference(
-                        channelId = channel.id,
-                        type = AccountNotificationType.fromApiString(type),
+                        channel = HorizonAccountNotificationChannel(
+                            id = channel.id,
+                            type = AccountNotificationType.fromApiString(type)
+                        ),
                         category = category,
                         frequency = AccountNotificationFrequency.fromApiString(notificationPreference.frequency)
                     )
@@ -68,7 +62,7 @@ class AccountNotificationsRepository @Inject constructor(
                     null
                 }
             }
-        }.distinctBy { Pair(it.channelId, it.category) }
+        }
 
         return settings
     }
@@ -87,8 +81,7 @@ class AccountNotificationsRepository @Inject constructor(
 }
 
 data class AccountNotificationPreference(
-    val channelId: Long,
-    val type: AccountNotificationType,
+    val channel: HorizonAccountNotificationChannel,
     val category: AccountNotificationCategory,
     val frequency: AccountNotificationFrequency
 )
@@ -102,7 +95,7 @@ enum class AccountNotificationCategory(val apiString: String) {
 
     companion object {
         fun fromApiString(apiString: String): AccountNotificationCategory? {
-            return values().firstOrNull { it.apiString == apiString }
+            return entries.firstOrNull { it.apiString == apiString }
         }
     }
 }
@@ -113,17 +106,39 @@ enum class AccountNotificationFrequency(val apiString: String) {
 
     companion object {
         fun fromApiString(apiString: String): AccountNotificationFrequency {
-            return values().firstOrNull { it.apiString == apiString } ?: NEVER
+            return entries.firstOrNull { it.apiString == apiString } ?: NEVER
         }
     }
 }
 enum class AccountNotificationType(val apiString: String) {
     EMAIL("email"),
-    PUSH("push");
+    PUSH("push"),
+    SMS("sms");
 
     companion object {
         fun fromApiString(apiString: String): AccountNotificationType {
-            return values().firstOrNull { it.apiString == apiString } ?: EMAIL
+            return entries.firstOrNull { it.apiString == apiString } ?: EMAIL
         }
     }
 }
+
+enum class HorizonAccountNotificationCategory(val categories: List<AccountNotificationCategory>) {
+    ANNOUNCEMENTS_AND_MESSAGES(listOf(
+        AccountNotificationCategory.ACCOUNT_NOTIFICATION,
+        AccountNotificationCategory.ANNOUNCEMENT,
+        AccountNotificationCategory.CONVERSATION_MESSAGE,
+    )),
+    ASSIGNMENT_DUE_DATE(listOf(AccountNotificationCategory.DUE_DATE)),
+    SCORES(listOf(AccountNotificationCategory.GRADING))
+}
+
+data class HorizonAccountNotificationPreference(
+    val channel: HorizonAccountNotificationChannel,
+    val category: HorizonAccountNotificationCategory,
+    val frequency: AccountNotificationFrequency
+)
+
+data class HorizonAccountNotificationChannel(
+    val id: Long,
+    val type: AccountNotificationType,
+)
