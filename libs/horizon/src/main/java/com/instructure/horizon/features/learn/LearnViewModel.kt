@@ -78,7 +78,7 @@ class LearnViewModel @Inject constructor(
             getCourses(forceRefresh = true)
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
-            _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false, errorMessage = "Failed to refresh Courses")) }
+            _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         }
     }
 }

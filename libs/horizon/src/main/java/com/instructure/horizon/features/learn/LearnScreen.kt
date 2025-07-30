@@ -134,7 +134,7 @@ private fun LearnScreenEmptyContent(state: LearnUiState) {
                 .verticalScroll(rememberScrollState()),
         ) {
             Text(
-                text = "You aren’t currently enrolled in a course.",
+                text = stringResource(R.string.learnEmptyMessage),
                 style = HorizonTypography.h3,
                 color = HorizonColors.Text.body(),
                 textAlign = TextAlign.Center
