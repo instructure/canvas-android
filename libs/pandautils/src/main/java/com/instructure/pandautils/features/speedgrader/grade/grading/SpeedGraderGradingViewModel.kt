@@ -97,7 +97,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         score = submission.score,
                         grade = submission.grade,
                         excused = submission.excused.orDefault(),
-                        enteredGrade = submission.enteredGrade ?: resources.getString(R.string.not_graded),
+                        enteredGrade = submission.enteredGrade
+                            ?: resources.getString(R.string.not_graded),
                         enteredScore = submission.enteredScore?.toFloat(),
                         pointsDeducted = submission.deductedPoints,
                         gradingType = submission.assignment?.gradingType,
@@ -176,6 +177,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 _uiState.update {
                     originalState.copy(
                         error = true,
+                        retryAction = {
+                            onScoreChanged(score)
+                        }
                     )
                 }
             }
