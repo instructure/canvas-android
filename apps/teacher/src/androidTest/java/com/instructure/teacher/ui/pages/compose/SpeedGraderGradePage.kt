@@ -177,7 +177,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param gradeValue The expected grade value to be displayed.
      */
     fun assertFinalGradeIsDisplayed(gradeValue: String) {
-        composeTestRule.onNodeWithTag("finalGradeLabel").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("finalGradeLabel").performScrollTo().assertIsDisplayed()
         composeTestRule
             .onNodeWithTag("finalGradeValue")
             .assertTextContains(gradeValue, substring = true)
@@ -191,7 +191,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      */
     @OptIn(ExperimentalTestApi::class)
     fun assertFinalGradePointsValueDisplayed(finalGradePointsValue: String) {
-        composeTestRule.onNodeWithTag("finalGradePointsLabel").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("finalGradePointsLabel").performScrollTo().assertIsDisplayed()
         // Wait up to 5 seconds for the expected substring to appear because sometimes it late a bit.
         composeTestRule.waitUntilExactlyOneExists(hasTestTag("finalGradePointsValue") and hasText(finalGradePointsValue), timeoutMillis = 5000)
         composeTestRule
@@ -206,7 +206,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param latePenaltyPointsValue The expected late penalty points value to be displayed.
      */
     fun assertLatePenaltyValueDisplayed(latePenaltyPointsValue: String) {
-        composeTestRule.onNodeWithTag("speedGraderLatePenaltyLabel").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("speedGraderLatePenaltyLabel").performScrollTo().assertIsDisplayed()
         composeTestRule
             .onNodeWithTag("speedGraderLatePenaltyValue")
             .assertTextContains(latePenaltyPointsValue, substring = true)
@@ -280,7 +280,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param daysLate The expected days late value to be displayed.
      */
     fun assertDaysLate(daysLate: String) {
-        composeTestRule.onNodeWithTag("speedGraderDaysLateLabel", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithTag("speedGraderDaysLateLabel", useUnmergedTree = true).performScrollTo().assertIsDisplayed()
         composeTestRule.onNodeWithTag("speedGraderDaysLateValue", useUnmergedTree = true).assertTextContains(daysLate).assertIsDisplayed()
     }
 
@@ -312,7 +312,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * Clicks the 'Complete' radio button in the Compose UI.
      */
     fun selectCompleteButton() {
-        composeTestRule.onNodeWithTag("speedGraderCompleteRadioButton", useUnmergedTree = true).performClick()
+        composeTestRule.onNodeWithTag("speedGraderCompleteRadioButton", useUnmergedTree = true).performScrollTo().performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -348,7 +348,7 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * Clicks the 'Incomplete' radio button in the Compose UI.
      */
     fun selectIncompleteButton() {
-        composeTestRule.onNodeWithTag("speedGraderIncompleteRadioButton", useUnmergedTree = true).performClick()
+        composeTestRule.onNodeWithTag("speedGraderIncompleteRadioButton", useUnmergedTree = true).performScrollTo().performClick()
         composeTestRule.waitForIdle()
     }
 

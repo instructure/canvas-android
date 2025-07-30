@@ -361,7 +361,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
         composeTestRule.waitForIdle()
-        speedGraderPage.clickExpandPanelButton()
+        if(!isLandscapeDevice()) speedGraderPage.clickExpandPanelButton()
         speedGraderPage.selectTab("Grade & Rubric")
     }
 }
