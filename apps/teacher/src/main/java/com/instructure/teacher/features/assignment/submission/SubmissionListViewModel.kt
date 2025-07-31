@@ -30,6 +30,8 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.utils.AssignmentUtils2
@@ -179,12 +181,14 @@ class SubmissionListViewModel @Inject constructor(
         return SubmissionUiState(
             submissionId = submission.id,
             userName = submission.assignee.name,
-            isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent ?: false,
+            isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent
+                ?: false,
             avatarUrl = if (submission.assignee is StudentAssignee) (submission.assignee as StudentAssignee).student.avatarUrl else null,
             tags = getTags(submission.submission),
             grade = getGrade(submission.submission),
             hidden = submission.submission?.let { it.postedAt == null } ?: false,
-            assigneeId = submission.assignee.id
+            assigneeId = submission.assigneeId,
+            group = submission.assignee is GroupAssignee
         )
     }
 
@@ -235,7 +239,13 @@ class SubmissionListViewModel @Inject constructor(
                             assignmentId = assignment.id,
                             selectedIdx = selected,
                             anonymousGrading = assignment.anonymousGrading,
-                            filteredSubmissionIds = submissions.map { it.submissionId }
+                            filteredSubmissionIds = submissions.map {
+                                if (RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2)) {
+                                    it.assigneeId
+                                } else {
+                                    it.submissionId
+                                }
+                            }
                                 .toLongArray(),
                             filter = filter,
                             filterValue = filterValue.orDefault(
@@ -284,7 +294,11 @@ class SubmissionListViewModel @Inject constructor(
                             contextCode = course.contextId,
                             contextName = course.name,
                             recipients = getRecipients(),
-                            subject = resources.getString(R.string.submissionMessageSubject, _uiState.value.headerTitle, assignment.name)
+                            subject = resources.getString(
+                                R.string.submissionMessageSubject,
+                                _uiState.value.headerTitle,
+                                assignment.name
+                            )
                         )
                     )
                 }
@@ -292,7 +306,12 @@ class SubmissionListViewModel @Inject constructor(
 
             is SubmissionListAction.AvatarClicked -> {
                 viewModelScope.launch {
-                    _events.send(SubmissionListViewModelAction.RouteToUser(action.userId, course.id))
+                    _events.send(
+                        SubmissionListViewModelAction.RouteToUser(
+                            action.userId,
+                            course.id
+                        )
+                    )
                 }
             }
         }

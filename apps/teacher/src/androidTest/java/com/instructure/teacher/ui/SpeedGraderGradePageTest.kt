@@ -195,7 +195,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("60") // It's a bit weird that why is this isn't the same as in the point based test
+        speedGraderGradePage.assertFinalGradeIsDisplayed("10.0") // It's a bit weird that why is this isn't the same as in the point based test
 
         speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()

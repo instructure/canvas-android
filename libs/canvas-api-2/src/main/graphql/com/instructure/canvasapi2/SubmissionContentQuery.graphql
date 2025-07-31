@@ -92,5 +92,11 @@ fragment SubmissionFields on SubmissionInterface {
         id
         courseId
         dueAt
+        groupSet {
+            groups {
+                name
+                _id
+            }
+        }
     }
 }

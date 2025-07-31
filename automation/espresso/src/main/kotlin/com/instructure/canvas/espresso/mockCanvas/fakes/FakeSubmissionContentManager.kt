@@ -29,7 +29,6 @@ class FakeSubmissionContentManager : SubmissionContentManager {
         assignmentId: Long
     ): SubmissionContentQuery.Data {
         val assignment = MockCanvas.data.assignments[assignmentId]
-        val course = MockCanvas.data.courses[assignment?.courseId]
         val submission = MockCanvas.data.submissions[assignmentId]?.get(0)
         val student = MockCanvas.data.students[0]
         val user = SubmissionFields.User(student.avatarUrl, student.name, student.shortName, student.sortableName)
@@ -43,7 +42,7 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             createdAt = attachment.createdAt,
             displayName = attachment.displayName,
             id = attachment.id.toString(),
-            size = attachment.size?.toString(),
+            size = attachment.size.toString(),
             thumbnailUrl = attachment.thumbnailUrl,
             title = attachment.filename,
             type = attachment.type,
@@ -58,7 +57,8 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             assignment?.anonymousGrading,
             assignment?.id.toString(),
             assignment?.courseId.toString(),
-            dueAt = assignment?.dueDate
+            dueAt = assignment?.dueDate,
+            groupSet = null
         )
         val dummySubmissionFields = SubmissionFields(
             groupId = "group-1",
@@ -76,7 +76,7 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             attachments = if (submissionAttachment == null) null else listOf(submissionAttachment),
             mediaObject = null,
             user = user,
-            assignment = fragmentAssignment ?: null
+            assignment = fragmentAssignment
         )
 
         val dummyNode = SubmissionContentQuery.Node(

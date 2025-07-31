@@ -39,7 +39,7 @@ class SubmissionContentManagerImpl : SubmissionContentManager {
                 nextCursor = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
             )
 
-            data = QLClientConfig.enqueueQuery(query).dataAssertNoErrors
+            data = QLClientConfig.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
             val connection = data.submission?.submissionHistoriesConnection
 
             allEdges.addAll(connection?.edges.orEmpty())
