@@ -18,7 +18,10 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
-import android.util.Log
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -37,9 +40,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.CircularProgressIndicator
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -54,6 +56,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -70,6 +73,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
@@ -78,8 +82,10 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
+import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
+import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary.SpeedGraderCommentLibraryScreen
 import com.instructure.pandautils.features.speedgrader.grade.comments.composables.SpeedGraderCommentInput
 import com.instructure.pandautils.utils.getFragmentActivity
@@ -96,7 +102,6 @@ import kotlin.math.roundToInt
 fun SpeedGraderCommentsSection(
     state: SpeedGraderCommentsUiState,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false,
     actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
 ) {
     val activity = LocalContext.current.getFragmentActivity()
@@ -113,17 +118,13 @@ fun SpeedGraderCommentsSection(
         object : FileUploadDialogParent {
             override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
                 if (event == FileUploadDialogFragment.EVENT_DIALOG_CANCELED) {
-                    Log.d("FileUploadDialog", "Dialog canceled")
                     fileDialogShown.value = false
                     actionHandler(SpeedGraderCommentsAction.FileUploadDialogClosed)
-                } else if (event == FileUploadDialogFragment.EVENT_ON_UPLOAD_BEGIN) {
-                    Log.d("FileUploadDialog", "Upload started")
                 }
             }
 
             override fun selectedUriStringsCallback(filePaths: List<String>) {
                 actionHandler(SpeedGraderCommentsAction.FilesSelected(filePaths))
-                Log.d("FileUploadDialog", "Selected file paths: $filePaths")
             }
 
             override fun workInfoLiveDataCallback(
@@ -131,7 +132,6 @@ fun SpeedGraderCommentsSection(
                 workInfoLiveData: LiveData<WorkInfo>
             ) {
                 actionHandler(SpeedGraderCommentsAction.FileUploadStarted(workInfoLiveData))
-                Log.d("FileUploadDialog", "WorkInfoLiveData callback with UUID: $uuid")
 
             }
         }
@@ -160,8 +160,9 @@ fun SpeedGraderCommentsSection(
             SpeedGraderCommentItems(
                 comments = state.comments,
                 modifier = Modifier.fillMaxSize(),
-                gradingAnonymously = gradingAnonymously,
-                onAttachmentClick = { attachmentRouter.openAttachment(activity, it) }
+
+                onAttachmentClick = { attachmentRouter.openAttachment(activity, it) },
+                actionHandler = actionHandler
             )
             HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
             SpeedGraderCommentInput(
@@ -211,7 +212,6 @@ fun SpeedGraderCommentsSection(
 
                             offsetX += dragAmount.x
                             offsetY += dragAmount.y
-                            Log.d("ASpeedGraderCommentSection", "offset: $offsetX, $offsetY")
                         }
                     }
             )
@@ -253,6 +253,19 @@ private fun AttachmentTypeSelectorDialog(
                     .background(colorResource(id = R.color.backgroundLightest)),
                 horizontalAlignment = Alignment.Start
             ) {
+                val audioPermissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+                    // Not working, needs to fixed in MBL-19070
+                    if (result) {
+                        actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
+                    }
+                }
+                val videoPermissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { results ->
+                    // Not working, needs to fixed in MBL-19070
+                    if (results.all { it.value }) {
+                        actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
+                    }
+                }
+                val context = LocalContext.current
                 Text(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -267,7 +280,13 @@ private fun AttachmentTypeSelectorDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { actionHandler(SpeedGraderCommentsAction.RecordAudioClicked) }
+                        .clickable {
+                            if (isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
+                                actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
+                            } else {
+                                audioPermissionRequest.launch(PermissionUtils.RECORD_AUDIO)
+                            }
+                        }
                         .padding(horizontal = 22.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -289,7 +308,19 @@ private fun AttachmentTypeSelectorDialog(
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .clickable { actionHandler(SpeedGraderCommentsAction.RecordVideoClicked) }
+                        .clickable {
+                            if (isPermissionGranted(context, PermissionUtils.CAMERA) &&
+                                isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
+                                actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
+                            } else {
+                                videoPermissionRequest.launch(
+                                    arrayOf(
+                                        PermissionUtils.CAMERA,
+                                        PermissionUtils.RECORD_AUDIO
+                                    )
+                                )
+                            }
+                        }
                         .padding(horizontal = 22.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
@@ -335,12 +366,16 @@ private fun AttachmentTypeSelectorDialog(
     }
 }
 
+private fun isPermissionGranted(context: Context, permission: String): Boolean {
+    return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+}
+
 @Composable
 private fun SpeedGraderCommentItems(
     comments: List<SpeedGraderComment>,
     onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false
+    actionHandler: (SpeedGraderCommentsAction) -> Unit = {}
 ) {
 //    val listState = rememberLazyListState()
 //    LaunchedEffect(comments.size) {
@@ -353,13 +388,12 @@ private fun SpeedGraderCommentItems(
             if (comment.isOwnComment) {
                 SpeedGraderOwnCommentItem(
                     comment = comment,
-                    gradingAnonymously = gradingAnonymously,
-                    onAttachmentClick = onAttachmentClick
+                    onAttachmentClick = onAttachmentClick,
+                    actionHandler = actionHandler,
                 )
             } else {
                 SpeedGraderUserCommentItem(
                     comment = comment,
-                    gradingAnonymously = gradingAnonymously,
                     onAttachmentClick = onAttachmentClick
                 )
             }
@@ -372,67 +406,104 @@ fun SpeedGraderOwnCommentItem(
     comment: SpeedGraderComment,
     onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false,
+    actionHandler: (SpeedGraderCommentsAction) -> Unit = {},
 ) {
     Column(
         modifier = modifier
             .padding(8.dp)
-            .alpha(if (comment.isPending) 0.5f else 1f)
     ) {
-        Text(
-            text = DateHelper.getDateTimeString(
-                LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
-            ) ?: "",
-            modifier = Modifier
-                .fillMaxWidth()
-                .wrapContentWidth(Alignment.End),
-            fontSize = 12.sp,
-            lineHeight = 16.sp,
-            color = colorResource(id = R.color.textDark),
-            textAlign = TextAlign.Right
-        )
-        Spacer(modifier = Modifier.height(2.dp))
-        if (comment.content.isNotEmpty()) {
+        Column(
+            modifier = modifier
+                .alpha(if (comment.isPending) 0.5f else 1f)
+        ) {
             Text(
-                text = comment.content,
+                text = DateHelper.getDateTimeString(
+                    LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                ) ?: "",
                 modifier = Modifier
-                    .padding(start = 36.dp)
                     .fillMaxWidth()
-                    .wrapContentWidth(Alignment.End)
-                    .background(
-                        color = LocalCourseColor.current,
-                        shape = RoundedCornerShape(size = 16.dp)
-                    )
-                    .padding(8.dp),
-                fontSize = 14.sp,
-                lineHeight = 19.sp,
-                color = colorResource(id = R.color.textLightest),
+                    .wrapContentWidth(Alignment.End),
+                fontSize = 12.sp,
+                lineHeight = 16.sp,
+                color = colorResource(id = R.color.textDark),
                 textAlign = TextAlign.Right
             )
-        }
-        if (comment.isPending && comment.content.isEmpty()) {
-            CircularProgressIndicator(
-                color = LocalCourseColor.current,
-                strokeWidth = 3.dp,
+            Spacer(modifier = Modifier.height(2.dp))
+            if (comment.content.isNotEmpty()) {
+                Text(
+                    text = comment.content,
+                    modifier = Modifier
+                        .padding(start = 36.dp)
+                        .fillMaxWidth()
+                        .wrapContentWidth(Alignment.End)
+                        .background(
+                            color = LocalCourseColor.current,
+                            shape = RoundedCornerShape(size = 16.dp)
+                        )
+                        .padding(8.dp),
+                    fontSize = 14.sp,
+                    lineHeight = 19.sp,
+                    color = colorResource(id = R.color.textLightest),
+                    textAlign = TextAlign.Right
+                )
+            }
+            if (comment.isPending && comment.content.isEmpty()) {
+                CircularProgressIndicator(
+                    color = LocalCourseColor.current,
+                    strokeWidth = 3.dp,
+                    modifier = Modifier
+                        .size(24.dp)
+                        .align(Alignment.End)
+                )
+            }
+            SpeedGraderAttachmentsComponent(
+                attachments = comment.attachments,
+
+                isOwn = true,
+                onSelect = onAttachmentClick
+            )
+            SpeedGraderMediaAttachmentComponent(
+                mediaObject = comment.mediaObject,
                 modifier = Modifier
-                    .size(24.dp)
-                    .align(Alignment.End)
+                    .fillMaxWidth(0.7f)
+                    .align(Alignment.End),
+                isOwn = true,
+                onAttachmentClick = onAttachmentClick
             )
         }
-        SpeedGraderAttachmentsComponent(
-            attachments = comment.attachments,
-            gradingAnonymously = gradingAnonymously,
-            isOwn = true,
-            onSelect = onAttachmentClick
+        if (comment.isFailed) {
+            Spacer(modifier = Modifier.height(4.dp))
+            SpeedGraderCommentErrorComponent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .wrapContentWidth(Alignment.End)
+                    .clickable { actionHandler(SpeedGraderCommentsAction.RetryCommentUpload(comment)) }
+            )
+        }
+    }
+}
+
+@Composable
+fun SpeedGraderCommentErrorComponent(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_warning_red),
+            contentDescription = null,
+            modifier = Modifier.size(16.dp),
+            tint = colorResource(id = R.color.textDanger)
         )
-        SpeedGraderMediaAttachmentComponent(
-            mediaObject = comment.mediaObject,
-            modifier = Modifier
-                .fillMaxWidth(0.7f)
-                .align(Alignment.End),
-            gradingAnonymously = gradingAnonymously,
-            isOwn = true,
-            onAttachmentClick = onAttachmentClick
+        Spacer(modifier = Modifier.width(2.dp))
+        Text(
+            text = "This message could not be sent. Tap to try again.",
+            fontSize = 14.sp,
+            lineHeight = 19.sp,
+            fontWeight = FontWeight(400),
+            color = colorResource(id = R.color.textDanger)
         )
     }
 }
@@ -441,7 +512,6 @@ fun SpeedGraderOwnCommentItem(
 fun SpeedGraderAttachmentsComponent(
     attachments: List<SpeedGraderCommentAttachment>,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false,
     onSelect: (SpeedGraderCommentAttachment) -> Unit = {},
     isOwn: Boolean = false
 ) {
@@ -462,9 +532,7 @@ fun SpeedGraderAttachmentsComponent(
                             shape = RoundedCornerShape(size = 16.dp)
                         )
                         .fillMaxWidth(if (isOwn) 0.7f else 1f)
-                        .clickable { onSelect(attachment) },
-
-                    gradingAnonymously = gradingAnonymously,
+                        .clickable { onSelect(attachment) }
                 )
             }
         }
@@ -476,7 +544,6 @@ fun SpeedGraderAttachmentsComponent(
 fun SpeedGraderAttachmentComponent(
     attachment: SpeedGraderCommentAttachment,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false,
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
@@ -550,7 +617,6 @@ fun SpeedGraderAttachmentComponent(
 fun SpeedGraderMediaAttachmentComponent(
     mediaObject: SpeedGraderMediaObject?,
     modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false,
     isOwn: Boolean,
     onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
 ) {
@@ -610,24 +676,19 @@ fun SpeedGraderMediaAttachmentComponent(
     }
 }
 
-@OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 fun SpeedGraderUserCommentItem(
     comment: SpeedGraderComment,
     onAttachmentClick: (SpeedGraderCommentAttachment) -> Unit,
-    modifier: Modifier = Modifier,
-    gradingAnonymously: Boolean = false
+    modifier: Modifier = Modifier
 ) {
     Row(modifier = modifier.padding(horizontal = 8.dp)) {
-        GlideImage(
-            model = comment.authorAvatarUrl,
-            contentDescription = null,
-            contentScale = ContentScale.Crop,
+        UserAvatar(
+            imageUrl = comment.authorAvatarUrl,
+            name = comment.authorName,
             modifier = Modifier
                 .padding(top = 8.dp)
                 .size(36.dp)
-                .clip(CircleShape)
-                .background(colorResource(id = R.color.backgroundLight))
         )
         Spacer(modifier = Modifier.width(20.dp))
         Column(
@@ -663,13 +724,11 @@ fun SpeedGraderUserCommentItem(
             }
             SpeedGraderAttachmentsComponent(
                 attachments = comment.attachments,
-                gradingAnonymously = gradingAnonymously,
                 isOwn = false,
                 onSelect = onAttachmentClick
             )
             SpeedGraderMediaAttachmentComponent(
                 mediaObject = comment.mediaObject,
-                gradingAnonymously = gradingAnonymously,
                 isOwn = false,
                 onAttachmentClick = onAttachmentClick
             )
@@ -736,13 +795,16 @@ fun SpeedGraderCommentSectionPreview() {
             )
         )
     )
-    SpeedGraderCommentsSection(state = SpeedGraderCommentsUiState(
-        comments = comments,
-        commentText = "",
-        isLoading = false,
-        errorMessage = null,
-        isEmpty = false,
-    ), gradingAnonymously = false, actionHandler = {})
+    SpeedGraderCommentsSection(
+        state = SpeedGraderCommentsUiState(
+            comments = comments,
+            commentText = "",
+            isLoading = false,
+            errorMessage = null,
+            isEmpty = false,
+        ),
+        actionHandler = {}
+    )
 }
 
 @Preview

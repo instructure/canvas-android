@@ -1,10 +1,26 @@
+<!--
+  ~ Copyright (C) 2025 - present Instructure, Inc.
+  ~
+  ~     This program is free software: you can redistribute it and/or modify
+  ~     it under the terms of the GNU General Public License as published by
+  ~     the Free Software Foundation, version 3 of the License.
+  ~
+  ~     This program is distributed in the hope that it will be useful,
+  ~     but WITHOUT ANY WARRANTY; without even the implied warranty of
+  ~     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  ~     GNU General Public License for more details.
+  ~
+  ~     You should have received a copy of the GNU General Public License
+  ~     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+  ~
+  -->
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
     android:width="24dp"
     android:height="25dp"
     android:viewportWidth="24"
     android:viewportHeight="25">
-  <path
-      android:pathData="M20.773,2.5V16.591H13.955L8.045,22.5V16.591H3.5V2.5H20.773ZM4.864,3.864V15.227H9.409V19.318L13.5,15.227H19.409V3.864H4.864ZM16.227,8.409H8.045V7.222H16.227V8.409ZM8.045,12.045V10.682H13.045V12.045H8.045Z"
-      android:fillColor="#6A7883"
-      android:fillType="evenOdd"/>
+    <path
+        android:pathData="M20.773,2.5V16.591H13.955L8.045,22.5V16.591H3.5V2.5H20.773ZM4.864,3.864V15.227H9.409V19.318L13.5,15.227H19.409V3.864H4.864ZM16.227,8.409H8.045V7.222H16.227V8.409ZM8.045,12.045V10.682H13.045V12.045H8.045Z"
+        android:fillColor="#6A7883"
+        android:fillType="evenOdd"/>
 </vector>

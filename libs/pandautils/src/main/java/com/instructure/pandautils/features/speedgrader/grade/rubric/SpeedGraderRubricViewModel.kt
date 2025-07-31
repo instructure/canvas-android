@@ -52,7 +52,13 @@ class SpeedGraderRubricViewModel @Inject constructor(
         savedStateHandle.get<Long>("courseId") ?: throw IllegalArgumentException("Missing courseId")
 
     private val _uiState =
-        MutableStateFlow(SpeedGraderRubricUiState(onRubricSelected = this::saveRubricAssessment, onPointChanged = this::onPointChanged))
+        MutableStateFlow(
+            SpeedGraderRubricUiState(
+                onRubricSelected = this::saveRubricAssessment,
+                onPointChanged = this::onPointChanged,
+                onCommentChange = this::onCommentChange
+            )
+        )
     val uiState = _uiState.asStateFlow()
 
     private var debouncePointChangeJob: Job? = null
@@ -74,13 +80,11 @@ class SpeedGraderRubricViewModel @Inject constructor(
                 it?.node
             }?.flatMap { it?.assessmentRatings ?: emptyList() }
                 ?.associate { assessment ->
-                    assessment.criterion?._id.orEmpty() to (assessment._id?.let { ratingId ->
-                        RubricCriterionAssessment(
-                            ratingId = ratingId,
-                            points = assessment.points,
-                            comments = assessment.comments
-                        )
-                    } ?: RubricCriterionAssessment())
+                    assessment.criterion?._id.orEmpty() to RubricCriterionAssessment(
+                        ratingId = assessment._id,
+                        points = assessment.points,
+                        comments = assessment.comments
+                    )
                 } ?: emptyMap()
             val assignment = repository.getAssignmentRubric(courseId, assignmentId)
             useRubricForGrading = assignment.isUseRubricForGrading
@@ -123,7 +127,8 @@ class SpeedGraderRubricViewModel @Inject constructor(
             val assessments = originalAssessment.toMutableMap()
             assessments[criterionId] = RubricCriterionAssessment(
                 ratingId,
-                points
+                points,
+                comments = originalAssessment[criterionId]?.comments ?: ""
             )
             _uiState.update {
                 it.copy(assessments = assessments)
@@ -185,6 +190,31 @@ class SpeedGraderRubricViewModel @Inject constructor(
                     saveRubricAssessment(rating.points.orDefault(), criterionId, rating.id)
                 } ?: run {
                     saveRubricAssessment(points, criterionId, null)
+                }
+            }
+        }
+    }
+
+    private fun onCommentChange(comment: String, criterionId: String) {
+        viewModelScope.launch {
+            val originalAssessment = _uiState.value.assessments
+            val assessments = originalAssessment.toMutableMap()
+            val currentAssessment = assessments[criterionId] ?: RubricCriterionAssessment()
+            assessments[criterionId] = currentAssessment.copy(comments = comment)
+            _uiState.update {
+                it.copy(assessments = assessments)
+            }
+            val rubricAssessmentMap = generateRubricAssessmentQueryMap(assessments)
+            try {
+                repository.postSubmissionRubricAssessment(
+                    courseId,
+                    assignmentId,
+                    userId,
+                    rubricAssessmentMap
+                )
+            } catch (e: Exception) {
+                _uiState.update {
+                    it.copy(assessments = originalAssessment)
                 }
             }
         }

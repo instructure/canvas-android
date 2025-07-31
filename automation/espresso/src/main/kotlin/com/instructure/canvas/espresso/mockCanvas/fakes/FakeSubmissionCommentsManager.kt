@@ -12,20 +12,27 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */
-package com.instructure.canvasapi2.managers.graphql
+ */package com.instructure.canvas.espresso.mockCanvas.fakes
 
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
-interface SubmissionCommentsManager {
+class FakeSubmissionCommentsManager : SubmissionCommentsManager {
+    override suspend fun getSubmissionComments(
+        userId: Long,
+        assignmentId: Long,
+        forceNetwork: Boolean
+    ): SubmissionCommentsResponseWrapper {
+        TODO("Not yet implemented")
+    }
 
-    suspend fun getSubmissionComments(userId: Long, assignmentId: Long, forceNetwork: Boolean = false): SubmissionCommentsResponseWrapper
-
-    suspend fun createSubmissionComment(
+    override suspend fun createSubmissionComment(
         submissionId: Long,
         comment: String,
-        attempt: Int? = null,
-        isGroupComment: Boolean = false,
-    ): CreateSubmissionCommentMutation.Data
+        attempt: Int?,
+        isGroupComment: Boolean
+    ): CreateSubmissionCommentMutation.Data {
+        TODO("Not yet implemented")
+    }
 }
