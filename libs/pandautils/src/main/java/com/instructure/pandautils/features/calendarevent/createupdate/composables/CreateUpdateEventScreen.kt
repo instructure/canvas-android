@@ -520,8 +520,10 @@ private fun CreateUpdateEventContent(
                     fontSize = 16.sp
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
+                val initialDetailsValue by remember { mutableStateOf(uiState.details) }
                 ComposeRCE(
-                    initialValue = uiState.details,
+                    initialValue = initialDetailsValue,
                     hint = labelText.takeIf { isScreenReaderEnabled() }.orEmpty(),
                     fixedHeightInDp = 280,
                     modifier = Modifier
