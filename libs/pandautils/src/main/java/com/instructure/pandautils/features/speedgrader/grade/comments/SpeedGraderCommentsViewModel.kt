@@ -210,9 +210,9 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         .partition { it.status == CommentSendStatus.DRAFT }
 
                     drafts.firstOrNull()?.let { draft ->
-                        if (draft.comment != _uiState.value.commentText.text) {
+                        if (draft.comment != _uiState.value.commentText) {
                             _uiState.update {
-                                it.copy(commentText = TextFieldValue(draft.comment.orEmpty()))
+                                it.copy(commentText = draft.comment.orEmpty())
                             }
                         }
                     }
@@ -245,7 +245,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     fun handleAction(action: SpeedGraderCommentsAction) {
         when (action) {
             is SpeedGraderCommentsAction.CommentFieldChanged -> {
-                debouncedSaveDraft(action.commentText.text)
+                debouncedSaveDraft(action.commentText)
                 _uiState.update { state ->
                     state.copy(commentText = action.commentText)
                 }
@@ -652,7 +652,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         waitMs = 300,
         coroutineScope = viewModelScope
     ) {
-        val commentText = _uiState.value.commentText.text
+        val commentText = _uiState.value.commentText
 
         val currentDrafts = pendingSubmissionCommentDao.findByPageId(pageId)
             .orEmpty()

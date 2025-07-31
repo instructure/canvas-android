@@ -55,8 +55,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -85,9 +83,9 @@ import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
-import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary.SpeedGraderCommentLibraryScreen
 import com.instructure.pandautils.features.speedgrader.grade.comments.composables.SpeedGraderCommentInput
+import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.getFragmentActivity
 import com.instructure.pandautils.utils.iconRes
 import com.instructure.pandautils.utils.setVisible
