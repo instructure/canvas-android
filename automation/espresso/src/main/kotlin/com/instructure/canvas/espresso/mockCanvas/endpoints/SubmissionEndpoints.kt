@@ -18,10 +18,18 @@ package com.instructure.canvas.espresso.mockCanvas.endpoints
 import android.util.Log
 import com.instructure.canvas.espresso.mockCanvas.Endpoint
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.utils.*
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvas.espresso.mockCanvas.utils.Segment
+import com.instructure.canvas.espresso.mockCanvas.utils.UserId
+import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.unauthorizedResponse
+import com.instructure.canvas.espresso.mockCanvas.utils.user
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Author
+import com.instructure.canvasapi2.models.FileUploadParams
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.type.SubmissionType
-import java.util.*
+import java.util.Calendar
 import kotlin.random.Random
 
 /**
@@ -179,6 +187,7 @@ object SubmissionUserEndpoint : Endpoint(
                             score = when (assignment.gradingType) {
                                 "points" -> grade.toDouble() // For "points" and "percent" grades, let's be accurate
                                 "percent" -> grade.toDouble()
+                                "gpa_scale" -> grade.toDouble()
                                 else -> 90.0 // for everything else, make something up for now
                             },
                             excused = false

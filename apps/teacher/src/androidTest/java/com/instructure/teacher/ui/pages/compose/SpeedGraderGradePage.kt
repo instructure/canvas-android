@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui.pages.compose
 
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
@@ -27,6 +28,7 @@ import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -178,10 +180,10 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      */
     fun assertFinalGradeIsDisplayed(gradeValue: String) {
         composeTestRule.onNodeWithTag("finalGradeLabel").performScrollTo().assertIsDisplayed()
-        composeTestRule
-            .onNodeWithTag("finalGradeValue")
-            .assertTextContains(gradeValue, substring = true)
-            .assertIsDisplayed()
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onAllNodesWithTag("finalGradeValue")
+                .fetchSemanticsNodes().any { it.config.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.Text)?.any { text -> text.text.contains(gradeValue) } == true }
+        }
     }
 
     /**
