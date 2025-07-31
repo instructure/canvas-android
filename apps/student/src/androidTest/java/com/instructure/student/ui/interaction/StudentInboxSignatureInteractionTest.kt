@@ -22,6 +22,7 @@ import com.google.android.apps.common.testing.accessibility.framework.checks.Spe
 import com.instructure.canvas.espresso.common.interaction.InboxSignatureInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
@@ -30,6 +31,7 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManag
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
@@ -78,6 +80,10 @@ class StudentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @BindValue
+    @JvmField
+    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
 
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
 

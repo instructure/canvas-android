@@ -1,6 +1,5 @@
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import com.instructure.pandautils.views.RecordingMediaType
@@ -9,7 +8,7 @@ import java.io.File
 
 data class SpeedGraderCommentsUiState(
     val comments: List<SpeedGraderComment> = emptyList(),
-    val commentText: TextFieldValue = TextFieldValue(""),
+    val commentText: String = "",
     val isLoading: Boolean = false,
     val errorMessage: String? = null,
     val isEmpty: Boolean = false,
@@ -65,7 +64,7 @@ data class SpeedGraderFileSelectorDialogData(
 )
 
 sealed class SpeedGraderCommentsAction {
-    data class CommentFieldChanged(val commentText: TextFieldValue) : SpeedGraderCommentsAction()
+    data class CommentFieldChanged(val commentText: String) : SpeedGraderCommentsAction()
     data object AddCommentLibraryClicked : SpeedGraderCommentsAction()
     data object AddAttachmentClicked : SpeedGraderCommentsAction()
     data object AttachmentTypeSelectorDialogClosed : SpeedGraderCommentsAction()
