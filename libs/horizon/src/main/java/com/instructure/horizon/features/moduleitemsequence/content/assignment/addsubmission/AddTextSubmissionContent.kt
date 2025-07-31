@@ -50,7 +50,7 @@ fun AddTextSubmissionContent(
         contentAlignment = Alignment.CenterStart
     ) {
         ComposeRCE(
-            html = uiState.text,
+            initialValue = uiState.initialValue,
             modifier = modifier
                 .fillMaxWidth()
                 .border(

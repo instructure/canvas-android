@@ -521,7 +521,7 @@ private fun CreateUpdateEventContent(
                 )
                 Spacer(modifier = Modifier.height(8.dp))
                 ComposeRCE(
-                    html = uiState.details,
+                    initialValue = uiState.details,
                     hint = labelText.takeIf { isScreenReaderEnabled() }.orEmpty(),
                     fixedHeightInDp = 280,
                     modifier = Modifier

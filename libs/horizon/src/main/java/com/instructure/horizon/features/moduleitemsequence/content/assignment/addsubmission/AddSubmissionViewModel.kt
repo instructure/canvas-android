@@ -107,7 +107,7 @@ class AddSubmissionViewModel @Inject constructor(
 
                 if (it == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
                     val text = draft?.submissionEntry.orEmpty()
-                    AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged, draftUiState, text.isNotEmpty())
+                    AddSubmissionTypeUiState.Text(text, text, ::onTextSubmissionChanged, draftUiState, text.isNotEmpty())
                 } else {
                     val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
                     this@AddSubmissionViewModel.files = files.map { file ->
@@ -175,7 +175,7 @@ class AddSubmissionViewModel @Inject constructor(
             createSubmissionDao.deleteDraftByAssignmentIdAndType(assignmentId, apiPrefs.user?.id.orDefault(), submissionType.apiString)
             updateShowDeleteDraftConfirmation(submissionType, false)
             if (submissionType == Assignment.SubmissionType.ONLINE_TEXT_ENTRY) {
-                onTextSubmissionChanged("")
+                onTextSubmissionChanged("", "")
             } else if (submissionType == Assignment.SubmissionType.ONLINE_UPLOAD) {
                 deleteAllFiles()
             }
@@ -277,7 +277,7 @@ class AddSubmissionViewModel @Inject constructor(
             }
         } else if (progress == 100.0f) {
             onSubmissionSuccess?.invoke()
-            onTextSubmissionChanged("")
+            onTextSubmissionChanged("", "")
             _uiState.update {
                 it.copy(
                     submissionInProgress = showProgress,
@@ -306,7 +306,7 @@ class AddSubmissionViewModel @Inject constructor(
         }
     }
 
-    private fun onTextSubmissionChanged(text: String) {
+    private fun onTextSubmissionChanged(text: String, initialText: String? = null) {
         val textSubmission =
             uiState.value.submissionTypes[uiState.value.selectedSubmissionTypeIndex]
         if (textSubmission is AddSubmissionTypeUiState.Text) {
@@ -314,7 +314,7 @@ class AddSubmissionViewModel @Inject constructor(
                 it.copy(
                     submissionTypes = it.submissionTypes.mapIndexed { index, submissionType ->
                         if (index == uiState.value.selectedSubmissionTypeIndex) {
-                            textSubmission.copy(text = text)
+                            textSubmission.copy(text = text, initialValue = initialText ?: textSubmission.initialValue)
                         } else {
                             submissionType
                         }

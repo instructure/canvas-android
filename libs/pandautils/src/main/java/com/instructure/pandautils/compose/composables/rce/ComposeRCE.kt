@@ -60,7 +60,7 @@ enum class RceControlsPosition {
 
 @Composable
 fun ComposeRCE(
-    html: String,
+    initialValue: String,
     modifier: Modifier = Modifier,
     hint: String = "",
     fixedHeightInDp: Int? = null,
@@ -259,10 +259,8 @@ fun ComposeRCE(
         rceTextEditor.setPlaceholder(hint)
     }
 
-    LaunchedEffect(html) {
-        if (html != rceTextEditor.getHtml()) {
-            rceTextEditor.applyHtml(html)
-        }
+    LaunchedEffect(initialValue) {
+        rceTextEditor.applyHtml(initialValue)
     }
 
     Column(modifier = modifier) {
