@@ -177,7 +177,4 @@
     <color name="blue">@color/textDarkest</color>
     <color name="darker_blue">@color/textDarkest</color>
 
-    <!-- SpeedGrader colors -->
-    <color name="messageBackground">#197EAB</color>
-
 </resources>

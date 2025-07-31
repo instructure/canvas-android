@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader.grading
+package com.instructure.pandautils.features.speedgrader.grade.grading
 
 import com.instructure.canvasapi2.SubmissionGradeQuery
 import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
