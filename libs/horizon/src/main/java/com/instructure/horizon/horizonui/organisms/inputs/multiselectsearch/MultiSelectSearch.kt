@@ -75,7 +75,7 @@ fun MultiSelectSearch(
             var heightInPx by remember { mutableIntStateOf(0) }
             var width by remember { mutableStateOf(0.dp) }
             InputContainer(
-                isFocused = state.isFocused || state.isMenuOpen,
+                isFocused = false,
                 isError = state.errorText != null,
                 enabled = state.enabled,
                 modifier = Modifier
@@ -96,7 +96,7 @@ fun MultiSelectSearch(
             }
             InputDropDownPopup(
                 isMenuOpen = state.isMenuOpen,
-                options = state.options,
+                options = state.options.filterNot { state.selectedOptions.contains(it) },
                 isLoading = state.isOptionListLoading,
                 isFocusable = false,
                 verticalOffsetPx = heightInPx,

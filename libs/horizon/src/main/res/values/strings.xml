@@ -322,5 +322,6 @@
     <string name="dashboard_courseInvite">You have been invited to join %s</string>
     <string name="dashboard_courseInviteAccept">Accept</string>
     <string name="dashboard_courseInviteFailed">Failed to accept course invite</string>
+    <string name="dashboard_emptyMessage">You aren’t currently enrolled in a course.</string>
     <string name="learnEmptyMessage">You aren’t currently enrolled in a course.</string>
 </resources>

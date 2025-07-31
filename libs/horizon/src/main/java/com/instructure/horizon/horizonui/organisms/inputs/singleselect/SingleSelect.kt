@@ -23,7 +23,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,7 +39,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
@@ -75,7 +73,7 @@ fun SingleSelect(
             var heightInPx by remember { mutableIntStateOf(0) }
             var width by remember { mutableStateOf(0.dp) }
             InputContainer(
-                isFocused = state.isFocused || state.isMenuOpen,
+                isFocused = false,
                 isError = state.errorText != null,
                 enabled = state.enabled,
                 onClick = { state.onMenuOpenChanged(!state.isMenuOpen) },
@@ -112,29 +110,17 @@ private fun <T>SingleSelectItem(option: T, state: SingleSelectState) {
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .conditional(option == state.selectedOption) {
-                background(HorizonColors.Surface.pagePrimary())
+            .conditional(option == state.selectedOption && state.isMenuOpen) {
+                background(HorizonColors.Surface.institution())
             }
     ) {
         Text(
             text = option.toString(),
             style = HorizonTypography.p1,
-            color = HorizonColors.Text.body(),
-            fontWeight = if (option == state.selectedOption) FontWeight.SemiBold else FontWeight.Normal,
+            color = if (option == state.selectedOption) HorizonColors.Surface.pageSecondary() else HorizonColors.Text.body(),
             modifier = Modifier
                 .padding(horizontal = 11.dp, vertical = 6.dp)
         )
-        Spacer(modifier = Modifier.weight(1f))
-        if (option == state.selectedOption) {
-            Icon(
-                painter = painterResource(R.drawable.check),
-                contentDescription = null,
-                tint = HorizonColors.Icon.default(),
-                modifier = Modifier
-                    .padding(end = 11.dp)
-                    .size(24.dp)
-            )
-        }
     }
 }
 

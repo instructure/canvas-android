@@ -18,16 +18,21 @@
 package com.instructure.horizon.features.dashboard
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -42,6 +47,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -93,41 +99,73 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
         val spinnerColor =
             if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
-        LoadingStateWrapper(loadingState = uiState.loadingState, spinnerColor = spinnerColor) {
-            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
-                item {
+        LoadingStateWrapper(loadingState = uiState.loadingState, spinnerColor = spinnerColor, modifier = Modifier.padding(paddingValues)) {
+            if (uiState.coursesUiState.isEmpty() && uiState.invitesUiState.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp)
+                        .verticalScroll(rememberScrollState())
+                        .height(IntrinsicSize.Max)
+                ) {
                     HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
-                    HorizonSpace(SpaceSize.SPACE_36)
-                }
-                items(uiState.invitesUiState) { inviteItem ->
-                    Alert(stringResource(R.string.dashboard_courseInvite, inviteItem.courseName), alertType = AlertType.Info, buttons = {
-                        LoadingButton(
-                            label = stringResource(R.string.dashboard_courseInviteAccept),
-                            contentAlignment = Alignment.CenterStart,
-                            color = ButtonColor.Black,
-                            onClick = inviteItem.onAccept,
-                            loading = inviteItem.acceptLoading
+                    HorizonSpace(SpaceSize.SPACE_24)
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            stringResource(R.string.dashboard_emptyMessage),
+                            style = HorizonTypography.h3,
+                            textAlign = TextAlign.Center
                         )
-                    }, onDismiss = if (inviteItem.acceptLoading) null else inviteItem.onDismiss)
-                    HorizonSpace(SpaceSize.SPACE_16)
-                }
-                itemsIndexed(uiState.coursesUiState) { index, courseItem ->
-                    DashboardCourseItem(courseItem, onClick = {
-                        mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
-                    }, onCourseClick = {
-                        homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
-                            popUpTo(homeNavController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = false
-                        }
-                    })
-                    if (index < uiState.coursesUiState.size - 1) {
-                        HorizonSpace(SpaceSize.SPACE_48)
                     }
                 }
-            })
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(start = 24.dp, end = 24.dp),
+                    content = {
+                        item {
+                            HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
+                            HorizonSpace(SpaceSize.SPACE_24)
+                        }
+                        items(uiState.invitesUiState) { inviteItem ->
+                            Alert(
+                                stringResource(R.string.dashboard_courseInvite, inviteItem.courseName),
+                                alertType = AlertType.Info,
+                                buttons = {
+                                    LoadingButton(
+                                        label = stringResource(R.string.dashboard_courseInviteAccept),
+                                        contentAlignment = Alignment.CenterStart,
+                                        color = ButtonColor.Black,
+                                        onClick = inviteItem.onAccept,
+                                        loading = inviteItem.acceptLoading
+                                    )
+                                },
+                                onDismiss = if (inviteItem.acceptLoading) null else inviteItem.onDismiss
+                            )
+                            HorizonSpace(SpaceSize.SPACE_16)
+                        }
+                        itemsIndexed(uiState.coursesUiState) { index, courseItem ->
+                            DashboardCourseItem(courseItem, onClick = {
+                                mainNavController.navigate(
+                                    MainNavigationRoute.ModuleItemSequence(
+                                        courseItem.courseId,
+                                        courseItem.nextModuleItemId
+                                    )
+                                )
+                            }, onCourseClick = {
+                                homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
+                                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = false
+                                }
+                            })
+                            if (index < uiState.coursesUiState.size - 1) {
+                                HorizonSpace(SpaceSize.SPACE_48)
+                            }
+                        }
+                    })
+            }
         }
     }
 }
@@ -186,7 +224,7 @@ private fun DashboardCourseItem(
                     onCourseClick()
                 }) {
             Text(text = courseItem.courseName, style = HorizonTypography.h1)
-            HorizonSpace(SpaceSize.SPACE_24)
+            HorizonSpace(SpaceSize.SPACE_12)
             ProgressBar(progress = courseItem.courseProgress)
             HorizonSpace(SpaceSize.SPACE_36)
         }

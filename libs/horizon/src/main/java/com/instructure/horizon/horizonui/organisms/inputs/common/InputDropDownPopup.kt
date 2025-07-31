@@ -21,6 +21,7 @@ import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.togetherWith
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -45,7 +46,6 @@ import androidx.compose.ui.window.PopupProperties
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Spinner
@@ -84,20 +84,18 @@ fun <T>InputDropDownPopup(
         ) {
             Card(
                 modifier = modifier
-                    .padding(bottom = 8.dp) // to avoid shadow clipping during animation
-                    .padding(horizontal = 8.dp) // to avoid shadow clipping during animation
+                    .padding(bottom = 8.dp)
+                    .padding(horizontal = 8.dp)
                     .width(width),
                 shape = HorizonCornerRadius.level2,
                 colors = CardDefaults.cardColors()
-                    .copy(containerColor = HorizonColors.Surface.cardPrimary()),
-                elevation = CardDefaults.elevatedCardElevation(
-                    defaultElevation = HorizonElevation.level3,
-                    pressedElevation = HorizonElevation.level3,
-                    focusedElevation = HorizonElevation.level3,
-                    disabledElevation = HorizonElevation.level3,
-                    hoveredElevation = HorizonElevation.level3,
-                    draggedElevation = HorizonElevation.level3
-                ),
+                    .copy(containerColor = HorizonColors.Surface.pageSecondary()),
+                border = if (isMenuOpen) {
+                    BorderStroke(
+                        width = 1.dp,
+                        color = HorizonColors.LineAndBorder.containerStroke()
+                    )
+                } else { null },
             ) {
                 AnimatedContent(
                     isLoading,
