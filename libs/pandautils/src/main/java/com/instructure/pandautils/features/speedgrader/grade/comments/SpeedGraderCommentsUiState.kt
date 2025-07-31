@@ -58,10 +58,10 @@ enum class MediaType {
 }
 
 data class SpeedGraderFileSelectorDialogData(
-    val assignmentId: Long = 0L,
-    val courseId: Long = 0L,
-    val userId: Long = 0L,
-    val attempt: Long? = null,
+    val assignmentId: Long,
+    val courseId: Long,
+    val userId: Long,
+    val attempt: Long?
 )
 
 sealed class SpeedGraderCommentsAction {

@@ -68,14 +68,15 @@ fun SpeedGraderCommentsScreen(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .height(50.dp)
                 .clickable(
                     enabled = !uiState.isLoading
                 ) {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                     onExpandToggle()
                 }
+                .padding(horizontal = 16.dp)
+                .height(50.dp)
+
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.ic_discussion),

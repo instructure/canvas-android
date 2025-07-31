@@ -35,7 +35,6 @@ import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.Logger
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
@@ -116,7 +115,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         userId = response.data.submission?.userId?.toLong() ?: -1L
         pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
         submissionId = response.data.submission?._id?.toLongOrNull()
-        collectPendingComments()
+        subscribeToPendingComments()
         val isAnonymousGrading = response.data.submission?.assignment?.anonymousGrading ?: false
         fetchedComments = response.comments
             .filter { it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
@@ -178,7 +177,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         try {
             speedGraderCommentsRepository.getSubmissionComments(studentId, assignmentId, true)
         } catch (e: Exception) {
-            Logger.e("Error fetching comments")
+            e.printStackTrace()
         }
     }
 
@@ -201,7 +200,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         )
     }
 
-    private fun collectPendingComments() {
+    private fun subscribeToPendingComments() {
         viewModelScope.launch(Dispatchers.IO) {
             pendingSubmissionCommentDao.findByPageIdFlow(pageId)
                 .collect { pendingCommentsEntities ->

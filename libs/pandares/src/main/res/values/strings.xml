@@ -2140,4 +2140,6 @@
     <string name="content_description_edit_rubric_comment">Edit rubric note</string>
     <string name="rubricNoteHint">Note</string>
     <string name="a11y_sendRubricNoteContentDescription">Send rubric note</string>
+    <string name="select_attachment_type">Select Attachment Type</string>
+    <string name="choose_files">Choose Files</string>
 </resources>

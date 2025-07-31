@@ -30,13 +30,13 @@ class SpeedGraderCommentsModule {
 
     @Provides
     fun provideSpeedGraderCommentsAttachmentRouter(): SpeedGraderCommentsAttachmentRouter {
-        return ParentSpeedGraderCommentsAttachmentRouter()
-    }
-}
-
-class ParentSpeedGraderCommentsAttachmentRouter : SpeedGraderCommentsAttachmentRouter {
-
-    override fun openAttachment(activity: FragmentActivity, attachment: SpeedGraderCommentAttachment) {
-        // Not implemented for ParentApp
+        return object : SpeedGraderCommentsAttachmentRouter {
+            override fun openAttachment(
+                activity: FragmentActivity,
+                attachment: SpeedGraderCommentAttachment
+            ) {
+                // Not implemented for ParentApp
+            }
+        }
     }
 }

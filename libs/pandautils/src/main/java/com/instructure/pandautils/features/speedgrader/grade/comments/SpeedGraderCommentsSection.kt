@@ -36,13 +36,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -52,6 +52,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -63,6 +64,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -84,6 +88,7 @@ import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
+import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
 import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
@@ -113,7 +118,7 @@ fun SpeedGraderCommentsSection(
         ).speedGraderCommentsAttachmentRouter()
     }
 
-    val fileDialogShown = remember { mutableStateOf(false) }
+    val fileDialogShown = rememberSaveable { mutableStateOf(false) }
     val dialogParent = remember {
         object : FileUploadDialogParent {
             override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
@@ -148,7 +153,7 @@ fun SpeedGraderCommentsSection(
                 onAttachmentClick = { attachmentRouter.openAttachment(activity, it) },
                 actionHandler = actionHandler
             )
-            HorizontalDivider(color = colorResource(id = R.color.backgroundMedium))
+            CanvasDivider()
             SpeedGraderCommentCreator(
                 commentText = state.commentText, actionHandler = actionHandler
             )
@@ -250,16 +255,18 @@ private fun AttachmentTypeSelectorDialog(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = "Select Attachment Type",
+                    text = stringResource(R.string.select_attachment_type),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 14.sp,
                     lineHeight = 19.sp,
-                    fontWeight = FontWeight(400),
                     textAlign = TextAlign.Center,
                 )
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .semantics {
+                            this.role = Role.Button
+                        }
                         .clickable {
                             if (isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
                                 actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
@@ -278,19 +285,23 @@ private fun AttachmentTypeSelectorDialog(
                     )
                     Spacer(modifier = Modifier.width(18.dp))
                     Text(
-                        text = "Record Audio",
+                        text = stringResource(R.string.recordAudio),
                         fontSize = 16.sp,
                         lineHeight = 21.sp,
-                        fontWeight = FontWeight(600),
+                        fontWeight = FontWeight.SemiBold,
                         color = colorResource(id = R.color.textDarkest)
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .semantics {
+                            this.role = Role.Button
+                        }
                         .clickable {
                             if (isPermissionGranted(context, PermissionUtils.CAMERA) &&
-                                isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
+                                isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)
+                            ) {
                                 actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
                             } else {
                                 videoPermissionRequest.launch(
@@ -312,16 +323,19 @@ private fun AttachmentTypeSelectorDialog(
                     )
                     Spacer(modifier = Modifier.width(18.dp))
                     Text(
-                        text = "Record Video",
+                        text = stringResource(R.string.recordVideo),
                         fontSize = 16.sp,
                         lineHeight = 21.sp,
-                        fontWeight = FontWeight(600),
+                        fontWeight = FontWeight.SemiBold,
                         color = colorResource(id = R.color.textDarkest)
                     )
                 }
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .semantics {
+                            this.role = Role.Button
+                        }
                         .clickable { actionHandler(SpeedGraderCommentsAction.ChooseFilesClicked) }
                         .padding(horizontal = 22.dp, vertical = 14.dp),
                     verticalAlignment = Alignment.CenterVertically,
@@ -334,10 +348,10 @@ private fun AttachmentTypeSelectorDialog(
                     )
                     Spacer(modifier = Modifier.width(18.dp))
                     Text(
-                        text = "Choose Files",
+                        text = stringResource(R.string.choose_files),
                         fontSize = 16.sp,
                         lineHeight = 21.sp,
-                        fontWeight = FontWeight(600),
+                        fontWeight = FontWeight.SemiBold,
                         color = colorResource(id = R.color.textDarkest)
                     )
                 }
@@ -357,10 +371,6 @@ private fun SpeedGraderCommentItems(
     modifier: Modifier = Modifier,
     actionHandler: (SpeedGraderCommentsAction) -> Unit = {}
 ) {
-//    val listState = rememberLazyListState()
-//    LaunchedEffect(comments.size) {
-//        listState.scrollToItem(comments.size)
-//    }
     Column(
         modifier = modifier.padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
@@ -399,7 +409,7 @@ fun SpeedGraderOwnCommentItem(
             Text(
                 text = DateHelper.getDateTimeString(
                     LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
-                ) ?: "",
+                ).orEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
                     .wrapContentWidth(Alignment.End),
@@ -438,7 +448,6 @@ fun SpeedGraderOwnCommentItem(
             }
             SpeedGraderAttachmentsComponent(
                 attachments = comment.attachments,
-
                 isOwn = true,
                 onSelect = onAttachmentClick
             )
@@ -479,10 +488,9 @@ fun SpeedGraderCommentErrorComponent(
         )
         Spacer(modifier = Modifier.width(2.dp))
         Text(
-            text = "This message could not be sent. Tap to try again.",
+            text = stringResource(R.string.errorSendingMessage),
             fontSize = 14.sp,
             lineHeight = 19.sp,
-            fontWeight = FontWeight(400),
             color = colorResource(id = R.color.textDanger)
         )
     }
@@ -505,7 +513,7 @@ fun SpeedGraderAttachmentsComponent(
                     attachment = attachment,
                     modifier = Modifier
                         .padding(top = 4.dp)
-                        .height(64.dp)
+                        .requiredHeight(64.dp)
                         .border(
                             width = 1.dp,
                             color = colorResource(id = R.color.backgroundMedium),
@@ -576,7 +584,7 @@ fun SpeedGraderAttachmentComponent(
                 fontSize = 14.sp,
                 lineHeight = 19.sp,
                 maxLines = 2,
-                fontWeight = FontWeight(600),
+                fontWeight = FontWeight.SemiBold,
                 overflow = TextOverflow.Ellipsis
             )
 
@@ -586,8 +594,7 @@ fun SpeedGraderAttachmentComponent(
                 text = attachment.size,
                 color = colorResource(id = R.color.textDark),
                 fontSize = 12.sp,
-                lineHeight = 16.sp,
-                fontWeight = FontWeight(400)
+                lineHeight = 16.sp
             )
         }
     }
@@ -650,7 +657,7 @@ fun SpeedGraderMediaAttachmentComponent(
             fontSize = 14.sp,
             lineHeight = 19.sp,
             maxLines = 2,
-            fontWeight = FontWeight(600),
+            fontWeight = FontWeight.SemiBold,
             overflow = TextOverflow.Ellipsis
         )
     }
@@ -681,14 +688,14 @@ fun SpeedGraderUserCommentItem(
                     text = comment.authorName,
                     fontSize = 16.sp,
                     lineHeight = 21.sp,
-                    fontWeight = FontWeight(600),
+                    fontWeight = FontWeight.SemiBold,
                     color = colorResource(id = R.color.textDarkest)
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = DateHelper.getDateTimeString(
                         LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
-                    ) ?: "",
+                    ).orEmpty(),
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     color = colorResource(id = R.color.textDark)
@@ -738,7 +745,7 @@ fun SpeedGraderCommentCreator(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(Color.Transparent),
-            label = { Text("Comment") },
+            label = { Text(stringResource(R.string.speedGraderCommentHint),) },
             value = commentText,
             maxLines = 5,
             onValueChange = {
@@ -747,7 +754,6 @@ fun SpeedGraderCommentCreator(
             textStyle = TextStyle(
                 fontSize = 14.sp,
                 lineHeight = 17.sp,
-                fontWeight = FontWeight(400),
                 color = colorResource(id = R.color.textDarkest),
             ),
             colors = TextFieldDefaults.colors(
