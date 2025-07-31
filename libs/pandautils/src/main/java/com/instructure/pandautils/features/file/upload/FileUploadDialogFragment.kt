@@ -82,6 +82,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
     private var attemptId: Long? by NLongArg()
 
     private var dialogCallback: ((Int) -> Unit)? = null
+    private var dialogParent: FileUploadDialogParent? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) {
@@ -193,6 +194,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
         if (requireActivity() is ShareExtensionActivity) {
             requireActivity().onBackPressed()
         }
+        getParent()?.attachmentCallback(EVENT_DIALOG_CANCELED, null)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -237,6 +239,9 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
     }
 
     private fun getParent(): FileUploadDialogParent? {
+        if (dialogParent != null) {
+            return dialogParent
+        }
         var parent = parentFragment as? FileUploadDialogParent
         if (parent == null) {
             parent = activity as? FileUploadDialogParent
@@ -286,7 +291,11 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
 
         fun newInstance(): FileUploadDialogFragment = FileUploadDialogFragment()
 
-        fun newInstance(args: Bundle, callback: ((Int) -> Unit)? = null): FileUploadDialogFragment {
+        fun newInstance(
+            args: Bundle,
+            callback: ((Int) -> Unit)? = null,
+            dialogParent: FileUploadDialogParent? = null
+        ): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
@@ -298,6 +307,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
                 courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
+                this.dialogParent = dialogParent
                 userId = args.getLong(Const.USER_ID, INVALID_ID)
                 attemptId = args.getLong(Const.SUBMISSION_ATTEMPT, INVALID_ID).takeIf { it != INVALID_ID }
             }

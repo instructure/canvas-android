@@ -21,6 +21,7 @@ import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.RouteUtils
@@ -74,6 +75,13 @@ class RouteUtilsTest : Assert() {
 
         mockkObject(com.instructure.canvasapi2.CanvasRestAdapter)
         every { com.instructure.canvasapi2.CanvasRestAdapter.okHttpClient } returns okHttpClient
+    }
+
+    @Test
+    fun `date`() {
+        val string = "Wed May 28 00:00:38 GMT+02:00 2025"
+        val date = DateHelper.speedGraderDateStringToDate(string)
+        assertNotNull(date)
     }
 
     @Test
