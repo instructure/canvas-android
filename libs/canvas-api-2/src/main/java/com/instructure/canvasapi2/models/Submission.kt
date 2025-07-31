@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @JvmSuppressWildcards
 @Parcelize
@@ -85,6 +85,9 @@ data class Submission(
         val gradingPeriodId: Long? = null,
         @SerializedName("late_policy_status")
         val latePolicyStatus: String? = null,
+
+        // Testing purpose fields
+        val status: String? = null
 ) : CanvasModel<Submission>() {
     override val comparisonDate get() = submittedAt
     override val comparisonString get() = submissionType

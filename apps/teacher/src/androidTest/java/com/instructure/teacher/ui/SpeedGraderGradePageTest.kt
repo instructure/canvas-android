@@ -257,7 +257,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertFinalGradeIsDisplayed("128.5 / 20 pts")
     }
 
-    @Stub
     @Test
     fun excuseStudent() {
         goToSpeedGraderGradePage()
@@ -268,13 +267,11 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertExcuseButtonDisabled()
 
         speedGraderGradePage.assertSliderVisible()
-       // TODO: Re-write these assertion functions to compose as well after make the mock working well to apply ui changes.
         speedGraderGradePage.assertSelectedStatusText("Excused")
-        speedGraderGradePage.assertFinalGradePointsValueDisplayed("- / 20 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("-")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("0 / 20 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("0")
     }
 
-    @Stub
     @Test
     @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
     fun clearGrade() {
@@ -285,11 +282,10 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertNoGradeButtonEnabled()
 
         speedGraderGradePage.assertSliderVisible()
-        // TODO: Re-write these assertion functions to compose as well after make the mock working well to apply ui changes.
         speedGraderGradePage.assertSelectedStatusText("None")
-        speedGraderGradePage.assertFinalGradePointsValueDisplayed("- / 20 pts")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("0 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("-")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("0 / 20 pts")
     }
 
     @Stub

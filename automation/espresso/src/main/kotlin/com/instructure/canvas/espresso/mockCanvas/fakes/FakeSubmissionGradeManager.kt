@@ -74,7 +74,7 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             gradeHidden = false,
             _id = submission?.id.toString(),
             submissionStatus = "on_time",
-            status = "submitted",
+            status = submission?.status ?: "submitted",
             latePolicyStatus = LatePolicyStatusType.none,
             late = submission?.late ?: false,
             secondsLate = 0.0,
