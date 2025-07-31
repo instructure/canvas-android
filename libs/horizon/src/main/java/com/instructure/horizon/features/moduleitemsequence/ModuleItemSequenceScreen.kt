@@ -53,7 +53,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -101,6 +100,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.Button
@@ -176,7 +176,7 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
         modifier
             .align(Alignment.BottomEnd)
             .padding(end = 24.dp, bottom = 16.dp)
-            .shadow(
+            .horizonShadow(
                 elevation = HorizonElevation.level4,
                 shape = HorizonCornerRadius.level6,
                 clip = false
