@@ -17,13 +17,15 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary
 
-import androidx.compose.ui.text.input.TextFieldValue
+import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.Normalizer
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -46,6 +48,7 @@ class SpeedGraderCommentLibraryViewModelTest {
 
     private val repository: SpeedGraderCommentLibraryRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
     private lateinit var viewModel: SpeedGraderCommentLibraryViewModel
 
@@ -54,7 +57,10 @@ class SpeedGraderCommentLibraryViewModelTest {
         Dispatchers.setMain(testDispatcher)
         mockkObject(Normalizer)
         every { Normalizer.normalize(any()) } answers { firstArg() }
+        mockkStatic(Uri::class)
+        every { Uri.decode(any()) } answers { firstArg<String>() }
         every { apiPrefs.user?.id } returns 123L
+        every { savedStateHandle.get<String>(COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM) } returns null
     }
 
     @After
@@ -64,10 +70,20 @@ class SpeedGraderCommentLibraryViewModelTest {
     }
 
     @Test
+    fun `Initializes with comment value from saved state handle`() = runTest {
+        every { savedStateHandle.get<String>(COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM) } returns "Initial comment"
+
+        viewModel = SpeedGraderCommentLibraryViewModel(savedStateHandle, repository, apiPrefs)
+
+        val uiState = viewModel.uiState.value
+        assertEquals("Initial comment", uiState.commentValue)
+    }
+
+    @Test
     fun `Loads comment library items successfully`() = runTest {
         coEvery { repository.getCommentLibraryItems(123L) } returns listOf("Great job", "Well done")
 
-        viewModel = SpeedGraderCommentLibraryViewModel(repository, apiPrefs)
+        viewModel = SpeedGraderCommentLibraryViewModel(savedStateHandle, repository, apiPrefs)
 
         val uiState = viewModel.uiState.value
         assertFalse(uiState.isLoading)
@@ -78,9 +94,9 @@ class SpeedGraderCommentLibraryViewModelTest {
     fun `Filters comment library items based on query`() = runTest {
         coEvery { repository.getCommentLibraryItems(123L) } returns listOf("Great job", "Well done", "Try again")
 
-        viewModel = SpeedGraderCommentLibraryViewModel(repository, apiPrefs)
+        viewModel = SpeedGraderCommentLibraryViewModel(savedStateHandle, repository, apiPrefs)
 
-        viewModel.uiState.value.onCommentValueChanged(TextFieldValue("great"))
+        viewModel.uiState.value.onCommentValueChanged("great")
 
         val filteredItems = viewModel.uiState.value.items
         assertEquals(listOf("Great job"), filteredItems)
@@ -91,7 +107,7 @@ class SpeedGraderCommentLibraryViewModelTest {
         every { apiPrefs.user?.id } returns 123L
         coEvery { repository.getCommentLibraryItems(123L) } throws Exception("Network error")
 
-        viewModel = SpeedGraderCommentLibraryViewModel(repository, apiPrefs)
+        viewModel = SpeedGraderCommentLibraryViewModel(savedStateHandle, repository, apiPrefs)
 
         val uiState = viewModel.uiState.value
         assertFalse(uiState.isLoading)

@@ -17,7 +17,8 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary
 
-import androidx.compose.ui.text.input.TextFieldValue
+import android.net.Uri
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -34,13 +35,17 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SpeedGraderCommentLibraryViewModel @Inject constructor(
+    savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderCommentLibraryRepository,
     private val apiPrefs: ApiPrefs
 ) : ViewModel() {
 
+    private val initialCommentValue = savedStateHandle.get<String>(COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM).orEmpty()
+
     private val _uiState = MutableStateFlow(
         SpeedGraderCommentLibraryUiState(
-            ::onCommentValueChanged
+            commentValue = Uri.decode(initialCommentValue),
+            onCommentValueChanged = ::onCommentValueChanged
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -60,7 +65,7 @@ class SpeedGraderCommentLibraryViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     isLoading = false,
-                    items = filterCommentLibraryItems(it.commentValue.text)
+                    items = filterCommentLibraryItems(it.commentValue)
                 )
             }
         } catch {
@@ -70,11 +75,11 @@ class SpeedGraderCommentLibraryViewModel @Inject constructor(
         }
     }
 
-    private fun onCommentValueChanged(newValue: TextFieldValue) {
+    private fun onCommentValueChanged(newValue: String) {
         _uiState.update { currentState ->
             currentState.copy(
                 commentValue = newValue,
-                items = filterCommentLibraryItems(newValue.text)
+                items = filterCommentLibraryItems(newValue)
             )
         }
     }

@@ -17,12 +17,10 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary
 
-import androidx.compose.ui.text.input.TextFieldValue
-
 
 data class SpeedGraderCommentLibraryUiState(
-    val onCommentValueChanged: (TextFieldValue) -> Unit,
+    val onCommentValueChanged: (String) -> Unit,
     val isLoading: Boolean = true,
     val items: List<String> = emptyList(),
-    val commentValue: TextFieldValue = TextFieldValue()
+    val commentValue: String = ""
 )

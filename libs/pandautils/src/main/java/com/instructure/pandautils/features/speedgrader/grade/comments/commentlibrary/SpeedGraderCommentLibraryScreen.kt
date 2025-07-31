@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary
 
+import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -30,18 +31,22 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.DialogProperties
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.dialog
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
@@ -52,37 +57,52 @@ import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.speedgrader.grade.comments.composables.SpeedGraderCommentInput
 
 
+internal const val COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM = "initialCommentValue"
+
 @Composable
 fun SpeedGraderCommentLibraryScreen(
-    onDismissRequest: (TextFieldValue) -> Unit,
-    initialCommentValue: TextFieldValue,
-    onSendCommentClicked: (TextFieldValue) -> Unit
+    onDismissRequest: (String) -> Unit,
+    initialCommentValue: String,
+    onSendCommentClicked: (String) -> Unit
 ) {
-    val viewModel: SpeedGraderCommentLibraryViewModel = hiltViewModel()
-    val uiState by viewModel.uiState.collectAsState()
-
-    LaunchedEffect(Unit) {
-        uiState.onCommentValueChanged(initialCommentValue)
-    }
-
-    FullScreenDialog(
-        onDismissRequest = {
-            onDismissRequest(uiState.commentValue)
-        }
+    NavHost(
+        navController = rememberNavController(),
+        startDestination = "commentLibrary/${Uri.encode(initialCommentValue)}"
     ) {
-        SpeedGraderCommentLibraryScreen(
-            uiState = uiState,
-            onDismissRequest = onDismissRequest,
-            onSendCommentClicked = onSendCommentClicked
-        )
+        dialog(
+            route = "commentLibrary/{$COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM}",
+            arguments = listOf(
+                navArgument(COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM) {
+                    type = NavType.StringType
+                }
+            ),
+            dialogProperties = DialogProperties(
+                usePlatformDefaultWidth = false
+            )
+        ) {
+            val viewModel: SpeedGraderCommentLibraryViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+
+            FullScreenDialog(
+                onDismissRequest = {
+                    onDismissRequest(uiState.commentValue)
+                }
+            ) {
+                SpeedGraderCommentLibraryScreen(
+                    uiState = uiState,
+                    onDismissRequest = onDismissRequest,
+                    onSendCommentClicked = onSendCommentClicked
+                )
+            }
+        }
     }
 }
 
 @Composable
 private fun SpeedGraderCommentLibraryScreen(
     uiState: SpeedGraderCommentLibraryUiState,
-    onDismissRequest: (TextFieldValue) -> Unit,
-    onSendCommentClicked: (TextFieldValue) -> Unit
+    onDismissRequest: (String) -> Unit,
+    onSendCommentClicked: (String) -> Unit
 ) {
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
@@ -113,8 +133,8 @@ private fun SpeedGraderCommentLibraryScreen(
 @Composable
 private fun SpeedGraderCommentLibraryContent(
     uiState: SpeedGraderCommentLibraryUiState,
-    onDismissRequest: (TextFieldValue) -> Unit,
-    onSendCommentClicked: (TextFieldValue) -> Unit,
+    onDismissRequest: (String) -> Unit,
+    onSendCommentClicked: (String) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -140,7 +160,7 @@ private fun SpeedGraderCommentLibraryContent(
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.textDarkest),
                         modifier = Modifier.clickable {
-                            uiState.onCommentValueChanged(TextFieldValue(item))
+                            uiState.onCommentValueChanged(item)
                         }
                     )
                     Spacer(modifier = Modifier.height(14.dp))

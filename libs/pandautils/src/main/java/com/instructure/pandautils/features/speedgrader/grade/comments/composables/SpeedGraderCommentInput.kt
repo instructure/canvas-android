@@ -19,40 +19,37 @@ package com.instructure.pandautils.features.speedgrader.grade.comments.composabl
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.LocalCourseColor
 
 
 @Composable
 fun SpeedGraderCommentInput(
+    commentText: String,
+    onCommentFieldChanged: (String) -> Unit,
     modifier: Modifier = Modifier,
-    commentText: TextFieldValue = TextFieldValue(""),
-    onCommentFieldChanged: (TextFieldValue) -> Unit = {},
     onCommentLibraryClicked: () -> Unit = {},
     onAttachmentClicked: () -> Unit = {},
     sendCommentClicked: () -> Unit = {},
@@ -81,7 +78,6 @@ fun SpeedGraderCommentInput(
             textStyle = TextStyle(
                 fontSize = 14.sp,
                 lineHeight = 17.sp,
-                fontWeight = FontWeight(400),
                 color = colorResource(id = R.color.textDarkest),
             ),
             colors = TextFieldDefaults.colors(
@@ -102,44 +98,42 @@ fun SpeedGraderCommentInput(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(start = 12.dp, end = 12.dp, bottom = 8.dp)
                 .wrapContentHeight()
         ) {
-            Icon(
-                painter = painterResource(
-                    id = if (isOnCommentLibrary) R.drawable.ic_arrow_down else R.drawable.ic_message
-                ),
-                contentDescription = stringResource(
-                    if (isOnCommentLibrary) R.string.close else R.string.toolbarCommentLibrary
-                ),
-                modifier = Modifier
-                    .height(24.dp)
-                    .clickable(onClick = onCommentLibraryClicked),
-                tint = colorResource(id = R.color.textDark)
-            )
-            Spacer(modifier = Modifier.width(16.dp))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_attachment),
-                contentDescription = stringResource(R.string.a11y_addAttachment),
-                modifier = Modifier
-                    .height(24.dp)
-                    .alpha(if (isOnCommentLibrary) 0.5f else 1f)
-                    .clickable(
-                        onClick = onAttachmentClicked,
-                        enabled = !isOnCommentLibrary
+            IconButton(
+                onClick = onCommentLibraryClicked,
+                colors = IconButtonDefaults.iconButtonColors(contentColor = colorResource(id = R.color.textDark))
+            ) {
+                Icon(
+                    painter = painterResource(
+                        id = if (isOnCommentLibrary) R.drawable.ic_arrow_down else R.drawable.ic_message
                     ),
-                tint = colorResource(id = R.color.textDark)
-            )
+                    contentDescription = stringResource(
+                        if (isOnCommentLibrary) R.string.close else R.string.toolbarCommentLibrary
+                    )
+                )
+            }
+            IconButton(
+                onClick = onAttachmentClicked,
+                enabled = !isOnCommentLibrary,
+                colors = IconButtonDefaults.iconButtonColors(contentColor = colorResource(id = R.color.textDark))
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_attachment),
+                    contentDescription = stringResource(R.string.a11y_addAttachment)
+                )
+            }
             Spacer(modifier = Modifier.weight(1f))
-            Icon(
-                painter = painterResource(id = R.drawable.ic_send_outlined),
-                contentDescription = stringResource(R.string.send),
-                modifier = Modifier
-                    .height(24.dp)
-                    .clickable(onClick = sendCommentClicked)
-                    .alpha(if (commentText.text.isEmpty()) 0.5f else 1f),
-                tint = colorResource(id = R.color.messageBackground)
-            )
+            IconButton(
+                onClick = sendCommentClicked,
+                enabled = commentText.isNotEmpty(),
+                colors = IconButtonDefaults.iconButtonColors(contentColor = LocalCourseColor.current)
+            ) {
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_send_outlined),
+                    contentDescription = stringResource(R.string.send)
+                )
+            }
         }
     }
 }

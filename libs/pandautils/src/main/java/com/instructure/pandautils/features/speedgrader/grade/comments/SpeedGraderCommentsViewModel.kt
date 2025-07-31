@@ -19,7 +19,6 @@ package com.instructure.pandautils.features.speedgrader.grade.comments
 import android.content.Context
 import android.net.Uri
 import android.webkit.MimeTypeMap
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -376,7 +375,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 _uiState.update { state ->
                     state.copy(
                         comments = fetchedComments + pendingComments,
-                        commentText = TextFieldValue("")
+                        commentText = ""
                     )
                 }
                 // TODO clear cache
@@ -506,7 +505,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             _uiState.update { state ->
                 state.copy(
                     comments = fetchedComments + pendingComments,
-                    commentText = TextFieldValue("")
+                    commentText = ""
                 )
             }
         } catch (e: Throwable) {
@@ -522,11 +521,11 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     private fun onSendCommentClicked() {
         viewModelScope.launch(Dispatchers.IO) {
-            if (_uiState.value.commentText.text.isNotEmpty()) {
-                val comment = _uiState.value.commentText.text
+            if (_uiState.value.commentText.isNotEmpty()) {
+                val comment = _uiState.value.commentText
                 _uiState.update { state ->
                     state.copy(
-                        commentText = TextFieldValue("")
+                        commentText = ""
                     )
                 }
 
