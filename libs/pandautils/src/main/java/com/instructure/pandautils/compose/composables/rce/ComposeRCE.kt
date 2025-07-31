@@ -60,8 +60,8 @@ enum class RceControlsPosition {
 
 @Composable
 fun ComposeRCE(
-    initialValue: String,
     modifier: Modifier = Modifier,
+    initialValue: String? = null,
     hint: String = "",
     fixedHeightInDp: Int? = null,
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
@@ -260,7 +260,7 @@ fun ComposeRCE(
     }
 
     LaunchedEffect(initialValue) {
-        rceTextEditor.applyHtml(initialValue)
+        if (initialValue != null) { rceTextEditor.applyHtml(initialValue) }
     }
 
     Column(modifier = modifier) {

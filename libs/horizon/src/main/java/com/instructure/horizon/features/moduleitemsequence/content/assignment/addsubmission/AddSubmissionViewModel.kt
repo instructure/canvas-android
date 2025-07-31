@@ -314,7 +314,7 @@ class AddSubmissionViewModel @Inject constructor(
                 it.copy(
                     submissionTypes = it.submissionTypes.mapIndexed { index, submissionType ->
                         if (index == uiState.value.selectedSubmissionTypeIndex) {
-                            textSubmission.copy(text = text, initialValue = initialText ?: textSubmission.initialValue)
+                            textSubmission.copy(text = text, initialValue = initialText)
                         } else {
                             submissionType
                         }
