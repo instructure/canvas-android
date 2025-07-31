@@ -143,7 +143,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         speedGraderPage.clickExpandPanelButton()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Grade' label is displayed.")
-        speedGraderPage.assertSpeedGraderLabelDisplayed()
+        speedGraderGradePage.assertSpeedGraderLabelDisplayed()
 
         Log.d(ASSERTION_TAG, "Assert that the speed grader page of '${assignment[0].name}' assignment's name is displayed as title's name and the '${course.name}' course's name as subtitle.")
         speedGraderPage.assertSpeedGraderToolbarTitle(assignment[0].name, course.name)

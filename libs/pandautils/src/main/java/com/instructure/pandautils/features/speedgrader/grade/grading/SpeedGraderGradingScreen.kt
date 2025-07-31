@@ -34,8 +34,8 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
+import androidx.compose.material3.SliderState
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -145,7 +145,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                         OutlinedButton(
                             enabled = uiState.enteredScore != null || uiState.excused,
                             onClick = { uiState.onScoreChange(null) },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier.weight(1f).testTag("speedGraderNoGradeButton"),
                             border = BorderStroke(
                                 1.dp,
                                 LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
@@ -170,7 +170,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                             1.dp,
                             LocalCourseColor.current.copy(alpha = if (uiState.excused) 0.5f else 1f)
                         ),
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).testTag("speedGraderExcuseButton"),
                         colors = ButtonDefaults.outlinedButtonColors().copy(
                             contentColor = LocalCourseColor.current,
                             disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
@@ -193,7 +193,8 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                     onSelection = { selected ->
                         val status = uiState.gradingStatuses.first { it.name == selected }
                         uiState.onStatusChange(status)
-                    }
+                    },
+                    testTag = "speedGraderStatusDropdown"
                 )
 
                 uiState.daysLate?.let {
@@ -239,6 +240,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     text = stringResource(R.string.points),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 16.sp,
+                    modifier = Modifier.testTag("finalGradePointsLabel")
                 )
 
                 Text(
@@ -250,7 +252,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     ),
                     color = colorResource(id = R.color.textDark),
                     fontSize = 16.sp,
-                    modifier = Modifier.testTag("finalGradeDisplay")
+                    modifier = Modifier.testTag("finalGradePointsValue")
                 )
 
             }
@@ -268,6 +270,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                         text = stringResource(R.string.speedGraderLatePenaltyTitle),
                         color = colorResource(id = R.color.textDanger),
                         fontSize = 16.sp,
+                        modifier = Modifier.testTag("speedGraderLatePenaltyLabel")
                     )
 
                     Text(
@@ -278,6 +281,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                         ),
                         color = colorResource(R.color.textDanger),
                         fontSize = 16.sp,
+                        modifier = Modifier.testTag("speedGraderLatePenaltyValue")
                     )
                 }
                 CanvasDivider()
@@ -317,7 +321,8 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     text = stringResource(R.string.finalGrade),
                     color = colorResource(id = R.color.textDarkest),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("finalGradeLabel")
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -326,7 +331,8 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
                     text = finalGrade,
                     color = colorResource(R.color.textDarkest),
                     fontSize = 16.sp,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("finalGradeValue")
                 )
 
                 if (uiState.gradeHidden) {
@@ -357,10 +363,11 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
                 color = colorResource(id = R.color.textDarkest),
                 fontSize = 16.sp,
                 fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.testTag("speedGraderDaysLateLabel")
             )
             dueDate?.let {
                 Text(
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = 4.dp).testTag("speedGraderDueDateValue"),
                     text = DateHelper.getDateAtTimeString(
                         LocalContext.current,
                         R.string.due_dateTime,
@@ -376,7 +383,8 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
             text = daysLate.toString(),
             color = LocalCourseColor.current,
             fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold
+            fontWeight = FontWeight.SemiBold,
+            modifier = Modifier.testTag("speedGraderDaysLateValue")
         )
     }
 }
@@ -385,6 +393,14 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
 private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val options = uiState.letterGrades.map { it.name }
     val notGraded = stringResource(R.string.not_graded)
+
+    var textFieldScore by remember(uiState.enteredScore) {
+        mutableStateOf(uiState.enteredScore?.let {
+            numberFormatter.format(
+                it
+            )
+        }.orEmpty())
+    }
 
     var selectedGrade by remember(
         uiState.enteredScore,
@@ -400,6 +416,13 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 )
             } ?: notGraded
         )
+    }
+
+    LaunchedEffect(textFieldScore) {
+        val scoreAsFloat = textFieldScore.toFloatOrNull()
+        if (scoreAsFloat != uiState.enteredScore) {
+            uiState.onScoreChange(scoreAsFloat)
+        }
     }
 
     LaunchedEffect(selectedGrade) {
@@ -426,220 +449,6 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 color = LocalCourseColor.current,
             )
         }
-        PointGradingTypeInput(uiState)
-    }
-}
-
-@Composable
-private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val haptic = LocalHapticFeedback.current
-    var grade by remember { mutableStateOf(uiState.enteredGrade ?: "") }
-    Column {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
-        ) {
-            Text(
-                stringResource(R.string.grade),
-                fontWeight = FontWeight.SemiBold,
-                color = colorResource(R.color.textDarkest),
-                fontSize = 16.sp
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            Text(
-                text = stringResource(
-                    R.string.completeIncompleteGradeScore,
-                    uiState.enteredScore ?: 0f,
-                    uiState.pointsPossible.orDefault()
-                ),
-                fontSize = 16.sp,
-                color = colorResource(R.color.textPlaceholder),
-                modifier = Modifier.padding(start = 8.dp)
-            )
-        }
-        RadioButtonText(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.gradeComplete),
-            selected = grade == "complete",
-            color = LocalCourseColor.current,
-            onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                grade = "complete"
-                uiState.onScoreChange(uiState.pointsPossible?.toFloat() ?: 0f)
-            })
-        CanvasDivider()
-        RadioButtonText(
-            modifier = Modifier.fillMaxWidth(),
-            text = stringResource(R.string.gradeIncomplete),
-            selected = grade == "incomplete",
-            color = LocalCourseColor.current,
-            onClick = {
-                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                grade = "incomplete"
-                uiState.onScoreChange(0f)
-            })
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
-    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
-    var textFieldScore by remember { mutableStateOf(grade) }
-
-    val maxScore = 100f
-    val sliderState = rememberSliderState(
-        value = sliderDrivenScore.coerceAtLeast(0f),
-        valueRange = 0f..maxScore,
-    )
-
-    LaunchedEffect(textFieldScore) {
-        val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
-            uiState.onPercentageChange(scoreAsFloat)
-        }
-    }
-
-    LaunchedEffect(grade) {
-        val newScore = grade.toFloatOrNull()
-        if (textFieldScore != newScore?.toString()) {
-            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
-        }
-        if (sliderDrivenScore != (newScore ?: 0f)) {
-            sliderDrivenScore = newScore ?: 0f
-            sliderState.value = (newScore ?: 0f).coerceAtLeast(0f)
-        }
-    }
-
-    LaunchedEffect(sliderState.value) {
-        val newScoreFromSlider = sliderState.value
-        if (sliderDrivenScore != newScoreFromSlider) {
-            sliderDrivenScore = round(newScoreFromSlider)
-            uiState.onPercentageChange(sliderDrivenScore)
-            textFieldScore = numberFormatter.format(sliderDrivenScore)
-        }
-    }
-
-    Column {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            Text(
-                stringResource(R.string.grade),
-                fontWeight = FontWeight.SemiBold,
-                color = colorResource(R.color.textDarkest),
-                fontSize = 16.sp
-            )
-            Text(
-                text = pluralStringResource(
-                    R.plurals.percentGradeScore,
-                    uiState.pointsPossible.orDefault().roundToInt(),
-                    uiState.pointsPossible.orDefault()
-                ),
-                modifier = Modifier.padding(start = 8.dp),
-                color = colorResource(R.color.textDark),
-                fontSize = 16.sp
-            )
-            Spacer(modifier = Modifier.weight(1f))
-            BasicTextFieldWithHintDecoration(
-                modifier = Modifier
-                    .padding(end = 8.dp),
-                value = textFieldScore,
-                onValueChange = {
-                    textFieldScore = it
-                },
-                hint = stringResource(R.string.percentageGradeHint),
-                hintColor = colorResource(R.color.textPlaceholder),
-                textColor = LocalCourseColor.current,
-            )
-            Text(
-                text = "%",
-                fontSize = 16.sp,
-                color = colorResource(R.color.textPlaceholder)
-            )
-        }
-
-        Slider(
-            modifier = Modifier.padding(top = 16.dp),
-            state = sliderState,
-            colors = SliderDefaults.colors(
-                thumbColor = LocalCourseColor.current,
-                activeTrackColor = LocalCourseColor.current,
-                inactiveTrackColor = LocalCourseColor.current.copy(alpha = 0.2f),
-                inactiveTickColor = LocalCourseColor.current
-            )
-        )
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val haptic = LocalHapticFeedback.current
-
-    val maxScore by remember {
-        mutableFloatStateOf(
-            max(
-                (uiState.pointsPossible?.toFloat() ?: 10f),
-                uiState.enteredScore ?: 0f
-            )
-        )
-    }
-
-    val pointScale = when {
-        maxScore <= 10.0 -> 4f
-        maxScore <= 20.0 -> 2f
-        else -> 1f
-    }
-
-    var sliderDrivenScore by remember {
-        mutableFloatStateOf(
-            (uiState.enteredScore ?: 0f) * pointScale
-        )
-    }
-    var textFieldScore by remember {
-        mutableStateOf(uiState.enteredScore?.let {
-            numberFormatter.format(
-                it
-            )
-        }.orEmpty())
-    }
-
-    val sliderState = rememberSliderState(
-        value = sliderDrivenScore.coerceAtLeast(0f),
-        valueRange = 0f..maxScore * pointScale,
-        steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt()) - 1
-    )
-
-    LaunchedEffect(textFieldScore) {
-        val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
-            uiState.onScoreChange(scoreAsFloat)
-        }
-    }
-
-    LaunchedEffect(uiState.enteredScore) {
-        val newScore = uiState.enteredScore
-        if (textFieldScore != newScore?.toString()) {
-            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
-        }
-        if (sliderDrivenScore != (newScore ?: 0f)) {
-            sliderDrivenScore = (newScore ?: 0f) * pointScale
-            sliderState.value = sliderDrivenScore.coerceAtLeast(0f)
-        }
-    }
-
-    LaunchedEffect(sliderState.value) {
-        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-        val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
-        if (sliderDrivenScore != newScoreFromSlider) {
-            sliderDrivenScore = newScoreFromSlider
-            uiState.onScoreChange(newScoreFromSlider)
-            textFieldScore = numberFormatter.format(newScoreFromSlider)
-        }
-    }
-
-    Column {
         Row(modifier = Modifier.fillMaxWidth()) {
             Text(
                 stringResource(R.string.grade),
@@ -679,10 +488,279 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 color = colorResource(R.color.textPlaceholder)
             )
         }
+    }
+}
+
+@Composable
+private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val haptic = LocalHapticFeedback.current
+    var grade by remember { mutableStateOf(uiState.enteredGrade ?: "") }
+    Column {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(bottom = 16.dp)
+        ) {
+            Text(
+                stringResource(R.string.grade),
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            Text(
+                text = stringResource(
+                    R.string.completeIncompleteGradeScore,
+                    uiState.enteredScore ?: 0f,
+                    uiState.pointsPossible.orDefault()
+                ),
+                fontSize = 16.sp,
+                color = colorResource(R.color.textPlaceholder),
+                modifier = Modifier.padding(start = 8.dp).testTag("speedGraderCurrentPassFailPointsGradeText")
+            )
+        }
+        RadioButtonText(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.gradeComplete),
+            selected = grade == "complete",
+            color = LocalCourseColor.current,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                grade = "complete"
+                uiState.onScoreChange(uiState.pointsPossible?.toFloat() ?: 0f)
+            },
+            testtag = "speedGraderCompleteRadioButton")
+        CanvasDivider()
+        RadioButtonText(
+            modifier = Modifier.fillMaxWidth(),
+            text = stringResource(R.string.gradeIncomplete),
+            selected = grade == "incomplete",
+            color = LocalCourseColor.current,
+            onClick = {
+                haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                grade = "incomplete"
+                uiState.onScoreChange(0f)
+            },
+            testtag = "speedGraderIncompleteRadioButton")
+
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
+    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
+    var textFieldScore by remember(uiState.enteredGrade) { mutableStateOf(grade) }
+
+    val maxScore by remember(uiState.enteredGrade) { mutableFloatStateOf(max(grade.toFloatOrNull() ?: 0f, 100f)) }
+    val sliderState =  remember(maxScore) {
+        SliderState(
+            value = sliderDrivenScore.coerceAtLeast(0f),
+            valueRange = 0f..maxScore,
+        )
+    }
+
+    LaunchedEffect(textFieldScore) {
+        val scoreAsFloat = textFieldScore.toFloatOrNull()
+        if (scoreAsFloat != uiState.enteredScore) {
+            uiState.onPercentageChange(scoreAsFloat)
+        }
+    }
+
+    LaunchedEffect(grade) {
+        val newScore = grade.toFloatOrNull()
+        if (textFieldScore != newScore?.toString()) {
+            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
+        }
+        if (sliderDrivenScore != (newScore ?: 0f)) {
+            sliderDrivenScore = newScore ?: 0f
+            sliderState.value = (newScore ?: 0f).coerceAtLeast(0f)
+        }
+    }
+
+    LaunchedEffect(sliderState.value) {
+        val newScoreFromSlider = sliderState.value
+        if (sliderDrivenScore != newScoreFromSlider) {
+            sliderDrivenScore = round(newScoreFromSlider)
+            uiState.onPercentageChange(sliderDrivenScore)
+            textFieldScore = numberFormatter.format(sliderDrivenScore)
+        }
+    }
+
+    Column {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.grade),
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
+            )
+            Text(
+                text = pluralStringResource(
+                    R.plurals.percentGradeScore,
+                    uiState.pointsPossible.orDefault().roundToInt(),
+                    uiState.pointsPossible.orDefault()
+                ),
+                modifier = Modifier.padding(start = 8.dp).testTag("speedGraderPercentagePossibleGradeLabel"),
+                color = colorResource(R.color.textDark),
+                fontSize = 16.sp
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            BasicTextFieldWithHintDecoration(
+                modifier = Modifier
+                    .padding(end = 8.dp),
+                value = textFieldScore,
+                onValueChange = {
+                    textFieldScore = it
+                },
+                hint = stringResource(R.string.percentageGradeHint),
+                hintColor = colorResource(R.color.textPlaceholder),
+                textColor = LocalCourseColor.current,
+                testTag = "speedGraderCurrentGradeTextField"
+            )
+            Text(
+                text = "%",
+                fontSize = 16.sp,
+                color = colorResource(R.color.textPlaceholder)
+            )
+        }
+
+        Slider(
+            modifier = Modifier.padding(top = 16.dp).testTag("speedGraderSlider"),
+            state = sliderState,
+            colors = SliderDefaults.colors(
+                thumbColor = LocalCourseColor.current,
+                activeTrackColor = LocalCourseColor.current,
+                inactiveTrackColor = LocalCourseColor.current.copy(alpha = 0.2f),
+                inactiveTickColor = LocalCourseColor.current
+            )
+        )
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+    val haptic = LocalHapticFeedback.current
+
+    val maxScore by remember(uiState.enteredScore) {
+        mutableFloatStateOf(
+            max(
+                (uiState.pointsPossible?.toFloat() ?: 10f),
+                uiState.enteredScore ?: 0f
+            )
+        )
+    }
+
+    val pointScale by remember(maxScore) {
+        mutableFloatStateOf(
+            when {
+                maxScore <= 10.0 -> 4f
+                maxScore <= 20.0 -> 2f
+                else -> 1f
+            }
+        )
+    }
+
+    var sliderDrivenScore by remember(uiState.enteredScore) {
+        mutableFloatStateOf(
+            (uiState.enteredScore ?: 0f) * pointScale
+        )
+    }
+    var textFieldScore by remember(uiState.enteredScore) {
+        mutableStateOf(uiState.enteredScore?.let {
+            numberFormatter.format(
+                it
+            )
+        }.orEmpty())
+    }
+
+    val sliderState = remember(maxScore) {
+        SliderState(
+            value = sliderDrivenScore.coerceAtLeast(0f),
+            valueRange = 0f..maxScore * pointScale,
+            steps = (((maxScore.roundToInt()).coerceAtLeast(1)) * pointScale.roundToInt()) - 1
+        )
+    }
+
+    LaunchedEffect(textFieldScore) {
+        val scoreAsFloat = textFieldScore.toFloatOrNull()
+        if (scoreAsFloat != uiState.enteredScore) {
+            uiState.onScoreChange(scoreAsFloat)
+        }
+    }
+
+    LaunchedEffect(uiState.enteredScore) {
+        val newScore = uiState.enteredScore
+        if (textFieldScore != newScore?.toString()) {
+            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
+        }
+        if (sliderDrivenScore != (newScore ?: 0f)) {
+            sliderDrivenScore = (newScore ?: 0f) * pointScale
+            sliderState.value = sliderDrivenScore.coerceAtLeast(0f)
+        }
+    }
+
+    LaunchedEffect(sliderState.value) {
+        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+        val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
+        if (sliderDrivenScore != newScoreFromSlider) {
+            sliderDrivenScore = newScoreFromSlider
+            uiState.onScoreChange(newScoreFromSlider)
+            textFieldScore = numberFormatter.format(newScoreFromSlider)
+        }
+    }
+
+    Column {
+        Row(modifier = Modifier.fillMaxWidth()) {
+            Text(
+                stringResource(R.string.grade),
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(R.color.textDarkest),
+                fontSize = 16.sp,
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
+            )
+            Spacer(modifier = Modifier.weight(1f))
+            BasicTextFieldWithHintDecoration(
+                modifier = Modifier
+                    .padding(end = 8.dp),
+                testTag = "speedGraderCurrentGradeTextField",
+                value = textFieldScore,
+                onValueChange = {
+                    textFieldScore = it
+                },
+                hint = stringResource(R.string.pointGradeHint),
+                hintColor = colorResource(R.color.textPlaceholder),
+                textColor = LocalCourseColor.current,
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal,
+                    imeAction = ImeAction.Done
+                ),
+                decorationText = pluralStringResource(
+                    R.plurals.pointsPts,
+                    textFieldScore.toFloatOrNull()?.toInt().orDefault()
+                )
+            )
+
+            Text(
+                text = pluralStringResource(
+                    R.plurals.pointsPossible,
+                    uiState.pointsPossible?.toInt().orDefault(),
+                    uiState.pointsPossible.orDefault()
+                ),
+                fontSize = 16.sp,
+                color = colorResource(R.color.textPlaceholder),
+                modifier = Modifier.testTag("speedGraderPointsPossibleText")
+            )
+        }
 
         if ((uiState.enteredScore ?: 0f) <= 100.0) {
             Slider(
-                modifier = Modifier.padding(top = 16.dp), state = sliderState,
+                modifier = Modifier.padding(top = 16.dp).testTag("speedGraderSlider"),
+                state = sliderState,
                 colors = SliderDefaults.colors(
                     thumbColor = LocalCourseColor.current,
                     activeTrackColor = LocalCourseColor.current,
