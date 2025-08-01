@@ -24,7 +24,6 @@ import androidx.compose.ui.test.assertIsNotEnabled
 import androidx.compose.ui.test.assertIsNotSelected
 import androidx.compose.ui.test.assertIsSelected
 import androidx.compose.ui.test.assertTextContains
-import androidx.compose.ui.test.hasAnyDescendant
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
@@ -272,8 +271,10 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
      * @param statusText The expected status text to be displayed in the dropdown as selected value.
      */
     fun assertSelectedStatusText(statusText: String) {
-        composeTestRule.onNode(hasTestTag("speedGraderStatusDropdown") and hasAnyDescendant(hasText(statusText, substring = true)), useUnmergedTree = true)
-            .assertIsDisplayed()
+        composeTestRule.waitUntil(5000) {
+            composeTestRule.onAllNodesWithTag("speedGraderStatusDropdown")
+                .fetchSemanticsNodes().any { it.config.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.Text)?.any { text -> text.text.contains(statusText) } == true }
+        }
     }
 
     /**

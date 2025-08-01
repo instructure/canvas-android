@@ -198,7 +198,10 @@ object SubmissionUserEndpoint : Endpoint(
                 } else if (excused == "true") {
                     val updatedSubmission = submission.copy(
                             grade = null,
-                            excused = true
+                            excused = true,
+                            status = "Excused",
+                            score = 0.0,
+                            enteredScore = 0.0
                     )
                     data.submissions[pathVars.assignmentId]?.remove(submission)
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
@@ -206,7 +209,10 @@ object SubmissionUserEndpoint : Endpoint(
                 } else if (grade == "Not Graded") {
                     val updatedSubmission = submission.copy(
                             grade = null,
-                            excused = false
+                            excused = false,
+                            status = "None",
+                            score = 0.0,
+                            enteredScore = 0.0,
                     )
                     data.submissions[pathVars.assignmentId]?.remove(submission)
                     data.submissions[pathVars.assignmentId]?.add(updatedSubmission)
