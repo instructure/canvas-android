@@ -101,16 +101,13 @@ fun SingleSelectSearch(
                 verticalOffsetPx = heightInPx,
                 isFocusable = false,
                 onMenuOpenChanged = { open ->
-                    if (state.isMenuOpen && !open && state.selectedOption != state.searchQuery.text) {
-                        isReset = true
-                        state.onSearchQueryChanged(TextFieldValue(state.selectedOption.orEmpty(), TextRange(state.selectedOption.orEmpty().length)))
-                    }
                     state.onMenuOpenChanged(open)
                 },
                 onOptionSelected = { selectedOption ->
                     isReset = true
                     state.onOptionSelected(selectedOption)
                     state.onMenuOpenChanged(false)
+                    state.onSearchQueryChanged(TextFieldValue(selectedOption, TextRange(selectedOption.length)))
                 },
                 item = { option ->
                     SingleSelectSearchItem(option, state)

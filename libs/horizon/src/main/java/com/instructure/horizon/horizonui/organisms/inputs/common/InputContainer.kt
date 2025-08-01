@@ -79,7 +79,7 @@ fun InputContainer(
                 HorizonBorder.level1(if (isError) HorizonColors.Surface.error() else HorizonColors.LineAndBorder.containerStroke()),
                 HorizonCornerRadius.level1_5
             )
-            .clickable(enabled = enabled) { onClick?.invoke() }
+            .clickable(enabled = enabled && onClick != null) { onClick?.invoke() }
             .alpha(if (enabled) 1f else 0.5f)
     ) {
         content()
