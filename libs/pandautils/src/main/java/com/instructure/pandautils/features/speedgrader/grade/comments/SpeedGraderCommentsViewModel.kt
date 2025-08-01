@@ -33,7 +33,6 @@ import com.instructure.canvasapi2.models.postmodels.CommentSendStatus
 import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
@@ -133,7 +132,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                             isOwnComment || !isAnonymousGrading
                         },
                         content = it.comment.orEmpty(),
-                        createdAt = it.createdAt.toString(),
+                        createdAt = it.createdAt,
                         isOwnComment = isOwnComment,
                         attachments = getAttachments(it.attachments.orEmpty()),
                         mediaObject = it.mediaObject?.let { mediaObject ->
@@ -191,7 +190,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             id = it.id,
             url = attachmentWithVerifier?.url ?: it.url ?: "",
             thumbnailUrl = it.thumbnailUrl,
-            createdAt = it.createdAt.toString(),
+            createdAt = it.createdAt,
             title = it.title ?: "",
             displayName = it.displayName ?: "",
             contentType = it.contentType ?: "",
@@ -223,7 +222,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                             authorId = apiPrefs.user?.id?.toString().orEmpty(),
                             authorAvatarUrl = apiPrefs.user?.avatarUrl.orEmpty(),
                             content = pendingComment.comment.orEmpty(),
-                            createdAt = DateHelper.longToSpeedGraderDateString(pendingComment.date.time).orEmpty(),
+                            createdAt = pendingComment.date,
                             isOwnComment = true,
                             attachments = emptyList(),
                             isPending = pendingComment.status == CommentSendStatus.SENDING,
@@ -401,15 +400,14 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         authorAvatarUrl = it.author?.avatarImageUrl ?: apiPrefs.user?.avatarUrl
                         ?: "",
                         content = it.submissionComment.comment ?: "",
-                        createdAt = DateHelper.longToSpeedGraderDateString(it.submissionComment.createdAt?.time)
-                            ?: "",
+                        createdAt = it.submissionComment.createdAt,
                         isOwnComment = true,
                         attachments = it.attachments?.map { attachment ->
                             SpeedGraderCommentAttachment(
                                 id = attachment.id.toString(),
                                 url = attachment.url ?: "",
                                 thumbnailUrl = attachment.thumbnailUrl,
-                                createdAt = attachment.createdAt.toString(),
+                                createdAt = attachment.createdAt,
                                 title = attachment.displayName ?: attachment.filename ?: "",
                                 displayName = attachment.displayName ?: "",
                                 contentType = attachment.contentType ?: "",
@@ -465,8 +463,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                             authorName = apiPrefs.user?.name.orEmpty(),
                             authorId = apiPrefs.user?.id?.toString().orEmpty(),
                             authorAvatarUrl = apiPrefs.user?.avatarUrl.orEmpty(),
-                            createdAt = DateHelper.longToSpeedGraderDateString(Date().time)
-                                .orEmpty(),
+                            createdAt = Date(),
                             isOwnComment = true,
                             mediaObject = SpeedGraderMediaObject(
                                 id = id.toString(),
@@ -553,7 +550,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                     authorId = apiPrefs.user?.id?.toString() ?: "",
                     authorAvatarUrl = apiPrefs.user?.avatarUrl ?: "",
                     content = comment,
-                    createdAt = newComment.createSubmissionComment?.submissionComment?.createdAt.toString(),
+                    createdAt = newComment.createSubmissionComment?.submissionComment?.createdAt,
                     isOwnComment = true,
                     attachments = emptyList(),
                     isPending = false

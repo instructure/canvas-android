@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.work.WorkInfo
 import com.instructure.pandautils.views.RecordingMediaType
 import java.io.File
+import java.util.Date
 
 
 data class SpeedGraderCommentsUiState(
@@ -23,7 +24,7 @@ data class SpeedGraderComment(
     val authorId: String = "",
     val authorAvatarUrl: String? = null,
     val content: String = "",
-    val createdAt: String = "",
+    val createdAt: Date? = null,
     val isOwnComment: Boolean = false,
     val attachments: List<SpeedGraderCommentAttachment> = emptyList(),
     val mediaObject: SpeedGraderMediaObject? = null,
@@ -39,7 +40,7 @@ data class SpeedGraderCommentAttachment(
     val size: String = "",
     val url: String = "",
     val thumbnailUrl: String? = null,
-    val createdAt: String = "",
+    val createdAt: Date? = null,
 )
 
 data class SpeedGraderMediaObject(

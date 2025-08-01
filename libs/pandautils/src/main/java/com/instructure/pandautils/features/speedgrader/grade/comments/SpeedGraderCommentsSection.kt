@@ -97,6 +97,7 @@ import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.views.FloatingRecordingView
 import com.instructure.pandautils.views.RecordingMediaType
 import dagger.hilt.android.EarlyEntryPoints
+import java.util.Date
 import java.util.UUID
 import kotlin.math.roundToInt
 
@@ -426,7 +427,7 @@ fun SpeedGraderOwnCommentItem(
         ) {
             Text(
                 text = DateHelper.getDateTimeString(
-                    LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                    LocalContext.current, comment.createdAt
                 ).orEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
@@ -712,7 +713,7 @@ fun SpeedGraderUserCommentItem(
                 Spacer(modifier = Modifier.weight(1f))
                 Text(
                     text = DateHelper.getDateTimeString(
-                        LocalContext.current, DateHelper.speedGraderDateStringToDate(comment.createdAt)
+                        LocalContext.current, comment.createdAt
                     ).orEmpty(),
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
@@ -748,7 +749,7 @@ fun SpeedGraderCommentSectionPreview() {
         SpeedGraderComment(
             content = "This is a great submission!",
             authorName = "Student A",
-            createdAt = "Wed May 27 00:23:23 GMT+02:00 2025",
+            createdAt = Date(),
             attachments = listOf(
                 SpeedGraderCommentAttachment(
                     displayName = "image_file_name.jpg", contentType = "image/jpeg", size = "1.2 MB"
@@ -758,12 +759,12 @@ fun SpeedGraderCommentSectionPreview() {
         SpeedGraderComment(
             content = "Please review the feedback provided.",
             isOwnComment = true,
-            createdAt = "Wed May 28 00:12:38 GMT+02:00 2025"
+            createdAt = Date()
         ),
         SpeedGraderComment(
             content = "Good job overall. She has met the basic requirements. There are a few areas where she could improve clarity and depth of analysis.",
             isOwnComment = true,
-            createdAt = "Wed May 29 00:43:38 GMT+02:00 2025",
+            createdAt = Date(),
             attachments = listOf(
                 SpeedGraderCommentAttachment(
                     displayName = "important_document.pdf",
@@ -775,7 +776,7 @@ fun SpeedGraderCommentSectionPreview() {
         SpeedGraderComment(
             content = "",
             isOwnComment = true,
-            createdAt = "Wed May 29 00:43:38 GMT+02:00 2025",
+            createdAt = Date(),
             mediaObject = SpeedGraderMediaObject(
                 id = "media123",
                 mediaDownloadUrl = "https://example.com/media.mp4",
@@ -789,7 +790,7 @@ fun SpeedGraderCommentSectionPreview() {
             content = "",
             authorName = "Student A",
             isOwnComment = false,
-            createdAt = "Wed May 31 00:43:38 GMT+02:00 2025",
+            createdAt = Date(),
             mediaObject = SpeedGraderMediaObject(
                 id = "media2",
                 mediaDownloadUrl = "https://example.com/media.amr",

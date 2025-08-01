@@ -38,19 +38,6 @@ object DateHelper {
         }
     }
 
-    fun speedGraderDateStringToDate(dateString: String?): Date? {
-        return try {
-            speedGraderDateTimeFormat.parse(dateString!!)
-        } catch (e: Exception) {
-            null
-        }
-    }
-
-    fun longToSpeedGraderDateString(date: Long?): String? {
-        if (date == null) return null
-        return speedGraderDateTimeFormat.format(Date(date))
-    }
-
     /**
      * Date Format Standards for Android
      * SHORT: 12/31/2000 or 1/3/2000
@@ -103,9 +90,6 @@ object DateHelper {
 
     val monthDayYearDateFormatUniversalShort: SimpleDateFormat
         get() = SimpleDateFormat("MMM d, YYYY", Locale.getDefault())
-
-    val speedGraderDateTimeFormat: SimpleDateFormat
-        get() = SimpleDateFormat("EEE MMM dd HH:mm:ss z yyyy", Locale.getDefault())
 
 
     fun getFormattedTime(context: Context?, date: Date?): String? {
