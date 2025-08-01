@@ -51,11 +51,8 @@ fun AddTextSubmissionContent(
     Box(
         contentAlignment = Alignment.CenterStart
     ) {
-        LaunchedEffect(uiState.initialValue) {
-            Log.d("AddTextSubmissionContent", "Initial value set: ${uiState.initialValue}")
-        }
         ComposeRCE(
-            initialValue = uiState.initialValue,
+            html = uiState.text,
             modifier = modifier
                 .fillMaxWidth()
                 .border(

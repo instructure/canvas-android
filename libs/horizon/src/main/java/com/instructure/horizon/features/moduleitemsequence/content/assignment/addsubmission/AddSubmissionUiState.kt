@@ -48,7 +48,6 @@ sealed class AddSubmissionTypeUiState(
     ): AddSubmissionTypeUiState
 
     data class Text(
-        val initialValue: String? = null,
         val text: String = "",
         val onTextChanged: (String) -> Unit = {},
         override val draftUiState: DraftUiState = DraftUiState(),
