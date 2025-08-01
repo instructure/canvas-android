@@ -35,9 +35,9 @@ import androidx.navigation.NavController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelect
-import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
-import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
+import com.instructure.horizon.horizonui.organisms.inputs.singleselectsearch.SingleSelectSearch
+import com.instructure.horizon.horizonui.organisms.inputs.singleselectsearch.SingleSelectSearchInputSize
+import com.instructure.horizon.horizonui.organisms.inputs.singleselectsearch.SingleSelectSearchState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
@@ -61,9 +61,9 @@ fun AccountAdvancedScreen(
 private fun AccountAdvancedContent(state: AccountAdvancedUiState, modifier: Modifier) {
     var isFocused by remember { mutableStateOf(false) }
     var isOpen by remember { mutableStateOf(false) }
-    val singleSelectState = SingleSelectState(
+    val singleSelectState = SingleSelectSearchState(
         label = stringResource(R.string.accountAdvancedtimeZoneSelectLabel),
-        size = SingleSelectInputSize.Medium,
+        size = SingleSelectSearchInputSize.Medium,
         placeHolderText = stringResource(R.string.accountAdvancedTimeZoneSelectPlaceHolder),
         isFocused = isFocused,
         isMenuOpen = isOpen,
@@ -75,6 +75,8 @@ private fun AccountAdvancedContent(state: AccountAdvancedUiState, modifier: Modi
         },
         options = state.timeZoneOptions.map { it.id },
         selectedOption = state.selectedTimeZone.id,
+        searchQuery = state.searchQuery,
+        onSearchQueryChanged = state.onSearchQueryChanged,
     )
     LazyColumn(
         contentPadding = PaddingValues(vertical = 32.dp, horizontal = 32.dp),
@@ -82,7 +84,7 @@ private fun AccountAdvancedContent(state: AccountAdvancedUiState, modifier: Modi
         modifier = modifier
     ) {
         item {
-            SingleSelect(singleSelectState)
+            SingleSelectSearch(singleSelectState)
         }
 
         item {
