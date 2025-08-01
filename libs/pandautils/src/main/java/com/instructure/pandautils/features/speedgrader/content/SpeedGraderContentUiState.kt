@@ -31,7 +31,9 @@ data class SpeedGraderContentUiState(
     val dueDate: Date? = null,
     val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
     val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
-    )
+    val anonymous: Boolean = false,
+    val group: Boolean = false
+)
 
 @Parcelize
 sealed class GradeableContent : Parcelable
@@ -46,6 +48,7 @@ class PdfContent(
     val courseId: Long? = null,
     val assigneeId: Long? = null
 ) : GradeableContent()
+
 class TextContent(val text: String) : GradeableContent()
 class ImageContent(val url: String, val contentType: String) : GradeableContent()
 class UrlContent(val url: String, val previewUrl: String?) : GradeableContent()

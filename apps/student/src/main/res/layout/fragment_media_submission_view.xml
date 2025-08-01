@@ -78,7 +78,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
+        android:visibility="visible"
         app:pclv_indeterminate="true" />
 
     <FrameLayout
@@ -100,6 +100,7 @@
             android:layout_width="56dp"
             android:layout_height="56dp"
             android:layout_gravity="center"
+            android:visibility="gone"
             android:background="@drawable/bg_play_arrow"
             android:contentDescription="@string/utils_playMedia"
             android:importantForAccessibility="yes"

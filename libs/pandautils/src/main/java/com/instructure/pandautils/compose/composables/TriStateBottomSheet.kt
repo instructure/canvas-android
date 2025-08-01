@@ -15,7 +15,6 @@
  */
 package com.instructure.pandautils.compose.composables
 
-import android.view.ViewTreeObserver
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -42,21 +41,19 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -162,37 +159,6 @@ fun TriStateBottomSheet(
         }
     }
 
-    val isKeyboardActuallyVisible by rememberKeyboardVisibilityState()
-
-    var anchorStateBeforeKeyboardWasVisible by rememberSaveable { mutableStateOf<AnchorPoints?>(null) }
-
-    LaunchedEffect(isKeyboardActuallyVisible, anchoredDraggableState.anchors, layoutReady) {
-        if (!layoutReady || anchoredDraggableState.anchors.size == 0) {
-            return@LaunchedEffect
-        }
-
-        if (isKeyboardActuallyVisible) {
-            anchorStateBeforeKeyboardWasVisible = anchoredDraggableState.targetValue
-            if (anchoredDraggableState.targetValue != AnchorPoints.TOP && anchoredDraggableState.currentValue != AnchorPoints.TOP) {
-                if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.TOP)) {
-                    coroutineScope.launch {
-                        anchoredDraggableState.animateTo(AnchorPoints.TOP)
-                    }
-                }
-            }
-        } else {
-            anchorStateBeforeKeyboardWasVisible?.let {
-                coroutineScope.launch {
-                    anchoredDraggableState.animateTo(it)
-                }
-            } ?: run {
-                coroutineScope.launch {
-                    anchoredDraggableState.animateTo(AnchorPoints.TOP)
-                }
-            }
-        }
-    }
-
     val currentSheetOffsetY by remember {
         derivedStateOf {
             val offset = anchoredDraggableState.offset
@@ -263,7 +229,9 @@ fun TriStateBottomSheet(
                                 coroutineScope.launch {
                                     anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
                                 }
-                            }) {
+                            },
+                                modifier = Modifier.testTag("collapsePanelButton")
+                            ) {
                                 Icon(
                                     tint = LocalCourseColor.current,
                                     painter = painterResource(R.drawable.ic_collapse_bottomsheet),
@@ -275,7 +243,9 @@ fun TriStateBottomSheet(
                                 coroutineScope.launch {
                                     anchoredDraggableState.animateTo(AnchorPoints.TOP)
                                 }
-                            }) {
+                            },
+                                modifier = Modifier.testTag("expandPanelButton")
+                            ) {
                                 Icon(
                                     tint = LocalCourseColor.current,
                                     painter = painterResource(R.drawable.ic_expand_bottomsheet),
@@ -333,30 +303,4 @@ fun TriStateBottomSheet(
             }
         }
     }
-}
-
-@Composable
-fun rememberKeyboardVisibilityState(): State<Boolean> {
-    val keyboardState = remember { mutableStateOf(false) }
-    val view = LocalView.current
-
-    DisposableEffect(view) {
-        val onGlobalLayoutListener = ViewTreeObserver.OnGlobalLayoutListener {
-            val rect = android.graphics.Rect()
-            view.getWindowVisibleDisplayFrame(rect)
-            val screenHeight = view.rootView.height
-            val keypadHeight = screenHeight - rect.bottom
-
-            val isVisible = keypadHeight > screenHeight * 0.15
-            if (keyboardState.value != isVisible) {
-                keyboardState.value = isVisible
-            }
-        }
-        view.viewTreeObserver.addOnGlobalLayoutListener(onGlobalLayoutListener)
-
-        onDispose {
-            view.viewTreeObserver.removeOnGlobalLayoutListener(onGlobalLayoutListener)
-        }
-    }
-    return keyboardState
 }

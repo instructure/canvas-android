@@ -81,6 +81,7 @@ sealed class ButtonColor(
     data object BlackOutline : ButtonColor(Color.Transparent, HorizonColors.Text.title(), HorizonColors.Surface.inversePrimary())
     data object WhiteOutline : ButtonColor(Color.Transparent, HorizonColors.Text.surfaceColored(), HorizonColors.Surface.pageSecondary())
     data object Danger : ButtonColor(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored())
+    data object DangerInverse : ButtonColor(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.error())
     data object Ghost : ButtonColor(Color.Transparent, HorizonColors.Text.title())
     data object Institution : ButtonColor(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored())
     data object Beige : ButtonColor(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())
@@ -194,6 +195,13 @@ private fun ButtonBlackOutlinePreviews() {
 private fun ButtonDangerPreviews() {
     ContextKeeper.appContext = LocalContext.current
     ButtonPreview(ButtonColor.Danger)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonDangerInversePreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.DangerInverse)
 }
 
 @Composable

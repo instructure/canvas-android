@@ -75,6 +75,10 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     is GradingEvent.RubricUpdated -> {
                         loadData(forceNetwork = true)
                     }
+
+                    is GradingEvent.PostPolicyUpdated -> {
+                        loadData(forceNetwork = true)
+                    }
                 }
             }
         }
@@ -93,12 +97,14 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         score = submission.score,
                         grade = submission.grade,
                         excused = submission.excused.orDefault(),
-                        enteredGrade = submission.enteredGrade ?: resources.getString(R.string.not_graded),
+                        enteredGrade = submission.enteredGrade
+                            ?: resources.getString(R.string.not_graded),
                         enteredScore = submission.enteredScore?.toFloat(),
                         pointsDeducted = submission.deductedPoints,
                         gradingType = submission.assignment?.gradingType,
                         loading = false,
                         error = false,
+                        gradeHidden = submission.hideGradeFromStudent.orDefault(),
                         daysLate = getDaysLate(submission.secondsLate),
                         dueDate = submission.assignment?.dueAt,
                         gradingStatuses = submission.assignment?.course?.gradeStatuses
@@ -153,7 +159,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
         debounceJob?.cancel()
 
         debounceJob = viewModelScope.launch {
-            delay(500)
+            val originalState = _uiState.value
+            delay(300)
             try {
                 repository.updateSubmissionGrade(
                     score = score?.toString() ?: resources.getString(R.string.not_graded),
@@ -168,9 +175,11 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     return@launch
                 }
                 _uiState.update {
-                    it.copy(
+                    originalState.copy(
                         error = true,
-                        retryAction = { onScoreChanged(score) }
+                        retryAction = {
+                            onScoreChanged(score)
+                        }
                     )
                 }
             }

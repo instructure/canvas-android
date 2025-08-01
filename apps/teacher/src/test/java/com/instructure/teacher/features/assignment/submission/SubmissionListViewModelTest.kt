@@ -31,20 +31,27 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -170,7 +177,7 @@ class SubmissionListViewModelTest {
 
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -179,11 +186,17 @@ class SubmissionListViewModelTest {
         setupString()
     }
 
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
+    }
+
     @Test
     fun `Empty state`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -199,7 +212,7 @@ class SubmissionListViewModelTest {
     fun `Error state when submissions fail`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -533,7 +546,7 @@ class SubmissionListViewModelTest {
     fun `Filter by section`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -603,7 +616,7 @@ class SubmissionListViewModelTest {
     fun `Hidden flag set if submission has no postedAt`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -661,9 +674,11 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Route to submission`() = runTest {
+        mockkObject(RemoteConfigUtils)
+        every { RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2) } returns true
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -705,7 +720,7 @@ class SubmissionListViewModelTest {
     fun `Refresh action`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -715,7 +730,7 @@ class SubmissionListViewModelTest {
 
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -723,7 +738,7 @@ class SubmissionListViewModelTest {
         viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
 
         coVerify {
-            submissionListRepository.getGradeableStudentSubmissions(any(), any(), true)
+            submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), true)
         }
 
         assertEquals(submissions.size, viewModel.uiState.value.submissions.size)
@@ -838,7 +853,7 @@ class SubmissionListViewModelTest {
     fun `Complete incomplete grades`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -904,7 +919,7 @@ class SubmissionListViewModelTest {
         )
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -982,7 +997,7 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Anonymous grading`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+        coEvery { submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), any()) } returns listOf(
             GradeableStudentSubmission(
                 assignee = StudentAssignee(
                     student = User(1L, name = "Student 1"),
@@ -1068,7 +1083,7 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Created by Student View`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+        coEvery { submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), any()) } returns listOf(
             GradeableStudentSubmission(
                 assignee = StudentAssignee(
                     student = User(1L, name = "Student 1", isFakeStudent = true),

@@ -1,7 +1,7 @@
 query GetCoursesQuery($id: ID!) {
     legacyNode(_id: $id, type: User) {
         ... on User {
-            enrollments(currentOnly: true) {
+            enrollments(currentOnly: true, horizonCourses: true) {
                 course {
                     id: _id
                     name
@@ -27,12 +27,16 @@ query GetCoursesQuery($id: ID!) {
                                             nodes {
                                                 id: _id
                                                 url
+                                                estimatedDuration
                                                 content {
+                                                    title
                                                     ... on Assignment {
                                                         id: _id
                                                         name
+                                                        title
                                                         dueAt
                                                         position
+                                                        isNewQuiz
                                                     }
                                                     ... on Discussion {
                                                         id: _id
@@ -41,7 +45,7 @@ query GetCoursesQuery($id: ID!) {
                                                     }
                                                     ... on ExternalTool {
                                                         id: _id
-                                                        name
+                                                        title
                                                     }
                                                     ... on ExternalUrl {
                                                         id: _id
@@ -49,10 +53,12 @@ query GetCoursesQuery($id: ID!) {
                                                     }
                                                     ... on File {
                                                         id: _id
+                                                        title
                                                         displayName
                                                     }
                                                     ... on ModuleExternalTool {
                                                         id: _id
+                                                        title
                                                         url
                                                     }
                                                     ... on Page {
@@ -61,6 +67,7 @@ query GetCoursesQuery($id: ID!) {
                                                     }
                                                     ... on Quiz {
                                                         id: _id
+                                                        title
                                                     }
                                                     ... on SubHeader {
                                                         title

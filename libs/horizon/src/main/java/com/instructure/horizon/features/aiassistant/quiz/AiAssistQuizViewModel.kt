@@ -16,14 +16,11 @@
  */
 package com.instructure.horizon.features.aiassistant.quiz
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
-import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigationTypeMap
-import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.quiz.composable.AiAssistQuizAnswerStatus
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,11 +31,9 @@ import javax.inject.Inject
 @HiltViewModel
 class AiAssistQuizViewModel @Inject constructor(
     private val repository: AiAssistQuizRepository,
-    savedStateHandle: SavedStateHandle
+    aiAssistContextProvider: AiAssistContextProvider
 ): ViewModel() {
-    private val aiContext = savedStateHandle.toRoute<AiAssistRoute.AiAssistQuiz>(
-        AiAssistNavigationTypeMap
-    ).aiContext
+    private val aiContext = aiAssistContextProvider.aiAssistContext
 
     private val _uiState = MutableStateFlow(
         AiAssistQuizUiState(

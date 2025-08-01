@@ -76,23 +76,17 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
-    courseId: Long? = null,
-    objectFilter: Pair<String, String>? = null,
 ) {
-    LaunchedEffect(courseId, objectFilter) {
-        state.updateContent(courseId, objectFilter)
-    }
-
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { if (courseId == null && objectFilter == null) NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
+        topBar = { if (state.showTopBar) NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
     ) { padding ->
         LazyColumn(
             modifier = Modifier
                 .padding(padding),
             contentPadding = PaddingValues(24.dp)
         ) {
-            if (objectFilter == null) {
+            if (state.showFilters) {
                 item {
                     FilterContent(
                         state.selectedFilter,
@@ -415,6 +409,8 @@ private fun NotebookScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = NotebookUiState(
         isLoading = false,
+        showFilters = true,
+        showTopBar = true,
         selectedFilter = NotebookType.Important,
         notes = listOf(
             Note(

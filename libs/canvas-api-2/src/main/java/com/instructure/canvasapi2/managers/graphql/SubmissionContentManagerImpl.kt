@@ -15,16 +15,45 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
+import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.SubmissionContentQuery
 
 class SubmissionContentManagerImpl : SubmissionContentManager {
+
     override suspend fun getSubmissionContent(
         userId: Long,
         assignmentId: Long
     ): SubmissionContentQuery.Data {
-        val query = SubmissionContentQuery(userId.toString(), assignmentId.toString())
-        val result = QLClientConfig.enqueueQuery(query)
-        return result.dataAssertNoErrors
+        var hasNextPage = true
+        var nextCursor: String? = null
+
+        val allEdges = mutableListOf<SubmissionContentQuery.Edge?>()
+        lateinit var data: SubmissionContentQuery.Data
+
+        while (hasNextPage) {
+            val query = SubmissionContentQuery(
+                userId = userId.toString(),
+                assignmentId = assignmentId.toString(),
+                pageSize = QLClientConfig.GRAPHQL_PAGE_SIZE,
+                nextCursor = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
+            )
+
+            data = QLClientConfig.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
+            val connection = data.submission?.submissionHistoriesConnection
+
+            allEdges.addAll(connection?.edges.orEmpty())
+
+            hasNextPage = connection?.pageInfo?.hasNextPage ?: false
+            nextCursor = connection?.pageInfo?.endCursor
+        }
+
+        return data.copy(
+            submission = data.submission?.copy(
+                submissionHistoriesConnection = data.submission?.submissionHistoriesConnection?.copy(
+                    edges = allEdges
+                )
+            )
+        )
     }
 }

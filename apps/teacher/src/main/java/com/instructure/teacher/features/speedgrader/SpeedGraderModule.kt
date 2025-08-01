@@ -17,6 +17,7 @@
 package com.instructure.teacher.features.speedgrader
 
 import android.content.res.Resources
+import com.instructure.pandautils.features.speedgrader.SpeedGraderPostPolicyRouter
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentRouter
 import dagger.Module
 import dagger.Provides
@@ -30,5 +31,10 @@ class SpeedGraderContentRouterModule {
     @Provides
     fun provideSpeedGraderContentRouter(resources: Resources): SpeedGraderContentRouter {
         return TeacherSpeedGraderContentRouter(resources)
+    }
+
+    @Provides
+    fun provideSpeedGraderPostPolicyRouter(): SpeedGraderPostPolicyRouter {
+        return TeacherSpeedGraderPostPolicyRouter()
     }
 }

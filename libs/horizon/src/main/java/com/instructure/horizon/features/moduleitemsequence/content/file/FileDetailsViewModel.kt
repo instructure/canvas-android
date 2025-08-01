@@ -20,6 +20,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.FileFolder
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
@@ -46,6 +47,7 @@ class FileDetailsViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     private val fileCache: FileCache,
+    private val crashlytics: FirebaseCrashlytics,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -140,32 +142,42 @@ class FileDetailsViewModel @Inject constructor(
         val contentType = file.contentType.orEmpty()
         val thumbnailUrl = file.thumbnailUrl.orEmpty()
 
-        return when {
-            contentType == "application/pdf" -> FilePreviewUiState.Pdf(url)
+        try {
+            return when {
+                contentType == "application/pdf" -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Pdf(Uri.fromFile(it))
+                    } ?: FilePreviewUiState.NoPreview
+                }
 
-            contentType.startsWith("video") || contentType.startsWith("audio") -> {
-                val tempFile: File? = fileCache.awaitFileDownload(url)
-                tempFile?.let {
-                    FilePreviewUiState.Media(
-                        Uri.fromFile(it),
-                        thumbnailUrl,
-                        contentType,
-                        displayName
-                    )
-                } ?: FilePreviewUiState.NoPreview
+                contentType.startsWith("video") || contentType.startsWith("audio") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Media(
+                            Uri.fromFile(it),
+                            thumbnailUrl,
+                            contentType,
+                            displayName
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
+
+                contentType.startsWith("image") -> {
+                    val tempFile: File? = fileCache.awaitFileDownload(url)
+                    tempFile?.let {
+                        FilePreviewUiState.Image(
+                            displayName = displayName,
+                            uri = Uri.fromFile(it)
+                        )
+                    } ?: FilePreviewUiState.NoPreview
+                }
+
+                else -> FilePreviewUiState.WebView("$authUrl&preview=1")
             }
-
-            contentType.startsWith("image") -> {
-                val tempFile: File? = fileCache.awaitFileDownload(url)
-                tempFile?.let {
-                    FilePreviewUiState.Image(
-                        displayName = displayName,
-                        uri = Uri.fromFile(it)
-                    )
-                } ?: FilePreviewUiState.NoPreview
-            }
-
-            else -> FilePreviewUiState.WebView("$authUrl&preview=1")
+        } catch (e: Exception) {
+            crashlytics.recordException(e)
+            return FilePreviewUiState.NoPreview
         }
     }
 

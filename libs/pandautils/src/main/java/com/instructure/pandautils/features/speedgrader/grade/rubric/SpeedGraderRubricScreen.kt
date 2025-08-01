@@ -64,6 +64,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
@@ -110,7 +111,7 @@ fun SpeedGraderRubricContent(uiState: SpeedGraderRubricUiState) {
                     .padding(vertical = 12.dp, horizontal = 16.dp)
             ) {
                 Text(
-                    modifier = Modifier.padding(bottom = 14.dp),
+                    modifier = Modifier.padding(bottom = 14.dp).testTag("speedGraderRubricsLabel"),
                     text = stringResource(R.string.rubricsTitle),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -181,7 +182,8 @@ private fun RubricCriterion(
                     text = rubricCriterion.description.orEmpty(),
                     fontSize = 16.sp,
                     fontWeight = FontWeight.SemiBold,
-                    color = colorResource(R.color.textDarkest)
+                    color = colorResource(R.color.textDarkest),
+                    modifier = Modifier.testTag("rubricCriterionDescription-${rubricCriterion.description.orEmpty()}")
                 )
 
                 Icon(

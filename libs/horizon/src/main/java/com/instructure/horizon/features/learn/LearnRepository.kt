@@ -17,16 +17,16 @@
 package com.instructure.horizon.features.learn
 
 import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.GetCoursesManager
+import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
 class LearnRepository @Inject constructor(
-    private val getCoursesManager: GetCoursesManager,
+    private val horizonGetCoursesManager: HorizonGetCoursesManager,
     private val apiPrefs: ApiPrefs
 ) {
     suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
-        val courseWithProgress = getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
+        val courseWithProgress = horizonGetCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
         return courseWithProgress
     }
 }

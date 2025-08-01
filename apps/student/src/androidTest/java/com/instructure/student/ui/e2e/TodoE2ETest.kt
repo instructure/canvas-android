@@ -27,6 +27,7 @@ import java.lang.Thread.sleep
 
 @HiltAndroidTest
 class TodoE2ETest: StudentTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -92,14 +93,14 @@ class TodoE2ETest: StudentTest() {
         todoPage.assertAssignmentNotDisplayed(testAssignment)
         todoPage.assertAssignmentDisplayedWithRetries(borderDateAssignment, 5)
 
-        Log.d(STEP_TAG, "Apply 'Favorited Courses' filter.")
+        Log.d(STEP_TAG, "Apply 'Favorite Courses' filter.")
         todoPage.chooseFavoriteCourseFilter()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Favorited Courses' header filter and the empty view is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Favorite Courses' header filter and the empty view is displayed.")
         todoPage.assertFavoritedCoursesFilterHeader()
         todoPage.assertEmptyView()
 
-        Log.d(STEP_TAG, "Clear 'Favorited Courses' filter.")
+        Log.d(STEP_TAG, "Clear 'Favorite Courses' filter.")
         todoPage.clearFilter()
 
         sleep(2000) //Allow the filter clarification to propagate.
@@ -125,16 +126,19 @@ class TodoE2ETest: StudentTest() {
         sleep(3000) //Wait for the bottom toast message 'Added to Dashboard' to be disappear.
         dashboardPage.clickTodoTab()
 
-        Log.d(STEP_TAG, "Apply 'Favorited Courses' filter.")
+        Log.d(STEP_TAG, "Apply 'Favorite Courses' filter.")
         todoPage.chooseFavoriteCourseFilter()
-        refresh() // We need to refresh the page in order to see the favorite course's assignments.
-        // It's working well on product version, maybe the backend is working differently on beta environment.
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Favorited Courses' header filter is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Favorite Courses' header filter is displayed.")
         todoPage.assertFavoritedCoursesFilterHeader()
+        refresh() // We need to refresh the page in order to see the favorite course's assignments.
 
-        Log.d(ASSERTION_TAG, "Assert that only the favorited course's assignment, '${borderDateAssignment.name}' is displayed.")
-        todoPage.assertAssignmentDisplayedWithRetries(favoriteCourseAssignment, 5)
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+            // It's working well on product version, maybe the backend is working differently on beta environment.
+            Log.d(ASSERTION_TAG, "Assert that only the favorite course's assignment, '${borderDateAssignment.name}' is displayed.")
+            todoPage.assertAssignmentDisplayedWithRetries(favoriteCourseAssignment, 5)
+        }
+
         todoPage.assertAssignmentNotDisplayed(testAssignment)
         todoPage.assertAssignmentNotDisplayed(borderDateAssignment)
         todoPage.assertQuizNotDisplayed(quiz)

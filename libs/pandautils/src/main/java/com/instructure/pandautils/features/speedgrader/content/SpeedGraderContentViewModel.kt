@@ -68,7 +68,21 @@ class SpeedGraderContentViewModel @Inject constructor(
         val submission = repository.getSubmission(assignmentId, studentId)
         val submissionFields = submission.submission?.submissionFields
 
-        val user = submissionFields?.user
+        val groupSubmission = submissionFields?.groupId != null
+
+        val assignee = if (groupSubmission) {
+            val group = submissionFields?.assignment?.groupSet?.groups?.find { it._id == submissionFields.groupId }
+            Assignee(
+                id = group?._id?.toLongOrNull(),
+                name = group?.name,
+            )
+        } else {
+            Assignee(
+                id = submission.submission?.userId?.toLongOrNull(),
+                name = submissionFields?.user?.name,
+                avatarUrl = submissionFields?.user?.avatarUrl
+            )
+        }
 
         val submissionHistory = submission.submission?.submissionHistoriesConnection?.edges
             .orEmpty()
@@ -93,10 +107,9 @@ class SpeedGraderContentViewModel @Inject constructor(
         _uiState.update { state ->
             state.copy(
                 content = initialContent,
-                assigneeId = submissionFields?.groupId?.toLongOrNull()
-                    ?: submission.submission?.userId?.toLongOrNull(),
-                userName = if (anonymousGrading) resources.getString(R.string.anonymousGradingStudentLabel) else user?.name,
-                userUrl = if (!anonymousGrading) user?.avatarUrl else null,
+                assigneeId = assignee.id,
+                userName = if (anonymousGrading) resources.getString(R.string.anonymousGradingStudentLabel) else assignee.name,
+                userUrl = if (!anonymousGrading) assignee.avatarUrl else null,
                 submissionState = getSubmissionStateLabel(submissionFields?.state),
                 dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
@@ -108,7 +121,9 @@ class SpeedGraderContentViewModel @Inject constructor(
                     items = attempts,
                     selectedItemId = attempts.firstOrNull()?.id,
                     onItemSelected = { onAttemptSelected(submission, submissionHistory, it) }
-                )
+                ),
+                anonymous = anonymousGrading,
+                group = groupSubmission
             )
         }
     }
@@ -156,8 +171,8 @@ class SpeedGraderContentViewModel @Inject constructor(
                 // Media submission
                 SubmissionType.MEDIA_RECORDING -> submissionFields.mediaObject?.let {
                     MediaContent(
-                        uri = Uri.parse(it.mediaSources?.firstOrNull()?.url),
-                        contentType = it.mediaType?.rawValue ?: "",
+                        uri = Uri.parse(it.mediaSources?.firstOrNull()?.url.orEmpty()),
+                        contentType = it.mediaType?.rawValue,
                         displayName = it.title
                     )
                 } ?: UnsupportedContent
@@ -348,3 +363,9 @@ class SpeedGraderContentViewModel @Inject constructor(
         const val STUDENT_ID_KEY = "submissionId"
     }
 }
+
+data class Assignee(
+    val id: Long? = null,
+    val name: String? = null,
+    val avatarUrl: String? = null
+)
