@@ -83,7 +83,6 @@ fun SingleSelectSearch(
                 isFocused = false,
                 isError = state.errorText != null,
                 enabled = state.enabled,
-                onClick = { state.onMenuOpenChanged(!state.isMenuOpen) },
                 modifier = Modifier
                     .onGloballyPositioned {
                         heightInPx = it.size.height
