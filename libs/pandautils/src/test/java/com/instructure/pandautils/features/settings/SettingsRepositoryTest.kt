@@ -20,7 +20,6 @@ import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.models.EnvironmentSettings
-import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
 import io.mockk.mockk
@@ -106,21 +105,5 @@ class SettingsRepositoryTest {
         val inboxSignatureState = repository.getInboxSignatureState()
 
         assertEquals(InboxSignatureState.DISABLED, inboxSignatureState)
-    }
-
-    @Test(expected = IllegalStateException::class)
-    fun `Switch experience throws error when the API call fails`() = runTest {
-        coEvery { experienceApi.switchExperience(any(), any()) } returns DataResult.Fail()
-
-        repository.switchExperience()
-    }
-
-    @Test
-    fun `Switch experience succeeds when the API call is successful`() = runTest {
-        coEvery { experienceApi.switchExperience(any(), any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.CAREER_LEARNER_EXPERIENCE))
-
-        val result = repository.switchExperience()
-
-        assertEquals(Unit, result)
     }
 }

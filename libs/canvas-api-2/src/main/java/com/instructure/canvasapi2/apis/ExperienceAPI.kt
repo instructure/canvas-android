@@ -18,16 +18,11 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.ExperienceSummary
 import com.instructure.canvasapi2.utils.DataResult
-import retrofit2.http.Field
 import retrofit2.http.GET
-import retrofit2.http.POST
 import retrofit2.http.Tag
 
 interface ExperienceAPI {
 
     @GET("career/experience_summary")
     suspend fun getExperienceSummary(@Tag params: RestParams): DataResult<ExperienceSummary>
-
-    @POST("career/switch_experience")
-    suspend fun switchExperience(@Tag params: RestParams, @Field("experience") experience: String): DataResult<ExperienceSummary>
 }
