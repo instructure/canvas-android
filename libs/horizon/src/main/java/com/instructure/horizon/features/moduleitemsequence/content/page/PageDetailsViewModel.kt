@@ -123,6 +123,7 @@ class PageDetailsViewModel @Inject constructor(
                 userComment = "",
                 type = NotebookType.valueOf(type)
             )
+            refreshNotes()
         } catch {}
     }
 }
