@@ -18,9 +18,12 @@ package com.instructure.horizon.features.moduleitemsequence.content.page
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
+import com.instructure.horizon.features.notebook.addedit.add.AddNoteRepository
+import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,13 +37,21 @@ import javax.inject.Inject
 class PageDetailsViewModel @Inject constructor(
     private val pageDetailsRepository: PageDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
+    private val addNoteRepository: AddNoteRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
 
     private val courseId: Long = savedStateHandle[Const.COURSE_ID] ?: -1L
     private val pageUrl: String = savedStateHandle[ModuleItemContent.Page.PAGE_URL] ?: ""
 
-    private val _uiState = MutableStateFlow(PageDetailsUiState(ltiButtonPressed = ::ltiButtonPressed, onUrlOpened = ::onUrlOpened, courseId = courseId))
+    private val _uiState = MutableStateFlow(
+        PageDetailsUiState(
+            ltiButtonPressed = ::ltiButtonPressed,
+            onUrlOpened = ::onUrlOpened,
+            addNote = ::addNote,
+            courseId = courseId
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -100,5 +111,18 @@ class PageDetailsViewModel @Inject constructor(
 
     private fun onUrlOpened() {
         _uiState.update { it.copy(urlToOpen = null) }
+    }
+
+    private fun addNote(highlightedData: NoteHighlightedData, type: String) {
+        viewModelScope.tryLaunch {
+            addNoteRepository.addNote(
+                courseId = courseId.toString(),
+                objectId = uiState.value.pageId.toString(),
+                objectType = "Page",
+                highlightedData = highlightedData,
+                userComment = "",
+                type = NotebookType.valueOf(type)
+            )
+        } catch {}
     }
 }
