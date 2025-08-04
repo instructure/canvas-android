@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -69,6 +70,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.format
 import java.util.Date
 
@@ -77,11 +79,24 @@ fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
 ) {
+    val scrollState = rememberLazyListState()
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { if (state.showTopBar) NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
+        topBar = {
+            if (state.showTopBar) {
+                NotebookAppBar(
+                    navigateBack = { mainNavController.popBackStack() },
+                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                        horizonShadow(
+                            elevation = HorizonElevation.level1,
+                        )
+                    }
+                )
+            }
+        },
     ) { padding ->
         LazyColumn(
+            state = scrollState,
             modifier = Modifier
                 .padding(padding),
             contentPadding = PaddingValues(24.dp)
