@@ -43,6 +43,8 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -64,10 +66,15 @@ fun SpeedGraderCommentsScreen(
 
     Column {
         CanvasDivider(modifier = Modifier.fillMaxWidth())
+        val stateExpanded = stringResource(R.string.a11y_expanded)
+        val stateCollapsed = stringResource(R.string.a11y_collapsed)
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier
                 .fillMaxWidth()
+                .semantics {
+                    stateDescription = if (expanded) stateExpanded else stateCollapsed
+                }
                 .clickable(
                     enabled = !uiState.isLoading
                 ) {

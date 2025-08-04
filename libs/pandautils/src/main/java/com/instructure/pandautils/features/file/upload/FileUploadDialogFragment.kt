@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -57,7 +58,9 @@ import com.instructure.pandautils.utils.isGroup
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : BaseCanvasDialogFragment() {
@@ -65,6 +68,9 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
     private val viewModel: FileUploadDialogViewModel by viewModels()
 
     private lateinit var binding: FragmentFileUploadDialogBinding
+
+    @Inject
+    lateinit var fileUploadEventHandler: FileUploadEventHandler
 
     private var uploadType: FileUploadType by SerializableArg(FileUploadType.ASSIGNMENT)
     private var canvasContext: CanvasContext by ParcelableArg(ApiPrefs.user)
@@ -82,7 +88,6 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
     private var attemptId: Long? by NLongArg()
 
     private var dialogCallback: ((Int) -> Unit)? = null
-    private var dialogParent: FileUploadDialogParent? = null
 
     private val cameraPermissionContract = registerForActivityResult(ActivityResultContracts.RequestPermission()) { isPermissionGranted ->
         if (isPermissionGranted) {
@@ -195,6 +200,9 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
             requireActivity().onBackPressed()
         }
         getParent()?.attachmentCallback(EVENT_DIALOG_CANCELED, null)
+        lifecycleScope.launch {
+            fileUploadEventHandler.postEvent(FileUploadEvent.DialogDismissed)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -230,18 +238,33 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
             is FileUploadAction.PickMultipleImage -> pickMultipleImage()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             is FileUploadAction.UploadStarted -> dismiss()
-            is FileUploadAction.AttachmentSelectedAction -> getParent()?.attachmentCallback(action.event, action.attachment)
+            is FileUploadAction.AttachmentSelectedAction -> {
+                getParent()?.attachmentCallback(action.event, action.attachment)
+                if (action.event == EVENT_DIALOG_CANCELED) {
+                    lifecycleScope.launch {
+                        fileUploadEventHandler.postEvent(FileUploadEvent.DialogDismissed)
+                    }
+                }
+            }
             is FileUploadAction.UploadStartedAction -> {
                 getParent()?.selectedUriStringsCallback(action.selectedUris)
                 getParent()?.workInfoLiveDataCallback(action.id, action.liveData)
+                lifecycleScope.launch {
+                    fileUploadEventHandler.postEvent(
+                        FileUploadEvent.FileSelected(action.selectedUris)
+                    )
+                    fileUploadEventHandler.postEvent(
+                        FileUploadEvent.UploadStarted(
+                            action.id,
+                            action.liveData
+                        )
+                    )
+                }
             }
         }
     }
 
     private fun getParent(): FileUploadDialogParent? {
-        if (dialogParent != null) {
-            return dialogParent
-        }
         var parent = parentFragment as? FileUploadDialogParent
         if (parent == null) {
             parent = activity as? FileUploadDialogParent
@@ -291,11 +314,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
 
         fun newInstance(): FileUploadDialogFragment = FileUploadDialogFragment()
 
-        fun newInstance(
-            args: Bundle,
-            callback: ((Int) -> Unit)? = null,
-            dialogParent: FileUploadDialogParent? = null
-        ): FileUploadDialogFragment {
+        fun newInstance(args: Bundle, callback: ((Int) -> Unit)? = null): FileUploadDialogFragment {
             return FileUploadDialogFragment().apply {
                 arguments = args
 
@@ -307,7 +326,6 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
                 courseId = args.getLong(Const.COURSE_ID, INVALID_ID)
                 position = args.getInt(Const.POSITION, INVALID_ID_INT)
                 dialogCallback = callback
-                this.dialogParent = dialogParent
                 userId = args.getLong(Const.USER_ID, INVALID_ID)
                 attemptId = args.getLong(Const.SUBMISSION_ATTEMPT, INVALID_ID).takeIf { it != INVALID_ID }
             }

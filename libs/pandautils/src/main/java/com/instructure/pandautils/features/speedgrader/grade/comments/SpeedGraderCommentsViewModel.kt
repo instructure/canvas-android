@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
@@ -34,6 +35,8 @@ import com.instructure.canvasapi2.models.postmodels.FileUploadWorkerData
 import com.instructure.canvasapi2.models.postmodels.PendingSubmissionComment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.file.upload.FileUploadEvent
+import com.instructure.pandautils.features.file.upload.FileUploadEventHandler
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
@@ -74,7 +77,8 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private val authorDao: AuthorDao,
     private val mediaCommentDao: MediaCommentDao,
     private val apiPrefs: ApiPrefs,
-    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder,
+    private val fileUploadEventHandler: FileUploadEventHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderCommentsUiState())
@@ -84,7 +88,6 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private val studentId: Long = savedStateHandle.get<Long>(SUBMISSION_ID_KEY) ?: -1L
     private val courseId: Long = savedStateHandle.get<Long>(Const.COURSE_ID) ?: -1L
 
-    private var userId = -1L
     private var pageId: String = ""
     private var selectedAttemptId: Long? = null
     private var submissionId: Long? = null
@@ -110,10 +113,10 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
         assignmentEnhancementsEnabled = speedGraderCommentsRepository.getCourseFeatures(courseId).contains("assignments_2_student")
         val response = speedGraderCommentsRepository.getSubmissionComments(studentId, assignmentId)
-        userId = response.data.submission?.userId?.toLong() ?: -1L
-        pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$userId"
+        pageId = "${apiPrefs.domain}-$courseId-$assignmentId-$studentId"
         submissionId = response.data.submission?._id?.toLongOrNull()
         subscribeToPendingComments()
+        subscribeToFileUploadEvents()
         val isAnonymousGrading = response.data.submission?.assignment?.anonymousGrading ?: false
         fetchedComments = response.comments
             .filter { it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
@@ -181,7 +184,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
 
     // TODO remove; We need this now, because the GraphQL query doesn't return file verifiers.
     private suspend fun getAttachments(attachments: List<SubmissionCommentsQuery.Attachment>) = attachments.map {
-        val submission = speedGraderCommentsRepository.getSingleSubmission(courseId, assignmentId, userId)
+        val submission = speedGraderCommentsRepository.getSingleSubmission(courseId, assignmentId, studentId)
         val attachmentWithVerifier = submission?.submissionComments
             ?.flatMap { attachmentsWithVerifier -> attachmentsWithVerifier.attachments }
             ?.find { attachmentWithVerifier -> attachmentWithVerifier.id == it._id.toLongOrNull() }
@@ -196,6 +199,27 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             contentType = it.contentType ?: "",
             size = it.size ?: "",
         )
+    }
+
+    private fun subscribeToFileUploadEvents() {
+        viewModelScope.launch {
+            fileUploadEventHandler.events.collect { event ->
+                Log.d("ASDF", "FileUploadEvent: $event")
+                when (event) {
+                    is FileUploadEvent.UploadStarted -> {
+                        onFileUploadStarted(event.workInfoLiveData)
+                    }
+                    is FileUploadEvent.FileSelected -> {
+                        selectedFilePaths = event.filePaths
+                    }
+                    is FileUploadEvent.DialogDismissed -> {
+                        _uiState.update { state ->
+                            state.copy(fileSelectorDialogData = null)
+                        }
+                    }
+                }
+            }
+        }
     }
 
     private fun subscribeToPendingComments() {
@@ -215,7 +239,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         }
                     }
 
-                    val pendingComments = pending.map { pendingComment ->
+                    pendingComments = pending.map { pendingComment ->
                         SpeedGraderComment(
                             id = pendingComment.id.toString(),
                             authorName = apiPrefs.user?.name.orEmpty(),
@@ -280,7 +304,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                         fileSelectorDialogData = SpeedGraderFileSelectorDialogData(
                             assignmentId = assignmentId,
                             courseId = courseId,
-                            userId = userId,
+                            userId = studentId,
                             attempt = selectedAttemptId
                         )
                     )
@@ -358,7 +382,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 workerId = workInfo.id.toString(),
                 courseId = courseId,
                 assignmentId = assignmentId,
-                userId = userId,
+                userId = studentId,
                 filePaths = selectedFilePaths.orEmpty(),
                 action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
                 attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
@@ -377,7 +401,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                     selectedFilePaths.orEmpty(),
                     courseId,
                     assignmentId,
-                    userId
+                    studentId
                 )
                 this.attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
             }
@@ -449,8 +473,8 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             context = context,
             mediaFilePath = Uri.fromFile(file).path,
             assignment = Assignment(id = assignmentId, courseId = courseId),
-            studentId = userId,
-            isGroupComment = false, // TODO handle group comments
+            studentId = studentId,
+            isGroupComment = false,
             pageId = pageId,
             attemptId = selectedAttemptId,
             mediaCommentId = id
@@ -614,7 +638,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 filePaths = filePaths,
                 courseId = courseId,
                 assignmentId = assignmentId,
-                userId = userId,
+                userId = studentId,
                 action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
                 attemptId = selectedAttemptId
             )

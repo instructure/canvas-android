@@ -112,6 +112,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
         attempt: Int?,
         isGroupComment: Boolean
     ): CreateSubmissionCommentMutation.Data {
+        throw Exception()
         val mutation = CreateSubmissionCommentMutation(
             submissionId.toString(),
             comment,

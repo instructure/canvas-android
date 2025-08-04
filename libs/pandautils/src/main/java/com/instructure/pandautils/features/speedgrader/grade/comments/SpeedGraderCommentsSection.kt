@@ -64,7 +64,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -76,18 +75,14 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.LiveData
-import androidx.work.WorkInfo
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.file.upload.FileUploadDialogFragment
-import com.instructure.pandautils.features.file.upload.FileUploadDialogParent
 import com.instructure.pandautils.features.speedgrader.grade.comments.commentlibrary.SpeedGraderCommentLibraryScreen
 import com.instructure.pandautils.features.speedgrader.grade.comments.composables.SpeedGraderCommentInput
 import com.instructure.pandautils.utils.PermissionUtils
@@ -115,30 +110,6 @@ fun SpeedGraderCommentsSection(
             context,
             SpeedGraderCommentsAttachmentRouterEntryPoint::class.java
         ).speedGraderCommentsAttachmentRouter()
-    }
-
-    val fileDialogShown = rememberSaveable { mutableStateOf(false) }
-    val dialogParent = remember {
-        object : FileUploadDialogParent {
-            override fun attachmentCallback(event: Int, attachment: FileSubmitObject?) {
-                if (event == FileUploadDialogFragment.EVENT_DIALOG_CANCELED) {
-                    fileDialogShown.value = false
-                    actionHandler(SpeedGraderCommentsAction.FileUploadDialogClosed)
-                }
-            }
-
-            override fun selectedUriStringsCallback(filePaths: List<String>) {
-                actionHandler(SpeedGraderCommentsAction.FilesSelected(filePaths))
-            }
-
-            override fun workInfoLiveDataCallback(
-                uuid: UUID?,
-                workInfoLiveData: LiveData<WorkInfo>
-            ) {
-                actionHandler(SpeedGraderCommentsAction.FileUploadStarted(workInfoLiveData))
-
-            }
-        }
     }
 
     var showCommentLibrary by rememberSaveable { mutableStateOf(false) }
@@ -220,7 +191,7 @@ fun SpeedGraderCommentsSection(
                     }
             )
         }
-        if (state.fileSelectorDialogData != null && !fileDialogShown.value) {
+        if (state.fileSelectorDialogData != null) {
             val fragmentManager = LocalContext.current.getFragmentActivity().supportFragmentManager
 
             val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
@@ -230,11 +201,9 @@ fun SpeedGraderCommentsSection(
                 state.fileSelectorDialogData.attempt
             )
 
-            FileUploadDialogFragment.newInstance(bundle, dialogParent = dialogParent).show(
-                fragmentManager, FileUploadDialogFragment.TAG
+            FileUploadDialogFragment.newInstance(bundle).show(
+                fragmentManager, FileUploadDialogFragment.TAG + UUID.randomUUID()
             )
-            fileDialogShown.value = true
-
         }
     }
 }
@@ -423,7 +392,7 @@ fun SpeedGraderOwnCommentItem(
     ) {
         Column(
             modifier = modifier
-                .alpha(if (comment.isPending) 0.5f else 1f)
+                .alpha(if (comment.isPending || comment.isFailed) 0.5f else 1f)
         ) {
             Text(
                 text = DateHelper.getDateTimeString(
