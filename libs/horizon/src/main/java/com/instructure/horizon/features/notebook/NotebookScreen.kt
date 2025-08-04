@@ -78,6 +78,7 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
+    onDismiss: (() -> Unit)? = null
 ) {
     val scrollState = rememberLazyListState()
     Scaffold(
@@ -88,7 +89,16 @@ fun NotebookScreen(
                     navigateBack = { mainNavController.popBackStack() },
                     modifier = Modifier.conditional(scrollState.canScrollBackward) {
                         horizonShadow(
-                            elevation = HorizonElevation.level1,
+                            elevation = HorizonElevation.level2,
+                        )
+                    }
+                )
+            } else if (onDismiss != null) {
+                NotebookAppBar(
+                    onClose = { onDismiss() },
+                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                        horizonShadow(
+                            elevation = HorizonElevation.level2,
                         )
                     }
                 )
@@ -193,7 +203,8 @@ fun NotebookBottomDialog(
 
         NotebookScreen(
             mainNavController = mainNavController,
-            state = state
+            state = state,
+            onDismiss = { onDismiss() }
         )
 
     }
