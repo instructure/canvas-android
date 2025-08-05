@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.WebView
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -49,6 +50,7 @@ import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.views.CanvasWebView
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -64,13 +66,17 @@ fun ComposeNotesHighlightingCanvasWebView(
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
-    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null
+    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
+    scrollState: ScrollState? = null
 ) {
+    val scrollRatio = rememberSaveable(scrollState?.value){ scrollState?.let { scrollState.value.toFloat() / scrollState.maxValue } ?: 0f }
     val webViewState = rememberSaveable { bundleOf() }
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
     val context = LocalContext.current
     val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+    var shouldScrollToContent: Boolean by remember { mutableStateOf(false) }
 
     val notesStateValue = rememberUpdatedState(notes)
 
@@ -108,19 +114,26 @@ fun ComposeNotesHighlightingCanvasWebView(
     } else {
         AndroidView(
             factory = {
+//                shouldScrollToContent = true
                 NotesHighlightingCanvasWebViewWrapper(it, callback = AddNoteActionModeCallback(lifecycleOwner, selectionLocation, menuItems)).apply {
                     webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
                         override fun openMediaFromWebView(mime: String, url: String, filename: String) =
                             webViewCallbacks.openMedia(mime, url, filename)
 
                         override fun onPageFinishedCallback(webView: WebView, url: String) {
+                            if (shouldScrollToContent) {
+                                shouldScrollToContent = false
+                                lifecycleOwner.lifecycleScope.launch { scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt()) }
+                            }
                             webViewCallbacks.onPageFinished(webView, url)
 
                             webView.evaluateTextSelectionInterface()
                             webView.highlightNotes(notesStateValue.value)
                         }
 
-                        override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
+                        override fun onPageStartedCallback(webView: WebView, url: String) {
+                            webViewCallbacks.onPageStarted(webView, url)
+                        }
 
                         override fun canRouteInternallyDelegate(url: String): Boolean = webViewCallbacks.canRouteInternally(url)
 
@@ -141,6 +154,7 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
 
+                    lifecycleOwner.lifecycleScope.launch { delay(500); scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt()) }
                 }
             },
             update = {
