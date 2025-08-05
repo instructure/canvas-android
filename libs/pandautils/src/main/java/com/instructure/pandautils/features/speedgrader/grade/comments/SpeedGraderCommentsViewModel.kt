@@ -160,6 +160,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         _uiState.update { state ->
             state.copy(
                 comments = fetchedComments + pendingComments,
+                isEmpty = fetchedComments.isEmpty() && pendingComments.isEmpty(),
                 isLoading = false,
             )
         }
