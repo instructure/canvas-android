@@ -210,9 +210,7 @@ class SettingsViewModel @Inject constructor(
     }
 
     private fun switchToCanvasCareer() {
-        viewModelScope.launch {
-            apiPrefs.canvasCareerView = true
-            _events.send(SettingsViewModelAction.RestartApp)
-        }
+        apiPrefs.canvasCareerView = true
+        _events.trySend(SettingsViewModelAction.RestartApp)
     }
 }

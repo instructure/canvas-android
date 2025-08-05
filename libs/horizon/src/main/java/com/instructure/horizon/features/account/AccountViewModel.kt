@@ -34,7 +34,6 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -186,11 +185,9 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun switchExperience() {
-        viewModelScope.launch {
-            apiPrefs.canvasCareerView = false
-            _uiState.update {
-                it.copy(restartApp = true)
-            }
+        apiPrefs.canvasCareerView = false
+        _uiState.update {
+            it.copy(restartApp = true)
         }
     }
 
