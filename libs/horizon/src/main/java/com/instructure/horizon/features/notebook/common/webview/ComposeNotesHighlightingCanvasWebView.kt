@@ -173,7 +173,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                         it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
                     }
                 } else {
-                    it.webView.restoreState(webViewState)
+                    it.loadHtml(content, title)
                 }
 
                 it.webView.addTextSelectionInterface(
