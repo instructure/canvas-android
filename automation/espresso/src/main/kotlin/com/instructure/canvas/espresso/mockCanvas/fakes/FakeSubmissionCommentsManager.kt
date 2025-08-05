@@ -12,9 +12,11 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- */package com.instructure.canvas.espresso.mockCanvas.fakes
+ */
+package com.instructure.canvas.espresso.mockCanvas.fakes
 
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
+import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
@@ -24,7 +26,12 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
         assignmentId: Long,
         forceNetwork: Boolean
     ): SubmissionCommentsResponseWrapper {
-        TODO("Not yet implemented")
+        return SubmissionCommentsResponseWrapper(
+            comments = emptyList(),
+            data = SubmissionCommentsQuery.Data(
+                submission = null
+            )
+        )
     }
 
     override suspend fun createSubmissionComment(
@@ -33,6 +40,6 @@ class FakeSubmissionCommentsManager : SubmissionCommentsManager {
         attempt: Int?,
         isGroupComment: Boolean
     ): CreateSubmissionCommentMutation.Data {
-        TODO("Not yet implemented")
+        return CreateSubmissionCommentMutation.Data(null)
     }
 }
