@@ -156,6 +156,7 @@ class LoginViewModelTest {
     @Test
     fun `Send login event with career experience when career experience is enabled`() {
         // Given
+        coEvery { apiPrefs.canvasCareerView } returns null
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
         coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.CAREER_LEARNER_EXPERIENCE))
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
@@ -179,6 +180,7 @@ class LoginViewModelTest {
     @Test
     fun `Send login event with academic experience when the current app is academic`() {
         // Given
+        coEvery { apiPrefs.canvasCareerView } returns null
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
         coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.ACADEMIC_EXPERIENCE))
         every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
@@ -202,6 +204,7 @@ class LoginViewModelTest {
     @Test
     fun `Send login event with academic experience and set canSwitchToCanvasCareer when the current app is academic but career is possible`() {
         // Given
+        coEvery { apiPrefs.canvasCareerView } returns null
         coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
         coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(
             ExperienceSummary(
@@ -224,6 +227,52 @@ class LoginViewModelTest {
         // Then
         verify { apiPrefs.canvasCareerView = false }
         verify { apiPrefs.canSwitchToCanvasCareer = true }
+        assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event with career experience when its already set`() {
+        // Given
+        coEvery { apiPrefs.canvasCareerView } returns true
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.CAREER_LEARNER_EXPERIENCE))
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, CAREER_EXPERIENCE) }
+        assertEquals(LoginResultAction.Login(Experience.Career), loginStatus.value!!.getContentIfNotHandled()!!)
+    }
+
+    @Test
+    fun `Send login event with academic experience when its already set to academic`() {
+        // Given
+        coEvery { apiPrefs.canvasCareerView } returns false
+        coEvery { featureFlagProvider.getCanvasForElementaryFlag() } returns false
+        coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Success(ExperienceSummary(currentApp = ExperienceSummary.ACADEMIC_EXPERIENCE))
+        every { oauthManager.getAuthenticatedSessionAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(AuthenticatedSession("", requiresTermsAcceptance = false))
+        }
+        every { userManager.getSelfAsync(any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(User())
+        }
+
+        // When
+        viewModel = createViewModel()
+        val loginStatus = viewModel.checkLogin(true, true)
+        loginStatus.observe(lifecycleOwner, {})
+
+        // Then
+        verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ACADEMIC_EXPERIENCE) }
         assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
     }
 
