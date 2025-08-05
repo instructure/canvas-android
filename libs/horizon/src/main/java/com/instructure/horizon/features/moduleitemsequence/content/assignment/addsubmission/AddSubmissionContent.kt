@@ -96,7 +96,9 @@ fun AddSubmissionContent(
         }
     }
     LaunchedEffect(scrollContent) {
-        scrollState.scrollBy(scrollContent?.toFloat() ?: 0f)
+        if (!scrollState.isScrollInProgress) {
+            scrollState.scrollBy(scrollContent?.toFloat() ?: 0f)
+        }
     }
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
@@ -218,7 +220,11 @@ fun AddSubmissionContent(
                 Box(
                     contentAlignment = Alignment.CenterEnd,
                     modifier = Modifier
-                        .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
+                        .background(
+                            color = HorizonColors.Surface
+                                .institution()
+                                .copy(alpha = alpha), shape = HorizonCornerRadius.level6
+                        )
                         .animateContentSize()
                 ) {
                     if (uiState.submissionInProgress) {
