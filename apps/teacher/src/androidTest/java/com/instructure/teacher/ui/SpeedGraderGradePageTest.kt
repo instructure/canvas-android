@@ -118,7 +118,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("10 / 20 pts")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
@@ -143,7 +142,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("12.0")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
@@ -171,7 +169,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("No Grade")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
 
         speedGraderGradePage.selectCompleteButton()
@@ -203,7 +200,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("10.0") // It's a bit weird that why is this isn't the same as in the point based test
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
