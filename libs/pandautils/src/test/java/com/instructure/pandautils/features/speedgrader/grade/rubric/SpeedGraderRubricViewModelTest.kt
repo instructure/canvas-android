@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader.grading.rubric
+package com.instructure.pandautils.features.speedgrader.grade.rubric
 
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.SubmissionRubricQuery

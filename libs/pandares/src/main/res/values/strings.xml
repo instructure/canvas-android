@@ -2134,9 +2134,15 @@
     <string name="rubricsTitle">Rubrics</string>
     <string name="rubricScore">Score</string>
     <string name="rubricScoreHint">Write score here</string>
+    <string name="speedGraderCommentsTitle">Comments (%s)</string>
     <string name="anonymousGradingStudentLabel">Student</string>
+    <string name="anonymousGradingUserLabel">Anonymous User</string>
     <string name="rubricNote">Rubric Note</string>
     <string name="content_description_edit_rubric_comment">Edit rubric note</string>
     <string name="rubricNoteHint">Note</string>
     <string name="a11y_sendRubricNoteContentDescription">Send rubric note</string>
+    <string name="select_attachment_type">Select Attachment Type</string>
+    <string name="choose_files">Choose Files</string>
+    <string name="a11y_expanded">Expanded</string>
+    <string name="a11y_collapsed">Collapsed</string>
 </resources>
