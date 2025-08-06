@@ -31,7 +31,7 @@ data class SpeedGraderGradingUiState(
     val score: Double? = null,
     val pointsDeducted: Double? = null,
     val gradingType: GradingType? = null,
-    val dueDate: Date? = null,
+    val submittedAt: Date? = null,
     val daysLate: Int? = null,
     val excused: Boolean = false,
     val letterGrades: List<GradingSchemeRow> = emptyList(),

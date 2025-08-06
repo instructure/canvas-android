@@ -106,7 +106,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         error = false,
                         gradeHidden = submission.hideGradeFromStudent.orDefault(),
                         daysLate = getDaysLate(submission.secondsLate),
-                        dueDate = submission.assignment?.dueAt,
+                        submittedAt = submission.submittedAt,
                         gradingStatuses = submission.assignment?.course?.gradeStatuses
                             ?.map {
                                 GradeStatus(

@@ -203,7 +203,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                 )
 
                 uiState.daysLate?.let {
-                    LateHeader(it, uiState.dueDate)
+                    LateHeader(it, uiState.submittedAt)
                 }
 
                 FinalScore(uiState)
@@ -354,7 +354,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
 }
 
 @Composable
-private fun LateHeader(daysLate: Int, dueDate: Date?) {
+private fun LateHeader(daysLate: Int, submissionDate: Date?) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -370,14 +370,14 @@ private fun LateHeader(daysLate: Int, dueDate: Date?) {
                 fontWeight = FontWeight.SemiBold,
                 modifier = Modifier.testTag("speedGraderDaysLateLabel")
             )
-            dueDate?.let {
+            submissionDate?.let {
                 Text(
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .testTag("speedGraderDueDateValue"),
                     text = DateHelper.getDateAtTimeString(
                         LocalContext.current,
-                        R.string.due_dateTime,
+                        R.string.submitted_dateTime,
                         it
                     ).orEmpty(),
                     color = colorResource(R.color.textDark),
@@ -821,7 +821,7 @@ private fun SpeedGraderGradingContentPreview() {
                 score = 14.0,
                 pointsDeducted = 1.0,
                 onScoreChange = {},
-                dueDate = Date(),
+                submittedAt = Date(),
                 daysLate = 4,
                 gradingType = GradingType.points,
                 onPercentageChange = {},
@@ -847,7 +847,7 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 grade = "90%",
                 score = 15.0,
                 onScoreChange = {},
-                dueDate = Date(),
+                submittedAt = Date(),
                 daysLate = 4,
                 gradingType = GradingType.percent,
                 onPercentageChange = {},
@@ -871,7 +871,7 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
                 enteredScore = 0f,
                 grade = "A",
                 score = 15.0,
-                dueDate = Date(),
+                submittedAt = Date(),
                 daysLate = 4,
                 onScoreChange = {},
                 gradingType = GradingType.pass_fail,
@@ -900,7 +900,7 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 gradingType = GradingType.letter_grade,
                 onPercentageChange = {},
                 pointsDeducted = 2.0,
-                dueDate = Date(),
+                submittedAt = Date(),
                 daysLate = 4,
                 letterGrades = listOf(
                     GradingSchemeRow("A", 90.0),
