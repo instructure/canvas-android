@@ -80,7 +80,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textSuccess)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.SUBMITTED
+                    submissionStateLabel = SubmissionStateLabel.Submitted
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -146,7 +146,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textSuccess)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.GRADED
+                    submissionStateLabel = SubmissionStateLabel.Graded
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -165,7 +165,7 @@ class GradesAssignmentItemTest {
         iconRes = R.drawable.ic_assignment,
         name = "Assignment",
         dueDate = "No due date",
-        submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+        submissionStateLabel = SubmissionStateLabel.NotSubmitted,
         displayGrade = DisplayGrade("-/15", "Content description")
     )
 }

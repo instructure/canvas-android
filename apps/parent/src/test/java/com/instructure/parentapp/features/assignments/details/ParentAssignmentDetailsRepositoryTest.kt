@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.ObserveeAssignment
@@ -29,7 +30,6 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.room.appdatabase.daos.ReminderDao
 import com.instructure.parentapp.features.assignment.details.ParentAssignmentDetailsRepository
 import com.instructure.parentapp.util.ParentPrefs
 import io.mockk.coEvery
@@ -46,9 +46,9 @@ class ParentAssignmentDetailsRepositoryTest {
     private val assignmentInterface: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val quizInterface: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val submissionInterface: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
-    private val reminderDao: ReminderDao = mockk(relaxed = true)
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
+    private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
 
     private val repository = ParentAssignmentDetailsRepository(
         coursesInterface,
@@ -56,7 +56,8 @@ class ParentAssignmentDetailsRepositoryTest {
         quizInterface,
         submissionInterface,
         featuresApi,
-        parentPrefs
+        parentPrefs,
+        customGradeStatusesManager
     )
 
     @Test

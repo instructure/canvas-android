@@ -331,7 +331,7 @@ class SpeedGraderContentViewModelTest {
 
         createViewModel()
 
-        assertEquals(SubmissionStateLabel.SUBMITTED, viewModel.uiState.value.submissionState)
+        assertEquals(SubmissionStateLabel.Submitted, viewModel.uiState.value.submissionState)
     }
 
     @Test
@@ -341,7 +341,7 @@ class SpeedGraderContentViewModelTest {
 
         createViewModel()
 
-        assertEquals(SubmissionStateLabel.NOT_SUBMITTED, viewModel.uiState.value.submissionState)
+        assertEquals(SubmissionStateLabel.NotSubmitted, viewModel.uiState.value.submissionState)
     }
 
     @Test
@@ -351,7 +351,7 @@ class SpeedGraderContentViewModelTest {
 
         createViewModel()
 
-        assertEquals(SubmissionStateLabel.GRADED, viewModel.uiState.value.submissionState)
+        assertEquals(SubmissionStateLabel.Graded, viewModel.uiState.value.submissionState)
     }
 
     @Test
@@ -361,7 +361,7 @@ class SpeedGraderContentViewModelTest {
 
         createViewModel()
 
-        assertEquals(SubmissionStateLabel.NONE, viewModel.uiState.value.submissionState)
+        assertEquals(SubmissionStateLabel.None, viewModel.uiState.value.submissionState)
     }
 
     @Test

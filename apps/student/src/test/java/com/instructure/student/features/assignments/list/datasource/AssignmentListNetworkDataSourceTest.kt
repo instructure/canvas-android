@@ -19,6 +19,7 @@ package com.instructure.student.features.assignments.list.datasource
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -34,8 +35,9 @@ class AssignmentListNetworkDataSourceTest {
 
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
 
-    private val dataSource = AssignmentListNetworkDataSource(assignmentApi, coursesApi)
+    private val dataSource = AssignmentListNetworkDataSource(assignmentApi, coursesApi, customGradeStatusesManager)
 
     @Test
     fun `Get assignment groups with assignments for grading period successfully returns api model`() = runTest {

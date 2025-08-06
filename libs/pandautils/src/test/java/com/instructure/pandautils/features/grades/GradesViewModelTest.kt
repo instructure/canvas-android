@@ -151,7 +151,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -285,7 +285,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 4",
                             dueDate = getFormattedDate(today.minusDays(1)),
-                            submissionStateLabel = SubmissionStateLabel.SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.Submitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -300,7 +300,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_discussion,
                             name = "Assignment 2",
                             dueDate = getFormattedDate(today.plusDays(1)),
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -315,7 +315,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_quiz,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -330,7 +330,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 3",
                             dueDate = getFormattedDate(today.minusDays(1)),
-                            submissionStateLabel = SubmissionStateLabel.GRADED,
+                            submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A")
                         )
                     )
@@ -419,7 +419,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_quiz,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         ),
                         AssignmentUiState(
@@ -427,7 +427,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_discussion,
                             name = "Assignment 2",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
 
@@ -443,7 +443,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 3",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.GRADED,
+                            submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A")
                         ),
                         AssignmentUiState(
@@ -451,7 +451,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 4",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.Submitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -569,7 +569,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -682,7 +682,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -750,7 +750,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )

@@ -78,6 +78,12 @@ object SubmissionAPI {
             @Tag restParams: RestParams
         ): DataResult<List<Submission>>
 
+        @GET("courses/{courseId}/students/submissions?student_ids[]=all")
+        suspend fun getSubmissionsForAllAssignmentsInCourse(
+            @Path("courseId") courseId: Long,
+            @Tag restParams: RestParams
+        ): DataResult<List<Submission>>
+
         @GET
         fun getNextPageSubmissions(@Url nextUrl: String): Call<List<Submission>>
 

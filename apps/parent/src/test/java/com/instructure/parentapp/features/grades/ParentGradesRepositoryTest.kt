@@ -20,6 +20,7 @@ package com.instructure.parentapp.features.grades
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
@@ -48,6 +49,7 @@ class ParentGradesRepositoryTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
+    private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
 
     private lateinit var repository: ParentGradesRepository
 
@@ -444,6 +446,6 @@ class ParentGradesRepositoryTest {
     )
 
     private fun createRepository() {
-        repository = ParentGradesRepository(assignmentApi, courseApi, parentPrefs)
+        repository = ParentGradesRepository(assignmentApi, courseApi, parentPrefs, customGradeStatusesManager)
     }
 }

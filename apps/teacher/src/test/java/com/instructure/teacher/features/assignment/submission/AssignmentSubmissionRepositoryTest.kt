@@ -18,6 +18,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SectionAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradeableStudent
@@ -37,7 +38,6 @@ import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.test.runTest
 import org.junit.Before
 import org.junit.Test
-import java.lang.IllegalStateException
 
 class AssignmentSubmissionRepositoryTest {
 
@@ -45,13 +45,13 @@ class AssignmentSubmissionRepositoryTest {
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface = mockk(relaxed = true)
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val sectionApi: SectionAPI.SectionsInterface = mockk(relaxed = true)
-
+    private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
 
     private lateinit var repository: AssignmentSubmissionRepository
 
     @Before
     fun setup() {
-        repository = AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi)
+        repository = AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi, customGradeStatusesManager)
 
         coEvery {
             sectionApi.getFirstPageSectionsList(any(), any())

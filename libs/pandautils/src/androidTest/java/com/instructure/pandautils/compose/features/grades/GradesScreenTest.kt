@@ -117,7 +117,7 @@ class GradesScreenTest {
                                     iconRes = R.drawable.ic_assignment,
                                     name = "Assignment 1",
                                     dueDate = "No due date",
-                                    submissionStateLabel = SubmissionStateLabel.GRADED,
+                                    submissionStateLabel = SubmissionStateLabel.Graded,
                                     displayGrade = DisplayGrade("14/15", "")
                                 ),
                                 AssignmentUiState(
@@ -125,7 +125,7 @@ class GradesScreenTest {
                                     iconRes = R.drawable.ic_quiz,
                                     name = "Assignment 2",
                                     dueDate = "Due date",
-                                    submissionStateLabel = SubmissionStateLabel.SUBMITTED,
+                                    submissionStateLabel = SubmissionStateLabel.Submitted,
                                     displayGrade = DisplayGrade("-/10", "")
                                 )
                             ),

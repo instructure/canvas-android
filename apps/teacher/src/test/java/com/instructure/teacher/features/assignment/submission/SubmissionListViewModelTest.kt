@@ -235,7 +235,7 @@ class SubmissionListViewModelTest {
                 "Late Student",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -245,7 +245,7 @@ class SubmissionListViewModelTest {
                 "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -255,7 +255,7 @@ class SubmissionListViewModelTest {
                 "Missing Student",
                 false,
                 null,
-                listOf(SubmissionTag.MISSING),
+                listOf(SubmissionTag.Missing),
                 "-",
                 true
             ),
@@ -265,7 +265,7 @@ class SubmissionListViewModelTest {
                 "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -275,7 +275,7 @@ class SubmissionListViewModelTest {
                 "Bad Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "0",
                 true
             ),
@@ -285,7 +285,7 @@ class SubmissionListViewModelTest {
                 "Excused Student",
                 false,
                 null,
-                listOf(SubmissionTag.EXCUSED),
+                listOf(SubmissionTag.Excused),
                 "",
                 true
             ),
@@ -295,7 +295,7 @@ class SubmissionListViewModelTest {
                 "Updated Grade Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -305,7 +305,7 @@ class SubmissionListViewModelTest {
                 "Not Submitted Student",
                 false,
                 null,
-                listOf(SubmissionTag.NOT_SUBMITTED),
+                listOf(SubmissionTag.NotSubmitted),
                 "-",
                 false
             )
@@ -333,7 +333,7 @@ class SubmissionListViewModelTest {
                 "Late Student",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             )
@@ -361,7 +361,7 @@ class SubmissionListViewModelTest {
                 "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -371,7 +371,7 @@ class SubmissionListViewModelTest {
                 "Bad Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "0",
                 true
             ),
@@ -381,7 +381,7 @@ class SubmissionListViewModelTest {
                 "Excused Student",
                 false,
                 null,
-                listOf(SubmissionTag.EXCUSED),
+                listOf(SubmissionTag.Excused),
                 "",
                 true
             )
@@ -409,7 +409,7 @@ class SubmissionListViewModelTest {
                 "Late Student",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -419,7 +419,7 @@ class SubmissionListViewModelTest {
                 "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -429,7 +429,7 @@ class SubmissionListViewModelTest {
                 "Missing Student",
                 false,
                 null,
-                listOf(SubmissionTag.MISSING),
+                listOf(SubmissionTag.Missing),
                 "-",
                 true
             ),
@@ -439,7 +439,7 @@ class SubmissionListViewModelTest {
                 "Updated Grade Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             )
@@ -467,7 +467,7 @@ class SubmissionListViewModelTest {
                 "Not Submitted Student",
                 false,
                 null,
-                listOf(SubmissionTag.NOT_SUBMITTED),
+                listOf(SubmissionTag.NotSubmitted),
                 "-",
                 false
             )
@@ -495,7 +495,7 @@ class SubmissionListViewModelTest {
                 "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -505,7 +505,7 @@ class SubmissionListViewModelTest {
                 "Updated Grade Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             )
@@ -533,7 +533,7 @@ class SubmissionListViewModelTest {
                 "Bad Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "0",
                 true
             )
@@ -603,7 +603,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             )
@@ -653,7 +653,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -663,7 +663,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 false
             )
@@ -768,7 +768,7 @@ class SubmissionListViewModelTest {
                 "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             )
@@ -889,7 +889,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "Complete",
                 true
             ),
@@ -899,7 +899,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "Incomplete",
                 true
             )
@@ -957,7 +957,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "85.12%",
                 true
             ),
@@ -967,7 +967,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10%",
                 true
             )
@@ -1049,7 +1049,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "85.123%",
                 true
             ),
@@ -1059,7 +1059,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10%",
                 true
             ),
@@ -1069,7 +1069,7 @@ class SubmissionListViewModelTest {
                 "Student 3",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10%",
                 true
             )
@@ -1111,7 +1111,7 @@ class SubmissionListViewModelTest {
             "Student 1",
             true,
             null,
-            listOf(SubmissionTag.GRADED),
+            listOf(SubmissionTag.Graded),
             "85.123%",
             true
         )

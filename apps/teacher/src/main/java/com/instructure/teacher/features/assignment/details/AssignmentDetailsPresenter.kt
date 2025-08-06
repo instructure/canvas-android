@@ -15,18 +15,27 @@
  */
 package com.instructure.teacher.features.assignment.details
 
+import com.instructure.canvasapi2.apis.AssignmentAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.SubmissionSummary
 import com.instructure.canvasapi2.utils.Logger
-import com.instructure.canvasapi2.utils.weave.*
-import com.instructure.teacher.viewinterface.AssignmentDetailsView
+import com.instructure.canvasapi2.utils.countCustomGradeStatus
+import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.canvasapi2.utils.weave.awaitApi
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
+import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.blueprint.FragmentPresenter
+import com.instructure.teacher.viewinterface.AssignmentDetailsView
 import kotlinx.coroutines.Job
 
-class AssignmentDetailsPresenter(var mAssignment: Assignment) : FragmentPresenter<AssignmentDetailsView>() {
+class AssignmentDetailsPresenter(
+    var mAssignment: Assignment,
+    private val assignmentsApi: AssignmentAPI.AssignmentInterface
+) : FragmentPresenter<AssignmentDetailsView>() {
 
     private var mApiCalls: Job? = null
 
@@ -38,23 +47,50 @@ class AssignmentDetailsPresenter(var mAssignment: Assignment) : FragmentPresente
         mApiCalls = weave {
             viewCallback?.onRefreshStarted()
             try {
-                inParallel {
-                    // Get Assignment
-                    if (!forceNetwork) {
-                        viewCallback?.populateAssignmentDetails(mAssignment)
-                    } else {
-                        await<Assignment>({ AssignmentManager.getAssignment(mAssignment.id, mAssignment.courseId, true, it) }) {
-                            mAssignment = it
-                            viewCallback?.populateAssignmentDetails(it)
-                        }
-                    }
-
-                    await<SubmissionSummary>({ SubmissionManager.getSubmissionSummary(mAssignment.courseId, mAssignment.id, forceNetwork, it) }) {
-                        val submissionSummary = it
-                        val totalStudents = submissionSummary.graded + submissionSummary.ungraded + submissionSummary.notSubmitted
-                        viewCallback?.updateSubmissionDonuts(totalStudents, submissionSummary.graded, submissionSummary.ungraded, submissionSummary.notSubmitted)
+                // Get Assignment
+                if (!forceNetwork) {
+                    mAssignment
+                } else {
+                    mAssignment = awaitApi {
+                        AssignmentManager.getAssignment(
+                            mAssignment.id,
+                            mAssignment.courseId,
+                            true,
+                            it
+                        )
                     }
                 }
+                viewCallback?.populateAssignmentDetails(mAssignment)
+
+                val submissionSummary = awaitApi { SubmissionManager.getSubmissionSummary(mAssignment.courseId, mAssignment.id, forceNetwork, it) }
+
+                val restParams = RestParams(isForceReadFromNetwork = forceNetwork, usePerPageQueryParam = true)
+                val submissions = assignmentsApi.getFirstPageSubmissionsForAssignment(
+                    mAssignment.courseId, mAssignment.id, restParams
+                ).depaginate {
+                    assignmentsApi.getNextPageSubmissions(it, restParams)
+                }.dataOrNull.orEmpty()
+
+                val customGradeStatedSubmittedCount = submissions.countCustomGradeStatus(
+                    "submitted", "pending_review", "graded"
+                )
+
+                val customGradeStatedUnsubmittedCount = submissions.countCustomGradeStatus(
+                    "unsubmitted",
+                    requireNoGradeMatch = false
+                )
+
+                val graded = submissionSummary.graded + customGradeStatedSubmittedCount + customGradeStatedUnsubmittedCount
+                val ungraded = submissionSummary.ungraded - customGradeStatedSubmittedCount
+                val unsubmitted = submissionSummary.notSubmitted - customGradeStatedUnsubmittedCount
+                val totalStudents = graded + ungraded + unsubmitted
+
+                viewCallback?.updateSubmissionDonuts(
+                    totalStudents,
+                    graded,
+                    ungraded,
+                    unsubmitted
+                )
             } catch (ignore: Throwable) {
                 Logger.e(ignore.message)
             }
@@ -64,7 +100,7 @@ class AssignmentDetailsPresenter(var mAssignment: Assignment) : FragmentPresente
     @Suppress("EXPERIMENTAL_FEATURE_WARNING")
     fun getAssignment(assignmentId: Long, course: Course) {
         mApiCalls = tryWeave {
-            val assignment = awaitApi<Assignment> { AssignmentManager.getAssignment(assignmentId, course.id, true, it) }
+            val assignment = awaitApi { AssignmentManager.getAssignment(assignmentId, course.id, true, it) }
 
             mAssignment = assignment
             loadData(false)
@@ -78,5 +114,4 @@ class AssignmentDetailsPresenter(var mAssignment: Assignment) : FragmentPresente
         super.onDestroyed()
         mApiCalls?.cancel()
     }
-
 }

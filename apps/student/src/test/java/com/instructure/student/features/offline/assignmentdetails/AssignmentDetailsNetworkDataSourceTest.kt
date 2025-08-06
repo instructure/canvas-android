@@ -21,7 +21,13 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.models.ObserveeAssignment
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
@@ -37,8 +43,15 @@ class AssignmentDetailsNetworkDataSourceTest {
     private val assignmentInterface: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val quizInterface: QuizAPI.QuizInterface = mockk(relaxed = true)
     private val submissionInterface: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
+    private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
 
-    private val dataSource = AssignmentDetailsNetworkDataSource(coursesInterface, assignmentInterface, quizInterface, submissionInterface)
+    private val dataSource = AssignmentDetailsNetworkDataSource(
+        coursesInterface,
+        assignmentInterface,
+        quizInterface,
+        submissionInterface,
+        customGradeStatusesManager
+    )
 
     @Test
     fun `Get course successfully returns data`() = runTest {

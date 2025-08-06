@@ -476,7 +476,7 @@ fun AssignmentItem(
                     fontSize = 14.sp,
                     modifier = modifier.testTag("assignmentName")
                 )
-                if (uiState.submissionStateLabel != SubmissionStateLabel.NONE) {
+                if (uiState.submissionStateLabel != SubmissionStateLabel.None) {
                     Spacer(modifier = Modifier.width(4.dp))
                     Box(
                         Modifier
@@ -500,7 +500,10 @@ fun AssignmentItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(id = uiState.submissionStateLabel.labelRes),
+                        text = when (uiState.submissionStateLabel) {
+                            is SubmissionStateLabel.Predefined -> stringResource(id = uiState.submissionStateLabel.labelRes)
+                            is SubmissionStateLabel.Custom -> uiState.submissionStateLabel.label
+                        },
                         color = colorResource(id = uiState.submissionStateLabel.colorRes),
                         fontSize = 14.sp
                     )
@@ -540,7 +543,7 @@ private fun GradesScreenPreview() {
                             name = "Assignment 1",
                             dueDate = "Due Date",
                             displayGrade = DisplayGrade("100%", ""),
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted
                         ),
                         AssignmentUiState(
                             id = 2,
@@ -548,7 +551,7 @@ private fun GradesScreenPreview() {
                             name = "Assignment 2",
                             dueDate = "Due Date",
                             displayGrade = DisplayGrade("Complete", ""),
-                            submissionStateLabel = SubmissionStateLabel.GRADED
+                            submissionStateLabel = SubmissionStateLabel.Graded
                         )
                     ),
                     expanded = true
@@ -570,7 +573,7 @@ private fun AssignmentItem1Preview() {
             name = "Assignment 1",
             dueDate = "Due Date",
             displayGrade = DisplayGrade("100%", ""),
-            submissionStateLabel = SubmissionStateLabel.LATE
+            submissionStateLabel = SubmissionStateLabel.Late
         ),
         actionHandler = {},
         userColor = android.graphics.Color.RED

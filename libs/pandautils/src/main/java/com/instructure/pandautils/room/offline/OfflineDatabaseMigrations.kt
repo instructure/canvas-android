@@ -108,5 +108,15 @@ val offlineDatabaseMigrations = arrayOf(
     createMigration(3, 4) { database ->
         database.execSQL("ALTER TABLE CourseEntity ADD COLUMN pointsBasedGradingScheme INTEGER NOT NULL DEFAULT 0")
         database.execSQL("ALTER TABLE CourseEntity ADD COLUMN scalingFactor REAL NOT NULL DEFAULT 1.0")
+    },
+    createMigration(4, 5) { database ->
+        database.execSQL("ALTER TABLE `SubmissionEntity` ADD COLUMN `customGradeStatusId` INTEGER")
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `CustomGradeStatusEntity` (" +
+                    "`id` TEXT NOT NULL," +
+                    "`name` TEXT NOT NULL," +
+                    "`courseId` INTEGER NOT NULL," +
+                    "PRIMARY KEY(`id`, `courseId`))"
+        )
     }
 )

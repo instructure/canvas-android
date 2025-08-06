@@ -18,6 +18,7 @@ package com.instructure.teacher.features.assignments.list
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -40,8 +41,14 @@ class AssignmentListRepositoryTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao = mockk(relaxed = true)
+    private val submissionApi: SubmissionAPI.SubmissionInterface = mockk(relaxed = true)
 
-    private val repository = TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListSelectedFiltersEntityDao)
+    private val repository = TeacherAssignmentListRepository(
+        assignmentApi,
+        courseApi,
+        assignmentListSelectedFiltersEntityDao,
+        submissionApi
+    )
 
     @Test
     fun `Get assignment groups with assignments for grading period`() = runTest {
@@ -59,6 +66,8 @@ class AssignmentListRepositoryTest {
     @Test
     fun `Get assignment groups with assignments`() = runTest {
         val expected = listOf(AssignmentGroup(id = 1), AssignmentGroup(id = 2))
+
+        coEvery { submissionApi.getSubmissionsForAllAssignmentsInCourse(any(), any()) } returns DataResult.Success(emptyList())
 
         coEvery { assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any()) } returns DataResult.Success(expected)
 

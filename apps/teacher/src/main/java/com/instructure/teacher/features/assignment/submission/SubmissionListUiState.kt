@@ -56,18 +56,31 @@ data class SubmissionUiState(
     val group: Boolean = false
 )
 
-enum class SubmissionTag(
-    @StringRes val text: Int,
-    @DrawableRes val icon: Int? = null,
-    @ColorRes val color: Int? = null
-) {
-    SUBMITTED(R.string.submitted, R.drawable.ic_complete, R.color.textSuccess),
-    LATE(R.string.late, R.drawable.ic_clock, R.color.textWarning),
-    MISSING(R.string.missingTag, R.drawable.ic_no, R.color.textDanger),
-    GRADED(R.string.graded, R.drawable.ic_complete_solid, R.color.textSuccess),
-    NEEDS_GRADING(R.string.needsGrading, null, R.color.textWarning),
-    EXCUSED(R.string.excused, R.drawable.ic_complete_solid, R.color.textWarning),
-    NOT_SUBMITTED(R.string.notSubmitted, R.drawable.ic_no, R.color.textDark),
+sealed class SubmissionTag {
+    abstract val icon: Int?
+    abstract val color: Int?
+
+    data class Predefined(
+        @StringRes val textRes: Int,
+        @DrawableRes override val icon: Int?,
+        @ColorRes override val color: Int?
+    ) : SubmissionTag()
+
+    data class Custom(
+        val text: String,
+        @DrawableRes override val icon: Int?,
+        @ColorRes override val color: Int?
+    ) : SubmissionTag()
+
+    companion object {
+        val Submitted = Predefined(R.string.submitted, R.drawable.ic_complete, R.color.textSuccess)
+        val Late = Predefined(R.string.late, R.drawable.ic_clock, R.color.textWarning)
+        val Missing = Predefined(R.string.missingTag, R.drawable.ic_no, R.color.textDanger)
+        val Graded = Predefined(R.string.graded, R.drawable.ic_complete_solid, R.color.textSuccess)
+        val NeedsGrading = Predefined(R.string.needsGrading, null, R.color.textWarning)
+        val Excused = Predefined(R.string.excused, R.drawable.ic_complete_solid, R.color.textWarning)
+        val NotSubmitted = Predefined(R.string.notSubmitted, R.drawable.ic_no, R.color.textDark)
+    }
 }
 
 sealed class SubmissionListAction {

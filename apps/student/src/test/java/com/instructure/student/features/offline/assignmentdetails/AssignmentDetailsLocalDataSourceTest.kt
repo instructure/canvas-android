@@ -20,6 +20,7 @@ package com.instructure.student.features.offline.assignmentdetails
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -36,8 +37,9 @@ class AssignmentDetailsLocalDataSourceTest {
     private val courseFacade: CourseFacade = mockk(relaxed = true)
     private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)
     private val quizDao: QuizDao = mockk(relaxed = true)
+    private val customGradeStatusDao: CustomGradeStatusDao = mockk(relaxed = true)
 
-    private val dataSource = AssignmentDetailsLocalDataSource(courseFacade, assignmentFacade, quizDao)
+    private val dataSource = AssignmentDetailsLocalDataSource(courseFacade, assignmentFacade, quizDao, customGradeStatusDao)
 
     @Test
     fun `Get course successfully returns api model`() = runTest {
