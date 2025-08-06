@@ -324,4 +324,6 @@
     <string name="dashboard_courseInviteFailed">Failed to accept course invite</string>
     <string name="dashboard_emptyMessage">You aren’t currently enrolled in a course.</string>
     <string name="learnEmptyMessage">You aren’t currently enrolled in a course.</string>
+    <string name="programsCourseCard_percentComplete">%s complete</string>
+    <string name="programsCourseCard_enrollButton">Enroll</string>
 </resources>

@@ -101,19 +101,29 @@ sealed class ProgressBarStyle(val textColor: Color, val progressColor: Color) {
 }
 
 @Composable
-fun ProgressBarSmall(progress: Double, label: String, modifier: Modifier = Modifier, style: ProgressBarStyle = ProgressBarStyle.Dark()) {
+fun ProgressBarSmall(
+    progress: Double,
+    modifier: Modifier = Modifier,
+    label: String? = null,
+    style: ProgressBarStyle = ProgressBarStyle.Dark(),
+    showLabels: Boolean = true
+) {
     Column {
-        Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = modifier.fillMaxWidth()) {
-            Text(
-                text = label,
-                style = HorizonTypography.p2,
-                color = style.textColor
-            )
-            Text(
-                text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
-                style = HorizonTypography.p2,
-                color = style.textColor
-            )
+        if (showLabels) {
+            Row(horizontalArrangement = Arrangement.SpaceBetween, modifier = modifier.fillMaxWidth()) {
+                if (label != null) {
+                    Text(
+                        text = label,
+                        style = HorizonTypography.p2,
+                        color = style.textColor
+                    )
+                }
+                Text(
+                    text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
+                    style = HorizonTypography.p2,
+                    color = style.textColor
+                )
+            }
         }
         Box(
             modifier
@@ -192,5 +202,16 @@ private fun ProgressBarSmallLightCustomColorPreview() {
         progress = 50.0,
         label = "Text",
         style = ProgressBarStyle.Light(overrideProgressColor = HorizonColors.PrimitivesRed.red45())
+    )
+}
+
+@Composable
+@Preview
+private fun ProgressBarSmallLightWithoutLabels() {
+    ContextKeeper.appContext = LocalContext.current
+    ProgressBarSmall(
+        progress = 50.0,
+        style = ProgressBarStyle.Light(overrideProgressColor = HorizonColors.PrimitivesRed.red45()),
+        showLabels = false
     )
 }
