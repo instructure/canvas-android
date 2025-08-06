@@ -209,21 +209,6 @@ private fun RubricCriterion(
                                 )
                             }
 
-                            Box(modifier = Modifier.padding(horizontal = 16.dp, vertical = 14.dp)) {
-                                Text(
-                                    modifier = Modifier
-                                        .border(
-                                            1.dp,
-                                            LocalCourseColor.current,
-                                            RoundedCornerShape(100.dp)
-                                        )
-                                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                                    text = rubricCriterion.id,
-                                    fontSize = 16.sp,
-                                    color = LocalCourseColor.current,
-                                    fontWeight = FontWeight.SemiBold,
-                                )
-                            }
                             rubricCriterion.ratings.forEachIndexed { index, rating ->
                                 val selectedIndex =
                                     rubricCriterion.ratings.indexOfFirst { it.id == assessment?.ratingId }
