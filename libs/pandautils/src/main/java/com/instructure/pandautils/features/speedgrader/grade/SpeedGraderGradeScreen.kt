@@ -21,14 +21,37 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.pandautils.features.speedgrader.grade.comments.SpeedGraderCommentsScreen
 import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingScreen
-import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricScreen
+import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricContent
+import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricViewModel
 
 @Composable
 fun SpeedGraderGradeScreen() {
-    Column(modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState())) {
+    val speedGraderRubricViewModel = hiltViewModel<SpeedGraderRubricViewModel>()
+    val speedGraderRubricUiState by speedGraderRubricViewModel.uiState.collectAsState()
+    var commentsExpanded by remember { mutableStateOf(false) }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .verticalScroll(rememberScrollState())
+    ) {
+        val showRubric = speedGraderRubricUiState.loading || speedGraderRubricUiState.criterions.isNotEmpty()
         SpeedGraderGradingScreen()
-        SpeedGraderRubricScreen()
+        SpeedGraderCommentsScreen(
+            expanded = commentsExpanded,
+            onExpandToggle = { commentsExpanded = !commentsExpanded }
+        )
+        if (showRubric) {
+            SpeedGraderRubricContent(uiState = speedGraderRubricUiState)
+        }
     }
 }

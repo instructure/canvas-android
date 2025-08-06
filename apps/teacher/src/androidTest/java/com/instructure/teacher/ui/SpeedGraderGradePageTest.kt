@@ -27,6 +27,7 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsMan
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
@@ -38,6 +39,7 @@ import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
@@ -91,6 +93,10 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
     @JvmField
     val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
 
+    @BindValue
+    @JvmField
+    val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
         goToSpeedGraderGradePage(gradingType = "points")
@@ -112,7 +118,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("10 / 20 pts")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
@@ -137,7 +142,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("12.0")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
@@ -165,7 +169,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("No Grade")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
 
         speedGraderGradePage.selectCompleteButton()
@@ -197,7 +200,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("10.0") // It's a bit weird that why is this isn't the same as in the point based test
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
