@@ -18,7 +18,6 @@
 package com.instructure.horizon.features.moduleitemsequence
 
 import android.net.Uri
-import android.util.Log
 import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
@@ -238,7 +237,6 @@ private fun ModuleItemSequenceContent(
         modifier = modifier
             .nestedScroll(nestedScrollConnection)
     ) {
-        Log.d("ModuleItemSequenceScreen", "Module header height: $moduleHeaderHeight, AppBar offset: ${nestedScrollConnection.appBarOffset}")
         Box(
             modifier = Modifier
                 .offset { IntOffset(0, nestedScrollConnection.appBarOffset) }
@@ -260,7 +258,6 @@ private fun ModuleItemSequenceContent(
             )
         }
         var moduleHeaderHeight = max(0.dp, with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
-        Log.d("ModuleItemSequenceScreen", "Module header height with offset: $moduleHeaderHeight")
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -281,9 +278,13 @@ private fun ModuleItemSequenceContent(
                 }
 
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
+                var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {
+                    if (uiState.currentPosition != previousPosition) {
+                        nestedScrollConnection.appBarOffset = 0
+                        previousPosition = uiState.currentPosition
+                    }
                     contentScrollState.scrollTo(0)
-                    //nestedScrollConnection.appBarOffset = 0
                     if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
                         pagerState.scrollToPage(uiState.currentPosition)
                     } else {
