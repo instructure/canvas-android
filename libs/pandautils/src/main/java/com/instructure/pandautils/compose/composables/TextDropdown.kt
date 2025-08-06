@@ -14,6 +14,8 @@
  *     limitations under the License.
  */package com.instructure.pandautils.compose.composables
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -31,12 +33,14 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -65,6 +69,15 @@ fun TextDropdown(
 
     val haptic = LocalHapticFeedback.current
 
+    val rotation = remember { Animatable(0f) }
+
+    LaunchedEffect(expanded) {
+        rotation.animateTo(
+            if (expanded) 180f else 0f,
+            animationSpec = tween()
+        )
+    }
+
     Row(
         modifier = modifier
             .fillMaxWidth(),
@@ -84,14 +97,12 @@ fun TextDropdown(
                 expanded = !expanded
             }
         ) {
-
             TextButton(
                 colors = ButtonDefaults.textButtonColors()
                     .copy(contentColor = color),
                 modifier = Modifier.menuAnchor(type = ExposedDropdownMenuAnchorType.PrimaryNotEditable).testTag(testTag),
                 onClick = {
                     haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    expanded = true
                 }) {
                 Text(
                     text = selectedOption.orEmpty(),
@@ -103,7 +114,7 @@ fun TextDropdown(
                 Icon(
                     painter = painterResource(R.drawable.ic_arrow_down),
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp),
+                    modifier = Modifier.size(16.dp).rotate(rotation.value),
                     tint = colorResource(R.color.textDark)
                 )
             }
