@@ -76,7 +76,8 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             attachments = if (submissionAttachment == null) null else listOf(submissionAttachment),
             mediaObject = null,
             user = user,
-            assignment = fragmentAssignment
+            assignment = fragmentAssignment,
+            customGradeStatus = null
         )
 
         val dummyNode = SubmissionContentQuery.Node(
