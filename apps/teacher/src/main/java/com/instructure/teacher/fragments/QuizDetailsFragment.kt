@@ -158,7 +158,7 @@ class QuizDetailsFragment : BasePresenterFragment<
                 R.id.menu_speedGrader -> {
                     val bundle = SpeedGraderFragment.makeBundle(
                         courseId = course.id,
-                        assignmentId = quiz.id
+                        assignmentId = quiz.assignmentId
                     )
                     RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
                 }
