@@ -201,7 +201,7 @@ class SubmissionListViewModel @Inject constructor(
     private fun getTags(submission: Submission?): List<SubmissionTag> {
         val tags = mutableListOf<SubmissionTag>()
 
-        val matchedCustomStatus = assignment.submission?.customGradeStatusId?.let { id ->
+        val matchedCustomStatus = submission?.customGradeStatusId?.let { id ->
             customStatuses.find { it._id.toLongOrNull() == id }
         }
 
