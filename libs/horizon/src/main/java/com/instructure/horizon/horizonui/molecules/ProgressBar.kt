@@ -92,12 +92,19 @@ private fun ProgressBarNumber(progress: Double, color: Color) {
     )
 }
 
-sealed class ProgressBarStyle(val textColor: Color, val progressColor: Color) {
+sealed class ProgressBarStyle(
+    val textColor: Color,
+    val progressColor: Color,
+    val backgroundColor: Color = HorizonColors.LineAndBorder.lineStroke()
+) {
     data class Light(val overrideProgressColor: Color = HorizonColors.Surface.cardPrimary()) :
         ProgressBarStyle(HorizonColors.Text.surfaceColored(), overrideProgressColor)
 
     data class Dark(val overrideProgressColor: Color = HorizonColors.Surface.inverseSecondary()) :
         ProgressBarStyle(HorizonColors.Text.body(), overrideProgressColor)
+
+    data class WhiteBackground(val overrideProgressColor: Color = HorizonColors.Surface.pageSecondary()) :
+        ProgressBarStyle(HorizonColors.Text.title(), overrideProgressColor, HorizonColors.Surface.pageSecondary())
 }
 
 @Composable
@@ -127,7 +134,7 @@ fun ProgressBarSmall(
         }
         Box(
             modifier
-                .background(shape = HorizonCornerRadius.level1, color = HorizonColors.LineAndBorder.lineStroke())
+                .background(shape = HorizonCornerRadius.level1, color = style.backgroundColor)
                 .fillMaxWidth()
                 .height(8.dp)
         ) {
@@ -212,6 +219,17 @@ private fun ProgressBarSmallLightWithoutLabels() {
     ProgressBarSmall(
         progress = 50.0,
         style = ProgressBarStyle.Light(overrideProgressColor = HorizonColors.PrimitivesRed.red45()),
+        showLabels = false
+    )
+}
+
+@Composable
+@Preview
+private fun ProgressBarSmallWhiteBackgroundWithoutLabels() {
+    ContextKeeper.appContext = LocalContext.current
+    ProgressBarSmall(
+        progress = 50.0,
+        style = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.PrimitivesRed.red45()),
         showLabels = false
     )
 }

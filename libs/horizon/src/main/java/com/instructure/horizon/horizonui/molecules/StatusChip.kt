@@ -66,6 +66,11 @@ sealed class StatusChipColor(val contentColor: Color, val fillColor: Color = Col
         contentColor = HorizonColors.Text.title(),
         borderColor = HorizonColors.LineAndBorder.lineStroke()
     )
+
+    data object White : StatusChipColor(
+        contentColor = HorizonColors.Text.title(),
+        fillColor = HorizonColors.Surface.pageSecondary()
+    )
 }
 
 @Composable
@@ -131,6 +136,15 @@ private fun StatusChipPreviewHoney() {
 private fun StatusChipPreviewWhiteWithBorder() {
     StatusChipPreview(
         color = StatusChipColor.WhiteWithBorder,
+        iconRes = R.drawable.add
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun StatusChipPreviewWhite() {
+    StatusChipPreview(
+        color = StatusChipColor.White,
         iconRes = R.drawable.add
     )
 }

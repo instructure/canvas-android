@@ -38,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -49,8 +48,6 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
-import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
-import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
@@ -112,17 +109,7 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
         }
         if (state.status is CourseCardStatus.InProgress && state.courseProgress != null) {
             HorizonSpace(SpaceSize.SPACE_12)
-            Text(
-                stringResource(R.string.programsCourseCard_percentComplete, NumberHelper.doubleToPercentage(state.courseProgress, 0)),
-                style = HorizonTypography.p2,
-                color = HorizonColors.Surface.institution()
-            )
-            HorizonSpace(SpaceSize.SPACE_8)
-            ProgressBarSmall(
-                state.courseProgress,
-                style = ProgressBarStyle.Light(overrideProgressColor = HorizonColors.Surface.institution()),
-                showLabels = false
-            )
+            ProgramsProgressBar(state.courseProgress)
             HorizonSpace(SpaceSize.SPACE_8)
         }
         if (state.chips.isNotEmpty()) {
