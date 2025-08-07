@@ -24,7 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -37,7 +37,9 @@ import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderR
 fun SpeedGraderGradeScreen() {
     val speedGraderRubricViewModel = hiltViewModel<SpeedGraderRubricViewModel>()
     val speedGraderRubricUiState by speedGraderRubricViewModel.uiState.collectAsState()
-    var commentsExpanded by remember { mutableStateOf(false) }
+    var commentsExpanded by rememberSaveable { mutableStateOf(false) }
+    var commentsPressed by rememberSaveable { mutableStateOf(false) }
+    var commentsFixed by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -45,10 +47,20 @@ fun SpeedGraderGradeScreen() {
             .verticalScroll(rememberScrollState())
     ) {
         val showRubric = speedGraderRubricUiState.loading || speedGraderRubricUiState.criterions.isNotEmpty()
+        commentsFixed = speedGraderRubricUiState.criterions.isEmpty()
+        if (!commentsPressed) {
+            commentsExpanded = speedGraderRubricUiState.criterions.isEmpty()
+        }
         SpeedGraderGradingScreen()
         SpeedGraderCommentsScreen(
             expanded = commentsExpanded,
-            onExpandToggle = { commentsExpanded = !commentsExpanded }
+            fixed = commentsFixed,
+            onExpandToggle = {
+                if (!commentsFixed) {
+                    commentsExpanded = !commentsExpanded
+                    commentsPressed = true
+                }
+            }
         )
         if (showRubric) {
             SpeedGraderRubricContent(uiState = speedGraderRubricUiState)
