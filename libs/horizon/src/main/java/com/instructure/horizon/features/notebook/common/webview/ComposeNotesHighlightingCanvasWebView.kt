@@ -39,6 +39,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.common.model.Note
+import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.addTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.evaluateTextSelectionInterface
 import com.instructure.horizon.features.notebook.common.webview.JSTextSelectionInterface.Companion.highlightNotes
@@ -88,9 +89,34 @@ fun ComposeNotesHighlightingCanvasWebView(
                 ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
                     clipboardManager.setText(AnnotatedString(selectedText))
                 },
-                ActionMenuItem(2, context.getString(R.string.notesActionMenuAddNote)) {
+                ActionMenuItem(2, context.getString(R.string.notesActionMenuAddImportantNote)) {
                     notesCallback.onNoteAdded(
                         selectedText,
+                        NotebookType.Important.name,
+                        selectedTextRangeStartContainer,
+                        selectedTextRangeStartOffset,
+                        selectedTextRangeEndContainer,
+                        selectedTextRangeEndOffset,
+                        selectedTextStart,
+                        selectedTextEnd
+                    )
+                },
+                ActionMenuItem(3, context.getString(R.string.notesActionMenuAddConfusingNote)) {
+                    notesCallback.onNoteAdded(
+                        selectedText,
+                        NotebookType.Confusing.name,
+                        selectedTextRangeStartContainer,
+                        selectedTextRangeStartOffset,
+                        selectedTextRangeEndContainer,
+                        selectedTextRangeEndOffset,
+                        selectedTextStart,
+                        selectedTextEnd
+                    )
+                },
+                ActionMenuItem(4, context.getString(R.string.notesActionMenuAddNote)) {
+                    notesCallback.onNoteAdded(
+                        selectedText,
+                        null,
                         selectedTextRangeStartContainer,
                         selectedTextRangeStartOffset,
                         selectedTextRangeEndContainer,

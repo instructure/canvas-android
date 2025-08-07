@@ -30,5 +30,5 @@ data class NotebookUiState(
     val loadNextPage: () -> Unit = {},
     val updateContent: (Long?, Pair<String, String>?) -> Unit,
     val showTopBar: Boolean = false,
-    val showFilters: Boolean = false
+    val showFilters: Boolean = false,
 )
