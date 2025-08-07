@@ -39,6 +39,7 @@ fun SpeedGraderGradeScreen() {
     val speedGraderRubricUiState by speedGraderRubricViewModel.uiState.collectAsState()
     var commentsExpanded by rememberSaveable { mutableStateOf(false) }
     var commentsPressed by rememberSaveable { mutableStateOf(false) }
+    var commentsFixed by rememberSaveable { mutableStateOf(false) }
 
     Column(
         modifier = Modifier
@@ -46,15 +47,19 @@ fun SpeedGraderGradeScreen() {
             .verticalScroll(rememberScrollState())
     ) {
         val showRubric = speedGraderRubricUiState.loading || speedGraderRubricUiState.criterions.isNotEmpty()
+        commentsFixed = speedGraderRubricUiState.criterions.isEmpty()
         if (!commentsPressed) {
             commentsExpanded = speedGraderRubricUiState.criterions.isEmpty()
         }
         SpeedGraderGradingScreen()
         SpeedGraderCommentsScreen(
             expanded = commentsExpanded,
+            fixed = commentsFixed,
             onExpandToggle = {
-                commentsExpanded = !commentsExpanded
-                commentsPressed = true
+                if (!commentsFixed) {
+                    commentsExpanded = !commentsExpanded
+                    commentsPressed = true
+                }
             }
         )
         if (showRubric) {
