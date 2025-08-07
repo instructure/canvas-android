@@ -2147,4 +2147,5 @@
     <string name="a11y_expanded">Expanded</string>
     <string name="a11y_collapsed">Collapsed</string>
     <string name="excuseStudent">Excuse Student</string>
+    <string name="detailsEmptyMessage">We don’t have further details for this Student and Assignment</string>
 </resources>
