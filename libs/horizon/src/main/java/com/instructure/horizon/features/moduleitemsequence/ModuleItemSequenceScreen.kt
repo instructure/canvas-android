@@ -289,6 +289,7 @@ private fun ModuleItemSequenceContent(
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
                         updateAiContext = uiState.updateAiAssistContext,
+                        updateNotebookContext = uiState.updateObjectTypeAndId,
                     )
                 }
             }
@@ -386,6 +387,7 @@ private fun ModuleItemContentScreen(
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
     updateAiContext: (AiAssistContextSource, String) -> Unit,
+    updateNotebookContext: (Pair<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -439,6 +441,7 @@ private fun ModuleItemContentScreen(
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 viewModel.refreshNotes()
+                updateNotebookContext("Page" to uiState.pageId.toString())
                 PageDetailsContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,

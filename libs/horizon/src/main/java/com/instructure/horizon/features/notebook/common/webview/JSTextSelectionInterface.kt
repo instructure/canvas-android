@@ -626,21 +626,21 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 		let cssStyle;
 		if (noteReactionString === 'Confusing') {
 			cssStyle = `
-                    background-color: rgba(255, 0, 0, 0.2);
+                    background-color: rgba(199, 31, 35, 0.2);
                     text-decoration: underline;
-                    text-decoration-color: rgba(255, 0, 0, 1);
+                    text-decoration-color: rgba(199, 31, 35, 1);
                       `;
 		} else if (noteReactionString === 'Important') {
 			cssStyle = `
-                        background-color: rgba(0, 0, 255, 0.2);
+                        background-color: rgba(14, 104, 179, 0.2);
                         text-decoration: underline;
-                        text-decoration-color: rgba(0, 0, 255, 1);
+                        text-decoration-color: rgba(14, 104, 179, 1);
                       `;
 		} else {
 			cssStyle = `
-                        background-color: rgba(0, 0, 255, 0.2);
+                        background-color: rgba(14, 104, 179, 0.2);
                         text-decoration: underline;
-                        text-decoration-color: rgba(0, 0, 255, 1);
+                        text-decoration-color: rgba(14, 104, 179, 1);
                       `;
 		}
 
