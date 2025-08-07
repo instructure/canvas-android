@@ -365,6 +365,19 @@ class SpeedGraderContentViewModelTest {
     }
 
     @Test
+    fun `fetchData updates uiState with Custom state when submission has custom grade status`() = runTest {
+        coEvery { submissionFields.customGradeStatus } returns "Custom Status"
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(
+            SubmissionStateLabel.Custom(R.drawable.ic_flag, R.color.textInfo, "Custom Status"),
+            viewModel.uiState.value.submissionState
+        )
+    }
+
+    @Test
     fun `fetchData updates uiState with attachments`() = runTest {
         coEvery { submissionFields.attachments } returns listOf(mockAttachment(id = "10"), mockAttachment(id = "20"))
         coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData

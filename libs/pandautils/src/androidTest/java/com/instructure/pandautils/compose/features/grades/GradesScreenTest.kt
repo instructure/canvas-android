@@ -140,7 +140,7 @@ class GradesScreenTest {
                                     iconRes = R.drawable.ic_assignment,
                                     name = "Assignment 3",
                                     dueDate = "Due date",
-                                    submissionStateLabel = SubmissionStateLabel.LATE,
+                                    submissionStateLabel = SubmissionStateLabel.Late,
                                     displayGrade = DisplayGrade("", "")
                                 )
                             ),

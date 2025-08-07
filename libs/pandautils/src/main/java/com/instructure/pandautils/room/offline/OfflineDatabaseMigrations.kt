@@ -116,7 +116,8 @@ val offlineDatabaseMigrations = arrayOf(
                     "`id` TEXT NOT NULL," +
                     "`name` TEXT NOT NULL," +
                     "`courseId` INTEGER NOT NULL," +
-                    "PRIMARY KEY(`id`, `courseId`))"
+                    "PRIMARY KEY(`id`, `courseId`)," +
+                    "FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)"
         )
     }
 )

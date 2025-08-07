@@ -399,19 +399,28 @@ class AssignmentListViewModelTest {
             assignmentGroupId = 1,
             submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
         )
+        val customStatusAssignment = Assignment(
+            id = 4,
+            assignmentGroupId = 1,
+            name = "Assignment 4",
+            submission = Submission(customGradeStatusId = 1, submittedAt = Date(), postedAt = Date()),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY.apiString)
+        )
         val assignmentGroups = listOf(
             AssignmentGroup(
                 id = 1,
                 name = "Group 1",
-                assignments = listOf(gradedAssignment, notGradedAssignment, notSubmittedAssignment)
+                assignments = listOf(gradedAssignment, notGradedAssignment, notSubmittedAssignment, customStatusAssignment)
             ),
         )
         val groupItem1 = AssignmentGroupItemState(course, gradedAssignment, emptyList())
         val groupItem2 = AssignmentGroupItemState(course, notGradedAssignment, emptyList())
         val groupItem3 = AssignmentGroupItemState(course, notSubmittedAssignment, emptyList())
+        val groupItem4 = AssignmentGroupItemState(course, customStatusAssignment, emptyList())
         every { behavior.getAssignmentGroupItemState(course, gradedAssignment, emptyList()) } returns groupItem1
         every { behavior.getAssignmentGroupItemState(course, notGradedAssignment, emptyList()) } returns groupItem2
         every { behavior.getAssignmentGroupItemState(course, notSubmittedAssignment, emptyList()) } returns groupItem3
+        every { behavior.getAssignmentGroupItemState(course, customStatusAssignment, emptyList()) } returns groupItem4
         coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
@@ -422,7 +431,7 @@ class AssignmentListViewModelTest {
             AssignmentFilter.Other,
         ))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(gradedAssignment, notGradedAssignment, notSubmittedAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
+        assertEquals(listOf(gradedAssignment, notGradedAssignment, notSubmittedAssignment, customStatusAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.NotYetSubmitted))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
@@ -434,7 +443,7 @@ class AssignmentListViewModelTest {
 
         newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(listOf(gradedAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
+        assertEquals(listOf(gradedAssignment, customStatusAssignment), viewModel.uiState.value.listState.values.first().map { it.assignment })
     }
 
     @Test
@@ -531,6 +540,15 @@ class AssignmentListViewModelTest {
         newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.AssignmentType)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
         assertEquals(typeGroups.map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map{ it.assignment } } )
+    }
+
+    @Test
+    fun `Test custom statuses getting fetched`() = runTest {
+        every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns 1
+
+        getViewModel()
+
+        coVerify(exactly = 1) { repository.getCustomGradeStatuses(1, false) }
     }
 
     private fun getViewModel(): AssignmentListViewModel {

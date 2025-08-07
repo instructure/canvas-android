@@ -102,7 +102,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textDanger)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.MISSING
+                    submissionStateLabel = SubmissionStateLabel.Missing
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -124,7 +124,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textWarning)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.LATE
+                    submissionStateLabel = SubmissionStateLabel.Late
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -156,6 +156,28 @@ class GradesAssignmentItemTest {
         composeTestRule.onNode(hasDrawable(R.drawable.ic_complete_solid), true)
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Graded", useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertTextColor(labelColor)
+    }
+
+    @Test
+    fun assertCustomStatusAssignment() {
+        var labelColor = Color(0)
+
+        composeTestRule.setContent {
+            labelColor = colorResource(id = R.color.textInfo)
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    submissionStateLabel = SubmissionStateLabel.Custom(R.drawable.ic_flag, R.color.textInfo, "Custom Status")
+                ),
+                actionHandler = {},
+                userColor = android.graphics.Color.RED
+            )
+        }
+
+        composeTestRule.onNode(hasDrawable(R.drawable.ic_flag), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Custom Status", useUnmergedTree = true)
             .assertIsDisplayed()
             .assertTextColor(labelColor)
     }

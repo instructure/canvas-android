@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -154,6 +155,18 @@ class SubmissionListViewModelTest {
                 student = User(8L, name = "Not Submitted Student"),
             ),
             submission = null
+        ),
+        GradeableStudentSubmission(
+            assignee = StudentAssignee(
+                student = User(9L, name = "Custom Status Student"),
+            ),
+            submission = Submission(
+                id = 9L,
+                attempt = 1L,
+                postedAt = Date(),
+                customGradeStatusId = 1L,
+                isGradeMatchesCurrentSubmission = true
+            )
         )
     )
 
@@ -182,6 +195,15 @@ class SubmissionListViewModelTest {
                 any()
             )
         } returns submissions
+
+        coEvery {
+            submissionListRepository.getCustomGradeStatuses(1L, any())
+        } returns listOf(
+            mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+                every { _id } returns "1"
+                every { name } returns "Custom Status 1"
+            }
+        )
 
         setupString()
     }
@@ -308,6 +330,16 @@ class SubmissionListViewModelTest {
                 listOf(SubmissionTag.NotSubmitted),
                 "-",
                 false
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "-",
+                false
             )
         )
 
@@ -384,6 +416,16 @@ class SubmissionListViewModelTest {
                 listOf(SubmissionTag.Excused),
                 "",
                 true
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "-",
+                false
             )
         )
 
@@ -536,6 +578,16 @@ class SubmissionListViewModelTest {
                 listOf(SubmissionTag.Graded),
                 "0",
                 true
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "-",
+                false
             )
         )
 

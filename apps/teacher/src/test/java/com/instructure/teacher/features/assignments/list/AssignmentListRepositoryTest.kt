@@ -19,10 +19,12 @@ package com.instructure.teacher.features.assignments.list
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
@@ -61,7 +63,6 @@ class AssignmentListRepositoryTest {
         coVerify { assignmentApi.getFirstPageAssignmentGroupListWithAssignmentsForGradingPeriod(1, 1, false, any(), any()) }
         assertEquals(expected, result)
     }
-
 
     @Test
     fun `Get assignment groups with assignments`() = runTest {
@@ -130,5 +131,56 @@ class AssignmentListRepositoryTest {
         repository.updateSelectedOptions(entity)
 
         coVerify { assignmentListSelectedFiltersEntityDao.insertOrUpdate(entity) }
+    }
+
+    @Test
+    fun `Get assignments subtracts custom-grade-submitted from needsGradingCount`() = runTest {
+        val assignment = Assignment(id = 101L, needsGradingCount = 4)
+        val assignmentGroup = AssignmentGroup(id = 1, assignments = listOf(assignment))
+
+        val customSubmission1 = Submission(
+            assignmentId = 101L,
+            customGradeStatusId = 1L,
+            workflowState = "submitted"
+        )
+        val customSubmission2 = Submission(
+            assignmentId = 101L,
+            customGradeStatusId = 1L,
+            workflowState = "graded"
+        )
+        val customSubmission3 = Submission(
+            assignmentId = 101L,
+            customGradeStatusId = 1L,
+            workflowState = "pending_review"
+        )
+
+        val regularSubmission = Submission(
+            assignmentId = 101L,
+            customGradeStatusId = null,
+            workflowState = "submitted"
+        )
+
+        val submissions = listOf(
+            customSubmission1,
+            customSubmission2,
+            customSubmission3,
+            regularSubmission
+        )
+
+        coEvery { submissionApi.getSubmissionsForAllAssignmentsInCourse(any(), any()) } returns DataResult.Success(submissions)
+        coEvery { submissionApi.getNextPageSubmissions(any(), any()) } returns DataResult.Success(emptyList())
+
+        coEvery {
+            assignmentApi.getFirstPageAssignmentGroupListWithAssignments(any(), any())
+        } returns DataResult.Success(listOf(assignmentGroup))
+
+        coEvery {
+            assignmentApi.getNextPageAssignmentGroupListWithAssignments(any(), any())
+        } returns DataResult.Success(emptyList())
+
+        val result = repository.getAssignments(courseId = 1L, forceRefresh = true)
+
+        val updatedAssignment = result[0].assignments[0]
+        assertEquals(1, updatedAssignment.needsGradingCount)
     }
 }

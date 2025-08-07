@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 5,
-    "identityHash": "18bbea65d4e7b1be8c453cdd667e5c67",
+    "identityHash": "e822f9086f5f31e5045447be92476615",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -5569,7 +5569,7 @@
       },
       {
         "tableName": "CustomGradeStatusEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`, `courseId`))",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `name` TEXT NOT NULL, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`, `courseId`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -5598,13 +5598,25 @@
           ]
         },
         "indices": [],
-        "foreignKeys": []
+        "foreignKeys": [
+          {
+            "table": "CourseEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "courseId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '18bbea65d4e7b1be8c453cdd667e5c67')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e822f9086f5f31e5045447be92476615')"
     ]
   }
 }

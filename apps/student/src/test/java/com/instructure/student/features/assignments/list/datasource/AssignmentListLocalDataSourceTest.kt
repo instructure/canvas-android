@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
+import com.instructure.pandautils.room.offline.entities.CustomGradeStatusEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import io.mockk.coEvery
@@ -79,5 +80,19 @@ class AssignmentListLocalDataSourceTest {
         val result = dataSource.getCourseWithGrade(1, true)
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get custom grade statuses for course successfully returns api model`() = runTest {
+        val data = listOf(
+            CustomGradeStatusEntity("1", "Custom Status 1", 1L),
+            CustomGradeStatusEntity("2", "Custom Status 2", 1L)
+        )
+
+        coEvery { customGradeStatusDao.getStatusesForCourse(1L) } returns data
+
+        val result = dataSource.getCustomGradeStatuses(1, true)
+
+        assertEquals(data.map { it.toApiModel() }, result)
     }
 }

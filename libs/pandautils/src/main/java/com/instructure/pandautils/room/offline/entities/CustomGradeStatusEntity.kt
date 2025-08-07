@@ -18,10 +18,19 @@
 package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 
 @Entity(
-    primaryKeys = ["id", "courseId"]
+    primaryKeys = ["id", "courseId"],
+    foreignKeys = [
+        ForeignKey(
+            entity = CourseEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["courseId"],
+            onDelete = ForeignKey.CASCADE
+        )
+    ]
 )
 data class CustomGradeStatusEntity(
     val id: String,

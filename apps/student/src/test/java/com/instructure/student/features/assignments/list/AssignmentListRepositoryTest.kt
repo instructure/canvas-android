@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.assignments.list
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -182,5 +183,45 @@ class AssignmentListRepositoryTest {
         repository.updateSelectedOptions(entity)
 
         coVerify { assignmentListSelectedFiltersEntityDao.insertOrUpdate(entity) }
+    }
+
+    @Test
+    fun `Get custom statuses from local storage when device is offline`() = runTest {
+        val node1 = mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+            every { _id } returns "1"
+            every { name } returns "Custom Status 1"
+        }
+        val node2 = mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+            every { _id } returns "2"
+            every { name } returns "Custom Status 2"
+        }
+
+        coEvery { networkDataSource.getCustomGradeStatuses(any(), any()) } returns listOf(node1)
+        coEvery { localDataSource.getCustomGradeStatuses(any(), any()) } returns listOf(node2)
+        coEvery { networkStateProvider.isOnline() } returns false
+
+        val result = repository.getCustomGradeStatuses(1, true)
+
+        assertEquals("2", result.first()._id)
+    }
+
+    @Test
+    fun `Get custom statuses from network when device is online`() = runTest {
+        val node1 = mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+            every { _id } returns "1"
+            every { name } returns "Custom Status 1"
+        }
+        val node2 = mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+            every { _id } returns "2"
+            every { name } returns "Custom Status 2"
+        }
+
+        coEvery { networkDataSource.getCustomGradeStatuses(any(), any()) } returns listOf(node1)
+        coEvery { localDataSource.getCustomGradeStatuses(any(), any()) } returns listOf(node2)
+        coEvery { networkStateProvider.isOnline() } returns true
+
+        val result = repository.getCustomGradeStatuses(1, true)
+
+        assertEquals("1", result.first()._id)
     }
 }

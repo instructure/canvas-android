@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.entities.CustomGradeStatusEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -30,6 +31,7 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class AssignmentDetailsLocalDataSourceTest {
@@ -90,5 +92,19 @@ class AssignmentDetailsLocalDataSourceTest {
         coEvery { quizDao.findById(any()) } returns null
 
         dataSource.getQuiz(1, 1, true)
+    }
+
+    @Test
+    fun `Get custom grade statuses for course successfully returns api model`() = runTest {
+        val data = listOf(
+            CustomGradeStatusEntity("1", "Custom Status 1", 1L),
+            CustomGradeStatusEntity("2", "Custom Status 2", 1L)
+        )
+
+        coEvery { customGradeStatusDao.getStatusesForCourse(1L) } returns data
+
+        val result = dataSource.getCustomGradeStatuses(1, true)
+
+        assertEquals(data.map { it.toApiModel() }, result)
     }
 }
