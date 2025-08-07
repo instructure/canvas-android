@@ -25,26 +25,7 @@ import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvasapi2.di.GraphQlApiModule
-import com.instructure.canvasapi2.managers.CommentLibraryManager
-import com.instructure.canvasapi2.managers.InboxSettingsManager
-import com.instructure.canvasapi2.managers.SubmissionRubricManager
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
-import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
-import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
-import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
-import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
-import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -54,13 +35,10 @@ import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.DashboardPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.tokenLogin
-import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
-import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 
 @HiltAndroidTest
-@UninstallModules(GraphQlApiModule::class)
 class StudentInboxComposeInteractionTest: InboxComposeInteractionTest() {
     override val isTesting = BuildConfig.IS_TESTING
 
@@ -68,42 +46,6 @@ class StudentInboxComposeInteractionTest: InboxComposeInteractionTest() {
 
     private val dashboardPage = DashboardPage()
     private val inboxPage = InboxPage()
-
-    @BindValue
-    @JvmField
-    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
-
-    @BindValue
-    @JvmField
-    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
-
-    @BindValue
-    @JvmField
-    val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
-
-    @BindValue
-    @JvmField
-    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
-
-    @BindValue
-    @JvmField
-    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
-
-    @BindValue
-    @JvmField
-    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
-
-    @BindValue
-    @JvmField
-    val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
-
-    @BindValue
-    @JvmField
-    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
-
-    @BindValue
-    @JvmField
-    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     override fun goToInboxCompose(data: MockCanvas) {
         val parent = data.parents.first()
