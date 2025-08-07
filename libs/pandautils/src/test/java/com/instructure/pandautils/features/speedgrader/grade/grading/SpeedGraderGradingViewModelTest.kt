@@ -121,7 +121,7 @@ class SpeedGraderGradingViewModelTest {
             gradingType = GradingType.points,
             loading = false,
             daysLate = 1,
-            dueDate = dueDate,
+            submittedAt = dueDate,
             letterGrades = listOf(
                 GradingSchemeRow(
                     name = "A",
@@ -162,7 +162,7 @@ class SpeedGraderGradingViewModelTest {
         assertEquals(expected.gradingType, uiState.gradingType)
         assertEquals(expected.loading, uiState.loading)
         assertEquals(expected.daysLate, uiState.daysLate)
-        assertEquals(expected.dueDate, uiState.dueDate)
+        assertEquals(expected.submittedAt, uiState.submittedAt)
         assertEquals(expected.gradingStatuses, uiState.gradingStatuses)
         assertEquals(expected.gradingStatus, uiState.gradingStatus)
     }
@@ -384,6 +384,7 @@ class SpeedGraderGradingViewModelTest {
                 enteredGrade = "A",
                 enteredScore = 95.0,
                 hideGradeFromStudent = false,
+                submittedAt = dueDate,
                 assignment = SubmissionGradeQuery.Assignment(
                     dueAt = dueDate,
                     gradingType = GradingType.points,
