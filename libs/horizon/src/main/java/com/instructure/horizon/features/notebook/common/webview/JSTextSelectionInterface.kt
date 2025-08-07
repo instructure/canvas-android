@@ -91,6 +91,58 @@ class JSTextSelectionInterface(
     companion object {
         private const val JS_INTERFACE_NAME = "TextSelectionInterface"
 		private const val JS_CODE_FROM_WEB = """
+let highlightCss = `
+    .highlighted-important {
+      background-color: rgba(14, 104, 179, 0.2);
+      text-decoration: underline;
+      text-decoration-color: rgba(14, 104, 179, 1);
+      position: relative;
+    }
+    .highlighted-important::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        z-index: 10;
+        background-color: rgba(14, 104, 179, 1);
+        background-image: url('path/to/your/image.svg');
+        background-size: 80%;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+    
+    .highlighted-confusing {
+      background-color: rgba(199, 31, 35, 0.2);
+      text-decoration: underline;
+      text-decoration-color: rgba(199, 31, 35, 1);
+    
+      position: relative;
+    }
+    .highlighted-confusing::before {
+        content: "";
+        display: block;
+        position: absolute;
+        top: -5px;
+        left: -5px;
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        z-index: 10;
+        background-color: rgba(199, 31, 35, 1);
+        background-image: url('path/to/your/image.svg');
+        background-size: 80%;
+        background-repeat: no-repeat;
+        background-position: center;
+    }
+`
+const styleSheet = document.createElement("style");
+styleSheet.innerText = highlightCss;
+document.head.appendChild(styleSheet);
+   
 const getNodeName = (node) => {
 	const nodeName = node.nodeName.toLowerCase();
 	return nodeName === "#text" ? "text()" : nodeName;
@@ -623,31 +675,19 @@ function highlightSelection(noteId, selectedText, userComment, startOffset, star
 	const textNodeSpans = getHighlightRange(range);
 	for (const textNode of textNodeSpans) {
 		const parent = textNode.parentNode;
-		let cssStyle;
+		let cssClass;
 		if (noteReactionString === 'Confusing') {
-			cssStyle = `
-                    background-color: rgba(199, 31, 35, 0.2);
-                    text-decoration: underline;
-                    text-decoration-color: rgba(199, 31, 35, 1);
-                      `;
+			cssClass = `highlighted-confusing`;
 		} else if (noteReactionString === 'Important') {
-			cssStyle = `
-                        background-color: rgba(14, 104, 179, 0.2);
-                        text-decoration: underline;
-                        text-decoration-color: rgba(14, 104, 179, 1);
-                      `;
+			cssClass = `highlighted-important`;
 		} else {
-			cssStyle = `
-                        background-color: rgba(14, 104, 179, 0.2);
-                        text-decoration: underline;
-                        text-decoration-color: rgba(14, 104, 179, 1);
-                      `;
+			cssClass = `highlighted-confusing`;
 		}
 
 		const highlightElement = document.createElement("span");
 		highlightElement.classList.add(highlightClassName);
+		highlightElement.classList.add(cssClass);
 		highlightElement.onclick = function () { ${ JS_INTERFACE_NAME }.onHighlightedTextClicked(noteId, noteReactionString, selectedText, userComment, startOffset, startContainer, endOffset, endContainer, textSelectionStart, textSelectionEnd); };
-		highlightElement.style.cssText = cssStyle;
 		highlightElement.textContent = textNode.textContent;
 
 		if (!highlightElement) return;
