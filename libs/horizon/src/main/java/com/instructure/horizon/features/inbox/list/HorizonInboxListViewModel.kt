@@ -58,7 +58,8 @@ class HorizonInboxListViewModel @Inject constructor(
             updateScopeFilter = ::updateScopeFilter,
             onRecipientSelected = ::onRecipientSelected,
             onRecipientRemoved = ::onRecipientRemoved,
-            showSnackbar = ::showSnackbar
+            showSnackbar = ::showSnackbar,
+            setItemAsRead = ::setItemAsRead
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -268,5 +269,21 @@ class HorizonInboxListViewModel @Inject constructor(
                 )
             )
         }
+    }
+
+    private fun setItemAsRead(itemId: Long) {
+        _uiState.update {
+            it.copy(
+                items = it.items.map { item ->
+                    if (item.id == itemId) {
+                        item.copy(isUnread = false)
+                    } else {
+                        item
+                    }
+                }
+            )
+        }
+
+        repository.invalidateConversationListCachedResponse()
     }
 }

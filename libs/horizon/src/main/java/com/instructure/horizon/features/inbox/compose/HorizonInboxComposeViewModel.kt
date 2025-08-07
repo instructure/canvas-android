@@ -149,9 +149,9 @@ class HorizonInboxComposeViewModel @Inject constructor(
                 attachmentIds = uiState.value.attachments.map { it.id }.toLongArray(),
                 isBulkMessage = uiState.value.isSendIndividually || uiState.value.selectedRecipients.size >= 100
             )
+            repository.invalidateConversationListCachedResponse()
 
             _uiState.update { it.copy(isSendLoading = false) }
-
             onFinished()
         } catch {
             _uiState.update { it.copy(snackbarMessage = context.getString(R.string.inboxComposeSendErrorMessage)) }

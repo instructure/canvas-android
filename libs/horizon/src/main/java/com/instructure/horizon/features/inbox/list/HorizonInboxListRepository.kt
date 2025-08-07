@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.list
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.CourseAPI
@@ -93,5 +94,9 @@ class HorizonInboxListRepository @Inject constructor(
         return courseApi.getFirstPageCoursesInbox(params).depaginate {
             courseApi.next(it, params)
         }.dataOrThrow
+    }
+
+    fun invalidateConversationListCachedResponse() {
+        CanvasRestAdapter.clearCacheUrls("conversations")
     }
 }

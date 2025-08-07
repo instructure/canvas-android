@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.details
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
@@ -42,7 +43,6 @@ class HorizonInboxDetailsRepository @Inject constructor(
 
     suspend fun getAccountAnnouncement(id: Long, forceRefresh: Boolean): AccountNotification {
         val params = RestParams(isForceReadFromNetwork = forceRefresh)
-        //return accountNotificationApi.getAccountNotification(id, params).dataOrThrow
         return accountNotificationApi.getAccountNotifications(params, true, true).dataOrThrow.first { it.id == id }
     }
 
@@ -98,5 +98,9 @@ class HorizonInboxDetailsRepository @Inject constructor(
             contextCode = contextCode,
             params = params
         ).dataOrThrow
+    }
+
+    fun invalidateConversationDetailsCachedResponse(conversationId: Long) {
+        CanvasRestAdapter.clearCacheUrls("conversations/$conversationId")
     }
 }
