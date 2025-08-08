@@ -328,7 +328,9 @@ private fun LazyListScope.inboxContent(
             item,
             item != state.items.lastOrNull(),
             {
-                state.setItemAsRead(item.id)
+                if (item.type != HorizonInboxItemType.AccountNotification) {
+                    state.setItemAsRead(item.id)
+                }
                 navController.navigate(
                     HorizonInboxRoute.InboxDetails.route(item.id, item.type, item.courseId)
                 )
