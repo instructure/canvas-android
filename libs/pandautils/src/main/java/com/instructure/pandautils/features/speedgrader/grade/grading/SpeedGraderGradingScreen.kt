@@ -186,7 +186,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                         )
                     ) {
                         Text(
-                            stringResource(R.string.excuseStudent),
+                            stringResource(R.string.gradeExcused),
                             fontSize = 16.sp,
                             lineHeight = 19.sp
                         )
@@ -467,7 +467,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 fontWeight = FontWeight.SemiBold,
                 color = colorResource(R.color.textDarkest),
                 fontSize = 16.sp,
-                modifier = Modifier.testTag("speedGraderGradeLabel")
+                modifier = Modifier.testTag("speedGraderCurrentGradeGradeLabel")
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
