@@ -106,12 +106,14 @@ fun ComposeNotesHighlightingCanvasWebView(
             )
         )
     }
+    var scrollToPrevious by rememberSaveable { mutableStateOf(false) }
 
     if (LocalInspectionMode.current) {
         Text(text = content)
     } else {
         AndroidView(
             factory = {
+                scrollToPrevious = true
                 NotesHighlightingCanvasWebViewWrapper(it, callback = AddNoteActionModeCallback(lifecycleOwner, selectionLocation, menuItems)).apply {
                     webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
                         override fun openMediaFromWebView(mime: String, url: String, filename: String) =
@@ -122,6 +124,16 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                             webView.evaluateTextSelectionInterface()
                             webView.highlightNotes(notesStateValue.value)
+
+                            if (scrollToPrevious && scrollRatio != 0f) {
+                                lifecycleOwner.lifecycleScope.launch {
+                                    delay(100)
+                                    scrollState?.scrollTo(
+                                        (scrollRatio * (scrollState.maxValue)).toInt()
+                                    )
+                                }
+                                scrollToPrevious = false
+                            }
                         }
 
                         override fun onPageStartedCallback(webView: WebView, url: String) {
@@ -146,8 +158,6 @@ fun ComposeNotesHighlightingCanvasWebView(
                     }
 
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
-
-                    lifecycleOwner.lifecycleScope.launch { delay(300); scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt()) }
                 }
             },
             update = {
