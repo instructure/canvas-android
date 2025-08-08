@@ -32,6 +32,7 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -81,7 +82,9 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Click on assignment '${testAssignment.name}'.")
-        courseDetailsPage.clickAssignment(testAssignment.name)
+        retryWithIncreasingDelay {
+            courseDetailsPage.clickAssignment(testAssignment.name)
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Assignment Details' as the user is on the assignment details page and the subtitle is the '${course.name}' course's name.")
         assignmentDetailsPage.assertDisplayToolbarTitle()
@@ -203,7 +206,9 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Click on assignment '${testAssignment.name}'.")
-        courseDetailsPage.clickAssignment(testAssignment.name)
+        retryWithIncreasingDelay {
+            courseDetailsPage.clickAssignment(testAssignment.name)
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Assignment Details' as the user is on the assignment details page and the subtitle is the '${course.name}' course's name.")
         assignmentDetailsPage.assertDisplayToolbarTitle()

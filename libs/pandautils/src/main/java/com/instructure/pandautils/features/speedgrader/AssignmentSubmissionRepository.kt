@@ -16,11 +16,13 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Group
@@ -37,7 +39,8 @@ class AssignmentSubmissionRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
     private val courseApi: CourseAPI.CoursesInterface,
-    private val sectionApi: SectionAPI.SectionsInterface
+    private val sectionApi: SectionAPI.SectionsInterface,
+    private val customGradeStatusesManager: CustomGradeStatusesManager
 ) {
 
     suspend fun getGradeableStudentSubmissions(
@@ -174,5 +177,18 @@ class AssignmentSubmissionRepository(
         return sectionApi.getFirstPageSectionsList(courseId, params).depaginate {
             sectionApi.getNextPageSectionsList(it, params)
         }.dataOrNull ?: emptyList()
+    }
+
+    suspend fun getCustomGradeStatuses(
+        courseId: Long,
+        forceNetwork: Boolean
+    ): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusesManager
+            .getCustomGradeStatuses(courseId, forceNetwork)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            .orEmpty()
     }
 }

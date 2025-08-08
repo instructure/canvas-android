@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.mockCanvas.addRubricToAssignment
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
@@ -34,11 +35,13 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManag
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
@@ -57,7 +60,10 @@ import org.junit.Test
 import com.instructure.canvasapi2.type.GradingType
 
 @HiltAndroidTest
-@UninstallModules(GraphQlApiModule::class)
+@UninstallModules(
+    GraphQlApiModule::class,
+    CustomGradeStatusModule::class
+)
 class SpeedGraderGradePageTest : TeacherComposeTest() {
 
     override fun displaysPageObjects()  = Unit
@@ -97,6 +103,10 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {

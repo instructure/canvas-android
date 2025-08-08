@@ -717,7 +717,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         SliderState(
             value = sliderDrivenScore,
             valueRange = minScore * pointScale..maxScore * pointScale,
-            steps = (maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1
+            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(1)
         )
     }
 

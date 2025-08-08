@@ -22,7 +22,10 @@ import com.google.android.apps.common.testing.accessibility.framework.checks.Spe
 import com.instructure.canvas.espresso.common.interaction.CalendarInteractionTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
@@ -30,11 +33,18 @@ import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.DashboardPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
 import com.instructure.parentapp.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class ParentCalendarInteractionTest : CalendarInteractionTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     override val isTesting = BuildConfig.IS_TESTING
 

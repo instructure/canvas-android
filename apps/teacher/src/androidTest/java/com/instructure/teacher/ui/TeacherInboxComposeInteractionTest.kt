@@ -36,11 +36,11 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManag
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
-import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager

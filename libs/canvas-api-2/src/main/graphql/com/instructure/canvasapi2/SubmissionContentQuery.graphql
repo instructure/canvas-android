@@ -53,6 +53,7 @@ fragment SubmissionFields on SubmissionInterface {
     statusTag
     status
     submissionStatus
+    customGradeStatus
     cachedDueDate
     submittedAt
     attachments {

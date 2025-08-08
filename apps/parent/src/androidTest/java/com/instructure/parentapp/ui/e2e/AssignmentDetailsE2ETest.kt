@@ -31,6 +31,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.ViewUtils
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.seedData
 import com.instructure.parentapp.utils.tokenLogin
@@ -95,7 +96,9 @@ class AssignmentDetailsE2ETest : ParentComposeTest() {
         courseDetailsPage.assertCourseNameDisplayed(course)
 
         Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment to open it's details.")
-        courseDetailsPage.clickAssignment(testAssignment.name)
+        retryWithIncreasingDelay {
+            courseDetailsPage.clickAssignment(testAssignment.name)
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Assignment Details' as the user is on the assignment details page and the subtitle is the '${course.name}' course's name.")
         assignmentDetailsPage.assertDisplayToolbarTitle()

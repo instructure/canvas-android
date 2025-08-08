@@ -17,11 +17,13 @@
 
 package com.instructure.student.features.assignments.details.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -33,7 +35,8 @@ class AssignmentDetailsNetworkDataSource(
     private val coursesInterface: CourseAPI.CoursesInterface,
     private val assignmentInterface: AssignmentAPI.AssignmentInterface,
     private val quizInterface: QuizAPI.QuizInterface,
-    private val submissionInterface: SubmissionAPI.SubmissionInterface
+    private val submissionInterface: SubmissionAPI.SubmissionInterface,
+    private val customGradeStatusesManager: CustomGradeStatusesManager
 ) : AssignmentDetailsDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
@@ -78,5 +81,15 @@ class AssignmentDetailsNetworkDataSource(
     private suspend fun getAssignmentWithHistory(assignmentId: Long, courseId: Long, forceNetwork: Boolean): DataResult<Assignment?> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return assignmentInterface.getAssignmentWithHistory(courseId, assignmentId, params)
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusesManager
+            .getCustomGradeStatuses(courseId, forceNetwork)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            .orEmpty()
     }
 }

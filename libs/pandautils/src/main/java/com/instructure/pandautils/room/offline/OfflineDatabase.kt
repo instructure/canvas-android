@@ -37,6 +37,7 @@ import com.instructure.pandautils.room.offline.daos.CourseGradingPeriodDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.DashboardCardDao
 import com.instructure.pandautils.room.offline.daos.DiscussionEntryDao
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
@@ -101,6 +102,7 @@ import com.instructure.pandautils.room.offline.entities.CourseGradingPeriodEntit
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.CustomGradeStatusEntity
 import com.instructure.pandautils.room.offline.entities.DashboardCardEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionEntryAttachmentEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionEntryEntity
@@ -223,8 +225,9 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         DiscussionTopicEntity::class,
         CourseSyncProgressEntity::class,
         FileSyncProgressEntity::class,
-        StudioMediaProgressEntity::class
-    ], version = 4
+        StudioMediaProgressEntity::class,
+        CustomGradeStatusEntity::class
+    ], version = 5
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -352,4 +355,6 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun discussionTopicRemoteFileDao(): DiscussionTopicRemoteFileDao
 
     abstract fun studioMediaProgressDao(): StudioMediaProgressDao
+
+    abstract fun customGradeStatusDao(): CustomGradeStatusDao
 }

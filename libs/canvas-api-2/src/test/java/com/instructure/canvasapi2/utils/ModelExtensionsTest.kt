@@ -17,8 +17,8 @@
 package com.instructure.canvasapi2.utils
 
 import com.instructure.canvasapi2.models.GradingSchemeRow
-import org.junit.Assert
-import org.junit.Assert.*
+import com.instructure.canvasapi2.models.Submission
+import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class ModelExtensionsTest {
@@ -113,5 +113,158 @@ class ModelExtensionsTest {
         val result = convertPercentScoreToLetterGrade( 0.1, gradingSchemes)
 
         assertEquals("F", result)
+    }
+
+    @Test
+    fun `Counts matching custom status submissions`() {
+        val list = listOf(
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "graded",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "85"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "missing",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "70"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = null,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = true,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = true,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = true,
+                grade = null
+            )
+        )
+
+        val count = list.countCustomGradeStatus("submitted", "graded", "pending_review")
+        assertEquals(3, count)
+    }
+
+    @Test
+    fun `Counts all matching when requireNoGradeMatch is false`() {
+        val list = listOf(
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = true,
+                grade = "80"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "75"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = true,
+                grade = null
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = null,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "88"
+            )
+        )
+
+        val count = list.countCustomGradeStatus("submitted", requireNoGradeMatch = false)
+        assertEquals(3, count)
+    }
+
+    @Test
+    fun `Returns 0 for empty list`() {
+        val count = emptyList<Submission>().countCustomGradeStatus("submitted")
+        assertEquals(0, count)
+    }
+
+    @Test
+    fun `Returns 0 when no submissions match`() {
+        val list = listOf(
+            Submission(
+                assignmentId = 1,
+                excused = true,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = null,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "missing",
+                isGradeMatchesCurrentSubmission = false,
+                grade = "90"
+            ),
+            Submission(
+                assignmentId = 1,
+                excused = false,
+                customGradeStatusId = 1L,
+                workflowState = "submitted",
+                isGradeMatchesCurrentSubmission = true,
+                grade = "95"
+            )
+        )
+
+        val count = list.countCustomGradeStatus("submitted", "graded")
+        assertEquals(0, count)
     }
 }

@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.features.assignments.list
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -37,4 +38,6 @@ interface AssignmentListRepository {
     suspend fun getSelectedOptions(userDomain: String, userId: Long, contextId: Long): AssignmentListSelectedFiltersEntity?
 
     suspend fun updateSelectedOptions(entity: AssignmentListSelectedFiltersEntity)
+
+    suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
 }

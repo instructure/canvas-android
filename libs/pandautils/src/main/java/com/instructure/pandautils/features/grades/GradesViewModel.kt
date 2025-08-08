@@ -21,6 +21,7 @@ import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
@@ -71,6 +72,8 @@ class GradesViewModel @Inject constructor(
     private var course: Course? = null
     private var courseGrade: CourseGrade? = null
 
+    private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
+
     init {
         loadGrades(
             forceRefresh = false,
@@ -92,6 +95,7 @@ class GradesViewModel @Inject constructor(
                 )
             }
 
+            customStatuses = repository.getCustomGradeStatuses(courseId, forceRefresh)
             val course = repository.loadCourse(courseId, forceRefresh)
             this@GradesViewModel.course = course
             val gradingPeriods = repository.loadGradingPeriods(courseId, forceRefresh)
@@ -220,7 +224,7 @@ class GradesViewModel @Inject constructor(
             context.getString(R.string.due, "$dateText $timeText")
         } ?: context.getString(R.string.gradesNoDueDate)
 
-        val submissionStateLabel = assignment.getSubmissionStateLabel()
+        val submissionStateLabel = assignment.getSubmissionStateLabel(customStatuses)
 
         AssignmentUiState(
             id = assignment.id,

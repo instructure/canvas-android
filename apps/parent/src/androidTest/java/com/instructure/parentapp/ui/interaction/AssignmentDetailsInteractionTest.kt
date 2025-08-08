@@ -33,7 +33,10 @@ import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockCanvas.addObserverAlert
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.Assignment
@@ -43,7 +46,9 @@ import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import junit.framework.Assert.assertTrue
 import org.hamcrest.CoreMatchers.containsString
 import org.hamcrest.Matchers
@@ -52,7 +57,13 @@ import java.util.Calendar
 import java.util.Date
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class AssignmentDetailsInteractionTest : ParentComposeTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
     override fun displaysPageObjects() = Unit
 
     @Test

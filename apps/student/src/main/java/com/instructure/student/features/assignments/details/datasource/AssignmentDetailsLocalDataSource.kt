@@ -17,10 +17,12 @@
 
 package com.instructure.student.features.assignments.details.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
@@ -28,7 +30,8 @@ import com.instructure.pandautils.room.offline.facade.CourseFacade
 class AssignmentDetailsLocalDataSource(
     private val courseFacade: CourseFacade,
     private val assignmentFacade: AssignmentFacade,
-    private val quizDao: QuizDao
+    private val quizDao: QuizDao,
+    private val customGradeStatusDao: CustomGradeStatusDao
 ) : AssignmentDetailsDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
@@ -49,5 +52,9 @@ class AssignmentDetailsLocalDataSource(
 
     override suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool? {
         return null
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusDao.getStatusesForCourse(courseId).map { it.toApiModel() }
     }
 }
