@@ -45,11 +45,14 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -68,6 +71,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -220,9 +224,13 @@ private fun ModuleItemSequenceContent(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
+        save = { it.value.appBarMaxHeight to it.value.appBarOffset },
+        restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
+    )
     val density = LocalDensity.current
-    var moduleHeaderHeight by remember { mutableIntStateOf(0) }
-    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
+    var moduleHeaderHeight by rememberSaveable { mutableIntStateOf(0) }
+    var nestedScrollConnection by rememberSaveable(saver = scrollConnectionSaver) { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
     val contentScrollState = rememberScrollState()
 
     Box(
@@ -235,8 +243,9 @@ private fun ModuleItemSequenceContent(
                 .onGloballyPositioned { coordinates ->
                     if (coordinates.size.height != moduleHeaderHeight) {
                         moduleHeaderHeight = coordinates.size.height
+                        val temp = nestedScrollConnection.appBarOffset
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)
+                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply { appBarOffset = temp }
                     }
                 }
         ) {
@@ -248,7 +257,7 @@ private fun ModuleItemSequenceContent(
                 onBackPressed = onBackPressed
             )
         }
-        var moduleHeaderHeight = with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() }
+        var moduleHeaderHeight = max(0.dp, with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -269,9 +278,13 @@ private fun ModuleItemSequenceContent(
                 }
 
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
+                var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {
+                    if (uiState.currentPosition != previousPosition) {
+                        nestedScrollConnection.appBarOffset = 0
+                        previousPosition = uiState.currentPosition
+                    }
                     contentScrollState.scrollTo(0)
-                    nestedScrollConnection.appBarOffset = 0
                     if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
                         pagerState.scrollToPage(uiState.currentPosition)
                     } else {
