@@ -83,58 +83,70 @@ fun ComposeNotesHighlightingCanvasWebView(
     var selectedTextStart by remember { mutableIntStateOf(0) }
     var selectedTextEnd by remember { mutableIntStateOf(0) }
 
-    val menuItems by remember {
-        mutableStateOf(
-            listOf(
-                ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
-                    clipboardManager.setText(AnnotatedString(selectedText))
-                },
-                ActionMenuItem(2, context.getString(R.string.notesActionMenuAddImportantNote)) {
-                    notesCallback.onNoteAdded(
-                        selectedText,
-                        NotebookType.Important.name,
-                        selectedTextRangeStartContainer,
-                        selectedTextRangeStartOffset,
-                        selectedTextRangeEndContainer,
-                        selectedTextRangeEndOffset,
-                        selectedTextStart,
-                        selectedTextEnd
-                    )
-                },
-                ActionMenuItem(3, context.getString(R.string.notesActionMenuAddConfusingNote)) {
-                    notesCallback.onNoteAdded(
-                        selectedText,
-                        NotebookType.Confusing.name,
-                        selectedTextRangeStartContainer,
-                        selectedTextRangeStartOffset,
-                        selectedTextRangeEndContainer,
-                        selectedTextRangeEndOffset,
-                        selectedTextStart,
-                        selectedTextEnd
-                    )
-                },
-                ActionMenuItem(4, context.getString(R.string.notesActionMenuAddNote)) {
-                    notesCallback.onNoteAdded(
-                        selectedText,
-                        null,
-                        selectedTextRangeStartContainer,
-                        selectedTextRangeStartOffset,
-                        selectedTextRangeEndContainer,
-                        selectedTextRangeEndOffset,
-                        selectedTextStart,
-                        selectedTextEnd
-                    )
-                }
-            )
-        )
-    }
-
     if (LocalInspectionMode.current) {
         Text(text = content)
     } else {
         AndroidView(
             factory = {
-                NotesHighlightingCanvasWebViewWrapper(it, callback = AddNoteActionModeCallback(lifecycleOwner, selectionLocation, menuItems)).apply {
+                NotesHighlightingCanvasWebViewWrapper(
+                    it,
+                    callback = AddNoteActionModeCallback(
+                        lifecycleOwner,
+                        selectionLocation,
+                        menuItems = {
+                            buildList {
+                                add(
+                                    ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
+                                        clipboardManager.setText(AnnotatedString(selectedText))
+                                    }
+                                )
+                                if (notes.none { intersects(it.highlightedText.textPosition.start to it.highlightedText.textPosition.end, selectedTextStart to selectedTextEnd) }){
+                                    add(
+                                        ActionMenuItem(2, context.getString(R.string.notesActionMenuAddImportantNote)) {
+                                            notesCallback.onNoteAdded(
+                                                selectedText,
+                                                NotebookType.Important.name,
+                                                selectedTextRangeStartContainer,
+                                                selectedTextRangeStartOffset,
+                                                selectedTextRangeEndContainer,
+                                                selectedTextRangeEndOffset,
+                                                selectedTextStart,
+                                                selectedTextEnd
+                                            )
+                                        }
+                                    )
+                                    add(
+                                        ActionMenuItem(3, context.getString(R.string.notesActionMenuAddConfusingNote)) {
+                                            notesCallback.onNoteAdded(
+                                                selectedText,
+                                                NotebookType.Confusing.name,
+                                                selectedTextRangeStartContainer,
+                                                selectedTextRangeStartOffset,
+                                                selectedTextRangeEndContainer,
+                                                selectedTextRangeEndOffset,
+                                                selectedTextStart,
+                                                selectedTextEnd
+                                            )
+                                        }
+                                    )
+                                    add(
+                                        ActionMenuItem(4, context.getString(R.string.notesActionMenuAddNote)) {
+                                            notesCallback.onNoteAdded(
+                                                selectedText,
+                                                null,
+                                                selectedTextRangeStartContainer,
+                                                selectedTextRangeStartOffset,
+                                                selectedTextRangeEndContainer,
+                                                selectedTextRangeEndOffset,
+                                                selectedTextStart,
+                                                selectedTextEnd
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    )).apply {
                     webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
                         override fun openMediaFromWebView(mime: String, url: String, filename: String) =
                             webViewCallbacks.openMedia(mime, url, filename)
@@ -225,4 +237,8 @@ fun ComposeNotesHighlightingCanvasWebView(
             modifier = modifier.fillMaxSize()
         )
     }
+}
+
+private fun intersects(a: Pair<Int, Int>, b: Pair<Int, Int>): Boolean {
+    return a.first <= b.second && b.first <= a.second
 }
