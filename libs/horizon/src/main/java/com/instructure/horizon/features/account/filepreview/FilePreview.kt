@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
@@ -71,16 +72,16 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
             is FilePreviewUiState.WebView -> {
                 ComposeCanvasWebView(
                     url = filePreviewUiState.url, applyOnWebView = {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    settings.loadWithOverviewMode = true
-                    settings.displayZoomControls = false
-                    settings.setSupportZoom(true)
-                    activity?.let { addVideoClient(it) }
-                    setInitialScale(100)
-                })
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        settings.loadWithOverviewMode = true
+                        settings.displayZoomControls = false
+                        settings.setSupportZoom(true)
+                        activity?.let { addVideoClient(it) }
+                        setInitialScale(100)
+                    })
             }
 
             FilePreviewUiState.NoPreview -> {}

@@ -13,14 +13,22 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.ui.pages
+package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextContains
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithTag
+import androidx.compose.ui.test.performClick
+import androidx.compose.ui.test.performTextInput
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
@@ -43,7 +51,6 @@ import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForViewWithId
 import com.instructure.espresso.page.waitForViewWithText
-import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.pageToItem
@@ -63,7 +70,7 @@ import java.util.Locale
  * of the comment library. This page extends the BasePage class.
  */
 @Suppress("unused")
-class SpeedGraderPage : BasePage() {
+class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage() { // TODO: YET this is a 'hybrid' page because it's highly used in tests, we'll eliminate the non-compose parts step by step.
 
     private val speedGraderActivityToolbar by OnViewWithId(R.id.speedGraderToolbar)
     private val slidingUpPanelLayout by OnViewWithId(R.id.slidingUpPanelLayout,false)
@@ -77,6 +84,77 @@ class SpeedGraderPage : BasePage() {
     private val commentLibraryContainer by OnViewWithId(R.id.commentLibraryFragmentContainer)
 
     /**
+     * Clicks the expand panel button in the Compose UI.
+     */
+    fun clickExpandPanelButton() {
+        composeTestRule
+            .onNodeWithTag("expandPanelButton", useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Clicks the collapse panel button in the Compose UI.
+     */
+    fun clickCollapsePanelButton() {
+        composeTestRule
+            .onNodeWithTag("collapsePanelButton", useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Enters a new grade in the Compose grade input field.
+     *
+     * @param grade The grade value to input.
+     */
+    fun enterNewGrade(grade: String) {
+        composeTestRule
+            .onNodeWithTag("gradeInputField")
+            .performTextInput(grade)
+    }
+
+    /**
+     * Asserts that the final grade is displayed in the Compose UI.
+     *
+     * @param grade The expected grade value to be displayed.
+     */
+    fun assertFinalGradeIsDisplayed(grade: String) {
+        composeTestRule
+            .onNodeWithTag("finalGradeValue")
+            .assertTextContains(grade, substring = true)
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Asserts that the empty view (No Submission) is displayed on the SpeedGrader page.
+     */
+    fun assertEmptyViewDisplayed() {
+        onView(withId(R.id.titleTextView) + withText(R.string.noSubmission)).assertDisplayed()
+        onView(withId(R.id.messageTextView) + withText(R.string.noSubmissionTeacher)).assertDisplayed()
+    }
+
+    /**
+     * Asserts that the attachment with the corresponding name is displayed in the SpeedGrader page.
+     *
+     * @param itemName The name of the attachment to assert.
+     */
+    fun assertSelectedAttachmentItemDisplayed(itemName: String) {
+        composeTestRule.onNode(hasTestTag("selectedAttachmentItem") and hasText(itemName), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    /**
+     * Asserts that the SpeedGrader toolbar is displayed.
+     *
+     * @param title The expected title of the SpeedGrader toolbar.
+     * @param subTitle The expected subtitle of the SpeedGrader toolbar, if any.
+     */
+    fun assertSpeedGraderToolbarTitle(title: String, subTitle: String? = null) {
+        composeTestRule.onNode(hasText(title) and hasAnyAncestor(hasTestTag("speedGraderAppBar"))).assertIsDisplayed()
+        if(subTitle != null) composeTestRule.onNode(hasText(title) and hasText(subTitle) and hasAnyAncestor(hasTestTag("speedGraderAppBar"))).assertIsDisplayed()
+    }
+
+    /**
      * Asserts that the page has the submission drop-down.
      */
     fun assertHasSubmissionDropDown() {
@@ -84,11 +162,11 @@ class SpeedGraderPage : BasePage() {
     }
 
     /**
-     * Selects the "Grades" tab.
+     * Selects the "Grades & Rubric" tab.
      */
-    fun selectGradesTab() {
-        val gradesTabText = getStringFromResource(R.string.sg_tab_grade).uppercase(Locale.getDefault())
-        onView(allOf((withText(gradesTabText)), isDisplayed())).click()
+    fun selectTab(tabTitle: String) {
+        composeTestRule.onNode(hasTestTag("speedGraderTab-${tabTitle}"), useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
     }
 
     /**
@@ -229,11 +307,6 @@ class SpeedGraderPage : BasePage() {
         commentLibraryContainer.check(ViewAssertions.matches(ViewMatchers.hasChildCount(0)))
     }
 
-    fun assertSpeedGraderToolbarTitle(title: String, subTitle: String? = null) {
-        onView(withId(R.id.titleTextView) + withText(title) + withAncestor(R.id.speedGraderToolbar)).assertDisplayed()
-        if(subTitle != null) onView(withId(R.id.subtitleTextView) + withText(subTitle) + withAncestor(R.id.speedGraderToolbar) + hasSibling(withId(R.id.titleTextView) + withText(title))).assertDisplayed()
-    }
-
     /**
      *
      * Asserts that the file with the given filename is displayed.
@@ -244,11 +317,11 @@ class SpeedGraderPage : BasePage() {
             Matchers.allOf(ViewMatchers.withId(R.id.fileNameText), ViewMatchers.withText(fileName))
         Espresso.onView(matcher).assertDisplayed()
     }
-    /**
 
-    Asserts that the comment attachment with the given filename and display name is displayed.
-    @param fileName The name of the attachment file.
-    @param displayName The display name of the attachment.
+    /**
+    * Asserts that the comment attachment with the given filename and display name is displayed.
+    * @param fileName The name of the attachment file.
+    * @param displayName The display name of the attachment.
      */
     fun assertCommentAttachmentDisplayedCommon(fileName: String, displayName: String) {
         val commentMatcher = Matchers.allOf(

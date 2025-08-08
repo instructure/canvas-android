@@ -32,6 +32,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.fragment.app.viewModels
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -57,7 +58,9 @@ import com.instructure.pandautils.utils.isGroup
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toast
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
 import java.io.File
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class FileUploadDialogFragment : BaseCanvasDialogFragment() {
@@ -65,6 +68,9 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
     private val viewModel: FileUploadDialogViewModel by viewModels()
 
     private lateinit var binding: FragmentFileUploadDialogBinding
+
+    @Inject
+    lateinit var fileUploadEventHandler: FileUploadEventHandler
 
     private var uploadType: FileUploadType by SerializableArg(FileUploadType.ASSIGNMENT)
     private var canvasContext: CanvasContext by ParcelableArg(ApiPrefs.user)
@@ -193,6 +199,10 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
         if (requireActivity() is ShareExtensionActivity) {
             requireActivity().onBackPressed()
         }
+        getParent()?.attachmentCallback(EVENT_DIALOG_CANCELED, null)
+        lifecycleScope.launch {
+            fileUploadEventHandler.postEvent(FileUploadEvent.DialogDismissed)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -228,10 +238,28 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
             is FileUploadAction.PickMultipleImage -> pickMultipleImage()
             is FileUploadAction.ShowToast -> Toast.makeText(requireContext(), action.toast, Toast.LENGTH_SHORT).show()
             is FileUploadAction.UploadStarted -> dismiss()
-            is FileUploadAction.AttachmentSelectedAction -> getParent()?.attachmentCallback(action.event, action.attachment)
+            is FileUploadAction.AttachmentSelectedAction -> {
+                getParent()?.attachmentCallback(action.event, action.attachment)
+                if (action.event == EVENT_DIALOG_CANCELED) {
+                    lifecycleScope.launch {
+                        fileUploadEventHandler.postEvent(FileUploadEvent.DialogDismissed)
+                    }
+                }
+            }
             is FileUploadAction.UploadStartedAction -> {
                 getParent()?.selectedUriStringsCallback(action.selectedUris)
                 getParent()?.workInfoLiveDataCallback(action.id, action.liveData)
+                lifecycleScope.launch {
+                    fileUploadEventHandler.postEvent(
+                        FileUploadEvent.FileSelected(action.selectedUris)
+                    )
+                    fileUploadEventHandler.postEvent(
+                        FileUploadEvent.UploadStarted(
+                            action.id,
+                            action.liveData
+                        )
+                    )
+                }
             }
         }
     }

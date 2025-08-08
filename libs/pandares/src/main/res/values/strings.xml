@@ -908,6 +908,16 @@
         <item quantity="other">%s points</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pts</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pt</item>
+        <item quantity="other">\/ %.0f pts</item>
+    </plurals>
+
     <string name="timeLimit">Time Limit</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>
@@ -2022,6 +2032,7 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Signature text</string>
     <string name="due_dateTime">Due: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Submitted: %1$s, %2$s</string>
     <string name="noDueDate">No Due Date</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Needs Grading</string>
@@ -2029,6 +2040,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f pts)</item>
     </plurals>
     <string name="noAssignments">No assignments</string>
     <string name="assignmentGroup">Assignment Group</string>
@@ -2088,4 +2103,49 @@
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
     <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
+    <string name="speedGraderGradeTabTitle">Grade &amp; Rubric</string>
+    <string name="speedGraderDetailsTabTitle">Details</string>
+    <string name="a11y_contentDescription_expandPanel">Expand panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
+    <string name="pointGradeHint">Write score here</string>
+    <string name="percentageGradeHint">Write percentage here</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Letter Grade</string>
+    <string name="daysLate">Days late</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pt</item>
+        <item quantity="other">%s / %s pts</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
+    <string name="gradingStatus_none">None</string>
+    <string name="gradingStatus_late">Late</string>
+    <string name="gradingStatus_missing">Missing</string>
+    <string name="gradingStatus_extended">Extended</string>
+    <string name="gradingStatus_excused">Excused</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Student Notes</string>
+    <string name="speedGraderStudentNotesLoading">Loading Student notes</string>
+    <string name="speedGraderStudentNotesErrorTitle">Oops! Something Went Wrong</string>
+    <string name="speedGraderStudentNotesErrorDescription">We\'re having trouble showing the student notes.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Refresh</string>
+    <string name="not_graded">Not Graded</string>
+    <string name="speedGraderSubmissionDetails">Submission Details</string>
+    <string name="speedGraderSubmissionDetailsLoading">Loading Submission details</string>
+    <string name="speedGraderWordCount">Word Count</string>
+    <string name="rubricsTitle">Rubrics</string>
+    <string name="rubricScore">Score</string>
+    <string name="rubricScoreHint">Write score here</string>
+    <string name="speedGraderCommentsTitle">Comments (%s)</string>
+    <string name="anonymousGradingStudentLabel">Student</string>
+    <string name="anonymousGradingUserLabel">Anonymous User</string>
+    <string name="rubricNote">Rubric Note</string>
+    <string name="content_description_edit_rubric_comment">Edit rubric note</string>
+    <string name="rubricNoteHint">Note</string>
+    <string name="a11y_sendRubricNoteContentDescription">Send rubric note</string>
+    <string name="select_attachment_type">Select Attachment Type</string>
+    <string name="choose_files">Choose Files</string>
+    <string name="a11y_expanded">Expanded</string>
+    <string name="a11y_collapsed">Collapsed</string>
+    <string name="excuseStudent">Excuse Student</string>
+    <string name="detailsEmptyMessage">We don’t have further details for this Student and Assignment</string>
 </resources>

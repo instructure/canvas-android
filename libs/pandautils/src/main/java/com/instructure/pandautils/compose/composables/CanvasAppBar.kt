@@ -64,7 +64,7 @@ fun CanvasAppBar(
                     heading()
                 }
             ) {
-                Text(text = title)
+                Text(text = title, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 subtitle?.let {
                     Text(text = subtitle,
                         fontSize = 12.sp,

@@ -50,5 +50,11 @@ class SimpleWebViewFragment : InternalWebViewFragment() {
         fun newInstance(url: String) = SimpleWebViewFragment().apply {
             this.url = url
         }
+
+        fun createBundle(url: String): Bundle {
+            return Bundle().apply {
+                putString(URL, url)
+            }
+        }
     }
 }

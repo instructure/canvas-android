@@ -1,0 +1,9 @@
+query AssignmentDetails($assignmentId: ID!) {
+    assignment(id: $assignmentId) {
+        course {
+            name
+            _id
+        }
+        title
+    }
+}

@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.Section
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 
 data class SubmissionListUiState(
@@ -51,7 +52,8 @@ data class SubmissionUiState(
     val avatarUrl: String?,
     val tags: List<SubmissionTag>,
     val grade: String? = null,
-    val hidden: Boolean = false
+    val hidden: Boolean = false,
+    val group: Boolean = false
 )
 
 enum class SubmissionTag(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -13,28 +13,27 @@
  *     You should have received a copy of the GNU General Public License
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
- */package com.instructure.teacher.features.assignment.submission
+ */
+package com.instructure.pandautils.features.speedgrader.grade.rubric
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
-import com.instructure.canvasapi2.apis.SectionAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
-@InstallIn(SingletonComponent::class)
-class AssignmentSubmissionListModule {
+@InstallIn(ViewModelComponent::class)
+class SpeedGraderRubricModule {
 
     @Provides
-    fun provideAssignmentSubmissionListRepository(
+    fun provideSpeedGraderRubricRepository(
+        submissionRubricManager: SubmissionRubricManager,
         assignmentApi: AssignmentAPI.AssignmentInterface,
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
-        courseApi: CourseAPI.CoursesInterface,
-        sectionApi: SectionAPI.SectionsInterface
-    ): AssignmentSubmissionRepository {
-        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi)
+        submissionApi: SubmissionAPI.SubmissionInterface
+    ): SpeedGraderRubricRepository {
+        return SpeedGraderRubricRepository(submissionRubricManager, assignmentApi, submissionApi)
     }
 }

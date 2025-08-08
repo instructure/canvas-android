@@ -63,6 +63,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 
 @Composable
@@ -268,6 +269,7 @@ private fun SubmissionListItem(
                 anonymous = anonymousGrading,
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,
+                group = submissionListUiState.group
             )
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(

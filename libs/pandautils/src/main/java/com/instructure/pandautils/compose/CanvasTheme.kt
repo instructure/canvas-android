@@ -32,6 +32,7 @@ import androidx.compose.material.Typography
 import androidx.compose.material.ripple.RippleAlpha
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
@@ -44,9 +45,15 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.TextUnitType
 import com.instructure.pandautils.R
 
+val LocalCourseColor = staticCompositionLocalOf<Color> {
+    Color.Unspecified
+}
+
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun CanvasTheme(content: @Composable () -> Unit) {
+fun CanvasTheme(
+    courseColor: Color = LocalCourseColor.current,
+    content: @Composable () -> Unit) {
     MaterialTheme(
         typography = typography.copy(
             button = typography.button.copy(letterSpacing = TextUnit(0.5f, TextUnitType.Sp)),
@@ -60,6 +67,7 @@ fun CanvasTheme(content: @Composable () -> Unit) {
                 fontFamily = lato,
                 letterSpacing = TextUnit(0f, TextUnitType.Sp)
             ),
+            LocalCourseColor provides courseColor,
             content = content
         )
     }

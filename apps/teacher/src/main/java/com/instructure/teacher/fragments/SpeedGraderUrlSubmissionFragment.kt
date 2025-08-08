@@ -37,8 +37,8 @@ class SpeedGraderUrlSubmissionFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedgraderUrlSubmissionBinding::bind)
 
-    private var mUrl by StringArg()
-    private var mPreviewUrl by NullableStringArg()
+    private var url by StringArg()
+    private var previewUrl by NullableStringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_speedgrader_url_submission, container, false)
@@ -46,18 +46,23 @@ class SpeedGraderUrlSubmissionFragment : BaseCanvasFragment() {
 
     override fun onStart() = with(binding) {
         super.onStart()
-        Glide.with(requireContext()).load(mPreviewUrl).into(urlPreviewImageView)
-        urlTextView.text = mUrl
+        Glide.with(requireContext()).load(previewUrl).into(urlPreviewImageView)
+        urlTextView.text = url
         urlTextView.setTextColor(ThemePrefs.textButtonColor)
         urlTextView.onClick {
-            requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), mUrl, "", true))
+            requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
         }
     }
 
     companion object {
         fun newInstance(url: String, previewUrl: String?) = SpeedGraderUrlSubmissionFragment().apply {
-            mUrl = url
-            mPreviewUrl = previewUrl
+            this.url = url
+            this.previewUrl = previewUrl
+        }
+
+        fun createBundle(url: String, previewUrl: String?) = Bundle().apply {
+            putString("url", url)
+            putString("previewUrl", previewUrl)
         }
     }
 }
