@@ -364,6 +364,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                 includedMessageIds = messageIds,
                 attachmentIds = uiState.value.replyState!!.attachments.map { it.id }
             )
+            repository.invalidateConversationDetailsCachedResponse(id)
 
             _uiState.update {
                 it.copy(
