@@ -21,6 +21,7 @@ import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -29,6 +30,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -50,7 +52,6 @@ import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.JsExternalToolInterface
 import com.instructure.pandautils.utils.JsGoogleDocsInterface
 import com.instructure.pandautils.views.CanvasWebView
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 
@@ -69,7 +70,10 @@ fun ComposeNotesHighlightingCanvasWebView(
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
     scrollState: ScrollState? = null
 ) {
-    val scrollRatio = rememberSaveable(scrollState?.value){ scrollState?.let { scrollState.value.toFloat() / scrollState.maxValue } ?: 0f }
+    var pageHeight by remember { mutableIntStateOf(0) }
+    var scrollValue by rememberSaveable { mutableIntStateOf(0) }
+    var previousScrollMaxValue by rememberSaveable { mutableIntStateOf(0) }
+    var scrollMaxValue by rememberSaveable { mutableIntStateOf(0) }
     val webViewState = rememberSaveable { bundleOf() }
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -85,6 +89,15 @@ fun ComposeNotesHighlightingCanvasWebView(
     var selectedTextRangeEndOffset by remember { mutableIntStateOf(0) }
     var selectedTextStart by remember { mutableIntStateOf(0) }
     var selectedTextEnd by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(scrollState?.maxValue) {
+        val maxValue = scrollState?.maxValue ?: 0
+
+        if (maxValue > 0 && maxValue < Int.MAX_VALUE) {
+            previousScrollMaxValue = scrollMaxValue
+            scrollMaxValue = maxValue
+        }
+    }
 
     val menuItems by remember {
         mutableStateOf(
@@ -106,14 +119,14 @@ fun ComposeNotesHighlightingCanvasWebView(
             )
         )
     }
-    var scrollToPrevious by rememberSaveable { mutableStateOf(false) }
 
+    var previousHeight by remember { mutableIntStateOf(0) }
     if (LocalInspectionMode.current) {
         Text(text = content)
     } else {
         AndroidView(
             factory = {
-                scrollToPrevious = true
+                scrollValue = scrollState?.value ?: 0
                 NotesHighlightingCanvasWebViewWrapper(it, callback = AddNoteActionModeCallback(lifecycleOwner, selectionLocation, menuItems)).apply {
                     webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
                         override fun openMediaFromWebView(mime: String, url: String, filename: String) =
@@ -124,16 +137,6 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                             webView.evaluateTextSelectionInterface()
                             webView.highlightNotes(notesStateValue.value)
-
-                            if (scrollToPrevious && scrollRatio != 0f) {
-                                lifecycleOwner.lifecycleScope.launch {
-                                    delay(500)
-                                    scrollState?.scrollTo(
-                                        (scrollRatio * (scrollState.maxValue)).toInt()
-                                    )
-                                }
-                                scrollToPrevious = false
-                            }
                         }
 
                         override fun onPageStartedCallback(webView: WebView, url: String) {
@@ -213,7 +216,19 @@ fun ComposeNotesHighlightingCanvasWebView(
             onRelease = {
                 it.webView.saveState(webViewState)
             },
-            modifier = modifier.fillMaxSize()
+            modifier = modifier
+                .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    pageHeight = coordinates.size.height
+                    if (coordinates.size.height > 0 && coordinates.size.height != previousHeight) {
+                        lifecycleOwner.lifecycleScope.launch {
+                            val scrollRatio = scrollValue.toFloat() / previousScrollMaxValue.toFloat()
+                            scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
+                        }
+                    }
+                    previousHeight = coordinates.size.height
+
+                }
         )
     }
 }
