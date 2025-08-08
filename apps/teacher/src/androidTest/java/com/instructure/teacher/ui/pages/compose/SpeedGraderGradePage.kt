@@ -69,8 +69,9 @@ class SpeedGraderGradePage(private val composeTestRule: ComposeTestRule) : BaseP
     /**
      * Assert that the 'Grade' label is displayed on the SpeedGrader page's 'Grade & Rubric' tab.
      */
+    @OptIn(ExperimentalTestApi::class)
     fun assertSpeedGraderLabelDisplayed() {
-                composeTestRule.onNodeWithTag("speedGraderCurrentGradeGradeLabel", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.waitUntilExactlyOneExists(hasTestTag("speedGraderCurrentGradeGradeLabel"), timeoutMillis = 5000)
     }
 
     /**

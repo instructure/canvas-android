@@ -15,6 +15,8 @@
  */
 package com.instructure.pandautils.compose.composables
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.AnchoredDraggableState
@@ -52,7 +54,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
@@ -279,16 +280,18 @@ fun TriStateBottomSheet(
                                 }
                             }
                         }) {
+                            val rotation = remember { Animatable(0f) }
+                            LaunchedEffect(anchoredDraggableState.targetValue) {
+                                rotation.animateTo(
+                                    if (anchoredDraggableState.targetValue == AnchorPoints.BOTTOM) 180f else 0f,
+                                    animationSpec = tween()
+                                )
+                            }
                             Icon(
                                 painter = painterResource(R.drawable.ic_arrow_down),
                                 tint = LocalCourseColor.current,
                                 contentDescription = stringResource(R.string.a11y_contentDescription_expandPanel),
-                                modifier = Modifier.rotate(
-                                    when (anchoredDraggableState.targetValue) {
-                                        AnchorPoints.BOTTOM -> 180f
-                                        else -> 0f
-                                    }
-                                )
+                                modifier = Modifier.rotate(rotation.value)
                             )
                         }
                     }

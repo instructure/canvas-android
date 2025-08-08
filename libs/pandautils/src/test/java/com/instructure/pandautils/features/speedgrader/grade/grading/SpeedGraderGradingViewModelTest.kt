@@ -10,6 +10,7 @@ import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import io.mockk.coEvery
@@ -38,6 +39,7 @@ class SpeedGraderGradingViewModelTest {
     private val repository: SpeedGraderGradingRepository = mockk(relaxed = true)
     private val gradingEventHandler = SpeedGraderGradingEventHandler()
     private val resources: Resources = mockk(relaxed = true)
+    private val errorHandler: SpeedGraderErrorHolder = mockk(relaxed = true)
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -63,7 +65,7 @@ class SpeedGraderGradingViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources, gradingEventHandler)
+        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources, gradingEventHandler, errorHandler)
     }
 
     @After
@@ -121,7 +123,7 @@ class SpeedGraderGradingViewModelTest {
             gradingType = GradingType.points,
             loading = false,
             daysLate = 1,
-            dueDate = dueDate,
+            submittedAt = dueDate,
             letterGrades = listOf(
                 GradingSchemeRow(
                     name = "A",
@@ -162,7 +164,7 @@ class SpeedGraderGradingViewModelTest {
         assertEquals(expected.gradingType, uiState.gradingType)
         assertEquals(expected.loading, uiState.loading)
         assertEquals(expected.daysLate, uiState.daysLate)
-        assertEquals(expected.dueDate, uiState.dueDate)
+        assertEquals(expected.submittedAt, uiState.submittedAt)
         assertEquals(expected.gradingStatuses, uiState.gradingStatuses)
         assertEquals(expected.gradingStatus, uiState.gradingStatus)
     }
@@ -297,7 +299,8 @@ class SpeedGraderGradingViewModelTest {
                     enteredScore = 95.0,
                     secondsLate = 0.0,
                     deductedPoints = 0.0,
-                    excused = false
+                    excused = false,
+                    late = false
                 )
             )
         )
@@ -343,7 +346,8 @@ class SpeedGraderGradingViewModelTest {
                     enteredScore = 95.0,
                     secondsLate = 0.0,
                     deductedPoints = 0.0,
-                    excused = false
+                    excused = false,
+                    late = false
                 )
             )
         )
@@ -384,6 +388,7 @@ class SpeedGraderGradingViewModelTest {
                 enteredGrade = "A",
                 enteredScore = 95.0,
                 hideGradeFromStudent = false,
+                submittedAt = dueDate,
                 assignment = SubmissionGradeQuery.Assignment(
                     dueAt = dueDate,
                     gradingType = GradingType.points,
@@ -482,6 +487,7 @@ class SpeedGraderGradingViewModelTest {
         uiState.onScoreChange(90f)
         testDispatcher.scheduler.advanceTimeBy(600)
         coVerify {
+            errorHandler.postError(any(), any())
             repository.updateSubmissionGrade(
                 "90.0",
                 userId = studentId,
@@ -491,8 +497,6 @@ class SpeedGraderGradingViewModelTest {
             )
         }
         val updatedUiState = viewModel.uiState.first()
-        assertEquals(true, updatedUiState.error)
-        assertNotNull(updatedUiState.retryAction)
 
         coEvery { repository.updateSubmissionGrade(any(), any(), any(), any(), any()) } returns mockk()
         updatedUiState.retryAction?.invoke()
@@ -508,7 +512,6 @@ class SpeedGraderGradingViewModelTest {
             )
         }
         val finalUiState = viewModel.uiState.first()
-        assertEquals(false, finalUiState.error)
         assertEquals(90.0f, finalUiState.enteredScore)
     }
 
@@ -598,7 +601,8 @@ class SpeedGraderGradingViewModelTest {
                     enteredScore = 95.0,
                     secondsLate = 0.0,
                     deductedPoints = 0.0,
-                    excused = false
+                    excused = false,
+                    late = false
                 )
             )
         )

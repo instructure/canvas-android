@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
+import java.util.Date
 
 class FakeSubmissionGradeManager : SubmissionGradeManager {
     override suspend fun getSubmissionGrade(
@@ -85,6 +86,7 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             enteredScore = submission?.score ?: 100.0,
             assignment = queryAssignment,
             hideGradeFromStudent = false,
+            submittedAt = Date()
         )
         return SubmissionGradeQuery.Data(submission = dummySubmission)
     }
