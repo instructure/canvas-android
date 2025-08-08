@@ -68,6 +68,7 @@ sealed class MainNavigationRoute(val route: String) {
         val textSelectionStart: Int,
         val textSelectionEnd: Int,
         val highlightedText: String,
+        val noteType: String?,
     ): MainNavigationRoute("add_notebook")
 
     @Serializable
