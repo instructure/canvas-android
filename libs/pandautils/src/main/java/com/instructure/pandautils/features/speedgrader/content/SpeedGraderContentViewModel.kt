@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -68,7 +69,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         val submission = repository.getSubmission(assignmentId, studentId)
         val submissionFields = submission.submission?.submissionFields
 
-        val groupSubmission = submissionFields?.groupId != null
+        val groupSubmission = submissionFields?.groupId != null && !submissionFields.assignment?.gradeGroupStudentsIndividually.orDefault()
 
         val assignee = if (groupSubmission) {
             val group = submissionFields?.assignment?.groupSet?.groups?.find { it._id == submissionFields.groupId }
@@ -211,7 +212,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 SubmissionType.ONLINE_QUIZ -> handleQuizSubmissionType(submissionFields)
 
                 // Discussion Submission
-                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submissionFields.previewUrl)
+                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submissionFields.previewUrl?.replace("&show_full_discussion_immediately=true", ""))
 
                 SubmissionType.STUDENT_ANNOTATION -> {
                     try {

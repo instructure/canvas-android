@@ -56,6 +56,7 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 @Composable
 fun SpeedGraderCommentsScreen(
     expanded: Boolean,
+    fixed: Boolean = false,
     onExpandToggle: () -> Unit
 ) {
     val viewModel: SpeedGraderCommentsViewModel = hiltViewModel()
@@ -105,7 +106,7 @@ fun SpeedGraderCommentsScreen(
                     color = LocalCourseColor.current,
                     modifier = Modifier.size(24.dp)
                 )
-            } else {
+            } else if (!fixed) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
                     tint = colorResource(id = R.color.textDarkest),

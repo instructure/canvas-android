@@ -93,6 +93,7 @@ fragment SubmissionFields on SubmissionInterface {
         id
         courseId
         dueAt
+        gradeGroupStudentsIndividually
         groupSet {
             groups {
                 name

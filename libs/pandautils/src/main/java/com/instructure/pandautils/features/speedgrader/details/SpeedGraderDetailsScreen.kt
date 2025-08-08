@@ -18,6 +18,7 @@ package com.instructure.pandautils.features.speedgrader.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
@@ -26,8 +27,12 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.features.speedgrader.details.studentnotes.StudentNotes
 import com.instructure.pandautils.features.speedgrader.details.studentnotes.StudentNotesViewModel
 import com.instructure.pandautils.features.speedgrader.details.submissiondetails.SubmissionDetails
@@ -61,6 +66,17 @@ fun SpeedGraderDetailsScreen() {
                 showTopDivider = submissionDetailsUiState.state != ScreenState.Empty && submissionDetailsExpanded,
                 uiState = studentNotesUiState,
                 modifier = Modifier.fillMaxWidth()
+            )
+        }
+        if (submissionDetailsUiState.state == ScreenState.Empty &&
+            studentNotesUiState.state == ScreenState.Empty
+        ) {
+            EmptyContent(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 32.dp, horizontal = 16.dp),
+                emptyMessage = stringResource(R.string.detailsEmptyMessage),
+                imageRes = R.drawable.ic_panda_space
             )
         }
     }

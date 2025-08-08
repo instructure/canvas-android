@@ -58,7 +58,8 @@ class FakeSubmissionContentManager : SubmissionContentManager {
             assignment?.id.toString(),
             assignment?.courseId.toString(),
             dueAt = assignment?.dueDate,
-            groupSet = null
+            groupSet = null,
+            gradeGroupStudentsIndividually = false
         )
         val dummySubmissionFields = SubmissionFields(
             groupId = "group-1",

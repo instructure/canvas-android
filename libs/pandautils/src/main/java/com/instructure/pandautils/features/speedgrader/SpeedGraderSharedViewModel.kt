@@ -18,14 +18,29 @@ package com.instructure.pandautils.features.speedgrader
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class SpeedGraderSharedViewModel : ViewModel() {
+@HiltViewModel
+class SpeedGraderSharedViewModel @Inject constructor(errorHandler: SpeedGraderErrorHolder) :
+    ViewModel() {
 
     private val _viewPagerEnabled: MutableSharedFlow<Boolean> = MutableSharedFlow()
     val viewPagerEnabled = _viewPagerEnabled.asSharedFlow()
+
+    val errorState = MutableSharedFlow<ErrorEvent>()
+
+    init {
+        viewModelScope.launch {
+            errorHandler.events.collectLatest {
+                errorState.emit(it)
+            }
+        }
+    }
 
     fun enableViewPager(enabled: Boolean) {
         viewModelScope.launch {

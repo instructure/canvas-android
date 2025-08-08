@@ -27,12 +27,19 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -49,6 +56,7 @@ import com.instructure.pandautils.compose.LocalCourseColor
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.utils.getFragmentActivity
+import kotlinx.coroutines.launch
 
 @Composable
 fun SpeedGraderScreen(
@@ -59,11 +67,38 @@ fun SpeedGraderScreen(
     val context = LocalContext.current
     val window = (context.getFragmentActivity()).window
 
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
     val pagerState = rememberPagerState(
         pageCount = { uiState.submissionIds.size },
         initialPage = uiState.selectedItem
     )
     val viewPagerEnabled by sharedViewModel.viewPagerEnabled.collectAsState(initial = true)
+
+    val errorEvent by sharedViewModel.errorState.collectAsState(initial = null)
+
+    LaunchedEffect(errorEvent) {
+        errorEvent?.let {
+            scope.launch {
+                val result = snackbarHostState.showSnackbar(
+                    message = it.message,
+                    actionLabel = context.getString(R.string.retry),
+                    duration = SnackbarDuration.Long
+                )
+
+                when (result) {
+                    SnackbarResult.ActionPerformed -> {
+                        it.retryAction?.invoke()
+                    }
+
+                    SnackbarResult.Dismissed -> {
+                        // Do nothing on dismiss
+                    }
+                }
+            }
+        }
+    }
 
     DisposableEffect(Unit) {
         val originalMode = window?.attributes?.softInputMode
@@ -77,6 +112,14 @@ fun SpeedGraderScreen(
     }
 
     Scaffold(
+        snackbarHost = {
+            SnackbarHost(snackbarHostState) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = LocalCourseColor.current
+                )
+            }
+        },
         topBar = {
             CanvasAppBar(
                 title = uiState.assignmentName,
@@ -109,10 +152,10 @@ fun SpeedGraderScreen(
 
             else -> {
                 HorizontalPager(
-            modifier = Modifier.padding(padding),
-            state = pagerState,
-            userScrollEnabled = viewPagerEnabled
-        ) { page ->
+                    modifier = Modifier.padding(padding),
+                    state = pagerState,
+                    userScrollEnabled = viewPagerEnabled
+                ) { page ->
                     uiState.onPageChange(page)
                     val submissionId = uiState.submissionIds[page]
                     NavHost(

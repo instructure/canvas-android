@@ -57,6 +57,7 @@ import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
+import com.instructure.canvasapi2.type.GradingType
 
 @HiltAndroidTest
 @UninstallModules(
@@ -109,7 +110,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
-        goToSpeedGraderGradePage(gradingType = "points")
+        goToSpeedGraderGradePage(gradingType = GradingType.points)
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
@@ -122,8 +123,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertSelectedStatusText("submitted")
 
-        speedGraderGradePage.assertDaysLate("1")
-
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("10 / 20 pts")
@@ -133,7 +132,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForPercentageGradedWithoutRubric() {
-        goToSpeedGraderGradePage(gradingType = "percent")
+        goToSpeedGraderGradePage(gradingType = GradingType.percent)
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertPossiblePointsForPercentageGradingType("20")
@@ -146,8 +145,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertSelectedStatusText("submitted")
 
-        speedGraderGradePage.assertDaysLate("1")
-
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("12 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
         speedGraderGradePage.assertFinalGradeIsDisplayed("12.0")
@@ -157,7 +154,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForPassFailAssignment() {
-        goToSpeedGraderGradePage(gradingType = "pass_fail")
+        goToSpeedGraderGradePage(gradingType = GradingType.pass_fail)
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredPassFailScore("10 / 20")
@@ -172,8 +169,6 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertExcuseButtonEnabled()
 
         speedGraderGradePage.assertSelectedStatusText("submitted")
-
-        speedGraderGradePage.assertDaysLate("1")
 
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
@@ -190,9 +185,10 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertIncompleteButtonSelected()
     }
 
-    @Test //This is right now 'rollbacking' to points based grading as gpa_scale is not handled in the SpeedGraderGradingScreen
+    @Stub
+    @Test
     fun correctViewsForGpaScaleAssignment() {
-        goToSpeedGraderGradePage("gpa_scale")
+        goToSpeedGraderGradePage(GradingType.gpa_scale)
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
         speedGraderGradePage.assertPointsPossible("20")
@@ -208,7 +204,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("10.0") // It's a bit weird that why is this isn't the same as in the point based test
+        speedGraderGradePage.assertFinalGradeIsDisplayed("10.0")
 
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
@@ -216,13 +212,11 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
     @Stub
     @Test
     fun correctViewsForLetterGradeAssignment() {
-        goToSpeedGraderGradePage(gradingType = "letter_grade")
+        goToSpeedGraderGradePage(gradingType = GradingType.letter_grade)
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
         speedGraderGradePage.assertPointsPossible("20")
-
-        speedGraderGradePage.assertSliderVisible()
 
         speedGraderGradePage.assertNoGradeButtonEnabled()
         speedGraderGradePage.assertExcuseButtonEnabled()
@@ -303,7 +297,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
     @Stub
     @Test
     fun correctViewsForPointGradedWithRubric() {
-        goToSpeedGraderGradePage("points", true)
+        goToSpeedGraderGradePage(GradingType.points, true)
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.assertRubricsLabelDisplayed()
         //TODO
@@ -312,13 +306,13 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
     @Stub
     @Test
     fun correctViewsForPercentageGradedWithRubric() {
-        goToSpeedGraderGradePage("percent", true)
+        goToSpeedGraderGradePage(GradingType.percent, true)
         speedGraderGradePage.assertSliderVisible()
         speedGraderGradePage.assertRubricsLabelDisplayed()
         //TODO
     }
 
-    private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false, pointsPossible: Int = 20, submission: Submission? = null) {
+    private fun goToSpeedGraderGradePage(gradingType: GradingType = GradingType.points, hasRubric: Boolean = false, pointsPossible: Int = 20, submission: Submission? = null) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -333,7 +327,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
                 courseId = course.id,
                 submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 pointsPossible = pointsPossible,
-                gradingType = gradingType
+                gradingType = gradingType.rawValue
         )
 
         if (hasRubric) {

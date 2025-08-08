@@ -17,8 +17,11 @@
 
 package com.instructure.pandautils.features.speedgrader
 
+import io.mockk.every
+import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
@@ -37,10 +40,13 @@ class SpeedGraderSharedViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private lateinit var viewModel: SpeedGraderSharedViewModel
 
+    private val errorHolder: SpeedGraderErrorHolder = mockk()
+
     @Before
     fun setUp() {
         Dispatchers.setMain(testDispatcher)
-        viewModel = SpeedGraderSharedViewModel()
+        every { errorHolder.events } returns MutableSharedFlow()
+        viewModel = SpeedGraderSharedViewModel(errorHolder)
     }
 
     @After

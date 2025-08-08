@@ -16,10 +16,13 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.rubric
 
+import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
@@ -41,7 +44,9 @@ private const val commentsPostFix = "][comments]"
 class SpeedGraderRubricViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderRubricRepository,
-    private val gradingEventHandler: SpeedGraderGradingEventHandler
+    private val gradingEventHandler: SpeedGraderGradingEventHandler,
+    private val errorHolder: SpeedGraderErrorHolder,
+    private val resources: Resources
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle.get<Long>("assignmentId")
@@ -148,6 +153,9 @@ class SpeedGraderRubricViewModel @Inject constructor(
                 _uiState.update {
                     it.copy(assessments = originalAssessment)
                 }
+                errorHolder.postError(resources.getString(R.string.generalUnexpectedError), {
+                    saveRubricAssessment(points, criterionId, ratingId)
+                })
             }
         }
     }
