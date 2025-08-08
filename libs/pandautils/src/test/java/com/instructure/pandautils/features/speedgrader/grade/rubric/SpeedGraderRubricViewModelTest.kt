@@ -16,17 +16,14 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.rubric
 
+import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.SubmissionRubricQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.canvasapi2.models.RubricSettings
+import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
-import com.instructure.pandautils.features.speedgrader.grade.rubric.RubricCriterion
-import com.instructure.pandautils.features.speedgrader.grade.rubric.RubricRating
-import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricRepository
-import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricUiState
-import com.instructure.pandautils.features.speedgrader.grade.rubric.SpeedGraderRubricViewModel
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -51,6 +48,8 @@ class SpeedGraderRubricViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: SpeedGraderRubricRepository = mockk(relaxed = true)
     private val gradingEventHandler: SpeedGraderGradingEventHandler = mockk(relaxed = true)
+    private val errorHolder: SpeedGraderErrorHolder = mockk(relaxed = true)
+    private val resources: Resources = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -690,7 +689,9 @@ class SpeedGraderRubricViewModelTest {
         return SpeedGraderRubricViewModel(
             savedStateHandle,
             repository,
-            gradingEventHandler
+            gradingEventHandler,
+            errorHolder,
+            resources
         )
     }
 }

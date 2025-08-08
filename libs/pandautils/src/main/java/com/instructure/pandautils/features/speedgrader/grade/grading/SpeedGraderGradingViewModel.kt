@@ -23,6 +23,7 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
@@ -42,7 +43,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderGradingRepository,
     private val resources: Resources,
-    private val gradingEventHandler: SpeedGraderGradingEventHandler
+    private val gradingEventHandler: SpeedGraderGradingEventHandler,
+    private val speedGraderErrorHolder: SpeedGraderErrorHolder
 ) : ViewModel() {
 
     private val assignmentId = savedStateHandle.get<Long>("assignmentId")
@@ -156,6 +158,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
     }
 
     private fun onScoreChanged(score: Float?) {
+        if (score == _uiState.value.enteredScore) return
         debounceJob?.cancel()
 
         debounceJob = viewModelScope.launch {
@@ -169,19 +172,18 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     courseId,
                     false
                 )
-                loadData(true)
             } catch (e: Exception) {
                 if (e is CancellationException) {
                     return@launch
                 }
-                _uiState.update {
-                    originalState.copy(
-                        error = true,
-                        retryAction = {
-                            onScoreChanged(score)
-                        }
-                    )
-                }
+                speedGraderErrorHolder.postError(
+                    message = resources.getString(R.string.generalUnexpectedError),
+                    retryAction = {
+                        onScoreChanged(score)
+                    }
+                )
+            } finally {
+                loadData(true)
             }
         }
     }
