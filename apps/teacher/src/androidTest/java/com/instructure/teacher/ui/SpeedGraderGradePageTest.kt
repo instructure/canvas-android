@@ -35,6 +35,7 @@ import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManag
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
@@ -58,7 +59,10 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(GraphQlApiModule::class)
+@UninstallModules(
+    GraphQlApiModule::class,
+    CustomGradeStatusModule::class
+)
 class SpeedGraderGradePageTest : TeacherComposeTest() {
 
     override fun displaysPageObjects()  = Unit

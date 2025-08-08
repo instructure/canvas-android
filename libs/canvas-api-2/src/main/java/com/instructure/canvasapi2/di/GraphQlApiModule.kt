@@ -28,8 +28,6 @@ import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManagerImpl
-import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
-import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManagerImpl
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
@@ -92,10 +90,5 @@ class GraphQlApiModule {
     @Provides
     fun provideSubmissionCommentManager(): SubmissionCommentsManager {
         return SubmissionCommentsManagerImpl()
-    }
-
-    @Provides
-    fun provideCustomGradeStatusesManager(): CustomGradeStatusesManager {
-        return CustomGradeStatusesManagerImpl()
     }
 }

@@ -22,6 +22,25 @@ import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 class FakeCustomGradeStatusesManager : CustomGradeStatusesManager {
 
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): CustomGradeStatusesQuery.Data? {
-        return null // TODO Implement
+        return CustomGradeStatusesQuery.Data(
+            course = CustomGradeStatusesQuery.Course(
+                customGradeStatusesConnection = CustomGradeStatusesQuery.CustomGradeStatusesConnection(
+                    nodes = listOf(
+                        CustomGradeStatusesQuery.Node(
+                            _id = "1",
+                            name = "Custom Status 1"
+                        ),
+                        CustomGradeStatusesQuery.Node(
+                            _id = "2",
+                            name = "Custom Status 2"
+                        ),
+                        CustomGradeStatusesQuery.Node(
+                            _id = "3",
+                            name = "Custom Status 3"
+                        )
+                    )
+                )
+            )
+        )
     }
 }
