@@ -110,6 +110,7 @@ mutation UpdateSubmissionStatusMutation($submissionId: ID!, $customGradeStatusId
             excused
             status
             grade
+            late
             enteredGrade
             enteredScore
             score

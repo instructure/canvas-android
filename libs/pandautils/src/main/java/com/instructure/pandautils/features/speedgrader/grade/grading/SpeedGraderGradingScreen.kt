@@ -132,6 +132,10 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
 
                     GradingType.not_graded -> {}
 
+                    GradingType.gpa_scale -> {
+                        LetterGradeGradingTypeInput(uiState)
+                    }
+
                     else -> {
                         PointGradingTypeInput(uiState)
                     }

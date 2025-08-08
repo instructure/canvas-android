@@ -105,7 +105,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         loading = false,
                         error = false,
                         gradeHidden = submission.hideGradeFromStudent.orDefault(),
-                        daysLate = getDaysLate(submission.secondsLate),
+                        daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null,
                         submittedAt = submission.submittedAt,
                         gradingStatuses = submission.assignment?.course?.gradeStatuses
                             ?.map {
@@ -238,7 +238,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         enteredGrade = submission?.enteredGrade,
                         enteredScore = submission?.enteredScore?.toFloat(),
                         pointsDeducted = submission?.deductedPoints,
-                        daysLate = getDaysLate(submission?.secondsLate),
+                        daysLate = if (submission?.late == true) getDaysLate(submission.secondsLate) else null,
                         excused = submission?.excused.orDefault()
                     )
                 }

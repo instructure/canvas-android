@@ -200,7 +200,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 SubmissionType.ONLINE_QUIZ -> handleQuizSubmissionType(submissionFields)
 
                 // Discussion Submission
-                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submissionFields.previewUrl)
+                SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submissionFields.previewUrl?.replace("&show_full_discussion_immediately=true", ""))
 
                 SubmissionType.STUDENT_ANNOTATION -> {
                     try {
