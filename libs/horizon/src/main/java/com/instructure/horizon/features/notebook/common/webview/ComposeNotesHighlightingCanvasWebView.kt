@@ -127,7 +127,7 @@ fun ComposeNotesHighlightingCanvasWebView(
 
                             if (scrollToPrevious && scrollRatio != 0f) {
                                 lifecycleOwner.lifecycleScope.launch {
-                                    delay(100)
+                                    delay(300)
                                     scrollState?.scrollTo(
                                         (scrollRatio * (scrollState.maxValue)).toInt()
                                     )
