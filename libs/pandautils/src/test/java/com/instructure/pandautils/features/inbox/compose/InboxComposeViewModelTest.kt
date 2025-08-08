@@ -38,6 +38,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHidden
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.ScreenState
 import io.mockk.coEvery
@@ -65,6 +66,7 @@ class InboxComposeViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val inboxComposeRepository: InboxComposeRepository = mockk(relaxed = true)
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -76,6 +78,7 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
     }
 
     @After
@@ -96,6 +99,24 @@ class InboxComposeViewModelTest {
         assertEquals(TextFieldValue(""), uiState.subject)
         assertEquals(TextFieldValue(""), uiState.body)
         assertEquals(ScreenState.Content, uiState.screenState)
+    }
+
+    @Test
+    fun `Test restrict_student_access feature flag hides send individual button`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals(true, uiState.hiddenFields.isSendIndividualHidden)
+    }
+
+    @Test
+    fun `Test without restrict_student_access feature flag send individual button is shown`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals(false, uiState.hiddenFields.isSendIndividualHidden)
     }
 
     @Test
@@ -644,7 +665,7 @@ class InboxComposeViewModelTest {
                 attachments = attachments
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider)
         val uiState = viewmodel.uiState.value
 
         assertEquals(mode, uiState.inboxComposeMode)
@@ -672,7 +693,7 @@ class InboxComposeViewModelTest {
                 isAttachmentDisabled = true
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider)
         val disabledFields = viewmodel.uiState.value.disabledFields
 
         assertEquals(true, disabledFields.isContextDisabled)
@@ -697,7 +718,7 @@ class InboxComposeViewModelTest {
                 isAttachmentHidden = true
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider)
         val hiddenFields = viewmodel.uiState.value.hiddenFields
 
         assertEquals(true, hiddenFields.isContextHidden)
@@ -809,6 +830,6 @@ class InboxComposeViewModelTest {
     // endregion
 
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
-        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao)
+        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao, featureFlagProvider)
     }
 }

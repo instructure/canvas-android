@@ -24,11 +24,13 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
+import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+
 import com.instructure.teacher.features.inbox.compose.TeacherInboxComposeRepository
 import com.instructure.teacher.features.inbox.details.TeacherInboxDetailsBehavior
 import com.instructure.teacher.features.inbox.list.TeacherInboxRepository
@@ -44,7 +46,10 @@ import dagger.hilt.android.components.ViewModelComponent
 class InboxFragmentModule {
 
     @Provides
-    fun providesInboxRouter(activity: FragmentActivity, fragment: Fragment): InboxRouter {
+    fun providesInboxRouter(
+        activity: FragmentActivity, 
+        fragment: Fragment
+    ): InboxRouter {
         return TeacherInboxRouter(activity, fragment)
     }
 }

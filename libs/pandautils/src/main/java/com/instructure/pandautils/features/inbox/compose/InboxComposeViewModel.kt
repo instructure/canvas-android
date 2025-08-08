@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.debounce
@@ -57,7 +58,8 @@ class InboxComposeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
-    private val attachmentDao: AttachmentDao
+    private val attachmentDao: AttachmentDao,
+    private val featureFlagProvider: FeatureFlagProvider
 ): ViewModel() {
     private var canSendToAll = false
 
@@ -100,6 +102,9 @@ class InboxComposeViewModel @Inject constructor(
         loadContexts()
         if (options != null) {
             initFromOptions(options)
+        } else {
+            // For new messages (no options), check feature flag to determine if send individual should be hidden
+            checkAndApplyFeatureFlagRestrictions()
         }
         loadSignature()
     }
@@ -182,6 +187,28 @@ class InboxComposeViewModel @Inject constructor(
                 }
             }
 
+        }
+    }
+
+    private fun checkAndApplyFeatureFlagRestrictions() {
+        viewModelScope.launch {
+            val restrictStudentAccess = checkEnvironmentFeatureFlag("restrict_student_access")
+            if (restrictStudentAccess) {
+                _uiState.update {
+                    it.copy(
+                        hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true)
+                    )
+                }
+                initialState = uiState.value
+            }
+        }
+    }
+
+    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag(featureFlag)
+        } catch (e: Exception) {
+            false
         }
     }
 
