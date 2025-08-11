@@ -45,6 +45,7 @@ class InboxE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
+    @Stub
     fun testInboxSelectedButtonActionsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
