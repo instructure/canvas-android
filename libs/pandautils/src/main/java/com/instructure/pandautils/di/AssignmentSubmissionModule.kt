@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SectionAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import dagger.Module
 import dagger.Provides
@@ -33,8 +34,9 @@ class AssignmentSubmissionModule {
         assignmentApi: AssignmentAPI.AssignmentInterface,
         enrollmentApi: EnrollmentAPI.EnrollmentInterface,
         courseApi: CourseAPI.CoursesInterface,
-        sectionApi: SectionAPI.SectionsInterface
+        sectionApi: SectionAPI.SectionsInterface,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): AssignmentSubmissionRepository {
-        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi)
+        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi, customGradeStatusesManager)
     }
 }

@@ -168,7 +168,6 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         val grade = "10"
         Log.d(STEP_TAG, "Enter '$grade' as the new grade and close the keyboard.")
         speedGraderGradePage.enterNewGrade(grade)
-        Espresso.pressBack()
         Thread.sleep(2000) // Wait for the keyboard to close, and the bottom panel to collapse.
 
         Log.d(STEP_TAG, "Click on the 'Expand Panel Button'.")

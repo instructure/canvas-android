@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
@@ -45,7 +46,12 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(FragmentComponent::class)
 class AssignmentDetailsFragmentModule {
     @Provides
-    fun provideAssignmentDetailsRouter(navigation: Navigation, parentPrefs: ParentPrefs, apiPrefs: ApiPrefs, analytics: Analytics): AssignmentDetailsRouter {
+    fun provideAssignmentDetailsRouter(
+        navigation: Navigation,
+        parentPrefs: ParentPrefs,
+        apiPrefs: ApiPrefs,
+        analytics: Analytics
+    ): AssignmentDetailsRouter {
         return ParentAssignmentDetailsRouter(navigation, parentPrefs, apiPrefs, analytics)
     }
 
@@ -65,9 +71,18 @@ class AssignmentDetailsModule {
         quizApi: QuizAPI.QuizInterface,
         submissionApi: SubmissionAPI.SubmissionInterface,
         featuresApi: FeaturesAPI.FeaturesInterface,
-        parentPrefs: ParentPrefs
+        parentPrefs: ParentPrefs,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): AssignmentDetailsRepository {
-        return ParentAssignmentDetailsRepository(coursesApi, assignmentApi, quizApi, submissionApi, featuresApi, parentPrefs)
+        return ParentAssignmentDetailsRepository(
+            coursesApi,
+            assignmentApi,
+            quizApi,
+            submissionApi,
+            featuresApi,
+            parentPrefs,
+            customGradeStatusesManager
+        )
     }
 
     @Provides
@@ -76,7 +91,10 @@ class AssignmentDetailsModule {
     }
 
     @Provides
-    fun provideAssignmentDetailsColorProvider(parentPrefs: ParentPrefs, colorKeeper: ColorKeeper): AssignmentDetailsColorProvider {
+    fun provideAssignmentDetailsColorProvider(
+        parentPrefs: ParentPrefs,
+        colorKeeper: ColorKeeper
+    ): AssignmentDetailsColorProvider {
         return ParentAssignmentDetailsColorProvider(parentPrefs, colorKeeper)
     }
 }

@@ -226,7 +226,7 @@ private fun UserHeader(
                 fontWeight = FontWeight.SemiBold,
                 fontSize = 16.sp
             )
-            if (submissionStatus != SubmissionStateLabel.NONE) {
+            if (submissionStatus != SubmissionStateLabel.None) {
                 Row(verticalAlignment = Alignment.Bottom) {
                     SubmissionStatus(
                         submissionStatus = submissionStatus,
@@ -292,7 +292,10 @@ private fun SubmissionStatus(
         )
         Spacer(modifier = Modifier.width(4.dp))
         Text(
-            text = stringResource(id = submissionStatus.labelRes),
+            text = when (submissionStatus) {
+                is SubmissionStateLabel.Predefined -> stringResource(id = submissionStatus.labelRes)
+                is SubmissionStateLabel.Custom -> submissionStatus.label
+            },
             color = colorResource(id = submissionStatus.colorRes),
             fontSize = 14.sp
         )
@@ -412,7 +415,9 @@ private fun Selector(
                     fontSize = 16.sp,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
-                    modifier = Modifier.weight(1f).testTag("selectedAttachmentItem")
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("selectedAttachmentItem")
                 )
                 Spacer(modifier = Modifier.width(4.dp))
                 Icon(
@@ -488,7 +493,7 @@ fun UserHeaderPreview() {
         userUrl = null,
         userName = "John Doe",
         dueDate = Date(),
-        submissionStatus = SubmissionStateLabel.GRADED,
+        submissionStatus = SubmissionStateLabel.Graded,
         expanded = false,
         onExpandClick = null,
         courseColor = Color(color = android.graphics.Color.BLUE),
@@ -526,7 +531,7 @@ private fun SpeedGraderContentScreenPreview() {
     val uiState = SpeedGraderContentUiState(
         userUrl = null,
         userName = "John Doe",
-        submissionState = SubmissionStateLabel.GRADED,
+        submissionState = SubmissionStateLabel.Graded,
         dueDate = Date(),
         attachmentSelectorUiState = SelectorUiState(
             items = listOf(

@@ -19,6 +19,7 @@ package com.instructure.parentapp.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.pandautils.features.grades.GradesBehaviour
 import com.instructure.pandautils.features.grades.GradesRepository
 import com.instructure.parentapp.features.grades.ParentGradesBehaviour
@@ -37,9 +38,10 @@ class GradesModule {
     fun provideGradesRepository(
         assignmentApi: AssignmentAPI.AssignmentInterface,
         courseApi: CourseAPI.CoursesInterface,
-        parentPrefs: ParentPrefs
+        parentPrefs: ParentPrefs,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): GradesRepository {
-        return ParentGradesRepository(assignmentApi, courseApi, parentPrefs)
+        return ParentGradesRepository(assignmentApi, courseApi, parentPrefs, customGradeStatusesManager)
     }
 
     @Provides

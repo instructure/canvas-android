@@ -85,6 +85,8 @@ data class Submission(
         val gradingPeriodId: Long? = null,
         @SerializedName("late_policy_status")
         val latePolicyStatus: String? = null,
+        @SerializedName("custom_grade_status_id")
+        val customGradeStatusId: Long? = null,
 
         // Testing purpose fields
         val status: String? = null
@@ -93,7 +95,7 @@ data class Submission(
     override val comparisonString get() = submissionType
 
     val isWithoutGradedSubmission: Boolean get() = !isGraded && submissionType == null
-    val isGraded: Boolean get() = grade != null
+    val isGraded: Boolean get() = grade != null || customGradeStatusId != null
 
     /* Submissions will have dummy submissions if they grade an assignment with no actual submissions. We want to see if any are not dummy submissions */
     fun hasRealSubmission() = submissionHistory.any { it?.submissionType != null }

@@ -111,7 +111,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                 assigneeId = assignee.id,
                 userName = if (anonymousGrading) resources.getString(R.string.anonymousGradingStudentLabel) else assignee.name,
                 userUrl = if (!anonymousGrading) assignee.avatarUrl else null,
-                submissionState = getSubmissionStateLabel(submissionFields?.state),
+                submissionState = getSubmissionStateLabel(submissionFields?.state, submissionFields?.customGradeStatus),
                 dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
                     items = attachments,
@@ -129,14 +129,26 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
-    private fun getSubmissionStateLabel(submissionState: SubmissionState?): SubmissionStateLabel {
-        return when (submissionState) {
-            SubmissionState.submitted -> SubmissionStateLabel.SUBMITTED
-            SubmissionState.unsubmitted -> SubmissionStateLabel.NOT_SUBMITTED
-            SubmissionState.graded -> SubmissionStateLabel.GRADED
-            SubmissionState.ungraded -> SubmissionStateLabel.SUBMITTED
-            SubmissionState.pending_review -> SubmissionStateLabel.SUBMITTED
-            else -> SubmissionStateLabel.NONE
+    private fun getSubmissionStateLabel(
+        submissionState: SubmissionState?,
+        customGradeStatus: String?
+    ): SubmissionStateLabel {
+        return when {
+            !customGradeStatus.isNullOrEmpty() -> SubmissionStateLabel.Custom(
+                R.drawable.ic_flag,
+                R.color.textInfo,
+                customGradeStatus
+            )
+
+            submissionState in setOf(
+                SubmissionState.submitted,
+                SubmissionState.ungraded,
+                SubmissionState.pending_review
+            ) -> SubmissionStateLabel.Submitted
+
+            submissionState == SubmissionState.unsubmitted -> SubmissionStateLabel.NotSubmitted
+            submissionState == SubmissionState.graded -> SubmissionStateLabel.Graded
+            else -> SubmissionStateLabel.None
         }
     }
 

@@ -21,6 +21,7 @@ import android.webkit.WebView
 import android.widget.Button
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
@@ -77,20 +78,26 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Date
+import javax.inject.Inject
 
 @PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
+@AndroidEntryPoint
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView,
         FragmentAssignmentDetailsBinding>(),
     AssignmentDetailsView,
     Identity {
+
+    @Inject
+    lateinit var assignmentsApi: AssignmentAPI.AssignmentInterface
 
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
@@ -150,7 +157,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.color, requireContext().getColor(R.color.textLightest))
     }
 
-    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment)
+    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment, assignmentsApi)
 
     override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
 
