@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji.</string>
     <string name="widgetSingleGradeSelectCourse">Izberimo predmet</string>
     <string name="widgetGradesErrorLoadingCourses">Med nalaganjem predmetov je prišlo do napake.</string>
+    <string name="settingsSwitchExperience">Preklopi na Canvas Career</string>
 </resources>

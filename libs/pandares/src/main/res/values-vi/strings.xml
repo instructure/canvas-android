@@ -706,7 +706,7 @@
     <string name="searchGuides">Tìm kiếm Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Tìm câu trả lời cho câu hỏi thườn gặp</string>
-    <string name="reportProblem">Báo Cáo Vấn Đề</string>
+    <string name="reportProblem">Báo cáo vấn đề</string>
     <string name="reportProblemDetails">Nếu ứng dụng hoạt động không bình thường, hãy cho chúng tôi biết</string>
     <string name="requestFeature">Yêu Cầu Đặc Tính</string>
     <string name="requestFeatureDetails">Bạn có ý tưởng để cải thiện ứng dụng?</string>
@@ -2069,4 +2069,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Để xem điểm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng.</string>
     <string name="widgetSingleGradeSelectCourse">Hãy chọn một khóa học</string>
     <string name="widgetGradesErrorLoadingCourses">Đã xảy ra lỗi khi tải các khóa học.</string>
+    <string name="settingsSwitchExperience">Chuyển đổi sang Canvas Career</string>
 </resources>

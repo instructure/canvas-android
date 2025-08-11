@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Per vedere i tuoi voti, accedi al tuo account nell’app.</string>
     <string name="widgetSingleGradeSelectCourse">Scegli un corso</string>
     <string name="widgetGradesErrorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi.</string>
+    <string name="settingsSwitchExperience">Passa a Canvas Career</string>
 </resources>

@@ -2071,4 +2071,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Untuk melihat nilai Anda, silakan login ke akun Anda di aplikasi.</string>
     <string name="widgetSingleGradeSelectCourse">Ayo pilih kursus</string>
     <string name="widgetGradesErrorLoadingCourses">Kesalahan terjadi saat memuat kursus.</string>
+    <string name="settingsSwitchExperience">Alihkan ke Canvas Career</string>
 </resources>

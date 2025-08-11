@@ -695,7 +695,7 @@
     <string name="searchGuides">搜索 Canvas 指南</string>
     <string name="canvasGuides">Canvas 指南</string>
     <string name="searchGuidesDetails">查找常见问题的答案</string>
-    <string name="reportProblem">报告问题</string>
+    <string name="reportProblem">报告一个问题</string>
     <string name="reportProblemDetails">如果应用程序出现异常，告知我们。</string>
     <string name="requestFeature">请求功能</string>
     <string name="requestFeatureDetails">有一个改善应用程序的想法吗？</string>
@@ -2036,4 +2036,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">要查看您的年级，请在应用程序中登录您的帐户。</string>
     <string name="widgetSingleGradeSelectCourse">请选择课程</string>
     <string name="widgetGradesErrorLoadingCourses">加载课程时出错。</string>
+    <string name="settingsSwitchExperience">切换到 Canvas Career</string>
 </resources>

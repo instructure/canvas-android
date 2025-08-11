@@ -706,7 +706,7 @@
     <string name="searchGuides">Cuardaigh na Treoracha Canvas</string>
     <string name="canvasGuides">Treoracha Canvas</string>
     <string name="searchGuidesDetails">Aimsigh freagraí do cheisteanna coitianta</string>
-    <string name="reportProblem">Tuairiscigh Fadhb</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">Má chliseann an aip, cuir in iúl dúinn</string>
     <string name="requestFeature">Iarr Gné</string>
     <string name="requestFeatureDetails">An bhfuil smaoineamh agat an aip a fheabhsú?</string>
@@ -2083,4 +2083,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Chun do mharcanna a fheiceáil, logáil isteach i do chuntas san aip le do thoil.</string>
     <string name="widgetSingleGradeSelectCourse">Roghnaímis cúrsa</string>
     <string name="widgetGradesErrorLoadingCourses">Tharla earráid agus cúrsaí á lódáil.</string>
+    <string name="settingsSwitchExperience">Téigh go Canvas Career</string>
 </resources>

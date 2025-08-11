@@ -749,7 +749,7 @@
     <string name="searchGuides">البحث في Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">احصل على إجابات للأسئلة المتداولة</string>
-    <string name="reportProblem">إبلاغ عن مشكلة</string>
+    <string name="reportProblem">الإبلاغ عن مشكلة</string>
     <string name="reportProblemDetails">أخبرنا إن لم يعمل التطبيق بشكل صحيح</string>
     <string name="requestFeature">طلب ميزة</string>
     <string name="requestFeatureDetails">هل لديك فكرة لتحسين التطبيق؟</string>
@@ -2195,4 +2195,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">لتر التقديرات الخاصة بك، يُرجى تسجيل الدخول في حسابك في التطبيق.</string>
     <string name="widgetSingleGradeSelectCourse">فلنختر مساقًا</string>
     <string name="widgetGradesErrorLoadingCourses">حدث خطأ أثناء تحميل المساقات.</string>
+    <string name="settingsSwitchExperience">تبديل إلى Canvas Career</string>
 </resources>

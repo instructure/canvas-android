@@ -706,7 +706,7 @@
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
-    <string name="reportProblem">Report a Problem</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">If the app misbehaves, let us know</string>
     <string name="requestFeature">Request a Feature</string>
     <string name="requestFeatureDetails">Have an idea to improve the app?</string>
@@ -2086,5 +2086,6 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
     <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+    <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
 </resources>

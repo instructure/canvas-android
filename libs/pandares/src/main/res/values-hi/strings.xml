@@ -2076,4 +2076,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">अपने ग्रेड देखने के लिए कृपया ऐप में अपने खाते में लॉग इन करें।</string>
     <string name="widgetSingleGradeSelectCourse">आइए, एक पाठ्यक्रम चुनें</string>
     <string name="widgetGradesErrorLoadingCourses">पाठ्यक्रम लोड करते समय त्रुटि उत्पन्न हुई।</string>
+    <string name="settingsSwitchExperience">Canvas कैरियर पर स्विच करें</string>
 </resources>

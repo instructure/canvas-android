@@ -706,7 +706,7 @@
     <string name="searchGuides">Rapu nga Kaiarahi Canvas</string>
     <string name="canvasGuides">Canvas Kaiārahi</string>
     <string name="searchGuidesDetails">Kimihia whakautu ki ngā pātai noa</string>
-    <string name="reportProblem">Pūrongo i te Raruraru</string>
+    <string name="reportProblem">Pūrongo i te raruraru</string>
     <string name="reportProblemDetails">Ki te hape te taupānga, whakamōhio mai ki ā mātou</string>
     <string name="requestFeature">Tono he Āhuatanga</string>
     <string name="requestFeatureDetails">He whakāro ki te whakapai ake i te taupānga?</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Hei kite i o tohu, tena koa takiuru ki to putea i roto i te taupānga.</string>
     <string name="widgetSingleGradeSelectCourse">Me whiriwhiri he akoranga</string>
     <string name="widgetGradesErrorLoadingCourses">I puta he hapa i te wa e uta ana i nga akoranga.</string>
+    <string name="settingsSwitchExperience">Hurihia ki te Canvas Mahi</string>
 </resources>

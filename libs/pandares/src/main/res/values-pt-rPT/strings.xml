@@ -706,7 +706,7 @@
     <string name="searchGuides">Procurar nos Guias do Canvas</string>
     <string name="canvasGuides">Guias Canvas</string>
     <string name="searchGuidesDetails">Encontre respostas para perguntas comuns</string>
-    <string name="reportProblem">Reportar um problema</string>
+    <string name="reportProblem">Denunciar um problema</string>
     <string name="reportProblemDetails">Se a app não funcionar, conte-nos</string>
     <string name="requestFeature">Solicite um recurso</string>
     <string name="requestFeatureDetails">Tem uma ideia de como melhorar a app?</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver as suas notas, inicie sessão na sua conta na app.</string>
     <string name="widgetSingleGradeSelectCourse">Vamos escolher uma disciplina</string>
     <string name="widgetGradesErrorLoadingCourses">Ocorreu um erro ao carregar as disciplinas.</string>
+    <string name="settingsSwitchExperience">Mudar para Canvas Career</string>
 </resources>

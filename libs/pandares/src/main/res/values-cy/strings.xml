@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">I weld eich graddau, mewngofnodwch i’ch cyfrif ar yr ap.</string>
     <string name="widgetSingleGradeSelectCourse">Dewch i ni ddewis cwrs</string>
     <string name="widgetGradesErrorLoadingCourses">Gwall wrth lwytho cyrsiau.</string>
+    <string name="settingsSwitchExperience">Newid i Canvas Career</string>
 </resources>

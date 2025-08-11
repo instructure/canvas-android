@@ -2036,4 +2036,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">要查看您的成績，請在應用程式中登入您的帳戶。</string>
     <string name="widgetSingleGradeSelectCourse">讓我們選擇課程</string>
     <string name="widgetGradesErrorLoadingCourses">載入課程時發生錯誤。</string>
+    <string name="settingsSwitchExperience">切換到 Canvas Career</string>
 </resources>

@@ -2132,4 +2132,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Aby wyświetlić oceny, zaloguj się do konta w aplikacji.</string>
     <string name="widgetSingleGradeSelectCourse">Wybierzmy kurs</string>
     <string name="widgetGradesErrorLoadingCourses">Wystąpił błąd podczas wczytywania kursów.</string>
+    <string name="settingsSwitchExperience">Przełącz na Canvas Career</string>
 </resources>

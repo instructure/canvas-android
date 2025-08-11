@@ -2069,4 +2069,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">For å se vurderinger, logg inn på kontoen din i appen.</string>
     <string name="widgetSingleGradeSelectCourse">La oss velge et emne</string>
     <string name="widgetGradesErrorLoadingCourses">Det oppsto en feil ved lasting av emner.</string>
+    <string name="settingsSwitchExperience">Bytt til Canvas Career</string>
 </resources>

@@ -2069,4 +2069,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació.</string>
     <string name="widgetSingleGradeSelectCourse">Triem una assignatura</string>
     <string name="widgetGradesErrorLoadingCourses">S\'ha produït un error en carregar les assignatures.</string>
+    <string name="settingsSwitchExperience">Canvia al Canvas Career</string>
 </resources>

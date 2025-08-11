@@ -2132,4 +2132,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Чтобы увидеть свои оценки, войдите в свою учетную запись в приложении.</string>
     <string name="widgetSingleGradeSelectCourse">Давайте выберем курс</string>
     <string name="widgetGradesErrorLoadingCourses">Произошла ошибка при загрузке курсов.</string>
+    <string name="settingsSwitchExperience">Переключение на Canvas Career</string>
 </resources>

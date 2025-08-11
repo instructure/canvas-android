@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
     <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+    <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 </resources>

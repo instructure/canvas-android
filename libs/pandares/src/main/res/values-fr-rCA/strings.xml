@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Pour voir vos notes, veuillez vous connecter à votre compte dans l\'application.</string>
     <string name="widgetSingleGradeSelectCourse">Choisissons un cours</string>
     <string name="widgetGradesErrorLoadingCourses">Une erreur s’est produite lors du chargement des cours</string>
+    <string name="settingsSwitchExperience">Passer à Canvas Career</string>
 </resources>

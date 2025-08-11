@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Nähdäksesi arvosanasi, kirjaudu tilillesi sovelluksessa..</string>
     <string name="widgetSingleGradeSelectCourse">Valitaan kurssi</string>
     <string name="widgetGradesErrorLoadingCourses">Kurssien lataamisen yhteydessä tapahtui virhe.</string>
+    <string name="settingsSwitchExperience">Vaihda Canvas-uraan</string>
 </resources>
