@@ -62,7 +62,7 @@ class TeacherAssignmentListRepository(
                     "submitted", "pending_review", "graded"
                 )
 
-                val needsGradingCount = assignment.needsGradingCount - customGradeStatedSubmittedCount
+                val needsGradingCount = (assignment.needsGradingCount - customGradeStatedSubmittedCount).coerceAtLeast(0)
 
                 assignment.copy(needsGradingCount = needsGradingCount)
             })

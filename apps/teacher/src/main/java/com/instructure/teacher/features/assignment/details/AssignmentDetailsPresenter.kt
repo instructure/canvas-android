@@ -81,8 +81,8 @@ class AssignmentDetailsPresenter(
                 )
 
                 val graded = submissionSummary.graded + customGradeStatedSubmittedCount + customGradeStatedUnsubmittedCount
-                val ungraded = submissionSummary.ungraded - customGradeStatedSubmittedCount
-                val unsubmitted = submissionSummary.notSubmitted - customGradeStatedUnsubmittedCount
+                val ungraded = (submissionSummary.ungraded - customGradeStatedSubmittedCount).coerceAtLeast(0)
+                val unsubmitted = (submissionSummary.notSubmitted - customGradeStatedUnsubmittedCount).coerceAtLeast(0)
                 val totalStudents = graded + ungraded + unsubmitted
 
                 viewCallback?.updateSubmissionDonuts(
