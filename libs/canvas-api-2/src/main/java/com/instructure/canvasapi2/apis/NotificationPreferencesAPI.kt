@@ -64,7 +64,7 @@ object NotificationPreferencesAPI {
                 @Query("notification_preferences[frequency]") frequency: String
         ): Call<NotificationPreferenceResponse>
 
-        @PUT("users/self/communication_channels/{communicationChannelId}/notification_preferences/{category}")
+        @PUT("users/self/communication_channels/{communicationChannelId}/notification_preference_categories/{category}")
         suspend fun updatePreferenceCategory(
             @Path("category") categoryName: String,
             @Path("communicationChannelId") communicationChannelId: Long,

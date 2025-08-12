@@ -76,7 +76,6 @@ fun AddSubmissionContent(
     scrollState: ScrollState,
     moduleHeaderHeight: Dp,
     modifier: Modifier = Modifier,
-    onRceFocused: () -> Unit = {}
 ) {
     var rceYPositionInRoot by remember { mutableIntStateOf(0) }
     var cursorYPosition by remember { mutableIntStateOf(0) }
@@ -97,7 +96,9 @@ fun AddSubmissionContent(
         }
     }
     LaunchedEffect(scrollContent) {
-        scrollState.scrollBy(scrollContent?.toFloat() ?: 0f)
+        if (!scrollState.isScrollInProgress) {
+            scrollState.scrollBy(scrollContent?.toFloat() ?: 0f)
+        }
     }
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
@@ -155,13 +156,16 @@ fun AddSubmissionContent(
             when (selectedSubmissionType) {
                 is AddSubmissionTypeUiState.File -> AddFileSubmissionContent(
                     uiState = selectedSubmissionType,
-                    submissionInProgress = uiState.submissionInProgress
+                    submissionInProgress = uiState.submissionInProgress,
+                    onFileAdded = {
+                        selectedSubmissionType.onFileAdded(it)
+                        scrollContent = scrollState.maxValue
+                    }
                 )
 
                 is AddSubmissionTypeUiState.Text ->
                     AddTextSubmissionContent(
                         uiState = selectedSubmissionType,
-                        onRceFocused = onRceFocused,
                         onCursorYCoordinateChanged = {
                             cursorYPosition = it.toInt().toPx
                         },
@@ -216,7 +220,11 @@ fun AddSubmissionContent(
                 Box(
                     contentAlignment = Alignment.CenterEnd,
                     modifier = Modifier
-                        .background(color = HorizonColors.Surface.institution().copy(alpha = alpha), shape = HorizonCornerRadius.level6)
+                        .background(
+                            color = HorizonColors.Surface
+                                .institution()
+                                .copy(alpha = alpha), shape = HorizonCornerRadius.level6
+                        )
                         .animateContentSize()
                 ) {
                     if (uiState.submissionInProgress) {

@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.account.advanced
 
 import android.content.Context
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -46,6 +47,7 @@ class AccountAdvancedViewModel @Inject constructor(
             ),
             updateTimeZone = ::updateTimeZone,
             saveSelectedTimeZone = ::saveSelectedTimeZone,
+            onSearchQueryChanged = ::updateSearchQuery,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -120,6 +122,14 @@ class AccountAdvancedViewModel @Inject constructor(
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(screenState = it.screenState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun updateSearchQuery(newQuery: TextFieldValue) {
+        _uiState.update {
+            it.copy(
+                searchQuery = newQuery
+            )
         }
     }
 }

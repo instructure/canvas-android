@@ -31,6 +31,7 @@ data class ExperienceSummary(
         const val ACADEMIC_EXPERIENCE = "academic"
         const val CAREER_EXPERIENCE = "career"
         const val CAREER_LEARNER_EXPERIENCE = "career_learner"
+        const val CAREER_LEARNING_PROVIDER = "career_learning_provider"
         const val ROLE_LEARNER = "learner"
         const val ROLE_LEARNING_PROVIDER = "learning_provider"
     }

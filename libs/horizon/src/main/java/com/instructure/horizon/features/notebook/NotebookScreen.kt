@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
@@ -38,7 +39,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -64,11 +64,13 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.format
 import java.util.Date
 
@@ -76,17 +78,40 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
+    onDismiss: (() -> Unit)? = null
 ) {
+    val scrollState = rememberLazyListState()
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
-        topBar = { if (state.showTopBar) NotebookAppBar(navigateBack = { mainNavController.popBackStack() }) },
+        topBar = {
+            if (state.showTopBar) {
+                NotebookAppBar(
+                    navigateBack = { mainNavController.popBackStack() },
+                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                        horizonShadow(
+                            elevation = HorizonElevation.level2,
+                        )
+                    }
+                )
+            } else if (onDismiss != null) {
+                NotebookAppBar(
+                    onClose = { onDismiss() },
+                    modifier = Modifier.conditional(scrollState.canScrollBackward) {
+                        horizonShadow(
+                            elevation = HorizonElevation.level2,
+                        )
+                    }
+                )
+            }
+        },
     ) { padding ->
         LazyColumn(
+            state = scrollState,
             modifier = Modifier
                 .padding(padding),
             contentPadding = PaddingValues(24.dp)
         ) {
-            if (state.showFilters) {
+            if (state.showFilters && state.notes.isNotEmpty()) {
                 item {
                     FilterContent(
                         state.selectedFilter,
@@ -95,15 +120,17 @@ fun NotebookScreen(
                 }
             }
 
-            item {
-                Column {
-                    Text(
-                        text = stringResource(R.string.notebookNotesLabel),
-                        style = HorizonTypography.labelLargeBold,
-                        color = HorizonColors.Text.title()
-                    )
+            if (state.notes.isNotEmpty()){
+                item {
+                    Column {
+                        Text(
+                            text = stringResource(R.string.notebookNotesLabel),
+                            style = HorizonTypography.labelLargeBold,
+                            color = HorizonColors.Text.title()
+                        )
 
-                    HorizonSpace(SpaceSize.SPACE_12)
+                        HorizonSpace(SpaceSize.SPACE_12)
+                    }
                 }
             }
 
@@ -174,68 +201,11 @@ fun NotebookBottomDialog(
             state.updateContent(courseId, objectFilter)
         }
 
-        LazyColumn(
-            contentPadding = PaddingValues(vertical = 24.dp)
-        ) {
-            item {
-                NotebookAppBar(
-                    onClose = onDismiss,
-                )
-            }
-
-            if (state.isLoading) {
-                item {
-                    LoadingContent()
-                }
-            } else if (state.notes.isEmpty()) {
-                item {
-                    EmptyContent(modifier = Modifier.padding(vertical = 24.dp))
-                }
-            } else {
-                items(state.notes) { note ->
-                    Column(
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    ) {
-                        NoteContent(note) {
-                            mainNavController.navigate(
-                                MainNavigationRoute.EditNotebook(
-                                    noteId = note.id,
-                                    highlightedText = note.highlightedText.selectedText,
-                                    userComment = note.userText,
-                                    highlightedTextStartContainer = note.highlightedText.range.startContainer,
-                                    highlightedTextStartOffset = note.highlightedText.range.startOffset,
-                                    highlightedTextEndContainer = note.highlightedText.range.endContainer,
-                                    highlightedTextEndOffset = note.highlightedText.range.endOffset,
-                                    textSelectionStart = note.highlightedText.textPosition.start,
-                                    textSelectionEnd = note.highlightedText.textPosition.end,
-                                    noteType = note.type.name,
-                                )
-                            )
-                        }
-
-                        if (state.notes.lastOrNull() != note) {
-                            HorizonSpace(SpaceSize.SPACE_12)
-                        }
-                    }
-                }
-
-                item {
-                    Column(
-                        modifier = Modifier.padding(horizontal = 24.dp)
-                    ) {
-                        HorizonSpace(SpaceSize.SPACE_24)
-
-                        NotesPager(
-                            canNavigateBack = state.hasPreviousPage,
-                            canNavigateForward = state.hasNextPage,
-                            isLoading = state.isLoading,
-                            onNavigateBack = state.loadPreviousPage,
-                            onNavigateForward = state.loadNextPage
-                        )
-                    }
-                }
-            }
-        }
+        NotebookScreen(
+            mainNavController = mainNavController,
+            state = state,
+            onDismiss = { onDismiss() }
+        )
 
     }
 }
@@ -297,7 +267,7 @@ private fun NoteContent(
     Column(
         modifier = Modifier
             .fillMaxWidth()
-            .shadow(
+            .horizonShadow(
                 elevation = HorizonElevation.level4,
                 shape = HorizonCornerRadius.level2,
                 clip = true
@@ -352,7 +322,7 @@ private fun EmptyContent(modifier: Modifier = Modifier) {
         contentAlignment = Alignment.Center,
         modifier = modifier
             .fillMaxWidth()
-            .shadow(
+            .horizonShadow(
                 elevation = HorizonElevation.level4,
                 shape = HorizonCornerRadius.level2,
                 clip = true
@@ -379,27 +349,29 @@ private fun NotesPager(
     onNavigateBack: () -> Unit,
     onNavigateForward: () -> Unit,
 ) {
-    Row(
-        horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
-    ) {
-        IconButton(
-            iconRes = R.drawable.chevron_left,
-            color = IconButtonColor.Black,
-            size = IconButtonSize.SMALL,
-            onClick = onNavigateBack,
-            enabled = canNavigateBack && !isLoading
-        )
+    if (canNavigateBack || canNavigateForward) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            IconButton(
+                iconRes = R.drawable.chevron_left,
+                color = IconButtonColor.Black,
+                size = IconButtonSize.SMALL,
+                onClick = onNavigateBack,
+                enabled = canNavigateBack && !isLoading
+            )
 
-        HorizonSpace(SpaceSize.SPACE_8)
+            HorizonSpace(SpaceSize.SPACE_8)
 
-        IconButton(
-            iconRes = R.drawable.chevron_right,
-            color = IconButtonColor.Black,
-            size = IconButtonSize.SMALL,
-            onClick = onNavigateForward,
-            enabled = canNavigateForward && !isLoading
-        )
+            IconButton(
+                iconRes = R.drawable.chevron_right,
+                color = IconButtonColor.Black,
+                size = IconButtonSize.SMALL,
+                onClick = onNavigateForward,
+                enabled = canNavigateForward && !isLoading
+            )
+        }
     }
 }
 

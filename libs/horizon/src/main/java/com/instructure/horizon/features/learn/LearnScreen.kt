@@ -31,7 +31,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -58,6 +61,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
@@ -80,6 +84,7 @@ import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.launch
@@ -107,8 +112,33 @@ fun LearnScreen(
             when {
                 state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
                 state.screenState.isLoading -> LoadingContent()
-                else -> LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+                else -> if (state.courses.isEmpty()) {
+                    LearnScreenEmptyContent(state)
+                } else {
+                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+                }
             }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun LearnScreenEmptyContent(state: LearnUiState) {
+    LoadingStateWrapper(state.screenState) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Text(
+                text = stringResource(R.string.learnEmptyMessage),
+                style = HorizonTypography.h3,
+                color = HorizonColors.Text.body(),
+                textAlign = TextAlign.Center
+            )
         }
     }
 }
@@ -168,6 +198,7 @@ private fun LearnScreenWrapper(
                 selectedIndex = pagerState.currentPage,
                 onTabSelected = { coroutineScope.launch { pagerState.animateScrollToPage(it) } },
                 tab = { tab, isSelected, modifier -> Tab(tab, isSelected, modifier) },
+                tabAlignment = Alignment.Start,
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
                     .padding(bottom = 24.dp)
@@ -251,6 +282,8 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
         modifier = Modifier
             .padding(start = 24.dp, end = 24.dp, top = 24.dp)
     ) {
+        val showDropDown = courses.size > 1
+
         val localDensity = LocalDensity.current
         var heightInPx by remember { mutableIntStateOf(0) }
         var width by remember { mutableStateOf(0.dp) }
@@ -267,7 +300,7 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
                     heightInPx = it.size.height
                     width = with(localDensity) { it.size.width.toDp() }
                 }
-                .clickable { isMenuOpen = !isMenuOpen }
+                .clickable(enabled = showDropDown) { isMenuOpen = !isMenuOpen }
         ) {
             AnimatedContent(
                 selectedCourse.courseName,
@@ -284,14 +317,16 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
 
             HorizonSpace(SpaceSize.SPACE_8)
 
-            Icon(
-                painter = painterResource(R.drawable.keyboard_arrow_down),
-                contentDescription = null,
-                tint = HorizonColors.Icon.default(),
-                modifier = Modifier
-                    .size(24.dp)
-                    .rotate(iconRotation)
-            )
+            if (showDropDown) {
+                Icon(
+                    painter = painterResource(R.drawable.keyboard_arrow_down),
+                    contentDescription = null,
+                    tint = HorizonColors.Icon.default(),
+                    modifier = Modifier
+                        .size(24.dp)
+                        .rotate(iconRotation)
+                )
+            }
         }
 
         InputDropDownPopup(
@@ -389,16 +424,29 @@ fun LearnScreenErrorPreview() {
 
 @Composable
 @Preview
-fun LearnScreenContentPreview() {
+fun LearnScreenEmptyContentPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(),
-        selectedCourse = CourseWithProgress(
-            courseId = 123,
-            courseName = "Course Name",
-            courseSyllabus = "Course Overview",
-            progress = 0.5,
-        ),
+        availableTabs = LearnTab.entries
+    )
+    LearnScreen(state, rememberNavController())
+}
+
+@Composable
+@Preview
+fun LearnScreenContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val course = CourseWithProgress(
+        courseId = 123,
+        courseName = "Course Name",
+        courseSyllabus = "Course Overview",
+        progress = 0.5,
+    )
+    val state = LearnUiState(
+        screenState = LoadingState(),
+        courses = listOf(course),
+        selectedCourse = course,
         availableTabs = LearnTab.entries
     )
     LearnScreen(state, rememberNavController())

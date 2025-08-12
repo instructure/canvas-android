@@ -64,7 +64,6 @@ import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.text.input.KeyboardType
@@ -73,8 +72,6 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.TextUnit
-import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.TermsOfService
@@ -184,18 +181,9 @@ private fun CanvasHeader(
         Spacer(modifier = Modifier.height(24.dp))
         Icon(
             modifier = Modifier.width(168.dp),
-            painter = painterResource(id = R.drawable.ic_canvas_wordmark),
+            painter = painterResource(id = R.drawable.canvas_wordmark),
             tint = colorResource(id = R.color.textDarkest),
             contentDescription = null
-        )
-        Spacer(modifier = Modifier.height(4.dp))
-        Text(
-            text = stringResource(com.instructure.parentapp.R.string.appUserTypeParent).uppercase(),
-            color = colorResource(id = R.color.textDarkest),
-            fontSize = 12.sp,
-            textAlign = TextAlign.Center,
-            letterSpacing = TextUnit(3F, TextUnitType.Sp),
-            fontWeight = FontWeight.Bold
         )
     }
 }

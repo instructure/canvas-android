@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.inbox.compose
 
+import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.RecipientAPI
@@ -62,5 +63,9 @@ class HorizonInboxComposeRepository @Inject constructor(
             attachmentIds = attachmentIds,
             params = RestParams()
         )
+    }
+
+    fun invalidateConversationListCachedResponse() {
+        CanvasRestAdapter.clearCacheUrls("conversations")
     }
 }

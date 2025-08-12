@@ -52,6 +52,7 @@ import instructure.rceditor.R
 import instructure.rceditor.RCEInsertDialog
 import instructure.rceditor.RCETextEditor
 import jp.wasabeef.richeditor.RichEditor
+import kotlinx.coroutines.delay
 
 enum class RceControlsPosition {
     TOP,
@@ -260,6 +261,7 @@ fun ComposeRCE(
     }
 
     LaunchedEffect(html) {
+        delay(500)
         if (html != rceTextEditor.getHtml()) {
             rceTextEditor.applyHtml(html)
         }

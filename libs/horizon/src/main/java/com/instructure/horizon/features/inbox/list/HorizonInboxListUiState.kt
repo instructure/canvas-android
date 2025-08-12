@@ -37,7 +37,8 @@ data class HorizonInboxListUiState(
     val onRecipientRemoved: (Recipient) -> Unit = {},
     val isOptionListLoading: Boolean = false,
     val showSnackbar: (String) -> Unit = {},
-    val minQueryLength: Int = 3
+    val minQueryLength: Int = 3,
+    val setItemAsRead: (Long) -> Unit = {}
 )
 
 data class HorizonInboxListItemState(

@@ -533,7 +533,7 @@ class CanvasWebView @JvmOverloads constructor(
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
         val (fontName, fontPath) = when {
-            ApiPrefs.canvasCareerView -> Pair("Figtree", "file:///android_asset/fonts/figtree_regular.ttf")
+            ApiPrefs.canvasCareerView ?: false -> Pair("Figtree", "file:///android_asset/fonts/figtree_regular.ttf")
             ApiPrefs.showElementaryView -> Pair("K5Font", "file:///android_asset/fonts/balsamiq_regular.ttf")
             else -> Pair("Lato", "file:///android_asset/fonts/lato_regular.ttf")
         }

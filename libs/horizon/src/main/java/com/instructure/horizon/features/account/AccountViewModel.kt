@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.ExperienceSummary
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -41,24 +42,26 @@ class AccountViewModel @Inject constructor(
     private val repository: AccountRepository,
     private val logoutHelper: LogoutHelper,
     private val databaseProvider: DatabaseProvider,
-    private val alarmScheduler: AlarmScheduler
-): ViewModel() {
-    private val _uiState = MutableStateFlow(AccountUiState(
-        screenState = LoadingState(
-            isPullToRefreshEnabled = false,
-            onSnackbarDismiss = ::dismissSnackbar,
-        ),
-        updateUserName = ::updateUserName,
-        performLogout = ::performLogout,
-        switchExperience = ::switchExperience
-    ))
+    private val alarmScheduler: AlarmScheduler,
+    private val apiPrefs: ApiPrefs
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(
+        AccountUiState(
+            screenState = LoadingState(
+                isPullToRefreshEnabled = false,
+                onSnackbarDismiss = ::dismissSnackbar,
+            ),
+            updateUserName = ::updateUserName,
+            performLogout = ::performLogout,
+            switchExperience = ::switchExperience
+        )
+    )
     val uiState = _uiState.asStateFlow()
 
     private var showExperienceSwitcher = false
 
     init {
         initData()
-        initOptions()
     }
 
     private fun initOptions() {
@@ -135,6 +138,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = true)) }
             loadData(forceRefresh)
+            initOptions()
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
             _uiState.update {
@@ -157,7 +161,7 @@ class AccountViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                userName = user.name,
+                userName = user.shortName ?: user.name,
             )
         }
     }
@@ -181,13 +185,9 @@ class AccountViewModel @Inject constructor(
     }
 
     private fun switchExperience() {
-        viewModelScope.tryLaunch {
-            repository.switchExperience()
-            _uiState.update {
-                it.copy(restartApp = true)
-            }
-        } catch {
-            // TODO Implement this when experience switching can be tested
+        apiPrefs.canvasCareerView = false
+        _uiState.update {
+            it.copy(restartApp = true)
         }
     }
 
