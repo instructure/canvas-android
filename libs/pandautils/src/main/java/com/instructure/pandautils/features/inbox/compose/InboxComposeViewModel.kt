@@ -102,10 +102,8 @@ class InboxComposeViewModel @Inject constructor(
         loadContexts()
         if (options != null) {
             initFromOptions(options)
-        } else {
-            // For new messages (no options), check feature flag to determine if send individual should be hidden
-            checkAndApplyFeatureFlagRestrictions()
         }
+        checkAndApplyFeatureFlagRestrictions()
         loadSignature()
     }
 
@@ -192,14 +190,21 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun checkAndApplyFeatureFlagRestrictions() {
         viewModelScope.launch {
+            val isTeacherApp = context.packageName.contains("teacher")
+            if (!isTeacherApp) return@launch
+            
             val restrictStudentAccess = checkEnvironmentFeatureFlag("restrict_student_access")
             if (restrictStudentAccess) {
                 _uiState.update {
                     it.copy(
-                        hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true)
+                        hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true),
+                        sendIndividual = true
                     )
                 }
-                initialState = uiState.value
+                initialState = initialState.copy(
+                    hiddenFields = initialState.hiddenFields.copy(isSendIndividualHidden = true),
+                    sendIndividual = true
+                )
             }
         }
     }
@@ -263,7 +268,9 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(subject = action.subject) }
             }
             is InboxComposeActionHandler.SendIndividualChanged -> {
-                _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
+                if (!uiState.value.hiddenFields.isSendIndividualHidden) {
+                    _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
+                }
             }
             is InboxComposeActionHandler.AddAttachmentSelected -> {
                 viewModelScope.launch {

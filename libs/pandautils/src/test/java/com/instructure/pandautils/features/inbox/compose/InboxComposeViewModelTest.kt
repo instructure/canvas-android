@@ -78,6 +78,7 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
+        coEvery { context.packageName } returns "com.instructure.teacher" // Default to teacher app
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
     }
 
@@ -102,12 +103,29 @@ class InboxComposeViewModelTest {
     }
 
     @Test
-    fun `Test restrict_student_access feature flag hides send individual button`() {
+    fun `Test restrict_student_access feature flag hides send individual button and enables it`() {
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
 
         assertEquals(true, uiState.hiddenFields.isSendIndividualHidden)
+        assertEquals(true, uiState.sendIndividual)
+        assertEquals(true, uiState.isSendIndividualEnabled)
+    }
+
+    @Test
+    fun `Test restrict_student_access feature flag prevents changing sendIndividual value`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        val viewmodel = getViewModel()
+        
+        // Initially sendIndividual should be true due to feature flag
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
+        
+        // Try to change it to false - should be ignored
+        viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(false))
+        
+        // Should still be true
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
     }
 
     @Test
@@ -117,6 +135,51 @@ class InboxComposeViewModelTest {
         val uiState = viewmodel.uiState.value
 
         assertEquals(false, uiState.hiddenFields.isSendIndividualHidden)
+    }
+
+    @Test
+    fun `Test restrict_student_access feature flag forces individual messages on send`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        coEvery { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+        
+        val viewmodel = getViewModel()
+        
+        // Set up minimum required state for sending
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = 1, name = "Test Course")))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1", name = "Test User")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Test Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Test Body")))
+        
+        // Send the message
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+        
+        // Verify that createConversation was called with isIndividual = true
+        coVerify(exactly = 1) { 
+            inboxComposeRepository.createConversation(
+                recipients = any(),
+                subject = any(),
+                message = any(),
+                context = any(),
+                attachments = any(),
+                isIndividual = true  // This should be true due to feature flag
+            )
+        }
+    }
+
+    @Test
+    fun `Test restrict_student_access feature flag does not apply in Student app`() {
+        coEvery { context.packageName } returns "com.instructure.student"
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        // Even though feature flag is true, restrictions should not apply in Student app
+        assertEquals(false, uiState.hiddenFields.isSendIndividualHidden)
+        assertEquals(false, uiState.sendIndividual)
+        
+        // Feature flag should not have been checked since it's Student app
+        coVerify(exactly = 0) { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") }
     }
 
     @Test
