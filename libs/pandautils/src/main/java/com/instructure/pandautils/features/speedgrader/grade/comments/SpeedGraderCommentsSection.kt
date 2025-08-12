@@ -135,7 +135,6 @@ fun SpeedGraderCommentsSection(
             SpeedGraderCommentItems(
                 comments = state.comments,
                 modifier = Modifier.fillMaxSize(),
-
                 onAttachmentClick = { attachmentRouter.openAttachment(activity, it) },
                 actionHandler = actionHandler
             )
@@ -154,8 +153,6 @@ fun SpeedGraderCommentsSection(
         if (state.showRecordFloatingView != null) {
             var offsetX by remember { mutableFloatStateOf(0f) }
             var offsetY by remember { mutableFloatStateOf(0f) }
-            // TODO Handle permissions for recording audio/video
-            // Permission request is sent if not granted, but we should handle the result
             AndroidView(
                 factory = { context ->
                     FloatingRecordingView(context).apply {
@@ -172,6 +169,16 @@ fun SpeedGraderCommentsSection(
                                 actionHandler(
                                     SpeedGraderCommentsAction.MediaRecorded(
                                         mediaFile
+                                    )
+                                )
+                            }
+                        }
+                        replayCallback = { mediaFile ->
+                            mediaFile?.let {
+                                attachmentRouter.openAttachment(
+                                    activity, SpeedGraderCommentAttachment(
+                                        contentType = "video",
+                                        url = mediaFile.absolutePath
                                     )
                                 )
                             }
