@@ -18,7 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import android.util.Log
-import androidx.test.espresso.Espresso.pressBack
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -34,7 +34,6 @@ import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.isElementDisplayed
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
@@ -94,6 +93,15 @@ class QuizzesE2ETest: StudentTest() {
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizNotDisplayed(quizUnpublished)
 
+        quizListPage.openSearchBar()
+        quizListPage.enterSearchQuery(quizPublished.title)
+        quizListPage.assertQuizDisplayed(quizPublished)
+        quizListPage.assertQuizItemCount(1)
+        quizListPage.clearSearchButton()
+        quizListPage.enterSearchQuery(quizUnpublished.title)
+        closeSoftKeyboard()
+        
+
         Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
         quizListPage.selectQuiz(quizPublished)
 
@@ -133,27 +141,14 @@ class QuizzesE2ETest: StudentTest() {
         // Not sure if that would make a difference.
         //
         // Possible solution: Write a custom atom to do the work instead of relying on webClick() via pressButton()
-        var attemptsLeft = 10
-        while(attemptsLeft > 0) {
-            try {
-                canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
-
-                // If the pressButton() call above was successful, then this check should fail.
-                canvasWebViewPage.runTextChecks(
-                        WebViewTextCheck(
-                                locatorType = Locator.ID,
-                                locatorValue = "take_quiz_link",
-                                textValue = "Take the Quiz"
-                        )
-                )
-                attemptsLeft -= 1
-                sleep(1000) // delay between attempts
-                Log.v("QuizTest", "Retrying take-quiz button press")
-            }
-            catch(t: Throwable) {
-                break
-            }
-        }
+        canvasWebViewPage.runTextChecks(
+            WebViewTextCheck(
+                locatorType = Locator.ID,
+                locatorValue = "take_quiz_link",
+                textValue = "Take the Quiz"
+            )
+        )
+        canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
 
         // Enter answers to questions.  Right now, only multiple-choice questions are supported.
         Log.d(STEP_TAG, "Enter answers to the questions:")
@@ -176,11 +171,11 @@ class QuizzesE2ETest: StudentTest() {
         //
         // Chosen strategy: pressBack() until you get to the quiz list page,
         // then reload the quiz details to get the latest info.
-        Log.d(STEP_TAG, "Navigate back to Quizzes Page.")
-        while(!isElementDisplayed(R.id.quizListPage)) pressBack()
+        //Log.d(STEP_TAG, "Navigate back to Quizzes Page.")
+        //while(!isElementDisplayed(R.id.quizListPage)) pressBack()
 
-        Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
-        quizListPage.selectQuiz(quizPublished)
+        //Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
+        //quizListPage.selectQuiz(quizPublished)
 
         sleep(5000)
         Log.d(ASSERTION_TAG, "Assert (on web) that the '${quizPublished.title}' quiz now has a history.")
@@ -195,7 +190,7 @@ class QuizzesE2ETest: StudentTest() {
                 .check(webMatches(getText(),containsString("LATEST")))
 
         Log.d(STEP_TAG, "Navigate back to Course Browser Page.")
-        ViewUtils.pressBackButton(2)
+        ViewUtils.pressBackButton(3)
 
         Log.d(STEP_TAG, "Navigate to Grades Page.")
         courseBrowserPage.selectGrades()

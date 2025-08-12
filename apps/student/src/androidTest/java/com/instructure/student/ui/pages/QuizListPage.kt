@@ -26,7 +26,10 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.withCustomConstraints
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.model.QuizApiModel
+import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountAssertion
+import com.instructure.espresso.Searchable
+import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
@@ -36,11 +39,52 @@ import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
+import com.instructure.espresso.replaceText
 import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
-class QuizListPage : BasePage(R.id.quizListPage) {
+class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
+
+    /**
+     * The search button on the page.
+     */
+    private val searchButton by OnViewWithId(R.id.search)
+
+    /**
+     * The search input view on the page.
+     */
+    private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
+
+    /**
+     * The empty panda view displayed when the quiz list is empty.
+     */
+    private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
+
+    /**
+     * Asserts the display of the "No Quizzes" view.
+     */
+    fun assertDisplaysNoQuizzesView() {
+        emptyPandaView.assertDisplayed()
+    }
+
+    fun openSearchBar() {
+        searchButton.click()
+    }
+
+    fun enterSearchQuery(query: String) {
+        searchInput.click()
+        searchInput.replaceText(query)
+    }
+
+    fun clearSearchButton(){
+        searchable.clickOnClearSearchButton()
+    }
+
+    fun asserttQuizNotDisplayed(quiz: QuizApiModel) {
+        assertMatcherDisplayed(allOf(withId(R.id.title), withText(quiz.title)))
+    }
+
 
     fun assertNoQuizDisplayed() {
         onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
