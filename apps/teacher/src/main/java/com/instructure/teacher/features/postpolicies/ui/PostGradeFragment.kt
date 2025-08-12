@@ -31,6 +31,11 @@ class PostGradeFragment : PostGradeMobiusFragment() {
 
     override fun getEventHandler(): SpeedGraderGradingEventHandler = speedGraderGradingEventHandler
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        retainInstance = false
+    }
+
     companion object {
         fun newInstance(assignment: Assignment, isHideGradeMode: Boolean) = PostGradeFragment().withArgs(
             Bundle().apply {
