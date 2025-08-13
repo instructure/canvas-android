@@ -19,6 +19,7 @@ package com.instructure.student.ui.pages
 import android.view.View
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
+import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withText
@@ -56,17 +57,6 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
      */
     private val searchInput by WaitForViewWithId(androidx.appcompat.R.id.search_src_text)
 
-    /**
-     * The empty panda view displayed when the quiz list is empty.
-     */
-    private val emptyPandaView by WaitForViewWithId(R.id.emptyPandaView)
-
-    /**
-     * Asserts the display of the "No Quizzes" view.
-     */
-    fun assertDisplaysNoQuizzesView() {
-        emptyPandaView.assertDisplayed()
-    }
 
     fun openSearchBar() {
         searchButton.click()
@@ -81,10 +71,10 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
         searchable.clickOnClearSearchButton()
     }
 
-    fun asserttQuizNotDisplayed(quiz: QuizApiModel) {
-        assertMatcherDisplayed(allOf(withId(R.id.title), withText(quiz.title)))
+    fun assertNoQuizzesTextDisplayed() {
+        onView(withText("No Quizzes"))
+            .check(matches(isDisplayed()))
     }
-
 
     fun assertNoQuizDisplayed() {
         onView(allOf(withId(R.id.emptyView), isDisplayed())).assertDisplayed()
