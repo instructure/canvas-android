@@ -19,7 +19,6 @@ package com.instructure.teacher.features.inbox.list
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
@@ -32,7 +31,6 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsFragment
 import com.instructure.pandautils.features.inbox.list.InboxFragment
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
-
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
@@ -41,12 +39,8 @@ import com.instructure.teacher.fragments.EmptyFragment
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.router.RouteMatcher.openMedia
 import com.instructure.teacher.utils.setupBackButtonAsBackPressedOnly
-import kotlinx.coroutines.launch
 
-class TeacherInboxRouter(
-    private val activity: FragmentActivity, 
-    private val fragment: Fragment
-) : InboxRouter {
+class TeacherInboxRouter(private val activity: FragmentActivity, private val fragment: Fragment) : InboxRouter {
 
     override fun openConversation(conversation: Conversation, scope: InboxApi.Scope) {
         val route = InboxDetailsFragment.makeRoute(conversation.id, conversation.workflowState == Conversation.WorkflowState.UNREAD)
@@ -63,8 +57,7 @@ class TeacherInboxRouter(
     }
 
     override fun routeToNewMessage(activity: FragmentActivity) {
-        val options = InboxComposeOptions()
-        val route = InboxComposeFragment.makeRoute(options)
+        val route = InboxComposeFragment.makeRoute(InboxComposeOptions.buildNewMessage())
         RouteMatcher.route(activity, route)
     }
 
