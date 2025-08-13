@@ -21,6 +21,7 @@ import android.webkit.WebView
 import android.widget.Button
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
@@ -36,10 +37,13 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
@@ -58,7 +62,6 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentDeletedEvent
@@ -67,7 +70,6 @@ import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -76,20 +78,26 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Date
+import javax.inject.Inject
 
 @PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
+@AndroidEntryPoint
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView,
         FragmentAssignmentDetailsBinding>(),
     AssignmentDetailsView,
     Identity {
+
+    @Inject
+    lateinit var assignmentsApi: AssignmentAPI.AssignmentInterface
 
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
@@ -135,14 +143,11 @@ class AssignmentDetailsFragment : BasePresenterFragment<
                 }
 
                 R.id.menu_speedGrader -> {
-                    SpeedGraderActivity.createIntent(
-                        requireContext(),
-                        course.id,
-                        assignment.id,
-                        -1
-                    ).let {
-                        startActivity(it)
-                    }
+                    val bundle = SpeedGraderFragment.makeBundle(
+                        courseId = course.id,
+                        assignmentId = assignment.id
+                    )
+                    RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
                 }
             }
         }
@@ -152,7 +157,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.color, requireContext().getColor(R.color.textLightest))
     }
 
-    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment)
+    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment, assignmentsApi)
 
     override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
 

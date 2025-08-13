@@ -21,18 +21,17 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class AccountNotificationsUiState(
     val screenState: LoadingState = LoadingState(isPullToRefreshEnabled = false),
     val notificationItems: List<AccountNotificationGroup> = emptyList(),
-    val updateNotificationItem: (AccountNotificationItem, Boolean) -> Unit = { _, _ -> },
 )
 
 data class AccountNotificationGroup(
     val title: String,
     val description: String,
-    val items: List<AccountNotificationItem>,
+    val items: List<AccountNotificationTypeState>,
 )
 
-data class AccountNotificationItem(
-    val title: String,
-    val onClick: suspend (Boolean) -> Unit,
-    val checked: Boolean,
+data class AccountNotificationTypeState(
+    val label: String,
     val enabled: Boolean,
+    val checked: Boolean,
+    val onClick: (Boolean) -> Unit
 )

@@ -22,7 +22,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.OptIn
-import com.instructure.pandautils.base.BaseCanvasFragment
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
@@ -30,6 +30,7 @@ import com.bumptech.glide.Glide
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
 import com.instructure.pandautils.utils.ExoAgent
@@ -37,6 +38,7 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -47,6 +49,7 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentMediaSubmissionViewBinding
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.router.RouteMatcher
+import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 class MediaSubmissionViewFragment : BaseCanvasFragment() {
@@ -57,11 +60,21 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
     private var contentType by StringArg()
     private var thumbnailUrl by NullableStringArg()
     private var displayName by NullableStringArg()
+    private var mediaUri: Uri? = null
 
-    private val exoAgent get() = ExoAgent.getAgentForUri(uri)
+    private val exoAgent get() = ExoAgent.getAgentForUri(mediaUri ?: uri)
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? =
         inflater.inflate(R.layout.fragment_media_submission_view, container, false)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        fetchMediaUri()
+    }
 
     override fun onStart() = with(binding) {
         super.onStart()
@@ -83,14 +96,34 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
 
         submissionMediaPlayerView.findViewById<View>(R.id.fullscreenButton).onClick {
             exoAgent.flagForResume()
-            val bundle = BaseViewMediaActivity.makeBundle(uri.toString(), thumbnailUrl, contentType, displayName, false)
+            val bundle = BaseViewMediaActivity.makeBundle(
+                (mediaUri ?: uri).toString(),
+                thumbnailUrl,
+                contentType,
+                displayName,
+                false
+            )
             RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.MEDIA))
         }
     }
 
     override fun onResume() {
         super.onResume()
+        if (mediaUri != null) {
+            attachMediaPlayer()
+        }
+    }
 
+    private fun fetchMediaUri() {
+        lifecycleScope.launch {
+            mediaUri = RouteUtils.getRedirectUrl(uri)
+            if (isResumed) {
+                attachMediaPlayer()
+            }
+        }
+    }
+
+    private fun attachMediaPlayer() {
         exoAgent.attach(binding.submissionMediaPlayerView, object : ExoInfoListener {
             override fun onStateChanged(newState: ExoAgentState) {
                 when (newState) {
@@ -98,8 +131,10 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
                         binding.mediaPreviewContainer.setVisible()
                         binding.mediaPlaybackErrorView.setGone()
                         binding.submissionMediaPlayerView.setGone()
+                        binding.prepareMediaButton.setVisible()
                         binding.mediaProgressBar.setGone()
                     }
+
                     ExoAgentState.PREPARING,
                     ExoAgentState.BUFFERING -> {
                         binding.mediaPreviewContainer.setGone()
@@ -108,12 +143,14 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
                         binding.mediaProgressBar.announceForAccessibility(getString(R.string.loading))
                         binding.mediaProgressBar.setVisible()
                     }
+
                     ExoAgentState.READY -> {
                         binding.mediaPreviewContainer.setGone()
                         binding.mediaPlaybackErrorView.setGone()
                         binding.submissionMediaPlayerView.setVisible()
                         binding.mediaProgressBar.setGone()
                     }
+
                     ExoAgentState.ENDED -> {
                         exoAgent.reset()
                         binding.mediaPreviewContainer.setVisible()
@@ -128,11 +165,13 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
                 binding.submissionMediaPlayerView.setGone()
                 binding.mediaProgressBar.setGone()
                 binding.mediaPlaybackErrorView.setVisible()
-                binding.errorTextView.setText(when (cause) {
-                    is HttpDataSource.HttpDataSourceException -> R.string.no_data_connection
-                    is UnrecognizedInputFormatException -> R.string.utils_couldNotPlayFormat
-                    else -> R.string.errorOccurred
-                })
+                binding.errorTextView.setText(
+                    when (cause) {
+                        is HttpDataSource.HttpDataSourceException -> R.string.no_data_connection
+                        is UnrecognizedInputFormatException -> R.string.utils_couldNotPlayFormat
+                        else -> R.string.errorOccurred
+                    }
+                )
                 val isUnrecognizedFormat = cause is UnrecognizedInputFormatException
                 binding.openExternallyButton.setVisible(isUnrecognizedFormat)
                 binding.tryAgainButton.setVisible(!isUnrecognizedFormat)
@@ -155,11 +194,13 @@ class MediaSubmissionViewFragment : BaseCanvasFragment() {
 
     companion object {
 
-        fun newInstance(media: SubmissionDetailsContentType.MediaContent) = MediaSubmissionViewFragment().apply {
-            uri = media.uri
-            thumbnailUrl = media.thumbnailUrl
-            contentType = media.contentType!!
-            displayName = media.displayName
+        fun newInstance(media: SubmissionDetailsContentType.MediaContent): MediaSubmissionViewFragment {
+            return MediaSubmissionViewFragment().apply {
+                uri = media.uri
+                thumbnailUrl = media.thumbnailUrl
+                contentType = media.contentType!!
+                displayName = media.displayName
+            }
         }
     }
 }

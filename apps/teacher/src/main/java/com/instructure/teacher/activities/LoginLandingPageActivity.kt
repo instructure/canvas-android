@@ -42,7 +42,7 @@ class LoginLandingPageActivity : BaseLoginLandingPageActivity() {
 
     override fun beginCanvasNetworkFlow(url: String): Intent = SignInActivity.createIntent(this, AccountDomain(url))
 
-    override fun appTypeName(): Int = R.string.appUserTypeTeacher
+    override fun appTypeName(): String = getString(R.string.appUserTypeTeacher)
 
     override fun themeColor(): Int = ContextCompat.getColor(this, R.color.login_teacherAppTheme)
 

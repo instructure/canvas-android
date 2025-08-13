@@ -291,7 +291,7 @@
     <string name="Todo">To-do lijst</string>
     <string name="todoFilter">Cursussen filteren</string>
     <string name="filterByEllipsis">Filteren op...</string>
-    <string name="favoritedCoursesLabel">Favoriete cursussen</string>
+    <string name="favoriteCoursesLabel">Favoriete cursussen</string>
     <string name="Event">Gebeurtenis</string>
     <string name="eventSuccessfulDeletion">Evenement was succesvol verwijderd</string>
     <string name="timeIconDescription">Tijdpictogram</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Meldingen</string>
     <string name="todoWidgetTitleLong">Canvas - To-do</string>
     <string name="gradesWidgetTitleLong">Canvas - Cijfers</string>
+    <string name="gradeWidgetTitleLong">Canvas – Cijfer</string>
     <string name="notificationWidgetTitleLong">Canvas - Berichtgevingen</string>
     <string name="notLoggedIn">Je bent niet ingelogd</string>
     <string name="widgetStyle">Kies de stijl van je widget</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Beoordelen na posten</string>
     <string name="gradeOverride">Cijferoverschrijving</string>
     <string name="currentGrade">Huidig cijfer </string>
-    <string name="opensInCanvasStudent">Opent in Canvas-cursist</string>
+    <string name="opensInCanvasApp">Opent in de Canvas-app</string>
     <string name="tab_student_view">Weergave voor cursisten</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Opslag</string>
     <string name="offline_content_storage_info">%s van %s gebruikt</string>
     <string name="offline_content_other">Andere apps</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Resterend</string>
-    <string name="offline_content_storage_info_a11y_description">Opslaginfo: %s van %s gebruikt, andere apps %d%%, Canvas Student %d%%, resterend %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Opslaginfo: %s van %s gebruikt, andere apps %d%%, Canvas %d%%, resterend %d%%</string>
     <string name="offline_content_all_courses">Alle cursussen</string>
     <string name="offline_content_sync">Synchroniseren</string>
     <string name="offline_content_selected">%d geselecteerd</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Cursisten beheren</string>
     <string name="screenTitleSettings">Instellingen</string>
-    <string name="navigationDrawerSwitchUsers">Wissel van gebruikers</string>
     <string name="navigationDrawerLogOut">Afmelden</string>
     <string name="noStudentsError">Geen cursisten</string>
     <string name="noStudentsErrorDescription">Je observeert geen cursisten.</string>
     <string name="noStudentsRefresh">Vernieuwen</string>
     <string name="noGrade">Geen cijfer</string>
+    <string name="noGrades">Geen cijfers</string>
     <string name="errorLoadingCourses">Er is een fout opgetreden bij het laden van de cursussen van je cursist.</string>
     <string name="parentNoCourses">Geen cursussen</string>
     <string name="parentNoCoursesMessage">De cursussen van je cursist zijn mogelijk nog niet gepubliceerd.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Ben je cursist of cursusleider?</string>
     <string name="studentOrTeacherSubtitle">Wellicht is een van onze andere apps hiervoor beter geschikt. Tik op een van de apps om de Play Store te openen</string>
     <string name="studentApp">CURSIST</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">CURSUSLEIDER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Cursist toegevoegd</string>
     <string name="addStudentTitle">Cursist toevoegen met&#8230;</string>
     <string name="addStudentQrCodeTitle">QR-code</string>
-    <string name="addStudentQrCodeExplanation">Cursisten kunnen een QR-code genereren met behulp van de Canvas Student-app op hun mobiele apparaat</string>
+    <string name="addStudentQrCodeExplanationCanvas">Cursisten kunnen een QR-code genereren met behulp van de Canvas-app op hun mobiele apparaat</string>
     <string name="addStudentPairingCodeTitle">Koppelingscode</string>
     <string name="addStudentPairingCodeExplanation">Cursisten kunnen een koppelingscode ophalen via de Canvas-website.</string>
     <string name="pairingCodeDialogTitle">Cursist toevoegen</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Annuleren</string>
     <string name="pairingCodeDialogPositiveButton">OK</string>
     <string name="pairingCodeDialogError">Je code is onjuist of verlopen.</string>
-    <string name="qrPairingTitle">Canvas Student openen</string>
-    <string name="qrPairingDescription">Je moet de Canvas Student-app van je cursist openen om door te kunnen gaan. Ga naar Hoofdmenu > Instellingen > Koppelen met waarnemer en scan de QR-code die je daar ziet.</string>
-    <string name="qrCodePairingPrompt">Scan een QR-code van Canvas om te koppelen</string>
+    <string name="qrPairingTitleCanvas">In de Canvas-app openen</string>
+    <string name="qrPairingDescriptionCanvas">Je moet de Canvas-app van je cursist openen om door te kunnen gaan. Ga naar Hoofdmenu > Instellingen > Koppelen met waarnemer en scan de QR-code die je daar ziet.</string>
+    <string name="qrCodePairingPromptCanvas">Scan een QR-code uit de Canvas-app om te koppelen</string>
     <string name="a11y_addStudentContentDescription">Cursist toevoegen</string>
     <string name="qrPairingErrorTitle">Verlopen QR-code</string>
     <string name="qrPairingErrorDescription">De QR-code die je hebt gescand is wellicht verlopen. Vernieuw de code op het apparaat van de cursist en probeer het opnieuw.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Er is een fout opgetreden bij het laden van de opdrachten</string>
     <string name="a11y_searchAssignments">Opdrachten zoeken</string>
     <string name="dueAssignmentListItem">Inleverdatum %1$s</string>
+    <string name="a11y_searchAmongRecipients">Zoeken onder de ontvangers</string>
+    <string name="a11y_recipientIsRemoved">%1$s is verwijderd</string>
+    <string name="widgetDueDate">In te leveren op %1$s</string>
+    <string name="widgetFromTo">%1$s tot %2$s</string>
+    <string name="widgetAllDay">De hele dag</string>
+    <string name="widgetErrorTitle">Oeps! Er is iets misgegaan</string>
+    <string name="widgetErrorSubtitle">We kunnen je taken op dit moment niet weergeven. Probeer het wat later nog een keer of open de app.</string>
+    <string name="widgetToDoEmptyTitle">Voor nu ben je klaar!</string>
+    <string name="widgetToDoEmptySubtitle">Het lijkt erop dat je de komende 4 weken vrij hebt. Wil je een paar opdrachten toevoegen?</string>
+    <string name="widgetNotLoggedInTitle">Laten we je aanmelden!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Meld je in de app aan bij je account om je lijst met opdrachten te bekijken. Het kost je maar een momentje!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Open het scherm van de lijst met opdrachten</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Nieuwe opdracht maken</string>
+    <string name="widgetGradesErrorSubtitle">We kunnen je cijfers op dit moment niet weergeven. Probeer het wat later nog een keer of open de app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Meld je in de app aan bij je account om je cijfers te bekijken. Het kost je maar een momentje!</string>
+    <string name="widgetSingleGradeErrorSubtitle">We kunnen je cijfers op dit moment niet weergeven.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Meld je in de app aan bij je account om je cijfers te bekijken.</string>
+    <string name="widgetSingleGradeSelectCourse">Laten we cursus kiezen</string>
+    <string name="widgetGradesErrorLoadingCourses">Er is een fout opgetreden tijdens het laden van cursussen.</string>
+    <string name="settingsSwitchExperience">Schakel over naar Canvas Career</string>
 </resources>

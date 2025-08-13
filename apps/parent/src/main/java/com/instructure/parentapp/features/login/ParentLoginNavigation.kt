@@ -22,6 +22,7 @@ import android.webkit.CookieManager
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.LoginNavigation
 import com.instructure.loginapi.login.tasks.LogoutTask
+import com.instructure.loginapi.login.viewmodel.Experience
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.parentapp.features.main.MainActivity
 import com.instructure.parentapp.util.ParentLogoutTask
@@ -41,7 +42,7 @@ class ParentLoginNavigation(
         ).execute()
     }
 
-    override fun initMainActivityIntent(): Intent {
+    override fun initMainActivityIntent(experience: Experience): Intent {
         CookieManager.getInstance().flush()
 
         val intent = Intent(activity, MainActivity::class.java)

@@ -939,6 +939,12 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 12 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade =  "12")
 
+        Log.d(ASSERTION_TAG, "Assert that the grade is not displayed on the course's card by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course.name, "N/A", false)
+
+        Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
+        leftSideNavigationDrawerPage.setShowGrades(true)
+
         Log.d(ASSERTION_TAG, "Refresh the Dashboard page. Assert that the course grade is 80%.")
         dashboardPage.refresh()
         dashboardPage.assertCourseGrade(course.name, "80%")
@@ -1050,12 +1056,14 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Refresh the Assignment List Page. Assert that all the different types of assignments' grades" +
                 "has been shown as their original grade types, since the restriction has been turned off.")
-        assignmentListPage.refreshAssignmentList()
-        assignmentListPage.assertHasAssignment(pointsTextAssignment, "12/15")
-        assignmentListPage.assertHasAssignment(percentageAssignment, "66.67%")
-        assignmentListPage.assertHasAssignment(letterGradeAssignment, "11.4/15 (C)")
-        assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
-        assignmentListPage.assertHasAssignment(gpaScaleAssignment, "3.7/15 (F)")
+        retryWithIncreasingDelay(times = 5) {
+            assignmentListPage.refreshAssignmentList()
+            assignmentListPage.assertHasAssignment(pointsTextAssignment, "12/15")
+            assignmentListPage.assertHasAssignment(percentageAssignment, "66.67%")
+            assignmentListPage.assertHasAssignment(letterGradeAssignment, "11.4/15 (C)")
+            assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
+            assignmentListPage.assertHasAssignment(gpaScaleAssignment, "3.7/15 (F)")
+        }
 
         Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(pointsTextAssignment)
@@ -1136,6 +1144,15 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(PREPARATION_TAG, "Grade submission: '${pointsTextAssignment.name}' with 12 points.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, pointsTextAssignment.id, student.id, postedGrade = "12")
+
+        Log.d(ASSERTION_TAG, "Assert that the grade is not displayed on the course's card by default.")
+        dashboardPage.assertCourseGradeNotDisplayed(course.name, "N/A", false)
+
+        Log.d(STEP_TAG, "Toggle ON 'Show Grades' and navigate back to Dashboard Page.")
+        leftSideNavigationDrawerPage.setShowGrades(true)
+
+        Log.d(ASSERTION_TAG, "Assert that the grade is displayed on the course's card.")
+        dashboardPage.assertCourseGrade(course.name, "N/A")
 
         Log.d(PREPARATION_TAG, "Update '${course.name}' course's settings: Enable restriction for quantitative data.")
         val restrictQuantitativeDataMap = mutableMapOf<String, Boolean>()

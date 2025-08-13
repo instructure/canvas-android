@@ -1,3 +1,4 @@
+
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
@@ -45,18 +46,18 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
     Box(modifier = modifier) {
         when (filePreviewUiState) {
             is FilePreviewUiState.Image -> ImageFileContent(
-                imageUrl = filePreviewUiState.url,
+                uri = filePreviewUiState.uri,
                 contentDescription = filePreviewUiState.displayName,
                 modifier = Modifier.fillMaxWidth(),
                 loadingIndicator = { Spinner(Modifier.fillMaxSize()) }
             )
 
             is FilePreviewUiState.Media -> MediaFileContent(
-                mediaUrl = filePreviewUiState.url,
+                uri = filePreviewUiState.uri,
                 contentType = filePreviewUiState.contentType,
-                onFullScreenClicked = { url, contentType ->
+                onFullScreenClicked = { uri, contentType ->
                     val bundle = BaseViewMediaActivity.makeBundle(
-                        url,
+                        uri.toString(),
                         filePreviewUiState.thumbnailUrl,
                         contentType,
                         filePreviewUiState.displayName,
@@ -65,20 +66,22 @@ fun FilePreview(filePreviewUiState: FilePreviewUiState, modifier: Modifier = Mod
                     context.startActivity(ViewMediaActivity.createIntent(context, bundle))
                 })
 
-            is FilePreviewUiState.Pdf -> {} // TODO Will be implemented once we know if we can use PSPDFKit
+            is FilePreviewUiState.Pdf -> {
+                PdfPreview(documentUri = filePreviewUiState.uri, modifier = Modifier.fillMaxSize())
+            }
             is FilePreviewUiState.WebView -> {
                 ComposeCanvasWebView(
                     url = filePreviewUiState.url, applyOnWebView = {
-                    layoutParams = ViewGroup.LayoutParams(
-                        ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT
-                    )
-                    settings.loadWithOverviewMode = true
-                    settings.displayZoomControls = false
-                    settings.setSupportZoom(true)
-                    activity?.let { addVideoClient(it) }
-                    setInitialScale(100)
-                })
+                        layoutParams = ViewGroup.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT
+                        )
+                        settings.loadWithOverviewMode = true
+                        settings.displayZoomControls = false
+                        settings.setSupportZoom(true)
+                        activity?.let { addVideoClient(it) }
+                        setInitialScale(100)
+                    })
             }
 
             FilePreviewUiState.NoPreview -> {}

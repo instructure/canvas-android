@@ -45,7 +45,7 @@ fun ComposeCanvasWebViewWrapper(
     webViewCallbacks: ComposeWebViewCallbacks? = null,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
-    val webViewState = rememberSaveable { bundleOf() }
+    val webViewState = rememberSaveable(content) { bundleOf() }
 
     if (LocalInspectionMode.current) {
         Text(text = content)

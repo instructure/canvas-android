@@ -189,6 +189,7 @@ class EventViewModel @Inject constructor(
                     val removedEvent = eventRepository.deleteCalendarEvent(scheduleItem.id)
                     _events.send(EventViewModelAction.RefreshCalendarDays(listOfNotNull(removedEvent.startDate?.toLocalDate())))
                 }
+                eventViewModelBehavior.updateWidget()
             }
         } catch {
             _uiState.update {

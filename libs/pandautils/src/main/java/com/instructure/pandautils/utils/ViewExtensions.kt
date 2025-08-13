@@ -95,6 +95,7 @@ import com.instructure.canvasapi2.utils.tryOrNull
 import com.instructure.canvasapi2.utils.weave.WeaveJob
 import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.speedgrader.grade.comments.SpeedGraderCommentAttachment
 import kotlinx.coroutines.delay
 import java.lang.reflect.Field
 import java.util.Locale
@@ -749,6 +750,22 @@ val Attachment.iconRes: Int
         contentType!!.startsWith("video") -> R.drawable.ic_media
         contentType!!.startsWith("audio") -> R.drawable.ic_audio
         else -> when (filename!!.substringAfterLast('.', "").lowercase(Locale.getDefault())) {
+            "doc", "docx" -> R.drawable.ic_document
+            "txt" -> R.drawable.ic_document
+            "rtf" -> R.drawable.ic_document
+            "pdf" -> R.drawable.ic_pdf
+            "xls" -> R.drawable.ic_document
+            "zip", "tar", "7z", "apk", "jar", "rar" -> R.drawable.ic_attachment
+            else -> R.drawable.ic_attachment
+        }
+    }
+
+val SpeedGraderCommentAttachment.iconRes: Int
+    get() = when {
+        contentType.startsWith("image") -> R.drawable.ic_image
+        contentType.startsWith("video") -> R.drawable.ic_media
+        contentType.startsWith("audio") -> R.drawable.ic_audio
+        else -> when (title.substringAfterLast('.', "").lowercase(Locale.getDefault())) {
             "doc", "docx" -> R.drawable.ic_document
             "txt" -> R.drawable.ic_document
             "rtf" -> R.drawable.ic_document

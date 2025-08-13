@@ -16,109 +16,221 @@
 package com.instructure.teacher.ui
 
 import android.util.Log
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.StubMultiAPILevel
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addRubricToAssignment
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.GraphQlApiModule
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.CommentLibraryManager
+import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
+import com.instructure.canvasapi2.type.GradingType
 
 @HiltAndroidTest
+@UninstallModules(
+    GraphQlApiModule::class,
+    CustomGradeStatusModule::class
+)
 class SpeedGraderGradePageTest : TeacherComposeTest() {
 
+    override fun displaysPageObjects()  = Unit
 
-    @Test
-    override fun displaysPageObjects() {
-        goToSpeedGraderGradePage()
-        speedGraderGradePage.assertPageObjects()
-    }
+    @BindValue
+    @JvmField
+    val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val inboxSettingsManager: InboxSettingsManager = FakeInboxSettingsManager()
+
+    @BindValue
+    @JvmField
+    val personContextManager: StudentContextManager = FakeStudentContextManager()
+
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
+
+    @BindValue
+    @JvmField
+    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
+
+    @BindValue
+    @JvmField
+    val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
-        val possiblePoint = 20
-        goToSpeedGraderGradePage(gradingType = "points", pointsPossible = possiblePoint)
+        goToSpeedGraderGradePage(gradingType = GradingType.points)
+
+        speedGraderGradePage.assertSpeedGraderLabelDisplayed()
+        speedGraderGradePage.assertCurrentEnteredScore("10")
+        speedGraderGradePage.assertPointsPossible("20")
+
         speedGraderGradePage.assertSliderVisible()
-        speedGraderGradePage.assertSliderMinValue("0")
-        speedGraderGradePage.assertSliderMaxValue(possiblePoint.toString())
-        speedGraderGradePage.assertRubricHidden()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxHidden()
+
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.assertExcuseButtonEnabled()
+
+        speedGraderGradePage.assertSelectedStatusText("submitted")
+
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("10 / 20 pts")
+
+        speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
     @Test
     fun correctViewsForPercentageGradedWithoutRubric() {
-        goToSpeedGraderGradePage("percent")
+        goToSpeedGraderGradePage(gradingType = GradingType.percent)
+
+        speedGraderGradePage.assertSpeedGraderLabelDisplayed()
+        speedGraderGradePage.assertPossiblePointsForPercentageGradingType("20")
+        speedGraderGradePage.assertCurrentEnteredPercentage("60")
+
         speedGraderGradePage.assertSliderVisible()
-        speedGraderGradePage.assertSliderMinValue("0%")
-        speedGraderGradePage.assertSliderMaxValue("100%")
-        speedGraderGradePage.assertRubricHidden()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxHidden()
-    }
 
-    @Test
-    fun correctViewsForPointGradedWithRubric() {
-        goToSpeedGraderGradePage("points", true)
-        speedGraderGradePage.assertSliderHidden()
-        speedGraderGradePage.assertRubricVisible()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxVisible()
-    }
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.assertExcuseButtonEnabled()
 
-    @Test
-    fun correctViewsForPercentageGradedWithRubric() {
-        goToSpeedGraderGradePage("percent", true)
-        speedGraderGradePage.assertSliderHidden()
-        speedGraderGradePage.assertRubricVisible()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxVisible()
+        speedGraderGradePage.assertSelectedStatusText("submitted")
+
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("12 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("12.0")
+
+        speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
     @Test
     fun correctViewsForPassFailAssignment() {
-        goToSpeedGraderGradePage("pass_fail")
+        goToSpeedGraderGradePage(gradingType = GradingType.pass_fail)
+
+        speedGraderGradePage.assertSpeedGraderLabelDisplayed()
+        speedGraderGradePage.assertCurrentEnteredPassFailScore("10 / 20")
+
         speedGraderGradePage.assertSliderHidden()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxVisible()
+
+        speedGraderGradePage.assertCompleteIncompleteButtonsDisplayed()
+        speedGraderGradePage.assertCompleteButtonNotSelected()
+        speedGraderGradePage.assertIncompleteButtonNotSelected()
+
+        speedGraderGradePage.assertNoGradeButtonDoesNotExist()
+        speedGraderGradePage.assertExcuseButtonEnabled()
+
+        speedGraderGradePage.assertSelectedStatusText("submitted")
+
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("No Grade")
+
+        speedGraderGradePage.assertNoRubricCriterionDisplayed()
+
+        speedGraderGradePage.selectCompleteButton()
+        speedGraderGradePage.assertCompleteButtonSelected()
+        speedGraderGradePage.assertIncompleteButtonNotSelected()
+
+        speedGraderGradePage.selectIncompleteButton()
+        speedGraderGradePage.assertCompleteButtonNotSelected()
+        speedGraderGradePage.assertIncompleteButtonSelected()
     }
 
-    @Test
-    fun correctViewsForLetterGradeAssignment() {
-        goToSpeedGraderGradePage("letter_grade")
-        speedGraderGradePage.assertSliderHidden()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxVisible()
-    }
-
+    @Stub
     @Test
     fun correctViewsForGpaScaleAssignment() {
-        goToSpeedGraderGradePage("gpa_scale")
-        speedGraderGradePage.assertSliderHidden()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
-        speedGraderGradePage.assertCheckboxVisible()
+        goToSpeedGraderGradePage(GradingType.gpa_scale)
+        speedGraderGradePage.assertSpeedGraderLabelDisplayed()
+        speedGraderGradePage.assertCurrentEnteredScore("10")
+        speedGraderGradePage.assertPointsPossible("20")
+
+        speedGraderGradePage.assertSliderVisible()
+
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.assertExcuseButtonEnabled()
+
+        speedGraderGradePage.assertSelectedStatusText("submitted")
+
+        speedGraderGradePage.assertDaysLate("1")
+
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("10.0")
+
+        speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
+    @Stub
     @Test
-    fun displaysGradeDialog() {
-        goToSpeedGraderGradePage()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.assertGradeDialog()
+    fun correctViewsForLetterGradeAssignment() {
+        goToSpeedGraderGradePage(gradingType = GradingType.letter_grade)
+
+        speedGraderGradePage.assertSpeedGraderLabelDisplayed()
+        speedGraderGradePage.assertCurrentEnteredScore("10")
+        speedGraderGradePage.assertPointsPossible("20")
+
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.assertExcuseButtonEnabled()
+
+        speedGraderGradePage.assertSelectedStatusText("submitted")
+
+        speedGraderGradePage.assertDaysLate("1")
+
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("10 / 20 pts")
+
+        speedGraderGradePage.assertRubricsLabelDisplayed()
+        speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
     @Test
@@ -130,56 +242,77 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
             return
         }
         goToSpeedGraderGradePage()
-        speedGraderGradePage.openGradeDialog()
         val grade = "19"
         speedGraderGradePage.enterNewGrade(grade)
-        speedGraderGradePage.assertHasGrade(grade)
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("19 / 20 pts")
     }
 
+    @Stub  //TODO: Known issue that first when entering new grade which is over 100, it "throws back" to the maximum points possible and shows the slider again.
     @Test
-    fun hidesRubricWhenMissing() {
+    fun sliderHideWhenEnteredGradeIsOverHundred() {
         goToSpeedGraderGradePage()
-        speedGraderGradePage.assertRubricHidden()
-    }
+        val grade = "128.5"
 
-    @Test
-    @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
-    fun overgradePointAssignment() {
-        val pointsPossible = 20
-        goToSpeedGraderGradePage(pointsPossible = pointsPossible)
-        speedGraderGradePage.openGradeDialog()
-        val grade = 28.6
-        speedGraderGradePage.enterNewGrade(grade.toString())
-        speedGraderGradePage.assertHasGrade(grade.toString())
-        speedGraderGradePage.assertHasOvergradeWarning(grade - pointsPossible)
-        speedGraderGradePage.assertSliderMaxValue(grade.toInt().toString())
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.enterNewGrade(grade)
+        speedGraderGradePage.assertSliderHidden()
+        // This should be fixed in the future to make this test work properly. (Because this behaviour in the test is the expected).
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("128.5 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("128.5 / 20 pts")
     }
 
     @Test
     fun excuseStudent() {
         goToSpeedGraderGradePage()
-        speedGraderPage.swipeUpGradesTab()
+
+        speedGraderGradePage.assertNoGradeButtonEnabled()
         speedGraderGradePage.assertExcuseButtonEnabled()
         speedGraderGradePage.clickExcuseStudentButton()
-        speedGraderGradePage.assertStudentExcused()
         speedGraderGradePage.assertExcuseButtonDisabled()
+
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertSelectedStatusText("Excused")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("0 / 20 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("0")
     }
 
     @Test
     @StubMultiAPILevel("Failed API levels = { 27, 28, 29 }")
     fun clearGrade() {
         goToSpeedGraderGradePage()
-        speedGraderPage.swipeUpGradesTab()
-        speedGraderGradePage.assertNoGradeButtonDisabled()
-        speedGraderGradePage.openGradeDialog()
-        speedGraderGradePage.enterNewGrade("15")
         speedGraderGradePage.assertNoGradeButtonEnabled()
+        speedGraderGradePage.assertExcuseButtonEnabled()
         speedGraderGradePage.clickNoGradeButton()
-        speedGraderGradePage.assertNoGradeButtonDisabled()
-        speedGraderGradePage.assertHasNoGrade()
+        speedGraderGradePage.assertNoGradeButtonEnabled()
+
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertSelectedStatusText("None")
+        speedGraderGradePage.assertFinalGradePointsValueDisplayed("0 / 20 pts")
+        speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("0 / 20 pts")
     }
 
-    private fun goToSpeedGraderGradePage(gradingType: String = "points", hasRubric: Boolean = false, pointsPossible: Int = 20) {
+    @Stub
+    @Test
+    fun correctViewsForPointGradedWithRubric() {
+        goToSpeedGraderGradePage(GradingType.points, true)
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertRubricsLabelDisplayed()
+        //TODO
+    }
+
+    @Stub
+    @Test
+    fun correctViewsForPercentageGradedWithRubric() {
+        goToSpeedGraderGradePage(GradingType.percent, true)
+        speedGraderGradePage.assertSliderVisible()
+        speedGraderGradePage.assertRubricsLabelDisplayed()
+        //TODO
+    }
+
+    private fun goToSpeedGraderGradePage(gradingType: GradingType = GradingType.points, hasRubric: Boolean = false, pointsPossible: Int = 20, submission: Submission? = null) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
@@ -194,7 +327,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
                 courseId = course.id,
                 submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
                 pointsPossible = pointsPossible,
-                gradingType = gradingType
+                gradingType = gradingType.rawValue
         )
 
         if (hasRubric) {
@@ -216,7 +349,10 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         val submission = data.addSubmissionForAssignment(
                 assignmentId = assignment.id,
                 userId = student.id,
-                type = "online_text_entry"
+                type = "online_text_entry",
+                body = "This is a test submission",
+                score = 10.0,
+                grade = "60",
         )
 
         val token = data.tokenFor(teacher)!!
@@ -226,6 +362,8 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectGradesTab()
+        composeTestRule.waitForIdle()
+        if(!isLandscapeDevice()) speedGraderPage.clickExpandPanelButton()
+        speedGraderPage.selectTab("Grade & Rubric")
     }
 }

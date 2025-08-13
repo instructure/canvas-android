@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.assignments.list.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -41,4 +42,6 @@ interface AssignmentListDataSource {
     ): List<GradingPeriod>
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course
+
+    suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
 }

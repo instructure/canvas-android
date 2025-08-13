@@ -72,7 +72,8 @@
     <string name="loginHint">Tìm trường hoặc học khu của bạn</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Báo Cáo Vấn Đề</string>
+    <string name="errorReportAProblem">Báo cáo vấn đề</string>
+    <string name="reportAProblemDialogTitle">Báo cáo vấn đề</string>
     <string name="errorReportSubject">Tiêu Đề</string>
     <string name="errorReportDescription">Mô Tả</string>
     <string name="errorReportSend">Gửi</string>

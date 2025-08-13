@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.settings
 
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSignatureSettings
@@ -31,8 +32,9 @@ class SettingsRepositoryTest {
     private val featuresApi: FeaturesAPI.FeaturesInterface = mockk(relaxed = true)
     private val inboxSettingsManager: InboxSettingsManager = mockk(relaxed = true)
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
+    private val experienceApi: ExperienceAPI = mockk(relaxed = true)
 
-    private val repository = SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour)
+    private val repository = SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceApi)
 
     @Test
     fun `Return hidden state when feature request fails`() = runTest {
@@ -77,7 +79,12 @@ class SettingsRepositoryTest {
     fun `Return enabled state when signature is enabled`() = runTest {
         coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(enableInboxSignatureBlock = true))
         coEvery { settingsBehaviour.isInboxSignatureEnabledForRole(any()) } returns true
-        coEvery { inboxSettingsManager.getInboxSignatureSettings(any()) } returns DataResult.Success(InboxSignatureSettings(useSignature = true, signature = "signature"))
+        coEvery { inboxSettingsManager.getInboxSignatureSettings(any()) } returns DataResult.Success(
+            InboxSignatureSettings(
+                useSignature = true,
+                signature = "signature"
+            )
+        )
 
         val inboxSignatureState = repository.getInboxSignatureState()
 
@@ -88,7 +95,12 @@ class SettingsRepositoryTest {
     fun `Return disabled state when signature is disabled`() = runTest {
         coEvery { featuresApi.getAccountSettingsFeatures(any()) } returns DataResult.Success(EnvironmentSettings(enableInboxSignatureBlock = true))
         coEvery { settingsBehaviour.isInboxSignatureEnabledForRole(any()) } returns true
-        coEvery { inboxSettingsManager.getInboxSignatureSettings(any()) } returns DataResult.Success(InboxSignatureSettings(useSignature = false, signature = "signature"))
+        coEvery { inboxSettingsManager.getInboxSignatureSettings(any()) } returns DataResult.Success(
+            InboxSignatureSettings(
+                useSignature = false,
+                signature = "signature"
+            )
+        )
 
         val inboxSignatureState = repository.getInboxSignatureState()
 

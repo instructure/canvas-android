@@ -17,6 +17,7 @@
 package com.instructure.student.features.assignments.list
 
 import androidx.fragment.app.FragmentActivity
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -33,11 +34,16 @@ import com.instructure.pandautils.features.assignments.list.filter.AssignmentSta
 import com.instructure.student.R
 import com.instructure.student.dialog.BookmarkCreationDialog
 
-class StudentAssignmentListBehavior: AssignmentListBehavior {
-    override fun getAssignmentGroupItemState(course: Course, assignment: Assignment): AssignmentGroupItemState {
+class StudentAssignmentListBehavior : AssignmentListBehavior {
+    override fun getAssignmentGroupItemState(
+        course: Course,
+        assignment: Assignment,
+        customStatuses: List<CustomGradeStatusesQuery.Node>
+    ): AssignmentGroupItemState {
         return AssignmentGroupItemState(
             course,
             assignment,
+            customStatuses,
             showDueDate = true,
             showSubmissionState = true,
             showGrade = true

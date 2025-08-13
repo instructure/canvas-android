@@ -158,7 +158,7 @@ fun ShowroomContent(route: String, navController: NavHostController) {
             .fillMaxSize()
     ) {
         Box {
-            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.GHOST, onClick = {
+            IconButton(iconRes = R.drawable.arrow_back, color = IconButtonColor.Ghost, onClick = {
                 navController.popBackStack()
             })
             Column {

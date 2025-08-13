@@ -142,7 +142,7 @@ private fun ModuleHeader(state: ModuleHeaderState, modifier: Modifier = Modifier
                     case = PillCase.TITLE,
                     size = PillSize.SMALL
                 )
-                HorizonSpace(SpaceSize.SPACE_4)
+                HorizonSpace(SpaceSize.SPACE_8)
             }
 
             AnimatedContent(
@@ -157,7 +157,7 @@ private fun ModuleHeader(state: ModuleHeaderState, modifier: Modifier = Modifier
                     overflow = TextOverflow.Ellipsis
                 )
             }
-            HorizonSpace(SpaceSize.SPACE_4)
+            HorizonSpace(SpaceSize.SPACE_8)
             FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ModuleItemText(text = pluralStringResource(R.plurals.moduleHeader_itemCount, state.itemCount, state.itemCount))
                 if (state.pastDueCount > 0) {

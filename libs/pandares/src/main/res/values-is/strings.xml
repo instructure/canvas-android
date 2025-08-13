@@ -291,7 +291,7 @@
     <string name="Todo">Verkefni</string>
     <string name="todoFilter">Sía námskeið</string>
     <string name="filterByEllipsis">Sía eftir&#8230;</string>
-    <string name="favoritedCoursesLabel">Uppáhalds námskeið</string>
+    <string name="favoriteCoursesLabel">Uppáhalds námskeið</string>
     <string name="Event">Viðburður</string>
     <string name="eventSuccessfulDeletion">Viðburði var eytt</string>
     <string name="timeIconDescription">Tímatákn</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Tilkynningar</string>
     <string name="todoWidgetTitleLong">Canvas - verkefni</string>
     <string name="gradesWidgetTitleLong">Canvas - einkunnir</string>
+    <string name="gradeWidgetTitleLong">Canvas - einkunn</string>
     <string name="notificationWidgetTitleLong">Canvas - tilkynningar</string>
     <string name="notLoggedIn">Þú ert ekki innskráð(ur)</string>
     <string name="widgetStyle">Veldu græjustíl þinn</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Hjálp</string>
     <string name="screenTitleManageStudents">Stjórna nemendum</string>
     <string name="screenTitleSettings">Stillingar</string>
-    <string name="navigationDrawerSwitchUsers">Skipta um notendur</string>
     <string name="navigationDrawerLogOut">Útskráning</string>
     <string name="noStudentsError">Engir nemendur</string>
     <string name="noStudentsErrorDescription">Þú fylgist ekki með neinum nemendum.</string>
     <string name="noStudentsRefresh">Glæða</string>
     <string name="noGrade">Engin einkunn</string>
+    <string name="noGrades">Engar einkunnir</string>
     <string name="errorLoadingCourses">Villa kom upp við að sækja námskeið nemanda.</string>
     <string name="parentNoCourses">Engin námskeið</string>
     <string name="parentNoCoursesMessage">Námskeið nemanda þíns eru ef til vill ekki birt enn.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Villa kom upp við að hlaða verkefnum</string>
     <string name="a11y_searchAssignments">Leita í verkefnum</string>
     <string name="dueAssignmentListItem">Skiladagur %1$s</string>
+    <string name="a11y_searchAmongRecipients">Leita í viðtakendum</string>
+    <string name="a11y_recipientIsRemoved">%1$s fjarlægt</string>
+    <string name="widgetDueDate">Skil klukkan %1$s</string>
+    <string name="widgetFromTo">%1$s til %2$s</string>
+    <string name="widgetAllDay">Allan daginn</string>
+    <string name="widgetErrorTitle">Úps! Eitthvað fór úrskeiðis</string>
+    <string name="widgetErrorSubtitle">Við eigum í vandræðum með að sýna verkefnin þín núna. Reyndu aftur eftir smá stund eða farðu í appið.</string>
+    <string name="widgetToDoEmptyTitle">Þetta er komið að sinni!</string>
+    <string name="widgetToDoEmptySubtitle">Það lítur út fyrir að þú sért laus næstu 4 vikurnar. Viltu bæta við nokkrum verkefnalistum?</string>
+    <string name="widgetNotLoggedInTitle">Við skulum skrá þig inn!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá verkefnalistana þína. Það tekur stutta stund!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Opna skjáinn fyrir verkefnalista</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Búa til nýjan verkefnalista</string>
+    <string name="widgetGradesErrorSubtitle">Við eigum í vandræðum með að sýna einkunnirnar þínar núna. Reyndu aftur eftir smá stund eða farðu í appið.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá einkunnirnar þínar. Það tekur stutta stund!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Við eigum í vandræðum með að sýna einkunnirnar þínar núna.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá einkunnirnar þínar.</string>
+    <string name="widgetSingleGradeSelectCourse">Við skulum velja námskeið</string>
+    <string name="widgetGradesErrorLoadingCourses">Villa við sókn á námskeiðum.</string>
+    <string name="settingsSwitchExperience">Skiptu yfir í Canvas Career</string>
 </resources>

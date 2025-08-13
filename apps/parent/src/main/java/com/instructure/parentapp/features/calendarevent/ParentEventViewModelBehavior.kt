@@ -61,4 +61,6 @@ class ParentEventViewModelBehavior(
 
         return options
     }
+
+    override fun updateWidget() = Unit
 }

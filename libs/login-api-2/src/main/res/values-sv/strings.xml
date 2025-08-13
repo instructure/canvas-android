@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Rapportera ett problem</string>
+    <string name="reportAProblemDialogTitle">Rapportera ett problem</string>
     <string name="errorReportSubject">Ämne</string>
     <string name="errorReportDescription">Beskrivning</string>
     <string name="errorReportSend">Skicka</string>

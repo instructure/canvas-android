@@ -15,12 +15,14 @@
  */
 package com.instructure.parentapp.features.assignment.details
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -35,7 +37,8 @@ class ParentAssignmentDetailsRepository(
     private val quizApi: QuizAPI.QuizInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
     private val featuresApi: FeaturesAPI.FeaturesInterface,
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val customGradeStatusesManager: CustomGradeStatusesManager
 ): AssignmentDetailsRepository {
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -81,5 +84,15 @@ class ParentAssignmentDetailsRepository(
     override suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean): Boolean {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return featuresApi.getEnabledFeaturesForCourse(courseId, params).dataOrNull?.contains("assignments_2_student").orDefault()
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusesManager
+            .getCustomGradeStatuses(courseId, forceNetwork)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            .orEmpty()
     }
 }

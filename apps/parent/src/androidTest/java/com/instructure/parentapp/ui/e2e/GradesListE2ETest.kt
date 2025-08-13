@@ -94,8 +94,10 @@ class GradesListE2ETest : ParentComposeTest() {
         courseDetailsPage.assertCourseNameDisplayed(course) //Course Details Page is actually the Grades page by default when there are no tabs.
 
         Log.d(ASSERTION_TAG, "Assert that the Grades Card text is 'Total' by default and the 'Based on graded assignments' label is displayed.")
-        gradesPage.assertCardText("Total")
-        gradesPage.assertBasedOnGradedAssignmentsLabel()
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000) {
+            gradesPage.assertCardText("Total")
+            gradesPage.assertBasedOnGradedAssignmentsLabel()
+        }
 
         Log.d(ASSERTION_TAG, "Assert that the group header 'Upcoming Assignments' is displayed since the '${testAssignment.name}' assignment's due date is in the future and it's already graded.")
         gradesPage.assertGroupHeaderIsDisplayed("Upcoming Assignments")

@@ -305,6 +305,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     override val bookmark: Bookmarker
         get() = Bookmarker(true, canvasContext)
             .withParam(RouterParams.PAGE_ID, if (Page.FRONT_PAGE_NAME == pageName) Page.FRONT_PAGE_NAME else pageName!!)
+            .withUrl(page.htmlUrl)
 
     private fun openEditPage(page: Page) {
         if (APIHelper.hasNetworkConnection()) {

@@ -30,10 +30,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
 @Composable
-fun RowScope.SelectableNavigationItem(item: BottomNavItem, selected: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
+fun RowScope.SelectableNavigationItem(item: BottomNavItem, selected: Boolean, enabled: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     val label = stringResource(item.label)
     NavigationBarItem(
         selected = selected,
+        enabled = enabled,
         onClick = onClick,
         icon = {
             Icon(painter = painterResource(if (selected) item.selectedIcon else item.icon), contentDescription = label)

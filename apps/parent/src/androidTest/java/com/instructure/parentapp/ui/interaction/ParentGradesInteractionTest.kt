@@ -20,17 +20,27 @@ package com.instructure.parentapp.ui.interaction
 import com.instructure.canvas.espresso.common.interaction.GradesInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.CoursesPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
 import com.instructure.parentapp.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class ParentGradesInteractionTest : GradesInteractionTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     private val coursesPage = CoursesPage(composeTestRule)
 

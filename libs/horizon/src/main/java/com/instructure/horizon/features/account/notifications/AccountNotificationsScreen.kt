@@ -50,8 +50,8 @@ import com.instructure.horizon.horizonui.organisms.cards.NotificationCard
 import com.instructure.horizon.horizonui.organisms.controls.ControlsContentState
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItem
 import com.instructure.horizon.horizonui.organisms.controls.SwitchItemState
-import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -108,13 +108,13 @@ private fun AccountNotificationContent(state: AccountNotificationsUiState, modif
             }
         }
         items(state.notificationItems) { notificationItem ->
-            NotificationGroup(notificationItem, state.updateNotificationItem)
+            NotificationGroup(notificationItem)
         }
     }
 }
 
 @Composable
-private fun NotificationGroup(group: AccountNotificationGroup, onItemSelected: (AccountNotificationItem, Boolean) -> Unit) {
+private fun NotificationGroup(group: AccountNotificationGroup) {
     Column(
         modifier = Modifier.fillMaxWidth()
     ) {
@@ -134,13 +134,13 @@ private fun NotificationGroup(group: AccountNotificationGroup, onItemSelected: (
 
         HorizonSpace(SpaceSize.SPACE_8)
 
-        group.items.toList().forEach { item ->
+        group.items.forEach { item ->
             val emailSwitchState = SwitchItemState(
-                controlsContentState = ControlsContentState(title = item.title),
+                controlsContentState = ControlsContentState(title = item.label),
                 checked = item.checked,
                 enabled = item.enabled,
                 onCheckedChanged = {
-                    onItemSelected(item, it)
+                    item.onClick(!item.checked)
                },
             )
             SwitchItem(emailSwitchState, Modifier.padding(vertical = 10.dp))

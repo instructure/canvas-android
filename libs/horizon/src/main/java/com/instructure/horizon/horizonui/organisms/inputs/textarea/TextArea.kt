@@ -107,7 +107,7 @@ fun TextArea(
 @Composable
 private fun TextAreaBox(state: TextAreaState, textStyle: TextStyle, innerTextField: @Composable () -> Unit) {
     Box(
-        contentAlignment = Alignment.CenterStart,
+        contentAlignment = Alignment.TopStart,
         modifier = Modifier
             .background(HorizonColors.Surface.cardPrimary())
             .padding(horizontal = 12.dp, vertical = 7.dp)

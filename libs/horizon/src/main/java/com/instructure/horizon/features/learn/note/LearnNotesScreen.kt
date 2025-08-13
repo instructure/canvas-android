@@ -16,29 +16,38 @@
  */
 package com.instructure.horizon.features.learn.note
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.unit.dp
-import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
+import com.instructure.horizon.features.notebook.NotebookScreen
+import com.instructure.horizon.features.notebook.NotebookViewModel
 
 @Composable
-fun LearnNotesScreen(modifier: Modifier = Modifier) {
+fun LearnNotesScreen(
+    courseId: Long,
+    mainNavController: NavHostController,
+    modifier: Modifier = Modifier
+) {
+    val viewModel: NotebookViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(courseId) {
+        viewModel.updateCourseId(courseId)
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
-            .fillMaxSize()
-            .clip(HorizonCornerRadius.level5)
-            .background(HorizonColors.Surface.cardPrimary())
-            .padding(vertical = 8.dp)
     ) {
-        Text("Notes Screen")
+        NotebookScreen(
+            mainNavController,
+            state
+        )
     }
 }

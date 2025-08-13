@@ -17,7 +17,7 @@ package com.instructure.teacher.ui.renderTests
 
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Section
-import com.instructure.espresso.*
+import com.instructure.espresso.swipeRight
 import com.instructure.teacher.R
 import com.instructure.teacher.features.postpolicies.PostSection
 import com.instructure.teacher.features.postpolicies.ui.PostGradeFragment

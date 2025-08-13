@@ -72,7 +72,8 @@
     <string name="loginHint">Encontrar a sua escola ou distrito</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Relatar um Problema:</string>
+    <string name="errorReportAProblem">Denunciar um problema</string>
+    <string name="reportAProblemDialogTitle">Denunciar um problema</string>
     <string name="errorReportSubject">Assunto</string>
     <string name="errorReportDescription">Descrição</string>
     <string name="errorReportSend">Enviar</string>

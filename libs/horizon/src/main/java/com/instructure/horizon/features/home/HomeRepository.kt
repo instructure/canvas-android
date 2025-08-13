@@ -18,11 +18,19 @@ package com.instructure.horizon.features.home
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
-class HomeRepository @Inject constructor(private val themeApi: ThemeAPI.ThemeInterface, private val userApi: UserAPI.UsersInterface) {
+class HomeRepository @Inject constructor(
+    private val apiPrefs: ApiPrefs,
+    private val themeApi: ThemeAPI.ThemeInterface,
+    private val userApi: UserAPI.UsersInterface,
+    private val getCoursesManager: HorizonGetCoursesManager,
+) {
 
     suspend fun getTheme(): CanvasTheme? {
         val params = RestParams(isForceReadFromNetwork = false)
@@ -32,5 +40,9 @@ class HomeRepository @Inject constructor(private val themeApi: ThemeAPI.ThemeInt
     suspend fun getSelf(): User? {
         val params = RestParams(isForceReadFromNetwork = true)
         return userApi.getSelf(params).dataOrNull
+    }
+
+    suspend fun getCourses(): List<CourseWithProgress> {
+        return getCoursesManager.getCoursesWithProgress(apiPrefs.user!!.id, false).dataOrThrow
     }
 }

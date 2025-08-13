@@ -23,19 +23,6 @@ query QueryNotes($filter: NoteFilterInput, $first: Float, $last: Float, $after: 
                 updatedAt
             }
         }
-        nodes {
-            id
-            rootAccountUuid
-            userId
-            courseId
-            objectId
-            objectType
-            userText
-            reaction
-            highlightData
-            createdAt
-            updatedAt
-        }
         pageInfo {
             hasNextPage
             hasPreviousPage

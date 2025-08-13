@@ -23,6 +23,7 @@ import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.qualifiers.ApplicationContext
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 class ModuleItemCardStateMapper @Inject constructor(
@@ -30,7 +31,7 @@ class ModuleItemCardStateMapper @Inject constructor(
 ) {
 
     fun mapModuleItemToCardState(moduleItem: ModuleItem, onClick: (Long) -> Unit): ModuleItemCardState? {
-        val learningObjectType =  when (moduleItem.type) {
+        val learningObjectType = when (moduleItem.type) {
             ModuleItem.Type.Assignment.name -> {
                 if (moduleItem.quizLti) {
                     LearningObjectType.ASSESSMENT
@@ -38,6 +39,7 @@ class ModuleItemCardStateMapper @Inject constructor(
                     LearningObjectType.ASSIGNMENT
                 }
             }
+
             ModuleItem.Type.Page.name -> LearningObjectType.PAGE
             ModuleItem.Type.ExternalUrl.name -> LearningObjectType.EXTERNAL_URL
             ModuleItem.Type.File.name -> LearningObjectType.FILE
@@ -58,7 +60,12 @@ class ModuleItemCardStateMapper @Inject constructor(
 
         val points = moduleItem.moduleDetails?.pointsPossible?.toDoubleOrNull()?.toInt()
         val pointsString = points?.let {
-            context.resources.getQuantityString(R.plurals.moduleItemCard_pointsPossible, it, it)
+            if (completionRequirement?.type == ModuleItem.MIN_SCORE) {
+                val minScore = DecimalFormat("#.#").format(completionRequirement.minScore)
+                context.resources.getQuantityString(R.plurals.moduleItemCard_pointsPossibleWithRequirement, it, it, minScore)
+            } else {
+                context.resources.getQuantityString(R.plurals.moduleItemCard_pointsPossible, it, it)
+            }
         }
 
         return ModuleItemCardState(

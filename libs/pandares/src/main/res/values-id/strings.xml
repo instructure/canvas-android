@@ -291,7 +291,7 @@
     <string name="Todo">Harus Dilakukan</string>
     <string name="todoFilter">Filter Kursus</string>
     <string name="filterByEllipsis">Filter menurut...</string>
-    <string name="favoritedCoursesLabel">Kursus Difavoritkan</string>
+    <string name="favoriteCoursesLabel">Kursus Favorit</string>
     <string name="Event">Acara</string>
     <string name="eventSuccessfulDeletion">Acara berhasil dihapus</string>
     <string name="timeIconDescription">Ikon Waktu</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifikasi</string>
     <string name="todoWidgetTitleLong">Canvas - To Do</string>
     <string name="gradesWidgetTitleLong">Canvas - Nilai</string>
+    <string name="gradeWidgetTitleLong">Canvas - Nilai</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikasi</string>
     <string name="notLoggedIn">Anda tidak login</string>
     <string name="widgetStyle">Pilih gaya widget Anda</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Nilai setelah posting</string>
     <string name="gradeOverride">Override nilai</string>
     <string name="currentGrade">Nilai Saat Ini</string>
-    <string name="opensInCanvasStudent">Membuka di Canvas Student</string>
+    <string name="opensInCanvasApp">Membuka di aplikasi Canvas</string>
     <string name="tab_student_view">Tampilan Siswa</string>
     <string name="rateOnThePlayStore">Beri Nilai di Play Store</string>
 
@@ -1472,9 +1473,9 @@
     <string name="offline_content_storage">Penyimpanan</string>
     <string name="offline_content_storage_info">%s dari %s Digunakan</string>
     <string name="offline_content_other">Aplikasi Lain</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Tersisa</string>
-    <string name="offline_content_storage_info_a11y_description">Informasi Penyimpanan: %s dari %s Digunakan, App Lain %d%%, Siswa Canvas %d%%, Tersisa %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informasi Penyimpanan: %s dari %s Digunakan, Aplikasi Lain %d%%, Canvas %d%%, Tersisa %d%%</string>
     <string name="offline_content_all_courses">Semua Kursus</string>
     <string name="offline_content_sync">Sinkronkan</string>
     <string name="offline_content_selected">%d Dipilih</string>
@@ -1779,12 +1780,12 @@
     <string name="screenTitleHelp">Bantu</string>
     <string name="screenTitleManageStudents">Kelola Siswa</string>
     <string name="screenTitleSettings">Pengaturan</string>
-    <string name="navigationDrawerSwitchUsers">Ganti Pengguna</string>
     <string name="navigationDrawerLogOut">Logout</string>
     <string name="noStudentsError">Tidak Ada Siswa</string>
     <string name="noStudentsErrorDescription">Anda tidak mengamati siswa manapun.</string>
     <string name="noStudentsRefresh">Muat Ulang</string>
     <string name="noGrade">Tanpa Nilai</string>
+    <string name="noGrades">Tidak Ada Nilai</string>
     <string name="errorLoadingCourses">Terjadi kesalahan ketika memuat kursus siswa Anda.</string>
     <string name="parentNoCourses">Tidak Ada Kursus</string>
     <string name="parentNoCoursesMessage">Kursus siswa Anda mungkin belum diterbitkan.</string>
@@ -1794,7 +1795,7 @@
     <string name="studentOrTeacherTitle">Anda siswa atau guru?</string>
     <string name="studentOrTeacherSubtitle">Salah satu app lain mungkin lebih cocok. Ketuk satu untuk membuka App Store.</string>
     <string name="studentApp">SISWA</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">GURU</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1832,7 +1833,7 @@
     <string name="addStudentSuccessfull">Siswa berhasil ditambahkan</string>
     <string name="addStudentTitle">Tambah siswa dengan...</string>
     <string name="addStudentQrCodeTitle">Kode QR</string>
-    <string name="addStudentQrCodeExplanation">Siswa dapat membuat kode QR menggunakan aplikasi Canvas Student di perangkat selulernya</string>
+    <string name="addStudentQrCodeExplanationCanvas">Siswa dapat membuat kode QR menggunakan aplikasi Canvas di perangkat selulernya</string>
     <string name="addStudentPairingCodeTitle">Kode Pairing</string>
     <string name="addStudentPairingCodeExplanation">Siswa bisa mendapat kode pairing melalui situs web Canvas</string>
     <string name="pairingCodeDialogTitle">Tambah Siswa</string>
@@ -1841,9 +1842,9 @@
     <string name="pairingCodeDialogNegativeButton">Batal</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Kode Anda salah atau sudah kedaluwarsa.</string>
-    <string name="qrPairingTitle">Buka Canvas Student</string>
-    <string name="qrPairingDescription">Anda harus membuka aplikasi Canvas Student Anda untuk melanjutkan. Pergilah ke Menu Utama > Pengaturan > Pairing dengan Pengamat dan pindai kode QR yang Anda lihat di sana.</string>
-    <string name="qrCodePairingPrompt">Pindai kode QR dari Canvas Student untuk login</string>
+    <string name="qrPairingTitleCanvas">Buka aplikasi Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Anda harus membuka aplikasi Canvas siswa Anda untuk melanjutkan. Pergilah ke Menu Utama > Pengaturan > Pairing dengan Pengamat dan pindai kode QR yang Anda lihat di sana.</string>
+    <string name="qrCodePairingPromptCanvas">Pindai kode QR dari aplikasi Canvas untuk memasangkan/pairing</string>
     <string name="a11y_addStudentContentDescription">Tambah Siswa</string>
     <string name="qrPairingErrorTitle">Kode QR Kedaluwarsa</string>
     <string name="qrPairingErrorDescription">Kode QR yang Anda pindai mungkin telah kedaluwarsa. Muat ulang kode di perangkat siswa dan coba lagi.</string>
@@ -2051,4 +2052,24 @@
     <string name="errorLoadingAssignments">Kesalahan terjadi saat memuat tugas</string>
     <string name="a11y_searchAssignments">Cari Tugas</string>
     <string name="dueAssignmentListItem">Batas %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cari di antara Penerima</string>
+    <string name="a11y_recipientIsRemoved">%1$s dihapus</string>
+    <string name="widgetDueDate">Sampai batas waktu pada %1$s</string>
+    <string name="widgetFromTo">%1$s hingga %2$s</string>
+    <string name="widgetAllDay">Sepanjang hari</string>
+    <string name="widgetErrorTitle">Waduh! Ada Sesuatu yang Salah</string>
+    <string name="widgetErrorSubtitle">Kami kesulitan menampilkan tugas Anda saat ini. Silakan coba lagi sebentar lagi atau pergi ke app.</string>
+    <string name="widgetToDoEmptyTitle">Anda hampir selesai saat ini!</string>
+    <string name="widgetToDoEmptySubtitle">Sepertinya Anda bebas selama 4 minggu berikutnya. Mau menambah beberapa to-do?</string>
+    <string name="widgetNotLoggedInTitle">Ayo Kita Log In!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Untuk melihat to-do Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Buka layar To Do</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Buat To Do baru</string>
+    <string name="widgetGradesErrorSubtitle">Kami kesulitan menampilkan nilai Anda saat ini. Silakan coba lagi sebentar lagi atau pergi ke app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Untuk melihat nilai Anda, silakan login ke akun Anda di aplikasi. Hanya butuh waktu sebentar!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Kami kesulitan menampilkan nilai Anda saat ini.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Untuk melihat nilai Anda, silakan login ke akun Anda di aplikasi.</string>
+    <string name="widgetSingleGradeSelectCourse">Ayo pilih kursus</string>
+    <string name="widgetGradesErrorLoadingCourses">Kesalahan terjadi saat memuat kursus.</string>
+    <string name="settingsSwitchExperience">Alihkan ke Canvas Career</string>
 </resources>

@@ -65,7 +65,7 @@ fun AddStudentScreen(
             )
             AddStudentButton(
                 title = R.string.addStudentQrCodeTitle,
-                explanation = R.string.addStudentQrCodeExplanation,
+                explanation = R.string.addStudentQrCodeExplanationCanvas,
                 icon = R.drawable.ic_qr_code,
                 onClick = onQrCodeClick
             )

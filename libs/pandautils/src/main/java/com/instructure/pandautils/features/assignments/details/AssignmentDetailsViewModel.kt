@@ -29,6 +29,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
@@ -90,7 +91,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val apiPrefs: ApiPrefs,
     private val submissionHandler: AssignmentDetailsSubmissionHandler,
     private val assignmentDetailsColorProvider: AssignmentDetailsColorProvider,
-    private val reminderManager: ReminderManager,
+    private val reminderManager: ReminderManager
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -136,6 +137,8 @@ class AssignmentDetailsViewModel @Inject constructor(
     var checkingReminderPermission = false
     var checkingNotificationPermission = false
 
+    private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
+
     init {
         markSubmissionAsRead()
         submissionHandler.addAssignmentSubmissionObserver(
@@ -180,6 +183,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                 _course.postValue(courseResult)
                 restrictQuantitativeData = courseResult.settings?.restrictQuantitativeData ?: false
                 gradingScheme = courseResult.gradingScheme
+
+                customStatuses = assignmentDetailsRepository.getCustomGradeStatuses(courseId, forceNetwork)
 
                 isObserver = courseResult.enrollments?.firstOrNull { it.isObserver } != null
 
@@ -264,27 +269,30 @@ class AssignmentDetailsViewModel @Inject constructor(
                 && assignment.dueAt != null
                 && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)
 
-        val submittedLabelText = resources.getString(
-            if (isMissing) {
-                R.string.missingAssignment
-            } else if (!assignment.isSubmitted) {
-                R.string.notSubmitted
-            } else if (assignment.isGraded()) {
-                R.string.gradedSubmissionLabel
-            } else {
-                R.string.submitted
-            }
-        )
-
-        val submissionStatusTint = if (assignment.isSubmitted) {
-            R.color.textSuccess
-        } else if (isMissing) {
-            R.color.textDanger
-        } else {
-            R.color.textDark
+        val matchedCustomStatus = assignment.submission?.customGradeStatusId?.let { id ->
+            customStatuses.find { it._id.toLongOrNull() == id }
         }
 
-        val submittedStatusIcon = if (assignment.isSubmitted) R.drawable.ic_complete_solid else R.drawable.ic_no
+        val submittedLabelText = when {
+            matchedCustomStatus != null -> matchedCustomStatus.name
+            isMissing -> resources.getString(R.string.missingAssignment)
+            !assignment.isSubmitted -> resources.getString(R.string.notSubmitted)
+            assignment.isGraded() -> resources.getString(R.string.gradedSubmissionLabel)
+            else -> resources.getString(R.string.submitted)
+        }
+
+        val submissionStatusTint = when {
+            matchedCustomStatus != null -> R.color.textInfo
+            assignment.isSubmitted -> R.color.textSuccess
+            isMissing -> R.color.textDanger
+            else -> R.color.textDark
+        }
+
+        val submittedStatusIcon = when {
+            matchedCustomStatus != null -> R.drawable.ic_flag
+            assignment.isSubmitted -> R.drawable.ic_complete_solid
+            else -> R.drawable.ic_no
+        }
 
         // Submission Status under title - We only show Graded or nothing at all for PAPER/NONE
         val submissionStatusVisible =

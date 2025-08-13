@@ -56,19 +56,7 @@
                 android:adjustViewBounds="true"
                 android:importantForAccessibility="no"
                 android:tint="@color/textDarkest"
-                app:srcCompat="@drawable/ic_canvas_wordmark" />
-
-            <TextView
-                android:id="@+id/appDescriptionType"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="36dp"
-                android:letterSpacing="0.1"
-                android:text="@string/appUserTypeTeacher"
-                android:textAllCaps="true"
-                android:textColor="@color/textDarkest"
-                android:textSize="14sp"
-                android:textStyle="bold" />
+                app:srcCompat="@drawable/canvas_wordmark" />
         </LinearLayout>
 
         <LinearLayout

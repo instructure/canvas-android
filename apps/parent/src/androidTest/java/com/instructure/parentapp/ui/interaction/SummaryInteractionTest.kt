@@ -20,7 +20,10 @@ import androidx.test.core.app.ApplicationProvider
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ScheduleItem
@@ -29,12 +32,19 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 import java.util.Calendar
 
 @HiltAndroidTest
-class SummaryInteractionTest: ParentComposeTest() {
+@UninstallModules(CustomGradeStatusModule::class)
+class SummaryInteractionTest : ParentComposeTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @Test
     fun testSummaryItemsAreDisplayed() {

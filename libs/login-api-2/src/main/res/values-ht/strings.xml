@@ -72,7 +72,8 @@
     <string name="loginHint">Jwenn lekòl oswa distri ou a</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Rapòte yon Pwoblèm</string>
+    <string name="errorReportAProblem">Rapòte yon pwoblèm</string>
+    <string name="reportAProblemDialogTitle">Rapòte yon pwoblèm</string>
     <string name="errorReportSubject">Sijè</string>
     <string name="errorReportDescription">Deskripsyon</string>
     <string name="errorReportSend">Voye</string>

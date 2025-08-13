@@ -21,6 +21,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -30,6 +31,10 @@ import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.orDefault
@@ -65,6 +70,7 @@ class SubmissionListViewModel @Inject constructor(
     private var submissions: List<GradeableStudentSubmission> = emptyList()
     private var sections: List<Section> = emptyList()
     private var selectedSectionIds = listOf<Long>()
+    private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
 
     private val _uiState = MutableStateFlow(
         SubmissionListUiState(
@@ -92,6 +98,10 @@ class SubmissionListViewModel @Inject constructor(
 
     private suspend fun loadData(forceNetwork: Boolean = false) {
         try {
+            customStatuses = submissionListRepository.getCustomGradeStatuses(
+                course.id,
+                forceNetwork
+            )
             submissions = submissionListRepository.getGradeableStudentSubmissions(
                 assignment,
                 course.id,
@@ -120,17 +130,17 @@ class SubmissionListViewModel @Inject constructor(
                 } ?: false
 
                 SubmissionListFilter.NOT_GRADED -> submission.submission?.let {
-                    assignment.getState(
+                    (assignment.getState(
                         it,
                         true
                     ) in listOf(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
-                    ) || !it.isGradeMatchesCurrentSubmission
+                    ) || !it.isGradeMatchesCurrentSubmission) && submission.submission?.customGradeStatusId == null
                 } ?: false
 
                 SubmissionListFilter.GRADED -> submission.submission?.let {
-                    assignment.getState(
+                    (assignment.getState(
                         it,
                         true
                     ) in listOf(
@@ -138,7 +148,7 @@ class SubmissionListViewModel @Inject constructor(
                         AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE,
                         AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING,
                         AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED
-                    ) && it.isGradeMatchesCurrentSubmission
+                    ) && it.isGradeMatchesCurrentSubmission) || submission.submission?.customGradeStatusId != null
                 } ?: false
 
                 SubmissionListFilter.ABOVE_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() }
@@ -177,36 +187,53 @@ class SubmissionListViewModel @Inject constructor(
         return SubmissionUiState(
             submissionId = submission.id,
             userName = submission.assignee.name,
-            isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent ?: false,
+            isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent
+                ?: false,
             avatarUrl = if (submission.assignee is StudentAssignee) (submission.assignee as StudentAssignee).student.avatarUrl else null,
             tags = getTags(submission.submission),
             grade = getGrade(submission.submission),
             hidden = submission.submission?.let { it.postedAt == null } ?: false,
-            assigneeId = submission.assignee.id
+            assigneeId = submission.assigneeId,
+            group = submission.assignee is GroupAssignee
         )
     }
 
     private fun getTags(submission: Submission?): List<SubmissionTag> {
         val tags = mutableListOf<SubmissionTag>()
 
+        val matchedCustomStatus = submission?.customGradeStatusId?.let { id ->
+            customStatuses.find { it._id.toLongOrNull() == id }
+        }
+
+        if (matchedCustomStatus != null) {
+            tags.add(
+                SubmissionTag.Custom(
+                    text = matchedCustomStatus.name,
+                    icon = R.drawable.ic_flag,
+                    color = R.color.textInfo
+                )
+            )
+            return tags
+        }
+
         when {
-            submission == null -> tags.add(SubmissionTag.NOT_SUBMITTED)
-            submission.missing -> tags.add(SubmissionTag.MISSING)
-            submission.workflowState == "unsubmitted" -> tags.add(SubmissionTag.NOT_SUBMITTED)
+            submission == null -> tags.add(SubmissionTag.NotSubmitted)
+            submission.missing -> tags.add(SubmissionTag.Missing)
+            submission.workflowState == "unsubmitted" -> tags.add(SubmissionTag.NotSubmitted)
             else -> {
                 if (!submission.late && !submission.excused && !submission.isGraded) {
-                    tags.add(SubmissionTag.SUBMITTED)
+                    tags.add(SubmissionTag.Submitted)
                 }
                 if (submission.late) {
-                    tags.add(SubmissionTag.LATE)
+                    tags.add(SubmissionTag.Late)
                 }
 
                 if (submission.excused) {
-                    tags.add(SubmissionTag.EXCUSED)
+                    tags.add(SubmissionTag.Excused)
                 } else if (submission.isGraded) {
-                    tags.add(SubmissionTag.GRADED)
+                    tags.add(SubmissionTag.Graded)
                 } else {
-                    tags.add(SubmissionTag.NEEDS_GRADING)
+                    tags.add(SubmissionTag.NeedsGrading)
                 }
             }
         }
@@ -233,7 +260,13 @@ class SubmissionListViewModel @Inject constructor(
                             assignmentId = assignment.id,
                             selectedIdx = selected,
                             anonymousGrading = assignment.anonymousGrading,
-                            filteredSubmissionIds = submissions.map { it.submissionId }
+                            filteredSubmissionIds = submissions.map {
+                                if (RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2)) {
+                                    it.assigneeId
+                                } else {
+                                    it.submissionId
+                                }
+                            }
                                 .toLongArray(),
                             filter = filter,
                             filterValue = filterValue.orDefault(
@@ -282,7 +315,11 @@ class SubmissionListViewModel @Inject constructor(
                             contextCode = course.contextId,
                             contextName = course.name,
                             recipients = getRecipients(),
-                            subject = resources.getString(R.string.submissionMessageSubject, _uiState.value.headerTitle, assignment.name)
+                            subject = resources.getString(
+                                R.string.submissionMessageSubject,
+                                _uiState.value.headerTitle,
+                                assignment.name
+                            )
                         )
                     )
                 }
@@ -290,7 +327,12 @@ class SubmissionListViewModel @Inject constructor(
 
             is SubmissionListAction.AvatarClicked -> {
                 viewModelScope.launch {
-                    _events.send(SubmissionListViewModelAction.RouteToUser(action.userId, course.id))
+                    _events.send(
+                        SubmissionListViewModelAction.RouteToUser(
+                            action.userId,
+                            course.id
+                        )
+                    )
                 }
             }
         }

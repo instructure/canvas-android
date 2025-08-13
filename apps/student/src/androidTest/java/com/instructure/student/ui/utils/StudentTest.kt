@@ -33,6 +33,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
+import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
@@ -143,6 +144,7 @@ abstract class StudentTest : CanvasTest() {
     val aboutPage = AboutPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
+    val canvasNetworkSignInPage = CanvasNetworkSignInPage()
     val loginSignInPage = LoginSignInPage()
     val moduleProgressionPage = ModuleProgressionPage()
     val modulesPage = ModulesPage()

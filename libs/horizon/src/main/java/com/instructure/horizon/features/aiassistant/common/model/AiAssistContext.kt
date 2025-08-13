@@ -1,14 +1,27 @@
 package com.instructure.horizon.features.aiassistant.common.model
 
-import kotlinx.serialization.Serializable
-
-@Serializable
 data class AiAssistContext(
     val contextString: String? = null,
-    val contextSources: Map<String, String> = emptyMap(),
+    val contextSources: List<AiAssistContextSource> = emptyList(),
     val chatHistory: List<AiAssistMessage> = emptyList(),
 ) {
     fun isEmpty(): Boolean {
-        return contextString.isNullOrEmpty() && contextSources.isEmpty() && chatHistory.isEmpty()
+        return contextString.isNullOrEmpty() && chatHistory.isEmpty()
     }
+}
+
+sealed class AiAssistContextSource(val rawValue: String, open val id: String) {
+    class Assignment(id: String): AiAssistContextSource("Assignment", id)
+    class Page(id: String): AiAssistContextSource("Page", id)
+    class CourseId(id: String): AiAssistContextSource("course-id", id)
+    class ModuleId(id: String): AiAssistContextSource("module-id", id)
+    class ModuleItemId(id: String): AiAssistContextSource("module-item-id", id)
+
+    fun toPair(): Pair<String, String> {
+        return Pair(rawValue, id)
+    }
+}
+
+fun List<AiAssistContextSource>.toMap(): Map<String, String> {
+    return this.associate { it.toPair() }
 }

@@ -16,8 +16,6 @@
  */
 package com.instructure.horizon.features.aiassistant.navigation
 
-import android.net.Uri
-import android.os.Bundle
 import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.runtime.Composable
@@ -26,26 +24,21 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatScreen
 import com.instructure.horizon.features.aiassistant.chat.AiAssistChatViewModel
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardScreen
 import com.instructure.horizon.features.aiassistant.flashcard.AiAssistFlashcardViewModel
 import com.instructure.horizon.features.aiassistant.main.AiAssistMainScreen
+import com.instructure.horizon.features.aiassistant.main.AiAssistMainViewModel
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizScreen
 import com.instructure.horizon.features.aiassistant.quiz.AiAssistQuizViewModel
-import kotlinx.serialization.json.Json
-import kotlin.reflect.typeOf
 
 @Composable
 fun AiAssistNavigation(
     navController: NavHostController,
     onDismiss: () -> Unit,
-    aiContext: AiAssistContext,
     modifier: Modifier = Modifier
 ) {
     NavHost(
@@ -58,55 +51,26 @@ fun AiAssistNavigation(
         modifier = modifier
     ) {
         composable(AiAssistRoute.AiAssistMain.route) {
-            AiAssistMainScreen(navController, aiContext, onDismiss)
+            val viewModel: AiAssistMainViewModel = hiltViewModel()
+            val uiState by viewModel.uiState.collectAsState()
+            AiAssistMainScreen(navController, uiState, onDismiss)
         }
-        composable<AiAssistRoute.AiAssistChat>(
-            typeMap = AiAssistNavigationTypeMap
-        ) {
+        composable(AiAssistRoute.AiAssistChat.route) {
             val viewModel: AiAssistChatViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
             AiAssistChatScreen(navController, onDismiss, state)
         }
 
-        composable<AiAssistRoute.AiAssistQuiz>(
-            typeMap = AiAssistNavigationTypeMap
-        ) {
+        composable(AiAssistRoute.AiAssistQuiz.route) {
             val viewModel: AiAssistQuizViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
             AiAssistQuizScreen(navController, state, onDismiss)
         }
 
-        composable<AiAssistRoute.AiAssistFlashcard>(
-            typeMap = AiAssistNavigationTypeMap
-        ) {
+        composable(AiAssistRoute.AiAssistFlashcard.route) {
             val viewModel: AiAssistFlashcardViewModel = hiltViewModel()
             val state by viewModel.uiState.collectAsState()
             AiAssistFlashcardScreen(navController, state, onDismiss)
         }
     }
-}
-
-val AiAssistNavigationTypeMap = mapOf(
-    typeOf<AiAssistRoute.AiAssistChat>() to navTypeOf<AiAssistRoute.AiAssistChat>(isNullableAllowed = true),
-    typeOf<AiAssistRoute.AiAssistQuiz>() to navTypeOf<AiAssistRoute.AiAssistQuiz>(isNullableAllowed = true),
-    typeOf<AiAssistRoute.AiAssistFlashcard>() to navTypeOf<AiAssistRoute.AiAssistFlashcard>(isNullableAllowed = true),
-    typeOf<AiAssistContext>() to navTypeOf<AiAssistContext>(isNullableAllowed = true),
-    typeOf<Map<String, String>>() to navTypeOf<Map<String, String>>(isNullableAllowed = true),
-    typeOf<List<AiAssistMessage>>() to navTypeOf<List<AiAssistMessage>>(isNullableAllowed = true),
-)
-
-private inline fun <reified T> navTypeOf(
-    isNullableAllowed: Boolean = false,
-    json: Json = Json,
-) = object : NavType<T>(isNullableAllowed = isNullableAllowed) {
-    override fun get(bundle: Bundle, key: String): T? =
-        bundle.getString(key)?.let(json::decodeFromString)
-
-    override fun parseValue(value: String): T = json.decodeFromString(Uri.decode(value))
-
-    override fun serializeAsValue(value: T): String = Uri.encode(json.encodeToString(value))
-
-    override fun put(bundle: Bundle, key: String, value: T) =
-        bundle.putString(key, json.encodeToString(value))
-
 }

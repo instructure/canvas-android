@@ -20,30 +20,25 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
-import com.instructure.horizon.features.moduleitemsequence.content.assignment.submission.HorizonSubmissionHelper
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
-import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
-import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.format
-import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import java.util.Date
+import java.text.NumberFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -51,37 +46,35 @@ class AssignmentDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val assignmentDetailsRepository: AssignmentDetailsRepository,
     private val htmlContentFormatter: HtmlContentFormatter,
-    private val submissionHelper: HorizonSubmissionHelper,
-    private val apiPrefs: ApiPrefs,
-    private val createSubmissionDao: CreateSubmissionDao,
+    private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val assignmentId = savedStateHandle[ModuleItemContent.Assignment.ASSIGNMENT_ID] ?: -1L
     private val courseId = savedStateHandle[Const.COURSE_ID] ?: -1L
-    private var assignmentName: String = ""
 
     private val _uiState =
         MutableStateFlow(
             AssignmentDetailsUiState(
+                assignmentId = assignmentId,
                 submissionDetailsUiState = SubmissionDetailsUiState(onNewAttemptClick = ::onNewAttemptClick),
-                addSubmissionUiState = AddSubmissionUiState(
-                    onSubmissionTypeSelected = ::submissionTypeSelected,
-                    onSubmissionButtonClicked = ::showSubmissionConfirmation,
-                    onDeleteDraftClicked = ::deleteDraftClicked,
-                    onDismissDeleteDraftConfirmation = ::deleteDraftDismissed,
-                    onDraftDeleted = ::deleteDraftSubmission,
-                    onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
-                    onSubmitAssignment = ::sendSubmission
+                toolsBottomSheetUiState = ToolsBottomSheetUiState(
+                    onDismiss = ::dismissToolsBottomSheet,
+                    onAttemptsClick = ::openAttemptSelector,
+                    onCommentsClick = ::openComments
                 ),
-                toolsBottomSheetUiState = ToolsBottomSheetUiState(onDismiss = ::dismissToolsBottomSheet),
                 ltiButtonPressed = ::ltiButtonPressed,
                 onUrlOpened = ::onUrlOpened,
-                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed)
+                submissionConfirmationUiState = SubmissionConfirmationUiState(onDismiss = ::onSubmissionDialogDismissed),
+                onCommentsBottomSheetDismissed = ::dismissComments,
+                onAssignmentUpdatedForAddSubmission = ::onAssignmentUpdatedForAddSubmission,
             )
         )
 
     val uiState = _uiState.asStateFlow()
+
+    private val _assignmentFlow = MutableStateFlow<Assignment?>(null)
+    val assignmentFlow = _assignmentFlow.asStateFlow()
 
     init {
         loadData()
@@ -91,32 +84,27 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = true)) }
         viewModelScope.tryLaunch {
             val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = false)
-            assignmentName = assignment.name.orEmpty()
-            val lastActualSubmission = assignment.lastActualSubmission
+            _assignmentFlow.value = assignment
+            val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
+            val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
             val submissions = if (lastActualSubmission != null) {
-                mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+                mapSubmissions(attempts)
             } else {
                 emptyList()
             }
-            val initialAttempt = lastActualSubmission?.attempt ?: -1L
-
-            val text = withContext(Dispatchers.IO) {
-                val draft = createSubmissionDao.findDraftSubmissionByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-                draft?.lastActivityDate?.let {
-                    updateDraftText(it)
-                }
-                draft?.submissionEntry.orEmpty()
-            }
-
-            val submissionTypes = assignment.getSubmissionTypes().mapNotNull {
-                when (it) {
-                    Assignment.SubmissionType.ONLINE_TEXT_ENTRY -> AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged)
-                    Assignment.SubmissionType.ONLINE_UPLOAD -> AddSubmissionTypeUiState.File("")
-                    else -> null
-                }
-            }
-
+            val initialAttempt = lastActualSubmission?.attempt ?: 0L // We need to use 0 as the initial attempt if there are no submissions
             val description = htmlContentFormatter.formatHtmlWithIframes(assignment.description.orEmpty())
+
+            val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
+            val showAttemptSelector = assignment.allowedAttempts != 1L
+
+            val hasUnreadComments = assignmentDetailsRepository.hasUnreadComments(assignmentId)
+
+            aiAssistContextProvider.aiAssistContext = AiAssistContext(
+                contextString = assignment.description.orEmpty(),
+                contextSources = aiAssistContextProvider.aiAssistContext.contextSources +
+                    AiAssistContextSource.Assignment(assignment.id.toString())
+            )
 
             _uiState.update {
                 it.copy(
@@ -127,15 +115,55 @@ class AssignmentDetailsViewModel @Inject constructor(
                         submissions = submissions,
                         currentSubmissionAttempt = initialAttempt
                     ),
-                    addSubmissionUiState = it.addSubmissionUiState.copy(submissionTypes = submissionTypes, submitEnabled = text.isNotEmpty()),
                     showSubmissionDetails = lastActualSubmission != null,
                     showAddSubmission = lastActualSubmission == null,
+                    onSubmissionSuccess = ::updateAssignment,
+                    attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
+                    toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(showAttemptSelector = showAttemptSelector, hasUnreadComments = hasUnreadComments)
                 )
             }
         } catch {
             _uiState.update { it.copy(loadingState = it.loadingState.copy(isLoading = false)) }
         }
     }
+
+    private fun createAttemptCardsState(
+        attempts: List<Submission>,
+        assignment: Assignment,
+        initialAttempt: Long
+    ) = attempts
+        .filter { it.workflowState != "unsubmitted" }
+        .sortedByDescending { it.attempt }
+        .map { attempt ->
+            createAttemptCard(
+                attempt,
+                assignment.pointsPossible,
+                selected = attempt.attempt == initialAttempt,
+                showScore = true,
+                onClick = {
+                    val viewingAttemptText = if (attempt.attempt != initialAttempt) {
+                        context.getString(R.string.assignmentDetails_viewingAttempt, attempt.attempt)
+                    } else {
+                        null
+                    }
+                    _uiState.update {
+                        it.copy(
+                            showSubmissionDetails = true,
+                            showAddSubmission = false,
+                            submissionDetailsUiState = it.submissionDetailsUiState.copy(
+                                currentSubmissionAttempt = attempt.attempt
+                            ),
+                            attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                                attempts = it.attemptSelectorUiState.attempts.map { card ->
+                                    card.copy(selected = card.attemptNumber == attempt.attempt)
+                                }
+                            ),
+                            viewingAttemptText = viewingAttemptText
+                        )
+                    }
+                    dismissAttemptSelector()
+                })
+        }
 
     private fun mapSubmissions(submissions: List<Submission>): List<SubmissionUiState> {
         return submissions.mapNotNull {
@@ -165,16 +193,6 @@ class AssignmentDetailsViewModel @Inject constructor(
             } else {
                 null
             }
-        }
-    }
-
-    private fun submissionTypeSelected(index: Int) {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    selectedSubmissionTypeIndex = index,
-                )
-            )
         }
     }
 
@@ -215,131 +233,31 @@ class AssignmentDetailsViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 showSubmissionDetails = false,
-                showAddSubmission = true
+                showAddSubmission = true,
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = it.attemptSelectorUiState.attempts.map { attempt ->
+                    attempt.copy(selected = false)
+                })
             )
-        }
-    }
-
-    private fun onTextSubmissionChanged(text: String) {
-        val textSubmission =
-            uiState.value.addSubmissionUiState.submissionTypes[uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex]
-        if (textSubmission is AddSubmissionTypeUiState.Text) {
-            _uiState.update {
-                it.copy(
-                    addSubmissionUiState = it.addSubmissionUiState.copy(
-                        submissionTypes = it.addSubmissionUiState.submissionTypes.mapIndexed { index, submissionType ->
-                            if (index == uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex) {
-                                textSubmission.copy(text = text)
-                            } else {
-                                submissionType
-                            }
-                        }
-                    )
-                )
-            }
-            viewModelScope.launch {
-                // We need to replace the line breaks from the RCE because if we delete any text it will still leave a <br> tag in the RCE
-                if (text.replace("<br>", "").isNotBlank()) {
-                    submissionHelper.saveDraft(CanvasContext.emptyCourseContext(id = courseId), assignmentId, assignmentName, text)
-                    updateDraftText(Date())
-                    updateSubmissionEnabled(true)
-                } else {
-                    createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-                    updateDraftText()
-                    updateSubmissionEnabled(false)
-                }
-            }
-        }
-    }
-
-    private fun updateDraftText(date: Date? = null) {
-        val draftText = if (date == null) {
-            ""
-        } else {
-            context.getString(R.string.assignmentDetails_draftSaved, date.format("dd/MM, h:mm a"))
-        }
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    draftDateString = draftText
-                )
-            )
-        }
-    }
-
-    private fun sendSubmission() {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showSubmissionConfirmation = false
-                )
-            )
-        }
-        val selectedSubmissionType =
-            uiState.value.addSubmissionUiState.submissionTypes[uiState.value.addSubmissionUiState.selectedSubmissionTypeIndex]
-        if (selectedSubmissionType is AddSubmissionTypeUiState.Text) {
-            submissionHelper.startTextSubmission(
-                canvasContext = CanvasContext.emptyCourseContext(id = courseId),
-                assignmentId = assignmentId,
-                text = selectedSubmissionType.text,
-                assignmentName = assignmentName
-            )
-            viewModelScope.launch {
-                createSubmissionDao.findSubmissionByAssignmentIdFlow(assignmentId, apiPrefs.user?.id.orDefault()).collect { entity ->
-                    if (entity != null) {
-                        updateSubmissionProgress(entity)
-                    }
-                }
-            }
-        } else if (selectedSubmissionType is AddSubmissionTypeUiState.File) {
-
-        }
-    }
-
-    private suspend fun updateSubmissionProgress(entity: CreateSubmissionEntity) {
-        val progress = entity.progress ?: 0f
-        val showProgress = progress > 0f && progress < 100.0
-        if (progress == 100.0f) {
-            updateAssignment()
-            onTextSubmissionChanged("")
-            _uiState.update {
-                it.copy(
-                    showSubmissionDetails = true,
-                    showAddSubmission = false,
-                    addSubmissionUiState = it.addSubmissionUiState.copy(
-                        submissionInProgress = showProgress
-                    ),
-                    submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
-                        show = true
-                    )
-                )
-            }
-        } else {
-            _uiState.update {
-                it.copy(
-                    addSubmissionUiState = it.addSubmissionUiState.copy(
-                        submissionInProgress = showProgress,
-                    ),
-                    showSubmissionDetails = false,
-                    showAddSubmission = true,
-                )
-            }
         }
     }
 
     private suspend fun updateAssignment() {
         val assignment = assignmentDetailsRepository.getAssignment(assignmentId, courseId, forceNetwork = true)
-        val lastActualSubmission = assignment.lastActualSubmission
+        _assignmentFlow.value = assignment
+        val lastActualSubmission = assignment.lastGradedOrSubmittedSubmission
+        val attempts = assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList()
         val submissions = if (lastActualSubmission != null) {
-            mapSubmissions(assignment.submission?.submissionHistory?.filterNotNull() ?: emptyList())
+            mapSubmissions(attempts)
         } else {
             emptyList()
         }
         val initialAttempt = lastActualSubmission?.attempt ?: -1L
 
         val currentAttempt = lastActualSubmission?.let {
-            createAttemptCard(it)
+            createAttemptCard(it, assignment.pointsPossible)
         }
+
+        val attemptsUiState = createAttemptCardsState(attempts, assignment, initialAttempt)
 
         _uiState.update {
             it.copy(
@@ -349,16 +267,14 @@ class AssignmentDetailsViewModel @Inject constructor(
                 ),
                 showSubmissionDetails = lastActualSubmission != null,
                 showAddSubmission = lastActualSubmission == null,
-                submissionConfirmationUiState = it.submissionConfirmationUiState.copy(attemptCardState = currentAttempt)
+                submissionConfirmationUiState = it.submissionConfirmationUiState.copy(
+                    show = true,
+                    attemptCardState = currentAttempt
+                ),
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(attempts = attemptsUiState),
+                viewingAttemptText = null
             )
         }
-    }
-
-    private fun createAttemptCard(submission: Submission): AttemptCardState {
-        return AttemptCardState(
-            attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
-            date = submission.submittedAt?.format("dd/MM, h:mm a").orEmpty()
-        )
     }
 
     private fun onSubmissionDialogDismissed() {
@@ -371,67 +287,77 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun deleteDraftClicked() {
+    private fun createAttemptCard(
+        submission: Submission,
+        possibleScore: Double,
+        selected: Boolean = false,
+        showScore: Boolean = false,
+        onClick: (() -> Unit)? = null
+    ): AttemptCardState {
+        val score = if (showScore && submission.isGraded) {
+            val formattedScore = formatScore(submission.score)
+            val formattedPossibleScore = formatScore(possibleScore)
+            context.getString(R.string.attemptCard_score, formattedScore, formattedPossibleScore)
+        } else {
+            null
+        }
+        return AttemptCardState(
+            attemptNumber = submission.attempt,
+            attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
+            date = submission.submittedAt?.format("MM/dd, h:mm a").orEmpty(),
+            score = score,
+            selected = selected,
+            onClick = onClick
+        )
+    }
+
+    private fun openAttemptSelector() {
         _uiState.update {
             it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showDeleteDraftConfirmation = true
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                    show = true,
+                    onDismiss = ::dismissAttemptSelector
+                ),
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
+            )
+        }
+    }
+
+    private fun dismissAttemptSelector() {
+        _uiState.update {
+            it.copy(
+                attemptSelectorUiState = it.attemptSelectorUiState.copy(
+                    show = false
                 )
             )
         }
     }
 
-    private fun deleteDraftDismissed() {
+    private fun openComments() {
         _uiState.update {
             it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showDeleteDraftConfirmation = false
-                )
+                openCommentsBottomSheetParams = OpenCommentsBottomSheetParams(assignmentId, courseId),
+                toolsBottomSheetUiState = it.toolsBottomSheetUiState.copy(show = false)
             )
         }
     }
 
-    private fun deleteDraftSubmission() {
-        viewModelScope.launch {
-            createSubmissionDao.deleteDraftByAssignmentId(assignmentId, apiPrefs.user?.id.orDefault())
-            _uiState.update {
-                it.copy(
-                    addSubmissionUiState = it.addSubmissionUiState.copy(
-                        showDeleteDraftConfirmation = false
-                    )
-                )
-            }
-            onTextSubmissionChanged("")
+    private fun dismissComments() {
+        _uiState.update {
+            it.copy(openCommentsBottomSheetParams = null)
         }
     }
 
-    private fun showSubmissionConfirmation() {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showSubmissionConfirmation = true
-                )
-            )
+    private fun formatScore(value: Double): String {
+        val formatter = NumberFormat.getNumberInstance().apply {
+            maximumFractionDigits = 2
+            minimumFractionDigits = 0
+            isGroupingUsed = false
         }
+        return formatter.format(value)
     }
 
-    private fun submissionConfirmationDismissed() {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    showSubmissionConfirmation = false
-                )
-            )
-        }
-    }
-
-    private fun updateSubmissionEnabled(enabled: Boolean) {
-        _uiState.update {
-            it.copy(
-                addSubmissionUiState = it.addSubmissionUiState.copy(
-                    submitEnabled = enabled
-                )
-            )
-        }
+    private fun onAssignmentUpdatedForAddSubmission() {
+        _assignmentFlow.value = null
     }
 }

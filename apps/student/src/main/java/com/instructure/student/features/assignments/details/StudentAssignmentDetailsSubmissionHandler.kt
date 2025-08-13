@@ -18,6 +18,7 @@ package com.instructure.student.features.assignments.details
 import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

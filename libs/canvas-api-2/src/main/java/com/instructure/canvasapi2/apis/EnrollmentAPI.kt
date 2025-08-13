@@ -86,6 +86,9 @@ object EnrollmentAPI {
         @POST("courses/{courseId}/enrollments/{enrollmentId}/{action}")
         fun handleInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Path("action") action: String): Call<Unit>
 
+        @POST("courses/{courseId}/enrollments/{enrollmentId}/accept")
+        suspend fun acceptInvite(@Path("courseId") courseId: Long, @Path("enrollmentId") enrollmentId: Long, @Tag params: RestParams): DataResult<Unit>
+
         @GET("users/self/enrollments?state[]=active&type[]=StudentEnrollment")
         fun getFirstPageEnrollmentsForGradingPeriod(@Query("grading_period_id") gradingPeriodId: Long): Call<List<Enrollment>>
     }

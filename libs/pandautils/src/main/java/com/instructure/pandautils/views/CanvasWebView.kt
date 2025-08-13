@@ -53,6 +53,7 @@ import android.view.MenuItem
 import android.view.MotionEvent
 import android.webkit.CookieManager
 import android.webkit.JavascriptInterface
+import android.webkit.MimeTypeMap
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -532,7 +533,7 @@ class CanvasWebView @JvmOverloads constructor(
         formatted = addProtocolToLinks(formatted)
         formatted = checkForMathTags(formatted)
         val (fontName, fontPath) = when {
-            ApiPrefs.canvasCareerView -> Pair("Figtree", "file:///android_asset/fonts/figtree_regular.ttf")
+            ApiPrefs.canvasCareerView ?: false -> Pair("Figtree", "file:///android_asset/fonts/figtree_regular.ttf")
             ApiPrefs.showElementaryView -> Pair("K5Font", "file:///android_asset/fonts/balsamiq_regular.ttf")
             else -> Pair("Lato", "file:///android_asset/fonts/lato_regular.ttf")
         }
@@ -636,7 +637,10 @@ class CanvasWebView @JvmOverloads constructor(
         if (acceptTypes.isNotEmpty() && acceptTypes[0].isNotBlank()) {
             // An array with one blank element will clear out the allowed mime types,
             // so we only want to add extra mime types if we are given any valid types
-            fileIntent.putExtra(Intent.EXTRA_MIME_TYPES, acceptTypes)
+            fileIntent.putExtra(
+                Intent.EXTRA_MIME_TYPES,
+                acceptTypes.map { MimeTypeMap.getSingleton().getMimeTypeFromExtension(it.replace(".", "")) ?: it }.toTypedArray()
+            )
         }
         fileIntent.type = "*/*"
 

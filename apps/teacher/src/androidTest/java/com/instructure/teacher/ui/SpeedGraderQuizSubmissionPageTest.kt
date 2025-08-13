@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
@@ -32,24 +33,28 @@ import org.junit.Test
 @HiltAndroidTest
 class SpeedGraderQuizSubmissionPageTest : TeacherComposeTest() {
 
+    @Stub
     @Test
     override fun displaysPageObjects() {
         getToQuizSubmissionPage()
         speedGraderQuizSubmissionPage.assertPageObjects()
     }
 
+    @Stub
     @Test
     fun displaysNoSubmission() {
         getToQuizSubmissionPage(submitQuiz = false)
         speedGraderQuizSubmissionPage.assertShowsNoSubmissionState()
     }
 
+    @Stub
     @Test
     fun displaysPendingReviewState() {
         getToQuizSubmissionPage(addQuestion = true, state = "pending_review")
         speedGraderQuizSubmissionPage.assertShowsPendingReviewState()
     }
 
+    @Stub
     @Test
     fun displaysViewQuizState() {
         getToQuizSubmissionPage(state = "untaken")

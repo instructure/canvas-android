@@ -195,10 +195,12 @@ class AssignmentListScreenTest {
                 allAssignments = assignmentGroups.flatMap { it.assignments },
                 assignmentGroups = assignmentGroups,
                 listState = mapOf(
-                    assignmentGroups[0].name.orEmpty() to
-                            assignmentGroups[0].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) },
-                    assignmentGroups[1].name.orEmpty() to
-                            assignmentGroups[1].assignments.map { AssignmentGroupItemState(course = Course(), assignment = it) }
+                    assignmentGroups[0].name.orEmpty() to assignmentGroups[0].assignments.map {
+                        AssignmentGroupItemState(course = Course(), assignment = it, customStatuses = emptyList())
+                    },
+                    assignmentGroups[1].name.orEmpty() to assignmentGroups[1].assignments.map {
+                        AssignmentGroupItemState(course = Course(), assignment = it, customStatuses = emptyList())
+                    }
                 ),
                 screenOption = AssignmentListScreenOption.List,
                 overFlowItems = listOf(AssignmentListMenuOverFlowItem("Item 1", {})),

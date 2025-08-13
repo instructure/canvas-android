@@ -19,10 +19,12 @@ package com.instructure.loginapi.login
 import android.content.Intent
 import androidx.fragment.app.FragmentActivity
 import com.instructure.loginapi.login.features.acceptableusepolicy.AcceptableUsePolicyActivity
+import com.instructure.loginapi.login.viewmodel.Experience
 import com.instructure.loginapi.login.viewmodel.LoginResultAction
 import com.instructure.loginapi.login.viewmodel.LoginViewModel
 
-private const val CANVAS_FOR_ELEMENTARY = "canvas_for_elementary"
+const val CANVAS_FOR_ELEMENTARY = "canvas_for_elementary"
+const val CANVAS_CAREER = "canvas_career"
 
 abstract class LoginNavigation(
     private val activity: FragmentActivity
@@ -35,8 +37,8 @@ abstract class LoginNavigation(
             event?.getContentIfNotHandled()?.let {
                 when (it) {
                     LoginResultAction.TokenNotValid -> logout()
-                    is LoginResultAction.Login -> startApp(it.elementary)
-                    is LoginResultAction.ShouldAcceptPolicy -> showPolicy(it.elementary)
+                    is LoginResultAction.Login -> startApp(it.experience)
+                    is LoginResultAction.ShouldAcceptPolicy -> showPolicy(it.experience)
                 }
             }
         })
@@ -44,19 +46,22 @@ abstract class LoginNavigation(
 
     protected abstract fun logout()
 
-    private fun startApp(elementary: Boolean) {
-        val intent = initMainActivityIntent()
+    private fun startApp(experience: Experience) {
+        val intent = initMainActivityIntent(experience)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        intent.putExtra(CANVAS_FOR_ELEMENTARY, elementary)
         activity.startActivity(intent)
         activity.finish()
     }
 
-    protected abstract fun initMainActivityIntent(): Intent
+    protected abstract fun initMainActivityIntent(experience: Experience): Intent
 
-    private fun showPolicy(elementary: Boolean) {
+    private fun showPolicy(experience: Experience) {
         val intent = Intent(activity, AcceptableUsePolicyActivity::class.java)
-        intent.putExtra(CANVAS_FOR_ELEMENTARY, elementary)
+        if (experience is Experience.Academic) {
+            intent.putExtra(CANVAS_FOR_ELEMENTARY, experience.elementary)
+        } else if (experience is Experience.Career) {
+            intent.putExtra(CANVAS_CAREER, true)
+        }
         activity.startActivity(intent)
     }
 }

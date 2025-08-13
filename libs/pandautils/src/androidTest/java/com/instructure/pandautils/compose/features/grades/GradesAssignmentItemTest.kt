@@ -80,7 +80,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textSuccess)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.SUBMITTED
+                    submissionStateLabel = SubmissionStateLabel.Submitted
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -102,7 +102,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textDanger)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.MISSING
+                    submissionStateLabel = SubmissionStateLabel.Missing
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -124,7 +124,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textWarning)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.LATE
+                    submissionStateLabel = SubmissionStateLabel.Late
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -146,7 +146,7 @@ class GradesAssignmentItemTest {
             labelColor = colorResource(id = R.color.textSuccess)
             AssignmentItem(
                 uiState = getUiState().copy(
-                    submissionStateLabel = SubmissionStateLabel.GRADED
+                    submissionStateLabel = SubmissionStateLabel.Graded
                 ),
                 actionHandler = {},
                 userColor = android.graphics.Color.RED
@@ -160,12 +160,34 @@ class GradesAssignmentItemTest {
             .assertTextColor(labelColor)
     }
 
+    @Test
+    fun assertCustomStatusAssignment() {
+        var labelColor = Color(0)
+
+        composeTestRule.setContent {
+            labelColor = colorResource(id = R.color.textInfo)
+            AssignmentItem(
+                uiState = getUiState().copy(
+                    submissionStateLabel = SubmissionStateLabel.Custom(R.drawable.ic_flag, R.color.textInfo, "Custom Status")
+                ),
+                actionHandler = {},
+                userColor = android.graphics.Color.RED
+            )
+        }
+
+        composeTestRule.onNode(hasDrawable(R.drawable.ic_flag), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Custom Status", useUnmergedTree = true)
+            .assertIsDisplayed()
+            .assertTextColor(labelColor)
+    }
+
     private fun getUiState() = AssignmentUiState(
         id = 1,
         iconRes = R.drawable.ic_assignment,
         name = "Assignment",
         dueDate = "No due date",
-        submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+        submissionStateLabel = SubmissionStateLabel.NotSubmitted,
         displayGrade = DisplayGrade("-/15", "Content description")
     )
 }

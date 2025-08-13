@@ -8,11 +8,13 @@ import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
+import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
@@ -380,6 +382,16 @@ class ApiModule {
     }
 
     @Provides
+    @Singleton
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
+        return TokenRefresher(context, loginRouter, eventBus)
+    }
+
+    @Provides
+    fun provideCanvaDocApi(): CanvaDocsAPI.CanvaDocsInterFace {
+        return RestBuilder().build(CanvaDocsAPI.CanvaDocsInterFace::class.java, RestParams())
+    }
+    @Provides
     fun provideStreamApi(): StreamAPI.StreamInterface {
         return RestBuilder().build(StreamAPI.StreamInterface::class.java, RestParams())
     }
@@ -392,12 +404,6 @@ class ApiModule {
     @Provides
     fun provideCommunicationChannelsApi(): CommunicationChannelsAPI.CommunicationChannelInterface {
         return RestBuilder().build(CommunicationChannelsAPI.CommunicationChannelInterface::class.java, RestParams())
-    }
-
-    @Provides
-    @Singleton
-    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
-        return TokenRefresher(context, loginRouter, eventBus)
     }
 
     @Provides
@@ -421,6 +427,11 @@ class ApiModule {
     @Singleton
     fun provideRedwoodApiPrefs(): RedwoodApiPref {
         return RedwoodApiPref()
+    }
+
+    @Provides
+    fun provideExperienceAPI(): ExperienceAPI {
+        return RestBuilder().build(ExperienceAPI::class.java, RestParams())
     }
 }
 

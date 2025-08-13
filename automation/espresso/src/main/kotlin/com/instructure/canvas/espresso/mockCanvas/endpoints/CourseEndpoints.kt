@@ -237,6 +237,24 @@ object CourseEndpoint : Endpoint(
                 }
             }
         ),
+        Segment("students") to Endpoint(
+            Segment("submissions") to Endpoint(
+                response = {
+                    val courseId = pathVars.courseId
+                    GET {
+                        val assignments = data.assignments.values.filter {
+                            it.courseId == courseId
+                        }
+
+                        val submissions = assignments.flatMap {
+                            data.submissions[it.id].orEmpty()
+                        }
+
+                        request.successResponse(submissions)
+                    }
+                }
+            )
+        ),
         response = {
             GET {
                 val courseId = pathVars.courseId

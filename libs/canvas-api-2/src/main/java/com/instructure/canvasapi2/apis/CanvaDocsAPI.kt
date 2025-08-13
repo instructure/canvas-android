@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.canvadocs.CanvaDocAnnotationResponse
 import com.instructure.canvasapi2.models.DocSession
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionRequestBody
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
+import com.instructure.canvasapi2.utils.DataResult
 
 import okhttp3.ResponseBody
 import retrofit2.Call
@@ -31,7 +32,7 @@ import retrofit2.http.*
 
 object CanvaDocsAPI {
 
-    internal interface CanvaDocsInterFace {
+    interface CanvaDocsInterFace {
         @GET
         fun getCanvaDoc(@Url url: String): Call<DocSession>
 
@@ -46,6 +47,9 @@ object CanvaDocsAPI {
 
         @POST("canvadoc_session")
         fun createCanvaDocSession(@Body body: CanvaDocSessionRequestBody): Call<CanvaDocSessionResponseBody>
+
+        @POST("canvadoc_session")
+        suspend fun createCanvaDocSession(@Body body: CanvaDocSessionRequestBody, @Tag restParams: RestParams): DataResult<CanvaDocSessionResponseBody>
     }
 
     fun getCanvaDoc(

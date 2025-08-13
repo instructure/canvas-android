@@ -16,12 +16,15 @@
  */
 package com.instructure.teacher.features.assignment.list
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.utils.countCustomGradeStatus
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
@@ -30,16 +33,40 @@ import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSe
 class TeacherAssignmentListRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val courseApi: CourseAPI.CoursesInterface,
-    private val assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao
-): AssignmentListRepository {
+    private val assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao,
+    private val submissionApi: SubmissionAPI.SubmissionInterface
+) : AssignmentListRepository {
     override suspend fun getAssignments(
         courseId: Long,
         forceRefresh: Boolean
     ): List<AssignmentGroup> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
-        return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams).depaginate {
-             assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, restParams)
+
+        val submissions = submissionApi.getSubmissionsForAllAssignmentsInCourse(
+            courseId = courseId, restParams = restParams
+        ).depaginate {
+            submissionApi.getNextPageSubmissions(it, restParams)
         }.dataOrThrow
+
+        val submissionsByAssignmentId = submissions.groupBy { it.assignmentId }
+
+        val assignmentGroups = assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, restParams).depaginate {
+            assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, restParams)
+        }.dataOrThrow
+
+        return assignmentGroups.map { group ->
+            group.copy(assignments = group.assignments.map { assignment ->
+                val relevantSubs = submissionsByAssignmentId[assignment.id] ?: emptyList()
+
+                val customGradeStatedSubmittedCount = relevantSubs.countCustomGradeStatus(
+                    "submitted", "pending_review", "graded"
+                )
+
+                val needsGradingCount = (assignment.needsGradingCount - customGradeStatedSubmittedCount).coerceAtLeast(0)
+
+                assignment.copy(needsGradingCount = needsGradingCount)
+            })
+        }
     }
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -72,6 +99,7 @@ class TeacherAssignmentListRepository(
         val restParams = RestParams(isForceReadFromNetwork = forceRefresh)
         return courseApi.getCourseWithGrade(courseId, restParams).dataOrThrow
     }
+
     override suspend fun getSelectedOptions(
         userDomain: String,
         userId: Long,
@@ -93,5 +121,9 @@ class TeacherAssignmentListRepository(
             selectedGroupByOption = entity.selectedGroupByOption
         ) ?: entity
         assignmentListSelectedFiltersEntityDao.insertOrUpdate(databaseEntity)
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return emptyList() // Not needed in Teacher
     }
 }

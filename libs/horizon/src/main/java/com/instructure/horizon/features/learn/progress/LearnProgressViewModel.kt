@@ -26,14 +26,12 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderStateMapper
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
-import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,7 +45,7 @@ class LearnProgressViewModel @Inject constructor(
         LearnProgressUiState(
             screenState = LoadingState(
                 onRefresh = ::refresh,
-                onErrorSnackbarDismiss = ::dismissSnackbar,
+                onSnackbarDismiss = ::dismissSnackbar,
             ),
         )
     )
@@ -84,7 +82,7 @@ class LearnProgressViewModel @Inject constructor(
                 module,
                 modules,
                 ::moduleHeaderSelected
-            ) to module.items.mapNotNull { moduleItem ->
+            ).copy(expanded = uiState.value.moduleItemStates[module.id]?.first?.expanded.orDefault()) to module.items.mapNotNull { moduleItem ->
                 if (moduleItem.type == ModuleItem.Type.SubHeader.name) {
                     ModuleItemState.SubHeader(moduleItem.title ?: "")
                 } else {
@@ -113,7 +111,7 @@ class LearnProgressViewModel @Inject constructor(
             getData(uiState.value.courseId, forceRefresh = true)
             _uiState.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
-            _uiState.update { it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(
+            _uiState.update { it.copy(screenState = it.screenState.copy(snackbarMessage = context.getString(
                 R.string.errorOccurred), isRefreshing = false)) }
         }
     }
@@ -136,7 +134,7 @@ class LearnProgressViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 }

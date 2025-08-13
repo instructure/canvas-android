@@ -34,6 +34,7 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
@@ -264,6 +265,33 @@ class SettingsViewModelTest {
                 }
             }
         }
+    }
+
+    @Test
+    fun `Switch experience switches experience and restarts app`() = runTest {
+        val items = mapOf(
+            R.string.preferences to listOf(
+                SettingsItem.SWITCH_EXPERIENCE
+            )
+        )
+        every { settingsBehaviour.settingsItems } returns items
+        every { networkStateProvider.isOnline() } returns true
+
+        every { themePrefs.appTheme } returns 0
+
+        val viewModel = createViewModel()
+
+        viewModel.uiState.value.items[R.string.preferences]?.firstOrNull { it.item == SettingsItem.SWITCH_EXPERIENCE }?.let { item ->
+            viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
+        }
+
+        val events = mutableListOf<SettingsViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewModel.events.toList(events)
+            assertEquals(SettingsViewModelAction.RestartApp, events.last())
+        }
+
+        coVerify { apiPrefs.canvasCareerView = true }
     }
 
     @Test

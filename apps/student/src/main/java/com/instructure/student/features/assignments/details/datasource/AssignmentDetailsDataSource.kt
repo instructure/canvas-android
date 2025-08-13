@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.assignments.details.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -28,4 +29,5 @@ interface AssignmentDetailsDataSource {
     suspend fun getQuiz(courseId: Long, quizId: Long, forceNetwork: Boolean): Quiz
     suspend fun getExternalToolLaunchUrl(courseId: Long, externalToolId: Long, assignmentId: Long, forceNetwork: Boolean): LTITool?
     suspend fun getLtiFromAuthenticationUrl(url: String, forceNetwork: Boolean): LTITool?
+    suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
 }

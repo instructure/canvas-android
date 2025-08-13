@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.di
 
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.pandautils.features.settings.SettingsBehaviour
@@ -32,8 +33,13 @@ import javax.inject.Singleton
 class SettingsModule {
 
     @Provides
-    fun provideSettingsRepository(featuresApi: FeaturesAPI.FeaturesInterface, inboxSettingsManager: InboxSettingsManager, settingsBehaviour: SettingsBehaviour): SettingsRepository {
-        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour)
+    fun provideSettingsRepository(
+        featuresApi: FeaturesAPI.FeaturesInterface,
+        inboxSettingsManager: InboxSettingsManager,
+        settingsBehaviour: SettingsBehaviour,
+        experienceAPI: ExperienceAPI
+    ): SettingsRepository {
+        return SettingsRepository(featuresApi, inboxSettingsManager, settingsBehaviour, experienceAPI)
     }
 }
 

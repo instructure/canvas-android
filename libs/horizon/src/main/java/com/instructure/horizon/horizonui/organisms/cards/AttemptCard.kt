@@ -24,6 +24,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -38,8 +39,10 @@ import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
 import com.instructure.horizon.horizonui.molecules.PillType
+import com.instructure.pandautils.compose.modifiers.conditional
 
 data class AttemptCardState(
+    val attemptNumber: Long = -1L,
     val attemptTitle: String,
     val date: String,
     val score: String? = null,
@@ -56,11 +59,13 @@ fun AttemptCard(state: AttemptCardState, modifier: Modifier = Modifier) {
         colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
         border = if (state.selected) HorizonBorder.level2(HorizonColors.Surface.institution()) else HorizonBorder.level1(),
         modifier = modifier
+            .clip(HorizonCornerRadius.level2)
+            .conditional(onClick != null) {
+                clickable { onClick?.invoke() }
+            }
     ) {
-        val clickModifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
         Column(
-            modifier = clickModifier
-                .padding(vertical = 12.dp, horizontal = 16.dp)
+            modifier = Modifier.padding(vertical = 16.dp, horizontal = 16.dp)
         ) {
             Text(text = state.attemptTitle, style = HorizonTypography.p2)
             HorizonSpace(SpaceSize.SPACE_2)

@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.features.grades
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
@@ -35,4 +36,5 @@ interface GradesRepository {
     fun getCourseGrade(course: Course, studentId: Long, enrollments: List<Enrollment>, gradingPeriodId: Long?): CourseGrade?
     fun getSortBy(): SortBy?
     fun setSortBy(sortBy: SortBy)
+    suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
 }

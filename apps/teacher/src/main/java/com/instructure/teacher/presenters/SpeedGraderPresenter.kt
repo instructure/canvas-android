@@ -39,8 +39,8 @@ import com.instructure.canvasapi2.utils.weave.weave
 import com.instructure.pandautils.blueprint.Presenter
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.teacher.events.SubmissionUpdatedEvent
-import com.instructure.teacher.features.assignment.submission.AssignmentSubmissionRepository
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.utils.getState
 import com.instructure.teacher.utils.transformForQuizGrading
 import com.instructure.teacher.viewinterface.SpeedGraderView

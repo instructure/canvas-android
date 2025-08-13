@@ -46,6 +46,7 @@ import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.databinding.DialogRatingBinding
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.Utils
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
 
@@ -94,7 +95,12 @@ class RatingDialog : BaseCanvasDialogFragment() {
         Analytics.logEvent(AnalyticsEventConstants.RATING_DIALOG_SHOW)
 
         val appType = arguments?.getSerializable(APP_TYPE) as AppType
-        val buttonText = if (Prefs.hasShown) getString(R.string.utils_dontShowAgain) else getString(R.string.done)
+        val showManually = arguments?.getBoolean(SHOW_MANUALLY).orDefault()
+
+        val buttonText = getString(
+            if (showManually || !Prefs.hasShown) R.string.done
+            else R.string.utils_dontShowAgain
+        )
 
         binding = DialogRatingBinding.inflate(LayoutInflater.from(context))
         setupViews(appType)
@@ -216,13 +222,15 @@ class RatingDialog : BaseCanvasDialogFragment() {
     companion object {
 
         private const val APP_TYPE = "app_type"
+        private const val SHOW_MANUALLY = "show_manually"
         private const val FOUR_WEEKS = 28
         private const val SIX_WEEKS = 42
         private const val KEY_STARS = "key_stars"
 
-        fun newInstance(appType: AppType): RatingDialog {
+        fun newInstance(appType: AppType, showManually: Boolean): RatingDialog {
             return RatingDialog().withArgs {
                 putSerializable(APP_TYPE, appType)
+                putBoolean(SHOW_MANUALLY, showManually)
             }
         }
 
@@ -253,8 +261,8 @@ class RatingDialog : BaseCanvasDialogFragment() {
         }
 
         @Suppress("MemberVisibilityCanPrivate")
-        fun showRateDialog(context: FragmentActivity, appType: AppType) {
-            RatingDialog.newInstance(appType).show(context.supportFragmentManager, RatingDialog::class.java.simpleName)
+        fun showRateDialog(context: FragmentActivity, appType: AppType, showManually: Boolean = false) {
+            newInstance(appType, showManually).show(context.supportFragmentManager, RatingDialog::class.java.simpleName)
         }
     }
 }

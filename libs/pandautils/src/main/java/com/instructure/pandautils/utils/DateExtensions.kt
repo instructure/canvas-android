@@ -118,8 +118,8 @@ fun String.formatIsoDuration(context: Context): String {
     }
 }
 
-fun Date.formatDayMonth(): String {
-    val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+fun Date.formatMonthDay(): String {
+    val formatter = SimpleDateFormat("MM/dd", Locale.getDefault())
     return formatter.format(this)
 }
 
@@ -128,8 +128,8 @@ fun Date.format(pattern: String): String {
     return formatter.format(this)
 }
 
-fun Date.formatDayMonthYear(): String {
-    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+fun Date.formatMonthDayYear(): String {
+    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
     return formatter.format(this)
 }
 

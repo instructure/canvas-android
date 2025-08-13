@@ -21,8 +21,11 @@ import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.checkToastText
+import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
 import com.instructure.parentapp.utils.seedData
 import com.instructure.parentapp.utils.tokenLogin
@@ -39,6 +42,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
     fun testHelpMenuE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -67,6 +71,9 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
         helpPage.assertReportProblemDialogDisplayed()
 
+        Log.d(ASSERTION_TAG, "Click on 'Cancel' button on the 'Report a problem' dialog.")
+        helpPage.clickCancelReportProblem()
+
         Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
         Intents.init()
 
@@ -78,5 +85,47 @@ class HelpMenuE2ETest : ParentComposeTest() {
         finally {
             Intents.release()
         }
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.COMMON, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
+    fun testHelpMenuReportProblemE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(parents = 1, students = 1, courses = 1)
+        val parent = data.parentsList[0]
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        tokenLogin(parent)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
+        dashboardPage.openLeftSideMenu()
+
+        Log.d(STEP_TAG, "Open Help Menu.")
+        leftSideNavigationDrawerPage.clickHelpMenu()
+
+        Log.d(ASSERTION_TAG, "Assert Help Menu Dialog is displayed.")
+        helpPage.assertHelpMenuDisplayed()
+
+        Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
+        helpPage.assertHelpMenuContent()
+
+        Log.d(STEP_TAG, "Click on the 'Report a Problem' help menu.")
+        helpPage.clickReportProblemLabel()
+
+        Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
+        helpPage.assertReportProblemDialogDisplayed()
+
+        Log.d(STEP_TAG, "Fill in the 'Report a problem' form with subject and description.")
+        helpPage.fillReportProblemForm("Test Subject", "Test Description")
+
+        Log.d(STEP_TAG, "Click on the 'Send' button on the 'Report a problem' dialog.")
+        helpPage.clickSendReportProblem()
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding toast message is displayed.")
+        checkToastText(R.string.errorReportThankyou, activityRule.activity)
     }
 }

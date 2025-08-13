@@ -17,8 +17,10 @@
 package com.instructure.canvasapi2.apis
 
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.DomainServicesWorkflow
 import com.instructure.canvasapi2.models.JWTTokenResponse
 import com.instructure.canvasapi2.utils.DataResult
+import retrofit2.http.Body
 import retrofit2.http.POST
 import retrofit2.http.Query
 import retrofit2.http.Tag
@@ -26,8 +28,9 @@ import retrofit2.http.Tag
 interface DomainServicesAuthenticationAPI {
     @POST("jwts")
     suspend fun getDomainServiceAuthentication(
-        @Query("audience") audience: String,
-        @Query("workflows[]") workflows: String,
+        @Query("audience") audience: String?,
+        @Query("canvas_audience") canvasAudience: Boolean?,
+        @Body workflows: DomainServicesWorkflow,
         @Tag params: RestParams
     ): DataResult<JWTTokenResponse>
 }
