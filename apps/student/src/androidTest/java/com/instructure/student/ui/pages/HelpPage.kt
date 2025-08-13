@@ -49,7 +49,7 @@ import org.hamcrest.CoreMatchers
 class HelpPage : BasePage(R.id.helpDialog) {
     private val askInstructorLabel by OnViewWithText(R.string.askInstructor)
     private val searchGuidesLabel by OnViewWithText(R.string.searchGuides)
-    private val reportProblemLabel by OnViewWithText(R.string.reportProblem)
+    private val reportProblemLabel by OnViewWithStringTextIgnoreCase("Report a problem")
     private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
