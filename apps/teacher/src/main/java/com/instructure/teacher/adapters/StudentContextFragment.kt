@@ -44,6 +44,7 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeFragment
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaultValues
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.utils.BooleanArg
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ProfileUtils
@@ -59,7 +60,6 @@ import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentStudentContextBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.StudentContextPresenterFactory
@@ -320,7 +320,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 )
 
                 val studentSubmission = GradeableStudentSubmission(StudentAssignee(user), null)
-                val bundle = SpeedGraderActivity.makeBundle(
+                val bundle = SpeedGraderFragment.makeBundle(
                     courseId = course.id.toLongOrNull() ?: 0,
                     assignmentId = submission.assignment?.id?.toLongOrNull() ?: 0,
                     anonymousGrading = false,

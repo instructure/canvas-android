@@ -2980,6 +2980,18 @@
               "deprecationReason": null
             },
             {
+              "name": "type",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "unlockAt",
               "description": "the unlock date (assignment is unlocked after this date)",
               "args": [
@@ -8272,6 +8284,18 @@
               "deprecationReason": null
             },
             {
+              "name": "horizonCourse",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Boolean",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [],
@@ -9039,12 +9063,32 @@
             },
             {
               "kind": "INTERFACE",
+              "name": "DiscussionsConnectionInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "FilesConnectionInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
               "name": "LegacyIDInterface",
               "ofType": null
             },
             {
               "kind": "INTERFACE",
               "name": "Node",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "PagesConnectionInterface",
+              "ofType": null
+            },
+            {
+              "kind": "INTERFACE",
+              "name": "QuizzesConnectionInterface",
               "ofType": null
             },
             {
@@ -19494,6 +19538,22 @@
               "deprecationReason": null
             },
             {
+              "name": "isLockedByMasterCourse",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "modules",
               "description": null,
               "args": [],
@@ -20048,6 +20108,22 @@
               "deprecationReason": null
             },
             {
+              "name": "isLockedByMasterCourse",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "modules",
               "description": null,
               "args": [],
@@ -20277,6 +20353,22 @@
               "deprecationReason": null
             },
             {
+              "name": "isLockedByMasterCourse",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "NON_NULL",
+                "name": null,
+                "ofType": {
+                  "kind": "SCALAR",
+                  "name": "Boolean",
+                  "ofType": null
+                }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "mimeClass",
               "description": null,
               "args": [],
@@ -20376,6 +20468,30 @@
               "type": {
                 "kind": "SCALAR",
                 "name": "URL",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "title",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "type",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "String",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -26310,6 +26426,18 @@
               "deprecationReason": null
             },
             {
+              "name": "estimatedDuration",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ISO8601Duration",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [],
@@ -26867,6 +26995,18 @@
               "deprecationReason": null
             },
             {
+              "name": "estimatedDuration",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ISO8601Duration",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
               "name": "id",
               "description": null,
               "args": [],
@@ -26878,6 +27018,18 @@
                   "name": "ID",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "indent",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "Int",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null
@@ -29522,6 +29674,35 @@
               "type": {
                 "kind": "OBJECT",
                 "name": "UpdateDiscussionTopicPayload",
+                "ofType": null
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "updateGradebookGroupFilter",
+              "description": null,
+              "args": [
+                {
+                  "name": "input",
+                  "description": "Parameters for UpdateGradebookGroupFilter",
+                  "type": {
+                    "kind": "NON_NULL",
+                    "name": null,
+                    "ofType": {
+                      "kind": "INPUT_OBJECT",
+                      "name": "UpdateGradebookGroupFilterInput",
+                      "ofType": null
+                    }
+                  },
+                  "defaultValue": null,
+                  "isDeprecated": false,
+                  "deprecationReason": null
+                }
+              ],
+              "type": {
+                "kind": "OBJECT",
+                "name": "UpdateGradebookGroupFilterPayload",
                 "ofType": null
               },
               "isDeprecated": false,
@@ -38158,6 +38339,18 @@
                   "name": "ID",
                   "ofType": null
                 }
+              },
+              "isDeprecated": false,
+              "deprecationReason": null
+            },
+            {
+              "name": "customGradeStatusId",
+              "description": null,
+              "args": [],
+              "type": {
+                "kind": "SCALAR",
+                "name": "ID",
+                "ofType": null
               },
               "isDeprecated": false,
               "deprecationReason": null

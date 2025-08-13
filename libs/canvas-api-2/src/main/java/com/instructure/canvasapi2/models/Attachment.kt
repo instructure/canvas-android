@@ -22,7 +22,7 @@ import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.isValid
 import kotlinx.parcelize.IgnoredOnParcel
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class Attachment(
@@ -39,8 +39,16 @@ data class Attachment(
     var previewUrl: String? = null,
     @SerializedName("created_at")
     var createdAt: Date? = null,
-    var size: Long = 0
-) : CanvasModel<Attachment>() {
+    var size: Long = 0,
+    @SerializedName("mimeClass")
+    var mimeClass: String? = null,
+    @SerializedName("type")
+    var type: String? = null,
+    @SerializedName("submissionPreviewUrl")
+    var submissionPreviewUrl: String? = null,
+    var updatedAt: Date? = null,
+
+    ) : CanvasModel<Attachment>() {
     override val comparisonDate get() = createdAt
     override val comparisonString get() = displayName
 

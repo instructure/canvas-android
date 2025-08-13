@@ -37,7 +37,10 @@ import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
 import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
 import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -56,13 +59,21 @@ import com.instructure.student.R
 import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 import org.junit.Test
 import java.net.URLEncoder
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class ModuleInteractionTest : StudentTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     // A collection of things that we create during initialization and remember for use during
