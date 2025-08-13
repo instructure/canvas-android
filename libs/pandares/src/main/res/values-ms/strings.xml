@@ -706,7 +706,7 @@
     <string name="searchGuides">Buat Carian dalam Panduan Canvas</string>
     <string name="canvasGuides">Panduan Canvas</string>
     <string name="searchGuidesDetails">Cari jawapan kepada soalan biasa</string>
-    <string name="reportProblem">Laporkan Masalah</string>
+    <string name="reportProblem">Laporkan masalah</string>
     <string name="reportProblemDetails">Jika apl menghadapi masalah, sila beritahu kami</string>
     <string name="requestFeature">Minta Ciri</string>
     <string name="requestFeatureDetails">Ada idea untuk menambah baik apl?</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Gred selepas disiarkan</string>
     <string name="gradeOverride">Gantian gred</string>
     <string name="currentGrade">Gred semasa</string>
-    <string name="opensInCanvasStudent">Terbuka dalam Canvas Student</string>
+    <string name="opensInCanvasApp">Terbuka dalam aplikasi Canvas</string>
     <string name="tab_student_view">Pandangan Pelajar</string>
 
 
@@ -1476,9 +1476,9 @@
     <string name="offline_content_storage">Storan</string>
     <string name="offline_content_storage_info">%s daripada %s Digunakan</string>
     <string name="offline_content_other">Aplikasi Lain</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Berbaki</string>
-    <string name="offline_content_storage_info_a11y_description">Maklumat Storan: %s daripada %s Digunakan, Aplikasi Lain %d%%, Pelajar Canvas %d%%, Baki %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Maklumat Storan: %s daripada %s Digunakan, Aplikasi Lain %d%%, Canvas %d%%, Berbaki %d%%</string>
     <string name="offline_content_all_courses">Semua Kursus</string>
     <string name="offline_content_sync">Segerakkan</string>
     <string name="offline_content_selected">%d Dipilih</string>
@@ -1798,7 +1798,7 @@
     <string name="studentOrTeacherTitle">Adakah anda seorang pelajar atau guru?</string>
     <string name="studentOrTeacherSubtitle">Salah satu apl kami yang lain mungkin lebih sesuai. Ketik satu untuk melawat Play Store</string>
     <string name="studentApp">PELAJAR</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">GURU</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">Lebih 99</string>
@@ -1836,7 +1836,7 @@
     <string name="addStudentSuccessfull">Pelajar berjaya ditambah</string>
     <string name="addStudentTitle">Tambah pelajar dengan...</string>
     <string name="addStudentQrCodeTitle">Kod QR</string>
-    <string name="addStudentQrCodeExplanation">Pelajar boleh menjana kod QR menggunakan aplikasi Canvas Student pada peranti mudah alih mereka</string>
+    <string name="addStudentQrCodeExplanationCanvas">Pelajar boleh menjana kod QR menggunakan aplikasi Canvas pada peranti mudah alih mereka</string>
     <string name="addStudentPairingCodeTitle">Kod Berpasangan</string>
     <string name="addStudentPairingCodeExplanation">Pelajar boleh mendapatkan kod berpasangan melalui laman web Canvas</string>
     <string name="pairingCodeDialogTitle">Tambah Pelajar</string>
@@ -1845,9 +1845,9 @@
     <string name="pairingCodeDialogNegativeButton">Batal</string>
     <string name="pairingCodeDialogPositiveButton">OK</string>
     <string name="pairingCodeDialogError">Kod anda tidak betul atau tamat tempoh.</string>
-    <string name="qrPairingTitle">Buka Canvas Student</string>
-    <string name="qrPairingDescription">Anda akan perlu membuka aplikasi pelajar Canvas Student anda untuk meneruskan. Pergi ke Menu Utama > Tetapan > Pasangkan dengan Pemerhati dan imbas kod QR yang anda lihat di sana.</string>
-    <string name="qrCodePairingPrompt">Imbas kod QR dari Canvas Student untuk berpasangan</string>
+    <string name="qrPairingTitleCanvas">Buka aplikasi Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Anda perlu membuka aplikasi Canvas pelajar anda untuk meneruskan. Pergi ke Menu Utama > Tetapan > Pasangkan dengan Pemerhati dan imbas kod QR yang anda lihat di sana.</string>
+    <string name="qrCodePairingPromptCanvas">Imbas kod QR dari aplikasi Canvas untuk berpasangan</string>
     <string name="a11y_addStudentContentDescription">Tambah Pelajar</string>
     <string name="qrPairingErrorTitle">Kod QR Tamat Tempoh</string>
     <string name="qrPairingErrorDescription">Kod QR yang anda imbas mungkin telah tamat tempoh. Segar semula kod pada peranti pelajar dan cuba semula.</string>
@@ -2074,4 +2074,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Untuk melihat gred anda, sila log masuk ke akaun anda di aplikasi.</string>
     <string name="widgetSingleGradeSelectCourse">Mari pilih kursus</string>
     <string name="widgetGradesErrorLoadingCourses">Ralat berlaku semasa memuatkan kursus.</string>
+    <string name="settingsSwitchExperience">Tukar kepada Canvas Career</string>
 </resources>

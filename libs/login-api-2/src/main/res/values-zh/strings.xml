@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">报告一个问题</string>
+    <string name="reportAProblemDialogTitle">报告一个问题</string>
     <string name="errorReportSubject">主题</string>
     <string name="errorReportDescription">说明</string>
     <string name="errorReportSend">发送</string>
