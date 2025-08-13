@@ -71,8 +71,8 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
         searchable.clickOnClearSearchButton()
     }
 
-    fun assertNoQuizzesTextDisplayed() {
-        onView(withText("No Quizzes"))
+    fun assertEmptyStateDisplayed() {
+        onView(allOf(withId(R.id.emptyViewLayout), isDisplayed()))
             .check(matches(isDisplayed()))
     }
 

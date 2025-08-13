@@ -91,9 +91,9 @@ class QuizzesE2ETest: StudentTest() {
         quizListPage.enterSearchQuery(quizUnpublished.title)
         closeSoftKeyboard()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${quizUnpublished.title}' quiz is NOT displayed in the search results and the 'No Quizzes' text is visible.")
+        Log.d(ASSERTION_TAG, "Assert that the '${quizUnpublished.title}' quiz is NOT displayed.")
         refresh()
-        quizListPage.assertNoQuizzesTextDisplayed()
+        quizListPage.assertEmptyStateDisplayed()
 
         Log.d(STEP_TAG, "Clear the search bar and search for the '${quizPublished.title}' quiz.")
         quizListPage.clearSearchButton()
