@@ -67,7 +67,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
         searchInput.replaceText(query)
     }
 
-    fun clearSearchButton(){
+    fun clearSearchButton() {
         searchable.clickOnClearSearchButton()
     }
 
