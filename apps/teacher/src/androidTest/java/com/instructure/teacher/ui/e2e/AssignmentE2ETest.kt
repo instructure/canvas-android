@@ -434,6 +434,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
     }
 
+    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)
