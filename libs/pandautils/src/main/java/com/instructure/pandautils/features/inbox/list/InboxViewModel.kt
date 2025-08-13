@@ -31,6 +31,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -40,7 +41,8 @@ import javax.inject.Inject
 class InboxViewModel @Inject constructor(
     private val inboxRepository: InboxRepository,
     private val resources: Resources,
-    private val inboxEntryItemCreator: InboxEntryItemCreator
+    private val inboxEntryItemCreator: InboxEntryItemCreator,
+    private val featureFlagProvider: FeatureFlagProvider
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -67,8 +69,14 @@ class InboxViewModel @Inject constructor(
 
     private var canvasContexts: List<CanvasContext> = emptyList()
 
+    private var canDeleteConversations = true
+
     private var lastRequestedPageLink: String? = null
     private var silentRefreshJob: Job? = null
+
+    init {
+        checkAndApplyFeatureFlagRestrictions()
+    }
 
     val bottomReachedCallback: () -> Unit = {
         viewModelScope.launch {
@@ -175,7 +183,11 @@ class InboxViewModel @Inject constructor(
     }
 
     private fun createMenuItems(selectedItems: List<InboxEntryItemViewModel>, scope: InboxApi.Scope): Set<InboxMenuItem> {
-        val menuItems = mutableSetOf<InboxMenuItem>(InboxMenuItem.DELETE)
+        val menuItems = mutableSetOf<InboxMenuItem>()
+        
+        if (canDeleteConversations) {
+            menuItems.add(InboxMenuItem.DELETE)
+        }
         when {
             scope == InboxApi.Scope.ARCHIVED -> menuItems.add(InboxMenuItem.UNARCHIVE)
             scope != InboxApi.Scope.SENT && scope != InboxApi.Scope.STARRED -> menuItems.add(InboxMenuItem.ARCHIVE)
@@ -582,5 +594,22 @@ class InboxViewModel @Inject constructor(
             }
         }
         return diff
+    }
+
+    private fun checkAndApplyFeatureFlagRestrictions() {
+        viewModelScope.launch {
+            val restrictStudentAccess = checkEnvironmentFeatureFlag("restrict_student_access")
+            if (restrictStudentAccess) {
+                canDeleteConversations = false
+            }
+        }
+    }
+
+    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag(featureFlag)
+        } catch (e: Exception) {
+            false
+        }
     }
 }

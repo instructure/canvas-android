@@ -32,6 +32,8 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.EnvironmentFeatureFlag
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -59,6 +61,7 @@ class InboxViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val inboxEntryItemCreator: InboxEntryItemCreator = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var viewModel: InboxViewModel
 
@@ -79,6 +82,8 @@ class InboxViewModelTest {
         coEvery { inboxRepository.updateConversation(any(), any(), any()) } returns DataResult.Success(
             Conversation()
         )
+        
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
 
         every { resources.getString(R.string.inboxScopeInbox) } returns "Inbox"
         every { resources.getString(R.string.allCourses) } returns "All Courses"
@@ -964,5 +969,35 @@ class InboxViewModelTest {
         coVerify { inboxRepository.getInboxSignature() }
     }
 
-    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)
+    @Test
+    fun `Create menu items includes delete when feature flag is disabled`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(EnvironmentFeatureFlag.RESTRICT_STUDENT_ACCESS) } returns false
+        
+        viewModel = createViewModel()
+        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.onSelectionModeEnabled()
+        viewModel.onConversationSelected(1L, true)
+        viewModel.createMenuItems()
+        
+        val menuItems = viewModel.uiState.value.menuItems
+        assertTrue("Delete menu item should be present when feature flag is disabled", 
+            menuItems.any { it.id == ContextMenuItem.DELETE.id })
+    }
+
+    @Test
+    fun `Create menu items excludes delete when feature flag is enabled`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(EnvironmentFeatureFlag.RESTRICT_STUDENT_ACCESS) } returns true
+        
+        viewModel = createViewModel()
+        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.onSelectionModeEnabled()
+        viewModel.onConversationSelected(1L, true)
+        viewModel.createMenuItems()
+        
+        val menuItems = viewModel.uiState.value.menuItems
+        assertFalse("Delete menu item should not be present when feature flag is enabled", 
+            menuItems.any { it.id == ContextMenuItem.DELETE.id })
+    }
+
+    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator, featureFlagProvider)
 }

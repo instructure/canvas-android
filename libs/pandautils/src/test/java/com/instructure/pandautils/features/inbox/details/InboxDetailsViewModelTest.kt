@@ -27,6 +27,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -51,6 +52,7 @@ class InboxDetailsViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val inboxDetailsRepository: InboxDetailsRepository = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private val conversation = Conversation(
         id = 1,
@@ -77,6 +79,7 @@ class InboxDetailsViewModelTest {
             com.instructure.pandautils.R.string.inboxReplySubjectRePrefix,
             conversation.subject
         ) } returns "Re: ${conversation.subject}"
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
     }
 
     @After
@@ -99,12 +102,16 @@ class InboxDetailsViewModelTest {
                 author = conversation.participants[0],
                 recipients = listOf(conversation.participants[1]),
                 enabledActions = true,
+                canReplyAll = true,
+                canDelete = true,
             ),
             InboxMessageUiState(
                 message = conversation.messages[1],
                 author = conversation.participants[1],
                 recipients = listOf(conversation.participants[0]),
                 enabledActions = true,
+                canReplyAll = true,
+                canDelete = true,
             ),
         )
         val expectedUiState = InboxDetailsUiState(
@@ -112,6 +119,7 @@ class InboxDetailsViewModelTest {
             conversation = conversation,
             messageStates = messageStates,
             state = ScreenState.Content,
+            showReplyAllButton = true,
         )
 
         assertEquals(expectedUiState, viewModel.uiState.value)
@@ -145,12 +153,16 @@ class InboxDetailsViewModelTest {
                 author = conversation.participants[0],
                 recipients = listOf(conversation.participants[1]),
                 enabledActions = true,
+                canReplyAll = true,
+                canDelete = true,
             ),
             InboxMessageUiState(
                 message = conversation.messages[1],
                 author = conversation.participants[1],
                 recipients = listOf(conversation.participants[0]),
                 enabledActions = true,
+                canReplyAll = true,
+                canDelete = true,
             ),
         )
         val expectedUiState = InboxDetailsUiState(
@@ -158,6 +170,7 @@ class InboxDetailsViewModelTest {
             conversation = conversation,
             messageStates = messageStates,
             state = ScreenState.Content,
+            showReplyAllButton = true,
         )
 
         viewModel.handleAction(InboxDetailsAction.RefreshCalled)
@@ -271,6 +284,8 @@ class InboxDetailsViewModelTest {
                 author = conversation.participants[1],
                 recipients = listOf(conversation.participants[0]),
                 enabledActions = true,
+                canReplyAll = true,
+                canDelete = true,
             ),
         )
         val expectedUiState = InboxDetailsUiState(
@@ -278,6 +293,7 @@ class InboxDetailsViewModelTest {
             conversation = newConversation,
             messageStates = messageStates,
             state = ScreenState.Content,
+            showReplyAllButton = true,
         )
         coEvery { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) } returns DataResult.Success(newConversation)
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(newConversation)
@@ -546,6 +562,8 @@ class InboxDetailsViewModelTest {
                 author = conversation.participants[1],
                 recipients = listOf(conversation.participants[0]),
                 enabledActions = true,
+                canReplyAll = true,
+                canDelete = true,
             ),
         )
         val expectedUiState = InboxDetailsUiState(
@@ -553,6 +571,7 @@ class InboxDetailsViewModelTest {
             conversation = newConversation,
             messageStates = messageStates,
             state = ScreenState.Content,
+            showReplyAllButton = true,
         )
         coEvery { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) } returns DataResult.Success(newConversation)
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(newConversation)
@@ -610,9 +629,53 @@ class InboxDetailsViewModelTest {
         coVerify(exactly = 1) { inboxDetailsRepository.deleteMessage(conversation.id, listOf(conversation.messages[0].id)) }
     }
 
+    @Test
+    fun `Test restrict_student_access feature flag hides delete button`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        val viewModel = getViewModel()
+        val uiState = viewModel.uiState.value
+
+        assertEquals(false, uiState.showDeleteButton)
+        assertEquals(false, uiState.showReplyAllButton)
+        // Also check that individual messages can't be deleted or replied all
+        uiState.messageStates.forEach { messageState ->
+            assertEquals(false, messageState.canDelete)
+            assertEquals(false, messageState.canReplyAll)
+        }
+    }
+
+    @Test
+    fun `Test without restrict_student_access feature flag delete button is shown`() {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+        val viewModel = getViewModel()
+        val uiState = viewModel.uiState.value
+
+        assertEquals(true, uiState.showDeleteButton)
+        assertEquals(true, uiState.showReplyAllButton)
+        // Also check that individual messages can be deleted and replied all
+        uiState.messageStates.forEach { messageState ->
+            assertEquals(true, messageState.canDelete)
+            assertEquals(true, messageState.canReplyAll)
+        }
+    }
+
+    @Test
+    fun `Test default state shows delete button when feature flag is not set`() {
+        val viewModel = getViewModel()
+        val uiState = viewModel.uiState.value
+
+        assertEquals(true, uiState.showDeleteButton)
+        assertEquals(true, uiState.showReplyAllButton)
+        // Also check that individual messages can be deleted and replied all by default
+        uiState.messageStates.forEach { messageState ->
+            assertEquals(true, messageState.canDelete)
+            assertEquals(true, messageState.canReplyAll)
+        }
+    }
+
     // endregion
 
     private fun getViewModel(): InboxDetailsViewModel {
-        return InboxDetailsViewModel(context, savedStateHandle, InboxDetailsBehavior(), inboxDetailsRepository)
+        return InboxDetailsViewModel(context, savedStateHandle, InboxDetailsBehavior(), inboxDetailsRepository, featureFlagProvider)
     }
 }

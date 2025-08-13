@@ -25,6 +25,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,6 +43,7 @@ class InboxDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val behavior: InboxDetailsBehavior,
     private val repository: InboxDetailsRepository,
+    private val featureFlagProvider: FeatureFlagProvider,
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -53,11 +55,14 @@ class InboxDetailsViewModel @Inject constructor(
     private val _events = Channel<InboxDetailsFragmentAction>()
     val events = _events.receiveAsFlow()
 
+    private var canDeleteMessages = true
+
     init {
         _uiState.update { it.copy(
             conversationId = conversationId,
             showBackButton = behavior.getShowBackButton(context)
         ) }
+        checkAndApplyFeatureFlagRestrictions()
         getConversation()
     }
 
@@ -191,6 +196,8 @@ class InboxDetailsViewModel @Inject constructor(
             recipients = recipients,
             enabledActions = true,
             cannotReply = conversation.cannotReply,
+            canReplyAll = canDeleteMessages, // Use same logic as canDeleteMessages
+            canDelete = canDeleteMessages,
         )
     }
 
@@ -254,6 +261,26 @@ class InboxDetailsViewModel @Inject constructor(
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
+        }
+    }
+
+    private fun checkAndApplyFeatureFlagRestrictions() {
+        viewModelScope.launch {
+            val restrictStudentAccess = checkEnvironmentFeatureFlag("restrict_student_access")
+            if (restrictStudentAccess) {
+                canDeleteMessages = false
+                _uiState.update {
+                    it.copy(showDeleteButton = false, showReplyAllButton = false)
+                }
+            }
+        }
+    }
+
+    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag(featureFlag)
+        } catch (e: Exception) {
+            false
         }
     }
 }
