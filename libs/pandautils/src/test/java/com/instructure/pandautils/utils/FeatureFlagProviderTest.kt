@@ -169,4 +169,58 @@ class FeatureFlagProviderTest {
 
         assertFalse(featureFlagProvider.offlineEnabled())
     }
+
+    @Test
+    fun `checkEnvironmentFeatureFlag returns true when feature flag is enabled`() = runTest {
+        val featureFlagName = "test_feature_flag"
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf(featureFlagName to true))
+
+        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `checkEnvironmentFeatureFlag returns false when feature flag is disabled`() = runTest {
+        val featureFlagName = "test_feature_flag"
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf(featureFlagName to false))
+
+        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `checkEnvironmentFeatureFlag returns false when feature flag does not exist`() = runTest {
+        val featureFlagName = "non_existent_feature_flag"
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("other_flag" to true))
+
+        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `checkEnvironmentFeatureFlag returns false when user is null`() = runTest {
+        val featureFlagName = "test_feature_flag"
+        every { apiPrefs.user } returns null
+
+        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `checkEnvironmentFeatureFlag returns false when environment feature flags is null`() = runTest {
+        val featureFlagName = "test_feature_flag"
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns null
+
+        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+
+        assertFalse(result)
+    }
 }
