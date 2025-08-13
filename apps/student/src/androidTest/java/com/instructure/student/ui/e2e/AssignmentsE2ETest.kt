@@ -308,7 +308,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @Stub // TODO MBL-19110
     fun testPointsGradeTextAssignmentE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -739,7 +738,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @Stub // TODO MBL-19110
     fun testSubmissionAttemptSelection() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

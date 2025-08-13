@@ -34,10 +34,7 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.espresso.assertContainsText
-import com.instructure.espresso.page.onViewWithId
 import com.instructure.espresso.retryWithIncreasingDelay
-import com.instructure.teacher.R
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.seedAssignmentSubmission
 import com.instructure.teacher.ui.utils.seedAssignments
@@ -437,7 +434,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
     }
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)

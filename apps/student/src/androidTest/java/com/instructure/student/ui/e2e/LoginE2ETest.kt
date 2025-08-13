@@ -147,7 +147,6 @@ class LoginE2ETest : StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
-    @Stub
     fun testUserRolesLoginE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -297,7 +296,6 @@ class LoginE2ETest : StudentTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.E2E)
-    @Stub
     fun testVanityDomainLoginE2E() {
         // Create a Retrofit client for our vanity domain
         val domain = "canvas.beta.jitops.computer" // Our test vanity domain

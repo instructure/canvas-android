@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -373,7 +372,6 @@ class SettingsE2ETest : StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SETTINGS, TestCategory.E2E)
-    @Stub
     fun testPronounsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

@@ -20,7 +20,6 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.student.ui.utils.StudentComposeTest
@@ -39,7 +38,6 @@ class PeopleE2ETest : StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PEOPLE, TestCategory.E2E)
-    @Stub
     fun testPeopleE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

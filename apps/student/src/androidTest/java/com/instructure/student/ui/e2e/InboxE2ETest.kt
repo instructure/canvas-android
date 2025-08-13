@@ -530,7 +530,6 @@ class InboxE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.INBOX, TestCategory.E2E)
-    @Stub
     fun testHelpMenuAskYourInstructorMessage() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
