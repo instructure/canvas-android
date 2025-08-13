@@ -22,12 +22,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import com.instructure.pandautils.base.BaseCanvasFragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
@@ -53,7 +54,7 @@ class PostPolicyFragment : BaseCanvasFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val titles = listOf(getString(R.string.postGradesTab), getString(R.string.hideGradesTab))
-        binding.postPolicyPager.adapter = PostPolicyPagerAdapter(course, assignment, childFragmentManager, titles)
+        binding.postPolicyPager.adapter = PostPolicyPagerAdapter(assignment, childFragmentManager, titles)
         binding.postPolicyTabLayout.setupWithViewPager(binding.postPolicyPager, true)
     }
 
@@ -74,14 +75,14 @@ class PostPolicyFragment : BaseCanvasFragment() {
     }
 
     companion object {
-        fun makeRoute(course: Course, assignment: Assignment) =
-            Route(PostPolicyFragment::class.java, course, Bundle().apply { putParcelable(Const.ASSIGNMENT, assignment) })
+        fun makeRoute(courseId: Long, assignment: Assignment) =
+            Route(PostPolicyFragment::class.java, CanvasContext.emptyCourseContext(id = courseId), Bundle().apply { putParcelable(Const.ASSIGNMENT, assignment) })
 
         fun newInstance(args: Bundle) = PostPolicyFragment().withArgs(args)
     }
 }
 
-private class PostPolicyPagerAdapter(val course: Course, val assignment: Assignment, fragmentManager: FragmentManager, val titles: List<String>) : FragmentPagerAdapter(fragmentManager) {
+private class PostPolicyPagerAdapter(val assignment: Assignment, fragmentManager: FragmentManager, val titles: List<String>) : FragmentPagerAdapter(fragmentManager) {
     override fun getCount() = 2
     override fun getPageTitle(position: Int) = titles[position]
 

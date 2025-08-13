@@ -19,10 +19,12 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
 import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -49,21 +51,23 @@ class AssignmentListFragmentModule {
 
 @Module
 @InstallIn(ViewModelComponent::class)
-class AssignmentListViewModelModule{
+class AssignmentListViewModelModule {
     @Provides
     fun provideAssignmentListLocalDataSource(
         assignmentFacade: AssignmentFacade,
-        courseFacade: CourseFacade
+        courseFacade: CourseFacade,
+        customGradeStatusDao: CustomGradeStatusDao
     ): AssignmentListLocalDataSource {
-        return AssignmentListLocalDataSource(assignmentFacade, courseFacade)
+        return AssignmentListLocalDataSource(assignmentFacade, courseFacade, customGradeStatusDao)
     }
 
     @Provides
     fun provideAssignmentListNetworkDataSource(
         assignmentApi: AssignmentAPI.AssignmentInterface,
-        courseApi: CourseAPI.CoursesInterface
+        courseApi: CourseAPI.CoursesInterface,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): AssignmentListNetworkDataSource {
-        return AssignmentListNetworkDataSource(assignmentApi, courseApi)
+        return AssignmentListNetworkDataSource(assignmentApi, courseApi, customGradeStatusesManager)
     }
 
     @Provides
@@ -74,7 +78,13 @@ class AssignmentListViewModelModule{
         featureFlagProvider: FeatureFlagProvider,
         assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao
     ): AssignmentListRepository {
-        return StudentAssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, assignmentListSelectedFiltersEntityDao)
+        return StudentAssignmentListRepository(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider,
+            assignmentListSelectedFiltersEntityDao
+        )
     }
 
     @Provides

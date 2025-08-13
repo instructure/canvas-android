@@ -21,6 +21,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
@@ -31,19 +32,27 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -146,6 +155,18 @@ class SubmissionListViewModelTest {
                 student = User(8L, name = "Not Submitted Student"),
             ),
             submission = null
+        ),
+        GradeableStudentSubmission(
+            assignee = StudentAssignee(
+                student = User(9L, name = "Custom Status Student"),
+            ),
+            submission = Submission(
+                id = 9L,
+                attempt = 1L,
+                postedAt = Date(),
+                customGradeStatusId = 1L,
+                isGradeMatchesCurrentSubmission = true
+            )
         )
     )
 
@@ -169,20 +190,35 @@ class SubmissionListViewModelTest {
 
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
         } returns submissions
 
+        coEvery {
+            submissionListRepository.getCustomGradeStatuses(1L, any())
+        } returns listOf(
+            mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+                every { _id } returns "1"
+                every { name } returns "Custom Status 1"
+            }
+        )
+
         setupString()
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
     }
 
     @Test
     fun `Empty state`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -198,7 +234,7 @@ class SubmissionListViewModelTest {
     fun `Error state when submissions fail`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -221,7 +257,7 @@ class SubmissionListViewModelTest {
                 "Late Student",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -231,7 +267,7 @@ class SubmissionListViewModelTest {
                 "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -241,7 +277,7 @@ class SubmissionListViewModelTest {
                 "Missing Student",
                 false,
                 null,
-                listOf(SubmissionTag.MISSING),
+                listOf(SubmissionTag.Missing),
                 "-",
                 true
             ),
@@ -251,7 +287,7 @@ class SubmissionListViewModelTest {
                 "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -261,7 +297,7 @@ class SubmissionListViewModelTest {
                 "Bad Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "0",
                 true
             ),
@@ -271,7 +307,7 @@ class SubmissionListViewModelTest {
                 "Excused Student",
                 false,
                 null,
-                listOf(SubmissionTag.EXCUSED),
+                listOf(SubmissionTag.Excused),
                 "",
                 true
             ),
@@ -281,7 +317,7 @@ class SubmissionListViewModelTest {
                 "Updated Grade Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -291,7 +327,17 @@ class SubmissionListViewModelTest {
                 "Not Submitted Student",
                 false,
                 null,
-                listOf(SubmissionTag.NOT_SUBMITTED),
+                listOf(SubmissionTag.NotSubmitted),
+                "-",
+                false
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
                 "-",
                 false
             )
@@ -319,7 +365,7 @@ class SubmissionListViewModelTest {
                 "Late Student",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             )
@@ -347,7 +393,7 @@ class SubmissionListViewModelTest {
                 "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -357,7 +403,7 @@ class SubmissionListViewModelTest {
                 "Bad Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "0",
                 true
             ),
@@ -367,9 +413,19 @@ class SubmissionListViewModelTest {
                 "Excused Student",
                 false,
                 null,
-                listOf(SubmissionTag.EXCUSED),
+                listOf(SubmissionTag.Excused),
                 "",
                 true
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "-",
+                false
             )
         )
 
@@ -395,7 +451,7 @@ class SubmissionListViewModelTest {
                 "Late Student",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -405,7 +461,7 @@ class SubmissionListViewModelTest {
                 "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -415,7 +471,7 @@ class SubmissionListViewModelTest {
                 "Missing Student",
                 false,
                 null,
-                listOf(SubmissionTag.MISSING),
+                listOf(SubmissionTag.Missing),
                 "-",
                 true
             ),
@@ -425,7 +481,7 @@ class SubmissionListViewModelTest {
                 "Updated Grade Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             )
@@ -453,7 +509,7 @@ class SubmissionListViewModelTest {
                 "Not Submitted Student",
                 false,
                 null,
-                listOf(SubmissionTag.NOT_SUBMITTED),
+                listOf(SubmissionTag.NotSubmitted),
                 "-",
                 false
             )
@@ -481,7 +537,7 @@ class SubmissionListViewModelTest {
                 "Good Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             ),
@@ -491,7 +547,7 @@ class SubmissionListViewModelTest {
                 "Updated Grade Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10",
                 true
             )
@@ -519,9 +575,19 @@ class SubmissionListViewModelTest {
                 "Bad Graded Student",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "0",
                 true
+            ),
+            SubmissionUiState(
+                9L,
+                9L,
+                "Custom Status Student",
+                false,
+                null,
+                listOf(SubmissionTag.Custom("Custom Status 1", R.drawable.ic_flag, R.color.textInfo)),
+                "-",
+                false
             )
         )
 
@@ -532,7 +598,7 @@ class SubmissionListViewModelTest {
     fun `Filter by section`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -589,7 +655,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             )
@@ -602,7 +668,7 @@ class SubmissionListViewModelTest {
     fun `Hidden flag set if submission has no postedAt`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -639,7 +705,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                 "-",
                 true
             ),
@@ -649,7 +715,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 false
             )
@@ -660,9 +726,11 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Route to submission`() = runTest {
+        mockkObject(RemoteConfigUtils)
+        every { RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2) } returns true
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -704,7 +772,7 @@ class SubmissionListViewModelTest {
     fun `Refresh action`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -714,7 +782,7 @@ class SubmissionListViewModelTest {
 
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -722,7 +790,7 @@ class SubmissionListViewModelTest {
         viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
 
         coVerify {
-            submissionListRepository.getGradeableStudentSubmissions(any(), any(), true)
+            submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), true)
         }
 
         assertEquals(submissions.size, viewModel.uiState.value.submissions.size)
@@ -752,7 +820,7 @@ class SubmissionListViewModelTest {
                 "On Time Student",
                 false,
                 null,
-                listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                 "-",
                 true
             )
@@ -837,7 +905,7 @@ class SubmissionListViewModelTest {
     fun `Complete incomplete grades`() = runTest {
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -873,7 +941,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "Complete",
                 true
             ),
@@ -883,7 +951,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "Incomplete",
                 true
             )
@@ -903,7 +971,7 @@ class SubmissionListViewModelTest {
         )
         coEvery {
             submissionListRepository.getGradeableStudentSubmissions(
-                any(),
+                any<Assignment>(),
                 any(),
                 any()
             )
@@ -941,7 +1009,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "85.12%",
                 true
             ),
@@ -951,7 +1019,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10%",
                 true
             )
@@ -981,7 +1049,7 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Anonymous grading`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+        coEvery { submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), any()) } returns listOf(
             GradeableStudentSubmission(
                 assignee = StudentAssignee(
                     student = User(1L, name = "Student 1"),
@@ -1033,7 +1101,7 @@ class SubmissionListViewModelTest {
                 "Student 1",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "85.123%",
                 true
             ),
@@ -1043,7 +1111,7 @@ class SubmissionListViewModelTest {
                 "Student 2",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10%",
                 true
             ),
@@ -1053,7 +1121,7 @@ class SubmissionListViewModelTest {
                 "Student 3",
                 false,
                 null,
-                listOf(SubmissionTag.GRADED),
+                listOf(SubmissionTag.Graded),
                 "10%",
                 true
             )
@@ -1067,7 +1135,7 @@ class SubmissionListViewModelTest {
 
     @Test
     fun `Created by Student View`() = runTest {
-        coEvery { submissionListRepository.getGradeableStudentSubmissions(any(), any(), any()) } returns listOf(
+        coEvery { submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), any()) } returns listOf(
             GradeableStudentSubmission(
                 assignee = StudentAssignee(
                     student = User(1L, name = "Student 1", isFakeStudent = true),
@@ -1095,7 +1163,7 @@ class SubmissionListViewModelTest {
             "Student 1",
             true,
             null,
-            listOf(SubmissionTag.GRADED),
+            listOf(SubmissionTag.Graded),
             "85.123%",
             true
         )

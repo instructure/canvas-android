@@ -41,9 +41,11 @@ fun UserAvatar(
     imageUrl: String?,
     name: String,
     anonymous: Boolean = false,
+    group: Boolean = false,
     modifier: Modifier = Modifier
 ) {
     val model: Any? = when {
+        group -> R.drawable.ic_group
         anonymous -> R.drawable.ic_user_avatar
         ProfileUtils.shouldLoadAltAvatarImage(imageUrl) -> ProfileUtils.createAvatarDrawable(
             context = LocalContext.current,

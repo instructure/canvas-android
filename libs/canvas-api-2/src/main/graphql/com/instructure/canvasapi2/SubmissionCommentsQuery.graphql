@@ -1,0 +1,87 @@
+#
+# Copyright (C) 2025 - present Instructure, Inc.
+#
+#     Licensed under the Apache License, Version 2.0 (the "License");
+#     you may not use this file except in compliance with the License.
+#     You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+#     Unless required by applicable law or agreed to in writing, software
+#     distributed under the License is distributed on an "AS IS" BASIS,
+#     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#     See the License for the specific language governing permissions and
+#     limitations under the License.
+#
+query SubmissionCommentsQuery(
+    $userId: ID!,
+    $assignmentId: ID!,
+    $historyCursor: String,
+    $commentCursor: String
+) {
+    submission(userId: $userId, assignmentId: $assignmentId) {
+        _id
+        userId
+        assignment {
+            anonymousGrading
+        }
+        submissionHistoriesConnection(first: 20, after: $historyCursor) {
+            edges {
+                node {
+                    attempt
+                    commentsConnection(first: 20, after: $commentCursor) {
+                        edges {
+                            node {
+                                author {
+                                    _id
+                                    name
+                                    email
+                                    avatarUrl
+                                    pronouns
+                                }
+                                mediaObject {
+                                    _id
+                                    mediaDownloadUrl
+                                    title
+                                    mediaType
+                                    thumbnailUrl
+                                    mediaSources {
+                                        contentType
+                                        fileExt
+                                        url
+                                    }
+                                }
+                                comment
+                                mediaCommentId
+                                createdAt
+                                canReply
+                                draft
+                                attempt
+                                read
+                                attachments {
+                                    _id
+                                    id
+                                    contentType
+                                    createdAt
+                                    displayName
+                                    title
+                                    size
+                                    thumbnailUrl
+                                    url
+                                }
+                            }
+                        }
+                        pageInfo {
+                            hasNextPage
+                            endCursor
+                        }
+                    }
+                }
+            }
+            pageInfo {
+                hasNextPage
+                endCursor
+            }
+        }
+    }
+}
