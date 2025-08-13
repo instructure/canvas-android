@@ -59,7 +59,8 @@ class InboxComposeViewModel @Inject constructor(
     private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
     private val attachmentDao: AttachmentDao,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val inboxComposeBehavior: InboxComposeBehavior
 ): ViewModel() {
     private var canSendToAll = false
 
@@ -190,11 +191,8 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun checkAndApplyFeatureFlagRestrictions() {
         viewModelScope.launch {
-            val isTeacherApp = context.packageName.contains("teacher")
-            if (!isTeacherApp) return@launch
-            
-            val restrictStudentAccess = checkEnvironmentFeatureFlag("restrict_student_access")
-            if (restrictStudentAccess) {
+            val shouldRestrict = inboxComposeBehavior.shouldRestrictStudentAccess()
+            if (shouldRestrict) {
                 _uiState.update {
                     it.copy(
                         hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true),
@@ -206,14 +204,6 @@ class InboxComposeViewModel @Inject constructor(
                     sendIndividual = true
                 )
             }
-        }
-    }
-
-    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag(featureFlag)
-        } catch (e: Exception) {
-            false
         }
     }
 
