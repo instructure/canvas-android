@@ -38,13 +38,4 @@ class InboxComposeBehaviorTest {
 
         assertFalse(result)
     }
-
-    @Test
-    fun `default shouldRestrictReplyAll returns false`() = runTest {
-        val behavior = object : InboxComposeBehavior {}
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
 }

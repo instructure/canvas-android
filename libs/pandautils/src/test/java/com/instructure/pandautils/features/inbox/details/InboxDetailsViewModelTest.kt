@@ -53,6 +53,7 @@ class InboxDetailsViewModelTest {
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val inboxDetailsRepository: InboxDetailsRepository = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val inboxDetailsBehavior: InboxDetailsBehavior = mockk(relaxed = true)
 
     private val conversation = Conversation(
         id = 1,
@@ -91,6 +92,9 @@ class InboxDetailsViewModelTest {
     @Test
     fun `Test ViewModel init`() {
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
+        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
+        coEvery { inboxDetailsBehavior.shouldRestrictReplyAll() } returns false
+        coEvery { inboxDetailsBehavior.getShowBackButton(any()) } returns true
 
         val viewModel = getViewModel()
 
@@ -144,6 +148,9 @@ class InboxDetailsViewModelTest {
 
     @Test
     fun `Test Refresh action`() {
+        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
+        coEvery { inboxDetailsBehavior.shouldRestrictReplyAll() } returns false
+        coEvery { inboxDetailsBehavior.getShowBackButton(any()) } returns true
         val viewModel = getViewModel()
 
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
@@ -276,6 +283,9 @@ class InboxDetailsViewModelTest {
 
     @Test
     fun `Test Message Delete action with successful Delete`() = runTest {
+        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
+        coEvery { inboxDetailsBehavior.shouldRestrictReplyAll() } returns false
+        coEvery { inboxDetailsBehavior.getShowBackButton(any()) } returns true
         val viewModel = getViewModel()
         val newConversation = conversation.copy(messages = listOf(conversation.messages[1]))
         val messageStates = listOf(
@@ -554,6 +564,9 @@ class InboxDetailsViewModelTest {
 
     @Test
     fun `Test MessageAction Delete Message action with successful Delete`() = runTest {
+        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
+        coEvery { inboxDetailsBehavior.shouldRestrictReplyAll() } returns false
+        coEvery { inboxDetailsBehavior.getShowBackButton(any()) } returns true
         val viewModel = getViewModel()
         val newConversation = conversation.copy(messages = listOf(conversation.messages[1]))
         val messageStates = listOf(
@@ -631,7 +644,8 @@ class InboxDetailsViewModelTest {
 
     @Test
     fun `Test restrict_student_access feature flag hides delete button`() {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns true
+        coEvery { inboxDetailsBehavior.shouldRestrictReplyAll() } returns true
         val viewModel = getViewModel()
         val uiState = viewModel.uiState.value
 
@@ -646,7 +660,8 @@ class InboxDetailsViewModelTest {
 
     @Test
     fun `Test without restrict_student_access feature flag delete button is shown`() {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
+        coEvery { inboxDetailsBehavior.shouldRestrictReplyAll() } returns false
         val viewModel = getViewModel()
         val uiState = viewModel.uiState.value
 
@@ -676,6 +691,6 @@ class InboxDetailsViewModelTest {
     // endregion
 
     private fun getViewModel(): InboxDetailsViewModel {
-        return InboxDetailsViewModel(context, savedStateHandle, InboxDetailsBehavior(), inboxDetailsRepository, featureFlagProvider)
+        return InboxDetailsViewModel(context, savedStateHandle, inboxDetailsBehavior, inboxDetailsRepository, featureFlagProvider)
     }
 }

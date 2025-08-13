@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -42,7 +43,7 @@ class InboxViewModel @Inject constructor(
     private val inboxRepository: InboxRepository,
     private val resources: Resources,
     private val inboxEntryItemCreator: InboxEntryItemCreator,
-    private val featureFlagProvider: FeatureFlagProvider
+    private val inboxDetailsBehavior: InboxDetailsBehavior
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -75,7 +76,11 @@ class InboxViewModel @Inject constructor(
     private var silentRefreshJob: Job? = null
 
     init {
-        checkAndApplyFeatureFlagRestrictions()
+        viewModelScope.launch {
+            canDeleteConversations = !inboxDetailsBehavior.shouldRestrictDeleteConversation()
+        }
+        _state.postValue(ViewState.Loading)
+        fetchData()
     }
 
     val bottomReachedCallback: () -> Unit = {
@@ -99,11 +104,6 @@ class InboxViewModel @Inject constructor(
             _events.postValue(Event(InboxAction.FailedToLoadNextPage))
         }
         _state.postValue(ViewState.Success) // We always need to finish with success state because we already have data and we send only an error event.
-    }
-
-    init {
-        _state.postValue(ViewState.Loading)
-        fetchData()
     }
 
     private fun fetchData(forceNetwork: Boolean = false, refresh: Boolean = false) {
@@ -594,22 +594,5 @@ class InboxViewModel @Inject constructor(
             }
         }
         return diff
-    }
-
-    private fun checkAndApplyFeatureFlagRestrictions() {
-        viewModelScope.launch {
-            val restrictStudentAccess = checkEnvironmentFeatureFlag("restrict_student_access")
-            if (restrictStudentAccess) {
-                canDeleteConversations = false
-            }
-        }
-    }
-
-    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag(featureFlag)
-        } catch (e: Exception) {
-            false
-        }
     }
 }
