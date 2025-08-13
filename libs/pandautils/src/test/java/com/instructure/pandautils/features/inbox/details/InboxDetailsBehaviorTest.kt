@@ -13,35 +13,39 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.inbox.compose
+package com.instructure.pandautils.features.inbox.details
 
+import android.content.Context
+import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class InboxComposeBehaviorTest {
+class InboxDetailsBehaviorTest {
 
     @Test
-    fun `default shouldRestrictStudentAccess returns false`() = runTest {
-        val behavior = object : InboxComposeBehavior {}
+    fun `default getShowBackButton returns true`() {
+        val behavior = InboxDetailsBehavior()
+        val context: Context = mockk(relaxed = true)
 
-        val result = behavior.shouldRestrictStudentAccess()
+        val result = behavior.getShowBackButton(context)
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `default shouldRestrictDeleteConversation returns false`() = runTest {
+        val behavior = InboxDetailsBehavior()
+
+        val result = behavior.shouldRestrictDeleteConversation()
 
         assertFalse(result)
     }
 
     @Test
     fun `default shouldRestrictReplyAll returns false`() = runTest {
-        val behavior = object : InboxComposeBehavior {}
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `default shouldRestrictReplyAll returns false`() = runTest {
-        val behavior = object : InboxComposeBehavior {}
+        val behavior = InboxDetailsBehavior()
 
         val result = behavior.shouldRestrictReplyAll()
 

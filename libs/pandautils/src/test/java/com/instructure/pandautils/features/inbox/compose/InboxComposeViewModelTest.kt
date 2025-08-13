@@ -82,6 +82,7 @@ class InboxComposeViewModelTest {
         coEvery { context.packageName } returns "com.instructure.teacher" // Default to teacher app
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
         coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns false
+        coEvery { inboxComposeBehavior.shouldRestrictReplyAll() } returns false
     }
 
     @After

@@ -30,4 +30,12 @@ class TeacherInboxComposeBehavior @Inject constructor(
             false
         }
     }
+
+    override suspend fun shouldRestrictReplyAll(): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

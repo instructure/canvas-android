@@ -13,44 +13,46 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.teacher.features.inbox.compose
+package com.instructure.teacher.features.inbox.details
 
+import android.content.Context
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class TeacherInboxComposeBehaviorTest {
+class TeacherInboxDetailsBehaviorTest {
 
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val behavior = TeacherInboxComposeBehavior(featureFlagProvider)
+    private val behavior = TeacherInboxDetailsBehavior(featureFlagProvider)
 
     @Test
-    fun `shouldRestrictStudentAccess returns true when feature flag is enabled`() = runTest {
+    fun `shouldRestrictDeleteConversation returns true when feature flag is enabled`() = runTest {
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
 
-        val result = behavior.shouldRestrictStudentAccess()
+        val result = behavior.shouldRestrictDeleteConversation()
 
         assertTrue(result)
     }
 
     @Test
-    fun `shouldRestrictStudentAccess returns false when feature flag is disabled`() = runTest {
+    fun `shouldRestrictDeleteConversation returns false when feature flag is disabled`() = runTest {
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
 
-        val result = behavior.shouldRestrictStudentAccess()
+        val result = behavior.shouldRestrictDeleteConversation()
 
         assertFalse(result)
     }
 
     @Test
-    fun `shouldRestrictStudentAccess returns false when feature flag throws exception`() = runTest {
+    fun `shouldRestrictDeleteConversation returns false when feature flag throws exception`() = runTest {
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
 
-        val result = behavior.shouldRestrictStudentAccess()
+        val result = behavior.shouldRestrictDeleteConversation()
 
         assertFalse(result)
     }
@@ -83,28 +85,11 @@ class TeacherInboxComposeBehaviorTest {
     }
 
     @Test
-    fun `shouldRestrictReplyAll returns true when feature flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+    fun `getShowBackButton returns false for tablet`() {
+        val context: Context = mockk(relaxed = true)
+        every { context.resources.getBoolean(any()) } returns true // Mock tablet
 
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns false when feature flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns false when feature flag throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
-
-        val result = behavior.shouldRestrictReplyAll()
+        val result = behavior.getShowBackButton(context)
 
         assertFalse(result)
     }

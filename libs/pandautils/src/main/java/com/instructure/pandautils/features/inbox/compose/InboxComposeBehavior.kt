@@ -17,4 +17,5 @@ package com.instructure.pandautils.features.inbox.compose
 
 interface InboxComposeBehavior {
     suspend fun shouldRestrictStudentAccess(): Boolean = false
+    suspend fun shouldRestrictReplyAll(): Boolean = false
 }

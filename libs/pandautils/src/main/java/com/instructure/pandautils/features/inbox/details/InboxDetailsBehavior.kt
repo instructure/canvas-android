@@ -20,4 +20,6 @@ import android.content.Context
 
 open class InboxDetailsBehavior {
     open fun getShowBackButton(context: Context): Boolean = true
+    open suspend fun shouldRestrictDeleteConversation(): Boolean = false
+    open suspend fun shouldRestrictReplyAll(): Boolean = false
 }
