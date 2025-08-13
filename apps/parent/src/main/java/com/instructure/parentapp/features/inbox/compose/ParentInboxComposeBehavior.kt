@@ -14,21 +14,17 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.inbox.details
+package com.instructure.parentapp.features.inbox.compose
 
-import android.content.Context
-import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
 import com.instructure.pandautils.utils.FeatureFlagProvider
-import com.instructure.teacher.utils.isTablet
 import javax.inject.Inject
 
-class TeacherInboxDetailsBehavior @Inject constructor(
+class ParentInboxComposeBehavior @Inject constructor(
     private val featureFlagProvider: FeatureFlagProvider
-) : InboxDetailsBehavior() {
+) : InboxComposeBehavior {
     
-    override fun getShowBackButton(context: Context): Boolean = !context.isTablet
-
-    override suspend fun shouldRestrictDeleteConversation(): Boolean {
+    override suspend fun shouldRestrictStudentAccess(): Boolean {
         return try {
             featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
         } catch (e: Exception) {

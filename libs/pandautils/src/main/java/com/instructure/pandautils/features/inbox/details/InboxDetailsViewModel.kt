@@ -25,6 +25,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,6 +43,7 @@ class InboxDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val behavior: InboxDetailsBehavior,
     private val repository: InboxDetailsRepository,
+    private val featureFlagProvider: FeatureFlagProvider,
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -53,11 +55,14 @@ class InboxDetailsViewModel @Inject constructor(
     private val _events = Channel<InboxDetailsFragmentAction>()
     val events = _events.receiveAsFlow()
 
+    private var canDeleteMessages = true
+
     init {
         _uiState.update { it.copy(
             conversationId = conversationId,
             showBackButton = behavior.getShowBackButton(context)
         ) }
+        checkAndApplyFeatureFlagRestrictions()
         getConversation()
     }
 
@@ -92,20 +97,27 @@ class InboxDetailsViewModel @Inject constructor(
                 getConversation(true)
             }
 
-            is InboxDetailsAction.DeleteConversation -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
-                showDialog = true,
-                title = context.getString(R.string.deleteConversation),
-                message = context.getString(R.string.confirmDeleteConversation),
-                positiveButton = context.getString(R.string.delete),
-                negativeButton = context.getString(R.string.cancel),
-                onPositiveButtonClick = {
-                    deleteConversation(action.conversationId)
-                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
-                },
-                onNegativeButtonClick = {
-                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+            is InboxDetailsAction.DeleteConversation -> {
+                viewModelScope.launch {
+                    val shouldRestrict = behavior.shouldRestrictDeleteConversation()
+                    if (!shouldRestrict) {
+                        _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
+                            showDialog = true,
+                            title = context.getString(R.string.deleteConversation),
+                            message = context.getString(R.string.confirmDeleteConversation),
+                            positiveButton = context.getString(R.string.delete),
+                            negativeButton = context.getString(R.string.cancel),
+                            onPositiveButtonClick = {
+                                deleteConversation(action.conversationId)
+                                _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+                            },
+                            onNegativeButtonClick = {
+                                _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+                            }
+                        )) }
+                    }
                 }
-            )) }
+            }
             is InboxDetailsAction.DeleteMessage -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
                 showDialog = true,
                 title = context.getString(R.string.deleteMessage),
@@ -136,8 +148,11 @@ class InboxDetailsViewModel @Inject constructor(
             }
             is InboxDetailsAction.ReplyAll -> {
                 viewModelScope.launch {
-                    uiState.value.conversation?.let {
-                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
+                    val shouldRestrict = behavior.shouldRestrictReplyAll()
+                    if (!shouldRestrict) {
+                        uiState.value.conversation?.let {
+                            _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
+                        }
                     }
                 }
             }
@@ -191,6 +206,8 @@ class InboxDetailsViewModel @Inject constructor(
             recipients = recipients,
             enabledActions = true,
             cannotReply = conversation.cannotReply,
+            canReplyAll = canDeleteMessages, // Use same logic as canDeleteMessages
+            canDelete = canDeleteMessages,
         )
     }
 
@@ -253,6 +270,25 @@ class InboxDetailsViewModel @Inject constructor(
                 refreshParentFragment()
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
+            }
+        }
+    }
+
+    private fun checkAndApplyFeatureFlagRestrictions() {
+        viewModelScope.launch {
+            val shouldRestrictDelete = behavior.shouldRestrictDeleteConversation()
+            val shouldRestrictReplyAll = behavior.shouldRestrictReplyAll()
+            
+            if (shouldRestrictDelete || shouldRestrictReplyAll) {
+                if (shouldRestrictDelete) {
+                    canDeleteMessages = false
+                }
+                _uiState.update {
+                    it.copy(
+                        showDeleteButton = !shouldRestrictDelete,
+                        showReplyAllButton = !shouldRestrictReplyAll
+                    )
+                }
             }
         }
     }

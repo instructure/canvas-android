@@ -18,6 +18,9 @@ package com.instructure.student.di.feature
 
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.student.features.inbox.compose.StudentInboxComposeBehavior
+import com.instructure.student.features.inbox.details.StudentInboxDetailsBehavior
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -27,12 +30,12 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 class InboxModule {
     @Provides
-    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
-        return InboxDetailsBehavior()
+    fun provideInboxDetailsBehavior(featureFlagProvider: FeatureFlagProvider): InboxDetailsBehavior {
+        return StudentInboxDetailsBehavior(featureFlagProvider)
     }
 
     @Provides
-    fun provideInboxComposeBehavior(): InboxComposeBehavior {
-        return InboxComposeBehavior()
+    fun provideInboxComposeBehavior(featureFlagProvider: FeatureFlagProvider): InboxComposeBehavior {
+        return StudentInboxComposeBehavior(featureFlagProvider)
     }
 }

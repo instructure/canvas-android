@@ -29,6 +29,7 @@ import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.teacher.features.inbox.compose.TeacherInboxComposeRepository
 import com.instructure.teacher.features.inbox.details.TeacherInboxDetailsBehavior
 import com.instructure.teacher.features.inbox.list.TeacherInboxRepository
@@ -77,8 +78,8 @@ class InboxModule {
     }
 
     @Provides
-    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
-        return TeacherInboxDetailsBehavior()
+    fun provideInboxDetailsBehavior(featureFlagProvider: FeatureFlagProvider): InboxDetailsBehavior {
+        return TeacherInboxDetailsBehavior(featureFlagProvider)
     }
 
 }
