@@ -67,7 +67,7 @@ class TeacherSettingsRouter(private val activity: FragmentActivity) : SettingsRo
     }
 
     override fun navigateToRateApp() {
-        RatingDialog.showRateDialog(activity, AppType.TEACHER)
+        RatingDialog.showRateDialog(activity, AppType.TEACHER, true)
     }
 
     override fun navigateToInboxSignature() {

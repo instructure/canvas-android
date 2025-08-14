@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.notebook.common.composable
 
-import androidx.compose.foundation.background
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -31,7 +30,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.pandautils.compose.modifiers.conditional
 import kotlin.math.min
 
 @Composable
@@ -57,9 +55,6 @@ fun NotebookHighlightedText(
             }
         },
         modifier = modifier
-            .conditional(lineColor != null) {
-                background(lineColor!!.copy(alpha = 0.2f))
-            }
             .drawWithContent {
                 drawContent()
                 if (lineColor != null) {
@@ -67,12 +62,20 @@ fun NotebookHighlightedText(
                     val lineHeight = size.height / lineCount
                     for (i in 1..lineCount) {
                         val verticalOffset = i * lineHeight - strokeWidth
+                        val lineWidth = lineList[i - 1]
 
                         drawLine(
                             color = lineColor,
                             strokeWidth = strokeWidth,
                             start = Offset(0f, verticalOffset),
-                            end = Offset(lineList[i - 1], verticalOffset)
+                            end = Offset(lineWidth, verticalOffset)
+                        )
+
+                        drawLine(
+                            color = lineColor.copy(alpha = 0.2f),
+                            strokeWidth = lineHeight,
+                            start = Offset(0f, verticalOffset - lineHeight / 2),
+                            end = Offset(lineWidth, verticalOffset - lineHeight / 2)
                         )
                     }
                 }

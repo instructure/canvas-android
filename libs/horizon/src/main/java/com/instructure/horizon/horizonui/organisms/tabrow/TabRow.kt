@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.horizonui.organisms.tabrow
 
+import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,7 +37,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -55,27 +56,38 @@ fun<T> TabRow(
     selectedIndex: Int,
     modifier: Modifier = Modifier,
     spacing: Dp = 24.dp,
+    tabAlignment: Alignment.Horizontal = Alignment.CenterHorizontally,
     selectedIndicator: @Composable BoxScope.(Modifier) -> Unit = { SelectedTabIndicator(it) },
     tab: @Composable (T, Boolean, Modifier) -> Unit,
 ) {
     val localDensity = LocalDensity.current
     val scrollState = rememberScrollState()
-    var containerWidth by remember { mutableIntStateOf(0) }
-    var tabRowWidth by remember { mutableIntStateOf(0) }
-    var sizes by remember { mutableStateOf(tabs.map { 0 }) }
+    var containerWidth by rememberSaveable { mutableIntStateOf(0) }
+    var tabRowWidth by rememberSaveable { mutableIntStateOf(0) }
+    var sizes by rememberSaveable { mutableStateOf(tabs.map { 0 }) }
     val spacingPx = with(localDensity) { spacing.toPx().toInt() }
+    val alignmentOffset = when (tabAlignment) {
+        Alignment.Start -> 0
+        Alignment.CenterHorizontally -> ((containerWidth - tabRowWidth) / 2).coerceAtLeast(0)
+        Alignment.End -> (containerWidth - tabRowWidth).coerceAtLeast(0)
+        else -> 0
+    }
     val currentOffset by animateIntAsState(
         sizes.take(selectedIndex).sumOf { it }
                 + (selectedIndex) * spacingPx
-                - scrollState.value
-                + ((containerWidth - tabRowWidth) / 2).coerceAtLeast(0)
+                + alignmentOffset
         ,
         label = "IndicatorAnimation"
     )
 
-
+    val alignment = when (tabAlignment) {
+        Alignment.Start -> Alignment.CenterStart
+        Alignment.CenterHorizontally -> Alignment.Center
+        Alignment.End -> Alignment.CenterEnd
+        else -> Alignment.Center
+    }
     Box(
-        contentAlignment = Alignment.Center,
+        contentAlignment = alignment,
         modifier = modifier
             .fillMaxWidth()
             .onGloballyPositioned {
@@ -113,11 +125,14 @@ fun<T> TabRow(
                 }
             }
         }
-        val width = with(localDensity) { sizes[selectedIndex].toDp() }
+        val width by animateDpAsState(
+            with(localDensity) { sizes[selectedIndex].toDp() },
+            label = "IndicatorWidthAnimation"
+        )
         selectedIndicator(
             Modifier
                 .width(width)
-                .offset { IntOffset(currentOffset, 0) }
+                .offset { IntOffset(currentOffset - scrollState.value, 0) }
         )
     }
 }

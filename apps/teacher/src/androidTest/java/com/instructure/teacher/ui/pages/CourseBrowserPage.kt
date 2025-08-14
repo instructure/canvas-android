@@ -128,8 +128,7 @@ class CourseBrowserPage : BasePage() {
      * Opens the syllabus in the course browser.
      */
     fun openSyllabus() {
-        scrollDownToCourseBrowser(scrollPosition = magicNumberForScroll)
-        waitForViewWithText("Syllabus").click()
+        waitForViewWithText("Syllabus").scrollTo().click()
     }
 
     /**

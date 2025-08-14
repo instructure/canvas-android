@@ -149,7 +149,7 @@ class HorizonSubmissionWorker @AssistedInject constructor(
             createSubmissionDao.updateProgress(100.0, submission.id)
             delay(1000)
             createSubmissionDao.updateProgress(0.0, submission.id)
-            createSubmissionDao.setDraft(submission.id, true)
+            createSubmissionDao.deleteSubmissionById(submission.id)
             Result.success()
         } ?: run {
             createSubmissionDao.updateProgress(0.0, submission.id)

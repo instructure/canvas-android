@@ -165,16 +165,16 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the submission of '${student.name}' student is displayed.")
         speedGraderPage.assertDisplaysTextSubmissionViewWithStudentName(student.name)
 
-        Log.d(STEP_TAG, "Select 'Grades' Tab and open the grade dialog.")
-        speedGraderPage.selectGradesTab()
-        speedGraderGradePage.openGradeDialog()
-
         val grade = "10"
-        Log.d(STEP_TAG, "Enter '$grade' as the new grade.")
+        Log.d(STEP_TAG, "Enter '$grade' as the new grade and close the keyboard.")
         speedGraderGradePage.enterNewGrade(grade)
+        Thread.sleep(2000) // Wait for the keyboard to close, and the bottom panel to collapse.
 
-        Log.d(ASSERTION_TAG, "Assert that it has applied.")
-        speedGraderGradePage.assertHasGrade(grade)
+        Log.d(STEP_TAG, "Click on the 'Expand Panel Button'.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the grade has applied.")
+        speedGraderGradePage.assertFinalGradeIsDisplayed(grade)
 
         Log.d(STEP_TAG, "Navigate back to the Assignment Submission List Page and refresh the page to apply the new grade changes.")
         Espresso.pressBack()
@@ -223,13 +223,12 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Type the '${gradedStudent.name}' student's name into the search input field.")
         assignmentSubmissionListPage.searchSubmission(gradedStudent.name)
 
-        Log.d(ASSERTION_TAG, "Assert that there is one submission displayed and that is for '${gradedStudent.name}' student.")
+        Log.d(ASSERTION_TAG,"Assert that there is one submission displayed and that is for '${gradedStudent.name}' student.")
         assignmentSubmissionListPage.assertHasSubmission(1)
         assignmentSubmissionListPage.assertHasStudentSubmission(gradedStudent)
 
         Log.d(STEP_TAG, "Clear the search field.")
         assignmentSubmissionListPage.clearSearch()
-
         Log.d(STEP_TAG, "Click on 'Post Policies' (eye) icon.")
         assignmentSubmissionListPage.clickOnPostPolicies()
 

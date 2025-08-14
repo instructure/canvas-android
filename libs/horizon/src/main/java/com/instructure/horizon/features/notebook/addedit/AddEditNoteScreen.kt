@@ -47,17 +47,14 @@ import com.instructure.horizon.features.notebook.common.composable.NotebookHighl
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
-import com.instructure.horizon.horizonui.molecules.IconButton
-import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputLabelRequired
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
@@ -158,19 +155,6 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
             minLines = 5
         )
 
-        if (state.onDeleteNote != null) {
-            IconButton(
-                iconRes = R.drawable.delete,
-                color = IconButtonColor.Danger,
-                size = IconButtonSize.SMALL,
-                elevation = HorizonElevation.level4,
-                onClick = { state.onDeleteNote.invoke { navController.popBackStack() } },
-                modifier = Modifier
-                    .align(Alignment.End)
-                    .padding(4.dp),
-            )
-        }
-
         HorizonSpace(SpaceSize.SPACE_16)
 
         Button(
@@ -181,6 +165,18 @@ private fun AddEditNoteContent(state: AddEditNoteUiState, navController: NavHost
             width = ButtonWidth.FILL,
             height = ButtonHeight.NORMAL
         )
+
+        if (state.onDeleteNote != null) {
+            HorizonSpace(SpaceSize.SPACE_16)
+            Button(
+                label = stringResource(R.string.addNoteDeleteLabel),
+                onClick = { state.onDeleteNote?.invoke { navController.popBackStack() } },
+                color = ButtonColor.DangerInverse,
+                width = ButtonWidth.FILL,
+                height = ButtonHeight.NORMAL,
+                iconPosition = ButtonIconPosition.Start(R.drawable.delete),
+            )
+        }
     }
 }
 

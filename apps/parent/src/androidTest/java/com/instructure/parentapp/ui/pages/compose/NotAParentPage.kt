@@ -20,6 +20,7 @@ package com.instructure.parentapp.ui.pages.compose
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
@@ -38,18 +39,18 @@ class NotAParentPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Return to login").performClick()
     }
 
-    fun clickApp(appName: String) {
-        composeTestRule.onNodeWithText(appName, useUnmergedTree = true)
+    fun clickApp(appContentDescription: String) {
+        composeTestRule.onNodeWithContentDescription(appContentDescription, useUnmergedTree = true)
             .performScrollTo()
             .performClick()
     }
 
     fun assertStudentAppDisplayed() {
-        composeTestRule.onNodeWithText("STUDENT").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Canvas").assertIsDisplayed().assertHasClickAction()
     }
 
     fun assertTeacherAppDisplayed() {
-        composeTestRule.onNodeWithText("TEACHER").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithContentDescription("Canvas Teacher").assertIsDisplayed().assertHasClickAction()
     }
 
     fun assertOtherAppSubtitleDisplayed() {

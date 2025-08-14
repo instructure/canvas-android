@@ -706,7 +706,7 @@
     <string name="searchGuides">Tìm kiếm Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Tìm câu trả lời cho câu hỏi thườn gặp</string>
-    <string name="reportProblem">Báo Cáo Vấn Đề</string>
+    <string name="reportProblem">Báo cáo vấn đề</string>
     <string name="reportProblemDetails">Nếu ứng dụng hoạt động không bình thường, hãy cho chúng tôi biết</string>
     <string name="requestFeature">Yêu Cầu Đặc Tính</string>
     <string name="requestFeatureDetails">Bạn có ý tưởng để cải thiện ứng dụng?</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Điểm sau khi đăng</string>
     <string name="gradeOverride">Ghi đè điểm</string>
     <string name="currentGrade">Điểm hiện tại</string>
-    <string name="opensInCanvasStudent">Mở Trong Canvas Student</string>
+    <string name="opensInCanvasApp">Mở trong ứng dụng Canvas</string>
     <string name="tab_student_view">Góc Nhìn Của Sinh Viên</string>
 
 
@@ -1471,9 +1471,9 @@
     <string name="offline_content_storage">Lưu trữ</string>
     <string name="offline_content_storage_info">%s / %s Đã Sử Dụng</string>
     <string name="offline_content_other">Các Ứng Dụng Khác</string>
-    <string name="offline_content_canvas_student">Sinh Viên Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Còn lại</string>
-    <string name="offline_content_storage_info_a11y_description">Thông Tin Lưu Trữ: %s trên %s Đã Sử Dụng, Ứng Dụng Khác %d%%, Canvas Student %d%%, Còn lại %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Thông Tin Lưu Trữ: %s / %s Đã Sử Dụng, Ứng Dụng Khác %d%%, Canvas %d%%, Còn Lại %d%%</string>
     <string name="offline_content_all_courses">Tất Cả Khóa Học</string>
     <string name="offline_content_sync">Đồng bộ</string>
     <string name="offline_content_selected">Đã Chọn %d</string>
@@ -1793,7 +1793,7 @@
     <string name="studentOrTeacherTitle">Bạn là sinh viên hay giáo viên?</string>
     <string name="studentOrTeacherSubtitle">Một trong các ứng dụng khác có thể thích hợp hơn. Nhấn vào một để truy cập Play Store</string>
     <string name="studentApp">SINH VIÊN</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">GIÁO VIÊN</string>
     <string name="canvasTeacherApp">Giáo Viên Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1831,7 +1831,7 @@
     <string name="addStudentSuccessfull">Đã thêm sinh viên thành công</string>
     <string name="addStudentTitle">Thêm sinh viên với...</string>
     <string name="addStudentQrCodeTitle">Mã QR</string>
-    <string name="addStudentQrCodeExplanation">Sinh viên có thể tạo mã QR bằng cách sử dụng ứng dụng Canvas Student trên thiết bị di động của họ</string>
+    <string name="addStudentQrCodeExplanationCanvas">Sinh viên có thể tạo mã QR bằng cách sử dụng ứng dụng Canvas trên thiết bị di động</string>
     <string name="addStudentPairingCodeTitle">Mã Ghép Cặp</string>
     <string name="addStudentPairingCodeExplanation">Sinh viên có thể nhận mã ghép cặp thông qua trang web Canvas</string>
     <string name="pairingCodeDialogTitle">Thêm Sinh Viên</string>
@@ -1840,9 +1840,9 @@
     <string name="pairingCodeDialogNegativeButton">Hủy</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Mã của bạn không đúng hoặc đã hết hạn.</string>
-    <string name="qrPairingTitle">Mở Canvas Student</string>
-    <string name="qrPairingDescription">Bạn cần mở ứng dụng Canvas Student của bạn để tiếp tục. Đi đến Menu Chính > Cài Đặt > Ghép Cặp Với Người Quan Sát rồi quét mã QR bạn thấy ở đó.</string>
-    <string name="qrCodePairingPrompt">Quét mã QR từ Canvas Student để ghép cặp</string>
+    <string name="qrPairingTitleCanvas">Mở ứng dụng Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Bạn cần mở ứng dụng Canvas của sinh viên để tiếp tục. Đi đến Menu Chính > Cài Đặt > Ghép Cặp với Người Quan Sát rồi quét mã QR bạn thấy ở đó.</string>
+    <string name="qrCodePairingPromptCanvas">Quét mã QR từ ứng dụng Canvas để ghép cặp</string>
     <string name="a11y_addStudentContentDescription">Thêm Sinh Viên</string>
     <string name="qrPairingErrorTitle">QR Code Đã Hết Hạn</string>
     <string name="qrPairingErrorDescription">Mã QR bạn quét có thể đã hết hạn. Hãy làm mới mã trên thiết bị của sinh viên rồi thử lại.</string>
@@ -2069,4 +2069,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Để xem điểm của bạn, vui lòng đăng nhập vào tài khoản của bạn trong ứng dụng.</string>
     <string name="widgetSingleGradeSelectCourse">Hãy chọn một khóa học</string>
     <string name="widgetGradesErrorLoadingCourses">Đã xảy ra lỗi khi tải các khóa học.</string>
+    <string name="settingsSwitchExperience">Chuyển đổi sang Canvas Career</string>
 </resources>

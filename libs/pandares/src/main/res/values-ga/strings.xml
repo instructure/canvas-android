@@ -706,7 +706,7 @@
     <string name="searchGuides">Cuardaigh na Treoracha Canvas</string>
     <string name="canvasGuides">Treoracha Canvas</string>
     <string name="searchGuidesDetails">Aimsigh freagraí do cheisteanna coitianta</string>
-    <string name="reportProblem">Tuairiscigh Fadhb</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">Má chliseann an aip, cuir in iúl dúinn</string>
     <string name="requestFeature">Iarr Gné</string>
     <string name="requestFeatureDetails">An bhfuil smaoineamh agat an aip a fheabhsú?</string>
@@ -1107,7 +1107,7 @@
     <string name="gradeAfterPosting">Marcáil tar éis postála</string>
     <string name="gradeOverride">Sárú marc</string>
     <string name="currentGrade">Marc reatha</string>
-    <string name="opensInCanvasStudent">Osclaíonn sé i gCanvas Student</string>
+    <string name="opensInCanvasApp">Osclaíonn sé san aip Canvas</string>
     <string name="tab_student_view">Amharc Mac Léinn</string>
     <string name="rateOnThePlayStore">Rátáil ar an Play Store</string>
 
@@ -1479,9 +1479,9 @@
     <string name="offline_content_storage">Stóras</string>
     <string name="offline_content_storage_info">%s de %s Úsáidte</string>
     <string name="offline_content_other">Aipeanna Eile</string>
-    <string name="offline_content_canvas_student">Mac Léinn Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Fágtha</string>
-    <string name="offline_content_storage_info_a11y_description">Eolas Stórais: Úsáideadh %s de %s, Aipeanna Eile %d%%, Mac Léinn Canvas %d%%, fágtha %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Eolas Stórais: %s de %s Úsáidte, Aipeanna Eile %d%%, Canvas %d%%, Fágtha %d%%</string>
     <string name="offline_content_all_courses">Cúrsaí Ar Fad</string>
     <string name="offline_content_sync">Sioncrónaigh</string>
     <string name="offline_content_selected">%d Roghnaithe</string>
@@ -1807,7 +1807,7 @@
     <string name="studentOrTeacherTitle">An mac léinn nó múinteoir tú?</string>
     <string name="studentOrTeacherSubtitle">D\'fhéadfadh go mbeadh ceann dár n-aipeanna eile níos oiriúnaí. Tapáil ceann chun cuairt a thabhairt ar an Play Store</string>
     <string name="studentApp">MAC LÉINN</string>
-    <string name="canvasStudentApp">Mac Léinn Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">MÚINTEOIR</string>
     <string name="canvasTeacherApp">Múinteoir Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1845,7 +1845,7 @@
     <string name="addStudentSuccessfull">D\'éirigh le cur an mac léinn leis</string>
     <string name="addStudentTitle">Cuir mac léinn le&#8230;</string>
     <string name="addStudentQrCodeTitle">Cód MF</string>
-    <string name="addStudentQrCodeExplanation">Is féidir le mic léinn cód MF a ghiniúint ag baint úsáide as an aip Canvas Student ar a ngléas móibíleach</string>
+    <string name="addStudentQrCodeExplanationCanvas">Is féidir le mic léinn cód MF a ghiniúint ag baint úsáide as an aip Canvas ar a ngléas soghluaiste.</string>
     <string name="addStudentPairingCodeTitle">Cód Péireála</string>
     <string name="addStudentPairingCodeExplanation">Is féidir le mic léinn cód péireála a fháil trí shuíomh Gréasáin Canvas</string>
     <string name="pairingCodeDialogTitle">Cuir Mac Léinn leis</string>
@@ -1854,9 +1854,9 @@
     <string name="pairingCodeDialogNegativeButton">Cealaigh</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Tá do chód mícheart nó imithe in éag.</string>
-    <string name="qrPairingTitle">Oscail Mac Léinn Canvas</string>
-    <string name="qrPairingDescription">Beidh ort aip Canvas Student do mhac léinn a oscailt chun leanúint ar aghaidh. Téigh isteach sa Phríomh-Roghchlár > Socruithe > Péireáil le Breathnóir agus scanadh an cód MF a fheiceann tú ann.</string>
-    <string name="qrCodePairingPrompt">Scan cód MF ó Canvas Student le péireáil</string>
+    <string name="qrPairingTitleCanvas">Oscail an aip Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Beidh ort aip Canvas do mhic léinn a oscailt le leanúint ar aghaidh. Téigh isteach sa Phríomh-Roghchlár > Socruithe > Péireáil le Breathnóir agus scanadh an cód MF a fheiceann tú ann.</string>
+    <string name="qrCodePairingPromptCanvas">Scanáil cód QR ón aip Canvas le péireáil</string>
     <string name="a11y_addStudentContentDescription">Cuir Mac Léinn leis</string>
     <string name="qrPairingErrorTitle">Cód MF imithe in éag</string>
     <string name="qrPairingErrorDescription">Seans go bhfuil an cód MF a scanáil tú imithe in éag. Athnuaigh an cód ar ghléas na mac léinn agus bain triail eile as.</string>
@@ -2083,4 +2083,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Chun do mharcanna a fheiceáil, logáil isteach i do chuntas san aip le do thoil.</string>
     <string name="widgetSingleGradeSelectCourse">Roghnaímis cúrsa</string>
     <string name="widgetGradesErrorLoadingCourses">Tharla earráid agus cúrsaí á lódáil.</string>
+    <string name="settingsSwitchExperience">Téigh go Canvas Career</string>
 </resources>

@@ -38,6 +38,7 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -71,7 +72,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.model.AssignmentStatus
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.formatDayMonthYear
+import com.instructure.pandautils.utils.formatMonthDayYear
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -83,9 +84,12 @@ fun LearnScoreScreen(
     viewModel: LearnScoreViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
-
+    var previousCourseId: Long? by rememberSaveable { mutableStateOf(null) }
     LaunchedEffect(courseId) {
-        viewModel.loadState(courseId)
+        if (courseId != previousCourseId) {
+            previousCourseId = courseId
+            viewModel.loadState(courseId)
+        }
     }
 
     LoadingStateWrapper(state.screenState) {
@@ -107,7 +111,7 @@ private fun LearnScoreContent(
     onSelectedSortOptionChanged: (LearnScoreSortOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    var isExpanded by remember { mutableStateOf(false) }
+    var isExpanded by rememberSaveable { mutableStateOf(false) }
     LazyColumn(
         modifier = modifier
             .padding(horizontal = 24.dp),
@@ -234,7 +238,7 @@ private fun AssignmentItem(
             .fillMaxWidth()
     ) {
         Text(
-            text = stringResource(R.string.scoresItemassignmentName, assignment.name.orEmpty()),
+            text = stringResource(R.string.scoresItemassignmentName, assignment.name),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body()
         )
@@ -244,7 +248,7 @@ private fun AssignmentItem(
         Text(
             text = stringResource(
                 R.string.scoresItemDueDate,
-                assignment.dueDate?.formatDayMonthYear() ?: stringResource(R.string.noDueDate)
+                assignment.dueDate?.formatMonthDayYear() ?: stringResource(R.string.noDueDate)
             ),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body()
@@ -271,7 +275,7 @@ private fun AssignmentItem(
         Text(
             text = stringResource(
                 R.string.scoresItemResult,
-                assignment.lastScore?.stringValueWithoutTrailingZeros ?: "-",
+                assignment.lastScore ?: "-",
                 assignment.pointsPossible.stringValueWithoutTrailingZeros
             ),
             style = HorizonTypography.p1,
@@ -284,17 +288,18 @@ private fun AssignmentItem(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
-                text = "Feedback:",
+                text = stringResource(R.string.learnScoreFeedbackLabel),
                 style = HorizonTypography.p1,
-                color = HorizonColors.Text.body()
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.padding(end = 4.dp)
             )
 
             if (assignment.submissionCommentsCount > 0) {
                 Icon(
-                    painter = painterResource(R.drawable.mark_unread_chat_alt),
+                    painter = painterResource(R.drawable.chat),
                     contentDescription = null,
                     tint = HorizonColors.Icon.default(),
-                    modifier = Modifier.padding(vertical = 4.dp)
+                    modifier = Modifier.padding(end = 4.dp)
                 )
                 Text(
                     text = (assignment.submissionCommentsCount).toString(),

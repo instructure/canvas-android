@@ -37,6 +37,7 @@ import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
 class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteractions): AssignmentDetailsPage(moduleItemInteractions) {
+
     fun addBookmark(bookmarkName: String) {
         openOverflowMenu()
         Espresso.onView(withText("Add Bookmark")).click()

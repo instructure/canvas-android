@@ -17,6 +17,7 @@
 package com.instructure.composeTest
 
 import androidx.annotation.DrawableRes
+import androidx.compose.ui.semantics.getOrNull
 import androidx.compose.ui.test.SemanticsMatcher
 import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasText
@@ -28,3 +29,8 @@ fun hasSiblingWithText(text: String): SemanticsMatcher = hasAnySibling(hasText(t
 
 fun hasDrawable(@DrawableRes id: Int): SemanticsMatcher = SemanticsMatcher.expectValue(DrawableId, id)
 
+fun hasTestTagThatContains(substring: String): SemanticsMatcher =
+    SemanticsMatcher("Has testTag containing \"$substring\"") { node ->
+        val tag = node.config.getOrNull(androidx.compose.ui.semantics.SemanticsProperties.TestTag)
+        tag?.contains(substring) == true
+    }

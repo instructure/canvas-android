@@ -22,7 +22,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import androidx.annotation.OptIn
-import com.instructure.pandautils.base.BaseCanvasActivity
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.C
 import androidx.media3.common.MediaItem
 import androidx.media3.common.util.UnstableApi
@@ -47,11 +47,14 @@ import androidx.media3.exoplayer.upstream.DefaultBandwidthMeter
 import androidx.media3.extractor.DefaultExtractorsFactory
 import com.instructure.pandautils.analytics.SCREEN_VIEW_VIDEO_VIEW
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.student.databinding.ActivityVideoViewBinding
 import com.instructure.student.util.Const
+import kotlinx.coroutines.launch
 
 @OptIn(UnstableApi::class)
 @ScreenView(SCREEN_VIEW_VIDEO_VIEW)
@@ -72,20 +75,27 @@ class VideoViewActivity : BaseCanvasActivity() {
         mainHandler = Handler()
         val videoTrackSelectionFactory: ExoTrackSelection.Factory = AdaptiveTrackSelection.Factory()
         trackSelector = DefaultTrackSelector(applicationContext, videoTrackSelectionFactory)
-        player = ExoPlayer.Builder(this)
-            .setTrackSelector(trackSelector)
-            .setLoadControl(DefaultLoadControl())
-            .build()
-        binding.playerView.player = player
-        player?.playWhenReady = true
-        player?.setMediaSource(buildMediaSource(Uri.parse(intent?.extras?.getString(Const.URL))))
-        player?.prepare()
+        fetchMediaUri(Uri.parse(intent?.extras?.getString(Const.URL)))
         ViewStyler.setStatusBarDark(this, ThemePrefs.primaryColor)
     }
 
     override fun onDestroy() {
         super.onDestroy()
         player?.release()
+    }
+
+    private fun fetchMediaUri(uri: Uri) {
+        lifecycleScope.launch {
+            val mediaUri = RouteUtils.getRedirectUrl(uri)
+            player = ExoPlayer.Builder(this@VideoViewActivity)
+                .setTrackSelector(trackSelector)
+                .setLoadControl(DefaultLoadControl())
+                .build()
+            binding.playerView.player = player
+            player?.playWhenReady = true
+            player?.setMediaSource(buildMediaSource(mediaUri))
+            player?.prepare()
+        }
     }
 
     private fun buildMediaSource(uri: Uri): MediaSource {

@@ -1088,7 +1088,7 @@
     <string name="gradeAfterPosting">公佈後評分</string>
     <string name="gradeOverride">評分重寫</string>
     <string name="currentGrade">目前評分</string>
-    <string name="opensInCanvasStudent">在 Canvas Student 中開啟</string>
+    <string name="opensInCanvasApp">在 Canvas 應用程式中開啟</string>
     <string name="tab_student_view">學生視圖</string>
 
 
@@ -1447,9 +1447,9 @@
     <string name="offline_content_storage">儲存</string>
     <string name="offline_content_storage_info">使用 %s 的 %s</string>
     <string name="offline_content_other">其他應用程式</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">其餘的</string>
-    <string name="offline_content_storage_info_a11y_description">儲存資訊：使用 %s 的 %s，其他應用程式 %d%%，Canvas 學生 %d%%，剩餘 %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">儲存資訊：使用 %s 的 %s，其他應用程式 %d%%，Canvas %d%%，剩餘 %d%%</string>
     <string name="offline_content_all_courses">所有課程</string>
     <string name="offline_content_sync">同步</string>
     <string name="offline_content_selected">已選擇 %d</string>
@@ -1761,7 +1761,7 @@
     <string name="studentOrTeacherTitle">您是學生或教師？</string>
     <string name="studentOrTeacherSubtitle">我們其他應用程式可能更適合您。點選「一」以瀏覽 Play Store</string>
     <string name="studentApp">學生</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">教師</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1799,7 +1799,7 @@
     <string name="addStudentSuccessfull">成功添加學生</string>
     <string name="addStudentTitle">添加學生&#8230;</string>
     <string name="addStudentQrCodeTitle">QR 碼</string>
-    <string name="addStudentQrCodeExplanation">學生可以使用流動裝置上的 Canvas Student 應用程式産生 QR 碼</string>
+    <string name="addStudentQrCodeExplanationCanvas">學生可以使用流動裝置上的 Canvas 應用程式産生 QR 碼</string>
     <string name="addStudentPairingCodeTitle">配對代碼</string>
     <string name="addStudentPairingCodeExplanation">學生可以透過 Canvas 網站獲取配對碼</string>
     <string name="pairingCodeDialogTitle">添加學生</string>
@@ -1808,9 +1808,9 @@
     <string name="pairingCodeDialogNegativeButton">取消</string>
     <string name="pairingCodeDialogPositiveButton">確定</string>
     <string name="pairingCodeDialogError">您的代碼錯誤或到期。</string>
-    <string name="qrPairingTitle">開啟 Canvas Student</string>
-    <string name="qrPairingDescription">您需要開啟學生的 Canvas Student 應用程式以繼續操作。前往主選單 > 設定 > 與觀察者配對，然後掃描該處顯示的 QR 碼。</string>
-    <string name="qrCodePairingPrompt">使用 Canvas Student 掃描 QR 碼以配對</string>
+    <string name="qrPairingTitleCanvas">開啟 Canvas 應用程式</string>
+    <string name="qrPairingDescriptionCanvas">您需要開啟學生的 Canvas 應用程式以繼續操作。前往主選單 > 設定 > 與觀察者配對，然後掃描該處顯示的 QR 碼。</string>
+    <string name="qrCodePairingPromptCanvas">使用 Canvas 應用程式掃描 QR 碼以配對</string>
     <string name="a11y_addStudentContentDescription">添加學生</string>
     <string name="qrPairingErrorTitle">已過期 QR 碼</string>
     <string name="qrPairingErrorDescription">您所掃描的 QR 碼可能已經過期。請在學生的裝置上重新整理代碼後重試。</string>
@@ -2036,4 +2036,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">要查看您的成績，請在應用程式中登入您的帳戶。</string>
     <string name="widgetSingleGradeSelectCourse">讓我們選擇課程</string>
     <string name="widgetGradesErrorLoadingCourses">載入課程時發生錯誤。</string>
+    <string name="settingsSwitchExperience">切換到 Canvas Career</string>
 </resources>

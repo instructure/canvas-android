@@ -148,7 +148,7 @@ class CommentsViewModel @Inject constructor(
         val commentCards = commentsData.comments.map {
             CommentCardState(
                 title = it.authorName,
-                date = it.createdAt.format("dd/MM, h:mm a"),
+                date = it.createdAt.format("MM/dd, h:mm a"),
                 subtitle = subtitle,
                 commentText = it.commentText,
                 fromCurrentUser = it.authorId == apiPrefs.user?.id,

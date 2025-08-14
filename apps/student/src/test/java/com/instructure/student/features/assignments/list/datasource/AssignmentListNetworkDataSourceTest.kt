@@ -17,14 +17,17 @@
 
 package com.instructure.student.features.assignments.list.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriodResponse
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -34,8 +37,9 @@ class AssignmentListNetworkDataSourceTest {
 
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val coursesApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
 
-    private val dataSource = AssignmentListNetworkDataSource(assignmentApi, coursesApi)
+    private val dataSource = AssignmentListNetworkDataSource(assignmentApi, coursesApi, customGradeStatusesManager)
 
     @Test
     fun `Get assignment groups with assignments for grading period successfully returns api model`() = runTest {
@@ -125,5 +129,43 @@ class AssignmentListNetworkDataSourceTest {
         val result = dataSource.getCourseWithGrade(1, true)
 
         Assert.assertNull(result)
+    }
+
+    @Test
+    fun `Get custom grade statuses returns data`() = runTest {
+        val node1 = mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+            every { name } returns "Custom Status 1"
+            every { _id } returns "123"
+        }
+
+        val node2 = mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+            every { name } returns "Custom Status 2"
+            every { _id } returns "456"
+        }
+
+        val connection = mockk<CustomGradeStatusesQuery.CustomGradeStatusesConnection> {
+            every { nodes } returns listOf(node1, node2, null)
+        }
+
+        val course = mockk<CustomGradeStatusesQuery.Course> {
+            every { customGradeStatusesConnection } returns connection
+        }
+
+        val data = mockk<CustomGradeStatusesQuery.Data> {
+            every { this@mockk.course } returns course
+        }
+
+        coEvery { customGradeStatusesManager.getCustomGradeStatuses(1L, true) } returns data
+
+        val result = dataSource.getCustomGradeStatuses(1L, true)
+
+        Assert.assertEquals(listOf(node1, node2), result)
+    }
+
+    @Test(expected = Exception::class)
+    fun `Get custom grade statuses throws exception when fetch fails`() = runTest {
+        coEvery { customGradeStatusesManager.getCustomGradeStatuses(1L, true) } throws Exception("Network error")
+
+        dataSource.getCustomGradeStatuses(1L, true)
     }
 }

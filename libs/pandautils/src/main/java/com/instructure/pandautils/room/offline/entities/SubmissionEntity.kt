@@ -19,9 +19,16 @@ package com.instructure.pandautils.room.offline.entities
 
 import androidx.room.Entity
 import androidx.room.ForeignKey
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Attachment
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.MediaComment
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.models.SubmissionComment
+import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.orDefault
-import java.util.*
+import java.util.Date
 
 @Entity(
     primaryKeys = ["id", "attempt"],
@@ -75,7 +82,8 @@ data class SubmissionEntity(
     val enteredScore: Double,
     val enteredGrade: String?,
     val postedAt: Date?,
-    val gradingPeriodId: Long?
+    val gradingPeriodId: Long?,
+    val customGradeStatusId: Long?
 ) {
     constructor(submission: Submission, groupId: Long?, mediaCommentId: String?) : this(
         id = submission.id,
@@ -105,7 +113,8 @@ data class SubmissionEntity(
         enteredScore = submission.enteredScore,
         enteredGrade = submission.enteredGrade,
         postedAt = submission.postedAt,
-        gradingPeriodId = submission.gradingPeriodId
+        gradingPeriodId = submission.gradingPeriodId,
+        customGradeStatusId = submission.customGradeStatusId
     )
 
     fun toApiModel(
@@ -153,6 +162,7 @@ data class SubmissionEntity(
         enteredScore = enteredScore,
         enteredGrade = enteredGrade,
         postedAt = postedAt,
-        gradingPeriodId = gradingPeriodId
+        gradingPeriodId = gradingPeriodId,
+        customGradeStatusId = customGradeStatusId
     )
 }

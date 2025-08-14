@@ -706,7 +706,7 @@
     <string name="searchGuides">Søg i Canvas-vejledningerne</string>
     <string name="canvasGuides">Canvas-vejledningerne</string>
     <string name="searchGuidesDetails">Find svar på hyppige spørgsmål</string>
-    <string name="reportProblem">Indberet et problem</string>
+    <string name="reportProblem">Rapporter et problem</string>
     <string name="reportProblemDetails">Fortæl os, hvis denne app ikke virker</string>
     <string name="requestFeature">Anmod om en funktion</string>
     <string name="requestFeatureDetails">Har du en ide, der kan forbedre appen?</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Karakter efter opslag</string>
     <string name="gradeOverride">Tilsidesættelse af karakter </string>
     <string name="currentGrade">Nuværende karakter </string>
-    <string name="opensInCanvasStudent">Åbner i Canvas for studerende</string>
+    <string name="opensInCanvasApp">Åbner i Canvas-appen</string>
     <string name="tab_student_view">Visning for studerende</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Opbevaring</string>
     <string name="offline_content_storage_info">%s af %s brugt</string>
     <string name="offline_content_other">Andre apps</string>
-    <string name="offline_content_canvas_student">Canvas-studerende</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Tilbage</string>
-    <string name="offline_content_storage_info_a11y_description">Opbevaringsoplysninger: %s af %s brugt, andre apps %d%%, Canvas for studerende %d%%, tilbage %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Opbevaringsoplysninger: %s af %s brugt, Andre apps %d%%, Canvas %d%%, Resterende %d%%</string>
     <string name="offline_content_all_courses">Alle fag</string>
     <string name="offline_content_sync">Synkroniser</string>
     <string name="offline_content_selected">%d valgt</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Er du studerende eller lærer?</string>
     <string name="studentOrTeacherSubtitle">En af vores andre apps kan være bedre egnet. Tryk på en for at besøge Play Store</string>
     <string name="studentApp">STUDERENDE</string>
-    <string name="canvasStudentApp">Canvas-studerende</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">LÆRER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Den studerende blev tilføjet</string>
     <string name="addStudentTitle">Tilføj studerende med ...</string>
     <string name="addStudentQrCodeTitle">QR-kode</string>
-    <string name="addStudentQrCodeExplanation">Studerende kan generere en QR-kode ved hjælp af Canvas Student-appen på deres mobilenhed</string>
+    <string name="addStudentQrCodeExplanationCanvas">Studerende kan generere en QR-kode ved hjælp af Canvas-appen på deres mobilenhed</string>
     <string name="addStudentPairingCodeTitle">Parringskode</string>
     <string name="addStudentPairingCodeExplanation">Studerende kan få en parringskode via Canvas-webstedet</string>
     <string name="pairingCodeDialogTitle">Tilføj studerende</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Annullér</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Din kode er forkert eller udløbet.</string>
-    <string name="qrPairingTitle">Åbn Canvas Student-appen</string>
-    <string name="qrPairingDescription">Du skal åbne din studerendes Canvas Student-app for at fortsætte. Gå til Hovedmenu > Indstillinger> Par med observatør, og scan den QR-kode, du ser der.</string>
-    <string name="qrCodePairingPrompt">Scan en QR-kode fra Canvas Student for at parre</string>
+    <string name="qrPairingTitleCanvas">Åbn Canvas-appen</string>
+    <string name="qrPairingDescriptionCanvas">Du skal åbne din studerendes Canvas-app for at fortsætte. Gå til Hovedmenu > Indstillinger> Par med observatør, og scan den QR-kode, du ser der.</string>
+    <string name="qrCodePairingPromptCanvas">Scan en QR-kode fra Canvas-appen for at parre</string>
     <string name="a11y_addStudentContentDescription">Tilføj studerende</string>
     <string name="qrPairingErrorTitle">Udløbet QR-kode</string>
     <string name="qrPairingErrorDescription">Den QR-kode, du scannede, kan være udløbet. Opdater koden på den studerendes enhed, og prøv igen.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">For at se dine karakterer skal du logge ind på din konto i appen.</string>
     <string name="widgetSingleGradeSelectCourse">Lad os vælge et fag</string>
     <string name="widgetGradesErrorLoadingCourses">Der opstod en fejl under indlæsning af fag.</string>
+    <string name="settingsSwitchExperience">Skift til Canvas Career</string>
 </resources>

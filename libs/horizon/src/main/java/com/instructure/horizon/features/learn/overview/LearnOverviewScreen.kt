@@ -54,7 +54,7 @@ fun LearnOverviewScreen(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp)
+                .padding(24.dp - 8.dp) // Adjust padding to handle WebView's default padding
         ) {
             ComposeCanvasWebViewWrapper(
                 content = summaryText ?: "",

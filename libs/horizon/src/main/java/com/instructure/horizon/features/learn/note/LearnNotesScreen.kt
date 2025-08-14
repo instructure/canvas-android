@@ -18,6 +18,7 @@ package com.instructure.horizon.features.learn.note
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,16 +34,20 @@ fun LearnNotesScreen(
     mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
+    val viewModel: NotebookViewModel = hiltViewModel()
+    val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(courseId) {
+        viewModel.updateCourseId(courseId)
+    }
+
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
     ) {
-        val viewModel = hiltViewModel<NotebookViewModel>()
-        val uiState by viewModel.uiState.collectAsState()
         NotebookScreen(
             mainNavController,
-            uiState,
-            courseId
+            state
         )
     }
 }

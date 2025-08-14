@@ -128,8 +128,9 @@ class AccountCalendarFeedViewModel @Inject constructor(
                 name = it.loadLabel(packageManager).toString(),
                 icon = it.loadIcon(context.packageManager),
                 intent = Intent(Intent.ACTION_VIEW).apply {
-                    flags = Intent.FLAG_GRANT_READ_URI_PERMISSION
-                    `package` = it.activityInfo.packageName
+                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    setPackage(it.activityInfo.packageName)
                     setDataAndType(icsUri, "text/calendar")
                 }
             )

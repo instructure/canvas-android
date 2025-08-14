@@ -33,6 +33,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.ViewUtils
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.parentapp.R
 import com.instructure.parentapp.utils.ParentComposeTest
@@ -84,8 +85,10 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Select '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
 
-        Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
-        courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFFFFFFFF)
+        retryWithIncreasingDelay(times = 5) {
+            Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
+            courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFFFFFFFF)
+        }
 
         Log.d(STEP_TAG, "Navigate back and open the Left Side Navigation Drawer menu.")
         Espresso.pressBack()
@@ -106,8 +109,10 @@ class SettingsE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Select '${course.name}' course.")
         coursesPage.clickCourseItem(course.name)
 
-        Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
-        courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFF273540)
+        retryWithIncreasingDelay(times = 5) {
+            Log.d(ASSERTION_TAG, "Assert on the Course Browser Page that the assignment label has the proper text color (which is used in Dark mode).")
+            courseDetailsPage.assertAssignmentLabelTextColor(testAssignment.name,0xFF273540)
+        }
     }
 
     @E2E

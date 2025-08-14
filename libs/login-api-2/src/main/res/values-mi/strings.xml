@@ -72,7 +72,8 @@
     <string name="loginHint">Kimihia tō kura takiwa rānei</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Pūrongo te raruraru</string>
+    <string name="errorReportAProblem">Pūrongo i te raruraru</string>
+    <string name="reportAProblemDialogTitle">Pūrongo i te raruraru</string>
     <string name="errorReportSubject">Kaupapa</string>
     <string name="errorReportDescription">Whakāhuatanga</string>
     <string name="errorReportSend">Tukua</string>

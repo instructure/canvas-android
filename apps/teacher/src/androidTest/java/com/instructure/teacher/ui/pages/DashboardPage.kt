@@ -223,12 +223,22 @@ class DashboardPage : BasePage() {
     }
 
     /**
+     * Opens the Dashboard page by clicking on Dashboard bottom menu.
+     */
+    fun openDashboard() {
+        coursesTab.click()
+    }
+
+    /**
      * Opens the inbox tab.
      */
     fun openInbox() {
         inboxTab.click()
     }
 
+    /**
+     * Opens the calendar tab.
+     */
     fun openCalendar() {
         calendarTab.click()
     }

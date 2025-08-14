@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Сообщить о проблеме</string>
+    <string name="reportAProblemDialogTitle">Сообщить о проблеме</string>
     <string name="errorReportSubject">Тема</string>
     <string name="errorReportDescription">Описание</string>
     <string name="errorReportSend">Отправить</string>

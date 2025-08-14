@@ -43,5 +43,6 @@ enum class SettingsItem(val res: Int, val availableOffline: Boolean = false) {
     FEATURE_FLAGS(R.string.featureFlags, true),
     REMOTE_CONFIG(R.string.remoteConfigParamsTitle, true),
     ACCOUNT_PREFERENCES(R.string.accountPreferences, true),
-    HOMEROOM_VIEW(R.string.settingsHomeroomView, true)
+    HOMEROOM_VIEW(R.string.settingsHomeroomView, true),
+    SWITCH_EXPERIENCE(R.string.settingsSwitchExperience),
 }

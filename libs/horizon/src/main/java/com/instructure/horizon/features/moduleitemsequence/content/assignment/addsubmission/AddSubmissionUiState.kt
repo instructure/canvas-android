@@ -31,7 +31,8 @@ data class AddSubmissionUiState(
     val submissionInProgress: Boolean = false,
     val errorMessage: String? = null,
     val snackbarMessage: String? = null,
-    val onSnackbarDismiss: () -> Unit = {}
+    val onSnackbarDismiss: () -> Unit = {},
+    val onAssignmentUpdated: (Assignment) -> Unit = {},
 )
 
 sealed class AddSubmissionTypeUiState(
@@ -64,6 +65,7 @@ sealed class AddSubmissionTypeUiState(
         val galleryPickerAllowed: Boolean = false,
         val files: List<AddSubmissionFileUiState> = emptyList(),
         val onFileAdded: (Uri) -> Unit = {},
+        val uploadFileEnabled: Boolean = true,
         override val draftUiState: DraftUiState = DraftUiState(),
         override val submitEnabled: Boolean = false
     ) : AddSubmissionTypeUiState(R.string.assignmentDetilas_submissionTypeFileUpload, Assignment.SubmissionType.ONLINE_UPLOAD) {

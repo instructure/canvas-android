@@ -25,7 +25,10 @@ import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addTodo
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.page.getStringFromResource
@@ -35,14 +38,21 @@ import com.instructure.student.ui.pages.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.di.FakeDateTimeProvider
 import com.instructure.student.ui.utils.tokenLoginElementary
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import junit.framework.AssertionFailedError
 import org.junit.Test
 import java.util.Calendar
 import javax.inject.Inject
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class ScheduleInteractionTest : StudentTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @Inject
     lateinit var dateTimeProvider: DateTimeProvider

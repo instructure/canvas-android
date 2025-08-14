@@ -18,6 +18,7 @@ package com.instructure.teacher.di
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
 import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
@@ -47,9 +48,10 @@ class AssignmentListViewModelModule {
     fun provideAssignmentListRepository(
         assignmentApi: AssignmentAPI.AssignmentInterface,
         courseApi: CourseAPI.CoursesInterface,
-        assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao
+        assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao,
+        submissionApi: SubmissionAPI.SubmissionInterface
     ): AssignmentListRepository {
-        return TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListSelectedFiltersEntityDao)
+        return TeacherAssignmentListRepository(assignmentApi, courseApi, assignmentListSelectedFiltersEntityDao, submissionApi)
     }
 
     @Provides

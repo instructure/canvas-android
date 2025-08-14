@@ -706,7 +706,7 @@
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
-    <string name="reportProblem">Report a Problem</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">If the app misbehaves, let us know</string>
     <string name="requestFeature">Request a Feature</string>
     <string name="requestFeatureDetails">Have an idea to improve the app?</string>
@@ -1107,7 +1107,7 @@
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
-    <string name="opensInCanvasStudent">Opens in Canvas Student</string>
+    <string name="opensInCanvasApp">Opens in Canvas app</string>
     <string name="tab_student_view">Student View</string>
     <string name="rateOnThePlayStore">Rate on the Play Store</string>
 
@@ -1480,9 +1480,9 @@
     <string name="offline_content_storage">Storage</string>
     <string name="offline_content_storage_info">%s of %s Used</string>
     <string name="offline_content_other">Other Apps</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Remaining</string>
-    <string name="offline_content_storage_info_a11y_description">Storage Info: %s of %s Used, Other Apps %d%%, Canvas Student %d%%, Remaining %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Storage Info: %s of %s Used, Other Apps %d%%, Canvas %d%%, Remaining %d%%</string>
     <string name="offline_content_all_courses">All Courses</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Selected</string>
@@ -1808,7 +1808,7 @@
     <string name="studentOrTeacherTitle">Are you a student or teacher?</string>
     <string name="studentOrTeacherSubtitle">One of our other apps might be a better fit. Tap one to visit the Play Store</string>
     <string name="studentApp">STUDENT</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1846,7 +1846,7 @@
     <string name="addStudentSuccessfull">Student added successfully</string>
     <string name="addStudentTitle">Add student with…</string>
     <string name="addStudentQrCodeTitle">QR Code</string>
-    <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
+    <string name="addStudentQrCodeExplanationCanvas">Students can generate a QR code using the Canvas app on their mobile device</string>
     <string name="addStudentPairingCodeTitle">Pairing Code</string>
     <string name="addStudentPairingCodeExplanation">Students can obtain a pairing code through the Canvas website</string>
     <string name="pairingCodeDialogTitle">Add Student</string>
@@ -1855,9 +1855,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancel</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Your code is incorrect or expired.</string>
-    <string name="qrPairingTitle">Open Canvas Student</string>
-    <string name="qrPairingDescription">You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.</string>
-    <string name="qrCodePairingPrompt">Scan a QR code from Canvas Student to pair</string>
+    <string name="qrPairingTitleCanvas">Open Canvas app</string>
+    <string name="qrPairingDescriptionCanvas">You\'ll need to open your student\'s Canvas app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.</string>
+    <string name="qrCodePairingPromptCanvas">Scan a QR code from Canvas app to pair</string>
     <string name="a11y_addStudentContentDescription">Add Student</string>
     <string name="qrPairingErrorTitle">Expired QR Code</string>
     <string name="qrPairingErrorDescription">The QR code you scanned may have expired. Refresh the code on the student\'s device and try again.</string>
@@ -2086,5 +2086,6 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
     <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+    <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
 </resources>

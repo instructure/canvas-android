@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">समस्या की रिपोर्ट करें</string>
+    <string name="reportAProblemDialogTitle">समस्या की रिपोर्ट करें</string>
     <string name="errorReportSubject">विषय</string>
     <string name="errorReportDescription">विवरण</string>
     <string name="errorReportSend">भेजें</string>

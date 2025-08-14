@@ -21,6 +21,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -68,6 +69,8 @@ class AssignmentListViewModel @Inject constructor(
 
     var bookmarker = Bookmarker(true, Course(courseId ?: 0))
 
+    private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
+
     init {
         getAssignments(false)
     }
@@ -80,6 +83,7 @@ class AssignmentListViewModel @Inject constructor(
         if (courseId != null) {
             viewModelScope.tryLaunch {
                 val course = repository.getCourse(courseId, forceRefresh)
+                customStatuses = repository.getCustomGradeStatuses(courseId, forceRefresh)
                 bookmarker = Bookmarker(true, course)
                 viewModelScope.launch { _events.send(AssignmentListFragmentEvent.UpdateStatusBarStyle(course)) }
                 _uiState.update { it.copy(course = course) }
@@ -118,7 +122,7 @@ class AssignmentListViewModel @Inject constructor(
                         gradingPeriodsWithAssignments = gradingPeriodAssignments,
                         listState = assignmentGroups.associate { assignmentGroup ->
                             assignmentGroup.name.orEmpty() to assignmentGroup.assignments.map { assignment ->
-                                assignmentListBehavior.getAssignmentGroupItemState(course, assignment)
+                                assignmentListBehavior.getAssignmentGroupItemState(course, assignment, customStatuses)
                             }
                         },
                         filterOptions = AssignmentListFilterOptions(
@@ -264,23 +268,33 @@ class AssignmentListViewModel @Inject constructor(
                     it.dueDate != null && (it.dueDate ?: Date()) < Date()
                 }
                 mapOf(
-                    resources.getString(R.string.overdueAssignments) to
-                        past.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+                    resources.getString(R.string.overdueAssignments) to past.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    },
 
-                    resources.getString(R.string.upcomingAssignments) to
-                        upcoming.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+                    resources.getString(R.string.upcomingAssignments) to upcoming.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    },
 
-                    resources.getString(R.string.undatedAssignments) to
-                        undated.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
+                    resources.getString(R.string.undatedAssignments) to undated.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    }
                 )
             }
             AssignmentGroupByOption.AssignmentGroup -> {
-                filteredAssignments
-                    .groupBy { it.assignmentGroupId }
-                    .map { (key, value) ->
-                        uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty() to
-                            value.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
-                    }.toMap()
+                filteredAssignments.groupBy { it.assignmentGroupId }.map { (key, value) ->
+                    uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty() to value.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    }
+                }.toMap()
             }
             AssignmentGroupByOption.AssignmentType -> {
                 val discussionsGroup = filteredAssignments.filter {
@@ -292,14 +306,19 @@ class AssignmentListViewModel @Inject constructor(
                 val assignmentGroup = filteredAssignments - discussionsGroup - quizzesGroup
 
                 mapOf(
-                    resources.getString(R.string.assignments) to
-                        assignmentGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
-
-                    resources.getString(R.string.discussion) to
-                        discussionsGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) },
-
-                    resources.getString(R.string.quizzes) to
-                        quizzesGroup.map { assignmentListBehavior.getAssignmentGroupItemState(course, it) }
+                    resources.getString(R.string.assignments) to assignmentGroup.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    }, resources.getString(R.string.discussion) to discussionsGroup.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    }, resources.getString(R.string.quizzes) to quizzesGroup.map {
+                        assignmentListBehavior.getAssignmentGroupItemState(
+                            course, it, customStatuses
+                        )
+                    }
                 )
             }
         }.filter { it.value.isNotEmpty() }

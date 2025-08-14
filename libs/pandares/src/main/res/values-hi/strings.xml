@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">पोस्ट करने के बाद ग्रेड</string>
     <string name="gradeOverride">ग्रेड अवहेलना</string>
     <string name="currentGrade">वर्तमान ग्रेड</string>
-    <string name="opensInCanvasStudent">Canvas Student में खुलता है</string>
+    <string name="opensInCanvasApp">Canvas ऐप में खुलता है</string>
     <string name="tab_student_view">छात्र दृश्य</string>
     <string name="rateOnThePlayStore">प्ले स्टोर पर रेट करें</string>
 
@@ -1478,9 +1478,9 @@
     <string name="offline_content_storage">भंडारण</string>
     <string name="offline_content_storage_info">%s में से %s का उपयोग किया गया</string>
     <string name="offline_content_other">अन्य ऐप्स</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">शेष</string>
-    <string name="offline_content_storage_info_a11y_description">भंडारण जानकारी: %s का %s प्रयुक्त, अन्य ऐप्स %d%%, Canvas Student %d%%, शेष %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">भंडारण जानकारी: %s का %s प्रयुक्त, अन्य ऐप्स %d%%, Canvas %d%%, शेष %d%%</string>
     <string name="offline_content_all_courses">सभी पाठ्यक्रम</string>
     <string name="offline_content_sync">सिंक करें</string>
     <string name="offline_content_selected">%d चुना गया</string>
@@ -1800,7 +1800,7 @@
     <string name="studentOrTeacherTitle">कआप छात्र हैं या शिक्षक हैं?</string>
     <string name="studentOrTeacherSubtitle">हमारा एक अन्य ऐप संभावित रूप से आपकी आवश्यकताओं को बेहतर ढंग से पूरा कर सकता है। प्ले स्टोर पर जाने के लिए टैप करें</string>
     <string name="studentApp">छात्र</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">शिक्षक</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1838,7 +1838,7 @@
     <string name="addStudentSuccessfull">छात्र सफलतापूर्वक जोड़ा गया</string>
     <string name="addStudentTitle">छात्र को इसके साथ जोड़ें...</string>
     <string name="addStudentQrCodeTitle">QR कोड</string>
-    <string name="addStudentQrCodeExplanation">छात्र अपने मोबाइल डिवाइस पर Canvas छात्र ऐप का उपयोग करके QR कोड जेनरेट सकते हैं</string>
+    <string name="addStudentQrCodeExplanationCanvas">छात्र अपने मोबाइल डिवाइस पर Canvas ऐप का उपयोग करके QR कोड जेनरेट सकते हैं</string>
     <string name="addStudentPairingCodeTitle">पेयरिंग कोड</string>
     <string name="addStudentPairingCodeExplanation">छात्र Canvas वेबसाइट के माध्यम से पेयरिंग कोड प्राप्त कर सकते हैं</string>
     <string name="pairingCodeDialogTitle">छात्र जोड़ें</string>
@@ -1847,9 +1847,9 @@
     <string name="pairingCodeDialogNegativeButton">रद्द करें</string>
     <string name="pairingCodeDialogPositiveButton">ठीक है</string>
     <string name="pairingCodeDialogError">आपका कोड गलत है या समाप्त हो गया है।</string>
-    <string name="qrPairingTitle">Canvas Student खोलें</string>
-    <string name="qrPairingDescription">जारी रखने के लिए आपको अपने छात्र का Canvas छात्र ऐप खोलना होगा। मुख्य मेनू > सेटिंग्स > समीक्षक के साथ पेयर करें में जाएं और वहां दिखाई देने वाले QR कोड को स्कैन करें।</string>
-    <string name="qrCodePairingPrompt">पेयर बनाने के लिए Canvas स्टूडेंट से QR कोड स्कैन करें</string>
+    <string name="qrPairingTitleCanvas">Canvas ऐप खोलें</string>
+    <string name="qrPairingDescriptionCanvas">जारी रखने के लिए आपको अपने छात्र का Canvas ऐप खोलना होगा। मुख्य मेनू > सेटिंग्स > समीक्षक के साथ पेयर करें में जाएं और वहां दिखाई देने वाले QR कोड को स्कैन करें।</string>
+    <string name="qrCodePairingPromptCanvas">पेयर बनाने के लिए Canvas ऐप से QR कोड स्कैन करें</string>
     <string name="a11y_addStudentContentDescription">छात्र जोड़ें</string>
     <string name="qrPairingErrorTitle">समाप्त हुआ QR कोड</string>
     <string name="qrPairingErrorDescription">हो सकता है कि आपके द्वारा स्कैन किए गए QR कोड का समय समाप्त हो गया हो। छात्र की डिवाइस पर कोड रीफ़्रेश करें और फिर से कोशिश करें।</string>
@@ -2076,4 +2076,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">अपने ग्रेड देखने के लिए कृपया ऐप में अपने खाते में लॉग इन करें।</string>
     <string name="widgetSingleGradeSelectCourse">आइए, एक पाठ्यक्रम चुनें</string>
     <string name="widgetGradesErrorLoadingCourses">पाठ्यक्रम लोड करते समय त्रुटि उत्पन्न हुई।</string>
+    <string name="settingsSwitchExperience">Canvas कैरियर पर स्विच करें</string>
 </resources>

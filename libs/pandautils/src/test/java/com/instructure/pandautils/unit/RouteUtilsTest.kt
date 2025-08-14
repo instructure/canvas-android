@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.unit
 
+import android.net.Uri
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -24,6 +25,9 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.RouteUtils
 import io.mockk.*
+import kotlinx.coroutines.runBlocking
+import okhttp3.OkHttpClient
+import okhttp3.Response
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -33,6 +37,16 @@ class RouteUtilsTest : Assert() {
     lateinit var route: Route
     lateinit var user: User
 
+    private val notRedirectUri: Uri = mockk(relaxed = true)
+    private val redirectUri: Uri = mockk(relaxed = true)
+    private val redirectedUri: Uri = mockk(relaxed = true)
+    private val notRedirectUrl = "https://domain.com/file"
+    private val redirectUrl = "https://domain.com/file?redirect=1"
+    private val redirectedUrl = "https://domain.com/redirected"
+    private val okHttpClient: OkHttpClient = mockk(relaxed = true)
+    private val call = mockk<okhttp3.Call>()
+    private val response = mockk<Response>()
+
     @Before
     fun setup() {
         user = User()
@@ -41,6 +55,25 @@ class RouteUtilsTest : Assert() {
         mockkObject(ApiPrefs)
         every { ApiPrefs.user } returns user
         every { ApiPrefs.fullDomain } returns "https://domain.instructure.com"
+
+        mockkStatic(Uri::class)
+        every { notRedirectUri.toString() } returns notRedirectUrl
+        every { redirectUri.toString() } returns redirectUrl
+        every { redirectedUri.toString() } returns redirectedUrl
+        every { Uri.parse(notRedirectUrl) } returns notRedirectUri
+        every { Uri.parse(redirectUrl) } returns redirectUri
+        every { Uri.parse(redirectedUrl) } returns redirectedUri
+
+        every { okHttpClient.newCall(any()) } returns call
+        every { okHttpClient.newBuilder().followRedirects(false)
+            .cache(null).build() } returns okHttpClient
+        every { response.isRedirect } returns true
+        every { response.header("Location") } returns redirectedUrl
+        every { response.close() } just Runs
+        coEvery { call.execute() } returns response
+
+        mockkObject(com.instructure.canvasapi2.CanvasRestAdapter)
+        every { com.instructure.canvasapi2.CanvasRestAdapter.okHttpClient } returns okHttpClient
     }
 
     @Test
@@ -121,4 +154,31 @@ class RouteUtilsTest : Assert() {
         }
     }
 
+    @Test
+    fun `returns original uri if no redirect param`() = runBlocking {
+        val result = RouteUtils.getRedirectUrl(notRedirectUri)
+        assertEquals(notRedirectUri, result)
+    }
+
+    @Test
+    fun `returns redirected uri if response is redirect`() = runBlocking {
+        val result = RouteUtils.getRedirectUrl(redirectUri)
+        assertEquals(redirectedUri, result)
+    }
+
+    @Test
+    fun `returns original uri if response is not redirect`() = runBlocking {
+        every { response.isRedirect } returns false
+
+        val result = RouteUtils.getRedirectUrl(redirectUri)
+        assertEquals(redirectUri, result)
+    }
+
+    @Test
+    fun `returns original uri on exception`() = runBlocking {
+        coEvery { call.execute() } throws Exception("Network error")
+
+        val result = RouteUtils.getRedirectUrl(redirectUri)
+        assertEquals(redirectUri, result)
+    }
 }

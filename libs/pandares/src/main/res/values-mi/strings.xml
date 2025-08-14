@@ -706,7 +706,7 @@
     <string name="searchGuides">Rapu nga Kaiarahi Canvas</string>
     <string name="canvasGuides">Canvas Kaiārahi</string>
     <string name="searchGuidesDetails">Kimihia whakautu ki ngā pātai noa</string>
-    <string name="reportProblem">Pūrongo i te Raruraru</string>
+    <string name="reportProblem">Pūrongo i te raruraru</string>
     <string name="reportProblemDetails">Ki te hape te taupānga, whakamōhio mai ki ā mātou</string>
     <string name="requestFeature">Tono he Āhuatanga</string>
     <string name="requestFeatureDetails">He whakāro ki te whakapai ake i te taupānga?</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Te kōeke i muri o te whakairi</string>
     <string name="gradeOverride">Whakakorenga kōeke</string>
     <string name="currentGrade">Kōeke ō naian</string>
-    <string name="opensInCanvasStudent">Huaki ai i roto i Canvas Ākonga</string>
+    <string name="opensInCanvasApp">Ka tuwhera ki te taupānga Canvas</string>
     <string name="tab_student_view">Tirohanga Ākonga</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Rokiroki</string>
     <string name="offline_content_storage_info">%s o %s Kua whakamahia</string>
     <string name="offline_content_other">Ētahi atu Taupānga</string>
-    <string name="offline_content_canvas_student">Canvas Ākonga</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">E toe ana</string>
-    <string name="offline_content_storage_info_a11y_description">Mōhiohio Rokiroki: %s o %s Kua whakamahia, Ētahi atu Taupānga %d%%, Ākonga Canvas %d%%, Toe %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Mōhiohio Rokiroki: %s o %s Kua whakamahia, Ētahi atu Taupānga %d%%, Canvas %d%%, E toe ana %d%%</string>
     <string name="offline_content_all_courses">Ngā akoranga katoa</string>
     <string name="offline_content_sync">Tukutahi</string>
     <string name="offline_content_selected">%d Kua tīpakohia</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">He ākonga he kaiako rānei koe?</string>
     <string name="studentOrTeacherSubtitle">Ko tētahi atu o a mātou taupānga pea he pai ake te uru. Patohia tetahi ki te toro ki te Toa Te purei</string>
     <string name="studentApp">ĀKONGA</string>
-    <string name="canvasStudentApp">Canvas Ākonga</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">KAIAKO</string>
     <string name="canvasTeacherApp">Canvas Kaiako</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">I angitu te whakaurunga a te tauira</string>
     <string name="addStudentTitle">Tapiri ākonga me...</string>
     <string name="addStudentQrCodeTitle">QR Waehere</string>
-    <string name="addStudentQrCodeExplanation">Ka taea e nga akonga te whakaputa waehere QR ma te whakamahi i te taupānga Canvas Student i runga i o raatau taputapu pūkoro</string>
+    <string name="addStudentQrCodeExplanationCanvas">Ka taea e nga akonga te whakaputa waehere QR ma te whakamahi i te taupānga Canvas i runga i o raatau taputapu pūkoro</string>
     <string name="addStudentPairingCodeTitle">Waihere Hono</string>
     <string name="addStudentPairingCodeExplanation">Ka taea e ngā ākonga te tiki waihere hono ma te mahi i te Canvas nipurangi</string>
     <string name="pairingCodeDialogTitle">Tapiri Ākonga</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Whakakore</string>
     <string name="pairingCodeDialogPositiveButton">Ae</string>
     <string name="pairingCodeDialogError">Kei te hē kua pau rānei tō waihere.</string>
-    <string name="qrPairingTitle">Huaki Canvas Ākonga</string>
-    <string name="qrPairingDescription">Me whakatuwhera e koe te taupānga Canvas Student a to tauira kia haere tonu. Haere ki roto i te Tahua Matua > Ngā Tautuhinga me te Kaitirotiro me te matawai i te QR Waehere ka kitea e koe i reira.</string>
-    <string name="qrCodePairingPrompt">Matawaihia he waehere QR mai i te Canvas Student hei takirua</string>
+    <string name="qrPairingTitleCanvas">Whakatuwherahia te taupānga Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Me whakatuwhera koe i te taupānga Canvas a tō ākonga kia haere tonu ai. Haere ki roto i te Tahua Matua > Ngā Tautuhinga > me te Kaitirotiro me te matawai i te QR Waehere ka kitea e koe i reira.</string>
+    <string name="qrCodePairingPromptCanvas">Matawaihia he waehere QR mai i te taupānga Canvas kia takirua</string>
     <string name="a11y_addStudentContentDescription">Tapiri Ākonga</string>
     <string name="qrPairingErrorTitle">Kua pau QR Waehere</string>
     <string name="qrPairingErrorDescription">Te QR Waehere kua matawaiatia e koe kua pau. Tāmatahia te waehere ki te taputapu a te tauira ka ngana ano.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Hei kite i o tohu, tena koa takiuru ki to putea i roto i te taupānga.</string>
     <string name="widgetSingleGradeSelectCourse">Me whiriwhiri he akoranga</string>
     <string name="widgetGradesErrorLoadingCourses">I puta he hapa i te wa e uta ana i nga akoranga.</string>
+    <string name="settingsSwitchExperience">Hurihia ki te Canvas Mahi</string>
 </resources>

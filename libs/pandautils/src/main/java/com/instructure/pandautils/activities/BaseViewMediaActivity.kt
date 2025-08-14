@@ -27,15 +27,16 @@ import android.widget.FrameLayout
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.annotation.OptIn
-import com.instructure.pandautils.base.BaseCanvasActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import androidx.media3.common.util.UnstableApi
 import androidx.media3.datasource.HttpDataSource
 import androidx.media3.exoplayer.source.UnrecognizedInputFormatException
 import com.bumptech.glide.Glide
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.R
+import com.instructure.pandautils.base.BaseCanvasActivity
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.ActivityViewMediaBinding
 import com.instructure.pandautils.dialogs.MobileDataWarningDialog
@@ -45,6 +46,7 @@ import com.instructure.pandautils.utils.ExoAgentState
 import com.instructure.pandautils.utils.ExoInfoListener
 import com.instructure.pandautils.utils.FileFolderDeletedEvent
 import com.instructure.pandautils.utils.FileFolderUpdatedEvent
+import com.instructure.pandautils.utils.RouteUtils
 import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -53,6 +55,7 @@ import com.instructure.pandautils.utils.setMenu
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.pandautils.utils.viewExternally
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import java.io.File
 
@@ -70,13 +73,93 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
     private val mDisplayName: String? by lazy { intent?.extras?.getString(DISPLAY_NAME) }
     private val mDestroyOnExit: Boolean by lazy { intent?.extras?.getBoolean(DESTROY_ON_EXIT, true) ?: true }
     private val mEditableFile: EditableFile? by lazy { intent?.extras?.getParcelable<EditableFile>(EDITABLE_FILE) }
+    private var mediaUri: Uri? = null
 
-    private val mExoAgent by lazy { ExoAgent.getAgentForUri(mUri) }
+    private val mExoAgent by lazy { ExoAgent.getAgentForUri(mediaUri ?: mUri) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         binding.mediaPlayerView.findViewById<ImageButton>(R.id.fullscreenButton).setGone()
+        fetchMediaUri()
+    }
+
+    private fun fetchMediaUri() {
+        with(binding) {
+            mediaPreviewContainer.setGone()
+            mediaPlaybackErrorView.setGone()
+            mediaPlayerView.setVisible()
+            mediaProgressBar.announceForAccessibility(getString(R.string.loading))
+            mediaProgressBar.setVisible()
+        }
+        lifecycleScope.launch {
+            mediaUri = RouteUtils.getRedirectUrl(mUri)
+            attachMediaPlayer()
+        }
+    }
+
+    private fun attachMediaPlayer() = with(binding) {
+        mExoAgent.attach(mediaPlayerView, object : ExoInfoListener {
+            override fun onStateChanged(newState: ExoAgentState) {
+                when (newState) {
+                    ExoAgentState.IDLE -> {
+                        mediaPreviewContainer.setVisible()
+                        mediaPlaybackErrorView.setGone()
+                        mediaPlayerView.setGone()
+                        mediaProgressBar.setGone()
+                    }
+
+                    ExoAgentState.PREPARING,
+                    ExoAgentState.BUFFERING -> {
+                        mediaPreviewContainer.setGone()
+                        mediaPlaybackErrorView.setGone()
+                        mediaPlayerView.setVisible()
+                        mediaProgressBar.announceForAccessibility(getString(R.string.loading))
+                        mediaProgressBar.setVisible()
+                    }
+
+                    ExoAgentState.READY -> {
+                        mediaPreviewContainer.setGone()
+                        mediaPlaybackErrorView.setGone()
+                        mediaPlayerView.setVisible()
+                        mediaProgressBar.setGone()
+                    }
+
+                    ExoAgentState.ENDED -> {
+                        mExoAgent.reset()
+                        mediaPreviewContainer.setVisible()
+                        mediaPlaybackErrorView.setGone()
+                        mediaPlayerView.setGone()
+                        mediaProgressBar.setGone()
+                    }
+                }
+            }
+
+            @OptIn(UnstableApi::class)
+            override fun onError(cause: Throwable?) {
+                mediaPlayerView.setGone()
+                mediaProgressBar.setGone()
+                mediaPlaybackErrorView.setVisible()
+                errorTextView.setText(
+                    when (cause) {
+                        is HttpDataSource.HttpDataSourceException -> R.string.utils_no_data_connection
+                        is UnrecognizedInputFormatException -> R.string.utils_couldNotPlayFormat
+                        else -> R.string.errorOccurred
+                    }
+                )
+                val isUnrecognizedFormat = cause is UnrecognizedInputFormatException
+                openExternallyButton.setVisible(isUnrecognizedFormat)
+                tryAgainButton.setVisible(!isUnrecognizedFormat)
+            }
+
+            override fun setAudioOnly() {
+                audioIconView.setVisible()
+            }
+
+        })
+        updateImmersivePadding()
+
+        setupToolbar()
     }
 
     private fun setupToolbar() {
@@ -126,71 +209,15 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
         }
         ViewStyler.themeButton(binding.tryAgainButton)
         binding.tryAgainButton.onClick { prepare() }
-        binding.openExternallyButton.onClick { mUri.viewExternally(this, mContentType) }
+        binding.openExternallyButton.onClick { (mediaUri ?: mUri).viewExternally(this, mContentType) }
     }
 
-    override fun onResume() = with(binding) {
+    override fun onResume() {
         super.onResume()
 
         val fileFolderDeletedEvent = EventBus.getDefault().getStickyEvent(FileFolderDeletedEvent::class.java)
         if (fileFolderDeletedEvent != null)
             finish()
-
-        mExoAgent.attach(mediaPlayerView, object : ExoInfoListener {
-            override fun onStateChanged(newState: ExoAgentState) {
-                when (newState) {
-                    ExoAgentState.IDLE -> {
-                        mediaPreviewContainer.setVisible()
-                        mediaPlaybackErrorView.setGone()
-                        mediaPlayerView.setGone()
-                        mediaProgressBar.setGone()
-                    }
-                    ExoAgentState.PREPARING,
-                    ExoAgentState.BUFFERING -> {
-                        mediaPreviewContainer.setGone()
-                        mediaPlaybackErrorView.setGone()
-                        mediaPlayerView.setVisible()
-                        mediaProgressBar.announceForAccessibility(getString(R.string.loading))
-                        mediaProgressBar.setVisible()
-                    }
-                    ExoAgentState.READY -> {
-                        mediaPreviewContainer.setGone()
-                        mediaPlaybackErrorView.setGone()
-                        mediaPlayerView.setVisible()
-                        mediaProgressBar.setGone()
-                    }
-                    ExoAgentState.ENDED -> {
-                        mExoAgent.reset()
-                        mediaPreviewContainer.setVisible()
-                        mediaPlaybackErrorView.setGone()
-                        mediaPlayerView.setGone()
-                        mediaProgressBar.setGone()
-                    }
-                }
-            }
-
-            @OptIn(UnstableApi::class) override fun onError(cause: Throwable?) {
-                mediaPlayerView.setGone()
-                mediaProgressBar.setGone()
-                mediaPlaybackErrorView.setVisible()
-                errorTextView.setText(when (cause) {
-                    is HttpDataSource.HttpDataSourceException -> R.string.utils_no_data_connection
-                    is UnrecognizedInputFormatException -> R.string.utils_couldNotPlayFormat
-                    else -> R.string.errorOccurred
-                })
-                val isUnrecognizedFormat = cause is UnrecognizedInputFormatException
-                openExternallyButton.setVisible(isUnrecognizedFormat)
-                tryAgainButton.setVisible(!isUnrecognizedFormat)
-            }
-
-            override fun setAudioOnly() {
-                audioIconView.setVisible()
-            }
-
-        })
-        updateImmersivePadding()
-
-        setupToolbar()
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {

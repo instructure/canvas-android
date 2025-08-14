@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Rhoi gwybod am broblem</string>
+    <string name="reportAProblemDialogTitle">Rhoi gwybod am broblem</string>
     <string name="errorReportSubject">Pwnc</string>
     <string name="errorReportDescription">Disgrifiad</string>
     <string name="errorReportSend">Anfon</string>

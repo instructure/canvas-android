@@ -94,6 +94,7 @@ val quizSubmittedListener = """
 fun AssessmentContentScreen(
     uiState: AssessmentUiState,
     modifier: Modifier = Modifier,
+    onAssessmentSubmitted: () -> Unit = {}
 ) {
     val activity = LocalContext.current.getActivityOrNull()
     if (uiState.showAssessmentDialog) {
@@ -171,6 +172,7 @@ fun AssessmentContentScreen(
                                 setInitialScale(100)
                                 activity?.let { addVideoClient(it) }
                                 addJavascriptInterface(JSBridge {
+                                    onAssessmentSubmitted()
                                     uiState.onAssessmentCompletion()
                                 }, JS_BRIDGE_NAME)
                             }, modifier = Modifier.alpha(if (uiState.assessmentLoading) 0f else 1f)

@@ -54,6 +54,7 @@ class AddNoteViewModel @Inject constructor(
     private val highlightedTextSelectionStart: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionStart
     private val highlightedTextSelectionEnd: Int = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().textSelectionEnd
     private val highlightedText: String = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().highlightedText
+    private val noteType: String? = savedStateHandle.toRoute<MainNavigationRoute.AddNotebook>().noteType
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(
@@ -73,7 +74,8 @@ class AddNoteViewModel @Inject constructor(
             onTypeChanged = ::onTypeChanged,
             onUserCommentChanged = ::onUserCommentChanged,
             onSaveNote = ::addNote,
-            onSnackbarDismiss = ::onSnackbarDismissed
+            onSnackbarDismiss = ::onSnackbarDismissed,
+            type = if (noteType == null) null else NotebookType.valueOf(noteType),
         )
     )
     val uiState = _uiState.asStateFlow()

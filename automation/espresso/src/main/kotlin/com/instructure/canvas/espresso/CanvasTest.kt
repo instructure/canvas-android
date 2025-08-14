@@ -563,6 +563,10 @@ abstract class CanvasTest : InstructureTestingContract {
             return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
         }
 
+        fun isCompactDevice(): Boolean {
+            return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.widthPixels < 600
+        }
+
         fun turnOffConnectionViaADB() {
             val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
             device.executeShellCommand(DISABLE_WIFI_COMMAND)

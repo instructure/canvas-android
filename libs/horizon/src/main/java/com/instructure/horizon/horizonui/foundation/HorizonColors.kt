@@ -365,8 +365,7 @@ object HorizonColors {
     }
 
     object Surface {
-        @Composable
-        fun attention() = colorResource(R.color.surface_attention)
+        fun attention() = Color(0xFF2B7ABC)
         @Composable
         fun attentionSecondary() = colorResource(R.color.surface_attentionSecondary)
         fun cardPrimary() = Color(0xFFFFFFFF)
@@ -383,8 +382,7 @@ object HorizonColors {
         fun pagePrimary() = Color(0xFFF2F4F4)
         fun pageSecondary() = Color(0xFFFFFFFF)
         fun pageTertiary() = Color(0xFFE8EAEC)
-        @Composable
-        fun warning() = colorResource(R.color.surface_warning)
+        fun warning() = Color(0xFFCF4A00)
         fun success() = Color(0xFF03893D)
         @Composable
         fun aiGradient() = Brush.verticalGradient(

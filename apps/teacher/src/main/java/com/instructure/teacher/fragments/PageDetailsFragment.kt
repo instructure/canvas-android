@@ -211,6 +211,7 @@ class PageDetailsFragment : BasePresenterFragment<
 
     override fun onError(stringId: Int) {
         Toast.makeText(requireContext(), stringId, Toast.LENGTH_SHORT).show()
+        binding.loading.setGone()
     }
 
     private fun setupToolbar() = with(binding) {

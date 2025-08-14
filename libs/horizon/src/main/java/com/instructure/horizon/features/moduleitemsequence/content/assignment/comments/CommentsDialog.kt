@@ -100,7 +100,7 @@ fun CommentsDialog(
                 .padding(top = 16.dp)
                 .background(HorizonColors.Surface.pagePrimary(), shape = HorizonCornerRadius.level5)
         ) {
-            Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 8.dp)) {
+            Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
                 IconButton(
                     iconRes = R.drawable.close,
                     color = IconButtonColor.Inverse,
@@ -131,7 +131,7 @@ fun CommentsDialog(
                     )
                 }
             }
-            HorizonSpace(SpaceSize.SPACE_24)
+            HorizonSpace(SpaceSize.SPACE_16)
             if (uiState.loading) {
                 Spinner(modifier = Modifier.fillMaxSize())
             } else {

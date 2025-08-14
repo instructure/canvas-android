@@ -21,7 +21,10 @@ import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addQuestionToQuiz
 import com.instructure.canvas.espresso.mockCanvas.addQuizSubmission
 import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
@@ -30,11 +33,18 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class QuizSubmissionListPageTest : TeacherComposeTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     @Test
     override fun displaysPageObjects() {

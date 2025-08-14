@@ -34,18 +34,15 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
-import com.instructure.canvasapi2.apis.UserAPI
+import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.managers.CourseManager.getAllFavoriteCourses
 import com.instructure.canvasapi2.managers.InboxManager.createConversation
-import com.instructure.canvasapi2.managers.UserManager.getFirstPagePeopleList
-import com.instructure.canvasapi2.managers.UserManager.getNextPagePeopleList
-import com.instructure.canvasapi2.models.Conversation
+import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.Course
-import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.isValid
 import com.instructure.canvasapi2.utils.weave.awaitApi
-import com.instructure.canvasapi2.utils.weave.awaitPaginated
 import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASK_INSTRUCTOR
 import com.instructure.pandautils.analytics.ScreenView
@@ -96,7 +93,7 @@ class AskInstructorDialogStyled : BaseCanvasDialogFragment() {
                     Toast.makeText(activity, getString(R.string.emptyMessage), Toast.LENGTH_SHORT).show()
                 }
             }
-            .setNegativeButton(getString(R.string.cancel)) {dialog, _ ->
+            .setNegativeButton(getString(R.string.cancel)) { dialog, _ ->
                 dialog.dismiss()
             }
 
@@ -180,26 +177,19 @@ class AskInstructorDialogStyled : BaseCanvasDialogFragment() {
 
     private fun sendMessage() {
         val progressDialog = ProgressDialog.show(activity, "", getString(R.string.sending))
-        tryWeave {
+        if (activity == null) return
+        val activity = requireActivity()
+        val activityLifecycle = activity.lifecycleScope
+        activityLifecycle.tryLaunch {
             val text = message.text.toString()
             val contextId = course?.contextId.orEmpty()
 
             // Fetch recipient IDs
-            val recipients = mutableSetOf<User>()
-            awaitPaginated<List<User>> { // Fetch teachers
-                onRequestFirst { getFirstPagePeopleList(course!!, UserAPI.EnrollmentType.TEACHER, true, it) }
-                onRequestNext { nextUrl, callback -> getNextPagePeopleList(true, nextUrl, callback) }
-                onResponse { recipients += it }
-            }
-            awaitPaginated<List<User>> { // Fetch TAs
-                onRequestFirst { getFirstPagePeopleList(course!!, UserAPI.EnrollmentType.TA, true, it) }
-                onRequestNext { nextUrl, callback -> getNextPagePeopleList(true, nextUrl, callback) }
-                onResponse { recipients += it }
-            }
+            val recipients = UserManager.getTeacherListForCourseAsync(course!!.id, true).await().dataOrThrow
             val ids = recipients.map { it.id.toString() }
 
             // Send message
-            awaitApi<List<Conversation>> { createConversation(ids, text, "", contextId, longArrayOf(), true, it) }
+            awaitApi { createConversation(ids, text, "", contextId, longArrayOf(), true, it) }
 
             // Dismiss dialogs
             progressDialog.dismiss()
@@ -207,7 +197,7 @@ class AskInstructorDialogStyled : BaseCanvasDialogFragment() {
         } catch {
             progressDialog.dismiss()
             val fatalErrorDialog = newInstance(R.string.error, R.string.errorSendingMessage, true)
-            fatalErrorDialog.show(requireActivity().supportFragmentManager, FatalErrorDialogStyled.TAG)
+            fatalErrorDialog.show(activity.supportFragmentManager, FatalErrorDialogStyled.TAG)
         }
     }
 

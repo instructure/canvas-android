@@ -23,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
@@ -151,7 +152,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -209,6 +210,12 @@ class GradesViewModelTest {
         val today = LocalDateTime.now()
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.getCustomGradeStatuses(1, any()) } returns listOf(
+            mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+                every { _id } returns "1"
+                every { name } returns "Custom Status 1"
+            }
+        )
         val assignmentGroups = listOf(
             AssignmentGroup(
                 id = 1,
@@ -258,6 +265,18 @@ class GradesViewModelTest {
                         submission = Submission(
                             submittedAt = Date()
                         )
+                    ),
+                    Assignment(
+                        id = 5,
+                        name = "Assignment 5",
+                        dueAt = today.minusDays(1).toApiString(),
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            submittedAt = Date(),
+                            customGradeStatusId = 1
+                        )
                     )
                 )
             )
@@ -285,7 +304,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 4",
                             dueDate = getFormattedDate(today.minusDays(1)),
-                            submissionStateLabel = SubmissionStateLabel.SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.Submitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -300,7 +319,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_discussion,
                             name = "Assignment 2",
                             dueDate = getFormattedDate(today.plusDays(1)),
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -315,7 +334,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_quiz,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -330,8 +349,20 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 3",
                             dueDate = getFormattedDate(today.minusDays(1)),
-                            submissionStateLabel = SubmissionStateLabel.GRADED,
+                            submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A")
+                        ),
+                        AssignmentUiState(
+                            id = 5,
+                            iconRes = R.drawable.ic_assignment,
+                            name = "Assignment 5",
+                            dueDate = getFormattedDate(today.minusDays(1)),
+                            submissionStateLabel = SubmissionStateLabel.Custom(
+                                R.drawable.ic_flag,
+                                R.color.textInfo,
+                                "Custom Status 1"
+                            ),
+                            displayGrade = DisplayGrade("")
                         )
                     )
                 )
@@ -345,6 +376,12 @@ class GradesViewModelTest {
     fun `Assignments map correctly sorted by groups`() {
         coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
         coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.getCustomGradeStatuses(1, any()) } returns listOf(
+            mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+                every { _id } returns "1"
+                every { name } returns "Custom Status 1"
+            }
+        )
         val assignmentGroups = listOf(
             AssignmentGroup(
                 id = 1,
@@ -391,6 +428,16 @@ class GradesViewModelTest {
                         submission = Submission(
                             submittedAt = Date(),
                         )
+                    ),
+                    Assignment(
+                        id = 5,
+                        name = "Assignment 5",
+                        submissionTypesRaw = listOf(
+                            SubmissionType.online_text_entry.rawValue
+                        ),
+                        submission = Submission(
+                            customGradeStatusId = 1
+                        )
                     )
                 )
             )
@@ -419,7 +466,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_quiz,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         ),
                         AssignmentUiState(
@@ -427,7 +474,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_discussion,
                             name = "Assignment 2",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
 
@@ -443,7 +490,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 3",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.GRADED,
+                            submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A")
                         ),
                         AssignmentUiState(
@@ -451,7 +498,19 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 4",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.Submitted,
+                            displayGrade = DisplayGrade("")
+                        ),
+                        AssignmentUiState(
+                            id = 5,
+                            iconRes = R.drawable.ic_assignment,
+                            name = "Assignment 5",
+                            dueDate = "No due date",
+                            submissionStateLabel = SubmissionStateLabel.Custom(
+                                R.drawable.ic_flag,
+                                R.color.textInfo,
+                                "Custom Status 1"
+                            ),
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -569,7 +628,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -682,7 +741,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )
@@ -750,7 +809,7 @@ class GradesViewModelTest {
                             iconRes = R.drawable.ic_assignment,
                             name = "Assignment 1",
                             dueDate = "No due date",
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED,
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted,
                             displayGrade = DisplayGrade("")
                         )
                     )

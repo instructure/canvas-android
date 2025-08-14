@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Calificación después de la publicación</string>
     <string name="gradeOverride">Anulación de las calificaciones</string>
     <string name="currentGrade">Calificación actual</string>
-    <string name="opensInCanvasStudent">Se abre en Canvas Student</string>
+    <string name="opensInCanvasApp">Se abre en la aplicación de Canvas</string>
     <string name="tab_student_view">Vista del estudiante</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Almacenamiento</string>
     <string name="offline_content_storage_info">%s de %s usado(s)</string>
     <string name="offline_content_other">Otras aplicaciones</string>
-    <string name="offline_content_canvas_student">Estudiante de Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Restante</string>
-    <string name="offline_content_storage_info_a11y_description">Información de almacenamiento: Se usó %s de %s. Otras aplicaciones usaron %d%%, el estudiante de Canvas usó %d%%, quedan %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Información de almacenamiento: Se usó %s de %s. Otras aplicaciones usaron %d%%. Canvas usó %d%%. Quedan %d%%</string>
     <string name="offline_content_all_courses">Todos los cursos</string>
     <string name="offline_content_sync">Sincronización</string>
     <string name="offline_content_selected">%d seleccionado/a</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">¿Es estudiante o profesor?</string>
     <string name="studentOrTeacherSubtitle">Una de nuestras otras aplicaciones podría ser más adecuada. Toque una para visitar la Play Store</string>
     <string name="studentApp">ESTUDIANTE</string>
-    <string name="canvasStudentApp">Estudiante de Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">PROFESOR</string>
     <string name="canvasTeacherApp">Profesor de Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99 o +</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">El estudiante se agregó correctamente</string>
     <string name="addStudentTitle">Agregar estudiante con...</string>
     <string name="addStudentQrCodeTitle">Código QR</string>
-    <string name="addStudentQrCodeExplanation">Los estudiantes pueden generar un código QR mediante la aplicación Canvas Student en sus dispositivos móviles</string>
+    <string name="addStudentQrCodeExplanationCanvas">Los estudiantes pueden generar un código QR mediante la aplicación de Canvas en sus dispositivos móviles</string>
     <string name="addStudentPairingCodeTitle">Código de emparejamiento</string>
     <string name="addStudentPairingCodeExplanation">Los estudiantes pueden obtener un código de emparejamiento a través del sitio web de Canvas</string>
     <string name="pairingCodeDialogTitle">Agregar estudiante</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancelar</string>
     <string name="pairingCodeDialogPositiveButton">Aceptar</string>
     <string name="pairingCodeDialogError">Su código es incorrecto o ha caducado.</string>
-    <string name="qrPairingTitle">Abrir Canvas Student</string>
-    <string name="qrPairingDescription">Para continuar, debe abrir la aplicación Canvas Student de su estudiante. Diríjase a Menú Principal > Configuraciones > Emparejar con Observador (Main Menu > Settings > Pair with Observer) y escanee el código QR que aparece allí.</string>
-    <string name="qrCodePairingPrompt">Escanear un código QR de Canvas Student para emparejar</string>
+    <string name="qrPairingTitleCanvas">Abrir aplicación de Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Para continuar, debe abrir la aplicación de Canvas de su estudiante. Diríjase a Menú Principal > Configuraciones > Emparejar con observador y escanee el código QR que aparece allí.</string>
+    <string name="qrCodePairingPromptCanvas">Escanear un código QR de la aplicación de Canvas para emparejar</string>
     <string name="a11y_addStudentContentDescription">Agregar estudiante</string>
     <string name="qrPairingErrorTitle">Código QR vencido</string>
     <string name="qrPairingErrorDescription">Es posible que el código QR que escaneó haya vencido. Actualice el código en el dispositivo del estudiante y vuelva a intentarlo.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver sus calificaciones, inicie sesión en su cuenta en la aplicación.</string>
     <string name="widgetSingleGradeSelectCourse">Elijamos un curso.</string>
     <string name="widgetGradesErrorLoadingCourses">Se produjo un error al cargar los cursos.</string>
+    <string name="settingsSwitchExperience">Cambiar a Canvas Career</string>
 </resources>

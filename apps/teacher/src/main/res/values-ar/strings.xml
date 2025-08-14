@@ -756,7 +756,7 @@
     <string name="termsOfUse">شروط الاستخدام</string>
     <string name="searchGuides">البحث في Canvas Guides</string>
     <string name="searchGuidesDetails">احصل على إجابات للأسئلة المتداولة</string>
-    <string name="reportProblem">إبلاغ عن مشكلة</string>
+    <string name="reportProblem">الإبلاغ عن مشكلة</string>
     <string name="reportProblemDetails">أخبرنا إن لم يعمل التطبيق بشكل صحيح</string>
     <string name="requestFeature">طلب ميزة</string>
     <string name="requestFeatureDetails">هل لديك فكرة لتحسين التطبيق؟</string>

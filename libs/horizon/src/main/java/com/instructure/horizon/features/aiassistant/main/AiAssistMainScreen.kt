@@ -31,7 +31,6 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistResponseTextBlock
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistScaffold
 import com.instructure.horizon.features.aiassistant.common.composable.AiAssistSuggestionTextBlock
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
@@ -40,7 +39,7 @@ import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
 @Composable
 fun AiAssistMainScreen(
     navController: NavHostController,
-    aiContext: AiAssistContext,
+    state: AiAssistMainUiState,
     onDismiss: () -> Unit,
 ) {
     var promptInput by remember { mutableStateOf(TextFieldValue("")) }
@@ -50,22 +49,20 @@ fun AiAssistMainScreen(
         inputTextValue = promptInput,
         onInputTextChanged = { promptInput = it },
         onInputTextSubmitted = {
-            val newContext = aiContext.copy(
-                chatHistory = aiContext.chatHistory + listOf(
-                    AiAssistMessage(
-                        role = AiAssistMessageRole.User,
-                        prompt = AiAssistMessagePrompt.Custom(promptInput.text)
-                    )
+            state.onSetAiAssistContextMessage(
+                AiAssistMessage(
+                    role = AiAssistMessageRole.User,
+                    prompt = AiAssistMessagePrompt.Custom(promptInput.text)
                 )
             )
-            navController.navigate(AiAssistRoute.AiAssistChat(newContext))
+            navController.navigate(AiAssistRoute.AiAssistChat.route)
        }
     ) { modifier ->
         LazyColumn(
             verticalArrangement = Arrangement.spacedBy(16.dp),
             modifier = modifier
         ) {
-            if (aiContext.isEmpty()) {
+            if (state.isAiContextEmpty) {
                 item {
                     AiAssistResponseTextBlock(
                         text = stringResource(R.string.ai_HowCanIHelpYou)
@@ -76,64 +73,49 @@ fun AiAssistMainScreen(
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_QuizMe),
                         onClick = {
-                            navController.navigate(AiAssistRoute.AiAssistQuiz(aiContext))
+                            navController.navigate(AiAssistRoute.AiAssistQuiz.route)
                         }
                     )
                 }
                 item {
-                    val newContext = aiContext.copy(
-                        chatHistory = aiContext.chatHistory + listOf(
-                            AiAssistMessage(
-                                role = AiAssistMessageRole.User,
-                                prompt = AiAssistMessagePrompt.Summarize
-                            )
-                        )
-                    )
-
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_summarize),
                         onClick = {
-                            navController.navigate(
-                                AiAssistRoute.AiAssistChat(newContext)
+                            state.onSetAiAssistContextMessage(
+                                AiAssistMessage(
+                                    role = AiAssistMessageRole.User,
+                                    prompt = AiAssistMessagePrompt.Summarize
+                                )
                             )
+                            navController.navigate(AiAssistRoute.AiAssistChat.route)
                         }
                     )
                 }
                 item {
-                    val newContext = aiContext.copy(
-                        chatHistory = aiContext.chatHistory + listOf(
-                            AiAssistMessage(
-                                role = AiAssistMessageRole.User,
-                                prompt = AiAssistMessagePrompt.KeyTakeAway
-                            )
-                        )
-                    )
-
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_giveMeKeyTakeaways),
                         onClick = {
-                            navController.navigate(
-                                AiAssistRoute.AiAssistChat(newContext)
+                            state.onSetAiAssistContextMessage(
+                                AiAssistMessage(
+                                    role = AiAssistMessageRole.User,
+                                    prompt = AiAssistMessagePrompt.KeyTakeAway
+                                )
                             )
+                            navController.navigate(AiAssistRoute.AiAssistChat.route)
                         }
                     )
                 }
                 item {
-                    val newContext = aiContext.copy(
-                        chatHistory = aiContext.chatHistory + listOf(
-                            AiAssistMessage(
-                                role = AiAssistMessageRole.User,
-                                prompt = AiAssistMessagePrompt.TellMeMore
-                            )
-                        )
-                    )
-
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_tellMeMore),
                         onClick = {
-                            navController.navigate(
-                                AiAssistRoute.AiAssistChat(newContext)
+                            state.onSetAiAssistContextMessage(
+                                AiAssistMessage(
+                                    role = AiAssistMessageRole.User,
+                                    prompt = AiAssistMessagePrompt.TellMeMore
+                                )
                             )
+                            navController.navigate(AiAssistRoute.AiAssistChat.route)
                         }
                     )
                 }
@@ -141,7 +123,7 @@ fun AiAssistMainScreen(
                     AiAssistSuggestionTextBlock(
                         text = stringResource(R.string.ai_generateFlashcards),
                         onClick = {
-                            navController.navigate(AiAssistRoute.AiAssistFlashcard(aiContext))
+                            navController.navigate(AiAssistRoute.AiAssistFlashcard.route)
                         }
                     )
                 }

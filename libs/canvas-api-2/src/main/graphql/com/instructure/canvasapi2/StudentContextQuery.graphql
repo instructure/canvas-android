@@ -108,6 +108,7 @@ query StudentContextCard($courseId: ID!, $studentId: ID!, $pageSize: Int!, $next
               gradingType
               submissionTypes
             }
+            customGradeStatus
           }
         }
       }

@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.assignments.details
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -58,4 +59,8 @@ class StudentAssignmentDetailsRepository(
 
     // Not relevant for student
     override suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean) = false
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return dataSource().getCustomGradeStatuses(courseId, forceNetwork)
+    }
 }

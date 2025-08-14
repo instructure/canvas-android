@@ -139,6 +139,8 @@ dependencies {
     implementation Libs.LIVE_DATA
     implementation Libs.VIEW_MODEL
     implementation project(':rceditor')
+    implementation Libs.COMPOSE_NAVIGATION
+
 
     /* Test Dependencies */
     testImplementation Libs.JUNIT
@@ -229,6 +231,11 @@ dependencies {
     api Libs.COMPOSE_UI
     api Libs.ANDROIDX_COMPOSE_ACTIVITY
     api Libs.GLIDE_COMPOSE
+    api Libs.COMPOSE_ADAPTIVE
+    api Libs.COMPOSE_MATERIAL3_WINDOW_SIZE
+    api Libs.COMPOSE_NAVIGATION_HILT
+    api Libs.COMPOSE_FRAGMENT
+
 
     implementation Libs.FLEXBOX_LAYOUT
 

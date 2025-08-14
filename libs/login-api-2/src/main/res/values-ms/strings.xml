@@ -72,7 +72,8 @@
     <string name="loginHint">Cari sekolah atau daerah anda</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Laporkan Masalah</string>
+    <string name="errorReportAProblem">Laporkan masalah</string>
+    <string name="reportAProblemDialogTitle">Laporkan masalah</string>
     <string name="errorReportSubject">Subjek</string>
     <string name="errorReportDescription">Penerangan</string>
     <string name="errorReportSend">Hantar</string>

@@ -67,7 +67,8 @@ class AddSubmissionViewModel @Inject constructor(
                 onSubmissionTypeSelected = ::submissionTypeSelected,
                 onSubmissionButtonClicked = ::showSubmissionConfirmation,
                 onDismissSubmissionConfirmation = ::submissionConfirmationDismissed,
-                onSubmitAssignment = ::sendSubmission
+                onSubmitAssignment = ::sendSubmission,
+                onAssignmentUpdated = ::updateAssignment
             )
         )
 
@@ -78,7 +79,7 @@ class AddSubmissionViewModel @Inject constructor(
         onSubmissionSuccess = listener
     }
 
-    fun updateAssignment(assignment: Assignment) {
+    private fun updateAssignment(assignment: Assignment) {
         viewModelScope.tryLaunch {
             assignmentName = assignment.name.orEmpty()
             assignmentId = assignment.id
@@ -109,14 +110,14 @@ class AddSubmissionViewModel @Inject constructor(
                     AddSubmissionTypeUiState.Text(text, ::onTextSubmissionChanged, draftUiState, text.isNotEmpty())
                 } else {
                     val files = createFileSubmissionDao.findFilesForSubmissionId(draft?.id ?: -1L)
-                    this@AddSubmissionViewModel.files.addAll(files.map { file ->
+                    this@AddSubmissionViewModel.files = files.map { file ->
                         FileSubmitObject(
                             name = file.name.orEmpty(),
                             fullPath = file.fullPath.orEmpty(),
                             contentType = file.contentType.orEmpty(),
                             size = file.size.orDefault()
                         )
-                    })
+                    }.toMutableList()
 
                     val fileUiStates = files.map { file ->
                         AddSubmissionFileUiState(
@@ -270,18 +271,37 @@ class AddSubmissionViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     submissionInProgress = false,
-                    errorMessage = context.getString(R.string.assignmentDetails_submissionError)
+                    errorMessage = context.getString(R.string.assignmentDetails_submissionError),
+                    submissionTypes = getUpdatedSubmissionTypesWithUploadFileEnabled(it.submissionTypes, true)
                 )
             }
         } else if (progress == 100.0f) {
             onSubmissionSuccess?.invoke()
             onTextSubmissionChanged("")
             _uiState.update {
-                it.copy(submissionInProgress = showProgress)
+                it.copy(
+                    submissionInProgress = showProgress,
+                    submissionTypes = getUpdatedSubmissionTypesWithUploadFileEnabled(it.submissionTypes, !showProgress))
             }
         } else if (progress > 0f) {
             _uiState.update {
-                it.copy(submissionInProgress = showProgress)
+                it.copy(
+                    submissionInProgress = showProgress,
+                    submissionTypes = getUpdatedSubmissionTypesWithUploadFileEnabled(it.submissionTypes, !showProgress)
+                )
+            }
+        }
+    }
+
+    private fun getUpdatedSubmissionTypesWithUploadFileEnabled(
+        submissionTypes: List<AddSubmissionTypeUiState>,
+        enabled: Boolean
+    ): List<AddSubmissionTypeUiState> {
+        return submissionTypes.map { submissionTypeUiState ->
+            if (submissionTypeUiState is AddSubmissionTypeUiState.File) {
+                submissionTypeUiState.copy(uploadFileEnabled = enabled)
+            } else {
+                submissionTypeUiState
             }
         }
     }
@@ -340,7 +360,7 @@ class AddSubmissionViewModel @Inject constructor(
         return if (date == null) {
             ""
         } else {
-            context.getString(R.string.assignmentDetails_draftSaved, date.format("dd/MM, h:mm a"))
+            context.getString(R.string.assignmentDetails_draftSaved, date.format("MM/dd, h:mm a"))
         }
     }
 

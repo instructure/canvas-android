@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Nota després de la publicació</string>
     <string name="gradeOverride">Substitució de la nota</string>
     <string name="currentGrade">Nota actual</string>
-    <string name="opensInCanvasStudent">S\'obre al Canvas Student</string>
+    <string name="opensInCanvasApp">S\'obre en l’aplicació Canvas</string>
     <string name="tab_student_view">Vista d\'estudiant</string>
 
 
@@ -1471,9 +1471,9 @@
     <string name="offline_content_storage">Emmagatzematge</string>
     <string name="offline_content_storage_info">S’han utilitzat %s de %s</string>
     <string name="offline_content_other">Altres aplicacions</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Restant</string>
-    <string name="offline_content_storage_info_a11y_description">Informació sobre l’emmagatzematge: %s de %s utilitzat, altres aplicacions %d%%, estudiants del Canvas %d%%, restant %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informació sobre l’emmagatzematge: %s de %s utilitzat, altres aplicacions %d%%, Canvas %d%%, restant %d%%</string>
     <string name="offline_content_all_courses">Totes les assignatures</string>
     <string name="offline_content_sync">Sincronitza</string>
     <string name="offline_content_selected">S’ha seleccionat %d</string>
@@ -1793,7 +1793,7 @@
     <string name="studentOrTeacherTitle">Sou un estudiant o un professor?</string>
     <string name="studentOrTeacherSubtitle">És possible que alguna de les altres aplicacions nostres us sigui més útil. Toqueu-ne una per anar a Play Store</string>
     <string name="studentApp">ESTUDIANT</string>
-    <string name="canvasStudentApp">Estudiant del Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">PROFESSOR</string>
     <string name="canvasTeacherApp">Professor del Canvas</string>
     <string name="inboxUnreadCountMoreThan99">Més de 99</string>
@@ -1831,7 +1831,7 @@
     <string name="addStudentSuccessfull">S\'ha afegit correctament l’estudiant</string>
     <string name="addStudentTitle">Afegeix un estudiant amb...</string>
     <string name="addStudentQrCodeTitle">Codi QR</string>
-    <string name="addStudentQrCodeExplanation">Al dispositiu mòbil, els estudiants poden generar un codi QR mitjançant l’aplicació Canvas Student</string>
+    <string name="addStudentQrCodeExplanationCanvas">Al dispositiu mòbil, els estudiants poden generar un codi QR mitjançant l’aplicació Canvas</string>
     <string name="addStudentPairingCodeTitle">Codi d\'emparellament</string>
     <string name="addStudentPairingCodeExplanation">Els estudiants poden obtenir un codi d\'emparellament a través del lloc web del Canvas</string>
     <string name="pairingCodeDialogTitle">Afegeix un estudiant</string>
@@ -1840,9 +1840,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancel·la</string>
     <string name="pairingCodeDialogPositiveButton">D\'acord</string>
     <string name="pairingCodeDialogError">El vostre codi no és correcte o ha caducat.</string>
-    <string name="qrPairingTitle">Obriu el Canvas Student</string>
-    <string name="qrPairingDescription">Per continuar, haureu d\'obrir l’aplicació Canvas Student de l’estudiant. Aneu a Menú principal > Configuració > Emparella amb l\'observador i escanegeu el codi QR que s’hi mostra.</string>
-    <string name="qrCodePairingPrompt">Escanegeu un codi QR del Canvas Student per fer l’emparellament</string>
+    <string name="qrPairingTitleCanvas">Obriu l’aplicació Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Per continuar, haureu d\'obrir l’aplicació Canvas de l’estudiant. Aneu a Menú principal > Configuració > Emparella amb l\'observador i escanegeu el codi QR que s’hi mostra.</string>
+    <string name="qrCodePairingPromptCanvas">Escanegeu un codi QR de l’aplicació Canvas per fer l’emparellament</string>
     <string name="a11y_addStudentContentDescription">Afegeix un estudiant</string>
     <string name="qrPairingErrorTitle">Codi QR caducat</string>
     <string name="qrPairingErrorDescription">És possible que el codi QR que heu escanejat ja hagi caducat. Actualitzeu el codi al dispositiu de l’estudiant i torneu a provar-ho.</string>
@@ -2069,4 +2069,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació.</string>
     <string name="widgetSingleGradeSelectCourse">Triem una assignatura</string>
     <string name="widgetGradesErrorLoadingCourses">S\'ha produït un error en carregar les assignatures.</string>
+    <string name="settingsSwitchExperience">Canvia al Canvas Career</string>
 </resources>

@@ -695,7 +695,7 @@
     <string name="searchGuides">搜索 Canvas 指南</string>
     <string name="canvasGuides">Canvas 指南</string>
     <string name="searchGuidesDetails">查找常见问题的答案</string>
-    <string name="reportProblem">报告问题</string>
+    <string name="reportProblem">报告一个问题</string>
     <string name="reportProblemDetails">如果应用程序出现异常，告知我们。</string>
     <string name="requestFeature">请求功能</string>
     <string name="requestFeatureDetails">有一个改善应用程序的想法吗？</string>
@@ -1088,7 +1088,7 @@
     <string name="gradeAfterPosting">发布后的评分</string>
     <string name="gradeOverride">覆盖评分</string>
     <string name="currentGrade">当前评分</string>
-    <string name="opensInCanvasStudent">在 Canvas 学生版中打开</string>
+    <string name="opensInCanvasApp">在 Canvas 应用程序中打开</string>
     <string name="tab_student_view">学生视图</string>
 
 
@@ -1447,9 +1447,9 @@
     <string name="offline_content_storage">存储空间</string>
     <string name="offline_content_storage_info">%s/%s 个已使用</string>
     <string name="offline_content_other">其他应用程序</string>
-    <string name="offline_content_canvas_student">Canvas 学生</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">剩余</string>
-    <string name="offline_content_storage_info_a11y_description">存储信息：%s/%s 已使用，其他 App %d%%，Canvas 学生 %d%%，剩余 %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">存储信息：%s/%s 已使用，其他应用程序 %d%%，Canvas  %d%%，剩余 %d%%</string>
     <string name="offline_content_all_courses">所有课程</string>
     <string name="offline_content_sync">同步</string>
     <string name="offline_content_selected">%d 已选择</string>
@@ -1761,7 +1761,7 @@
     <string name="studentOrTeacherTitle">您是学生还是教师？</string>
     <string name="studentOrTeacherSubtitle">我们的其他应用可能更合适。点击一项以访问 Play Store</string>
     <string name="studentApp">学生</string>
-    <string name="canvasStudentApp">Canvas 学生</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">教师</string>
     <string name="canvasTeacherApp">Canvas 教师</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1799,7 +1799,7 @@
     <string name="addStudentSuccessfull">已成功添加学生</string>
     <string name="addStudentTitle">使用...添加学生</string>
     <string name="addStudentQrCodeTitle">二维码</string>
-    <string name="addStudentQrCodeExplanation">学生可以在移动设备上使用 Canvas 学生版应用程序生成二维码</string>
+    <string name="addStudentQrCodeExplanationCanvas">学生可以在移动设备上使用 Canvas 应用程序生成二维码</string>
     <string name="addStudentPairingCodeTitle">配对码</string>
     <string name="addStudentPairingCodeExplanation">学生可以通过 Canvas 网站获得配对码</string>
     <string name="pairingCodeDialogTitle">添加学生</string>
@@ -1808,9 +1808,9 @@
     <string name="pairingCodeDialogNegativeButton">取消</string>
     <string name="pairingCodeDialogPositiveButton">确定</string>
     <string name="pairingCodeDialogError">您的代码错误或已过期。</string>
-    <string name="qrPairingTitle">打开 Canvas 学生版</string>
-    <string name="qrPairingDescription">您需要打开学生的 Canvas 学生版应用程序才能继续操作。转到“主菜单 > 设置 > 与旁听者配对”，扫描在其中看到的二维码。</string>
-    <string name="qrCodePairingPrompt">从 Canvas 学生版扫描二维码进行配对</string>
+    <string name="qrPairingTitleCanvas">打开 Canvas 应用程序</string>
+    <string name="qrPairingDescriptionCanvas">您需要打开学生的 Canvas 应用程序才能继续操作。转到“主菜单 > 设置 > 与旁听者配对”，扫描在其中看到的二维码。</string>
+    <string name="qrCodePairingPromptCanvas">从 Canvas 应用程序扫描二维码进行配对</string>
     <string name="a11y_addStudentContentDescription">添加学生</string>
     <string name="qrPairingErrorTitle">失效的二维码</string>
     <string name="qrPairingErrorDescription">您扫描的二维码已失效。在学生的设备上刷新二维码并重试。</string>
@@ -2036,4 +2036,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">要查看您的年级，请在应用程序中登录您的帐户。</string>
     <string name="widgetSingleGradeSelectCourse">请选择课程</string>
     <string name="widgetGradesErrorLoadingCourses">加载课程时出错。</string>
+    <string name="settingsSwitchExperience">切换到 Canvas Career</string>
 </resources>

@@ -19,6 +19,8 @@ package com.instructure.horizon.features.aiassistant.quiz
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
@@ -45,17 +47,20 @@ fun AiAssistQuizScreen(
         navController = navController,
         onDismiss = { onDismiss() },
     ) { modifier ->
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = modifier.fillMaxSize()
-        ) {
             if (state.isLoading) {
-                Spinner(
-                    color = HorizonColors.Surface.cardPrimary(),
-                )
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = modifier.fillMaxSize()
+                ) {
+                    Spinner(
+                        color = HorizonColors.Surface.cardPrimary(),
+                    )
+                }
             } else {
                 if (state.quizState != null) {
-                    Column {
+                    Column(
+                        modifier = modifier.verticalScroll(rememberScrollState())
+                    ) {
                         AiAssistResponseTextBlock(
                             text = state.quizState.question
                         )
@@ -80,12 +85,10 @@ fun AiAssistQuizScreen(
                             checkButtonEnabled = state.quizState.selectedOptionIndex != null && !state.isChecked,
                             onCheckAnswerSelected = { state.checkQuiz() },
                             onRegenerateSelected = { state.regenerateQuiz() },
-                            modifier = modifier
                         )
                     }
                 }
             }
-        }
     }
 }
 

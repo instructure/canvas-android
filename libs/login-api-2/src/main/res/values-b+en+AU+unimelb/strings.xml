@@ -72,7 +72,8 @@
     <string name="loginHint">Find your school or district</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Report A Problem</string>
+    <string name="errorReportAProblem">Report a problem</string>
+    <string name="reportAProblemDialogTitle">Report a problem</string>
     <string name="errorReportSubject">Subject</string>
     <string name="errorReportDescription">Description</string>
     <string name="errorReportSend">Send</string>

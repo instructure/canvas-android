@@ -235,11 +235,11 @@ data class Assignment(
     override fun describeContents(): Int = 0
 
     fun isMissing(): Boolean {
-        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null)
+        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null && submission?.customGradeStatusId == null)
     }
 
     fun isGraded(): Boolean {
-        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
+        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null) || submission?.customGradeStatusId != null
     }
 
     fun ltiToolType(): LtiType {

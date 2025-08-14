@@ -21,6 +21,7 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -329,6 +330,19 @@ class LoginE2ETest : StudentTest() {
         leftSideNavigationDrawerPage.logout()
     }
 
+    @Test
+    @Stub("Stubbed because there was some change on 7th or 8th of July, 2025 and on the CI it loads an invalid URL page, however the test runs locally.")
+    @E2E
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E, SecondaryFeatureCategory.CANVAS_NETWORK)
+    fun testCanvasNetworkSignInPageE2E() {
+
+        Log.d(STEP_TAG, "Click on the 'Canvas Network' link on the Login Landing Page to open the Canvas Network Page (learn.canvas.net).")
+        loginLandingPage.clickCanvasNetworkButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the Canvas Network Page has been displayed.")
+        canvasNetworkSignInPage.assertPageObjects()
+    }
+
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {
 
         Thread.sleep(5100) //Need to wait > 5 seconds before each login attempt because of new 'too many attempts' login policy on web.
@@ -370,7 +384,6 @@ class LoginE2ETest : StudentTest() {
 
         Log.d(ASSERTION_TAG, "Assert that '${user.name}' user's role is: '$role'.")
         peopleListPage.assertPersonListed(user, role)
-
     }
 
     private fun assertDashboardPageDisplayed(user: CanvasUserApiModel)

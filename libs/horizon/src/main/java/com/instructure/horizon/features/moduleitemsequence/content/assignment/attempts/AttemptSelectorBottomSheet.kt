@@ -71,7 +71,7 @@ fun AttemptSelectorBottomSheet(
             .padding(top = 48.dp)
     ) {
         Column {
-            Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 8.dp)) {
+            Box(modifier = Modifier.padding(start = 24.dp, end = 24.dp, top = 24.dp)) {
                 IconButton(
                     iconRes = R.drawable.close,
                     color = IconButtonColor.Inverse,
@@ -103,7 +103,7 @@ fun AttemptSelectorBottomSheet(
                 }
             }
         }
-        HorizonSpace(SpaceSize.SPACE_24)
+        HorizonSpace(SpaceSize.SPACE_16)
         if (uiState.attempts.isEmpty()) {
             Text(
                 stringResource(R.string.attemptBottomSheet_noAttempts),

@@ -18,6 +18,7 @@ package com.instructure.pandautils.compose.composables.rce
 import android.content.ContentValues
 import android.net.Uri
 import android.provider.MediaStore
+import android.webkit.JavascriptInterface
 import android.webkit.URLUtil
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -51,6 +52,7 @@ import instructure.rceditor.R
 import instructure.rceditor.RCEInsertDialog
 import instructure.rceditor.RCETextEditor
 import jp.wasabeef.richeditor.RichEditor
+import kotlinx.coroutines.delay
 
 enum class RceControlsPosition {
     TOP,
@@ -66,6 +68,7 @@ fun ComposeRCE(
     canvasContext: CanvasContext = CanvasContext.defaultCanvasContext(),
     onTextChangeListener: (String) -> Unit,
     onRceFocused: () -> Unit = {},
+    onCursorYCoordinateChanged: ((Float) -> Unit)? = null,
     rceControlsPosition: RceControlsPosition = RceControlsPosition.TOP,
     rceDialogThemeColor: Int = ThemePrefs.brandColor,
     rceDialogButtonColor: Int = ThemePrefs.textButtonColor,
@@ -88,6 +91,58 @@ fun ComposeRCE(
         setOnTextChangeListener {
             onTextChangeListener(it)
             evaluateJavascript("javascript:RE.enabledEditingItems();", null)
+        }
+        onCursorYCoordinateChanged?.let {
+            addJavascriptInterface(
+                RCECursorPositionInterface { y ->
+                    it(y)
+                }, RCECursorPositionInterface.NAME
+            )
+        }
+        setOnInitialLoadListener {
+            if (onCursorYCoordinateChanged != null) {
+                evaluateJavascript(
+                    """
+            document.addEventListener("selectionchange", () => {
+                const selection = window.getSelection();
+                if (!selection || selection.rangeCount === 0) {
+                    return null;
+                }
+
+                const range = selection.getRangeAt(0);
+                let y = null;
+
+                // Try getting rects directly first
+                const rects = range.getClientRects();
+                if (rects.length > 0) {
+                    y = rects[0].y;
+                } else {
+                    const container = range.endContainer;
+                    const offset = range.endOffset;
+                    const editorDiv = document.getElementById('editor'); // Your contenteditable div
+            
+                    // Create a temporary span to get the position
+                    const tempSpan = document.createElement('span');
+                    tempSpan.textContent = '\u200b'; // Zero-width space character
+                    tempSpan.style.whiteSpace = 'pre'; // Ensure space is preserved
+                    tempSpan.style.lineHeight = '0'; // Don't affect line height by this span
+                    tempSpan.style.fontSize = '0'; // Make it invisible visually
+            
+                    // Insert the temporary span at the caret position
+                    range.insertNode(tempSpan);
+            
+                    // Get its position
+                    const spanRect = tempSpan.getBoundingClientRect();
+                    y = spanRect.y;
+            
+                    // Clean up: remove the temporary span and restore the selection
+                    tempSpan.parentNode.removeChild(tempSpan);
+                }
+                ${RCECursorPositionInterface.NAME}.onCursorPositionChanged(y);
+            })
+        """.trimIndent(), null
+                )
+            }
         }
         setOnDecorationChangeListener { text, _ ->
             if (!focused) {
@@ -206,6 +261,7 @@ fun ComposeRCE(
     }
 
     LaunchedEffect(html) {
+        delay(500)
         if (html != rceTextEditor.getHtml()) {
             rceTextEditor.applyHtml(html)
         }
@@ -257,5 +313,17 @@ fun ComposeRCE(
             Divider()
             RCEControls(rceState, onActionClick = onActionClick, onColorClick = onColorClick)
         }
+    }
+}
+
+private class RCECursorPositionInterface(
+    val onCursorPositionChangeCallback: (Float) -> Unit
+) {
+    @JavascriptInterface
+    fun onCursorPositionChanged(y: Float) {
+        this.onCursorPositionChangeCallback(y)
+    }
+    companion object {
+        const val NAME = "RCECursorPositionInterface"
     }
 }

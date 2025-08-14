@@ -1088,7 +1088,7 @@
     <string name="gradeAfterPosting">投稿後の評定</string>
     <string name="gradeOverride">評定上書き</string>
     <string name="currentGrade">現在の評定 </string>
-    <string name="opensInCanvasStudent">Canvas受講者内で開く</string>
+    <string name="opensInCanvasApp">Canvasアプリ内で開く</string>
     <string name="tab_student_view">受講者ビュー</string>
 
 
@@ -1447,9 +1447,9 @@
     <string name="offline_content_storage">保管</string>
     <string name="offline_content_storage_info">%s / %s を使用</string>
     <string name="offline_content_other">その他アプリ</string>
-    <string name="offline_content_canvas_student">Canvas 受講者</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">残り</string>
-    <string name="offline_content_storage_info_a11y_description">ストレージ情報:%s / %s 使用済み、その他アプリ %d%%、Canvas 受講者 %d%%、残り %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">ストレージ情報:%s / %s 使用済み、その他アプリ %d%%、Canvas %d%%、残り %d%%</string>
     <string name="offline_content_all_courses">すべてのコース</string>
     <string name="offline_content_sync">同期化</string>
     <string name="offline_content_selected">%d が選択されました</string>
@@ -1761,7 +1761,7 @@
     <string name="studentOrTeacherTitle">受講者と教員のどちらですか？</string>
     <string name="studentOrTeacherSubtitle">他のアプリのいずれかが、より適切かもしれません。1つタップしてPlay Storeにアクセスする</string>
     <string name="studentApp">受講者</string>
-    <string name="canvasStudentApp">Canvas 受講者</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">教員</string>
     <string name="canvasTeacherApp">Canvas 教員</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1799,7 +1799,7 @@
     <string name="addStudentSuccessfull">学生が正常に追加されました</string>
     <string name="addStudentTitle">次を使って受講者を追加します&#8230;</string>
     <string name="addStudentQrCodeTitle">QR コード</string>
-    <string name="addStudentQrCodeExplanation">受講生はモバイルデバイスのCanvas Studentアプリを使用してQRコードを生成できます</string>
+    <string name="addStudentQrCodeExplanationCanvas">受講生はモバイルデバイスのCanvasアプリを使用してQRコードを生成できます</string>
     <string name="addStudentPairingCodeTitle">ペアリングコード</string>
     <string name="addStudentPairingCodeExplanation">受講者はCanvas Webサイトからペアリングコードを取得できます</string>
     <string name="pairingCodeDialogTitle">受講者を追加</string>
@@ -1808,9 +1808,9 @@
     <string name="pairingCodeDialogNegativeButton">キャンセル</string>
     <string name="pairingCodeDialogPositiveButton">OK</string>
     <string name="pairingCodeDialogError">コードが間違っているか、期限が切れています。</string>
-    <string name="qrPairingTitle">Open Canvas受講者</string>
-    <string name="qrPairingDescription">続行するには、受講生のCanvas Studentアプリを開く必要があります。メインメニュー > [設定] > [オブザーバーとのペアリング]に移動し、そこに表示されるQRコードをスキャンしてください。</string>
-    <string name="qrCodePairingPrompt">Canvas Student からペアになる QR コードをスキャnnsuru</string>
+    <string name="qrPairingTitleCanvas">Canvasアプリを開く</string>
+    <string name="qrPairingDescriptionCanvas">続行するには、受講者のCanvasアプリを開く必要があります。メインメニュー > [設定] > [オブザーバーとのペアリング]に移動し、そこに表示されるQRコードをスキャンしてください。</string>
+    <string name="qrCodePairingPromptCanvas">Canvasアプリ からペアになる QR コードをスキャンする</string>
     <string name="a11y_addStudentContentDescription">受講者を追加</string>
     <string name="qrPairingErrorTitle">期限切れのQRコード</string>
     <string name="qrPairingErrorDescription">スキャンしたQRコードの有効期限が切れている可能性があります。受講者のデバイスでコードを更新して、もう一度やり直してください。</string>
@@ -2036,4 +2036,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">評定を表示するには、アプリでアカウントにログインしてください。</string>
     <string name="widgetSingleGradeSelectCourse">コースを選択しましょう</string>
     <string name="widgetGradesErrorLoadingCourses">コースの読み込み中にエラーが発生しました。</string>
+    <string name="settingsSwitchExperience">Canvas Career に切り替える</string>
 </resources>

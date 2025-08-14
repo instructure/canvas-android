@@ -64,7 +64,7 @@ class QuizE2ETest: TeacherTest() {
         Log.d(ASSERTION_TAG, "Assert that there is no quiz displayed on the page.")
         quizListPage.assertDisplaysNoQuizzesView()
 
-        Log.d(PREPARATION_TAG, "Seed two quizzes for the '${course.name}' course. Also, seed a question into both the quizzes and publish them.")
+        Log.d(PREPARATION_TAG, "Seed two quizzes for the '${course.name}' course. Also, seed a question into both the quizzes (by default, the quizzes will be unpublished).")
         val testQuizList = seedQuizzes(courseId = course.id, quizzes = 2, withDescription = true, dueAt = 3.days.fromNow.iso8601, teacherToken = teacher.token, published = false)
         seedQuizQuestion(courseId = course.id, quizId = testQuizList.quizList[0].id, teacherToken = teacher.token)
         seedQuizQuestion(courseId = course.id, quizId = testQuizList.quizList[1].id, teacherToken = teacher.token)
@@ -102,7 +102,7 @@ class QuizE2ETest: TeacherTest() {
         quizDetailsPage.assertQuizPublished()
 
         Log.d(PREPARATION_TAG, "Submit the '${firstQuiz.title}' quiz.")
-        seedQuizSubmission(courseId = course.id, quizId = testQuizList.quizList[0].id, studentToken = student.token)
+        seedQuizSubmission(courseId = course.id, quizId = firstQuiz.id, studentToken = student.token)
 
         Log.d(ASSERTION_TAG, "Refresh the page. Assert that it needs grading because of the previous submission.")
         quizListPage.refresh()
