@@ -13,22 +13,19 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.compose.modifiers
+package com.instructure.horizon.features.learn.programs
 
-import androidx.compose.ui.Modifier
+import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
 
-fun Modifier.conditional(condition: Boolean, modifier: Modifier.() -> Modifier): Modifier {
-    return if (condition) {
-        then(modifier(Modifier))
-    } else {
-        this
-    }
-}
+data class ProgramDetailsUiState(
+    val programName: String,
+    val progress: Double,
+    val description: String,
+    val tags: List<ProgramDetailTag> = emptyList(),
+    val programProgressState: ProgramProgressState = ProgramProgressState(courses = emptyList()),
+)
 
-fun <T> Modifier.ifNotNull(value: T?, modifier: Modifier.(T) -> Modifier): Modifier {
-    return if (value != null) {
-        then(modifier(Modifier, value))
-    } else {
-        this
-    }
-}
+data class ProgramDetailTag(
+    val name: String,
+    val iconRes: Int? = null,
+)
