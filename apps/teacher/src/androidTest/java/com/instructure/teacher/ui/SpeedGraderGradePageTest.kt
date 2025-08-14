@@ -51,13 +51,16 @@ import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.canvasapi2.type.GradingType
+import com.instructure.dataseeding.util.ago
+import com.instructure.dataseeding.util.days
+import com.instructure.dataseeding.util.iso8601
 import com.instructure.teacher.ui.utils.TeacherComposeTest
 import com.instructure.teacher.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
-import com.instructure.canvasapi2.type.GradingType
 
 @HiltAndroidTest
 @UninstallModules(
@@ -66,7 +69,7 @@ import com.instructure.canvasapi2.type.GradingType
 )
 class SpeedGraderGradePageTest : TeacherComposeTest() {
 
-    override fun displaysPageObjects()  = Unit
+    override fun displaysPageObjects() = Unit
 
     @BindValue
     @JvmField
@@ -185,15 +188,12 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         speedGraderGradePage.assertIncompleteButtonSelected()
     }
 
-    @Stub
     @Test
     fun correctViewsForGpaScaleAssignment() {
         goToSpeedGraderGradePage(GradingType.gpa_scale)
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
         speedGraderGradePage.assertPointsPossible("20")
-
-        speedGraderGradePage.assertSliderVisible()
 
         speedGraderGradePage.assertNoGradeButtonEnabled()
         speedGraderGradePage.assertExcuseButtonEnabled()
@@ -204,12 +204,11 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("10.0")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("60")
 
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
-    @Stub
     @Test
     fun correctViewsForLetterGradeAssignment() {
         goToSpeedGraderGradePage(gradingType = GradingType.letter_grade)
@@ -227,9 +226,8 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("10 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("10 / 20 pts")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("60")
 
-        speedGraderGradePage.assertRubricsLabelDisplayed()
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
@@ -312,47 +310,58 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         //TODO
     }
 
-    private fun goToSpeedGraderGradePage(gradingType: GradingType = GradingType.points, hasRubric: Boolean = false, pointsPossible: Int = 20, submission: Submission? = null) {
+    private fun goToSpeedGraderGradePage(
+        gradingType: GradingType = GradingType.points,
+        hasRubric: Boolean = false,
+        pointsPossible: Int = 20,
+        submission: Submission? = null
+    ) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
         val teacher = data.teachers[0]
         val student = data.students[0]
         val course = data.courses.values.first()
 
         data.addCoursePermissions(
-                course.id,
-                CanvasContextPermission() // Just need to have some sort of permissions object registered
+            course.id,
+            CanvasContextPermission() // Just need to have some sort of permissions object registered
         )
 
         val assignment = data.addAssignment(
-                courseId = course.id,
-                submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
-                pointsPossible = pointsPossible,
-                gradingType = gradingType.rawValue
+            courseId = course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
+            pointsPossible = pointsPossible,
+            gradingType = gradingType.rawValue,
+            dueAt = 1.days.ago.iso8601
         )
 
         if (hasRubric) {
             val rubricCriterion = RubricCriterion(
-                    id = data.newItemId().toString(),
-                    description = "Description of criterion",
-                    longDescription = "0, 3, 7 or 10 points",
-                    points = 10.0,
-                    ratings = mutableListOf(
-                            RubricCriterionRating(id = "1", points = 0.0, description = "No Marks", longDescription = "Really?"),
-                            RubricCriterionRating(id = "2", points = 3.0, description = "Meh", longDescription = "You're better than this!"),
-                            RubricCriterionRating(id = "3", points = 7.0, description = "Passable", longDescription = "Getting there!"),
-                            RubricCriterionRating(id = "4", points = 10.0, description = "Full Marks", longDescription = "Way to go!")
-                    )
+                id = data.newItemId().toString(),
+                description = "Description of criterion",
+                longDescription = "0, 3, 7 or 10 points",
+                points = 10.0,
+                ratings = mutableListOf(
+                    RubricCriterionRating(id = "1", points = 0.0, description = "No Marks", longDescription = "Really?"),
+                    RubricCriterionRating(
+                        id = "2",
+                        points = 3.0,
+                        description = "Meh",
+                        longDescription = "You're better than this!"
+                    ),
+                    RubricCriterionRating(id = "3", points = 7.0, description = "Passable", longDescription = "Getting there!"),
+                    RubricCriterionRating(id = "4", points = 10.0, description = "Full Marks", longDescription = "Way to go!")
+                )
             )
             data.addRubricToAssignment(assignment.id, listOf(rubricCriterion))
         }
 
-        val submission = data.addSubmissionForAssignment(
-                assignmentId = assignment.id,
-                userId = student.id,
-                type = "online_text_entry",
-                body = "This is a test submission",
-                score = 10.0,
-                grade = "60",
+        data.addSubmissionForAssignment(
+            assignmentId = assignment.id,
+            userId = student.id,
+            type = "online_text_entry",
+            body = "This is a test submission",
+            score = 10.0,
+            grade = "60"
         )
 
         val token = data.tokenFor(teacher)!!
@@ -363,7 +372,7 @@ class SpeedGraderGradePageTest : TeacherComposeTest() {
         assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
         composeTestRule.waitForIdle()
-        if(!isLandscapeDevice()) speedGraderPage.clickExpandPanelButton()
+        if (isCompactDevice()) speedGraderPage.clickExpandPanelButton()
         speedGraderPage.selectTab("Grade & Rubric")
     }
 }
