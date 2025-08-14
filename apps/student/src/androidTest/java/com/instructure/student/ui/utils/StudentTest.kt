@@ -158,7 +158,7 @@ abstract class StudentTest : CanvasTest() {
     val pickerSubmissionUploadPage = PickerSubmissionUploadPage()
     val profileSettingsPage = ProfileSettingsPage()
     val qrLoginPage = QRLoginPage()
-    val quizListPage = QuizListPage()
+    val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
     val quizTakingPage = QuizTakingPage()
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()
