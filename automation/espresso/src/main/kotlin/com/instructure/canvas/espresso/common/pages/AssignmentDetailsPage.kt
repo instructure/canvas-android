@@ -97,7 +97,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertAssignmentDetails(assignment: AssignmentApiModel) {
-        onView(withId(R.id.assignmentName)).assertHasText(assignment.name)
+        waitForView(withId(R.id.assignmentName)).assertHasText(assignment.name)
         onView(allOf(withId(R.id.points), isDisplayed()))
             .check(matches(containsTextCaseInsensitive(assignment.pointsPossible?.toInt().toString())))
     }
