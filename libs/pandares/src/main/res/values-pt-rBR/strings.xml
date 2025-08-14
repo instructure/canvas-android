@@ -706,7 +706,7 @@
     <string name="searchGuides">Pesquisar no Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">Encontrar respostas para perguntas comuns</string>
-    <string name="reportProblem">Relatar um problema</string>
+    <string name="reportProblem">Reportar um problema</string>
     <string name="reportProblemDetails">Caso o aplicativo porte-se mal, deixe-nos saber</string>
     <string name="requestFeature">Solicitar uma funcionalidade</string>
     <string name="requestFeatureDetails">Tem uma ideia para melhorar o aplicativo?</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Nota após postar</string>
     <string name="gradeOverride">Substituição da nota</string>
     <string name="currentGrade">Nota atual </string>
-    <string name="opensInCanvasStudent">Abrir no Canvas Student</string>
+    <string name="opensInCanvasApp">Abre no aplicativo Canvas</string>
     <string name="tab_student_view">Visualização do aluno</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Armazenamento</string>
     <string name="offline_content_storage_info">%s de %s usado</string>
     <string name="offline_content_other">Outros aplicativos</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Restante</string>
-    <string name="offline_content_storage_info_a11y_description">Informações de armazenamento %s de %s usados, Outros aplicativos %d%%, aluno do Canvas %d%%, Restante %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informações de armazenamento %s de %s usado, outros aplicativos %d%%, Canvas %d%%, restante %d%%</string>
     <string name="offline_content_all_courses">Todos os cursos</string>
     <string name="offline_content_sync">Sincronizar</string>
     <string name="offline_content_selected">%d Selecionado(s)</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Você é um aluno ou professor?</string>
     <string name="studentOrTeacherSubtitle">Um dos nossos outros aplicativos pode ser uma escolha melhor. Toque em um para acessar a Play Store</string>
     <string name="studentApp">ALUNO</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">PROFESSOR</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">+99</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Aluno adicionado com sucesso</string>
     <string name="addStudentTitle">Adicionar aluno com...</string>
     <string name="addStudentQrCodeTitle">Código QR</string>
-    <string name="addStudentQrCodeExplanation">Os alunos podem gerar um código QR usando o aplicativo Canvas Student em seu dispositivo móvel</string>
+    <string name="addStudentQrCodeExplanationCanvas">Os alunos podem gerar um código QR usando o aplicativo Canvas em seu dispositivo móvel</string>
     <string name="addStudentPairingCodeTitle">Código de emparelhamento</string>
     <string name="addStudentPairingCodeExplanation">Os alunos podem obter um código de emparelhamento no site do Canvas</string>
     <string name="pairingCodeDialogTitle">Adicionar Estudante</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancelar</string>
     <string name="pairingCodeDialogPositiveButton">OK</string>
     <string name="pairingCodeDialogError">Seu código está incorreto ou expirado.</string>
-    <string name="qrPairingTitle">Abrir Canvas Student</string>
-    <string name="qrPairingDescription">Você precisará abrir o aplicativo Canvas Student de seu aluno para continuar. Vá para o Menu Principal > Configurações > Emparelhar com o Observer e escaneie o código QR que você vê lá.</string>
-    <string name="qrCodePairingPrompt">Digitalize um código QR do Canvas Student para emparelhar</string>
+    <string name="qrPairingTitleCanvas">Abrir o aplicativo Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Você precisará abrir o aplicativo Canvas do seu aluno para continuar. Vá para o Menu Principal > Configurações > Emparelhar com o Observador e escaneie o código QR que você vê lá.</string>
+    <string name="qrCodePairingPromptCanvas">Escanear um código QR do aplicativo Canvas para emparelhar</string>
     <string name="a11y_addStudentContentDescription">Adicionar Estudante</string>
     <string name="qrPairingErrorTitle">Código QR expirado</string>
     <string name="qrPairingErrorDescription">O código QR que você escaneou pode ter expirado. Atualize o código no dispositivo do aluno e tente novamente.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver suas notas, faça login em sua conta no aplicativo.</string>
     <string name="widgetSingleGradeSelectCourse">Vamos escolher um curso</string>
     <string name="widgetGradesErrorLoadingCourses">Ocorreu um erro ao carregar os cursos.</string>
+    <string name="settingsSwitchExperience">Mudar para o Canvas Career</string>
 </resources>

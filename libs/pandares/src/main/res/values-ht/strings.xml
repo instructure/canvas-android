@@ -706,7 +706,7 @@
     <string name="searchGuides">Chèche nan Gid Canvas</string>
     <string name="canvasGuides">Gid Canvas</string>
     <string name="searchGuidesDetails">Jwenn repons a kesyon yo poze souvan</string>
-    <string name="reportProblem">Rapòte yon Pwoblèm</string>
+    <string name="reportProblem">Rapòte yon pwoblèm</string>
     <string name="reportProblemDetails">Si app la konpòte li mal, fè nou konnen</string>
     <string name="requestFeature">Mande yon Fonksyon</string>
     <string name="requestFeatureDetails">Ou gen yon ide de kijan pou amelyore app la?</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Nòt aprè piblikasyon</string>
     <string name="gradeOverride">Ranplasman nòt</string>
     <string name="currentGrade">Nòt aktyèl</string>
-    <string name="opensInCanvasStudent">Ouvri nan Canvas Student</string>
+    <string name="opensInCanvasApp">Ouvri nan aplikasyon Canvas</string>
     <string name="tab_student_view">Afichaj Elèv</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Estokaj</string>
     <string name="offline_content_storage_info">%s sou %s Itilize</string>
     <string name="offline_content_other">Lòt Aplikasyon</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Rete</string>
-    <string name="offline_content_storage_info_a11y_description">Enfo sou Estokaj: %s sou %s itilize, Lòt Aplikasyon %d%%, Canvas Student %d%%, Rete %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Enfo sou Estokaj: %s sou %s Itilizew, Lòt Aplikasyon %d%%, Canvas %d%%, Rete %d%%</string>
     <string name="offline_content_all_courses">Tout Kou</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Seleksyone</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Ou se pwofesè oswa elèv?</string>
     <string name="studentOrTeacherSubtitle">Yonn nan lòt aplikasyon nou yo kapab pi bon. Tape sou youn pou ka vite Play Store la</string>
     <string name="studentApp">ELÈV</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">PWOFESÈ</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Elèv ajoute avèk siksè</string>
     <string name="addStudentTitle">Ajoute elèv ak...</string>
     <string name="addStudentQrCodeTitle">Kòd QR</string>
-    <string name="addStudentQrCodeExplanation">Elèv yo ka jenere yon kòd QR avèk aplikasyon Canvas Student lan sou pòtab yo</string>
+    <string name="addStudentQrCodeExplanationCanvas">Elèv yo ka jenere yon kòd QR avèk aplikasyon Canvas la sou pòtab yo</string>
     <string name="addStudentPairingCodeTitle">Kòd Kouplaj</string>
     <string name="addStudentPairingCodeExplanation">Elèv yo ka jwenn yon kòd kouplaj sou sit entènèt Canvas la</string>
     <string name="pairingCodeDialogTitle">Ajoute Elèv</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Anile</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Kòd ou a enkòrèk oswa li ekspire.</string>
-    <string name="qrPairingTitle">Ouvri Canvas Student</string>
-    <string name="qrPairingDescription">Ou dwe ouvri aplikasyon Canvas Student elèv ou a pou w ka kontinye. Ale nan Meni Prensipal > Paramèt > Asosye ak Obsèvatè a epi eskane kòd QR ou wè a.</string>
-    <string name="qrCodePairingPrompt">Eskane yon kòd QR sou Canvas Student pou w ka asosye yo</string>
+    <string name="qrPairingTitleCanvas">Ouvri aplikasyon Canvas la</string>
+    <string name="qrPairingDescriptionCanvas">Ou\ dwe ouvri aplikasyon Canvas\ student ou a pou w  ka kontinye. Ale nan Meni Prensipal > Paramèt > Asosye ak Obsèvatè a epi eskane kòd QR ou wè a.</string>
+    <string name="qrCodePairingPromptCanvas">Eskane yon kòd QR sou aplikasyon Canvas la pou ka asosye yo</string>
     <string name="a11y_addStudentContentDescription">Ajoute Elèv</string>
     <string name="qrPairingErrorTitle">Kòd QR ekspire</string>
     <string name="qrPairingErrorDescription">Ta sanble kòd QR ou eskane a ekspire. Aktyalize kòd la sou aparèy elèv la epi eseye ankò.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Pou w wè nòt ou yo, tanpri konekte sou kont ou nan aplikasyon an.</string>
     <string name="widgetSingleGradeSelectCourse">An n chwazi yon kou</string>
     <string name="widgetGradesErrorLoadingCourses">Yon erè fèt pandan chajman kou yo:</string>
+    <string name="settingsSwitchExperience">Chanje a Karyè Canvas</string>
 </resources>

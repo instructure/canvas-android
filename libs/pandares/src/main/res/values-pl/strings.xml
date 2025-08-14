@@ -1142,7 +1142,7 @@
     <string name="gradeAfterPosting">Ocena po opublikowaniu</string>
     <string name="gradeOverride">Nadpisująca ocena</string>
     <string name="currentGrade">Bieżąca ocena</string>
-    <string name="opensInCanvasStudent">Otwiera się w Canvas Student</string>
+    <string name="opensInCanvasApp">Otwórz w aplikacji Canvas</string>
     <string name="tab_student_view">Widok uczestnika</string>
 
 
@@ -1516,9 +1516,9 @@
     <string name="offline_content_storage">Magazyn danych</string>
     <string name="offline_content_storage_info">%s z %s użytych</string>
     <string name="offline_content_other">Inne aplikacje</string>
-    <string name="offline_content_canvas_student">Uczestnik Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Pozostało</string>
-    <string name="offline_content_storage_info_a11y_description">Informacje o pamięci: Użycie %s z %s, inne aplikacje %d%%, uczestnik Canvas %d%%, pozostało %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informacje o pamięci: Użycie %s z %s, inne aplikacje %d%%, Canvas %d%%, pozostało %d%%</string>
     <string name="offline_content_all_courses">Wszystkie kursy</string>
     <string name="offline_content_sync">Synchronizacja</string>
     <string name="offline_content_selected">%d wybrano</string>
@@ -1854,7 +1854,7 @@
     <string name="studentOrTeacherTitle">Jesteś uczestnikiem czy nauczycielem?</string>
     <string name="studentOrTeacherSubtitle">Jedna z innych naszych aplikacji może być bardziej przydatna. Stuknij jedną z nich, aby odwiedzić sklep Play Store.</string>
     <string name="studentApp">UCZESTNIK</string>
-    <string name="canvasStudentApp">Uczestnik Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">NAUCZYCIEL</string>
     <string name="canvasTeacherApp">Nauczyciel Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1892,7 +1892,7 @@
     <string name="addStudentSuccessfull">Pomyślnie dodano uczestnika</string>
     <string name="addStudentTitle">Dodaj uczestnika z...</string>
     <string name="addStudentQrCodeTitle">Kod QR</string>
-    <string name="addStudentQrCodeExplanation">Uczestnicy mogą wygenerować kod QR za pomocą aplikacji Canvas Student na smartfonie</string>
+    <string name="addStudentQrCodeExplanationCanvas">Uczestnicy mogą wygenerować kod QR za pomocą aplikacji Canvas na urządzeniu mobilnym</string>
     <string name="addStudentPairingCodeTitle">Kod parowania</string>
     <string name="addStudentPairingCodeExplanation">Uczestnicy mogą otrzymać kod parowania za pomocą witryny Canvas</string>
     <string name="pairingCodeDialogTitle">Dodaj uczestnika</string>
@@ -1901,9 +1901,9 @@
     <string name="pairingCodeDialogNegativeButton">Anuluj</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Twój kod jest nieprawidłowy lub wygasł.</string>
-    <string name="qrPairingTitle">Otwórz aplikację Canvas Student</string>
-    <string name="qrPairingDescription">Aby kontynuować, należy otworzyć aplikację Canvas Student uczestnika. Przejdź do Menu głównego > Ustawienia > Paruj z obserwującym i zeskanuj podany kod QR.</string>
-    <string name="qrCodePairingPrompt">Aby sparować, zeskanuj kod QR z Canvas Student.</string>
+    <string name="qrPairingTitleCanvas">Otwórz aplikację Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Aby kontynuować, należy otworzyć aplikację Canvas uczestnika. Przejdź do Menu głównego > Ustawienia > Paruj z obserwującym i zeskanuj podany kod QR.</string>
+    <string name="qrCodePairingPromptCanvas">Aby sparować, zeskanuj kod QR z Canvas.</string>
     <string name="a11y_addStudentContentDescription">Dodaj uczestnika</string>
     <string name="qrPairingErrorTitle">Nieważny kod QR</string>
     <string name="qrPairingErrorDescription">Kod QR, który zeskanowano, mógł już wygasnąć. Odśwież kod na urządzeniu uczestnika i spróbuj ponownie.</string>
@@ -2132,4 +2132,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Aby wyświetlić oceny, zaloguj się do konta w aplikacji.</string>
     <string name="widgetSingleGradeSelectCourse">Wybierzmy kurs</string>
     <string name="widgetGradesErrorLoadingCourses">Wystąpił błąd podczas wczytywania kursów.</string>
+    <string name="settingsSwitchExperience">Przełącz na Canvas Career</string>
 </resources>
