@@ -18,18 +18,16 @@ package com.instructure.horizon.features.aiassistant.chat
 
 import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessage
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessagePrompt
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistMessageRole
 import com.instructure.horizon.features.aiassistant.common.model.toDisplayText
-import com.instructure.horizon.features.aiassistant.navigation.AiAssistNavigationTypeMap
-import com.instructure.horizon.features.aiassistant.navigation.AiAssistRoute
+import com.instructure.horizon.features.aiassistant.common.model.toMap
 import com.instructure.pine.type.MessageInput
 import com.instructure.pine.type.Role
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -43,9 +41,9 @@ import javax.inject.Inject
 class AiAssistChatViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val repository: AiAssistChatRepository,
-    savedStateHandle: SavedStateHandle
+    aiAssistContextProvider: AiAssistContextProvider,
 ): ViewModel() {
-    private val aiContext = savedStateHandle.toRoute<AiAssistRoute.AiAssistChat>(AiAssistNavigationTypeMap).aiContext
+    private val aiContext = aiAssistContextProvider.aiAssistContext
 
     private val _uiState = MutableStateFlow(AiAssistChatUiState(
         onInputTextChanged = ::onTextInputChanged,
@@ -141,7 +139,8 @@ class AiAssistChatViewModel @Inject constructor(
     }
 
     private suspend fun answerPrompt(prompt: String): String {
-        return if (uiState.value.aiContext.contextSources.isNotEmpty()) {
+        // TODO: Pine API does not work correctly so we fall back to cedar with all requests
+        return if(false){ // if (uiState.value.aiContext.contextSources.isNotEmpty()) {
             repository.answerPrompt(
                 messages = uiState.value.messages.map {
                     MessageInput(
@@ -153,7 +152,7 @@ class AiAssistChatViewModel @Inject constructor(
                         text = it.prompt.toDisplayText(context)
                     )
                 },
-                context = uiState.value.aiContext.contextSources
+                context = uiState.value.aiContext.contextSources.toMap()
             )
         } else {
             repository.answerPrompt(prompt, uiState.value.aiContext.contextString)

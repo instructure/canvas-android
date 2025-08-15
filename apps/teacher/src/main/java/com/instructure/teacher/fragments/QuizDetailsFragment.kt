@@ -36,15 +36,17 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_EDIT_QUIZ_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
@@ -56,7 +58,6 @@ import com.instructure.pandautils.utils.withArgs
 import com.instructure.pandautils.views.CanvasWebView
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.databinding.FragmentQuizDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -65,7 +66,6 @@ import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.QuizDetailsPresenterFactory
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.presenters.QuizDetailsPresenter
 import com.instructure.teacher.router.RouteMatcher
 import com.instructure.teacher.utils.anonymousSubmissionsDisplayable
@@ -156,14 +156,11 @@ class QuizDetailsFragment : BasePresenterFragment<
                 }
 
                 R.id.menu_speedGrader -> {
-                    SpeedGraderActivity.createIntent(
-                        requireContext(),
-                        course.id,
-                        quiz._assignment?.id ?: quizId,
-                        -1
-                    ).let {
-                        startActivity(it)
-                    }
+                    val bundle = SpeedGraderFragment.makeBundle(
+                        courseId = course.id,
+                        assignmentId = quiz.assignmentId
+                    )
+                    RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
                 }
             }
         }

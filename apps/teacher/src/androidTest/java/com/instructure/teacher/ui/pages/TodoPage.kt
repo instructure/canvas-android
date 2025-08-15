@@ -50,10 +50,10 @@ class TodoPage : BasePage() {
      *
      * @param courseName The name of the course associated with the To Do element.
      */
-    fun assertTodoElementDetailsDisplayed(courseName: String) {
-        onView(withId(R.id.toDoCourse) + withText(courseName)).assertDisplayed()
-        onView(withId(R.id.dueDate)).assertDisplayed()
-        onView(withId(R.id.toDoTitle)).assertDisplayed()
+    fun assertTodoElementDetailsDisplayed(courseName: String, todoTitle: String) {
+        onView(withId(R.id.toDoCourse) + withText(courseName) + hasSibling(withId(R.id.toDoTitle) + withText(todoTitle))).assertDisplayed()
+        onView(withId(R.id.dueDate) + hasSibling(withId(R.id.toDoTitle) + withText(todoTitle))).assertDisplayed()
+        onView(withId(R.id.toDoTitle) + withText(todoTitle)).assertDisplayed()
     }
 
     /**

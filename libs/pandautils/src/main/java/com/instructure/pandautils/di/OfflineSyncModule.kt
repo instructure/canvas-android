@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
@@ -46,6 +47,7 @@ import com.instructure.pandautils.features.offline.sync.StudioSync
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
@@ -144,7 +146,9 @@ class OfflineSyncModule {
         fileFolderApi: FileFolderAPI.FilesFoldersInterface,
         pageDao: PageDao,
         firebaseCrashlytics: FirebaseCrashlytics,
-        fileSync: FileSync
+        fileSync: FileSync,
+        customGradeStatusDao: CustomGradeStatusDao,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): CourseSync {
         return CourseSync(
             courseApi,
@@ -180,7 +184,9 @@ class OfflineSyncModule {
             fileFolderApi,
             pageDao,
             firebaseCrashlytics,
-            fileSync
+            fileSync,
+            customGradeStatusDao,
+            customGradeStatusesManager
         )
     }
 

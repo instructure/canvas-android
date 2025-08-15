@@ -1,5 +1,6 @@
 package com.instructure.pandautils.features.assignments.list
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
@@ -38,6 +39,7 @@ data class AssignmentListMenuOverFlowItem(
 data class AssignmentGroupItemState(
     val course: Course,
     val assignment: Assignment,
+    val customStatuses: List<CustomGradeStatusesQuery.Node>,
     val showPublishStateIcon: Boolean = false,
     val showClosedState: Boolean = false,
     val showDueDate: Boolean = false,

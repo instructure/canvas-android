@@ -276,7 +276,11 @@ fun waitForMatcherWithRefreshes(target: Matcher<View>) {
  * Assumes that a SwipeRefreshLayout element is visible.
  */
 fun refresh() {
-    val swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
+    var swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
+    if(swipeRefreshLayoutMatcher == null) {
+        Thread.sleep(5000)
+        swipeRefreshLayoutMatcher = getSwipeRefreshLayoutMatcher()
+    }
     onView(swipeRefreshLayoutMatcher)
         .perform(withCustomConstraints(ViewActions.swipeDown(), ViewMatchers.isDisplayingAtLeast(5)))
 }

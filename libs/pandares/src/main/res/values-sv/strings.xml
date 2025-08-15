@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Bedöm efter publicering</string>
     <string name="gradeOverride">Åsidosättning av omdöme</string>
     <string name="currentGrade">Aktuell omdöme</string>
-    <string name="opensInCanvasStudent">Öppnas i Canvas Student</string>
+    <string name="opensInCanvasApp">Öppnas i Canvas-app</string>
     <string name="tab_student_view">Studentens vy</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Lagring</string>
     <string name="offline_content_storage_info">%s av %s har använts</string>
     <string name="offline_content_other">Andra appar</string>
-    <string name="offline_content_canvas_student">Canvas-student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Återstående</string>
-    <string name="offline_content_storage_info_a11y_description">Lagringsinformation: %s av %s använda, andra appar %d%%, Canvas Student %d%%, kvar %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Lagringsinformation: %s av %s använda, övriga appar %d%%, Canvas %d%%, kvar %d%%</string>
     <string name="offline_content_all_courses">Alla kurser</string>
     <string name="offline_content_sync">Synkronisera</string>
     <string name="offline_content_selected">%d Vald</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Är du student eller lärare?</string>
     <string name="studentOrTeacherSubtitle">Någon av våra andra appar kan vara bättre lämpade. Tryck på en för att besöka Play-butiken</string>
     <string name="studentApp">STUDENT</string>
-    <string name="canvasStudentApp">Canvas-student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">LÄRARE</string>
     <string name="canvasTeacherApp">Canvas-lärare</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Student lades till</string>
     <string name="addStudentTitle">Lägg till student med...</string>
     <string name="addStudentQrCodeTitle">QR-kod</string>
-    <string name="addStudentQrCodeExplanation">Studenter kan generera en QR-kod i Canvas-studentapp på sin mobila enhet.</string>
+    <string name="addStudentQrCodeExplanationCanvas">Studenter kan generera en QR-kod i Canvas-appen på sin mobila enhet.</string>
     <string name="addStudentPairingCodeTitle">Parkopplingskod</string>
     <string name="addStudentPairingCodeExplanation">Studenter kan få en parkopplingskod genom att använda Canvas Student-appen i sina mobiler.</string>
     <string name="pairingCodeDialogTitle">Lägg till student</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Avbryt</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Din kod är fel eller har gått ut.</string>
-    <string name="qrPairingTitle">Öppna Canvas Student</string>
-    <string name="qrPairingDescription">Du måste öppna din students Canvas-studentapp för att fortsätta. Gå till Huvudmenyn > Inställningar > Parkoppla med observatör och skanna QR-koden du ser där.</string>
-    <string name="qrCodePairingPrompt">Skanna en QR-kod från Canvas Student för att parkoppla</string>
+    <string name="qrPairingTitleCanvas">Öppna Canvas-app</string>
+    <string name="qrPairingDescriptionCanvas">Du måste öppna din students Canvas-app för att fortsätta. Gå till Huvudmenyn > Inställningar > Parkoppla med observatör och skanna QR-koden du ser där.</string>
+    <string name="qrCodePairingPromptCanvas">Skanna en QR-kod från Canvas-appen för att parkoppla</string>
     <string name="a11y_addStudentContentDescription">Lägg till student</string>
     <string name="qrPairingErrorTitle">Utgången QR-kod</string>
     <string name="qrPairingErrorDescription">QR-koden du skannade kan har gått ut. Uppdatera koden i studentens enhet och försök igen.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Om du vill se dina att omdömen loggar du in på ditt konto i appen.</string>
     <string name="widgetSingleGradeSelectCourse">Nu väljer vi en kurs.</string>
     <string name="widgetGradesErrorLoadingCourses">Ett fel inträffade under inläsning av kurser.</string>
+    <string name="settingsSwitchExperience">Byt till Canvas Career</string>
 </resources>

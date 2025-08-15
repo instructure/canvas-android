@@ -154,7 +154,9 @@ class SettingsViewModel @Inject constructor(
 
             is SettingsAction.ItemClicked -> {
                 viewModelScope.launch {
-                    if (networkStateProvider.isOnline() || action.settingsItem.availableOffline) {
+                    if (action.settingsItem == SettingsItem.SWITCH_EXPERIENCE) {
+                        switchToCanvasCareer()
+                    } else if (networkStateProvider.isOnline() || action.settingsItem.availableOffline) {
                         _events.send(SettingsViewModelAction.Navigate(action.settingsItem))
                     } else {
                         _events.send(SettingsViewModelAction.ShowOfflineDialog)
@@ -205,5 +207,10 @@ class SettingsViewModel @Inject constructor(
             val state = if (enabled) InboxSignatureState.ENABLED else InboxSignatureState.DISABLED
             changeSettingsItemSubtitle(SettingsItem.INBOX_SIGNATURE, state.textRes!!)
         }
+    }
+
+    private fun switchToCanvasCareer() {
+        apiPrefs.canvasCareerView = true
+        _events.trySend(SettingsViewModelAction.RestartApp)
     }
 }

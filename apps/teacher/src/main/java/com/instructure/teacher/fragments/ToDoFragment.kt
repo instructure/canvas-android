@@ -24,17 +24,23 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getDrawableCompat
+import com.instructure.pandautils.utils.requestAccessibilityFocus
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
-import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.adapters.ToDoAdapter
 import com.instructure.teacher.databinding.FragmentTodoBinding
 import com.instructure.teacher.events.AssignmentGradedEvent
@@ -153,9 +159,9 @@ class ToDoFragment : BaseSyncFragment<ToDo, ToDoPresenter, ToDoView, ToDoViewHol
             showToast(R.string.toDoNoSubmissions)
             return
         }
-        val submissionIds = submissions.map { it.id }.toLongArray()
+        val submissionIds = submissions.map { if (RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2)) it.assigneeId else it.id }.toLongArray()
         val anonymousGrading = assignment.anonymousGrading || assignment.anonymousSubmissions
-        val bundle = SpeedGraderActivity.makeBundle(courseId = course.id, assignmentId = assignment.id, filteredSubmissionIds = submissionIds, anonymousGrading = anonymousGrading, selectedIdx = 0)
+        val bundle = SpeedGraderFragment.makeBundle(courseId = course.id, assignmentId = assignment.id, filteredSubmissionIds = submissionIds, anonymousGrading = anonymousGrading, selectedIdx = 0)
         RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
     }
 

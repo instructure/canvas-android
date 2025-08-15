@@ -90,7 +90,7 @@ class ManageOfflineContentPage : BasePage(R.id.manageOfflineContentPage) {
         onView(withId(R.id.storageInfo) + containsTextCaseInsensitive("Used")).assertDisplayed()
         onView(withId(R.id.progress) + withParent(withId(R.id.storageInfoContainer))).assertDisplayed()
         onView(withId(R.id.otherLabel) + withText(R.string.offline_content_other)).assertDisplayed()
-        onView(withId(R.id.canvasLabel) + withText(R.string.offline_content_canvas_student)).assertDisplayed()
+        onView(withId(R.id.canvasLabel) + withText(R.string.offline_content_canvas)).assertDisplayed()
         onView(withId(R.id.remainingLabel) + withText(R.string.offline_content_remaining)).assertDisplayed()
     }
 

@@ -25,7 +25,7 @@ data class AssignmentScoreItem(
     val status: AssignmentStatus,
     val pointsPossible: Double,
     val submissionCommentsCount: Int,
-    val lastScore: Double?,
+    val lastScore: String?,
     val dueDate: Date?
 ) {
     constructor(assignment: Assignment): this(
@@ -33,7 +33,7 @@ data class AssignmentScoreItem(
         name = assignment.name.orEmpty(),
         status = assignment.getStatus(),
         pointsPossible = assignment.pointsPossible,
-        lastScore = assignment.submission?.score,
+        lastScore = assignment.submission?.grade,
         submissionCommentsCount = assignment.lastGradedOrSubmittedSubmission?.submissionComments?.size ?: 0,
         dueDate = assignment.dueDate
     )

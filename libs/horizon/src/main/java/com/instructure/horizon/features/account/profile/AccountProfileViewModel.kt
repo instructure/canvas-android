@@ -214,7 +214,7 @@ class AccountProfileViewModel @Inject constructor(
                     screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.accountProfileUpdated)),
                 )
             }
-            notifyParent(uiState.value.fullNameInputState.value.text)
+            notifyParent(uiState.value.displayNameInputState.value.text)
         } catch {
             _uiState.update {
                 it.copy(

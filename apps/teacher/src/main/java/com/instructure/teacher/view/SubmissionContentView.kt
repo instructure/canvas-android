@@ -77,6 +77,22 @@ import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.binding.BindableSpinnerAdapter
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptItemViewModel
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
+import com.instructure.pandautils.features.speedgrader.content.AnonymousSubmissionContent
+import com.instructure.pandautils.features.speedgrader.content.DiscussionContent
+import com.instructure.pandautils.features.speedgrader.content.ExternalToolContent
+import com.instructure.pandautils.features.speedgrader.content.GradeableContent
+import com.instructure.pandautils.features.speedgrader.content.ImageContent
+import com.instructure.pandautils.features.speedgrader.content.MediaContent
+import com.instructure.pandautils.features.speedgrader.content.NoSubmissionContent
+import com.instructure.pandautils.features.speedgrader.content.NoneContent
+import com.instructure.pandautils.features.speedgrader.content.OnPaperContent
+import com.instructure.pandautils.features.speedgrader.content.OtherAttachmentContent
+import com.instructure.pandautils.features.speedgrader.content.PdfContent
+import com.instructure.pandautils.features.speedgrader.content.QuizContent
+import com.instructure.pandautils.features.speedgrader.content.StudentAnnotationContent
+import com.instructure.pandautils.features.speedgrader.content.TextContent
+import com.instructure.pandautils.features.speedgrader.content.UnsupportedContent
+import com.instructure.pandautils.features.speedgrader.content.UrlContent
 import com.instructure.pandautils.interfaces.ShareableFile
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.PermissionUtils
@@ -1065,38 +1081,6 @@ class AnnotationCommentDeleteAcknowledged(val annotationList: List<CanvaDocAnnot
 class TabSelectedEvent(val selectedTabIdx: Int)
 class UploadMediaCommentEvent(val file: File, val assignmentId: Long, val courseId: Long, val assigneeId: Long, val attemptId: Long?)
 
-
-sealed class GradeableContent
-object NoSubmissionContent : GradeableContent()
-object NoneContent : GradeableContent()
-class ExternalToolContent(val url: String) : GradeableContent()
-object OnPaperContent : GradeableContent()
-object UnsupportedContent : GradeableContent()
-class OtherAttachmentContent(val attachment: Attachment) : GradeableContent()
-class PdfContent(val url: String) : GradeableContent()
-class TextContent(val text: String) : GradeableContent()
-class ImageContent(val url: String, val contentType: String) : GradeableContent()
-class UrlContent(val url: String, val previewUrl: String?) : GradeableContent()
-class DiscussionContent(val previewUrl: String?) : GradeableContent()
-class StudentAnnotationContent(val submissionId: Long, val attempt: Long) : GradeableContent()
-object AnonymousSubmissionContent : GradeableContent()
-
 class MediaCommentDialogClosedEvent
 class AudioPermissionGrantedEvent(val assigneeId: Long)
 class VideoPermissionGrantedEvent(val assigneeId: Long)
-
-
-class QuizContent(
-    val courseId: Long,
-    val assignmentId: Long,
-    val studentId: Long,
-    val url: String,
-    val pendingReview: Boolean
-) : GradeableContent()
-
-class MediaContent(
-        val uri: Uri,
-        val contentType: String? = null,
-        val thumbnailUrl: String? = null,
-        val displayName: String? = null
-) : GradeableContent()

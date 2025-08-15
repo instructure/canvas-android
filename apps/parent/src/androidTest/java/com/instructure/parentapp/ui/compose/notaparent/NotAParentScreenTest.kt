@@ -22,6 +22,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -78,11 +79,11 @@ class NotAParentScreenTest {
         scrollToText("Are you a student or teacher?")
 
         composeTestRule.onNodeWithText("Are you a student or teacher?").performClick()
-        composeTestRule.onNodeWithText("STUDENT")
+        composeTestRule.onNodeWithContentDescription("Canvas")
             .performScrollTo()
             .assertIsDisplayed()
             .assertHasClickAction()
-        composeTestRule.onNodeWithText("TEACHER")
+        composeTestRule.onNodeWithContentDescription("Canvas Teacher")
             .performScrollTo()
             .assertIsDisplayed()
             .assertHasClickAction()
