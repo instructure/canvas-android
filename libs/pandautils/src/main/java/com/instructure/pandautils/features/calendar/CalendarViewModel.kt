@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.pandautils.utils.toLocalDateOrNull
@@ -289,7 +290,8 @@ class CalendarViewModel @Inject constructor(
                     iconRes = it.getIconForPlannerItem(),
                     name = it.plannable.title,
                     date = getDateForPlannerItem(it),
-                    status = getStatusForPlannerItem(it)
+                    status = getStatusForPlannerItem(it),
+                    tag = getTagForPlannerItem(it),
                 )
             } ?: emptyList()
 
@@ -360,6 +362,19 @@ class CalendarViewModel @Inject constructor(
 
                 else -> null
             }
+        } else {
+            null
+        }
+    }
+
+    private fun getTagForPlannerItem(plannerItem: PlannerItem): String? {
+        return if (plannerItem.plannable.subAssignmentTag == Const.REPLY_TO_TOPIC) {
+            context.getString(R.string.reply_to_topic)
+        } else if (plannerItem.plannable.subAssignmentTag == Const.REPLY_TO_ENTRY && plannerItem.plannableItemDetails?.replyRequiredCount != null) {
+            context.getString(
+                R.string.additional_replies,
+                plannerItem.plannableItemDetails?.replyRequiredCount
+            )
         } else {
             null
         }

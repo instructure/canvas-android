@@ -29,10 +29,10 @@ fun PlannerItem.todoHtmlUrl(apiPrefs: ApiPrefs): String {
 @DrawableRes
 fun PlannerItem.getIconForPlannerItem(): Int {
     return when (this.plannableType) {
-        PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_assignment
+        PlannableType.ASSIGNMENT -> R.drawable.ic_assignment
         PlannableType.QUIZ -> R.drawable.ic_quiz
         PlannableType.CALENDAR_EVENT -> R.drawable.ic_calendar
-        PlannableType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
+        PlannableType.DISCUSSION_TOPIC, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_discussion
         PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
         else -> R.drawable.ic_calendar
     }
