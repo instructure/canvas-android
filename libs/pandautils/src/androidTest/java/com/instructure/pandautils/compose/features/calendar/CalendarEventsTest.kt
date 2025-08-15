@@ -148,6 +148,15 @@ class CalendarEventsTest {
                             R.drawable.ic_assignment,
                             "Due Jan 9 at 8:00 AM",
                             "Missing"
+                        ),
+                        EventUiState(
+                            3L,
+                            "Course 2",
+                            CanvasContext.defaultCanvasContext(),
+                            "Discussion Checkpoints",
+                            R.drawable.ic_discussion,
+                            "Due Jan 9 at 9:00 AM",
+                            tag = "Reply to topic"
                         )
                     )
                 )
@@ -167,6 +176,15 @@ class CalendarEventsTest {
         event2Date.assertIsDisplayed()
         val event2Status = composeTestRule.onNode(hasText("Missing"))
         event2Status.assertIsDisplayed()
+
+        val event3Title = composeTestRule.onNode(hasText("Discussion Checkpoints"))
+        event3Title.assertIsDisplayed()
+        val event3ContextName = composeTestRule.onNode(hasText("Course 2"))
+        event3ContextName.assertIsDisplayed()
+        val event3Date = composeTestRule.onNode(hasText("Due Jan 9 at 9:00 AM"))
+        event3Date.assertIsDisplayed()
+        val event3Tag= composeTestRule.onNode(hasText("Reply to topic"))
+        event3Tag.assertIsDisplayed()
     }
 
     @Test

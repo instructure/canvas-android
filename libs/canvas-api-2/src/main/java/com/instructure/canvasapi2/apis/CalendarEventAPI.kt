@@ -132,7 +132,8 @@ object CalendarEventAPI {
 
     enum class CalendarEventType(val apiName: String) {
         CALENDAR("event"),
-        ASSIGNMENT("assignment")
+        ASSIGNMENT("assignment"),
+        SUB_ASSIGNMENT("sub_assignment")
     }
 
     enum class ModifyEventScope(val apiName: String, @StringRes val stringRes: Int) {
