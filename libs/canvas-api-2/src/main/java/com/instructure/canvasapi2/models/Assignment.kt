@@ -122,6 +122,9 @@ data class Assignment(
 
     val lastActualSubmission: Submission? get() = submission?.takeIf { it.workflowState == "submitted" }
 
+    val lastGradedOrSubmittedSubmission: Submission?
+        get() = submission?.takeIf { it.workflowState == "graded" || it.workflowState == "submitted" }
+
     /**
      * Whether or not the user has submitted this assignment. If the user has not submitted anything, Canvas generates
      * an empty submission with a null value for "submittedAt". For very old assignments, canvas might not
@@ -232,11 +235,11 @@ data class Assignment(
     override fun describeContents(): Int = 0
 
     fun isMissing(): Boolean {
-        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null)
+        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null && submission?.customGradeStatusId == null)
     }
 
     fun isGraded(): Boolean {
-        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
+        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null) || submission?.customGradeStatusId != null
     }
 
     fun ltiToolType(): LtiType {

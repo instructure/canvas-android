@@ -22,6 +22,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -69,6 +70,7 @@ import com.instructure.pandautils.utils.toPx
 fun FileDrop(
     acceptedFileTypes: List<String>,
     modifier: Modifier = Modifier,
+    uploadButtonEnabled: Boolean = true,
     fileItems: @Composable ColumnScope.() -> Unit = {},
     onUploadClick: () -> Unit = {}
 ) {
@@ -96,15 +98,18 @@ fun FileDrop(
                 height = ButtonHeight.NORMAL,
                 width = ButtonWidth.RELATIVE,
                 color = ButtonColor.Institution,
-                onClick = onUploadClick
+                onClick = onUploadClick,
+                enabled = uploadButtonEnabled,
             )
             HorizonSpace(SpaceSize.SPACE_16)
-            val acceptedFileTypesText = acceptedFileTypes.joinToString(", ")
-            Text(
-                text = stringResource(R.string.fileDrop_acceptFileTypes, acceptedFileTypesText),
-                style = HorizonTypography.p2,
-                textAlign = TextAlign.Center
-            )
+            if (acceptedFileTypes.isNotEmpty()) {
+                val acceptedFileTypesText = acceptedFileTypes.joinToString(", ")
+                Text(
+                    text = stringResource(R.string.fileDrop_acceptFileTypes, acceptedFileTypesText),
+                    style = HorizonTypography.p2,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
         fileItems()
     }
@@ -112,30 +117,42 @@ fun FileDrop(
 
 sealed class FileDropItemState(
     open val fileName: String,
-    val actionIconRes: Int,
-    open val onActionClick: () -> Unit = {},
-    open val onClick: () -> Unit = {}
+    open val actionIconRes: Int,
+    open val onActionClick: (() -> Unit)? = null,
+    open val onClick: (() -> Unit)? = null
 ) {
-    data class Success(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.delete)
+    data class Success(
+        override val fileName: String,
+        override val onActionClick: (() -> Unit)? = null,
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.delete
+    ) :
+        FileDropItemState(fileName, actionIconRes)
 
     data class InProgress(
         override val fileName: String,
         val progress: Float? = null,
-        override val onActionClick: () -> Unit = {},
-        override val onClick: () -> Unit = {}
+        override val onActionClick: (() -> Unit)? = null,
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.close
     ) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.close)
+        FileDropItemState(fileName, actionIconRes)
 
     data class NoLongerEditable(
         override val fileName: String,
-        override val onActionClick: () -> Unit = {},
-        override val onClick: () -> Unit = {}
+        override val onActionClick: (() -> Unit)? = null,
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.download
     ) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.download)
+        FileDropItemState(fileName, actionIconRes)
 
-    data class Error(override val fileName: String, override val onActionClick: () -> Unit = {}, override val onClick: () -> Unit = {}) :
-        FileDropItemState(fileName, actionIconRes = R.drawable.refresh)
+    data class Error(
+        override val fileName: String,
+        override val onActionClick: (() -> Unit)? = null,
+        override val onClick: (() -> Unit)? = null,
+        override val actionIconRes: Int = R.drawable.refresh
+    ) :
+        FileDropItemState(fileName, actionIconRes)
 
 }
 
@@ -150,12 +167,15 @@ fun FileDropItem(
         HorizonSpace(SpaceSize.SPACE_8)
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            modifier = modifier
+            modifier = Modifier
                 .fillMaxWidth()
+                .defaultMinSize(minHeight = 64.dp)
                 .background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level3)
                 .conditional(hasBorder) { border(HorizonBorder.level1(borderColor), shape = HorizonCornerRadius.level3) }
                 .clip(HorizonCornerRadius.level3)
-                .clickable { state.onClick() }
+                .conditional(state.onClick != null) {
+                    clickable { state.onClick?.invoke() }
+                }
                 .padding(16.dp)
         ) {
             AnimatedContent(state) { targetState ->
@@ -194,12 +214,14 @@ fun FileDropItem(
             }
             Text(text = state.fileName, style = HorizonTypography.p1, modifier = Modifier.weight(1f))
             HorizonSpace(SpaceSize.SPACE_8)
-            IconButton(
-                iconRes = state.actionIconRes,
-                size = IconButtonSize.SMALL,
-                color = IconButtonColor.INVERSE,
-                onClick = state.onActionClick
-            )
+            state.onActionClick?.let {
+                IconButton(
+                    iconRes = state.actionIconRes,
+                    size = IconButtonSize.SMALL,
+                    color = IconButtonColor.Inverse,
+                    onClick = it
+                )
+            }
         }
     }
 }

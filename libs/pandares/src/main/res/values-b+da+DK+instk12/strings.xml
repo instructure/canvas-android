@@ -291,7 +291,7 @@
     <string name="Todo">Opgaveliste</string>
     <string name="todoFilter">Filtrer fag</string>
     <string name="filterByEllipsis">Sorter efter &#8230;</string>
-    <string name="favoritedCoursesLabel">Foretrukne fag</string>
+    <string name="favoriteCoursesLabel">Favoritfag</string>
     <string name="Event">Begivenhed</string>
     <string name="eventSuccessfulDeletion">Begivenheden blev succefuldt slettet</string>
     <string name="timeIconDescription">Tidsikon</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifikationer</string>
     <string name="todoWidgetTitleLong">Canvas - Opgaveliste</string>
     <string name="gradesWidgetTitleLong">Canvas - Vurderinger</string>
+    <string name="gradeWidgetTitleLong">Canvas – Vurdering</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifikationer</string>
     <string name="notLoggedIn">Du er ikke logget ind</string>
     <string name="widgetStyle">Vælg din widget stil</string>
@@ -705,7 +706,7 @@
     <string name="searchGuides">Søg i Canvas-vejledningerne</string>
     <string name="canvasGuides">Canvas-vejledningerne</string>
     <string name="searchGuidesDetails">Find svar på hyppige spørgsmål</string>
-    <string name="reportProblem">Indberet et problem</string>
+    <string name="reportProblem">Rapporter et problem</string>
     <string name="reportProblemDetails">Fortæl os, hvis denne app ikke virker</string>
     <string name="requestFeature">Anmod om en funktion</string>
     <string name="requestFeatureDetails">Har du en ide, der kan forbedre appen?</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Vurdering efter opslag</string>
     <string name="gradeOverride">Tilsidesættelse af vurdering</string>
     <string name="currentGrade">Nuværende vurdering</string>
-    <string name="opensInCanvasStudent">Åbner i Canvas for elever</string>
+    <string name="opensInCanvasApp">Åbner i Canvas-appen</string>
     <string name="tab_student_view">Visning for elever</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Opbevaring</string>
     <string name="offline_content_storage_info">%s af %s brugt</string>
     <string name="offline_content_other">Andre apps</string>
-    <string name="offline_content_canvas_student">Canvas-elev</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Tilbage</string>
-    <string name="offline_content_storage_info_a11y_description">Opbevaringsoplysninger: %s af %s brugt, andre apps %d%%, Canvas Student %d%%, tilbage %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Opbevaringsoplysninger: %s af %s brugt, Andre apps %d%%, Canvas %d%%, Resterende %d%%</string>
     <string name="offline_content_all_courses">Alle fag</string>
     <string name="offline_content_sync">Synkroniser</string>
     <string name="offline_content_selected">%d valgt</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Hjælp</string>
     <string name="screenTitleManageStudents">Administrer elever</string>
     <string name="screenTitleSettings">Indstillinger</string>
-    <string name="navigationDrawerSwitchUsers">Skift brugere</string>
     <string name="navigationDrawerLogOut">Log ud</string>
     <string name="noStudentsError">Ingen elever</string>
     <string name="noStudentsErrorDescription">Du observerer ikke nogen elever.</string>
     <string name="noStudentsRefresh">Opdater</string>
     <string name="noGrade">Ingen vurdering</string>
+    <string name="noGrades">Ingen vurderinger</string>
     <string name="errorLoadingCourses">Der opstod en fejl under indlæsning af elevens fag.</string>
     <string name="parentNoCourses">Ingen fag</string>
     <string name="parentNoCoursesMessage">Din elevs fag kan muligvis ikke offentliggøres endnu.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Er du elev eller lærer?</string>
     <string name="studentOrTeacherSubtitle">En af vores andre apps kan være bedre egnet. Tryk på en for at besøge Play Store</string>
     <string name="studentApp">ELEV</string>
-    <string name="canvasStudentApp">Canvas-elev</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">LÆRER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Eleven blev tilføjet</string>
     <string name="addStudentTitle">Tilføj elev med ...</string>
     <string name="addStudentQrCodeTitle">QR-kode</string>
-    <string name="addStudentQrCodeExplanation">Elever kan generere en QR-kode ved hjælp af Canvas Student-appen på deres mobilenhed</string>
+    <string name="addStudentQrCodeExplanationCanvas">Elever kan generere en QR-kode ved hjælp af Canvas-appen på deres mobilenhed</string>
     <string name="addStudentPairingCodeTitle">Parringskode</string>
     <string name="addStudentPairingCodeExplanation">Elever kan få en parringskode via Canvas-webstedet</string>
     <string name="pairingCodeDialogTitle">Tilføj elever</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Annullér</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Din kode er forkert eller udløbet.</string>
-    <string name="qrPairingTitle">Åbn Canvas-appen for elev</string>
-    <string name="qrPairingDescription">Du skal åbne elevens Canvas Student-app for at fortsætte. Gå til Hovedmenu > Indstillinger> Par med observatør, og scan den QR-kode, du ser der.</string>
-    <string name="qrCodePairingPrompt">Scan en QR-kode fra Canvas Student for at parre</string>
+    <string name="qrPairingTitleCanvas">Åbn Canvas-appen</string>
+    <string name="qrPairingDescriptionCanvas">Du skal åbne din elevs Canvas-app for at fortsætte. Gå til Hovedmenu > Indstillinger> Par med observatør, og scan den QR-kode, du ser der.</string>
+    <string name="qrCodePairingPromptCanvas">Scan en QR-kode fra Canvas-appen for at parre</string>
     <string name="a11y_addStudentContentDescription">Tilføj elever</string>
     <string name="qrPairingErrorTitle">Udløbet QR-kode</string>
     <string name="qrPairingErrorDescription">Den QR-kode, du scannede, kan være udløbet. Opdater koden på elevens enhed, og prøv igen.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Der opstod en fejl under indlæsning af opgaver</string>
     <string name="a11y_searchAssignments">Søg opgaver</string>
     <string name="dueAssignmentListItem">Forfalder %1$s</string>
+    <string name="a11y_searchAmongRecipients">Søg blandt modtagere</string>
+    <string name="a11y_recipientIsRemoved">%1$s er fjernet</string>
+    <string name="widgetDueDate">Forfalder %1$s</string>
+    <string name="widgetFromTo">%1$s til %2$s</string>
+    <string name="widgetAllDay">Hele dagen</string>
+    <string name="widgetErrorTitle">Ups! Noget gik galt</string>
+    <string name="widgetErrorSubtitle">Vi har problemer med at vise dine opgaver lige nu. Prøv igen om lidt, eller brug appen.</string>
+    <string name="widgetToDoEmptyTitle">Du er færdig for nu!</string>
+    <string name="widgetToDoEmptySubtitle">Det ser ud til, at du har fri de næste 4 uger. Vil du tilføje noget til opgavelisten?</string>
+    <string name="widgetNotLoggedInTitle">Lad os få dig logget ind!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">For at se din opgaveliste skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Åbn skærmen med opgavelisten</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Opret ny opgave</string>
+    <string name="widgetGradesErrorSubtitle">Vi har problemer med at vise dine vurderinger lige nu. Prøv igen om lidt, eller brug appen.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">For at se dine vurderinger skal du logge ind på din konto i appen. Det tager kun et øjeblik!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Vi har problemer med at vise dine vurderinger lige nu.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">For at se dine vurderinger skal du logge ind på din konto i appen.</string>
+    <string name="widgetSingleGradeSelectCourse">Lad os vælge et fag</string>
+    <string name="widgetGradesErrorLoadingCourses">Der opstod en fejl under indlæsning af fag.</string>
+    <string name="settingsSwitchExperience">Skift til Canvas Career</string>
 </resources>

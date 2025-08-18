@@ -19,6 +19,7 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.DashboardCourse
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.weave.catch
@@ -26,7 +27,9 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.formatIsoDuration
+import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
@@ -39,11 +42,12 @@ import javax.inject.Inject
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val themePrefs: ThemePrefs
 ) : ViewModel() {
 
     private val _uiState =
-        MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh, onErrorSnackbarDismiss = ::dismissSnackbar)))
+        MutableStateFlow(DashboardUiState(loadingState = LoadingState(onRefresh = ::refresh, onSnackbarDismiss = ::dismissSnackbar)))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -67,47 +71,50 @@ class DashboardViewModel @Inject constructor(
     }
 
     private suspend fun loadData(forceNetwork: Boolean) {
-        val courses = dashboardRepository.getCoursesWithProgress(forceNetwork = forceNetwork)
-        if (courses.isSuccess) {
-            val coursesResult = courses.dataOrThrow.filter { it.progress != null }
+        // We need to poll for the logo URL because the Dashboard already starts to load when the canvas theme is not yet applied at the first launch.
+        poll(
+            pollInterval = 50,
+            maxAttempts = 10,
+            block = { _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) } },
+            validate = { themePrefs.mobileLogoUrl.isNotEmpty() })
+        val dashboardContent = dashboardRepository.getDashboardContent(forceNetwork = forceNetwork)
+        if (dashboardContent.isSuccess) {
+            val coursesResult = dashboardContent.dataOrThrow.courses
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
                     mapCourse(course, forceNetwork)
                 }
             }.awaitAll().filterNotNull()
-            _uiState.update { it.copy(coursesUiState = courseUiStates, loadingState = it.loadingState.copy(isError = false)) }
+            val inviteResults = dashboardContent.dataOrThrow.courseInvites
+            val invites = inviteResults.map { courseInvite ->
+                CourseInviteUiState(courseId = courseInvite.courseId, courseName = courseInvite.courseName, onAccept = {
+                    updateAcceptLoadingForInvite(courseInvite.courseId, true)
+                    viewModelScope.tryLaunch {
+                        dashboardRepository.acceptInvite(courseInvite.courseId, courseInvite.enrollmentId)
+                        refresh()
+                    } catch {
+                        _uiState.update { it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.dashboard_courseInviteFailed))) }
+                        updateAcceptLoadingForInvite(courseInvite.courseId, false)
+                    }
+                }, onDismiss = {
+                    dismissInvite(courseInvite.courseId)
+                })
+            }
+            _uiState.update { it.copy(coursesUiState = courseUiStates, invitesUiState = invites, loadingState = it.loadingState.copy(isError = false)) }
         } else {
             handleError()
         }
     }
 
-    private suspend fun mapCourse(course: CourseWithProgress, forceNetwork: Boolean): DashboardCourseUiState? {
-        val nextModuleId = course.nextUpModuleId
-        val nextModuleItemId = course.nextUpModuleItemId
+    private suspend fun mapCourse(dashboardCourse: DashboardCourse, forceNetwork: Boolean): DashboardCourseUiState? {
+        val nextModuleId = dashboardCourse.nextUpModuleId
+        val nextModuleItemId = dashboardCourse.nextUpModuleItemId
         return if (nextModuleId != null && nextModuleItemId != null) {
-            val nextModule = dashboardRepository.getNextModule(
-                course.course.id,
-                nextModuleId,
-                forceNetwork = forceNetwork
-            )
-            val nextModuleItem = dashboardRepository.getNextModuleItem(
-                course.course.id,
-                nextModuleId,
-                nextModuleItemId,
-                forceNetwork = forceNetwork
-            )
-            if (nextModuleItem.isSuccess) {
-                val nextModuleResult = nextModule.dataOrNull
-                val nextModuleItemResult = nextModuleItem.dataOrThrow
-                createCourseUiState(course, nextModuleResult, nextModuleItemResult)
-            } else {
-                handleError()
-                null
-            }
-        } else if (course.progress == 0.0) {
+            createCourseUiState(dashboardCourse)
+        } else if (dashboardCourse.course.progress < 100.0) {
 
             val modules = dashboardRepository.getFirstPageModulesWithItems(
-                course.course.id,
+                dashboardCourse.course.courseId,
                 forceNetwork = forceNetwork
             )
 
@@ -118,18 +125,18 @@ class DashboardViewModel @Inject constructor(
                 if (nextModuleItemResult == null || nextModuleResult == null) {
                     return null
                 }
-                createCourseUiState(course, nextModuleResult, nextModuleItemResult)
+                createCourseUiState(dashboardCourse.course, nextModuleResult, nextModuleItemResult)
             } else {
                 handleError()
                 null
             }
-        } else if (course.progress == 100.0) {
+        } else if (dashboardCourse.course.progress == 100.0) {
             DashboardCourseUiState(
-                courseId = course.course.id,
-                courseName = course.course.name,
-                courseProgress = course.progress,
+                courseId = dashboardCourse.course.courseId,
+                courseName = dashboardCourse.course.courseName,
+                courseProgress = dashboardCourse.course.progress,
                 completed = true,
-                progressLabel = getProgressLabel(course.progress),
+                progressLabel = getProgressLabel(dashboardCourse.course.progress),
             )
         } else {
             handleError()
@@ -138,26 +145,43 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun createCourseUiState(
-        course: CourseWithProgress,
-        nextModuleResult: ModuleObject?,
-        nextModuleItemResult: ModuleItem
+        dashboardCourse: DashboardCourse
     ) = DashboardCourseUiState(
-        courseId = course.course.id,
-        courseName = course.course.name,
+        courseId = dashboardCourse.course.courseId,
+        courseName = dashboardCourse.course.courseName,
+        courseProgress = dashboardCourse.course.progress,
+        nextModuleName = dashboardCourse.nextUpModuleTitle ?: "",
+        nextModuleItemId = dashboardCourse.nextUpModuleItemId,
+        nextModuleItemName = dashboardCourse.nextUpModuleItemTitle ?: "",
+        progressLabel = getProgressLabel(dashboardCourse.course.progress),
+        remainingTime = dashboardCourse.nextModuleItemEstimatedDuration?.formatIsoDuration(context),
+        learningObjectType = if (dashboardCourse.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(
+            dashboardCourse.nextModuleItemType.orEmpty()
+        ),
+        dueDate = dashboardCourse.nextModuleItemDueDate
+    )
+
+    private fun createCourseUiState(
+        course: CourseWithProgress,
+        nextModule: ModuleObject?,
+        nextModuleItem: ModuleItem
+    ) = DashboardCourseUiState(
+        courseId = course.courseId,
+        courseName = course.courseName,
         courseProgress = course.progress,
-        nextModuleName = nextModuleResult?.name ?: "",
-        nextModuleItemId = nextModuleItemResult.id,
-        nextModuleItemName = nextModuleItemResult.title ?: "",
+        nextModuleName = nextModule?.name ?: "",
+        nextModuleItemId = nextModuleItem.id,
+        nextModuleItemName = nextModuleItem.title ?: "",
         progressLabel = getProgressLabel(course.progress),
-        remainingTime = nextModuleItemResult.estimatedDuration?.formatIsoDuration(context),
-        learningObjectType = LearningObjectType.fromApiString(nextModuleItemResult.type.orEmpty()),
-        dueDate = nextModuleItemResult.moduleDetails?.dueDate
+        remainingTime = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
+        learningObjectType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
+        dueDate = nextModuleItem.moduleDetails?.dueDate
     )
 
     private fun getProgressLabel(progress: Double): String {
         return when (progress) {
-            in 0.0..<100.0 -> {
-                context.getString(R.string.learningObject_pillStatusInProgress).uppercase()
+            0.0 -> {
+                context.getString(R.string.learningObject_pillStatusNotStarted).uppercase()
             }
 
             100.0 -> {
@@ -165,7 +189,7 @@ class DashboardViewModel @Inject constructor(
             }
 
             else -> {
-                context.getString(R.string.learningObject_pillStatusNotStarted).uppercase()
+                context.getString(R.string.learningObject_pillStatusInProgress).uppercase()
             }
         }
     }
@@ -175,14 +199,34 @@ class DashboardViewModel @Inject constructor(
             if (it.coursesUiState.isEmpty()) {
                 it.copy(loadingState = it.loadingState.copy(isError = true))
             } else {
-                it.copy(loadingState = it.loadingState.copy(errorSnackbar = context.getString(R.string.errorOccurred)))
+                it.copy(loadingState = it.loadingState.copy(snackbarMessage = context.getString(R.string.errorOccurred)))
             }
         }
     }
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(errorSnackbar = null))
+            it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun updateAcceptLoadingForInvite(courseId: Long, isLoading: Boolean) {
+        _uiState.update { currentState ->
+            val updatedInvites = currentState.invitesUiState.map { invite ->
+                if (invite.courseId == courseId) {
+                    invite.copy(acceptLoading = isLoading)
+                } else {
+                    invite
+                }
+            }
+            currentState.copy(invitesUiState = updatedInvites)
+        }
+    }
+
+    private fun dismissInvite(courseId: Long) {
+        _uiState.update { currentState ->
+            val updatedInvites = currentState.invitesUiState.filterNot { it.courseId == courseId }
+            currentState.copy(invitesUiState = updatedInvites)
         }
     }
 }

@@ -51,6 +51,7 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CheckboxText
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.RadioButtonText
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 
 @Composable
@@ -302,6 +303,7 @@ private fun FilterItem(
 ) {
     RadioButtonText(
         modifier = Modifier
+            .padding(vertical = 8.dp, horizontal = 16.dp)
             .fillMaxWidth()
             .testTag("filterItem"),
         text = text,

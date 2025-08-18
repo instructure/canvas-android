@@ -291,7 +291,7 @@
     <string name="Todo">A Fazer</string>
     <string name="todoFilter">Filtrar Disciplinas</string>
     <string name="filterByEllipsis">Filtrar por&#8230;</string>
-    <string name="favoritedCoursesLabel">Disciplinas Favoritas</string>
+    <string name="favoriteCoursesLabel">Disciplinas preferidas</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">O Evento foi apagado com sucesso</string>
     <string name="timeIconDescription">Ícone Hora</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notificações</string>
     <string name="todoWidgetTitleLong">Canvas - A Fazer</string>
     <string name="gradesWidgetTitleLong">Canvas - Classificações</string>
+    <string name="gradeWidgetTitleLong">Pano - Nota</string>
     <string name="notificationWidgetTitleLong">Canvas - Notificações</string>
     <string name="notLoggedIn">Não está registado</string>
     <string name="widgetStyle">Escolha o estilo do seu widget</string>
@@ -705,7 +706,7 @@
     <string name="searchGuides">Procurar nos Guias do Canvas</string>
     <string name="canvasGuides">Guias Canvas</string>
     <string name="searchGuidesDetails">Encontre respostas para perguntas comuns</string>
-    <string name="reportProblem">Reportar um problema</string>
+    <string name="reportProblem">Denunciar um problema</string>
     <string name="reportProblemDetails">Se a app não funcionar, conte-nos</string>
     <string name="requestFeature">Solicite um recurso</string>
     <string name="requestFeatureDetails">Tem uma ideia de como melhorar a app?</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Classificação após publicação</string>
     <string name="gradeOverride">Substituir classificação </string>
     <string name="currentGrade">Classificação Atual</string>
-    <string name="opensInCanvasStudent">Abrir no Aluno Canvas</string>
+    <string name="opensInCanvasApp">Abrir na app Canvas</string>
     <string name="tab_student_view">Vista de aluno</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Armazenamento</string>
     <string name="offline_content_storage_info">%s de %s Utilizado</string>
     <string name="offline_content_other">Outras aplicações</string>
-    <string name="offline_content_canvas_student">Aluno Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Restante</string>
-    <string name="offline_content_storage_info_a11y_description">Informações de armazenamento: %s De %s Usados, Outras Aplicações %d%%, Canvas Student %d%%, Restantes %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informações de armazenamento: %s de %s Usados, Outras Apps %d%%, Canvas %d%%, Restantes %d%%</string>
     <string name="offline_content_all_courses">Todas as disciplinas</string>
     <string name="offline_content_sync">Sincronizar</string>
     <string name="offline_content_selected">%d Selecionado</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Ajuda</string>
     <string name="screenTitleManageStudents">Gerir alunos</string>
     <string name="screenTitleSettings">Definições</string>
-    <string name="navigationDrawerSwitchUsers">Alterar Utilizadores</string>
     <string name="navigationDrawerLogOut">Sair</string>
     <string name="noStudentsError">Não existem alunos</string>
     <string name="noStudentsErrorDescription">Você não está a observar nenhum aluno.</string>
     <string name="noStudentsRefresh">Atualizar</string>
     <string name="noGrade">Sem classificação</string>
+    <string name="noGrades">Sem notas</string>
     <string name="errorLoadingCourses">Houve um erro ao carregar as disciplinas dos seus alunos.</string>
     <string name="parentNoCourses">Sem Disciplinas</string>
     <string name="parentNoCoursesMessage">As disciplinas dos seus alunos podem ainda não ter sido publicadas.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Você é um aluno ou professor?</string>
     <string name="studentOrTeacherSubtitle">Uma das nossas outras aplicações pode ser um ajuste melhor. Toque em um para visitar a App Store</string>
     <string name="studentApp">ALUNO</string>
-    <string name="canvasStudentApp">Aluno Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">PROFESSOR</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Aluno adicionado com êxito</string>
     <string name="addStudentTitle">Adicionar aluno com...</string>
     <string name="addStudentQrCodeTitle">Código QR</string>
-    <string name="addStudentQrCodeExplanation">Os alunos podem gerar um código QR utilizando a aplicação Canvas Student no seu dispositivo móvel</string>
+    <string name="addStudentQrCodeExplanationCanvas">Os alunos podem gerar um código QR utilizando a aplicação Canvas no seu dispositivo móvel</string>
     <string name="addStudentPairingCodeTitle">Código de emparelhamento</string>
     <string name="addStudentPairingCodeExplanation">Os alunos podem obter um código de parelhamento através do sitio web do Canvas</string>
     <string name="pairingCodeDialogTitle">Adicionar aluno</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancelar</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">O seu código está incorrecto ou expirou.</string>
-    <string name="qrPairingTitle">Abrir Canvas Student</string>
-    <string name="qrPairingDescription">Terá de abrir a aplicação Canvas Student do seu aluno para poder continuar. Vá ao Menu Principal > Configurações > Parelhar com Observador e digitalize o código QR que aí vê.</string>
-    <string name="qrCodePairingPrompt">Digitalize um código QR do Canvas Student para emparelhar</string>
+    <string name="qrPairingTitleCanvas">Abrir app Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Terá de abrir a aplicação Canvas do seu aluno para poder continuar. Vá ao Menu Principal > Configurações > Parelhar com Observador e digitalize o código QR que aí vê.</string>
+    <string name="qrCodePairingPromptCanvas">Digitalize um código QR do Canvas para emparelhar</string>
     <string name="a11y_addStudentContentDescription">Adicionar aluno</string>
     <string name="qrPairingErrorTitle">Código QR expirado</string>
     <string name="qrPairingErrorDescription">O código QR que digitalizou pode ter expirado. Atualizar o código no dispositivo do aluno e tente novamente.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Ocorreu um erro ao carregar as tarefas</string>
     <string name="a11y_searchAssignments">Pesquisar Tarefas</string>
     <string name="dueAssignmentListItem">Data limite %1$s</string>
+    <string name="a11y_searchAmongRecipients">Buscar entre destinatários</string>
+    <string name="a11y_recipientIsRemoved">%1$s é removido</string>
+    <string name="widgetDueDate">Previsto %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">Todo o dia</string>
+    <string name="widgetErrorTitle">Oops! Algo correu mal</string>
+    <string name="widgetErrorSubtitle">Estamos com problemas para mostrar as suas tarefas no momento. Tente novamente em alguns instantes ou aceda à app.</string>
+    <string name="widgetToDoEmptyTitle">Por enquanto, está tudo pronto!,</string>
+    <string name="widgetToDoEmptySubtitle">Parece que está livre nas próximas 4 semanas. Quer adicionar algumas tarefas?</string>
+    <string name="widgetNotLoggedInTitle">Vamos iniciar sessão!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Para ver as suas tarefas, inicie sessão na sua conta na app. É só um segundo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Abrir ecrã da lista de tarefas</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Criar nova tarefa</string>
+    <string name="widgetGradesErrorSubtitle">Estamos com problemas para mostrar as suas notas no momento. Tente novamente em alguns instantes ou aceda à app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Para ver as suas notas, inicie sessão na sua conta na aplicação. É só um segundo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Estamos com problemas para mostrar as suas notas neste momento.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Para ver as suas notas, inicie sessão na sua conta na app.</string>
+    <string name="widgetSingleGradeSelectCourse">Vamos escolher uma disciplina</string>
+    <string name="widgetGradesErrorLoadingCourses">Ocorreu um erro ao carregar as disciplinas.</string>
+    <string name="settingsSwitchExperience">Mudar para Canvas Career</string>
 </resources>

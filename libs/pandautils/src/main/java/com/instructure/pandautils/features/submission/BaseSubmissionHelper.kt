@@ -43,10 +43,11 @@ abstract class BaseSubmissionHelper(
         canvasContext: CanvasContext,
         assignmentId: Long,
         assignmentName: String?,
-        text: String
+        text: String,
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
     ) {
         val dbSubmissionId = runBlocking {
-            insertNewSubmission(assignmentId) {
+            insertNewSubmission(assignmentId, deleteBySubmissionTypeFilter = deleteBySubmissionTypeFilter) {
                 val entity = CreateSubmissionEntity(
                     submissionEntry = text,
                     assignmentName = assignmentName,
@@ -85,6 +86,39 @@ abstract class BaseSubmissionHelper(
         }
     }
 
+    suspend fun saveDraftWithFiles(
+        canvasContext: CanvasContext,
+        assignmentId: Long,
+        assignmentName: String?,
+        files: List<FileSubmitObject>
+    ): Long {
+        return insertDraft(assignmentId, submissionType = Assignment.SubmissionType.ONLINE_UPLOAD) {
+            val entity = CreateSubmissionEntity(
+                assignmentName = assignmentName,
+                assignmentId = assignmentId,
+                canvasContext = canvasContext,
+                submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
+                userId = getUserId(),
+                lastActivityDate = Date(),
+                isDraft = true,
+                fileCount = files.size
+            )
+            it.submissionDao().insert(entity).also { rowId ->
+                val dbSubmissionId = it.submissionDao().findSubmissionByRowId(rowId)?.id ?: return@insertDraft
+                val fileEntities = files.map { file ->
+                    CreateFileSubmissionEntity(
+                        dbSubmissionId = dbSubmissionId,
+                        name = file.name,
+                        size = file.size,
+                        contentType = file.contentType,
+                        fullPath = file.fullPath
+                    )
+                }
+                it.fileSubmissionDao().insertAll(fileEntities)
+            }
+        }
+    }
+
     fun startUrlSubmission(
         canvasContext: CanvasContext,
         assignmentId: Long,
@@ -114,12 +148,14 @@ abstract class BaseSubmissionHelper(
         assignmentId: Long,
         assignmentName: String?,
         assignmentGroupCategoryId: Long = 0,
-        files: ArrayList<FileSubmitObject>
+        files: ArrayList<FileSubmitObject>,
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
+
     ) {
         files.ifEmpty { return } // No need to upload files if we aren't given any
 
         val dbSubmissionId = runBlocking {
-            insertNewSubmission(assignmentId, files) {
+            insertNewSubmission(assignmentId, files, deleteBySubmissionTypeFilter) {
                 val entity = CreateSubmissionEntity(
                     assignmentName = assignmentName,
                     assignmentId = assignmentId,
@@ -127,7 +163,8 @@ abstract class BaseSubmissionHelper(
                     canvasContext = canvasContext,
                     submissionType = Assignment.SubmissionType.ONLINE_UPLOAD.apiString,
                     userId = getUserId(),
-                    lastActivityDate = Date()
+                    lastActivityDate = Date(),
+                    fileCount = files.size
                 )
                 it.submissionDao().insert(entity)
             }
@@ -293,9 +330,10 @@ abstract class BaseSubmissionHelper(
     private suspend fun insertNewSubmission(
         assignmentId: Long,
         files: List<FileSubmitObject> = emptyList(),
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null,
         insertBlock: suspend (StudentDb) -> Long
     ): Long {
-        deleteSubmissionsForAssignment(assignmentId, files)
+        deleteSubmissionsForAssignment(assignmentId, files, deleteBySubmissionTypeFilter)
         val rowId = insertBlock(studentDb)
         val dbSubmissionId = studentDb.submissionDao().findSubmissionByRowId(rowId)?.id ?: return -1
 
@@ -315,9 +353,15 @@ abstract class BaseSubmissionHelper(
 
     private suspend fun deleteSubmissionsForAssignment(
         id: Long,
-        files: List<FileSubmitObject> = emptyList()
+        files: List<FileSubmitObject> = emptyList(),
+        deleteBySubmissionTypeFilter: Assignment.SubmissionType? = null
     ) {
-        studentDb.submissionDao().findSubmissionsByAssignmentId(id, getUserId())
+        val submissions = if (deleteBySubmissionTypeFilter != null) {
+            studentDb.submissionDao().findSubmissionsByAssignmentIdAndType(id, getUserId(), deleteBySubmissionTypeFilter.apiString)
+        } else {
+            studentDb.submissionDao().findSubmissionsByAssignmentId(id, getUserId())
+        }
+        submissions
             .forEach { submission ->
                 studentDb.fileSubmissionDao().findFilesForSubmissionId(submission.id)
                     .forEach { file ->
@@ -329,7 +373,11 @@ abstract class BaseSubmissionHelper(
                     }
                 studentDb.fileSubmissionDao().deleteFilesForSubmissionId(submission.id)
             }
-        studentDb.submissionDao().deleteSubmissionsForAssignmentId(id, getUserId())
+        if (deleteBySubmissionTypeFilter != null) {
+            studentDb.submissionDao().deleteSubmissionsForAssignmentIdAndType(id, getUserId(), deleteBySubmissionTypeFilter.apiString)
+        } else {
+            studentDb.submissionDao().deleteSubmissionsForAssignmentId(id, getUserId())
+        }
     }
 
     abstract fun startSubmissionWorker(action: SubmissionWorkerAction, submissionId: Long? = null, commentId: Long? = null)
@@ -340,15 +388,16 @@ abstract class BaseSubmissionHelper(
 
     private suspend fun insertDraft(
         assignmentId: Long,
+        submissionType: Assignment.SubmissionType = Assignment.SubmissionType.ONLINE_TEXT_ENTRY,
         insertBlock: suspend (StudentDb) -> Unit
     ): Long {
-        deleteDraftsForAssignment(assignmentId)
+        deleteDraftsForAssignment(assignmentId, submissionType)
         insertBlock(studentDb)
         return studentDb.submissionDao().getLastInsert()
     }
 
-    private suspend fun deleteDraftsForAssignment(assignmentId: Long) {
-        studentDb.submissionDao().deleteDraftByAssignmentId(assignmentId, getUserId())
+    private suspend fun deleteDraftsForAssignment(assignmentId: Long, submissionType: Assignment.SubmissionType) {
+        studentDb.submissionDao().deleteDraftByAssignmentIdAndType(assignmentId, getUserId(), submissionType.apiString)
     }
 
     fun deletePendingComment(commentId: Long) {

@@ -15,16 +15,23 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
+import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.RedwoodApiManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
+import com.instructure.horizon.features.notebook.common.model.Note
+import com.instructure.horizon.features.notebook.common.model.mapToNotes
+import com.instructure.redwood.type.LearningObjectFilter
+import com.instructure.redwood.type.NoteFilterInput
 import javax.inject.Inject
 
 class PageDetailsRepository @Inject constructor(
     private val pageApi: PageAPI.PagesInterface,
-    private val oAuthInterface: OAuthAPI.OAuthInterface
+    private val oAuthInterface: OAuthAPI.OAuthInterface,
+    private val redwoodApi: RedwoodApiManager,
 ) {
     suspend fun getPageDetails(courseId: Long, pageId: String, forceNetwork: Boolean = false): Page {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
@@ -36,5 +43,19 @@ class PageDetailsRepository @Inject constructor(
             url,
             RestParams(isForceReadFromNetwork = true)
         ).dataOrNull?.sessionUrl ?: url
+    }
+
+    suspend fun getNotes(courseId: Long, pageId: Long): List<Note> {
+        return redwoodApi.getNotes(
+            filter = NoteFilterInput(
+                courseId = Optional.present(courseId.toString()),
+                learningObject = Optional.present(LearningObjectFilter(
+                    type = "Page",
+                    id = pageId.toString()
+                )),
+            ),
+            firstN = null,
+            after = null,
+        ).mapToNotes()
     }
 }

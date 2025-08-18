@@ -40,6 +40,14 @@ object AnnouncementAPI {
         @GET("{contextType}/{contextId}/discussion_topics?only_announcements=1&include[]=sections")
         suspend fun getFirstPageAnnouncementsList(@Path("contextType") contextType: String, @Path("contextId") contextId: Long, @Tag params: RestParams): DataResult<List<DiscussionTopicHeader>>
 
+        @GET("announcements")
+        suspend fun getFirstPageAnnouncements(
+            @Query("context_codes[]") vararg courseCode: String,
+            @Query("start_date") startDate: String,
+            @Query("end_date") endDate: String,
+            @Tag params: RestParams
+        ): DataResult<List<DiscussionTopicHeader>>
+
         @GET
         fun getNextPageAnnouncementsList(@Url nextUrl: String): Call<List<DiscussionTopicHeader>>
 

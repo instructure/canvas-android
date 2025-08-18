@@ -77,7 +77,7 @@ class LegalDialogFragment : BaseCanvasDialogFragment() {
 
         val dialog = builder.create()
 
-        binding.termsOfUse.setOnClickListener {
+        binding.termsOfUse.onClickWithRequireNetwork {
             if (html.isBlank() && !APIHelper.hasNetworkConnection()) {
                 showNoConnectionDialog(requireContext())
             } else {

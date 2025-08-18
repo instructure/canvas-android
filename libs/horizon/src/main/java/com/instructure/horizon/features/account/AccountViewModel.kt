@@ -19,6 +19,8 @@ package com.instructure.horizon.features.account
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.models.ExperienceSummary
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -40,34 +42,50 @@ class AccountViewModel @Inject constructor(
     private val repository: AccountRepository,
     private val logoutHelper: LogoutHelper,
     private val databaseProvider: DatabaseProvider,
-    private val alarmScheduler: AlarmScheduler
-): ViewModel() {
-    private val _uiState = MutableStateFlow(AccountUiState(
-        screenState = LoadingState(
-            isPullToRefreshEnabled = false,
-            onErrorSnackbarDismiss = ::dismissSnackbar,
-        ),
-        updateUserName = ::updateUserName,
-        performLogout = ::performLogout,
-    ))
+    private val alarmScheduler: AlarmScheduler,
+    private val apiPrefs: ApiPrefs
+) : ViewModel() {
+    private val _uiState = MutableStateFlow(
+        AccountUiState(
+            screenState = LoadingState(
+                isPullToRefreshEnabled = false,
+                onSnackbarDismiss = ::dismissSnackbar,
+            ),
+            updateUserName = ::updateUserName,
+            performLogout = ::performLogout,
+            switchExperience = ::switchExperience
+        )
+    )
     val uiState = _uiState.asStateFlow()
+
+    private var showExperienceSwitcher = false
 
     init {
         initData()
-        initOptions()
     }
 
     private fun initOptions() {
         _uiState.update {
             it.copy(
-                accountGroups = listOf(
-                    getSettingsGroup(),
-                    getSupportGroup(),
-                    getLogOutGroup()
-                )
+                accountGroups = buildList {
+                    if (showExperienceSwitcher) add(getExperienceGroup())
+                    add(getSettingsGroup())
+                    add(getSupportGroup())
+                    add(getLogOutGroup())
+                }
             )
         }
     }
+
+    private fun getExperienceGroup() = AccountGroupState(
+        title = context.getString(R.string.accountExperienceHeading),
+        items = listOf(
+            AccountItemState(
+                title = context.getString(R.string.accountSwitchToAcademicLabel),
+                type = AccountItemType.SwitchExperience,
+            ),
+        )
+    )
 
     private fun getSettingsGroup() = AccountGroupState(
         title = context.getString(R.string.accountSettingsHeading),
@@ -120,6 +138,7 @@ class AccountViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = true)) }
             loadData(forceRefresh)
+            initOptions()
             _uiState.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
             _uiState.update {
@@ -137,16 +156,19 @@ class AccountViewModel @Inject constructor(
     private suspend fun loadData(forceRefresh: Boolean = false) {
         val user = repository.getUserDetails(forceRefresh = forceRefresh)
 
+        val experiences = repository.getExperiences(forceRefresh = forceRefresh)
+        showExperienceSwitcher = experiences.contains(ExperienceSummary.ACADEMIC_EXPERIENCE)
+
         _uiState.update {
             it.copy(
-                userName = user.name,
+                userName = user.shortName ?: user.name,
             )
         }
     }
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 
@@ -160,6 +182,13 @@ class AccountViewModel @Inject constructor(
 
     private fun performLogout() {
         logoutHelper.logout(databaseProvider, alarmScheduler)
+    }
+
+    private fun switchExperience() {
+        apiPrefs.canvasCareerView = false
+        _uiState.update {
+            it.copy(restartApp = true)
+        }
     }
 
     companion object {

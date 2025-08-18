@@ -448,8 +448,8 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                     )
                 }
                 if (item.showSubmissionState) {
-                    val submissionStateLabel = assignment.getSubmissionStateLabel()
-                    if (submissionStateLabel != SubmissionStateLabel.NONE) {
+                    val submissionStateLabel = assignment.getSubmissionStateLabel(item.customStatuses)
+                    if (submissionStateLabel != SubmissionStateLabel.None) {
                         AssignmentDivider()
                         Icon(
                             painter = painterResource(submissionStateLabel.iconRes),
@@ -459,7 +459,10 @@ private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor:
                                 .size(16.dp)
                         )
                         Text(
-                            stringResource(submissionStateLabel.labelRes),
+                            text = when (submissionStateLabel) {
+                                is SubmissionStateLabel.Predefined -> stringResource(id = submissionStateLabel.labelRes)
+                                is SubmissionStateLabel.Custom -> submissionStateLabel.label
+                            },
                             color = colorResource(submissionStateLabel.colorRes),
                             fontSize = 14.sp,
                             fontWeight = FontWeight.Normal,
@@ -564,6 +567,7 @@ fun AssignmentListPreview() {
                 AssignmentGroupItemState(
                     course,
                     Assignment(name = "Assignment 1"),
+                    emptyList(),
                     showDueDate = true,
                     showGrade = true,
                     showSubmissionState = true
@@ -571,6 +575,7 @@ fun AssignmentListPreview() {
                 AssignmentGroupItemState(
                     course,
                     Assignment(name = "Assignment 2"),
+                    emptyList(),
                     showPublishStateIcon = true,
                     showClosedState = true,
                     showDueDate = true,
@@ -581,6 +586,7 @@ fun AssignmentListPreview() {
                 AssignmentGroupItemState(
                     course,
                     Assignment(name = "Assignment 3"),
+                    emptyList(),
                     showDueDate = true,
                     showGrade = true,
                     showSubmissionState = true
@@ -588,6 +594,7 @@ fun AssignmentListPreview() {
                 AssignmentGroupItemState(
                     course,
                     Assignment(name = "Assignment 4"),
+                    emptyList(),
                     showPublishStateIcon = true,
                     showClosedState = true,
                     showDueDate = true,

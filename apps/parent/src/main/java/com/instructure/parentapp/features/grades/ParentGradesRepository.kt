@@ -17,9 +17,11 @@
 
 package com.instructure.parentapp.features.grades
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getGradingTypeFromAPIString
 import com.instructure.canvasapi2.models.AssignmentGroup
@@ -37,7 +39,8 @@ import com.instructure.parentapp.util.ParentPrefs
 class ParentGradesRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val courseApi: CourseAPI.CoursesInterface,
-    private val parentPrefs: ParentPrefs
+    private val parentPrefs: ParentPrefs,
+    private val customGradeStatusesManager: CustomGradeStatusesManager
 ) : GradesRepository {
 
     override val studentId = parentPrefs.currentStudent?.id.orDefault()
@@ -96,5 +99,18 @@ class ParentGradesRepository(
 
     override fun setSortBy(sortBy: SortBy) {
         parentPrefs.gradesSortBy = sortBy.name
+    }
+
+    override suspend fun getCustomGradeStatuses(
+        courseId: Long,
+        forceNetwork: Boolean
+    ): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusesManager
+            .getCustomGradeStatuses(courseId, forceNetwork)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            .orEmpty()
     }
 }

@@ -23,11 +23,13 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedData
@@ -63,19 +65,39 @@ class OfflineSyllabusE2ETest : StudentTest() {
         tokenLogin(student)
         dashboardPage.waitForRender()
 
-        Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
-        dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
 
-        Log.d(STEP_TAG, "Expand '${course.name}' course.")
-        manageOfflineContentPage.expandCollapseItem(course.name)
+            refresh()
 
-        Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
-        manageOfflineContentPage.changeItemSelectionState("Syllabus")
-        manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+            Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+            dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
 
-        Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
-        dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
-        device.waitForIdle()
+            Log.d(STEP_TAG, "Expand '${course.name}' course.")
+            manageOfflineContentPage.expandCollapseItem(course.name)
+
+            Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
+            manageOfflineContentPage.changeItemSelectionState("Syllabus")
+            manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+            Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+            dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+            device.waitForIdle()
+        }) {
+
+            Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
+            dashboardPage.clickCourseOverflowMenu(course.name, "Manage Offline Content")
+
+            Log.d(STEP_TAG, "Expand '${course.name}' course.")
+            manageOfflineContentPage.expandCollapseItem(course.name)
+
+            Log.d(STEP_TAG, "Select the 'Syllabus' of '${course.name}' course for sync. Click on the 'Sync' button.")
+            manageOfflineContentPage.changeItemSelectionState("Syllabus")
+            manageOfflineContentPage.clickOnSyncButtonAndConfirm()
+
+            Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
+            dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
+            device.waitForIdle()
+        }
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
@@ -101,6 +123,7 @@ class OfflineSyllabusE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the Offline Indicator (bottom banner) is displayed on the Page List Page.")
         OfflineTestUtils.assertOfflineIndicator()
     }
+
     @After
     fun tearDown() {
         Log.d(PREPARATION_TAG, "Turn back on the Wi-Fi and Mobile Data on the device, so it will come back online.")

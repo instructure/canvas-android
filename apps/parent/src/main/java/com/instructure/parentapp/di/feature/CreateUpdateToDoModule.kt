@@ -19,7 +19,7 @@ package com.instructure.parentapp.di.feature
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.di.PLANNER_API_SERIALIZE_NULLS
-import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoBehavior
+import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoViewModelBehavior
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoRepository
 import com.instructure.parentapp.features.calendartodo.ParentCreateUpdateToDoRepository
 import com.instructure.parentapp.util.ParentPrefs
@@ -43,8 +43,8 @@ class CreateUpdateToDoModule {
     }
 
     @Provides
-    fun provideCreateUpdateToDoBehavior(): CreateUpdateToDoBehavior {
-        return object : CreateUpdateToDoBehavior {
+    fun provideCreateUpdateToDoBehavior(): CreateUpdateToDoViewModelBehavior {
+        return object : CreateUpdateToDoViewModelBehavior {
             override fun updateWidget() = Unit
         }
     }

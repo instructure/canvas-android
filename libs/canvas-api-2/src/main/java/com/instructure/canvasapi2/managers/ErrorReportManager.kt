@@ -29,11 +29,9 @@ object ErrorReportManager {
         val adapter = RestBuilder(callback)
         val params = RestParams(
             domain = if (isGeneric) ErrorReportAPI.DEFAULT_DOMAIN else null,
-            shouldIgnoreToken = true,
             isForceReadFromNetwork = true
         )
 
         ErrorReportAPI.postErrorReport(errorReport, callback, adapter, params)
     }
-
 }

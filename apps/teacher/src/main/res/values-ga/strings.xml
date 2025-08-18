@@ -313,7 +313,6 @@
     <string name="assignments_list">Liosta Tascanna</string>
     <string name="syllabus">Siollabas</string>
     <!--End Course Settings-->
-
     <!-- Assignment Details -->
     <string name="multiple_due_dates">Dátaí Dlite Iolracha</string>
     <string name="everyone">Gach duine</string>
@@ -711,7 +710,7 @@
     <string name="termsOfUse">Téarmaí Úsáide</string>
     <string name="searchGuides">Cuardaigh na Treoracha Canvas</string>
     <string name="searchGuidesDetails">Aimsigh freagraí do cheisteanna coitianta</string>
-    <string name="reportProblem">Tuairiscigh Fadhb</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">Má chliseann an aip, cuir in iúl dúinn</string>
     <string name="requestFeature">Iarr Gné</string>
     <string name="requestFeatureDetails">An bhfuil smaoineamh agat an aip a fheabhsú?</string>
@@ -737,7 +736,7 @@
     <string name="removeDueDate">Bain Dáta Dlite</string>
     <string name="removeDueDateMessage">Bainfidh sé seo an dáta dlite agus na sannaithe bainteacha go léir.</string>
     <string name="email">Ríomhphost</string>
-    <string name="fullscreen">scáileán iomlán</string>
+    <string name="fullscreen">Lánscáileán</string>
     <string name="addNew">Cuir Nua leis</string>
     <string name="sendMessage">Seol Teachtaireacht</string>
     <string name="addMessage">Cuir Teachtaireacht leis</string>

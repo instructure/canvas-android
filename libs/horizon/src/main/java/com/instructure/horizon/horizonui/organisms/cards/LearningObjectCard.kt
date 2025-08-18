@@ -15,19 +15,20 @@
  */
 package com.instructure.horizon.horizonui.organisms.cards
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -38,6 +39,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.horizonui.molecules.Pill
@@ -45,7 +47,7 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillStyle
 import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.model.LearningObjectType
-import com.instructure.pandautils.utils.formatDayMonth
+import com.instructure.pandautils.utils.formatMonthDay
 import java.util.Date
 
 data class LearningObjectCardState(
@@ -61,18 +63,10 @@ data class LearningObjectCardState(
 @Composable
 fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifier: Modifier = Modifier) {
     val onClick = learningObjectCardState.onClick
-    Card(
-        shape = HorizonCornerRadius.level2,
-        colors = CardDefaults.cardColors().copy(containerColor = HorizonColors.Surface.cardPrimary()),
-        elevation = CardDefaults.elevatedCardElevation(
-            defaultElevation = HorizonElevation.level4,
-            pressedElevation = HorizonElevation.level4,
-            focusedElevation = HorizonElevation.level4,
-            disabledElevation = HorizonElevation.level4,
-            hoveredElevation = HorizonElevation.level4,
-            draggedElevation = HorizonElevation.level4
-        ),
-        modifier = modifier
+    Box(modifier = modifier
+            .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level2, clip = true)
+            .clip(HorizonCornerRadius.level2)
+            .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level2)
     ) {
         val clickModifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
         Column(clickModifier.padding(36.dp)) {
@@ -100,13 +94,13 @@ fun LearningObjectCard(learningObjectCardState: LearningObjectCardState, modifie
                     }
                     if (learningObjectCardState.dueDate != null) {
                         LearningObjectPill(
-                            stringResource(R.string.learningobject_dueDate, learningObjectCardState.dueDate.formatDayMonth()),
+                            stringResource(R.string.learningobject_dueDate, learningObjectCardState.dueDate.formatMonthDay()),
                             iconRes = R.drawable.calendar_today
                         )
                     }
                 }
                 Spacer(modifier = Modifier.width(24.dp))
-                if (onClick != null) IconButton(iconRes = R.drawable.arrow_forward, color = IconButtonColor.INSTITUTION, onClick = onClick)
+                if (onClick != null) IconButton(iconRes = R.drawable.arrow_forward, color = IconButtonColor.Institution, onClick = onClick)
             }
         }
     }

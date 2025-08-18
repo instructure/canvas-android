@@ -30,276 +30,283 @@
         app:popupTheme="@style/ToolBarPopupStyle"
         app:theme="@style/ToolBarStyle" />
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:animateLayoutChanges="true"
-        android:orientation="vertical"
-        android:paddingBottom="16dp"
-        android:paddingEnd="8dp"
-        android:paddingStart="8dp">
+        android:layout_height="match_parent">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/titleLabel"
-            style="@style/TextFont.Medium"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/title"
-            android:labelFor="@+id/editAssignmentName"
-            android:textColorHint="@color/textDark"
-            app:hintTextAppearance="@style/TextInputLabel">
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            android:paddingStart="8dp"
+            android:paddingEnd="8dp"
+            android:paddingBottom="16dp">
 
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/titleEditText"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/titleLabel"
                 style="@style/TextFont.Medium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/title"
-                android:maxLines="2"
-                android:minHeight="48dp"
-                android:textColorHint="@color/textDark"
-                android:textSize="16sp" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <TextView
-            android:id="@+id/accessLabel"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:labelFor="@+id/displayGradeAsSpinner"
-            android:paddingStart="4dp"
-            android:text="@string/access"
-            android:textColor="@color/textDark" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/accessSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="48dp"
-            android:paddingStart="-8dp"
-            app:theme="@style/ThemeSpinner" />
-
-        <TextView
-            android:id="@+id/restrictedAccessLabel"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:labelFor="@+id/displayGradeAsSpinner"
-            android:paddingStart="4dp"
-            android:text="@string/restrictedAccess"
-            android:textColor="@color/textDark"
-            android:visibility="gone" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/restrictedAccessSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="48dp"
-            android:paddingStart="-8dp"
-            android:visibility="gone"
-            app:theme="@style/ThemeSpinner"
-            tools:visibility="visible" />
-
-        <LinearLayout
-            android:id="@+id/restrictedAccessUnlock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/unlockDateTextInput"
-                style="@style/OverrideViewTextInputLayoutDate"
-                android:contentDescription="@string/available_from"
-                android:labelFor="@+id/unlockDateEditText"
-                android:textColorHint="@color/textDark"
-                app:hintTextAppearance="@style/TextInputLabel">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/unlockDateEditText"
-                    style="@style/OverrideViewEditText"
-                    android:hint="@string/available_from"
-                    android:minHeight="48dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/unlockTimeTextInput"
-                style="@style/OverrideViewTextInputLayoutTime"
+                android:layout_marginTop="8dp"
                 android:background="@android:color/transparent"
-                android:contentDescription="@string/dueTime"
-                android:labelFor="@+id/unlockTimeEditText"
+                android:contentDescription="@string/title"
+                android:labelFor="@+id/editAssignmentName"
                 android:textColorHint="@color/textDark"
                 app:hintTextAppearance="@style/TextInputLabel">
 
                 <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/unlockTimeEditText"
-                    style="@style/OverrideViewEditText"
-                    android:minHeight="48dp" />
+                    android:id="@+id/titleEditText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/title"
+                    android:maxLines="2"
+                    android:minHeight="48dp"
+                    android:textColorHint="@color/textDark"
+                    android:textSize="16sp" />
 
             </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/restrictedAccessLock"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            tools:visibility="visible">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lockDateTextInput"
-                style="@style/OverrideViewTextInputLayoutDate"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/available_to"
-                android:labelFor="@+id/lockDateEditText"
-                android:textColorHint="@color/textDark"
-                app:hintTextAppearance="@style/TextInputLabel">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/lockDateEditText"
-                    style="@style/OverrideViewEditText"
-                    android:hint="@string/available_to"
-                    android:minHeight="48dp" />
-            </com.google.android.material.textfield.TextInputLayout>
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/lockTimeTextInput"
-                style="@style/OverrideViewTextInputLayoutTime"
-                android:background="@android:color/transparent"
-                android:contentDescription="@string/dueTime"
-                android:labelFor="@+id/lockTimeEditText"
-                android:textColorHint="@color/textDark"
-                app:hintTextAppearance="@style/TextInputLabel">
-
-                <androidx.appcompat.widget.AppCompatEditText
-                    android:id="@+id/lockTimeEditText"
-                    style="@style/OverrideViewEditText"
-                    android:minHeight="48dp" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </LinearLayout>
-
-        <TextView
-            android:id="@+id/usageRightsLabel"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:labelFor="@+id/displayGradeAsSpinner"
-            android:paddingStart="4dp"
-            android:text="@string/usageRights"
-            android:textColor="@color/textDark"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/usageRightsSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="48dp"
-            android:paddingStart="-8dp"
-            android:visibility="gone"
-            app:theme="@style/ThemeSpinner"
-            tools:visibility="visible" />
-
-        <TextView
-            android:id="@+id/licenseLabel"
-            style="@style/TextFont.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:labelFor="@+id/displayGradeAsSpinner"
-            android:paddingStart="4dp"
-            android:text="@string/license"
-            android:textColor="@color/textDark"
-            android:visibility="gone"
-            tools:visibility="visible" />
-
-        <androidx.appcompat.widget.AppCompatSpinner
-            android:id="@+id/licenseSpinner"
-            style="@style/Widget.AppCompat.Spinner.Underlined"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:minHeight="48dp"
-            android:paddingStart="-8dp"
-            android:visibility="gone"
-            app:theme="@style/ThemeSpinner" />
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/copyrightHolderLabel"
-            style="@style/TextFont.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:background="@android:color/transparent"
-            android:contentDescription="@string/copyrightHolder"
-            android:labelFor="@+id/editAssignmentName"
-            android:textColorHint="@color/textDark"
-            android:visibility="gone"
-            app:hintTextAppearance="@style/TextInputLabel"
-            tools:visibility="visible">
-
-            <androidx.appcompat.widget.AppCompatEditText
-                android:id="@+id/copyrightEditText"
-                style="@style/TextFont.Medium"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:hint="@string/copyrightHolder"
-                android:maxLines="2"
-                android:minHeight="48dp"
-                android:textColorHint="@color/textDark"
-                android:textSize="16sp"
-                android:visibility="gone"
-                tools:visibility="visible" />
-
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <RelativeLayout
-            android:id="@+id/deleteWrapper"
-            android:layout_width="match_parent"
-            android:layout_height="?android:listPreferredItemHeightSmall"
-            android:layout_marginTop="8dp"
-            android:background="?android:selectableItemBackground"
-            android:gravity="center_vertical"
-            android:visibility="visible">
-
-            <ImageView
-                android:id="@+id/deleteImage"
-                android:layout_width="18dp"
-                android:layout_height="18dp"
-                android:layout_centerVertical="true"
-                android:importantForAccessibility="no"
-                android:tint="@color/textDanger"
-                app:srcCompat="@drawable/ic_trash" />
 
             <TextView
-                android:id="@+id/deleteText"
+                android:id="@+id/accessLabel"
                 style="@style/TextFont.Medium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginStart="12dp"
-                android:layout_toEndOf="@id/deleteImage"
-                android:importantForAccessibility="yes"
-                android:text="@string/deleteFile"
-                android:textColor="@color/textDanger"
-                android:textSize="16sp" />
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/displayGradeAsSpinner"
+                android:paddingStart="4dp"
+                android:text="@string/access"
+                android:textColor="@color/textDark" />
 
-        </RelativeLayout>
-    </LinearLayout>
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/accessSpinner"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:paddingStart="-8dp"
+                app:theme="@style/ThemeSpinner" />
+
+            <TextView
+                android:id="@+id/restrictedAccessLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/displayGradeAsSpinner"
+                android:paddingStart="4dp"
+                android:text="@string/restrictedAccess"
+                android:textColor="@color/textDark"
+                android:visibility="gone" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/restrictedAccessSpinner"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:paddingStart="-8dp"
+                android:visibility="gone"
+                app:theme="@style/ThemeSpinner"
+                tools:visibility="visible" />
+
+            <LinearLayout
+                android:id="@+id/restrictedAccessUnlock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/unlockDateTextInput"
+                    style="@style/OverrideViewTextInputLayoutDate"
+                    android:contentDescription="@string/available_from"
+                    android:labelFor="@+id/unlockDateEditText"
+                    android:textColorHint="@color/textDark"
+                    app:hintTextAppearance="@style/TextInputLabel">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/unlockDateEditText"
+                        style="@style/OverrideViewEditText"
+                        android:hint="@string/available_from"
+                        android:minHeight="48dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/unlockTimeTextInput"
+                    style="@style/OverrideViewTextInputLayoutTime"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/dueTime"
+                    android:labelFor="@+id/unlockTimeEditText"
+                    android:textColorHint="@color/textDark"
+                    app:hintTextAppearance="@style/TextInputLabel">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/unlockTimeEditText"
+                        style="@style/OverrideViewEditText"
+                        android:minHeight="48dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/restrictedAccessLock"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:visibility="gone"
+                tools:visibility="visible">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lockDateTextInput"
+                    style="@style/OverrideViewTextInputLayoutDate"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/available_to"
+                    android:labelFor="@+id/lockDateEditText"
+                    android:textColorHint="@color/textDark"
+                    app:hintTextAppearance="@style/TextInputLabel">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/lockDateEditText"
+                        style="@style/OverrideViewEditText"
+                        android:hint="@string/available_to"
+                        android:minHeight="48dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/lockTimeTextInput"
+                    style="@style/OverrideViewTextInputLayoutTime"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@string/dueTime"
+                    android:labelFor="@+id/lockTimeEditText"
+                    android:textColorHint="@color/textDark"
+                    app:hintTextAppearance="@style/TextInputLabel">
+
+                    <androidx.appcompat.widget.AppCompatEditText
+                        android:id="@+id/lockTimeEditText"
+                        style="@style/OverrideViewEditText"
+                        android:minHeight="48dp" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/usageRightsLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/displayGradeAsSpinner"
+                android:paddingStart="4dp"
+                android:text="@string/usageRights"
+                android:textColor="@color/textDark"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/usageRightsSpinner"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:paddingStart="-8dp"
+                android:visibility="gone"
+                app:theme="@style/ThemeSpinner"
+                tools:visibility="visible" />
+
+            <TextView
+                android:id="@+id/licenseLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:labelFor="@+id/displayGradeAsSpinner"
+                android:paddingStart="4dp"
+                android:text="@string/license"
+                android:textColor="@color/textDark"
+                android:visibility="gone"
+                tools:visibility="visible" />
+
+            <androidx.appcompat.widget.AppCompatSpinner
+                android:id="@+id/licenseSpinner"
+                style="@style/Widget.AppCompat.Spinner.Underlined"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:minHeight="48dp"
+                android:paddingStart="-8dp"
+                android:visibility="gone"
+                app:theme="@style/ThemeSpinner" />
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/copyrightHolderLabel"
+                style="@style/TextFont.Medium"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:background="@android:color/transparent"
+                android:contentDescription="@string/copyrightHolder"
+                android:labelFor="@+id/editAssignmentName"
+                android:textColorHint="@color/textDark"
+                android:visibility="gone"
+                app:hintTextAppearance="@style/TextInputLabel"
+                tools:visibility="visible">
+
+                <androidx.appcompat.widget.AppCompatEditText
+                    android:id="@+id/copyrightEditText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/copyrightHolder"
+                    android:maxLines="2"
+                    android:minHeight="48dp"
+                    android:textColorHint="@color/textDark"
+                    android:textSize="16sp"
+                    android:visibility="gone"
+                    tools:visibility="visible" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <RelativeLayout
+                android:id="@+id/deleteWrapper"
+                android:layout_width="match_parent"
+                android:layout_height="?android:listPreferredItemHeightSmall"
+                android:layout_marginTop="8dp"
+                android:background="?android:selectableItemBackground"
+                android:gravity="center_vertical"
+                android:visibility="visible">
+
+                <ImageView
+                    android:id="@+id/deleteImage"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
+                    android:layout_centerVertical="true"
+                    android:importantForAccessibility="no"
+                    android:tint="@color/textDanger"
+                    app:srcCompat="@drawable/ic_trash" />
+
+                <TextView
+                    android:id="@+id/deleteText"
+                    style="@style/TextFont.Medium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/deleteImage"
+                    android:importantForAccessibility="yes"
+                    android:text="@string/deleteFile"
+                    android:textColor="@color/textDanger"
+                    android:textSize="16sp" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
 
 </LinearLayout>

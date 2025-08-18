@@ -18,15 +18,21 @@
 package com.instructure.horizon.features.dashboard
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -38,8 +44,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -51,21 +59,25 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.ProgressBar
+import com.instructure.horizon.horizonui.organisms.Alert
+import com.instructure.horizon.horizonui.organisms.AlertType
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
-
-const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
+import com.instructure.pandautils.utils.ThemePrefs
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
@@ -85,29 +97,75 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     }
 
     Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
-        LoadingStateWrapper(loadingState = uiState.loadingState) {
-            LazyColumn(contentPadding = PaddingValues(start = 24.dp, end = 24.dp), modifier = Modifier.padding(paddingValues), content = {
-                item {
+        val spinnerColor =
+            if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
+        LoadingStateWrapper(loadingState = uiState.loadingState, spinnerColor = spinnerColor, modifier = Modifier.padding(paddingValues)) {
+            if (uiState.coursesUiState.isEmpty() && uiState.invitesUiState.isEmpty()) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp)
+                        .verticalScroll(rememberScrollState())
+                        .height(IntrinsicSize.Max)
+                ) {
                     HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
-                    HorizonSpace(SpaceSize.SPACE_36)
-                }
-                itemsIndexed(uiState.coursesUiState) { index, courseItem ->
-                    DashboardCourseItem(courseItem, onClick = {
-                        mainNavController.navigate(MainNavigationRoute.ModuleItemSequence(courseItem.courseId, courseItem.nextModuleItemId))
-                    }, onCourseClick = {
-                        homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
-                            popUpTo(homeNavController.graph.findStartDestination().id) {
-                                saveState = true
-                            }
-                            launchSingleTop = true
-                            restoreState = true
-                        }
-                    })
-                    if (index < uiState.coursesUiState.size - 1) {
-                        HorizonSpace(SpaceSize.SPACE_48)
+                    HorizonSpace(SpaceSize.SPACE_24)
+                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                        Text(
+                            stringResource(R.string.dashboard_emptyMessage),
+                            style = HorizonTypography.h3,
+                            textAlign = TextAlign.Center
+                        )
                     }
                 }
-            })
+            } else {
+                LazyColumn(
+                    contentPadding = PaddingValues(start = 24.dp, end = 24.dp),
+                    content = {
+                        item {
+                            HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
+                            HorizonSpace(SpaceSize.SPACE_24)
+                        }
+                        items(uiState.invitesUiState) { inviteItem ->
+                            Alert(
+                                stringResource(R.string.dashboard_courseInvite, inviteItem.courseName),
+                                alertType = AlertType.Info,
+                                buttons = {
+                                    LoadingButton(
+                                        label = stringResource(R.string.dashboard_courseInviteAccept),
+                                        contentAlignment = Alignment.CenterStart,
+                                        color = ButtonColor.Black,
+                                        onClick = inviteItem.onAccept,
+                                        loading = inviteItem.acceptLoading
+                                    )
+                                },
+                                onDismiss = if (inviteItem.acceptLoading) null else inviteItem.onDismiss
+                            )
+                            HorizonSpace(SpaceSize.SPACE_16)
+                        }
+                        itemsIndexed(uiState.coursesUiState) { index, courseItem ->
+                            DashboardCourseItem(courseItem, onClick = {
+                                mainNavController.navigate(
+                                    MainNavigationRoute.ModuleItemSequence(
+                                        courseItem.courseId,
+                                        courseItem.nextModuleItemId
+                                    )
+                                )
+                            }, onCourseClick = {
+                                homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
+                                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = false
+                                }
+                            })
+                            if (index < uiState.coursesUiState.size - 1) {
+                                HorizonSpace(SpaceSize.SPACE_48)
+                            }
+                        }
+                    })
+            }
         }
     }
 }
@@ -117,14 +175,19 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
     Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
         GlideImage(
             model = uiState.logoUrl,
+            contentScale = ContentScale.Fit,
+            modifier = Modifier
+                .weight(1f)
+                .heightIn(max = 44.dp),
             contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
-            modifier = Modifier.width(118.dp)
         )
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             iconRes = R.drawable.menu_book_notebook,
-            onClick = uiState.onNotebookClick,
-            color = IconButtonColor.INVERSE,
+            onClick = {
+                mainNavController.navigate(MainNavigationRoute.Notebook.route)
+            },
+            color = IconButtonColor.Inverse,
             elevation = HorizonElevation.level4,
         )
         HorizonSpace(SpaceSize.SPACE_8)
@@ -134,14 +197,14 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
                 mainNavController.navigate(MainNavigationRoute.Notification.route)
             },
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.INVERSE
+            color = IconButtonColor.Inverse
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.mail,
-            onClick = uiState.onInboxClick,
+            onClick = { mainNavController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.INVERSE
+            color = IconButtonColor.Inverse
         )
     }
 }
@@ -161,7 +224,7 @@ private fun DashboardCourseItem(
                     onCourseClick()
                 }) {
             Text(text = courseItem.courseName, style = HorizonTypography.h1)
-            HorizonSpace(SpaceSize.SPACE_24)
+            HorizonSpace(SpaceSize.SPACE_12)
             ProgressBar(progress = courseItem.courseProgress)
             HorizonSpace(SpaceSize.SPACE_36)
         }

@@ -16,12 +16,13 @@
 package com.instructure.horizon.features.moduleitemsequence
 
 import android.net.Uri
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.pandautils.utils.Const
 
 data class ModuleItemSequenceUiState(
+    val courseId: Long,
     val loadingState: LoadingState = LoadingState(),
     val items: List<ModuleItemUiState> = emptyList(),
     val currentPosition: Int = -1,
@@ -31,12 +32,17 @@ data class ModuleItemSequenceUiState(
     val onNextClick: () -> Unit = {},
     val onProgressClick: () -> Unit = {},
     val onAssignmentToolsClick: () -> Unit = {},
-    val openAssignmentTools: Boolean = false,
+    val showAssignmentToolsForId: Long? = null,
     val assignmentToolsOpened: () -> Unit = {},
     val showAiAssist: Boolean = false,
-    val updateShowAiAssist: (Boolean) -> Unit = {},
-    val aiContext: AiAssistContext = AiAssistContext(),
-    val updateAiContextString: (String) -> Unit = {},
+    val showNotebook: Boolean = false,
+    val updateShowAiAssist: (Boolean) -> Unit,
+    val updateShowNotebook: (Boolean) -> Unit,
+    val objectTypeAndId: Pair<String, String> = Pair("", ""),
+    val updateObjectTypeAndId: (Pair<String, String>) -> Unit = {},
+    val hasUnreadComments: Boolean = false,
+    val updateAiAssistContext: (AiAssistContextSource, String) -> Unit = { _, _ -> },
+    val shouldRefreshPreviousScreen: Boolean = false,
 )
 
 data class ModuleItemUiState(
@@ -58,9 +64,10 @@ data class MarkAsDoneUiState(
 )
 
 sealed class ModuleItemContent(val routeWithArgs: String) {
-    data class Assignment(val courseId: Long, val assignmentId: Long) : ModuleItemContent(
-        "courses/$courseId/assignments/$assignmentId"
-    ) {
+    data class Assignment(val courseId: Long, val assignmentId: Long, val onSubmitted: () -> Unit = {}) :
+        ModuleItemContent(
+            "courses/$courseId/assignments/$assignmentId"
+        ) {
         companion object {
             const val ASSIGNMENT_ID = "assignmentId"
             const val ROUTE = "courses/{${Const.COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
@@ -71,11 +78,11 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         ModuleItemContent(
             "courses/$courseId/pages/$pageUrl"
         ) {
-            companion object {
-                const val PAGE_URL = "pageUrl"
-                const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_URL}}"
-            }
+        companion object {
+            const val PAGE_URL = "pageUrl"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/pages/{${PAGE_URL}}"
         }
+    }
 
     data class ExternalLink(val title: String, val url: String) :
         ModuleItemContent("external_link/${Uri.encode(title)}/${Uri.encode(url)}") {
@@ -92,7 +99,8 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         ) {
         companion object {
             const val FILE_URL = "fileUrl"
-            const val ROUTE = "courses/{${Const.COURSE_ID}}/files/{${FILE_URL}}?moduleItemId={${Const.MODULE_ITEM_ID}}&moduleId={${Const.MODULE_ID}}"
+            const val ROUTE =
+                "courses/{${Const.COURSE_ID}}/files/{${FILE_URL}}?moduleItemId={${Const.MODULE_ITEM_ID}}&moduleId={${Const.MODULE_ID}}"
         }
     }
 
@@ -107,12 +115,12 @@ sealed class ModuleItemContent(val routeWithArgs: String) {
         }
     }
 
-    data class Assessment(val courseId: Long, val quizId: Long) : ModuleItemContent(
-        "courses/$courseId/quizzes/$quizId"
+    data class Assessment(val courseId: Long, val assignmentId: Long, val onSubmitted: () -> Unit = {}) : ModuleItemContent(
+        "courses/$courseId/quizzes/$assignmentId"
     ) {
         companion object {
-            const val QUIZ_ID = "quizId"
-            const val ROUTE = "courses/{${Const.COURSE_ID}}/quizzes/{$QUIZ_ID}"
+            const val ASSIGNMENT_ID = "assignmentId"
+            const val ROUTE = "courses/{${Const.COURSE_ID}}/quizzes/{$ASSIGNMENT_ID}"
         }
     }
 

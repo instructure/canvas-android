@@ -33,17 +33,21 @@ object FileUploadManager {
     private fun performUpload(
         file: File,
         uploadParams: FileUploadParams,
-        onProgress: ProgressRequestUpdateListener? = null
+        onProgress: ProgressRequestUpdateListener? = null,
+        restParams: RestParams = RestParams()
     ): DataResult<Attachment> {
         val adapter = RestBuilder()
-        val params = RestParams(shouldIgnoreToken = false)
-        val attachment = FileUploadAPI.uploadSynchronous(uploadParams, file, adapter, params, onProgress)
+        val attachment = FileUploadAPI.uploadSynchronous(uploadParams, file, adapter, restParams, onProgress)
         return if (attachment != null) DataResult.Success(attachment) else DataResult.Fail()
     }
 
-    fun uploadFile(config: FileUploadConfig, onProgress: ProgressRequestUpdateListener? = null): DataResult<Attachment> {
+    fun uploadFile(
+        config: FileUploadConfig,
+        onProgress: ProgressRequestUpdateListener? = null,
+        fileUploadRestParams: RestParams = RestParams()
+    ): DataResult<Attachment> {
         return FileUploadAPI.getUploadParams(config)
-            .then { performUpload(File(config.filePath), it, onProgress) }
+            .then { performUpload(File(config.filePath), it, onProgress, fileUploadRestParams) }
     }
 
     fun uploadAvatarSynchronous(imageName: String, size: Long, contentType: String, path: String): AvatarWrapper {

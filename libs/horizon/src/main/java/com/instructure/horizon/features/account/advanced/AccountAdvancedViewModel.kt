@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.account.advanced
 
 import android.content.Context
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -42,10 +43,11 @@ class AccountAdvancedViewModel @Inject constructor(
         AccountAdvancedUiState(
             screenState = LoadingState(
                 isPullToRefreshEnabled = false,
-                onErrorSnackbarDismiss = ::dismissSnackbar
+                onSnackbarDismiss = ::dismissSnackbar
             ),
             updateTimeZone = ::updateTimeZone,
             saveSelectedTimeZone = ::saveSelectedTimeZone,
+            onSearchQueryChanged = ::updateSearchQuery,
         )
     )
     val uiState = _uiState.asStateFlow()
@@ -74,7 +76,7 @@ class AccountAdvancedViewModel @Inject constructor(
             }
         } catch {
             _uiState.update {
-                it.copy(screenState = it.screenState.copy(isLoading = false, isError = true, errorSnackbar = context.getString(
+                it.copy(screenState = it.screenState.copy(isLoading = false, isError = true, snackbarMessage = context.getString(
                     R.string.accountAdvancedFailedToLoadMessage
                 )))
             }
@@ -91,7 +93,7 @@ class AccountAdvancedViewModel @Inject constructor(
             repository.updateUserTimeZone(selectedTimeZone.id)
 
             _uiState.update {
-                it.copy(screenState = it.screenState.copy(errorSnackbar = context.getString(R.string.accountAdvancedUpdatedMessage)))
+                it.copy(screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.accountAdvancedUpdatedMessage)))
             }
             
             _uiState.update {
@@ -101,7 +103,7 @@ class AccountAdvancedViewModel @Inject constructor(
             _uiState.update {
                 it.copy(
                     screenState = it.screenState.copy(
-                        errorSnackbar = context.getString(R.string.accountAdvancedFailedToUpdateMessage)
+                        snackbarMessage = context.getString(R.string.accountAdvancedFailedToUpdateMessage)
                     ),
                     isButtonEnabled = true
                 )
@@ -119,7 +121,15 @@ class AccountAdvancedViewModel @Inject constructor(
 
     private fun dismissSnackbar() {
         _uiState.update {
-            it.copy(screenState = it.screenState.copy(errorSnackbar = null))
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun updateSearchQuery(newQuery: TextFieldValue) {
+        _uiState.update {
+            it.copy(
+                searchQuery = newQuery
+            )
         }
     }
 }

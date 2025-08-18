@@ -88,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:visibility="gone"
+        android:visibility="visible"
         app:pclv_indeterminate="true"
         app:pclv_override_color="@color/login_teacherAppTheme"/>
 
@@ -113,6 +113,7 @@
             android:background="@drawable/bg_play_arrow"
             android:contentDescription="@string/playMedia"
             android:importantForAccessibility="yes"
+            android:visibility="gone"
             android:src="@drawable/ic_play_arrow"/>
 
     </FrameLayout>

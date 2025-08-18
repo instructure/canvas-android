@@ -124,6 +124,8 @@ internal class SvgDecoder : ResourceDecoder<InputStream, SVG> {
     override fun decode(source: InputStream, width: Int, height: Int, options: Options): Resource<SVG>? {
         try {
             val svg = SVG.getFromInputStream(source)
+            svg.documentWidth = width.toFloat()
+            svg.documentHeight = height.toFloat()
             return SimpleResource(svg)
         } catch (e: SVGParseException) {
             throw IOException("Cannot load SVG from stream", e)

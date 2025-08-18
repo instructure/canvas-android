@@ -19,20 +19,33 @@ package com.instructure.teacher.ui
 import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.StudentContextManager
+import com.instructure.canvasapi2.managers.SubmissionRubricManager
+import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
+import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.teacher.ui.utils.TeacherComposeTest
@@ -60,6 +73,31 @@ class CommentLibraryPageTest : TeacherComposeTest() {
     @JvmField
     val personContextManager: StudentContextManager = FakeStudentContextManager()
 
+    @BindValue
+    @JvmField
+    val assignmentDetailsManager: AssignmentDetailsManager = FakeAssignmentDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionContentManager: SubmissionContentManager = FakeSubmissionContentManager()
+
+    @BindValue
+    @JvmField
+    val submissionGradeManager: SubmissionGradeManager = FakeSubmissionGradeManager()
+
+    @BindValue
+    @JvmField
+    val submissionDetailsManager: SubmissionDetailsManager = FakeSubmissionDetailsManager()
+
+    @BindValue
+    @JvmField
+    val submissionRubricManager: SubmissionRubricManager = FakeSubmissionRubricManager()
+
+    @BindValue
+    @JvmField
+    val submissionCommentsManager: SubmissionCommentsManager = FakeSubmissionCommentsManager()
+
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllItemsWhenCommentFieldIsClicked() {
@@ -74,6 +112,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         }
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAndSelectFilteredCommentCloseCommentLibrary() {
@@ -95,6 +134,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionAndSendComment() {
@@ -122,6 +162,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun sendCommentFromCommentLibraryWithoutSelectingSuggestion() {
@@ -145,6 +186,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun reopenCommentLibraryWhenTextIsModified() {
@@ -170,6 +212,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         commentLibraryPage.assertSuggestionVisible(filteredSuggestion)
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showEmptyViewWhenFilteringHasNoSuggestion() {
@@ -181,6 +224,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         commentLibraryPage.assertEmptyViewVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun selectCommentLibrarySuggestionFromMultipleItemResult() {
@@ -205,6 +249,7 @@ class CommentLibraryPageTest : TeacherComposeTest() {
         speedGraderPage.assertCommentLibraryNotVisible()
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.SPEED_GRADER, TestCategory.INTERACTION)
     fun showAllCommentLibraryItemsAfterClearingCommentFieldFilter() {

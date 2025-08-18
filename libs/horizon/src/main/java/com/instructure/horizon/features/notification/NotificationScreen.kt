@@ -89,28 +89,30 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
 
         HorizonDivider()
 
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(vertical = 16.dp)
-        ) {
-            IconButton(
-                iconRes = R.drawable.chevron_left,
-                onClick = state.decreasePageIndex,
-                color = IconButtonColor.BLACK,
-                enabled = state.currentPageIndex > 0 && state.pagedNotificationItems.size > 1
-            )
+        if (state.pagedNotificationItems.size > 1) {
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = 16.dp)
+            ) {
+                IconButton(
+                    iconRes = R.drawable.chevron_left,
+                    onClick = state.decreasePageIndex,
+                    color = IconButtonColor.Black,
+                    enabled = state.currentPageIndex > 0 && state.pagedNotificationItems.size > 1
+                )
 
-            HorizonSpace(SpaceSize.SPACE_8)
+                HorizonSpace(SpaceSize.SPACE_8)
 
-            IconButton(
-                iconRes = R.drawable.chevron_right,
-                onClick = state.increasePageIndex,
-                color = IconButtonColor.BLACK,
-                enabled = state.currentPageIndex < state.pagedNotificationItems.lastIndex
-            )
+                IconButton(
+                    iconRes = R.drawable.chevron_right,
+                    onClick = state.increasePageIndex,
+                    color = IconButtonColor.Black,
+                    enabled = state.currentPageIndex < state.pagedNotificationItems.lastIndex
+                )
+            }
         }
     }
 }
