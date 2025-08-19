@@ -26,6 +26,7 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.pandautils.features.inbox.compose.DefaultInboxComposeBehavior
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
@@ -97,6 +98,6 @@ class InboxModule {
 
     @Provides
     fun provideInboxComposeBehavior(): InboxComposeBehavior {
-        return InboxComposeBehavior()
+        return DefaultInboxComposeBehavior()
     }
 }

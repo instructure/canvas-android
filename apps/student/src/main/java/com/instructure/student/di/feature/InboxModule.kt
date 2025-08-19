@@ -16,6 +16,7 @@
  */
 package com.instructure.student.di.feature
 
+import com.instructure.pandautils.features.inbox.compose.DefaultInboxComposeBehavior
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import dagger.Module
@@ -33,6 +34,6 @@ class InboxModule {
 
     @Provides
     fun provideInboxComposeBehavior(): InboxComposeBehavior {
-        return InboxComposeBehavior()
+        return DefaultInboxComposeBehavior()
     }
 }
