@@ -40,6 +40,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.toast
@@ -73,6 +74,9 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     @Inject
     lateinit var webViewAuthenticator: WebViewAuthenticator
 
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     private lateinit var navController: NavController
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,6 +86,7 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         setupNavigation()
         handleQrMasquerading()
         scheduleAlarms()
+        fetchFeatureFlags()
 
         RatingDialog.showRatingDialog(this, AppType.PARENT)
     }
@@ -196,6 +201,16 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onQuotaExceeded(errorCode: StorageQuotaExceededError) {
         toast(R.string.fileQuotaExceeded)
+    }
+
+    private fun fetchFeatureFlags() {
+        lifecycleScope.launch {
+            try {
+                featureFlagProvider.fetchEnvironmentFeatureFlags()
+            } catch (e: Exception) {
+                Log.w("MainActivity", "Failed to fetch feature flags", e)
+            }
+        }
     }
 
     companion object {

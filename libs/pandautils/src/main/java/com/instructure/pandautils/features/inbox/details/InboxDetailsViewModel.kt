@@ -25,7 +25,6 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -43,7 +42,6 @@ class InboxDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val behavior: InboxDetailsBehavior,
     private val repository: InboxDetailsRepository,
-    private val featureFlagProvider: FeatureFlagProvider,
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -56,14 +54,17 @@ class InboxDetailsViewModel @Inject constructor(
     val events = _events.receiveAsFlow()
 
     private var canDeleteMessages = true
+    private var canReplyAll = true
 
     init {
         _uiState.update { it.copy(
             conversationId = conversationId,
             showBackButton = behavior.getShowBackButton(context)
         ) }
-        checkAndApplyFeatureFlagRestrictions()
-        getConversation()
+        viewModelScope.launch {
+            checkAndApplyFeatureFlagRestrictions()
+            getConversation()
+        }
     }
 
     fun messageActionHandler(action: MessageAction) {
@@ -200,13 +201,14 @@ class InboxDetailsViewModel @Inject constructor(
     private fun getMessageViewState(conversation: Conversation, message: Message): InboxMessageUiState {
         val author = conversation.participants.find { it.id == message.authorId }
         val recipients = conversation.participants.filter { message.participatingUserIds.filter { it != message.authorId }.contains(it.id) }
+        
         return InboxMessageUiState(
             message = message,
             author = author,
             recipients = recipients,
             enabledActions = true,
             cannotReply = conversation.cannotReply,
-            canReplyAll = canDeleteMessages, // Use same logic as canDeleteMessages
+            canReplyAll = canReplyAll,
             canDelete = canDeleteMessages,
         )
     }
@@ -274,22 +276,18 @@ class InboxDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun checkAndApplyFeatureFlagRestrictions() {
-        viewModelScope.launch {
-            val shouldRestrictDelete = behavior.shouldRestrictDeleteConversation()
-            val shouldRestrictReplyAll = behavior.shouldRestrictReplyAll()
-            
-            if (shouldRestrictDelete || shouldRestrictReplyAll) {
-                if (shouldRestrictDelete) {
-                    canDeleteMessages = false
-                }
-                _uiState.update {
-                    it.copy(
-                        showDeleteButton = !shouldRestrictDelete,
-                        showReplyAllButton = !shouldRestrictReplyAll
-                    )
-                }
-            }
+    private suspend fun checkAndApplyFeatureFlagRestrictions() {
+        val shouldRestrictDelete = behavior.shouldRestrictDeleteConversation()
+        val shouldRestrictReplyAll = behavior.shouldRestrictReplyAll()
+        
+        canDeleteMessages = !shouldRestrictDelete
+        canReplyAll = !shouldRestrictReplyAll
+        
+        _uiState.update {
+            it.copy(
+                showDeleteButton = !shouldRestrictDelete,
+                showReplyAllButton = !shouldRestrictReplyAll
+            )
         }
     }
 }
