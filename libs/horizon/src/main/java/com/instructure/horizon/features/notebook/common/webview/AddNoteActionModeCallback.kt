@@ -31,7 +31,7 @@ import kotlinx.coroutines.launch
 class AddNoteActionModeCallback(
     lifecycleOwner: LifecycleOwner,
     private val selectionLocation: Flow<SelectionLocation>,
-    private val menuItems: List<ActionMenuItem>
+    private val menuItems: () -> List<ActionMenuItem>
 ): ActionMode.Callback2() {
 
     private var menuLocation: SelectionLocation? = null
@@ -46,7 +46,7 @@ class AddNoteActionModeCallback(
 
 
     override fun onCreateActionMode(mode: ActionMode?, menu: Menu?): Boolean {
-        menuItems.forEach {
+        menuItems().forEach {
             menu?.add(Menu.NONE, it.id, Menu.NONE, it.label)
         }
         return true
@@ -57,7 +57,7 @@ class AddNoteActionModeCallback(
     }
 
     override fun onActionItemClicked(mode: ActionMode?, item: MenuItem?): Boolean {
-        menuItems.firstOrNull { it.id == item?.itemId }?.onClick?.invoke()
+        menuItems().firstOrNull { it.id == item?.itemId }?.onClick?.invoke()
         mode?.finish()
         return true
     }

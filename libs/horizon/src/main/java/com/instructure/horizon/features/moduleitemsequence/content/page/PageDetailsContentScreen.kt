@@ -91,6 +91,7 @@ fun PageDetailsContentScreen(
                             addJavascriptInterface(JSInterface(uiState.ltiButtonPressed), Const.LTI_TOOL)
                         }
                     },
+                    scrollState = scrollState,
                     embeddedWebViewCallbacks = ComposeEmbeddedWebViewCallbacks(
                         shouldLaunchInternalWebViewFragment = { _ -> true },
                         launchInternalWebViewFragment = { url -> activity?.launchCustomTab(url, ThemePrefs.brandColor) }

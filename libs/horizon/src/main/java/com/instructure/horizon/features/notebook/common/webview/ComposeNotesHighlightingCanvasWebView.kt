@@ -17,9 +17,11 @@
 package com.instructure.horizon.features.notebook.common.webview
 
 import android.webkit.WebView
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -28,6 +30,7 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.platform.LocalContext
@@ -65,8 +68,13 @@ fun ComposeNotesHighlightingCanvasWebView(
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks = ComposeWebViewCallbacks(),
-    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null
+    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
+    scrollState: ScrollState? = null
 ) {
+    var pageHeight by remember { mutableIntStateOf(0) }
+    var scrollValue by rememberSaveable { mutableIntStateOf(0) }
+    var previousScrollMaxValue by rememberSaveable { mutableIntStateOf(0) }
+    var scrollMaxValue by rememberSaveable { mutableIntStateOf(0) }
     val webViewState = rememberSaveable { bundleOf() }
     val selectionLocation: MutableStateFlow<SelectionLocation> by remember { mutableStateOf(MutableStateFlow(SelectionLocation(0f, 0f, 0f, 0f))) }
     val lifecycleOwner = LocalLifecycleOwner.current
@@ -83,58 +91,81 @@ fun ComposeNotesHighlightingCanvasWebView(
     var selectedTextStart by remember { mutableIntStateOf(0) }
     var selectedTextEnd by remember { mutableIntStateOf(0) }
 
-    val menuItems by remember {
-        mutableStateOf(
-            listOf(
-                ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
-                    clipboardManager.setText(AnnotatedString(selectedText))
-                },
-                ActionMenuItem(2, context.getString(R.string.notesActionMenuAddImportantNote)) {
-                    notesCallback.onNoteAdded(
-                        selectedText,
-                        NotebookType.Important.name,
-                        selectedTextRangeStartContainer,
-                        selectedTextRangeStartOffset,
-                        selectedTextRangeEndContainer,
-                        selectedTextRangeEndOffset,
-                        selectedTextStart,
-                        selectedTextEnd
-                    )
-                },
-                ActionMenuItem(3, context.getString(R.string.notesActionMenuAddConfusingNote)) {
-                    notesCallback.onNoteAdded(
-                        selectedText,
-                        NotebookType.Confusing.name,
-                        selectedTextRangeStartContainer,
-                        selectedTextRangeStartOffset,
-                        selectedTextRangeEndContainer,
-                        selectedTextRangeEndOffset,
-                        selectedTextStart,
-                        selectedTextEnd
-                    )
-                },
-                ActionMenuItem(4, context.getString(R.string.notesActionMenuAddNote)) {
-                    notesCallback.onNoteAdded(
-                        selectedText,
-                        null,
-                        selectedTextRangeStartContainer,
-                        selectedTextRangeStartOffset,
-                        selectedTextRangeEndContainer,
-                        selectedTextRangeEndOffset,
-                        selectedTextStart,
-                        selectedTextEnd
-                    )
-                }
-            )
-        )
+    LaunchedEffect(scrollState?.maxValue) {
+        val maxValue = scrollState?.maxValue ?: 0
+
+        if (maxValue > 0 && maxValue < Int.MAX_VALUE) {
+            previousScrollMaxValue = scrollMaxValue
+            scrollMaxValue = maxValue
+        }
     }
 
+    var previousHeight by remember { mutableIntStateOf(0) }
     if (LocalInspectionMode.current) {
         Text(text = content)
     } else {
         AndroidView(
             factory = {
-                NotesHighlightingCanvasWebViewWrapper(it, callback = AddNoteActionModeCallback(lifecycleOwner, selectionLocation, menuItems)).apply {
+                scrollValue = scrollState?.value ?: 0
+                NotesHighlightingCanvasWebViewWrapper(
+                    it,
+                    callback = AddNoteActionModeCallback(
+                        lifecycleOwner,
+                        selectionLocation,
+                        menuItems = {
+                            buildList {
+                                add(
+                                    ActionMenuItem(1, context.getString(R.string.notesActionMenuCopy)) {
+                                        clipboardManager.setText(AnnotatedString(selectedText))
+                                    }
+                                )
+                                if (notes.none { intersects(it.highlightedText.textPosition.start to it.highlightedText.textPosition.end, selectedTextStart to selectedTextEnd) }){
+                                    add(
+                                        ActionMenuItem(2, context.getString(R.string.notesActionMenuAddImportantNote)) {
+                                            notesCallback.onNoteAdded(
+                                                selectedText,
+                                                NotebookType.Important.name,
+                                                selectedTextRangeStartContainer,
+                                                selectedTextRangeStartOffset,
+                                                selectedTextRangeEndContainer,
+                                                selectedTextRangeEndOffset,
+                                                selectedTextStart,
+                                                selectedTextEnd
+                                            )
+                                        }
+                                    )
+                                    add(
+                                        ActionMenuItem(3, context.getString(R.string.notesActionMenuAddConfusingNote)) {
+                                            notesCallback.onNoteAdded(
+                                                selectedText,
+                                                NotebookType.Confusing.name,
+                                                selectedTextRangeStartContainer,
+                                                selectedTextRangeStartOffset,
+                                                selectedTextRangeEndContainer,
+                                                selectedTextRangeEndOffset,
+                                                selectedTextStart,
+                                                selectedTextEnd
+                                            )
+                                        }
+                                    )
+                                    add(
+                                        ActionMenuItem(4, context.getString(R.string.notesActionMenuAddNote)) {
+                                            notesCallback.onNoteAdded(
+                                                selectedText,
+                                                null,
+                                                selectedTextRangeStartContainer,
+                                                selectedTextRangeStartOffset,
+                                                selectedTextRangeEndContainer,
+                                                selectedTextRangeEndOffset,
+                                                selectedTextStart,
+                                                selectedTextEnd
+                                            )
+                                        }
+                                    )
+                                }
+                            }
+                        }
+                    )).apply {
                     webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
                         override fun openMediaFromWebView(mime: String, url: String, filename: String) =
                             webViewCallbacks.openMedia(mime, url, filename)
@@ -166,7 +197,6 @@ fun ComposeNotesHighlightingCanvasWebView(
                     }
 
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
-
                 }
             },
             update = {
@@ -185,7 +215,7 @@ fun ComposeNotesHighlightingCanvasWebView(
                         it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
                     }
                 } else {
-                    it.webView.restoreState(webViewState)
+                    it.loadHtml(content, title)
                 }
 
                 it.webView.addTextSelectionInterface(
@@ -222,7 +252,23 @@ fun ComposeNotesHighlightingCanvasWebView(
             onRelease = {
                 it.webView.saveState(webViewState)
             },
-            modifier = modifier.fillMaxSize()
+            modifier = modifier
+                .fillMaxSize()
+                .onGloballyPositioned { coordinates ->
+                    pageHeight = coordinates.size.height
+                    if (coordinates.size.height > 0 && coordinates.size.height != previousHeight) {
+                        lifecycleOwner.lifecycleScope.launch {
+                            val scrollRatio = scrollValue.toFloat() / previousScrollMaxValue.toFloat()
+                            scrollState?.scrollTo((scrollRatio * (scrollState.maxValue)).toInt())
+                        }
+                    }
+                    previousHeight = coordinates.size.height
+
+                }
         )
     }
+}
+
+private fun intersects(a: Pair<Int, Int>, b: Pair<Int, Int>): Boolean {
+    return a.first <= b.second && b.first <= a.second
 }
