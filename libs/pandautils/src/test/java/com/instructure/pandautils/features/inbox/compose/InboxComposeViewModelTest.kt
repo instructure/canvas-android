@@ -38,6 +38,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHidden
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsPreviousMessages
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.ScreenState
 import io.mockk.coEvery
@@ -65,6 +66,8 @@ class InboxComposeViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
     private val inboxComposeRepository: InboxComposeRepository = mockk(relaxed = true)
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
+    private val inboxComposeBehavior: InboxComposeBehavior = mockk(relaxed = true)
 
     @Before
     fun setup() {
@@ -76,6 +79,9 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
+        coEvery { context.packageName } returns "com.instructure.teacher" // Default to teacher app
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
+        coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns false
     }
 
     @After
@@ -96,6 +102,86 @@ class InboxComposeViewModelTest {
         assertEquals(TextFieldValue(""), uiState.subject)
         assertEquals(TextFieldValue(""), uiState.body)
         assertEquals(ScreenState.Content, uiState.screenState)
+    }
+
+    @Test
+    fun `Test shouldRestrictStudentAccess behavior hides send individual button and enables it`() {
+        coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals(true, uiState.hiddenFields.isSendIndividualHidden)
+        assertEquals(true, uiState.sendIndividual)
+        assertEquals(true, uiState.isSendIndividualEnabled)
+    }
+
+    @Test
+    fun `Test shouldRestrictStudentAccess behavior prevents changing sendIndividual value`() {
+        coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        val viewmodel = getViewModel()
+        
+        // Initially sendIndividual should be true due to behavior
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
+        
+        // Try to change it to false - should be ignored
+        viewmodel.handleAction(InboxComposeActionHandler.SendIndividualChanged(false))
+        
+        // Should still be true
+        assertEquals(true, viewmodel.uiState.value.sendIndividual)
+    }
+
+    @Test
+    fun `Test without shouldRestrictStudentAccess behavior send individual button is shown`() {
+        coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns false
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals(false, uiState.hiddenFields.isSendIndividualHidden)
+    }
+
+    @Test
+    fun `Test shouldRestrictStudentAccess behavior forces individual messages on send`() {
+        coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        coEvery { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+        
+        val viewmodel = getViewModel()
+        
+        // Set up minimum required state for sending
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(Course(id = 1, name = "Test Course")))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1", name = "Test User")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Test Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Test Body")))
+        
+        // Send the message
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+        
+        // Verify that createConversation was called with isIndividual = true
+        coVerify(exactly = 1) { 
+            inboxComposeRepository.createConversation(
+                recipients = any(),
+                subject = any(),
+                message = any(),
+                context = any(),
+                attachments = any(),
+                isIndividual = true  // This should be true due to feature flag
+            )
+        }
+    }
+
+    @Test
+    fun `Test restrict_student_access feature flag does not apply in Student app`() {
+        coEvery { context.packageName } returns "com.instructure.student"
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        // Even though feature flag is true, restrictions should not apply in Student app
+        assertEquals(false, uiState.hiddenFields.isSendIndividualHidden)
+        assertEquals(false, uiState.sendIndividual)
+        
+        // Feature flag should not have been checked since it's Student app
+        coVerify(exactly = 0) { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") }
     }
 
     @Test
@@ -644,7 +730,7 @@ class InboxComposeViewModelTest {
                 attachments = attachments
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
         val uiState = viewmodel.uiState.value
 
         assertEquals(mode, uiState.inboxComposeMode)
@@ -672,7 +758,7 @@ class InboxComposeViewModelTest {
                 isAttachmentDisabled = true
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
         val disabledFields = viewmodel.uiState.value.disabledFields
 
         assertEquals(true, disabledFields.isContextDisabled)
@@ -697,7 +783,7 @@ class InboxComposeViewModelTest {
                 isAttachmentHidden = true
             )
         )
-        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao)
+        val viewmodel = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
         val hiddenFields = viewmodel.uiState.value.hiddenFields
 
         assertEquals(true, hiddenFields.isContextHidden)
@@ -809,6 +895,6 @@ class InboxComposeViewModelTest {
     // endregion
 
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
-        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao)
+        return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
     }
 }

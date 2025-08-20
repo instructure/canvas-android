@@ -32,6 +32,7 @@ import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.debounce
@@ -57,7 +58,9 @@ class InboxComposeViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
     private val fileDownloader: FileDownloader,
     private val inboxComposeRepository: InboxComposeRepository,
-    private val attachmentDao: AttachmentDao
+    private val attachmentDao: AttachmentDao,
+    private val featureFlagProvider: FeatureFlagProvider,
+    private val inboxComposeBehavior: InboxComposeBehavior
 ): ViewModel() {
     private var canSendToAll = false
 
@@ -101,6 +104,7 @@ class InboxComposeViewModel @Inject constructor(
         if (options != null) {
             initFromOptions(options)
         }
+        checkAndApplyFeatureFlagRestrictions()
         loadSignature()
     }
 
@@ -185,6 +189,24 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
+    private fun checkAndApplyFeatureFlagRestrictions() {
+        viewModelScope.launch {
+            val shouldRestrict = inboxComposeBehavior.shouldRestrictStudentAccess()
+            if (shouldRestrict) {
+                _uiState.update {
+                    it.copy(
+                        hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true),
+                        sendIndividual = true
+                    )
+                }
+                initialState = initialState.copy(
+                    hiddenFields = initialState.hiddenFields.copy(isSendIndividualHidden = true),
+                    sendIndividual = true
+                )
+            }
+        }
+    }
+
     fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
         if (workInfo.state == WorkInfo.State.SUCCEEDED) {
             viewModelScope.launch {
@@ -236,7 +258,9 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { it.copy(subject = action.subject) }
             }
             is InboxComposeActionHandler.SendIndividualChanged -> {
-                _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
+                if (!uiState.value.hiddenFields.isSendIndividualHidden) {
+                    _uiState.update { it.copy(sendIndividual = action.sendIndividual) }
+                }
             }
             is InboxComposeActionHandler.AddAttachmentSelected -> {
                 viewModelScope.launch {
