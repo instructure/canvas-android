@@ -38,4 +38,13 @@ class InboxComposeBehaviorTest {
 
         assertFalse(result)
     }
+
+    @Test
+    fun `default shouldHideSendIndividual returns false`() = runTest {
+        val behavior = object : InboxComposeBehavior {}
+
+        val result = behavior.shouldHideSendIndividual()
+
+        assertFalse(result)
+    }
 }

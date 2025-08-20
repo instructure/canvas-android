@@ -38,4 +38,12 @@ class TeacherInboxComposeBehavior @Inject constructor(
             false
         }
     }
+
+    override suspend fun shouldHideSendIndividual(): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

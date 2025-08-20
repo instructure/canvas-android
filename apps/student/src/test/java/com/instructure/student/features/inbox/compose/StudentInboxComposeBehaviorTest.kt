@@ -82,4 +82,14 @@ class StudentInboxComposeBehaviorTest {
 
         assertFalse(result)
     }
+
+    @Test
+    fun `shouldHideSendIndividual returns false regardless of feature flag`() = runTest {
+        // Test when feature flag is enabled
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+
+        val result = behavior.shouldHideSendIndividual()
+
+        assertFalse(result)
+    }
 }

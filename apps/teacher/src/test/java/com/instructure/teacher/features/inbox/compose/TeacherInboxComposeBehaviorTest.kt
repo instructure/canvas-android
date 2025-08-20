@@ -81,4 +81,31 @@ class TeacherInboxComposeBehaviorTest {
 
         assertFalse(result)
     }
+
+    @Test
+    fun `shouldHideSendIndividual returns true when feature flag is enabled`() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+
+        val result = behavior.shouldHideSendIndividual()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `shouldHideSendIndividual returns false when feature flag is disabled`() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+
+        val result = behavior.shouldHideSendIndividual()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `shouldHideSendIndividual returns false when feature flag throws exception`() = runTest {
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
+
+        val result = behavior.shouldHideSendIndividual()
+
+        assertFalse(result)
+    }
 }

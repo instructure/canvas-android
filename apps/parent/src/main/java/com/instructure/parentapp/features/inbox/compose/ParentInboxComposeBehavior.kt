@@ -39,4 +39,6 @@ class ParentInboxComposeBehavior @Inject constructor(
             false
         }
     }
+
+    override suspend fun shouldHideSendIndividual(): Boolean = false
 }

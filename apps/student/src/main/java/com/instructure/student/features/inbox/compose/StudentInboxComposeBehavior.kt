@@ -39,4 +39,6 @@ class StudentInboxComposeBehavior @Inject constructor(
             false
         }
     }
+
+    override suspend fun shouldHideSendIndividual(): Boolean = false
 }

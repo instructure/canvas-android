@@ -83,6 +83,7 @@ class InboxComposeViewModelTest {
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
         coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns false
         coEvery { inboxComposeBehavior.shouldRestrictReplyAll() } returns false
+        coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns false
     }
 
     @After
@@ -108,6 +109,7 @@ class InboxComposeViewModelTest {
     @Test
     fun `Test shouldRestrictStudentAccess behavior hides send individual button and enables it`() {
         coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns true
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
 
@@ -119,6 +121,7 @@ class InboxComposeViewModelTest {
     @Test
     fun `Test shouldRestrictStudentAccess behavior prevents changing sendIndividual value`() {
         coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns true
         val viewmodel = getViewModel()
         
         // Initially sendIndividual should be true due to behavior
@@ -141,8 +144,21 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Test shouldRestrictStudentAccess with shouldHideSendIndividual false keeps send individual button visible`() {
+        coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns false
+        val viewmodel = getViewModel()
+        val uiState = viewmodel.uiState.value
+
+        assertEquals(false, uiState.hiddenFields.isSendIndividualHidden)
+        assertEquals(true, uiState.sendIndividual)
+        assertEquals(true, uiState.isSendIndividualEnabled)
+    }
+
+    @Test
     fun `Test shouldRestrictStudentAccess behavior forces individual messages on send`() {
         coEvery { inboxComposeBehavior.shouldRestrictStudentAccess() } returns true
+        coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns true
         coEvery { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
         
         val viewmodel = getViewModel()
