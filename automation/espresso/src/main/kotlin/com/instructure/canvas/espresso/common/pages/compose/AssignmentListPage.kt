@@ -38,11 +38,13 @@ import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.dataseeding.model.AssignmentApiModel
 import com.instructure.dataseeding.model.QuizApiModel
 import com.instructure.espresso.R
 import com.instructure.espresso.page.plus
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -145,16 +147,17 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             .assertIsDisplayed()
         }
 
-        // Check that grade is present, if that is specified
-        if(expectedLabel != null) {
-            composeTestRule.onNode(
-                hasText(assignmentName).and(
-                    hasParent(hasAnyDescendant(hasText(expectedLabel, substring = true)))
+        retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
+            // Check that grade is present, if that is specified
+            if (expectedLabel != null) {
+                composeTestRule.onNode(
+                    hasText(assignmentName).and(
+                        hasParent(hasAnyDescendant(hasText(expectedLabel, substring = true)))
+                    )
                 )
-            )
-            .assertIsDisplayed()
+                    .assertIsDisplayed()
+            }
         }
-
     }
 
     fun assertQuizNotDisplayed(quiz: QuizApiModel) {
