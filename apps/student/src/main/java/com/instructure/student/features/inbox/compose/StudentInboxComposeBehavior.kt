@@ -17,28 +17,8 @@
 package com.instructure.student.features.inbox.compose
 
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import javax.inject.Inject
 
-class StudentInboxComposeBehavior @Inject constructor(
-    private val featureFlagProvider: FeatureFlagProvider
-) : InboxComposeBehavior {
-    
-    override suspend fun shouldRestrictStudentAccess(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    override suspend fun shouldRestrictReplyAll(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
-
+class StudentInboxComposeBehavior @Inject constructor() : InboxComposeBehavior {
     override suspend fun shouldHideSendIndividual(): Boolean = false
 }

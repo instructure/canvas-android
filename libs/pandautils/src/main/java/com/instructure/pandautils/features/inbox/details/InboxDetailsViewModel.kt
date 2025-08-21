@@ -25,6 +25,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,6 +43,7 @@ class InboxDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val behavior: InboxDetailsBehavior,
     private val repository: InboxDetailsRepository,
+    private val featureFlagProvider: FeatureFlagProvider
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -100,7 +102,7 @@ class InboxDetailsViewModel @Inject constructor(
 
             is InboxDetailsAction.DeleteConversation -> {
                 viewModelScope.launch {
-                    val shouldRestrict = behavior.shouldRestrictDeleteConversation()
+                    val shouldRestrict = checkRestrictStudentAccessFlag()
                     if (!shouldRestrict) {
                         _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
                             showDialog = true,
@@ -149,7 +151,7 @@ class InboxDetailsViewModel @Inject constructor(
             }
             is InboxDetailsAction.ReplyAll -> {
                 viewModelScope.launch {
-                    val shouldRestrict = behavior.shouldRestrictReplyAll()
+                    val shouldRestrict = checkRestrictStudentAccessFlag()
                     if (!shouldRestrict) {
                         uiState.value.conversation?.let {
                             _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
@@ -277,8 +279,8 @@ class InboxDetailsViewModel @Inject constructor(
     }
 
     private suspend fun checkAndApplyFeatureFlagRestrictions() {
-        val shouldRestrictDelete = behavior.shouldRestrictDeleteConversation()
-        val shouldRestrictReplyAll = behavior.shouldRestrictReplyAll()
+        val shouldRestrictDelete = checkRestrictStudentAccessFlag()
+        val shouldRestrictReplyAll = checkRestrictStudentAccessFlag()
         
         canDeleteMessages = !shouldRestrictDelete
         canReplyAll = !shouldRestrictReplyAll
@@ -288,6 +290,14 @@ class InboxDetailsViewModel @Inject constructor(
                 showDeleteButton = !shouldRestrictDelete,
                 showReplyAllButton = !shouldRestrictReplyAll
             )
+        }
+    }
+
+    private suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+        } catch (e: Exception) {
+            false
         }
     }
 }

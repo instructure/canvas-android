@@ -125,7 +125,12 @@ private fun AppBar(
             }
         } else null,
         actions = {
-            AppBarMenu(uiState, actionHandler)
+            AppBarMenu(
+                conversation = uiState.conversation,
+                showDeleteButton = uiState.showDeleteButton,
+                showReplyAllButton = uiState.showReplyAllButton,
+                actionHandler = actionHandler
+            )
         },
         backgroundColor = Color(color = ThemePrefs.primaryColor),
         contentColor = Color(color = ThemePrefs.primaryTextColor),
@@ -290,9 +295,13 @@ private fun InboxDetailsContentView(
 }
 
 @Composable
-private fun AppBarMenu(uiState: InboxDetailsUiState, actionHandler: (InboxDetailsAction) -> Unit) {
+private fun AppBarMenu(
+    conversation: Conversation?,
+    showDeleteButton: Boolean,
+    showReplyAllButton: Boolean,
+    actionHandler: (InboxDetailsAction) -> Unit
+) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
-    val conversation = uiState.conversation
     OverflowMenu(
         modifier = Modifier
             .background(color = colorResource(id = R.color.backgroundLightestElevated))
@@ -313,7 +322,7 @@ private fun AppBarMenu(uiState: InboxDetailsUiState, actionHandler: (InboxDetail
                     MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
                 }
 
-                if (uiState.showReplyAllButton) {
+                if (showReplyAllButton) {
                     DropdownMenuItem(
                         onClick = {
                             showMenu = !showMenu
@@ -405,7 +414,7 @@ private fun AppBarMenu(uiState: InboxDetailsUiState, actionHandler: (InboxDetail
                 }
             }
 
-            if (uiState.showDeleteButton) {
+            if (showDeleteButton) {
                 DropdownMenuItem(
                     onClick = {
                         showMenu = !showMenu

@@ -90,6 +90,13 @@ class SplashViewModel @Inject constructor(
                 Pendo.endSession()
             }
 
+            // Fetch environment feature flags for app functionality
+            try {
+                featureFlagProvider.fetchEnvironmentFeatureFlags()
+            } catch (e: Exception) {
+                // Log error but don't block app startup
+            }
+
             val students = repository.getStudents()
             if (students.isEmpty() && apiPrefs.canBecomeUser == false) {
                 _events.send(SplashAction.NavigateToNotAParentScreen)

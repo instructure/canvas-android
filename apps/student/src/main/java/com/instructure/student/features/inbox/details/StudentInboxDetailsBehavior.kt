@@ -20,23 +20,5 @@ import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import javax.inject.Inject
 
-class StudentInboxDetailsBehavior @Inject constructor(
-    private val featureFlagProvider: FeatureFlagProvider
-) : InboxDetailsBehavior() {
-
-    override suspend fun shouldRestrictDeleteConversation(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    override suspend fun shouldRestrictReplyAll(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
+class StudentInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {
 }

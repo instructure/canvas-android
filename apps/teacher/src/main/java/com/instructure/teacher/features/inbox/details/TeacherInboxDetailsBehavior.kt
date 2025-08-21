@@ -22,25 +22,7 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.teacher.utils.isTablet
 import javax.inject.Inject
 
-class TeacherInboxDetailsBehavior @Inject constructor(
-    private val featureFlagProvider: FeatureFlagProvider
-) : InboxDetailsBehavior() {
+class TeacherInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {
     
     override fun getShowBackButton(context: Context): Boolean = !context.isTablet
-
-    override suspend fun shouldRestrictDeleteConversation(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
-
-    override suspend fun shouldRestrictReplyAll(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
 }

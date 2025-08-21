@@ -78,8 +78,8 @@ class InboxModule {
     }
 
     @Provides
-    fun provideInboxDetailsBehavior(featureFlagProvider: FeatureFlagProvider): InboxDetailsBehavior {
-        return TeacherInboxDetailsBehavior(featureFlagProvider)
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return TeacherInboxDetailsBehavior()
     }
 
 }

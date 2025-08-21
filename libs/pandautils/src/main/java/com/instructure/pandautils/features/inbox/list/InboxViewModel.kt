@@ -28,7 +28,6 @@ import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
@@ -43,7 +42,7 @@ class InboxViewModel @Inject constructor(
     private val inboxRepository: InboxRepository,
     private val resources: Resources,
     private val inboxEntryItemCreator: InboxEntryItemCreator,
-    private val inboxDetailsBehavior: InboxDetailsBehavior
+    private val featureFlagProvider: FeatureFlagProvider
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -76,9 +75,6 @@ class InboxViewModel @Inject constructor(
     private var silentRefreshJob: Job? = null
 
     init {
-        viewModelScope.launch {
-            canDeleteConversations = !inboxDetailsBehavior.shouldRestrictDeleteConversation()
-        }
         _state.postValue(ViewState.Loading)
         fetchData()
     }
@@ -109,6 +105,9 @@ class InboxViewModel @Inject constructor(
     private fun fetchData(forceNetwork: Boolean = false, refresh: Boolean = false) {
         viewModelScope.launch {
             try {
+                // Check delete permissions
+                canDeleteConversations = !checkRestrictStudentAccessFlag()
+                
                 silentRefreshJob?.cancel()
                 exitSelectionMode()
                 lastRequestedPageLink = null
@@ -594,5 +593,13 @@ class InboxViewModel @Inject constructor(
             }
         }
         return diff
+    }
+
+    private suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+        } catch (e: Exception) {
+            false
+        }
     }
 }

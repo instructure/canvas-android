@@ -86,7 +86,6 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
         setupNavigation()
         handleQrMasquerading()
         scheduleAlarms()
-        fetchFeatureFlags()
 
         RatingDialog.showRatingDialog(this, AppType.PARENT)
     }
@@ -201,16 +200,6 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onQuotaExceeded(errorCode: StorageQuotaExceededError) {
         toast(R.string.fileQuotaExceeded)
-    }
-
-    private fun fetchFeatureFlags() {
-        lifecycleScope.launch {
-            try {
-                featureFlagProvider.fetchEnvironmentFeatureFlags()
-            } catch (e: Exception) {
-                Log.w("MainActivity", "Failed to fetch feature flags", e)
-            }
-        }
     }
 
     companion object {

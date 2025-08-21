@@ -94,12 +94,12 @@ class InboxModule {
     }
 
     @Provides
-    fun provideInboxDetailsBehavior(featureFlagProvider: FeatureFlagProvider): InboxDetailsBehavior {
-        return ParentInboxDetailsBehavior(featureFlagProvider)
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return ParentInboxDetailsBehavior()
     }
 
     @Provides
-    fun provideInboxComposeBehavior(featureFlagProvider: FeatureFlagProvider): InboxComposeBehavior {
-        return ParentInboxComposeBehavior(featureFlagProvider)
+    fun provideInboxComposeBehavior(): InboxComposeBehavior {
+        return ParentInboxComposeBehavior()
     }
 }

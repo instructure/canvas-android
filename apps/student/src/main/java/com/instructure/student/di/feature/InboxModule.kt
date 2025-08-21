@@ -30,12 +30,12 @@ import dagger.hilt.android.components.ViewModelComponent
 @InstallIn(ViewModelComponent::class)
 class InboxModule {
     @Provides
-    fun provideInboxDetailsBehavior(featureFlagProvider: FeatureFlagProvider): InboxDetailsBehavior {
-        return StudentInboxDetailsBehavior(featureFlagProvider)
+    fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
+        return StudentInboxDetailsBehavior()
     }
 
     @Provides
-    fun provideInboxComposeBehavior(featureFlagProvider: FeatureFlagProvider): InboxComposeBehavior {
-        return StudentInboxComposeBehavior(featureFlagProvider)
+    fun provideInboxComposeBehavior(): InboxComposeBehavior {
+        return StudentInboxComposeBehavior()
     }
 }
