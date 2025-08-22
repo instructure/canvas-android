@@ -26,16 +26,16 @@ class ProgramDetailsRepository @Inject constructor(
     private val journeyApiManager: JourneyApiManager,
     private val courseApi: CourseAPI.CoursesInterface
 ) {
-    suspend fun getProgramDetails(programId: String): Program {
-        val program = journeyApiManager.getPrograms(true).find { it.id == programId }
+    suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = true): Program {
+        val program = journeyApiManager.getPrograms(forceNetwork).find { it.id == programId }
         // TODO Error handling
         return program!!
     }
 
-    suspend fun getCoursesById(courseIds: List<Long>): List<Course> {
+    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = true): List<Course> {
         // TODO We might want to optimize the fetching here
         return courseIds.mapNotNull {
-            courseApi.getCourse(it, RestParams()).dataOrNull
+            courseApi.getCourse(it, RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull
         }
     }
 }

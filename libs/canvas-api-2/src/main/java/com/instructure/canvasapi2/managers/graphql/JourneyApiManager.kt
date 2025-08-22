@@ -32,6 +32,7 @@ data class Program(
     val startDate: Date?,
     val endDate: Date?,
     val variant: ProgramVariantType,
+    val courseCompletionCount: Int? = null,
     val sortedRequirements: List<ProgramRequirement>,
 )
 
@@ -73,6 +74,7 @@ class JourneyApiManager @Inject constructor(
             startDate = enrolledProgram.startDate,
             endDate = enrolledProgram.endDate,
             variant = enrolledProgram.variant,
+            courseCompletionCount = enrolledProgram.courseCompletionCount,
             sortedRequirements = sortedRequirements
         )
     }

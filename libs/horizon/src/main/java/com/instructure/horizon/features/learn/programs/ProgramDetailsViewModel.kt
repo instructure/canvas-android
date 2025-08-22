@@ -35,6 +35,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import com.instructure.pandautils.utils.formatMonthDayYear
+import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -61,7 +62,7 @@ class ProgramDetailsViewModel @Inject constructor(
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
                     programName = programDetails.name,
-                    progress = 50.0, // TODO Calculate progress
+                    progress = calculateProgress(programDetails),
                     description = programDetails.description ?: "",
                     tags = createProgramTags(programDetails),
                     programProgressState = createProgramProgressState(programDetails)
@@ -132,7 +133,18 @@ class ProgramDetailsViewModel @Inject constructor(
             )
         }
 
-        return ProgramProgressState(courseItems)
+        val headerString = if (!linear) {
+            context.resources.getQuantityString(
+                R.plurals.programCourses_courseCompletionCount,
+                program.sortedRequirements.size,
+                program.courseCompletionCount ?: program.sortedRequirements.size,
+                program.sortedRequirements.size
+            )
+        } else {
+            null
+        }
+
+        return ProgramProgressState(courseItems, headerString)
     }
 
     private fun createProgramCourseChips(
@@ -165,7 +177,9 @@ class ProgramDetailsViewModel @Inject constructor(
             }
         }
 
-        if (course.startDate != null && course.endDate != null && requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED) {
+        val shouldShowDate =
+            courseCardStatus == CourseCardStatus.Active || courseCardStatus == CourseCardStatus.InProgress || courseCardStatus == CourseCardStatus.Enrolled
+        if (course.startDate != null && course.endDate != null && shouldShowDate) {
             chips.add(
                 CourseCardChipState(
                     context.getString(
@@ -180,5 +194,21 @@ class ProgramDetailsViewModel @Inject constructor(
         // TODO Calculate remaining minutes and add tag
 
         return chips
+    }
+
+    private fun calculateProgress(program: Program): Double {
+        if (program.sortedRequirements.isEmpty()) return 0.0
+
+        return if (program.variant == ProgramVariantType.LINEAR) {
+            val requiredCourses = program.sortedRequirements.filter { it.required }
+            val totalProgress = requiredCourses.sumOf { it.progress }
+            (totalProgress / (requiredCourses.size * 100)) * 100
+        } else {
+            val courseCompletionCount = program.courseCompletionCount.orDefault()
+            val requiredCourses = program.sortedRequirements.filter { it.required }
+            val orderedProgresses = requiredCourses.map { it.progress }.sortedDescending()
+            val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
+            (totalProgress / (courseCompletionCount * 100)) * 100
+        }
     }
 }

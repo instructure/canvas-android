@@ -335,4 +335,8 @@
     <string name="programCourseTag_locked">Locked</string>
     <string name="programCourseTag_completed">Completed</string>
     <string name="programCourseTag_enrolled">Enrolled</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Complete %1$d of %2$d course</item>
+        <item quantity="other">Complete %1$d of %2$d courses</item>
+    </plurals>
 </resources>
