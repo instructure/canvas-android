@@ -80,6 +80,14 @@ class TeacherCalendarRepositoryTest {
             contextCode = "course_1"
         )
 
+        val subAssignment = ScheduleItem(
+            itemId = "1",
+            title = "Discussion Checkpoint",
+            subAssignment = Assignment(id = 1234L, dueAt = LocalDateTime.now().toApiString()),
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            contextCode = "course_1"
+        )
+
         val calendarEvent = ScheduleItem(
             itemId = "0",
             title = "calendar event",
@@ -103,6 +111,14 @@ class TeacherCalendarRepositoryTest {
         coEvery {
             calendarEventApi.getCalendarEvents(
                 any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT.apiName,
+                any(), any(), any(), any()
+            )
+        } returns DataResult.Success(listOf(subAssignment))
+
+        coEvery {
+            calendarEventApi.getCalendarEvents(
+                any(),
                 CalendarEventAPI.CalendarEventType.CALENDAR.apiName,
                 any(), any(), any(), any()
             )
@@ -112,13 +128,18 @@ class TeacherCalendarRepositoryTest {
 
         val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", listOf("course_1"), true)
 
-        assertEquals(3, result.size)
+        assertEquals(4, result.size)
         val assignmentResult = result.find { it.plannableType == PlannableType.ASSIGNMENT }!!
+        val subAssignmentResult = result.find { it.plannableType == PlannableType.SUB_ASSIGNMENT }!!
         val calendarEventResult = result.find { it.plannableType == PlannableType.CALENDAR_EVENT }!!
         val plannerNoteResult = result.find { it.plannableType == PlannableType.PLANNER_NOTE }!!
         assertEquals(assignment.assignment?.id, assignmentResult.plannable.id)
         assertEquals(assignment.title, assignmentResult.plannable.title)
         assertEquals(assignment.contextCode, assignmentResult.canvasContext.contextId)
+
+        assertEquals(subAssignment.itemId, subAssignmentResult.plannable.id.toString())
+        assertEquals(subAssignment.title, subAssignmentResult.plannable.title)
+        assertEquals(subAssignment.contextCode, subAssignmentResult.canvasContext.contextId)
 
         assertEquals(calendarEvent.itemId, calendarEventResult.plannable.id.toString())
         assertEquals(calendarEvent.title, calendarEventResult.plannable.title)
@@ -129,6 +150,7 @@ class TeacherCalendarRepositoryTest {
 
         coVerify(exactly = 1) { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.CALENDAR.apiName, any(), any(), any(), any()) }
         coVerify(exactly = 1) { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName, any(), any(), any(), any()) }
+        coVerify(exactly = 1) { calendarEventApi.getCalendarEvents(any(), CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT.apiName, any(), any(), any(), any()) }
         coVerify(exactly = 1) { plannerApi.getPlannerNotes(any(), any(), any(), any()) }
     }
 
@@ -179,6 +201,14 @@ class TeacherCalendarRepositoryTest {
                 any(), any(), any(), any()
             )
         } returns DataResult.Success(listOf(assignment, assignmentHidden))
+
+        coEvery {
+            calendarEventApi.getCalendarEvents(
+                any(),
+                CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT.apiName,
+                any(), any(), any(), any()
+            )
+        } returns DataResult.Success(emptyList())
 
         coEvery {
             calendarEventApi.getCalendarEvents(

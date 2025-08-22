@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.pandautils.utils.toLocalDateOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -289,7 +290,8 @@ class CalendarViewModel @Inject constructor(
                     iconRes = it.getIconForPlannerItem(),
                     name = it.plannable.title,
                     date = getDateForPlannerItem(it),
-                    status = getStatusForPlannerItem(it)
+                    status = getStatusForPlannerItem(it),
+                    tag = it.getTagForPlannerItem(context),
                 )
             } ?: emptyList()
 

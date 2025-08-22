@@ -55,7 +55,10 @@ data class PlannerItem (
     val newActivity: Boolean?,
 
     @SerializedName("planner_override")
-    var plannerOverride: PlannerOverride? = null
+    var plannerOverride: PlannerOverride? = null,
+
+    @SerializedName("details")
+    val plannableItemDetails: PlannerItemDetails? = null
 ): Parcelable {
 
     val canvasContext: CanvasContext
@@ -93,3 +96,9 @@ enum class PlannableType {
     @SerializedName("assessment_request")
     ASSESSMENT_REQUEST
 }
+
+@Parcelize
+data class PlannerItemDetails(
+    @SerializedName("reply_to_entry_required_count")
+    val replyRequiredCount: Int?
+): Parcelable
