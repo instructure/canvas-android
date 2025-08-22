@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.utils
 
 import com.instructure.canvasapi2.managers.CedarAuthenticationManager
 import com.instructure.canvasapi2.managers.DomainServicesAuthenticationManager
+import com.instructure.canvasapi2.managers.JourneyAuthenticationManager
 import com.instructure.canvasapi2.managers.PineAuthenticationManager
 import com.instructure.canvasapi2.managers.RedwoodAuthenticationManager
 import kotlinx.coroutines.runBlocking
@@ -58,3 +59,7 @@ class CedarAuthenticator @Inject constructor(
 class RedwoodAuthenticator @Inject constructor(
     redwoodAuthenticationManager: RedwoodAuthenticationManager
 ) : DomainServicesAuthenticator(redwoodAuthenticationManager)
+
+class JourneyAuthenticator @Inject constructor(
+    journeyAuthenticationManager: JourneyAuthenticationManager
+) : DomainServicesAuthenticator(journeyAuthenticationManager)

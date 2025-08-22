@@ -16,11 +16,13 @@
 package com.instructure.horizon.features.learn.programs
 
 import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
+import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class ProgramDetailsUiState(
-    val programName: String,
-    val progress: Double,
-    val description: String,
+    val loadingState: LoadingState = LoadingState(),
+    val programName: String = "",
+    val progress: Double = 0.0,
+    val description: String = "",
     val tags: List<ProgramDetailTag> = emptyList(),
     val programProgressState: ProgramProgressState = ProgramProgressState(courses = emptyList()),
 )

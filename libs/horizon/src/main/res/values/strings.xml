@@ -329,4 +329,10 @@
     <string name="programsProgressBar_percentComplete">%s complete</string>
     <string name="programsProgressBar_notStarted">Not started</string>
     <string name="programsCourseCard_enrollButton">Enroll</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Required</string>
+    <string name="programCourseTag_optional">Optional</string>
+    <string name="programCourseTag_locked">Locked</string>
+    <string name="programCourseTag_completed">Completed</string>
+    <string name="programCourseTag_enrolled">Enrolled</string>
 </resources>

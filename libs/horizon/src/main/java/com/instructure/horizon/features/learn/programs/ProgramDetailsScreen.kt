@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,38 +48,41 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .padding(horizontal = 24.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(uiState.programName, style = HorizonTypography.h3)
-        HorizonSpace(SpaceSize.SPACE_24)
-        ProgramsProgressBar(
-            uiState.progress,
-            progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
-        )
-        HorizonSpace(SpaceSize.SPACE_8)
-        Text(text = uiState.description, style = HorizonTypography.p1)
-        HorizonSpace(SpaceSize.SPACE_16)
-        FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            uiState.tags.forEach { tag ->
-                StatusChip(
-                    StatusChipState(
-                        label = tag.name,
-                        color = StatusChipColor.White,
-                        fill = true,
-                        iconRes = tag.iconRes
+    LoadingStateWrapper(loadingState = uiState.loadingState) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(uiState.programName, style = HorizonTypography.h3)
+            HorizonSpace(SpaceSize.SPACE_24)
+            ProgramsProgressBar(
+                uiState.progress,
+                progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
+            )
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(text = uiState.description, style = HorizonTypography.p1)
+            HorizonSpace(SpaceSize.SPACE_16)
+            FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                uiState.tags.forEach { tag ->
+                    StatusChip(
+                        StatusChipState(
+                            label = tag.name,
+                            color = StatusChipColor.White,
+                            fill = true,
+                            iconRes = tag.iconRes
+                        )
                     )
-                )
+                }
             }
+            HorizonSpace(SpaceSize.SPACE_24)
+            ProgramProgress(state = uiState.programProgressState)
         }
-        HorizonSpace(SpaceSize.SPACE_24)
-        ProgramProgress(state = uiState.programProgressState)
     }
 }
 

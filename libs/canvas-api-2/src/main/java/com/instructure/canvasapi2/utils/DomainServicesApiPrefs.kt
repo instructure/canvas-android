@@ -15,3 +15,7 @@ class CedarApiPref: DomainServicesApiPref("cedar_api_prefs") {
 class RedwoodApiPref: DomainServicesApiPref("redwood_api_prefs") {
     override var token: String? by NStringPref(null, "redwood_token")
 }
+
+class JourneyApiPref: DomainServicesApiPref("journey_api_prefs") {
+    override var token: String? by NStringPref(null, "journey_token")
+}
