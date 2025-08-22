@@ -31,7 +31,7 @@ class PlannerManager(private val plannerApi: PlannerAPI) {
 
     fun getPlannerItemsAsync(forceNetwork: Boolean, startDate: String? = null, endDate: String? = null) = apiAsync<List<PlannerItem>> { getPlannerItems(forceNetwork, it, startDate, endDate) }
 
-    private fun getPlannerItems(
+    fun getPlannerItems(
             forceNetwork: Boolean,
             callback: StatusCallback<List<PlannerItem>>,
             startDate: String? = null,
@@ -56,7 +56,7 @@ class PlannerManager(private val plannerApi: PlannerAPI) {
 
     fun createPlannerOverrideAsync(forceNetwork: Boolean, plannerOverride: PlannerOverride) = apiAsync<PlannerOverride> { createPlannerOverride(forceNetwork, it, plannerOverride) }
 
-    private fun updatePlannerOverride(
+    fun updatePlannerOverride(
             forceNetwork: Boolean,
             callback: StatusCallback<PlannerOverride>,
             completed: Boolean,

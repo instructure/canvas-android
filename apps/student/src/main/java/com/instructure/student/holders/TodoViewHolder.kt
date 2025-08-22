@@ -6,10 +6,15 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.DateHelper
+import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
@@ -21,8 +26,8 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
     @SuppressLint("SetTextI18n")
     fun bind(
         context: Context,
-        item: ToDo,
-        adapterToFragmentCallback: NotificationAdapterToFragmentCallback<ToDo>?,
+        item: PlannerItem,
+        adapterToFragmentCallback: NotificationAdapterToFragmentCallback<PlannerItem>?,
         checkboxCallback: TodoListRecyclerAdapter.TodoCheckboxCallback
     ) = with(ViewholderTodoBinding.bind(itemView)){
         root.setOnClickListener {
@@ -33,15 +38,14 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             }
         }
 
-        root.setOnLongClickListener(View.OnLongClickListener {
-            if (item.ignore == null) return@OnLongClickListener false
+        root.setOnLongClickListener {
             checkboxCallback.onCheckChanged(item, !item.isChecked, adapterPosition)
             true
-        })
+        }
 
-        when {
-            item.canvasContext?.name != null -> {
-                course.text = item.canvasContext!!.name
+        /*when {
+            item.canvasContext.name != null -> {
+                course.text = item.canvasContext.name
                 course.setTextColor(item.canvasContext.color)
             }
             item.scheduleItem?.contextType == CanvasContext.Type.USER -> {
@@ -49,52 +53,80 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 course.setTextColor(item.canvasContext.color)
             }
             else -> course.text = ""
-        }
+        }*/
+
+        course.text = getContextNameForPlannerItem(context, item)
+        course.setTextColor(item.canvasContext.color)
+        title.text = item.plannable.title
+        description.setTextForVisibility(getDateForPlannerItem(context, item))
+        tag.setTextForVisibility(getTagForPlannerItem(context, item))
 
         // Get courseColor
-        val iconColor = item.canvasContext?.color ?: ContextCompat.getColor(context, R.color.textDarkest)
+        val iconColor = item.canvasContext.color
+        val drawable = ColorKeeper.getColoredDrawable(context, item.getIconForPlannerItem(), iconColor)
+        icon.setImageDrawable(drawable)
 
         if (item.isChecked) {
             root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundMedium))
         } else {
             root.setBackgroundColor(ContextCompat.getColor(context, R.color.backgroundLightest))
         }
+    }
 
-        var todoDetails: String? = ""
-        var titlePrefix = ""
-        when (item.type) {
-            ToDo.Type.Submitting -> {
-                titlePrefix = context.getString(R.string.toDoTurnIn) + " "
-                title.text = titlePrefix + item.title
-                todoDetails = DateHelper.createPrefixedDateTimeString(context, R.string.dueAt, item.comparisonDate)
+    private fun getContextNameForPlannerItem(context: Context, plannerItem: PlannerItem): String {
+        return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
+            if (plannerItem.contextName.isNullOrEmpty()) {
+                context.getString(R.string.userCalendarToDo)
+            } else {
+                context.getString(R.string.courseToDo, plannerItem.contextName)
             }
-            ToDo.Type.UPCOMING_ASSIGNMENT -> {
-                // Upcoming assignments can be either grading or submitting and we don't know, so they have no prefix
-                title.text = item.title
-                todoDetails = DateHelper.createPrefixedDateTimeString(context, R.string.dueAt, item.comparisonDate)
-            }
-            ToDo.Type.Grading -> {
-                title.text = context.resources.getString(R.string.grade) + " " + item.title
-                val count = item.needsGradingCount
-                todoDetails = context.resources.getQuantityString(R.plurals.to_do_needs_grading, count, count)
-            }
-            ToDo.Type.UpcomingEvent -> {
-                title.text = item.title
-                todoDetails = item.scheduleItem!!.getStartToEndString(context)
-            }
-            null -> {}
+        } else {
+            plannerItem.contextName.orEmpty()
         }
+    }
 
-        description.setTextForVisibility(todoDetails)
-
-        val drawableResId: Int = when {
-            item.type == ToDo.Type.UpcomingEvent -> R.drawable.ic_calendar
-            item.assignment?.quizId ?: 0 > 0 || item.quiz != null -> R.drawable.ic_quiz
-            item.assignment!!.discussionTopicHeader != null -> R.drawable.ic_discussion
-            else -> R.drawable.ic_assignment
+    private fun getDateForPlannerItem(context: Context, plannerItem: PlannerItem): String? {
+        return if (plannerItem.plannableType == PlannableType.PLANNER_NOTE) {
+            plannerItem.plannable.todoDate.toDate()?.let {
+                val dateText = DateHelper.dayMonthDateFormat.format(it)
+                val timeText = DateHelper.getFormattedTime(context, it)
+                context.getString(R.string.calendarAtDateTime, dateText, timeText)
+            }
+        } else if (plannerItem.plannableType == PlannableType.CALENDAR_EVENT) {
+            val startDate = plannerItem.plannable.startAt
+            val endDate = plannerItem.plannable.endAt
+            if (startDate != null && endDate != null) {
+                val dateText = DateHelper.dayMonthDateFormat.format(startDate)
+                val startText = DateHelper.getFormattedTime(context, startDate)
+                val endText = DateHelper.getFormattedTime(context, endDate)
+                if (plannerItem.plannable.allDay == true) {
+                    dateText
+                } else if (startDate == endDate) {
+                    context.getString(R.string.calendarAtDateTime, dateText, startText)
+                } else {
+                    context.getString(R.string.calendarFromTo, dateText, startText, endText)
+                }
+            } else null
+        } else {
+            plannerItem.plannable.dueAt?.let {
+                val dateText = DateHelper.dayMonthDateFormat.format(it)
+                val timeText = DateHelper.getFormattedTime(context, it)
+                context.getString(R.string.calendarDueDate, dateText, timeText)
+            }
         }
-        val drawable = ColorKeeper.getColoredDrawable(context, drawableResId, iconColor)
-        icon.setImageDrawable(drawable)
+    }
+
+    private fun getTagForPlannerItem(context: Context, plannerItem: PlannerItem): String? {
+        return if (plannerItem.plannable.subAssignmentTag == Const.REPLY_TO_TOPIC) {
+            context.getString(R.string.reply_to_topic)
+        } else if (plannerItem.plannable.subAssignmentTag == Const.REPLY_TO_ENTRY && plannerItem.plannableItemDetails?.replyRequiredCount != null) {
+            context.getString(
+                R.string.additional_replies,
+                plannerItem.plannableItemDetails?.replyRequiredCount
+            )
+        } else {
+            null
+        }
     }
 
     companion object {
