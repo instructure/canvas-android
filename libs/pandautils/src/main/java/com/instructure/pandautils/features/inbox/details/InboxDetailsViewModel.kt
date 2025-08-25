@@ -57,6 +57,7 @@ class InboxDetailsViewModel @Inject constructor(
 
     private var canDeleteMessages = true
     private var canReplyAll = true
+    private var shouldRestrictStudentAccess = false
 
     init {
         _uiState.update { it.copy(
@@ -101,24 +102,21 @@ class InboxDetailsViewModel @Inject constructor(
             }
 
             is InboxDetailsAction.DeleteConversation -> {
-                viewModelScope.launch {
-                    val shouldRestrict = checkRestrictStudentAccessFlag()
-                    if (!shouldRestrict) {
-                        _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
-                            showDialog = true,
-                            title = context.getString(R.string.deleteConversation),
-                            message = context.getString(R.string.confirmDeleteConversation),
-                            positiveButton = context.getString(R.string.delete),
-                            negativeButton = context.getString(R.string.cancel),
-                            onPositiveButtonClick = {
-                                deleteConversation(action.conversationId)
-                                _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
-                            },
-                            onNegativeButtonClick = {
-                                _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
-                            }
-                        )) }
-                    }
+                if (!shouldRestrictStudentAccess) {
+                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
+                        showDialog = true,
+                        title = context.getString(R.string.deleteConversation),
+                        message = context.getString(R.string.confirmDeleteConversation),
+                        positiveButton = context.getString(R.string.delete),
+                        negativeButton = context.getString(R.string.cancel),
+                        onPositiveButtonClick = {
+                            deleteConversation(action.conversationId)
+                            _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+                        },
+                        onNegativeButtonClick = {
+                            _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+                        }
+                    )) }
                 }
             }
             is InboxDetailsAction.DeleteMessage -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
@@ -150,10 +148,9 @@ class InboxDetailsViewModel @Inject constructor(
                 }
             }
             is InboxDetailsAction.ReplyAll -> {
-                viewModelScope.launch {
-                    val shouldRestrict = checkRestrictStudentAccessFlag()
-                    if (!shouldRestrict) {
-                        uiState.value.conversation?.let {
+                if (!shouldRestrictStudentAccess) {
+                    uiState.value.conversation?.let {
+                        viewModelScope.launch {
                             _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
                         }
                     }
@@ -279,16 +276,15 @@ class InboxDetailsViewModel @Inject constructor(
     }
 
     private suspend fun checkAndApplyFeatureFlagRestrictions() {
-        val shouldRestrictDelete = checkRestrictStudentAccessFlag()
-        val shouldRestrictReplyAll = checkRestrictStudentAccessFlag()
+        shouldRestrictStudentAccess = checkRestrictStudentAccessFlag()
         
-        canDeleteMessages = !shouldRestrictDelete
-        canReplyAll = !shouldRestrictReplyAll
+        canDeleteMessages = !shouldRestrictStudentAccess
+        canReplyAll = !shouldRestrictStudentAccess
         
         _uiState.update {
             it.copy(
-                showDeleteButton = !shouldRestrictDelete,
-                showReplyAllButton = !shouldRestrictReplyAll
+                showDeleteButton = !shouldRestrictStudentAccess,
+                showReplyAllButton = !shouldRestrictStudentAccess
             )
         }
     }

@@ -208,14 +208,6 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    private suspend fun checkRestrictStudentAccessFlag(): Boolean {
-        return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
-        } catch (e: Exception) {
-            false
-        }
-    }
-
     fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
         if (workInfo.state == WorkInfo.State.SUCCEEDED) {
             viewModelScope.launch {

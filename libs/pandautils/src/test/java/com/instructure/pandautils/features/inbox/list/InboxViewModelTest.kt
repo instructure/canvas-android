@@ -29,10 +29,10 @@ import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.pandautils.R
-import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -60,7 +60,7 @@ class InboxViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val inboxEntryItemCreator: InboxEntryItemCreator = mockk(relaxed = true)
-    private val inboxDetailsBehavior: InboxDetailsBehavior = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var viewModel: InboxViewModel
 
@@ -81,13 +81,13 @@ class InboxViewModelTest {
         coEvery { inboxRepository.updateConversation(any(), any(), any()) } returns DataResult.Success(
             Conversation()
         )
-        
-        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
 
         every { resources.getString(R.string.inboxScopeInbox) } returns "Inbox"
         every { resources.getString(R.string.allCourses) } returns "All Courses"
         every { resources.getString(R.string.errorOccurred) } returns "Error"
         every { resources.getString(R.string.inboxOperationFailed) } returns "Epic Fail"
+
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
 
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3]) }
     }
@@ -968,31 +968,5 @@ class InboxViewModelTest {
         coVerify { inboxRepository.getInboxSignature() }
     }
 
-    @Test
-    fun `Delete menu item is included when behavior allows deletion`() {
-        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns false
-        
-        viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.itemViewModels.value!![0].onLongClick(View(context))
-        
-        val menuItems = viewModel.data.value!!.editMenuItems
-        assertTrue("Delete menu item should be present when behavior allows deletion", 
-            menuItems.contains(InboxMenuItem.DELETE))
-    }
-
-    @Test
-    fun `Delete menu item is excluded when behavior restricts deletion`() {
-        coEvery { inboxDetailsBehavior.shouldRestrictDeleteConversation() } returns true
-        
-        viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.itemViewModels.value!![0].onLongClick(View(context))
-        
-        val menuItems = viewModel.data.value!!.editMenuItems
-        assertFalse("Delete menu item should not be present when behavior restricts deletion", 
-            menuItems.contains(InboxMenuItem.DELETE))
-    }
-
-    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator, inboxDetailsBehavior)
+    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator, featureFlagProvider)
 }

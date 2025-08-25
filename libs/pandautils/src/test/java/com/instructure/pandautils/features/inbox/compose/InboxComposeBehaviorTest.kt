@@ -22,24 +22,6 @@ import org.junit.Test
 class InboxComposeBehaviorTest {
 
     @Test
-    fun `default shouldRestrictStudentAccess returns false`() = runTest {
-        val behavior = object : InboxComposeBehavior {}
-
-        val result = behavior.shouldRestrictStudentAccess()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `default shouldRestrictReplyAll returns false`() = runTest {
-        val behavior = object : InboxComposeBehavior {}
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
-
-    @Test
     fun `default shouldHideSendIndividual returns false`() = runTest {
         val behavior = object : InboxComposeBehavior {}
 

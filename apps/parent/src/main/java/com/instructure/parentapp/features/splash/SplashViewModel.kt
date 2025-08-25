@@ -68,6 +68,13 @@ class SplashViewModel @Inject constructor(
             val theme = repository.getTheme()
             theme?.let { _events.send(SplashAction.ApplyTheme(it)) }
 
+            // Fetch environment feature flags for app functionality
+            try {
+                featureFlagProvider.fetchEnvironmentFeatureFlags()
+            } catch (e: Exception) {
+                // Log error but don't block app startup
+            }
+
             if (apiPrefs.canBecomeUser == null && qrMasqueradeId == 0L) {
                 if (apiPrefs.domain.startsWith("siteadmin", true)) {
                     apiPrefs.canBecomeUser = true
@@ -88,13 +95,6 @@ class SplashViewModel @Inject constructor(
                 Pendo.startSession(userWithIds?.uuid?.SHA256().orEmpty(), userWithIds?.accountUuid.orEmpty(), visitorData, accountData)
             } else {
                 Pendo.endSession()
-            }
-
-            // Fetch environment feature flags for app functionality
-            try {
-                featureFlagProvider.fetchEnvironmentFeatureFlags()
-            } catch (e: Exception) {
-                // Log error but don't block app startup
             }
 
             val students = repository.getStudents()

@@ -33,22 +33,4 @@ class InboxDetailsBehaviorTest {
 
         assertTrue(result)
     }
-
-    @Test
-    fun `default shouldRestrictDeleteConversation returns false`() = runTest {
-        val behavior = InboxDetailsBehavior()
-
-        val result = behavior.shouldRestrictDeleteConversation()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `default shouldRestrictReplyAll returns false`() = runTest {
-        val behavior = InboxDetailsBehavior()
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
 }
