@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.inbox.list
 
 import android.content.Context
-import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -96,7 +95,6 @@ class HorizonInboxListViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
         } catch {
-            Log.d("HorizonInboxListViewModel", "loadData: ${it.message}", it)
             showErrorState()
         }
     }
