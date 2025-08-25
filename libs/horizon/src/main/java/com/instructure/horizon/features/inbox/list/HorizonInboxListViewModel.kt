@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.inbox.list
 
 import android.content.Context
+import android.util.Log
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -95,6 +96,7 @@ class HorizonInboxListViewModel @Inject constructor(
                 it.copy(loadingState = it.loadingState.copy(isLoading = false))
             }
         } catch {
+            Log.d("HorizonInboxListViewModel", "loadData: ${it.message}", it)
             showErrorState()
         }
     }
@@ -153,7 +155,10 @@ class HorizonInboxListViewModel @Inject constructor(
                             title = conversation.subject.orEmpty(),
                             description = conversation.participants?.map { it.name }?.joinToString(", ").orEmpty(),
                             courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
-                            date = conversation.lastMessageAt?.toDate() ?: conversation.lastAuthoredMessageAt?.toDate(),
+                            date = listOf(
+                                conversation.lastAuthoredMessageAt?.toDate(),
+                                conversation.lastMessageAt?.toDate()
+                            ).maxByOrNull { it?.time ?: 0 },
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }
