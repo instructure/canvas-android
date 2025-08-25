@@ -153,7 +153,10 @@ class HorizonInboxListViewModel @Inject constructor(
                             title = conversation.subject.orEmpty(),
                             description = conversation.participants?.map { it.name }?.joinToString(", ").orEmpty(),
                             courseId = conversation.contextCode?.substringAfter("course_")?.toLongOrNull(),
-                            date = conversation.lastMessageAt?.toDate() ?: conversation.lastAuthoredMessageAt?.toDate(),
+                            date = listOf(
+                                conversation.lastAuthoredMessageAt?.toDate(),
+                                conversation.lastMessageAt?.toDate()
+                            ).maxByOrNull { it?.time ?: 0 },
                             isUnread = conversation.workflowState == Conversation.WorkflowState.UNREAD
                         )
                     }
