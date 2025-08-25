@@ -16,70 +16,20 @@
  */
 package com.instructure.student.features.inbox.details
 
-import com.instructure.pandautils.utils.FeatureFlagProvider
-import io.mockk.coEvery
+import android.content.Context
 import io.mockk.mockk
-import kotlinx.coroutines.test.runTest
-import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class StudentInboxDetailsBehaviorTest {
 
-    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
-    private val behavior = StudentInboxDetailsBehavior(featureFlagProvider)
+    private val behavior = StudentInboxDetailsBehavior()
+    private val context: Context = mockk(relaxed = true)
 
     @Test
-    fun `shouldRestrictDeleteConversation returns true when feature flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
-
-        val result = behavior.shouldRestrictDeleteConversation()
+    fun `getShowBackButton returns true for student`() {
+        val result = behavior.getShowBackButton(context)
 
         assertTrue(result)
-    }
-
-    @Test
-    fun `shouldRestrictDeleteConversation returns false when feature flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
-
-        val result = behavior.shouldRestrictDeleteConversation()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictDeleteConversation returns false when feature flag throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
-
-        val result = behavior.shouldRestrictDeleteConversation()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns true when feature flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns false when feature flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns false when feature flag throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
     }
 }

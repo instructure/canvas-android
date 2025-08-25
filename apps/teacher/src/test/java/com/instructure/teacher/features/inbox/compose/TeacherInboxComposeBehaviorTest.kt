@@ -29,60 +29,6 @@ class TeacherInboxComposeBehaviorTest {
     private val behavior = TeacherInboxComposeBehavior(featureFlagProvider)
 
     @Test
-    fun `shouldRestrictStudentAccess returns true when feature flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
-
-        val result = behavior.shouldRestrictStudentAccess()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `shouldRestrictStudentAccess returns false when feature flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
-
-        val result = behavior.shouldRestrictStudentAccess()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictStudentAccess returns false when feature flag throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
-
-        val result = behavior.shouldRestrictStudentAccess()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns true when feature flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertTrue(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns false when feature flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `shouldRestrictReplyAll returns false when feature flag throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
-
-        val result = behavior.shouldRestrictReplyAll()
-
-        assertFalse(result)
-    }
-
-    @Test
     fun `shouldHideSendIndividual returns true when feature flag is enabled`() = runTest {
         coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
 

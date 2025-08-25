@@ -17,7 +17,6 @@
 package com.instructure.student.features.inbox.details
 
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import javax.inject.Inject
 
 class StudentInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {

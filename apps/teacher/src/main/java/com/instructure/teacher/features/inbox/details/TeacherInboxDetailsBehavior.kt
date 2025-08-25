@@ -18,7 +18,6 @@ package com.instructure.teacher.features.inbox.details
 
 import android.content.Context
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
-import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.teacher.utils.isTablet
 import javax.inject.Inject
 
