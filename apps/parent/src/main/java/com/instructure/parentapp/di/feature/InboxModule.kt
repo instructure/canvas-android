@@ -26,10 +26,12 @@ import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.apis.RecipientAPI
 import com.instructure.canvasapi2.managers.InboxSettingsManager
-import com.instructure.pandautils.features.inbox.compose.DefaultInboxComposeBehavior
 import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
 import com.instructure.pandautils.features.inbox.compose.InboxComposeRepository
 import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
+import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.parentapp.features.inbox.compose.ParentInboxComposeBehavior
+import com.instructure.parentapp.features.inbox.details.ParentInboxDetailsBehavior
 import com.instructure.pandautils.features.inbox.list.InboxRepository
 import com.instructure.pandautils.features.inbox.list.InboxRouter
 import com.instructure.pandautils.utils.FileDownloader
@@ -93,11 +95,11 @@ class InboxModule {
 
     @Provides
     fun provideInboxDetailsBehavior(): InboxDetailsBehavior {
-        return InboxDetailsBehavior()
+        return ParentInboxDetailsBehavior()
     }
 
     @Provides
     fun provideInboxComposeBehavior(): InboxComposeBehavior {
-        return DefaultInboxComposeBehavior()
+        return ParentInboxComposeBehavior()
     }
 }

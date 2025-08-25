@@ -25,6 +25,7 @@ import com.instructure.pandares.R
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -42,6 +43,7 @@ class InboxDetailsViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val behavior: InboxDetailsBehavior,
     private val repository: InboxDetailsRepository,
+    private val featureFlagProvider: FeatureFlagProvider
 ): ViewModel() {
 
     val conversationId: Long? = savedStateHandle.get<Long>(InboxDetailsFragment.CONVERSATION_ID)
@@ -53,12 +55,18 @@ class InboxDetailsViewModel @Inject constructor(
     private val _events = Channel<InboxDetailsFragmentAction>()
     val events = _events.receiveAsFlow()
 
+    private var canDeleteMessages = true
+    private var canReplyAll = true
+
     init {
         _uiState.update { it.copy(
             conversationId = conversationId,
             showBackButton = behavior.getShowBackButton(context)
         ) }
-        getConversation()
+        viewModelScope.launch {
+            checkAndApplyFeatureFlagRestrictions()
+            getConversation()
+        }
     }
 
     fun messageActionHandler(action: MessageAction) {
@@ -92,20 +100,27 @@ class InboxDetailsViewModel @Inject constructor(
                 getConversation(true)
             }
 
-            is InboxDetailsAction.DeleteConversation -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
-                showDialog = true,
-                title = context.getString(R.string.deleteConversation),
-                message = context.getString(R.string.confirmDeleteConversation),
-                positiveButton = context.getString(R.string.delete),
-                negativeButton = context.getString(R.string.cancel),
-                onPositiveButtonClick = {
-                    deleteConversation(action.conversationId)
-                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
-                },
-                onNegativeButtonClick = {
-                    _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+            is InboxDetailsAction.DeleteConversation -> {
+                viewModelScope.launch {
+                    val shouldRestrict = checkRestrictStudentAccessFlag()
+                    if (!shouldRestrict) {
+                        _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
+                            showDialog = true,
+                            title = context.getString(R.string.deleteConversation),
+                            message = context.getString(R.string.confirmDeleteConversation),
+                            positiveButton = context.getString(R.string.delete),
+                            negativeButton = context.getString(R.string.cancel),
+                            onPositiveButtonClick = {
+                                deleteConversation(action.conversationId)
+                                _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+                            },
+                            onNegativeButtonClick = {
+                                _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState()) }
+                            }
+                        )) }
+                    }
                 }
-            )) }
+            }
             is InboxDetailsAction.DeleteMessage -> _uiState.update { it.copy(confirmationDialogState = ConfirmationDialogState(
                 showDialog = true,
                 title = context.getString(R.string.deleteMessage),
@@ -136,8 +151,11 @@ class InboxDetailsViewModel @Inject constructor(
             }
             is InboxDetailsAction.ReplyAll -> {
                 viewModelScope.launch {
-                    uiState.value.conversation?.let {
-                        _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
+                    val shouldRestrict = checkRestrictStudentAccessFlag()
+                    if (!shouldRestrict) {
+                        uiState.value.conversation?.let {
+                            _events.send(InboxDetailsFragmentAction.NavigateToCompose(InboxComposeOptions.buildReplyAll(context, it, action.message)))
+                        }
                     }
                 }
             }
@@ -185,12 +203,15 @@ class InboxDetailsViewModel @Inject constructor(
     private fun getMessageViewState(conversation: Conversation, message: Message): InboxMessageUiState {
         val author = conversation.participants.find { it.id == message.authorId }
         val recipients = conversation.participants.filter { message.participatingUserIds.filter { it != message.authorId }.contains(it.id) }
+        
         return InboxMessageUiState(
             message = message,
             author = author,
             recipients = recipients,
             enabledActions = true,
             cannotReply = conversation.cannotReply,
+            canReplyAll = canReplyAll,
+            canDelete = canDeleteMessages,
         )
     }
 
@@ -254,6 +275,29 @@ class InboxDetailsViewModel @Inject constructor(
             } else {
                 _events.send(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)))
             }
+        }
+    }
+
+    private suspend fun checkAndApplyFeatureFlagRestrictions() {
+        val shouldRestrictDelete = checkRestrictStudentAccessFlag()
+        val shouldRestrictReplyAll = checkRestrictStudentAccessFlag()
+        
+        canDeleteMessages = !shouldRestrictDelete
+        canReplyAll = !shouldRestrictReplyAll
+        
+        _uiState.update {
+            it.copy(
+                showDeleteButton = !shouldRestrictDelete,
+                showReplyAllButton = !shouldRestrictReplyAll
+            )
+        }
+    }
+
+    private suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return try {
+            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+        } catch (e: Exception) {
+            false
         }
     }
 }

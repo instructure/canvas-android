@@ -14,14 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.inbox.details
+package com.instructure.student.features.inbox.details
 
 import android.content.Context
-import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
-import com.instructure.teacher.utils.isTablet
-import javax.inject.Inject
+import io.mockk.mockk
+import org.junit.Assert.assertTrue
+import org.junit.Test
 
-class TeacherInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {
-    
-    override fun getShowBackButton(context: Context): Boolean = !context.isTablet
+class StudentInboxDetailsBehaviorTest {
+
+    private val behavior = StudentInboxDetailsBehavior()
+    private val context: Context = mockk(relaxed = true)
+
+    @Test
+    fun `getShowBackButton returns true for student`() {
+        val result = behavior.getShowBackButton(context)
+
+        assertTrue(result)
+    }
 }

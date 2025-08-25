@@ -40,6 +40,7 @@ import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.utils.AppType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.toast
@@ -72,6 +73,9 @@ class MainActivity : BaseCanvasActivity(), OnUnreadCountInvalidated, Masqueradin
 
     @Inject
     lateinit var webViewAuthenticator: WebViewAuthenticator
+
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
 
     private lateinit var navController: NavController
 

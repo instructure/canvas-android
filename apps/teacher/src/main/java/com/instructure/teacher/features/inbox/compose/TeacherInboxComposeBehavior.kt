@@ -23,7 +23,7 @@ class TeacherInboxComposeBehavior @Inject constructor(
     private val featureFlagProvider: FeatureFlagProvider
 ) : InboxComposeBehavior {
     
-    override suspend fun shouldRestrictStudentAccess(): Boolean {
+    override suspend fun shouldHideSendIndividual(): Boolean {
         return try {
             featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
         } catch (e: Exception) {
