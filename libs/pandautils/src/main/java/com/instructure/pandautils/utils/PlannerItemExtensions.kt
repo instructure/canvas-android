@@ -16,6 +16,7 @@
  */
 package com.instructure.pandautils.utils
 
+import android.content.Context
 import androidx.annotation.DrawableRes
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
@@ -35,5 +36,18 @@ fun PlannerItem.getIconForPlannerItem(): Int {
         PlannableType.DISCUSSION_TOPIC, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_discussion
         PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
         else -> R.drawable.ic_calendar
+    }
+}
+
+fun PlannerItem.getTagForPlannerItem(context: Context): String? {
+    return if (plannable.subAssignmentTag == Const.REPLY_TO_TOPIC) {
+        context.getString(R.string.reply_to_topic)
+    } else if (plannable.subAssignmentTag == Const.REPLY_TO_ENTRY && plannableItemDetails?.replyRequiredCount != null) {
+        context.getString(
+            R.string.additional_replies,
+            plannableItemDetails?.replyRequiredCount
+        )
+    } else {
+        null
     }
 }
