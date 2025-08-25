@@ -43,6 +43,7 @@ import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.NullableParcelableArg
@@ -52,6 +53,7 @@ import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.onClick
+import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
@@ -60,7 +62,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.databinding.FragmentQuizDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.QuizUpdatedEvent
 import com.instructure.teacher.events.post
@@ -192,7 +193,7 @@ class QuizDetailsFragment : BasePresenterFragment<
 
             // Send out bus event to trigger a refresh for quiz list and submission list
             QuizUpdatedEvent(quiz.id, javaClass.simpleName).post()
-            AssignmentGradedEvent(quiz.id, javaClass.simpleName).post()
+            AssignmentGradedEvent(quiz.id, javaClass.simpleName).postSticky()
         }
 
         availabilityLayout.setGone()

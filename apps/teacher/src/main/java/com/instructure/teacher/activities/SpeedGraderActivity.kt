@@ -48,7 +48,10 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.dialogs.UnsavedChangesContinueDialog
+import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.utils.ActivityResult
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ExoAgent
 import com.instructure.pandautils.utils.OnActivityResults
@@ -68,10 +71,7 @@ import com.instructure.teacher.BuildConfig
 import com.instructure.teacher.R
 import com.instructure.teacher.adapters.SubmissionContentAdapter
 import com.instructure.teacher.databinding.ActivitySpeedgraderBinding
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderPresenterFactory
-import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
-import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryAction
 import com.instructure.teacher.features.speedgrader.commentlibrary.CommentLibraryFragment

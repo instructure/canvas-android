@@ -26,14 +26,24 @@ import android.view.accessibility.AccessibilityEvent
 import android.widget.FrameLayout
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.RubricCriterion
+import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.AssignmentGradedEvent
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.postSticky
+import com.instructure.pandautils.utils.setGone
+import com.instructure.pandautils.utils.setVisible
+import com.instructure.pandautils.utils.toast
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.ViewEditRubricBinding
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.utils.getColorCompat
@@ -173,7 +183,7 @@ class RubricEditView @JvmOverloads constructor(
                 onAssessmentSaved(updatedSubmission)
 
                 // Post update event
-                AssignmentGradedEvent(mAssignment.id).post()
+                AssignmentGradedEvent(mAssignment.id).postSticky()
                 SubmissionUpdatedEvent(updatedSubmission).post()
                 CanvasRestAdapter.clearCacheUrls("courses/${mAssignment.courseId}/assignment_groups")
                 CanvasRestAdapter.clearCacheUrls("courses/${mAssignment.courseId}/assignments/${mAssignment.id}")

@@ -45,6 +45,7 @@ import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -56,6 +57,7 @@ import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
@@ -65,7 +67,6 @@ import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentDeletedEvent
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
@@ -180,7 +181,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             presenter.loadData(true)
 
             // Send out bus events to trigger a refresh for assignment list and submission list
-            AssignmentGradedEvent(assignment.id, javaClass.simpleName).post()
+            AssignmentGradedEvent(assignment.id, javaClass.simpleName).postSticky()
             AssignmentUpdatedEvent(assignment.id, javaClass.simpleName).post()
         }
 

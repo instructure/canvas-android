@@ -26,7 +26,9 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.postSticky
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Job
@@ -172,6 +174,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     courseId,
                     false
                 )
+
+                AssignmentGradedEvent(assignmentId).postSticky()
             } catch (e: Exception) {
                 if (e is CancellationException) {
                     return@launch
@@ -207,6 +211,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     assignmentId,
                     courseId,
                 )
+
+                AssignmentGradedEvent(assignmentId).postSticky()
+
                 loadData(forceNetwork = true)
             } catch (e: Exception) {
                 _uiState.update {
@@ -229,6 +236,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     gradeStatus.id?.toString(),
                     gradeStatus.statusId
                 ).updateSubmissionGradeStatus?.submission
+
+                AssignmentGradedEvent(assignmentId).postSticky()
 
                 _uiState.update {
                     it.copy(
