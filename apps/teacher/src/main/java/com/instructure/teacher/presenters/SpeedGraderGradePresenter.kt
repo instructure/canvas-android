@@ -18,15 +18,24 @@ package com.instructure.teacher.presenters
 
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.instructure.canvasapi2.managers.SubmissionManager
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.Assignee
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.GroupAssignee
+import com.instructure.canvasapi2.models.StudentAssignee
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.canvasapi2.utils.weave.weave
-import com.instructure.teacher.events.AssignmentGradedEvent
+import com.instructure.pandautils.blueprint.FragmentPresenter
+import com.instructure.pandautils.utils.AssignmentGradedEvent
+import com.instructure.pandautils.utils.postSticky
 import com.instructure.teacher.events.SubmissionUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.viewinterface.SpeedGraderGradeView
-import com.instructure.pandautils.blueprint.FragmentPresenter
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 
 class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Assignment, val course: Course, val assignee: Assignee) : FragmentPresenter<SpeedGraderGradeView>() {
 
@@ -94,7 +103,7 @@ class SpeedGraderGradePresenter(var submission: Submission?, val assignment: Ass
     fun updateSubmission(newSubmission: Submission) {
         submission = newSubmission
         viewCallback?.updateGradeText()
-        AssignmentGradedEvent(assignment.id).post() //post bus event
+        AssignmentGradedEvent(assignment.id).postSticky() //post bus event
         SubmissionUpdatedEvent(newSubmission).post()
         CanvasRestAdapter.clearCacheUrls("courses/${course.id}/assignment_groups")
         CanvasRestAdapter.clearCacheUrls("courses/${course.id}/assignments/${assignment.id}")
