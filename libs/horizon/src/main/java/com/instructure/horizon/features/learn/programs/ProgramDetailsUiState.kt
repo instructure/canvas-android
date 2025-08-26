@@ -21,7 +21,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class ProgramDetailsUiState(
     val loadingState: LoadingState = LoadingState(),
     val programName: String = "",
-    val progress: Double = 0.0,
+    val progressBarUiState: ProgressBarUiState = ProgressBarUiState(),
     val description: String = "",
     val tags: List<ProgramDetailTag> = emptyList(),
     val programProgressState: ProgramProgressState = ProgramProgressState(courses = emptyList()),
@@ -31,3 +31,13 @@ data class ProgramDetailTag(
     val name: String,
     val iconRes: Int? = null,
 )
+
+data class ProgressBarUiState(
+    val progress: Double = 0.0,
+    val progressBarStatus: ProgressBarStatus = ProgressBarStatus.IN_PROGRESS
+)
+
+enum class ProgressBarStatus {
+    NOT_STARTED,
+    IN_PROGRESS
+}

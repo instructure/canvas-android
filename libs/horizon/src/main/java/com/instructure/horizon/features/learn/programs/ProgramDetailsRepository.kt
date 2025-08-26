@@ -15,27 +15,27 @@
  */
 package com.instructure.horizon.features.learn.programs
 
-import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
 import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.models.Course
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class ProgramDetailsRepository @Inject constructor(
     private val journeyApiManager: JourneyApiManager,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val getCoursesManager: HorizonGetCoursesManager
 ) {
-    suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = true): Program {
-        val program = journeyApiManager.getPrograms(forceNetwork).find { it.id == programId }
-        // TODO Error handling
-        return program!!
+    suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = false): Program {
+        val program = journeyApiManager.getProgramById(programId, forceNetwork)
+        return program
     }
 
-    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = true): List<Course> {
-        // TODO We might want to optimize the fetching here
-        return courseIds.mapNotNull {
-            courseApi.getCourse(it, RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull
-        }
+    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {
+        courseIds.map { id ->
+            async { getCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
+        }.awaitAll()
     }
 }

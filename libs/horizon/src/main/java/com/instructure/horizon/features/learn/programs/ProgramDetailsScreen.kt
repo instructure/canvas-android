@@ -62,7 +62,7 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Mo
             Text(uiState.programName, style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_24)
             ProgramsProgressBar(
-                uiState.progress,
+                uiState.progressBarUiState,
                 progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
             )
             HorizonSpace(SpaceSize.SPACE_8)
@@ -93,7 +93,7 @@ private fun ProgramDetailsScreenPreview() {
     ProgramDetailsScreen(
         uiState = ProgramDetailsUiState(
             programName = "Program Name Here",
-            progress = 15.0,
+            progressBarUiState = ProgressBarUiState(progress = 15.0, progressBarStatus = ProgressBarStatus.IN_PROGRESS),
             description = "Learner provider-generated program description At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Guidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.",
             tags = listOf(
                 ProgramDetailTag("Body Text"),

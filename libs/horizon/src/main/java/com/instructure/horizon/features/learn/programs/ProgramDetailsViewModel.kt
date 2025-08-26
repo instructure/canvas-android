@@ -18,9 +18,9 @@ package com.instructure.horizon.features.learn.programs
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
-import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
@@ -42,6 +42,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
+import kotlin.time.Duration
 
 @HiltViewModel
 class ProgramDetailsViewModel @Inject constructor(
@@ -58,25 +59,30 @@ class ProgramDetailsViewModel @Inject constructor(
         }
         viewModelScope.tryLaunch {
             val programDetails = repository.getProgramDetails("")
+            val progressBarStatus = if (programDetails.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
+                ProgressBarStatus.IN_PROGRESS
+            } else {
+                ProgressBarStatus.NOT_STARTED
+            }
+            val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId })
             _uiState.update {
                 it.copy(
                     loadingState = it.loadingState.copy(isLoading = false),
                     programName = programDetails.name,
-                    progress = calculateProgress(programDetails),
+                    progressBarUiState = ProgressBarUiState(progress = calculateProgress(programDetails), progressBarStatus = progressBarStatus),
                     description = programDetails.description ?: "",
-                    tags = createProgramTags(programDetails),
-                    programProgressState = createProgramProgressState(programDetails)
+                    tags = createProgramTags(programDetails, courses),
+                    programProgressState = createProgramProgressState(programDetails, courses)
                 )
             }
         } catch {
-            // TODO Error handling
             _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false))
+                it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
         }
     }
 
-    private fun createProgramTags(program: Program): List<ProgramDetailTag> {
+    private fun createProgramTags(program: Program, courses: List<CourseWithModuleItemDurations>): List<ProgramDetailTag> {
         val tags = mutableListOf<ProgramDetailTag>()
         if (program.startDate != null && program.endDate != null) {
             tags.add(
@@ -91,13 +97,19 @@ class ProgramDetailsViewModel @Inject constructor(
             )
         }
 
-        // TODO Calculate remaining minutes and add tag
+        val moduleItemDurations = courses.flatMap { it.moduleItemsDuration }
+        if (moduleItemDurations.isNotEmpty()) {
+            val durationString = getDurationStringFromDurations(moduleItemDurations)
+            if (durationString.isNotEmpty()) {
+                tags.add(ProgramDetailTag(durationString))
+            }
+        }
+
         return tags
     }
 
-    private suspend fun createProgramProgressState(program: Program): ProgramProgressState {
+    private fun createProgramProgressState(program: Program, courses: List<CourseWithModuleItemDurations>): ProgramProgressState {
         val linear = program.variant == ProgramVariantType.LINEAR
-        val courses = repository.getCoursesById(program.sortedRequirements.map { it.courseId })
 
         val courseItems = program.sortedRequirements.mapIndexed { index, requirement ->
 
@@ -110,7 +122,7 @@ class ProgramDetailsViewModel @Inject constructor(
                 else -> CourseCardStatus.Inactive // Default case
             }
 
-            val chips = createProgramCourseChips(requirement, courses.find { it.id == requirement.courseId } ?: Course(), courseCardStatus)
+            val chips = createProgramCourseChips(requirement, courses.find { it.courseId == requirement.courseId } ?: CourseWithModuleItemDurations(), courseCardStatus)
 
             val sequentialProperties = if (linear) {
                 SequentialProgramProgressProperties(
@@ -124,9 +136,9 @@ class ProgramDetailsViewModel @Inject constructor(
 
             ProgramProgressItemState(
                 courseCard = ProgramCourseCardState(
-                    courseName = courses.find { it.id == requirement.courseId }?.name.orEmpty(),
+                    courseName = courses.find { it.courseId == requirement.courseId }?.courseName.orEmpty(),
                     status = courseCardStatus,
-                    courseProgress = requirement.progress, // TODO This should be ignored and the should be requested from the Course API instead, because it's not reliable
+                    courseProgress = requirement.progress,
                     chips = chips
                 ),
                 sequentialProperties = sequentialProperties
@@ -149,7 +161,7 @@ class ProgramDetailsViewModel @Inject constructor(
 
     private fun createProgramCourseChips(
         requirement: ProgramRequirement,
-        course: Course,
+        course: CourseWithModuleItemDurations,
         courseCardStatus: CourseCardStatus
     ): List<CourseCardChipState> {
         val chips = mutableListOf<CourseCardChipState>()
@@ -177,6 +189,13 @@ class ProgramDetailsViewModel @Inject constructor(
             }
         }
 
+        if (course.moduleItemsDuration.isNotEmpty()) {
+            val durationString = getDurationStringFromDurations(course.moduleItemsDuration)
+            if (durationString.isNotEmpty()) {
+                chips.add(CourseCardChipState(durationString))
+            }
+        }
+
         val shouldShowDate =
             courseCardStatus == CourseCardStatus.Active || courseCardStatus == CourseCardStatus.InProgress || courseCardStatus == CourseCardStatus.Enrolled
         if (course.startDate != null && course.endDate != null && shouldShowDate) {
@@ -190,8 +209,6 @@ class ProgramDetailsViewModel @Inject constructor(
                 )
             )
         }
-
-        // TODO Calculate remaining minutes and add tag
 
         return chips
     }
@@ -210,5 +227,27 @@ class ProgramDetailsViewModel @Inject constructor(
             val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
             (totalProgress / (courseCompletionCount * 100)) * 100
         }
+    }
+
+    private fun getDurationStringFromDurations(durations: List<String>): String {
+        val totalMinutes = durations.mapNotNull { duration ->
+            try {
+                val dur = Duration.parse(duration)
+                val hours = dur.inWholeHours.toInt()
+                val minutes = (dur.inWholeMinutes % 60).toInt()
+                hours * 60 + minutes
+            } catch (e: Exception) {
+                null
+            }
+        }.sum()
+
+        val hours = totalMinutes / 60
+        val minutes = totalMinutes % 60
+
+        val parts = mutableListOf<String>()
+        if (hours > 0) parts.add(context.resources.getQuantityString(R.plurals.durationHours, hours, hours))
+        if (minutes > 0) parts.add(context.resources.getQuantityString(R.plurals.durationMins, minutes, minutes))
+
+        return if (parts.isEmpty()) "" else parts.joinToString(" ")
     }
 }

@@ -39,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.programs.ProgressBarUiState
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -109,7 +110,7 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
         }
         if (state.status is CourseCardStatus.InProgress && state.courseProgress != null) {
             HorizonSpace(SpaceSize.SPACE_12)
-            ProgramsProgressBar(state.courseProgress)
+            ProgramsProgressBar(ProgressBarUiState(state.courseProgress))
             HorizonSpace(SpaceSize.SPACE_8)
         }
         if (state.chips.isNotEmpty()) {
