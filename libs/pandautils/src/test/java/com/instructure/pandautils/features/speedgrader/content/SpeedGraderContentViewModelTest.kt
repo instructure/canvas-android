@@ -28,6 +28,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
@@ -65,6 +67,7 @@ class SpeedGraderContentViewModelTest {
     private val submission = mockk<SubmissionContentQuery.Submission>(relaxed = true)
     private val assignment = mockk<SubmissionFields.Assignment>(relaxed = true)
     private val resources = mockk<Resources>(relaxed = true)
+    private val gradingEventHandler = SpeedGraderGradingEventHandler()
 
     @Before
     fun setup() {
@@ -104,7 +107,7 @@ class SpeedGraderContentViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderContentViewModel(savedStateHandle, repository, resources, selectedAttemptHolder)
+        viewModel = SpeedGraderContentViewModel(savedStateHandle, repository, resources, selectedAttemptHolder, gradingEventHandler)
     }
 
     @Test
@@ -463,6 +466,22 @@ class SpeedGraderContentViewModelTest {
         val newContent = viewModel.uiState.value.content as PdfContent
         assertEquals("https://example.com/file_10.pdf", newContent.url)
         assertEquals(10L, viewModel.uiState.value.attachmentSelectorUiState.selectedItemId)
+    }
+
+    @Test
+    fun `status gets refreshed on GradeChanged event`() = runTest {
+        coEvery { submissionFields.state } returns SubmissionState.submitted
+        coEvery { repository.getSubmission(assignmentId, studentId) } returns submissionData
+
+        createViewModel()
+
+        assertEquals(SubmissionStateLabel.Submitted, viewModel.uiState.value.submissionState)
+
+        coEvery { submissionFields.state } returns SubmissionState.graded
+
+        gradingEventHandler.postEvent(GradingEvent.GradeChanged)
+
+        assertEquals(SubmissionStateLabel.Graded, viewModel.uiState.value.submissionState)
     }
 
     private fun mockAttachment(

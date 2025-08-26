@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +52,8 @@ class SpeedGraderContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderContentRepository,
     private val resources: Resources,
-    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder,
+    private val gradingEventHandler: SpeedGraderGradingEventHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderContentUiState())
@@ -62,6 +65,17 @@ class SpeedGraderContentViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             fetchData()
+            viewModelScope.launch {
+                gradingEventHandler.events.collect {
+                    when (it) {
+                        is GradingEvent.GradeChanged -> {
+                            updateSubmissionState()
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
         }
     }
 
@@ -125,6 +139,20 @@ class SpeedGraderContentViewModel @Inject constructor(
                 ),
                 anonymous = anonymousGrading,
                 group = groupSubmission
+            )
+        }
+    }
+
+    private suspend fun updateSubmissionState() {
+        val submission = repository.getSubmission(assignmentId, studentId)
+        val submissionFields = submission.submission?.submissionFields
+
+        _uiState.update { state ->
+            state.copy(
+                submissionState = getSubmissionStateLabel(
+                    submissionFields?.state,
+                    submissionFields?.customGradeStatus
+                )
             )
         }
     }

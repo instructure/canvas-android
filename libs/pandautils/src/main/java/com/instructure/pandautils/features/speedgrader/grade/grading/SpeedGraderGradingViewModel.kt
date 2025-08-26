@@ -81,6 +81,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     is GradingEvent.PostPolicyUpdated -> {
                         loadData(forceNetwork = true)
                     }
+
+                    else -> {}
                 }
             }
         }
@@ -172,6 +174,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     courseId,
                     false
                 )
+
+                gradingEventHandler.postEvent(GradingEvent.GradeChanged)
             } catch (e: Exception) {
                 if (e is CancellationException) {
                     return@launch
@@ -207,6 +211,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     assignmentId,
                     courseId,
                 )
+
+                gradingEventHandler.postEvent(GradingEvent.GradeChanged)
+
                 loadData(forceNetwork = true)
             } catch (e: Exception) {
                 _uiState.update {
@@ -229,6 +236,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     gradeStatus.id?.toString(),
                     gradeStatus.statusId
                 ).updateSubmissionGradeStatus?.submission
+
+                gradingEventHandler.postEvent(GradingEvent.GradeChanged)
 
                 _uiState.update {
                     it.copy(
