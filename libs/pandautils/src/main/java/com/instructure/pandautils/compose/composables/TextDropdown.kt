@@ -115,10 +115,9 @@ fun TextDropdown(
                     painter = painterResource(R.drawable.ic_arrow_down),
                     contentDescription = null,
                     modifier = Modifier.size(16.dp).rotate(rotation.value),
-                    tint = colorResource(R.color.textDark)
+                    tint = color
                 )
             }
-
 
             ExposedDropdownMenu(
                 expanded = expanded,
