@@ -17,6 +17,7 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
+import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -45,6 +46,7 @@ import com.instructure.student.R
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers.allOf
 
+
 class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
 
     /**
@@ -65,6 +67,7 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
     fun enterSearchQuery(query: String) {
         searchInput.click()
         searchInput.replaceText(query)
+        closeSoftKeyboard()
     }
 
     fun clearSearchButton() {
@@ -74,6 +77,18 @@ class QuizListPage(val searchable: Searchable) : BasePage(R.id.quizListPage) {
     fun assertEmptyStateDisplayed() {
         onView(allOf(withId(R.id.emptyViewLayout), isDisplayed()))
             .check(matches(isDisplayed()))
+    }
+
+    fun assertAssignmentQuizzesGroupDisplayed() {
+        assertMatcherDisplayed(allOf(withId(R.id.title), withText("Assignment Quizzes")))
+    }
+
+    fun collapseAssignmentQuizzesGroup() {
+        clickMatcher(withId(R.id.expand_collapse))
+    }
+
+    fun expandAssignmentQuizzesGroup() {
+        clickMatcher(withId(R.id.expand_collapse))
     }
 
     fun assertNoQuizDisplayed() {

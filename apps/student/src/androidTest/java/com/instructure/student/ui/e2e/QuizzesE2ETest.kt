@@ -17,7 +17,6 @@
 package com.instructure.student.ui.e2e
 
 import android.util.Log
-import androidx.test.espresso.Espresso.closeSoftKeyboard
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -82,34 +81,47 @@ class QuizzesE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to Quizzes Page.")
         courseBrowserPage.selectQuizzes()
 
-        Log.d(ASSERTION_TAG, "Assert that '${quizPublished.title}' published quiz is displayed and '${quizUnpublished.title}' unpublished quiz has not displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${quizPublished.title}' published quiz is displayed and '${quizUnpublished.title}' unpublished quiz has not displayed and the quiz group name is displayed.")
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizNotDisplayed(quizUnpublished)
+        quizListPage.assertAssignmentQuizzesGroupDisplayed()
+
+        Log.d(STEP_TAG, "Collapse the quiz group.")
+        quizListPage.collapseAssignmentQuizzesGroup()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz is NOT displayed.")
+        quizListPage.assertQuizNotDisplayed(quizPublished)
+
+        Log.d(STEP_TAG, "Expand the quiz group.")
+        quizListPage.expandAssignmentQuizzesGroup()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz is displayed again.")
+        quizListPage.assertQuizDisplayed(quizPublished)
 
         Log.d(STEP_TAG, "Open the search bar and search for the '${quizUnpublished.title}' quiz.")
         quizListPage.openSearchBar()
         quizListPage.enterSearchQuery(quizUnpublished.title)
-        closeSoftKeyboard()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${quizUnpublished.title}' quiz is NOT displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed.")
         refresh()
         quizListPage.assertEmptyStateDisplayed()
 
         Log.d(STEP_TAG, "Clear the search bar and search for the '${quizPublished.title}' quiz.")
         quizListPage.clearSearchButton()
         quizListPage.enterSearchQuery(quizPublished.title)
+        //closeSoftKeyboard()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz is displayed in the search results.")
+        Log.d(ASSERTION_TAG, "Assert that ONLY the '${quizPublished.title}' quiz is displayed in the search results page.")
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizItemCount(1)
 
         Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
         quizListPage.selectQuiz(quizPublished)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz title is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz title is displayed on the quiz details page.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(locatorType = Locator.ID, locatorValue = "quiz_title", textValue = quizPublished.title))
 
-        Log.d(STEP_TAG, "Press 'Take the Quiz' button.")
+        Log.d(ASSERTION_TAG, "Assert that the 'Take the Quiz' button is displayed on the quiz details page.")
         canvasWebViewPage.runTextChecks(
             WebViewTextCheck(
                 locatorType = Locator.ID,
@@ -117,21 +129,22 @@ class QuizzesE2ETest: StudentTest() {
                 textValue = "Take the Quiz"
             )
         )
-        canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
 
+        Log.d(STEP_TAG, "Press 'Take the Quiz' button.")
+        canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
 
         Log.d(STEP_TAG, "Enter answers to the questions:")
         Thread.sleep(2000) // Wait for the quiz to load
         for(question in quizQuestions) {
             Log.d(ASSERTION_TAG, "Assert that the following question is displayed: '${question.questionText}'.")
-            quizTakingPage.verifyQuestionDisplayed(question.id!!, question.questionText!!)
+            quizTakingPage.assertQuestionDisplayed(question.id!!, question.questionText!!)
             if(question.questionType == "multiple_choice_question") {
                 Log.d(STEP_TAG, "Choosing an answer for the following question: '${question.questionText}'.")
                 quizTakingPage.selectAnyAnswer(question.id!!)
             }
         }
 
-        Log.d(PREPARATION_TAG, "Submit the '${quizPublished.title}' quiz.")
+        Log.d(STEP_TAG, "Submit the '${quizPublished.title}' quiz.")
         quizTakingPage.submitQuiz()
 
         Thread.sleep(3000) // Wait for the quiz submission to finish.
@@ -154,7 +167,6 @@ class QuizzesE2ETest: StudentTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the corresponding grade (10) is displayed for '${quizPublished.title}' quiz.")
         courseGradesPage.assertGradeDisplayed(withText(quizPublished.title), containsTextCaseInsensitive("10"))
-
     }
 
     private fun makeQuizQuestions() = listOf(
