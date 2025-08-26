@@ -19,6 +19,7 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.R
+import okhttp3.internal.delimiterOffset
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -131,6 +132,21 @@ fun Date.format(pattern: String): String {
 fun Date.formatMonthDayYear(): String {
     val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
     return formatter.format(this)
+}
+
+fun Date.localisedFormat(pattern: String, locale: Locale? = null): String {
+    val currentLocal = locale ?: Locale.getDefault()
+    val skeleton = android.text.format.DateFormat.getBestDateTimePattern(currentLocal, pattern)
+    val formatter = SimpleDateFormat(skeleton, currentLocal)
+    return formatter.format(this)
+}
+
+fun Date.localisedFormatMonthDay(): String {
+    return localisedFormat("MM/dd")
+}
+
+fun Date.localisedFormatMonthDayYear(): String {
+    return localisedFormat("MM/dd/yyyy")
 }
 
 fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {
