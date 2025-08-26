@@ -29,7 +29,9 @@ class ProgramDetailsRepository @Inject constructor(
     private val getCoursesManager: HorizonGetCoursesManager
 ) {
     suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = false): Program {
-        val program = journeyApiManager.getProgramById(programId, forceNetwork)
+        // TODO This solution might be temporary. When we will have the program switcher we will always request all the programs.
+        val program = journeyApiManager.getPrograms(forceNetwork).find { it.id == programId }
+            ?: throw IllegalArgumentException("Program with id $programId not found")
         return program
     }
 

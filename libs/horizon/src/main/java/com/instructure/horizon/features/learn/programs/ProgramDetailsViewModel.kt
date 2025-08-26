@@ -32,6 +32,7 @@ import com.instructure.horizon.features.learn.programs.components.ProgramProgres
 import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
 import com.instructure.horizon.features.learn.programs.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import com.instructure.pandautils.utils.formatMonthDayYear
@@ -50,7 +51,14 @@ class ProgramDetailsViewModel @Inject constructor(
     private val repository: ProgramDetailsRepository
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(ProgramDetailsUiState())
+    private val _uiState = MutableStateFlow(
+        ProgramDetailsUiState(
+            loadingState = LoadingState(
+                onRefresh = ::refreshProgram,
+                onSnackbarDismiss = ::dismissSnackbar
+            )
+        )
+    )
     val state = _uiState.asStateFlow()
 
     init {
@@ -58,27 +66,35 @@ class ProgramDetailsViewModel @Inject constructor(
             it.copy(loadingState = it.loadingState.copy(isLoading = true))
         }
         viewModelScope.tryLaunch {
-            val programDetails = repository.getProgramDetails("")
-            val progressBarStatus = if (programDetails.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
-                ProgressBarStatus.IN_PROGRESS
-            } else {
-                ProgressBarStatus.NOT_STARTED
-            }
-            val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId })
-            _uiState.update {
-                it.copy(
-                    loadingState = it.loadingState.copy(isLoading = false),
-                    programName = programDetails.name,
-                    progressBarUiState = ProgressBarUiState(progress = calculateProgress(programDetails), progressBarStatus = progressBarStatus),
-                    description = programDetails.description ?: "",
-                    tags = createProgramTags(programDetails, courses),
-                    programProgressState = createProgramProgressState(programDetails, courses)
-                )
-            }
+            loadData()
         } catch {
             _uiState.update {
                 it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
             }
+        }
+    }
+
+    private suspend fun loadData(forceNetwork: Boolean = false) {
+        val programDetails = repository.getProgramDetails("", forceNetwork = forceNetwork)
+        val progressBarStatus =
+            if (programDetails.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
+                ProgressBarStatus.IN_PROGRESS
+            } else {
+                ProgressBarStatus.NOT_STARTED
+            }
+        val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId }, forceNetwork = forceNetwork)
+        _uiState.update {
+            it.copy(
+                loadingState = it.loadingState.copy(isLoading = false, isRefreshing = false),
+                programName = programDetails.name,
+                progressBarUiState = ProgressBarUiState(
+                    progress = calculateProgress(programDetails),
+                    progressBarStatus = progressBarStatus
+                ),
+                description = programDetails.description ?: "",
+                tags = createProgramTags(programDetails, courses),
+                programProgressState = createProgramProgressState(programDetails, courses)
+            )
         }
     }
 
@@ -122,7 +138,10 @@ class ProgramDetailsViewModel @Inject constructor(
                 else -> CourseCardStatus.Inactive // Default case
             }
 
-            val chips = createProgramCourseChips(requirement, courses.find { it.courseId == requirement.courseId } ?: CourseWithModuleItemDurations(), courseCardStatus)
+            val chips = createProgramCourseChips(
+                requirement,
+                courses.find { it.courseId == requirement.courseId } ?: CourseWithModuleItemDurations(),
+                courseCardStatus)
 
             val sequentialProperties = if (linear) {
                 SequentialProgramProgressProperties(
@@ -249,5 +268,29 @@ class ProgramDetailsViewModel @Inject constructor(
         if (minutes > 0) parts.add(context.resources.getQuantityString(R.plurals.durationMins, minutes, minutes))
 
         return if (parts.isEmpty()) "" else parts.joinToString(" ")
+    }
+
+    private fun refreshProgram() {
+        _uiState.update {
+            it.copy(loadingState = it.loadingState.copy(isRefreshing = true))
+        }
+        viewModelScope.tryLaunch {
+            loadData(true)
+        } catch {
+            _uiState.update {
+                it.copy(
+                    loadingState = it.loadingState.copy(
+                        isRefreshing = false,
+                        snackbarMessage = context.getString(R.string.programDetails_failedToRefresh)
+                    )
+                )
+            }
+        }
+    }
+
+    private fun dismissSnackbar() {
+        _uiState.update {
+            it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
+        }
     }
 }
