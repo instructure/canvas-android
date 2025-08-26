@@ -72,7 +72,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.model.AssignmentStatus
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.formatMonthDayYear
+import com.instructure.pandautils.utils.localisedFormatMonthDayYear
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -248,7 +248,7 @@ private fun AssignmentItem(
         Text(
             text = stringResource(
                 R.string.scoresItemDueDate,
-                assignment.dueDate?.formatMonthDayYear() ?: stringResource(R.string.noDueDate)
+                assignment.dueDate?.localisedFormatMonthDayYear() ?: stringResource(R.string.noDueDate)
             ),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body()

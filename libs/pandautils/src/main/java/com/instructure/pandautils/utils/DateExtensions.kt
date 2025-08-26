@@ -19,7 +19,6 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.pandautils.R
-import okhttp3.internal.delimiterOffset
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -134,19 +133,40 @@ fun Date.formatMonthDayYear(): String {
     return formatter.format(this)
 }
 
-fun Date.localisedFormat(pattern: String, locale: Locale? = null): String {
+fun Date.localisedFormat(
+    pattern: String,
+    context: Context? = null,
+    locale: Locale? = null
+): String {
     val currentLocal = locale ?: Locale.getDefault()
+
+    val is24HourFormat = if (context == null)
+        false
+    else
+        android.text.format.DateFormat.is24HourFormat(context)
+
+    val pattern = if (is24HourFormat) {
+        pattern
+            .replace("hh", "HH")
+            .replace("h", "H")
+            .replace("a", "")
+    } else {
+        pattern
+            .replace("HH", "hh")
+            .replace("H", "h")
+            .apply { if (!contains("a")) plus("a") }
+    }
     val skeleton = android.text.format.DateFormat.getBestDateTimePattern(currentLocal, pattern)
     val formatter = SimpleDateFormat(skeleton, currentLocal)
     return formatter.format(this)
 }
 
-fun Date.localisedFormatMonthDay(): String {
-    return localisedFormat("MM/dd")
+fun Date.localisedFormatMonthDay(locale: Locale? = null): String {
+    return localisedFormat("MM/dd", locale = locale)
 }
 
-fun Date.localisedFormatMonthDayYear(): String {
-    return localisedFormat("MM/dd/yyyy")
+fun Date.localisedFormatMonthDayYear(locale: Locale? = null): String {
+    return localisedFormat("MM/dd/yyyy", locale = locale)
 }
 
 fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {

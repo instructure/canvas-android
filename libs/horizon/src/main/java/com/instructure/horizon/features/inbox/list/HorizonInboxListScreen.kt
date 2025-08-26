@@ -83,7 +83,6 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.format
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
