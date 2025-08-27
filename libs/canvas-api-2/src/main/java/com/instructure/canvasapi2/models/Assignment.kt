@@ -115,7 +115,9 @@ data class Assignment(
         @SerializedName("omit_from_final_grade")
         val omitFromFinalGrade: Boolean = false,
         @SerializedName("hide_in_gradebook")
-        val isHiddenInGradeBook: Boolean = false
+        val isHiddenInGradeBook: Boolean = false,
+        @SerializedName("sub_assignment_tag")
+        val subAssignmentTag: String? = null
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
