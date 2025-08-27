@@ -114,7 +114,8 @@ class FakeStudentContextManager : StudentContextManager {
                             AssignmentState.published,
                             GradingType.percent,
                             mutableListOf(SubmissionType.online_text_entry)
-                        )
+                        ),
+                        null
                     )
                 )
             } else {

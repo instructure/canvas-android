@@ -34,6 +34,7 @@ import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
@@ -52,12 +53,14 @@ import com.instructure.pandautils.features.offline.offlinecontent.CourseFileShar
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
+import com.instructure.pandautils.room.offline.entities.CustomGradeStatusEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -109,7 +112,9 @@ class CourseSync(
     private val fileFolderApi: FileFolderAPI.FilesFoldersInterface,
     private val pageDao: PageDao,
     private val firebaseCrashlytics: FirebaseCrashlytics,
-    private val fileSync: FileSync
+    private val fileSync: FileSync,
+    private val customGradeStatusDao: CustomGradeStatusDao,
+    private val customGradeStatusesManager: CustomGradeStatusesManager
 ) {
 
     private val additionalFileIdsToSync = mutableMapOf<Long, Set<Long>>()
@@ -326,10 +331,24 @@ class CourseSync(
                 }
             }
 
+            fetchCustomGradeStatuses(courseId)
+
             fetchQuizzes(assignmentGroups, courseId)
 
             assignmentFacade.insertAssignmentGroups(assignmentGroups, courseId)
         }
+    }
+
+    private suspend fun fetchCustomGradeStatuses(courseId: Long) {
+        val customGradeStatuses = customGradeStatusesManager.getCustomGradeStatuses(courseId, true)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            ?.map { CustomGradeStatusEntity(it, courseId) }
+            .orEmpty()
+
+        customGradeStatusDao.insertAll(customGradeStatuses)
     }
 
     private suspend fun fetchCourseDetails(courseId: Long): Course {

@@ -23,16 +23,17 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.applyTheme
 import com.instructure.pandautils.utils.positionOnScreen
+import com.instructure.pandautils.utils.post
+import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.DialogPostGradedEveryoneBinding
 import com.instructure.teacher.databinding.FragmentPostGradeBinding
-import com.instructure.teacher.events.AssignmentGradedEvent
-import com.instructure.teacher.events.post
 import com.instructure.teacher.features.postpolicies.PostGradeEvent
 import com.instructure.teacher.mobius.common.ui.MobiusView
 import com.spotify.mobius.functions.Consumer
@@ -146,7 +147,7 @@ class PostGradeView(
 
     fun showGradesPosted(isHidingGrades: Boolean, assignmentId: Long) {
         Toast.makeText(context, if (isHidingGrades) R.string.postPolicyHiddenToast else R.string.postPolicyPostedToast, Toast.LENGTH_SHORT).show()
-        AssignmentGradedEvent(assignmentId).post() //post bus event
+        AssignmentGradedEvent(assignmentId).postSticky() //post bus event
         activity.onBackPressed()
     }
 

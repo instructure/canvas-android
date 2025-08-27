@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Ocena po objavi</string>
     <string name="gradeOverride">Preglasitev ocene</string>
     <string name="currentGrade">Trenutna ocena</string>
-    <string name="opensInCanvasStudent">Odpiranje v Canvas Student</string>
+    <string name="opensInCanvasApp">Odpri v aplikaciji Canvas</string>
     <string name="tab_student_view">Pogled študenta</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Shramba</string>
     <string name="offline_content_storage_info">%s od %s uporabljenih</string>
     <string name="offline_content_other">Druge aplikacije</string>
-    <string name="offline_content_canvas_student">Študent v sistemu Canvas</string>
+    <string name="offline_content_canvas">Sistem Canvas</string>
     <string name="offline_content_remaining">Preostalo</string>
-    <string name="offline_content_storage_info_a11y_description">Informacije o shrambi: Uporabljeno %s od %s, druge aplikacije %d%%, Canvas Student %d%%, preostalo %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informacije o shrambi: Uporabljeno %s od %s, druge aplikacije %d%%, Canvas %d%%, preostalo %d%%</string>
     <string name="offline_content_all_courses">Vsi predmeti</string>
     <string name="offline_content_sync">Sinhronizacija</string>
     <string name="offline_content_selected">Izbrana je možnost %d</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Ste študent ali izvajalec?</string>
     <string name="studentOrTeacherSubtitle">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite eno od njih, da obiščete trgovino Play Store</string>
     <string name="studentApp">ŠTUDENT</string>
-    <string name="canvasStudentApp">Študent v sistemu Canvas</string>
+    <string name="canvasAppName">Sistem Canvas</string>
     <string name="teacherApp">IZVAJALEC</string>
     <string name="canvasTeacherApp">Izvajalec v sistemu Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Študent je bil uspešno dodan</string>
     <string name="addStudentTitle">Dodaj študenta s/z ...</string>
     <string name="addStudentQrCodeTitle">Koda QR</string>
-    <string name="addStudentQrCodeExplanation">Študenti lahko ustvarijo kodo QR z aplikacijo Canvas Student na svoji mobilni napravi</string>
+    <string name="addStudentQrCodeExplanationCanvas">Študenti lahko ustvarijo kodo QR z aplikacijo Canvas na svoji mobilni napravi</string>
     <string name="addStudentPairingCodeTitle">Koda za seznanjanje naprave</string>
     <string name="addStudentPairingCodeExplanation">Študenti lahko pridobijo kodo za seznanitev prek spletnega mesta Canvas</string>
     <string name="pairingCodeDialogTitle">Dodaj študenta</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Prekliči</string>
     <string name="pairingCodeDialogPositiveButton">V redu</string>
     <string name="pairingCodeDialogError">Vaša koda je nepravilna ali potekla.</string>
-    <string name="qrPairingTitle">Odpiranje Canvas Student</string>
-    <string name="qrPairingDescription">Če želite nadaljevati, odprite aplikacijo Canvas Student za študente. Pojdite v glavni meni > Nastavitve > Seznani s skritim bralcem in odčitajte prikazano kodo QR</string>
-    <string name="qrCodePairingPrompt">Preberite kodo QR iz Canvas Student za seznanjanje</string>
+    <string name="qrPairingTitleCanvas">Odpri aplikacijo Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Če želite nadaljevati, odprite aplikacijo Canvas za študente. Pojdite v glavni meni > Nastavitve > Seznani s skritim bralcem in odčitajte prikazano kodo QR</string>
+    <string name="qrCodePairingPromptCanvas">Preberite kodo QR iz aplikacije Canvas za seznanjanje</string>
     <string name="a11y_addStudentContentDescription">Dodaj študenta</string>
     <string name="qrPairingErrorTitle">Koda QR je potekla</string>
     <string name="qrPairingErrorDescription">Veljavnost kode QR, ki ste jo odčitali, je potekla. Osvežite kodo na študentovi napravi in poskusite znova.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji.</string>
     <string name="widgetSingleGradeSelectCourse">Izberimo predmet</string>
     <string name="widgetGradesErrorLoadingCourses">Med nalaganjem predmetov je prišlo do napake.</string>
+    <string name="settingsSwitchExperience">Preklopi na Canvas Career</string>
 </resources>

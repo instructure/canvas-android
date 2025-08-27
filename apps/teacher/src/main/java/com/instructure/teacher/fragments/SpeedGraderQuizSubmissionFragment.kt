@@ -25,11 +25,11 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_QUIZ_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
+import com.instructure.pandautils.features.speedgrader.content.QuizContent
 import com.instructure.pandautils.utils.*
 import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedGraderQuizSubmissionBinding
 import com.instructure.teacher.router.RouteMatcher
-import com.instructure.teacher.view.QuizContent
 import com.instructure.teacher.view.QuizSubmissionGradedEvent
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -40,11 +40,11 @@ class SpeedGraderQuizSubmissionFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedGraderQuizSubmissionBinding::bind)
 
-    private var mCourseId by LongArg()
-    private var mAssignmentId by LongArg()
-    private var mStudentId by LongArg()
-    private var mUrl by StringArg()
-    private var mPendingReview by BooleanArg()
+    private var courseId by LongArg()
+    private var assignmentId by LongArg()
+    private var studentId by LongArg()
+    private var url by StringArg()
+    private var pendingReview by BooleanArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_speed_grader_quiz_submission, container, false)
@@ -61,7 +61,7 @@ class SpeedGraderQuizSubmissionFragment : BaseCanvasFragment() {
         ViewStyler.themeButton(viewQuizButton)
         gradeQuizButton.onClick { viewQuizSubmission() }
         viewQuizButton.onClick { viewQuizSubmission() }
-        if (mPendingReview) {
+        if (pendingReview) {
             viewQuizButton.setGone()
             pendingReviewLabel.setVisible()
             gradeQuizButton.setVisible()
@@ -80,25 +80,33 @@ class SpeedGraderQuizSubmissionFragment : BaseCanvasFragment() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizGraded(event: QuizSubmissionGradedEvent) {
-        event.once("QuizSubFrag|$mCourseId|$mAssignmentId|$mStudentId") {
-            if (it.userId != mStudentId) return@once
-            mPendingReview = false
+        event.once("QuizSubFrag|$courseId|$assignmentId|$studentId") {
+            if (it.userId != studentId) return@once
+            pendingReview = false
             setupViews()
         }
     }
 
     private fun viewQuizSubmission() {
-        val bundle = SpeedGraderQuizWebViewFragment.newInstance(mCourseId, mAssignmentId, mStudentId, mUrl).nonNullArgs
+        val bundle = SpeedGraderQuizWebViewFragment.newInstance(courseId, assignmentId, studentId, url).nonNullArgs
         RouteMatcher.route(requireActivity(), Route(SpeedGraderQuizWebViewFragment::class.java, null, bundle))
     }
 
     companion object {
         fun newInstance(content: QuizContent) = SpeedGraderQuizSubmissionFragment().apply {
-            mCourseId = content.courseId
-            mAssignmentId = content.assignmentId
-            mStudentId = content.studentId
-            mUrl = content.url
-            mPendingReview = content.pendingReview
+            courseId = content.courseId
+            assignmentId = content.assignmentId
+            studentId = content.studentId
+            url = content.url
+            pendingReview = content.pendingReview
+        }
+
+        fun createBundle(content: QuizContent) = Bundle().apply {
+            putLong("courseId", content.courseId)
+            putLong("assignmentId", content.assignmentId)
+            putLong("studentId", content.studentId)
+            putString("url", content.url)
+            putBoolean("pendingReview", content.pendingReview)
         }
     }
 }
