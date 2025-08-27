@@ -34,6 +34,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.BaseSyncFragment
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getDrawableCompat
@@ -43,7 +44,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.activities.InitActivity
 import com.instructure.teacher.adapters.ToDoAdapter
 import com.instructure.teacher.databinding.FragmentTodoBinding
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.ToDoPresenterFactory
 import com.instructure.teacher.holders.ToDoViewHolder
 import com.instructure.teacher.interfaces.AdapterToFragmentCallback
