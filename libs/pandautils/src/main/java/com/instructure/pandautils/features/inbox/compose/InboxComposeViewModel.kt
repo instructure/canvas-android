@@ -191,8 +191,9 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun checkAndApplyFeatureFlagRestrictions() {
         viewModelScope.launch {
-            val shouldRestrict = inboxComposeBehavior.shouldRestrictStudentAccess()
-            if (shouldRestrict) {
+            val shouldHideSendIndividual = inboxComposeBehavior.shouldHideSendIndividual()
+            
+            if (shouldHideSendIndividual) {
                 _uiState.update {
                     it.copy(
                         hiddenFields = it.hiddenFields.copy(isSendIndividualHidden = true),

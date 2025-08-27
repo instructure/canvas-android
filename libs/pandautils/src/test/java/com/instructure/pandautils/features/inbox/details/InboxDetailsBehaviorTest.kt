@@ -13,8 +13,24 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.pandautils.features.inbox.compose
+package com.instructure.pandautils.features.inbox.details
 
-interface InboxComposeBehavior {
-    suspend fun shouldHideSendIndividual(): Boolean = false
+import android.content.Context
+import io.mockk.mockk
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
+import org.junit.Test
+
+class InboxDetailsBehaviorTest {
+
+    @Test
+    fun `default getShowBackButton returns true`() {
+        val behavior = InboxDetailsBehavior()
+        val context: Context = mockk(relaxed = true)
+
+        val result = behavior.getShowBackButton(context)
+
+        assertTrue(result)
+    }
 }
