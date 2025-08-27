@@ -87,6 +87,8 @@ data class Submission(
         val latePolicyStatus: String? = null,
         @SerializedName("custom_grade_status_id")
         val customGradeStatusId: Long? = null,
+        @SerializedName("seconds_late")
+        val secondsLate: Long? = null,
 
         // Testing purpose fields
         val status: String? = null

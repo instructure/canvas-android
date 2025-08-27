@@ -38,6 +38,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -56,8 +57,37 @@ fun BasicTextFieldWithHintDecoration(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textStyle: TextStyle = LocalTextStyle.current
 ) {
+    BasicTextFieldWithHintDecoration(
+        hintColor = hintColor,
+        textColor = textColor,
+        value = if (value != null) TextFieldValue(value) else TextFieldValue(""),
+        onValueChange = {
+            onValueChange(it.text)
+        },
+        hint = hint,
+        modifier = modifier,
+        testTag = testTag,
+        decorationText = decorationText,
+        keyboardOptions = keyboardOptions,
+        textStyle = textStyle
+    )
+}
+
+@Composable
+fun BasicTextFieldWithHintDecoration(
+    hintColor: Color,
+    textColor: Color,
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    hint: String,
+    modifier: Modifier = Modifier,
+    testTag: String = "gradeInputField",
+    decorationText: String? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    textStyle: TextStyle = LocalTextStyle.current
+) {
     BasicTextField(
-        value = value.orEmpty(),
+        value = value,
         onValueChange = onValueChange,
         modifier = modifier.then(Modifier.testTag(testTag)),
         keyboardOptions = keyboardOptions,
@@ -70,7 +100,7 @@ fun BasicTextFieldWithHintDecoration(
         cursorBrush = SolidColor(textColor),
         decorationBox = { innerTextField ->
             Box {
-                if (value.isNullOrEmpty()) {
+                if (value.text.isEmpty()) {
                     Text(
                         text = hint,
                         fontSize = 16.sp,

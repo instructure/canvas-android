@@ -62,7 +62,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 onScoreChange = this::onScoreChanged,
                 onPercentageChange = this::onPercentageChanged,
                 onExcuse = this::onExcuse,
-                onStatusChange = this::onStatusChange
+                onStatusChange = this::onStatusChange,
+                onLateDaysChange = this::onLateDaysChange
             )
         )
     val uiState = _uiState.asStateFlow()
@@ -70,6 +71,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
     lateinit var submissionId: String
 
     private var debounceJob: Job? = null
+
+    private var daysLateDebounceJob: Job? = null
 
     init {
         loadData()
@@ -197,9 +200,9 @@ class SpeedGraderGradingViewModel @Inject constructor(
         onScoreChanged(score?.toFloat())
     }
 
-    private fun getDaysLate(secondsLate: Double?): Int? {
+    private fun getDaysLate(secondsLate: Double?): Float? {
         return secondsLate?.let {
-            (it / (60 * 60 * 24)).roundToInt().coerceAtLeast(1)
+            (it / (60 * 60 * 24)).toFloat()
         }
     }
 
@@ -258,6 +261,39 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     it.copy(
                         error = true,
                         retryAction = { onStatusChange(gradeStatus) }
+                    )
+                }
+            }
+        }
+    }
+
+    private fun onLateDaysChange(lateDays: Float?) {
+        daysLateDebounceJob?.cancel()
+        val seconds = ((lateDays ?: 0f) * 60 * 60 * 24).roundToInt()
+        if (lateDays == null) return
+        daysLateDebounceJob = viewModelScope.launch {
+            delay(300)
+            try {
+                repository.updateLateSecondsOverride(
+                    studentId,
+                    assignmentId,
+                    courseId,
+                    seconds
+                )
+
+                AssignmentGradedEvent(assignmentId).postSticky()
+
+                loadData(forceNetwork = true)
+            } catch (e: Exception) {
+                if (e is CancellationException) {
+                    return@launch
+                }
+                _uiState.update {
+                    it.copy(
+                        error = true,
+                        retryAction = {
+                            onLateDaysChange(lateDays)
+                        }
                     )
                 }
             }
