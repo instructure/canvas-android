@@ -145,7 +145,7 @@ fun Date.localisedFormat(
     else
         android.text.format.DateFormat.is24HourFormat(context)
 
-    val pattern = if (is24HourFormat) {
+    val hourFormattedPattern = if (is24HourFormat) {
         pattern
             .replace("hh", "HH")
             .replace("h", "H")
@@ -156,8 +156,8 @@ fun Date.localisedFormat(
             .replace("H", "h")
             .apply { if (!contains("a")) plus("a") }
     }
-    val skeleton = android.text.format.DateFormat.getBestDateTimePattern(currentLocal, pattern)
-    val formatter = SimpleDateFormat(skeleton, currentLocal)
+    val bestDatePattern = android.text.format.DateFormat.getBestDateTimePattern(currentLocal, hourFormattedPattern)
+    val formatter = SimpleDateFormat(bestDatePattern, currentLocal)
     return formatter.format(this)
 }
 
