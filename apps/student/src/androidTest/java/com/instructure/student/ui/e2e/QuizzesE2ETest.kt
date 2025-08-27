@@ -31,7 +31,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
@@ -99,17 +98,15 @@ class QuizzesE2ETest: StudentTest() {
         quizListPage.assertQuizDisplayed(quizPublished)
 
         Log.d(STEP_TAG, "Open the search bar and search for the '${quizUnpublished.title}' quiz.")
-        quizListPage.openSearchBar()
-        quizListPage.enterSearchQuery(quizUnpublished.title)
+        quizListPage.searchable.clickOnSearchButton()
+        quizListPage.searchable.typeToSearchBar(quizUnpublished.title)
 
         Log.d(ASSERTION_TAG, "Assert that the empty view is displayed.")
-        refresh()
         quizListPage.assertEmptyStateDisplayed()
 
         Log.d(STEP_TAG, "Clear the search bar and search for the '${quizPublished.title}' quiz.")
-        quizListPage.clearSearchButton()
-        quizListPage.enterSearchQuery(quizPublished.title)
-        //closeSoftKeyboard()
+        quizListPage.searchable.clickOnClearSearchButton()
+        quizListPage.searchable.typeToSearchBar(quizUnpublished.title)
 
         Log.d(ASSERTION_TAG, "Assert that ONLY the '${quizPublished.title}' quiz is displayed in the search results page.")
         quizListPage.assertQuizDisplayed(quizPublished)
@@ -133,7 +130,7 @@ class QuizzesE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Press 'Take the Quiz' button.")
         canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
 
-        Log.d(STEP_TAG, "Enter answers to the questions:")
+        Log.d(STEP_TAG, "Enter answers to the questions.")
         Thread.sleep(2000) // Wait for the quiz to load
         for(question in quizQuestions) {
             Log.d(ASSERTION_TAG, "Assert that the following question is displayed: '${question.questionText}'.")
