@@ -15,6 +15,7 @@
  */
 package com.instructure.pandautils.features.assignments.details
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LTITool
@@ -44,4 +45,6 @@ interface AssignmentDetailsRepository {
     fun isOnline(): Boolean
 
     suspend fun isAssignmentEnhancementEnabled(courseId: Long, forceNetwork: Boolean): Boolean
+
+    suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
 }

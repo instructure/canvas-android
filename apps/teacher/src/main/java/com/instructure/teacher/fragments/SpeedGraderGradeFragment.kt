@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_GRADE
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.NullableParcelableArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -40,7 +41,6 @@ import com.instructure.teacher.R
 import com.instructure.teacher.databinding.FragmentSpeedgraderGradeBinding
 import com.instructure.teacher.dialog.CustomizeGradeDialog
 import com.instructure.teacher.dialog.PassFailGradeDailog
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.factory.SpeedGraderGradePresenterFactory
 import com.instructure.teacher.presenters.SpeedGraderGradePresenter
 import com.instructure.teacher.utils.getDisplayGrade

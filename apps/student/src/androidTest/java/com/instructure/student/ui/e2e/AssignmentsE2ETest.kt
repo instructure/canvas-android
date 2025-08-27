@@ -1056,12 +1056,14 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Refresh the Assignment List Page. Assert that all the different types of assignments' grades" +
                 "has been shown as their original grade types, since the restriction has been turned off.")
-        assignmentListPage.refreshAssignmentList()
-        assignmentListPage.assertHasAssignment(pointsTextAssignment, "12/15")
-        assignmentListPage.assertHasAssignment(percentageAssignment, "66.67%")
-        assignmentListPage.assertHasAssignment(letterGradeAssignment, "11.4/15 (C)")
-        assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
-        assignmentListPage.assertHasAssignment(gpaScaleAssignment, "3.7/15 (F)")
+        retryWithIncreasingDelay(times = 5) {
+            assignmentListPage.refreshAssignmentList()
+            assignmentListPage.assertHasAssignment(pointsTextAssignment, "12/15")
+            assignmentListPage.assertHasAssignment(percentageAssignment, "66.67%")
+            assignmentListPage.assertHasAssignment(letterGradeAssignment, "11.4/15 (C)")
+            assignmentListPage.assertHasAssignment(passFailAssignment, "Incomplete")
+            assignmentListPage.assertHasAssignment(gpaScaleAssignment, "3.7/15 (F)")
+        }
 
         Log.d(STEP_TAG, "Click on '${pointsTextAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(pointsTextAssignment)

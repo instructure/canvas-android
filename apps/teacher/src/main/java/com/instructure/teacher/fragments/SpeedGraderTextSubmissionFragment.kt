@@ -42,7 +42,7 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
 
     private val binding by viewBinding(FragmentSpeedGraderTextSubmissionBinding::bind)
 
-    private var mSubmissionText by StringArg()
+    private var submissionText by StringArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_speed_grader_text_submission, container, false)
@@ -81,7 +81,7 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
 
-        textSubmissionWebViewWrapper.loadHtml(mSubmissionText, getString(R.string.a11y_submissionText))
+        textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText))
     }
 
     override fun onStop() {
@@ -90,8 +90,16 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
     }
 
     companion object {
+
+        const val SUBMISSION_TEXT = "submissionText"
+
         fun newInstance(text: String) = SpeedGraderTextSubmissionFragment().apply {
-            mSubmissionText = text
+            arguments = createBundle(text)
+            submissionText = text
+        }
+
+        fun createBundle(text: String) = Bundle().apply {
+            putString(SUBMISSION_TEXT, text)
         }
     }
 

@@ -384,3 +384,9 @@ fun GradeStatisticsView.setStatistics(stats: GradeCellViewState.GradeStats?, @Co
         setAccentColor(color)
     }
 }
+
+@BindingAdapter("textColorRes")
+fun TextView.setTextColorRes(@ColorRes colorId: Int) {
+    if (colorId == 0) return
+    setTextColor(ContextCompat.getColor(context, colorId))
+}

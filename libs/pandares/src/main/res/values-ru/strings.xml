@@ -1142,7 +1142,7 @@
     <string name="gradeAfterPosting">Оценка после публикации</string>
     <string name="gradeOverride">Игнорировать оценку</string>
     <string name="currentGrade">Текущая оценка</string>
-    <string name="opensInCanvasStudent">Открыть в Canvas Student</string>
+    <string name="opensInCanvasApp">Открыть в приложении Canvas</string>
     <string name="tab_student_view">Просмотр студентом</string>
 
 
@@ -1516,9 +1516,9 @@
     <string name="offline_content_storage">Хранилище</string>
     <string name="offline_content_storage_info">%s из %s использовано</string>
     <string name="offline_content_other">Другие приложения</string>
-    <string name="offline_content_canvas_student">Студент Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Остается</string>
-    <string name="offline_content_storage_info_a11y_description">Информация о хранилище: %s из %s используется, другие приложения %d%%, учащийся Canvas %d%%, остается %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Информация о хранилище: %s из %s используется, другие приложения %d%%, Canvas %d%%, остается %d%%</string>
     <string name="offline_content_all_courses">Все курсы</string>
     <string name="offline_content_sync">Синхронизировать</string>
     <string name="offline_content_selected">%d выбрано</string>
@@ -1854,7 +1854,7 @@
     <string name="studentOrTeacherTitle">Вы учащийся или преподаватель?</string>
     <string name="studentOrTeacherSubtitle">Одно из наших других приложений может подойти лучше. Прикоснитесь один раз для входа в Play Store</string>
     <string name="studentApp">УЧАЩИЙСЯ</string>
-    <string name="canvasStudentApp">Учащийся Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">ПРЕПОДАВАТЕЛЬ</string>
     <string name="canvasTeacherApp">Преподаватель Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1892,7 +1892,7 @@
     <string name="addStudentSuccessfull">Учащийся успешно добавлен</string>
     <string name="addStudentTitle">Добавить учащегося с&#8230;</string>
     <string name="addStudentQrCodeTitle">QR-код</string>
-    <string name="addStudentQrCodeExplanation">Учащиеся могут генерировать QR-код с помощью приложения Canvas Student на своем мобильном устройстве</string>
+    <string name="addStudentQrCodeExplanationCanvas">Учащиеся могут генерировать QR-код с помощью приложения Canvas на своем мобильном устройстве</string>
     <string name="addStudentPairingCodeTitle">Код сопряжения</string>
     <string name="addStudentPairingCodeExplanation">Учащиеся могут получить код подключения на веб-сайте Canvas</string>
     <string name="pairingCodeDialogTitle">Добавить учащегося</string>
@@ -1901,9 +1901,9 @@
     <string name="pairingCodeDialogNegativeButton">Отменить</string>
     <string name="pairingCodeDialogPositiveButton">Ок</string>
     <string name="pairingCodeDialogError">Ваш код неверен, или истек срок его действия.</string>
-    <string name="qrPairingTitle">Откройте Canvas Student</string>
-    <string name="qrPairingDescription">Вам понадобится открыть приложение Canvas Student, чтобы продолжить. Перейдите в Главное меню > Настройки > Подключить к Observer и отсканируйте QR-код, который вы видите здесь.</string>
-    <string name="qrCodePairingPrompt">Отсканируйте QR-код в Canvas Student для сопряжение</string>
+    <string name="qrPairingTitleCanvas">Открыть приложение Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Вам понадобится открыть приложение Canvas учащегося, чтобы продолжить. Перейдите в Главное меню > Настройки > Подключить к Observer и отсканируйте QR-код, который вы видите здесь.</string>
+    <string name="qrCodePairingPromptCanvas">Отсканируйте QR-код в приложении Canvas для сопряжения</string>
     <string name="a11y_addStudentContentDescription">Добавить учащегося</string>
     <string name="qrPairingErrorTitle">QR-код с истекшим сроком действия</string>
     <string name="qrPairingErrorDescription">У отсканированного вами QR-кода мог истечь срок действия. Обновите код на устройстве учащегося и попробуйте еще раз.</string>
@@ -2132,4 +2132,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Чтобы увидеть свои оценки, войдите в свою учетную запись в приложении.</string>
     <string name="widgetSingleGradeSelectCourse">Давайте выберем курс</string>
     <string name="widgetGradesErrorLoadingCourses">Произошла ошибка при загрузке курсов.</string>
+    <string name="settingsSwitchExperience">Переключение на Canvas Career</string>
 </resources>

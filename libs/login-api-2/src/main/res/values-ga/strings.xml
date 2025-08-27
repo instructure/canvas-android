@@ -72,7 +72,8 @@
     <string name="loginHint">Aimsigh do scoil nó do cheantar</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Tuairiscigh Fadhb</string>
+    <string name="errorReportAProblem">Report a problem</string>
+    <string name="reportAProblemDialogTitle">Report a problem</string>
     <string name="errorReportSubject">Ábhar</string>
     <string name="errorReportDescription">Cur síos</string>
     <string name="errorReportSend">Seol</string>

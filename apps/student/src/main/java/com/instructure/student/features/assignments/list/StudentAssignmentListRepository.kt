@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.assignments.list
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -90,5 +91,9 @@ class StudentAssignmentListRepository(
             selectedGroupByOption = entity.selectedGroupByOption
         ) ?: entity
         assignmentListSelectedFiltersEntityDao.insertOrUpdate(databaseEntity)
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return dataSource().getCustomGradeStatuses(courseId, forceNetwork)
     }
 }

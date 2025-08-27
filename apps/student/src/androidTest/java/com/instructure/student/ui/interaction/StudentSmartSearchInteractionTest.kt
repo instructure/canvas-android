@@ -22,7 +22,10 @@ import androidx.compose.ui.test.performTextInput
 import androidx.compose.ui.test.requestFocus
 import com.instructure.canvas.espresso.common.interaction.SmartSearchInteractionTest
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
@@ -34,10 +37,17 @@ import com.instructure.student.ui.pages.DiscussionDetailsPage
 import com.instructure.student.ui.pages.PageDetailsPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class StudentSmartSearchInteractionTest : SmartSearchInteractionTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
 
     override val isTesting = BuildConfig.IS_TESTING
 

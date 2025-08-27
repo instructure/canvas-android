@@ -708,7 +708,7 @@
     <string name="termsOfUse">Pogoji uporabe</string>
     <string name="searchGuides">Išči vodnike po sistemu Canvas</string>
     <string name="searchGuidesDetails">Poišči odgovore na pogosta vprašanja</string>
-    <string name="reportProblem">Poročajte o težavi</string>
+    <string name="reportProblem">Poročajte o težavi.</string>
     <string name="reportProblemDetails">Če aplikacija ne deluje dobro, nas o tem obvestite.</string>
     <string name="requestFeature">Zahtevaj funkcionalnost</string>
     <string name="requestFeatureDetails">Ali imate zamisel za izboljšanje aplikacije?</string>

@@ -19,7 +19,7 @@ package com.instructure.canvasapi2.models
 
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @JvmSuppressWildcards
 @Parcelize
@@ -82,13 +82,20 @@ data class Submission(
         @SerializedName("posted_at")
         val postedAt: Date? = null,
         @SerializedName("grading_period_id")
-        val gradingPeriodId: Long? = null
+        val gradingPeriodId: Long? = null,
+        @SerializedName("late_policy_status")
+        val latePolicyStatus: String? = null,
+        @SerializedName("custom_grade_status_id")
+        val customGradeStatusId: Long? = null,
+
+        // Testing purpose fields
+        val status: String? = null
 ) : CanvasModel<Submission>() {
     override val comparisonDate get() = submittedAt
     override val comparisonString get() = submissionType
 
     val isWithoutGradedSubmission: Boolean get() = !isGraded && submissionType == null
-    val isGraded: Boolean get() = grade != null
+    val isGraded: Boolean get() = grade != null || customGradeStatusId != null
 
     /* Submissions will have dummy submissions if they grade an assignment with no actual submissions. We want to see if any are not dummy submissions */
     fun hasRealSubmission() = submissionHistory.any { it?.submissionType != null }
