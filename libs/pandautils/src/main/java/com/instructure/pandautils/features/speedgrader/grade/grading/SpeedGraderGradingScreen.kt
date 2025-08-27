@@ -471,8 +471,8 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
-                modifier = Modifier
-                    .padding(end = 8.dp),
+                modifier = Modifier.padding(end = 8.dp),
+                testTag = "speedGraderCurrentGradeTextField",
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -497,7 +497,8 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                     uiState.pointsPossible.orDefault()
                 ),
                 fontSize = 16.sp,
-                color = colorResource(R.color.textPlaceholder)
+                color = colorResource(R.color.textPlaceholder),
+                modifier = Modifier.testTag("speedGraderPointsPossibleText")
             )
         }
     }
