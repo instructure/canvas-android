@@ -21,9 +21,9 @@ import android.content.Context
 import android.view.View
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.StatusCallback
+import com.instructure.canvasapi2.apis.PlannerAPI
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.CourseManager
-import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.PlannableType
@@ -32,9 +32,12 @@ import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DateHelper
-import com.instructure.canvasapi2.utils.LinkHeaders
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.isInvited
 import com.instructure.canvasapi2.utils.toApiString
+import com.instructure.canvasapi2.utils.weave.WeaveJob
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryWeave
 import com.instructure.pandarecycler.util.GroupSortedList
 import com.instructure.pandarecycler.util.Types
 import com.instructure.student.R
@@ -45,8 +48,6 @@ import com.instructure.student.holders.ExpandableViewHolder
 import com.instructure.student.holders.TodoViewHolder
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
 import org.threeten.bp.LocalDate
-import retrofit2.Call
-import retrofit2.Response
 import java.util.Date
 
 open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem, RecyclerView.ViewHolder> {
@@ -55,11 +56,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         null
     private var todoCheckboxCallback: TodoCheckboxCallback? = null
 
-    private var courseMap: Map<Long, Course>? = null
-    private var plannerList: List<PlannerItem>? = null
-
-    private var coursesCallback: StatusCallback<List<Course>>? = null
-    private var plannerCallback: StatusCallback<List<PlannerItem>>? = null
+    private var loadJob: WeaveJob? = null
     private var canvasContext: CanvasContext? = null
 
     private val checkedTodos = HashSet<PlannerItem>()
@@ -70,7 +67,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         false // With multiple callbacks, some could fail while others don't. This manages when to display no connection when offline
     private var filterMode: FilterMode = NoFilter
 
-    private lateinit var plannerManager: PlannerManager
+    private lateinit var plannerApi: PlannerAPI.PlannerInterface
 
     // region Interfaces
     interface TodoCheckboxCallback {
@@ -91,13 +88,13 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         context: Context,
         canvasContext: CanvasContext,
         adapterToFragmentCallback: NotificationAdapterToFragmentCallback<PlannerItem>,
-        plannerManager: PlannerManager
+        plannerApi: PlannerAPI.PlannerInterface
     ) : super(context, Date::class.java, PlannerItem::class.java) {
         this.canvasContext = canvasContext
         this.adapterToFragmentCallback = adapterToFragmentCallback
         isEditMode = false
         isExpandedByDefault = true
-        this.plannerManager = plannerManager
+        this.plannerApi = plannerApi
         loadData()
     }
 
@@ -169,8 +166,34 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
     }
 
     final override fun loadData() {
-        CourseManager.getCourses(true, coursesCallback!!)
-        plannerManager.getPlannerItems(isRefresh, plannerCallback!!, LocalDate.now().toApiString())
+        loadJob = tryWeave {
+            val courses = CourseManager.getCoursesAsync(isRefresh)
+            val restParams =
+                RestParams(isForceReadFromNetwork = isRefresh, usePerPageQueryParam = true)
+            val plannerItems = plannerApi.getPlannerItems(
+                startDate = LocalDate.now().toApiString(),
+                endDate = null,
+                contextCodes = emptyList(),
+                restParams = restParams
+            ).depaginate { nextUrl ->
+                plannerApi.nextPagePlannerItems(nextUrl, restParams)
+            }
+
+            val filteredCourses = courses.await().dataOrThrow.filter {
+                !it.accessRestrictedByDate && !it.isInvited() && (when (filterMode) {
+                    is FavoritedCourses -> it.isFavorite
+                    else -> true
+                })
+            }
+            val courseMap = CourseManager.createCourseMap(filteredCourses)
+
+            val plannerList = plannerItems.dataOrThrow
+                .filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
+
+            populateAdapter(courseMap, plannerList)
+        } catch {
+            it.printStackTrace()
+        }
     }
 
     override fun onCallbackFinished(type: ApiType?) {
@@ -194,15 +217,11 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         super.refresh()
     }
 
-    private fun populateAdapter() {
-        if (courseMap == null || plannerList == null) {
-            return
-        }
-
+    private fun populateAdapter(courseMap: Map<Long, Course>, plannerList: List<PlannerItem>) {
         val todos = plannerList
-            ?.filter { it.plannerOverride?.markedComplete != true }
-            ?.filter { shownByFilter(it) }
-            ?.sortedBy { it.comparisonDate } ?: emptyList()
+            .filter { it.plannerOverride?.markedComplete != true }
+            .filter { shownByFilter(it, courseMap) }
+            .sortedBy { it.comparisonDate }
 
         todos.forEach {
             addOrUpdateItem(DateHelper.getCleanDate(it.comparisonDate.time), it)
@@ -210,17 +229,13 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         adapterToFragmentCallback?.onRefreshFinished()
         isAllPagesLoaded = true
 
-        // Reset the lists
-        courseMap = null
-        plannerList = null
-
         onCallbackFinished(ApiType.API)
     }
 
-    private fun shownByFilter(plannerItem: PlannerItem): Boolean {
+    private fun shownByFilter(plannerItem: PlannerItem, courseMap: Map<Long, Course>): Boolean {
         return when (filterMode) {
             is NoFilter -> true
-            is FavoritedCourses -> plannerItem.courseId?.let { courseId -> courseMap?.get(courseId)?.isFavorite == true }
+            is FavoritedCourses -> plannerItem.courseId?.let { courseId -> courseMap.get(courseId)?.isFavorite == true }
                 ?: false
         }
     }
@@ -258,34 +273,6 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
                 notifyItemChanged(position)
             }
         }
-
-        coursesCallback = object : StatusCallback<List<Course>>() {
-            override fun onResponse(response: Response<List<Course>>, linkHeaders: LinkHeaders, type: ApiType) {
-                val body = response.body() ?: return
-                val filteredCourses = body.filter {
-                    !it.accessRestrictedByDate && !it.isInvited() && (when (filterMode) {
-                                is FavoritedCourses -> it.isFavorite
-                                else -> true
-                            })
-                }
-                courseMap = CourseManager.createCourseMap(filteredCourses)
-                populateAdapter()
-            }
-        }
-
-        plannerCallback = object : StatusCallback<List<PlannerItem>>() {
-            override fun onResponse(
-                response: Response<List<PlannerItem>>,
-                linkHeaders: LinkHeaders,
-                type: ApiType
-            ) {
-                plannerList = response.body()
-                    ?.filter { it.plannableType != PlannableType.ANNOUNCEMENT && it.plannableType != PlannableType.ASSESSMENT_REQUEST }
-                    ?: return
-                populateAdapter()
-            }
-        }
-
     }
 
     // endregion
@@ -314,48 +301,33 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
     }
 
     private fun hideTodoItem(plannerItem: PlannerItem) {
-        val callback = object : StatusCallback<PlannerOverride>() {
-            override fun onResponse(
-                response: Response<PlannerOverride>,
-                linkHeaders: LinkHeaders,
-                type: ApiType
-            ) {
-                removeItem(plannerItem)
-                adapterToRecyclerViewCallback?.setIsEmpty(size() == 0)
+        tryWeave {
+            if (plannerItem.plannerOverride == null) {
+                val override = PlannerOverride(
+                    plannableId = plannerItem.plannable.id,
+                    plannableType = plannerItem.plannableType,
+                    markedComplete = true
+                )
+                plannerApi.createPlannerOverride(override, RestParams(isForceReadFromNetwork = true))
+            } else {
+                plannerApi.updatePlannerOverride(
+                    plannerOverrideId = plannerItem.plannerOverride?.id ?: return@tryWeave,
+                    complete = true,
+                    params = RestParams(isForceReadFromNetwork = true)
+                )
             }
-
-            override fun onFail(call: Call<PlannerOverride>?, error: Throwable, response: Response<*>?) {
-                // If the update fails, we don't want to remove it from the list
-                deletedTodos.remove(plannerItem)
-            }
-        }
-        if (plannerItem.plannerOverride == null) {
-            val override = PlannerOverride(
-                plannableId = plannerItem.plannable.id,
-                plannableType = plannerItem.plannableType,
-                markedComplete = true
-            )
-            plannerManager.createPlannerOverride(
-                forceNetwork = true,
-                callback = callback,
-                plannerOverride = override
-            )
-            return
-        } else {
-            plannerManager.updatePlannerOverride(
-                forceNetwork = true,
-                overrideId = plannerItem.plannerOverride?.id ?: return,
-                completed = true,
-                callback = callback
-            )
+            removeItem(plannerItem)
+            adapterToRecyclerViewCallback?.setIsEmpty(size() == 0)
+        } catch {
+            deletedTodos.remove(plannerItem)
+            it.printStackTrace()
         }
     }
 
     // endregion
 
     override fun cancel() {
-        coursesCallback?.cancel()
-        plannerCallback?.cancel()
+        loadJob?.cancel()
     }
 
     // region Expandable Callbacks

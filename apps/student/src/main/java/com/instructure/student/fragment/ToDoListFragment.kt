@@ -26,7 +26,7 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckedTextView
-import com.instructure.canvasapi2.managers.PlannerManager
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
@@ -65,7 +65,7 @@ class ToDoListFragment : ParentFragment() {
     private lateinit var recyclerViewBinding: PandaRecyclerRefreshLayoutBinding
 
     @Inject
-    lateinit var plannerManager: PlannerManager
+    lateinit var plannerApi: PlannerAPI.PlannerInterface
 
     @Inject
     lateinit var calendarRouter: CalendarRouter
@@ -115,7 +115,7 @@ class ToDoListFragment : ParentFragment() {
                 true
             }
         }
-        recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, plannerManager)
+        recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, plannerApi)
         recyclerAdapter?.let {
             configureRecyclerView(
                 view,
