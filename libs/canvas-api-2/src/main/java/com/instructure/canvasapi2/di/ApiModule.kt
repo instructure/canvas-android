@@ -415,25 +415,25 @@ class ApiModule {
     @Provides
     @Singleton
     fun providePineApiPrefs(): PineApiPref {
-        return PineApiPref()
+        return PineApiPref
     }
 
     @Provides
     @Singleton
     fun provideCedarApiPrefs(): CedarApiPref {
-        return CedarApiPref()
+        return CedarApiPref
     }
 
     @Provides
     @Singleton
     fun provideRedwoodApiPrefs(): RedwoodApiPref {
-        return RedwoodApiPref()
+        return RedwoodApiPref
     }
 
     @Provides
     @Singleton
     fun provideJourneyApiPrefs(): JourneyApiPref {
-        return JourneyApiPref()
+        return JourneyApiPref
     }
 
     @Provides
