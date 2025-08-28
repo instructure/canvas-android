@@ -715,7 +715,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         )
     }
 
-    val sliderState = remember(maxScore, minScore) {
+    val sliderState = remember(uiState.enteredScore, maxScore, minScore) {
         SliderState(
             value = sliderDrivenScore,
             valueRange = minScore * pointScale..maxScore * pointScale,
@@ -794,7 +794,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
-        if ((uiState.enteredScore ?: 0f) <= 100.0) {
+        if (uiState.pointsPossible != null && uiState.pointsPossible != 0.0 && (uiState.enteredScore ?: 0f) <= 100.0) {
             Slider(
                 modifier = Modifier
                     .padding(top = 16.dp)
