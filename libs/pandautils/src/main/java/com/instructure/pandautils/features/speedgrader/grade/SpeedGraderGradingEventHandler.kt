@@ -24,6 +24,7 @@ import javax.inject.Singleton
 sealed class GradingEvent {
     data object RubricUpdated : GradingEvent()
     data object PostPolicyUpdated : GradingEvent()
+    data object GradeChanged : GradingEvent()
 }
 
 @Singleton
