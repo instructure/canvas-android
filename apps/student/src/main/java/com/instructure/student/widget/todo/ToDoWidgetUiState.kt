@@ -34,5 +34,6 @@ data class WidgetPlannerItem(
     val canvasContextText: String,
     val title: String,
     val dateText: String,
-    val url: String
+    val url: String,
+    val tag: String? = null
 )

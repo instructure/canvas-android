@@ -5,16 +5,14 @@ import android.content.Context
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
-import com.instructure.canvasapi2.models.ToDo
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.ColorKeeper
-import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
@@ -43,23 +41,11 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             true
         }
 
-        /*when {
-            item.canvasContext.name != null -> {
-                course.text = item.canvasContext.name
-                course.setTextColor(item.canvasContext.color)
-            }
-            item.scheduleItem?.contextType == CanvasContext.Type.USER -> {
-                course.text = context.getString(R.string.PersonalCalendar)
-                course.setTextColor(item.canvasContext.color)
-            }
-            else -> course.text = ""
-        }*/
-
         course.text = getContextNameForPlannerItem(context, item)
         course.setTextColor(item.canvasContext.color)
         title.text = item.plannable.title
         description.setTextForVisibility(getDateForPlannerItem(context, item))
-        tag.setTextForVisibility(getTagForPlannerItem(context, item))
+        tag.setTextForVisibility(item.getTagForPlannerItem(context))
 
         // Get courseColor
         val iconColor = item.canvasContext.color
@@ -113,19 +99,6 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 val timeText = DateHelper.getFormattedTime(context, it)
                 context.getString(R.string.calendarDueDate, dateText, timeText)
             }
-        }
-    }
-
-    private fun getTagForPlannerItem(context: Context, plannerItem: PlannerItem): String? {
-        return if (plannerItem.plannable.subAssignmentTag == Const.REPLY_TO_TOPIC) {
-            context.getString(R.string.reply_to_topic)
-        } else if (plannerItem.plannable.subAssignmentTag == Const.REPLY_TO_ENTRY && plannerItem.plannableItemDetails?.replyRequiredCount != null) {
-            context.getString(
-                R.string.additional_replies,
-                plannerItem.plannableItemDetails?.replyRequiredCount
-            )
-        } else {
-            null
         }
     }
 
