@@ -57,7 +57,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -71,7 +70,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -229,9 +227,8 @@ private fun AttachmentTypeSelectorDialog(
     actionHandler: (SpeedGraderCommentsAction) -> Unit = {}
 ) {
     ModalBottomSheet(
-        sheetMaxWidth = Dp.Infinity,
         dragHandle = null,
-        shape = RectangleShape,
+        shape = RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp),
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = colorResource(R.color.backgroundLightestElevated),
         onDismissRequest = {
