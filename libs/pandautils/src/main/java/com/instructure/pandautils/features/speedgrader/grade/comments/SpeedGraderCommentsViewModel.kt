@@ -657,14 +657,13 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         viewModelScope.launch(Dispatchers.IO) {
             if (_uiState.value.commentText.isNotEmpty()) {
                 val comment = _uiState.value.commentText
-                _uiState.update { state ->
-                    state.copy(
-                        commentText = ""
-                    )
-                }
 
                 val id = createPendingComment(comment)
                 sendComment(id, comment)
+
+                _uiState.update { state ->
+                    state.copy(commentText = "")
+                }
             }
         }
     }
