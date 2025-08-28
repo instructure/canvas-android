@@ -2149,4 +2149,6 @@
     <string name="excuseStudent">Excuse Student</string>
     <string name="detailsEmptyMessage">We don’t have further details for this Student and Assignment</string>
     <string name="daysLateHint">Write days late</string>
+    <string name="reply_to_topic">Reply to topic</string>
+    <string name="additional_replies">Additional replies (%d)</string>
 </resources>

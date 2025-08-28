@@ -70,6 +70,9 @@ data class DiscussionTopicHeader(
         @SerializedName("is_announcement")
         var announcement: Boolean = false,
 
+        @SerializedName("reply_to_entry_required_count")
+        val replyRequiredCount: Int? = 0,
+
         // If the topic is for grading and a group assignment this will
         // point to the original topic in the course.
         // String maybe?

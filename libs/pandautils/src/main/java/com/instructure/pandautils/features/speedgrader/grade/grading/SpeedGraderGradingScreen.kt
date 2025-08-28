@@ -206,7 +206,8 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                         val status = uiState.gradingStatuses.first { it.name == selected }
                         uiState.onStatusChange(status)
                     },
-                    testTag = "speedGraderStatusDropdown"
+                    testTag = "speedGraderStatusDropdown",
+                    color = LocalCourseColor.current
                 )
 
                 uiState.daysLate?.let {
