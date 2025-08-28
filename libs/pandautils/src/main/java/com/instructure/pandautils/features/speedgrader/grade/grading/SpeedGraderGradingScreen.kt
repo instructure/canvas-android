@@ -396,7 +396,7 @@ private fun LateHeader(
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .testTag("speedGraderDueDateValue"),
-                    text = DateHelper.getDateAtTimeString(
+                    text = DateHelper.getDateAtTimeWithYearString(
                         LocalContext.current,
                         R.string.submitted_dateTime,
                         it
