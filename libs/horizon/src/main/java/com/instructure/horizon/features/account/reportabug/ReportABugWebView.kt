@@ -16,12 +16,8 @@
  */
 package com.instructure.horizon.features.account.reportabug
 
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
-import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
@@ -31,7 +27,7 @@ fun ReportABugWebView(
     navController: NavController,
 ) {
     HorizonScaffold(
-        title = stringResource(R.string.accountAdvancedTitle),
+        title = "Report a problem",
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         ComposeCanvasWebViewWrapper(
@@ -42,6 +38,11 @@ fun ReportABugWebView(
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
+                <style>
+                body {
+                   height: 1000px;
+                </style>
+                <meta name="viewport" content="width=device-width initial-scale=1">
                 </head>
                 <body>
                 </body>
@@ -54,17 +55,18 @@ fun ReportABugWebView(
     script.id = SCRIPT_ID
     script.src =
       "https://instructure.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/vf1kch/b/0/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=e6b73300"
-    script.async = true
     document.body.appendChild(script)
     
     window.ATL_JQ_PAGE_PROPS = {
         triggerFunction: function (showCollectorDialog) {
-                showCollectorDialog();
+  setTimeout(function() {
+  showCollectorDialog();
+}, 1000);
         }
     };
                 """.trimIndent(), null)
             }),
-            modifier = Modifier.fillMaxSize()
+            modifier = modifier
         )
     }
 }
