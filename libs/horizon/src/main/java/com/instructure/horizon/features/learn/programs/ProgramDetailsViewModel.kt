@@ -160,7 +160,8 @@ class ProgramDetailsViewModel @Inject constructor(
                     courseName = courses.find { it.courseId == requirement.courseId }?.courseName.orEmpty(),
                     status = courseCardStatus,
                     courseProgress = requirement.progress,
-                    chips = chips
+                    chips = chips,
+                    dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed
                 ),
                 sequentialProperties = sequentialProperties
             )
