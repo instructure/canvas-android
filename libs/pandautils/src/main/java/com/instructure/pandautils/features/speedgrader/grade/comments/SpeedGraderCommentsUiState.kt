@@ -65,7 +65,7 @@ data class SpeedGraderFileSelectorDialogData(
 )
 
 sealed class SpeedGraderCommentsAction {
-    data class CommentFieldChanged(val commentText: String) : SpeedGraderCommentsAction()
+    data class CommentFieldChanged(val commentText: String, val saveDraft: Boolean = true) : SpeedGraderCommentsAction()
     data object AddCommentLibraryClicked : SpeedGraderCommentsAction()
     data object AddAttachmentClicked : SpeedGraderCommentsAction()
     data object AttachmentTypeSelectorDialogClosed : SpeedGraderCommentsAction()
