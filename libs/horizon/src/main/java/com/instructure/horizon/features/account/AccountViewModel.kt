@@ -118,8 +118,8 @@ class AccountViewModel @Inject constructor(
         title = context.getString(R.string.accountSupportHeading),
         items = listOf(
             AccountItemState(
-                title = context.getString(R.string.accountGiveFeedbackLabel),
-                type = AccountItemType.OpenInNew("https://forms.gle/R2cqoowDEUs5CWwy8"),
+                title = "Report a bug",
+                type = AccountItemType.Open(AccountRoute.BugReportWebView)
             )
         )
     )
