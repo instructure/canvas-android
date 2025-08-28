@@ -30,6 +30,7 @@ import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
+import com.instructure.canvasapi2.type.SubmissionStatusTagType
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
@@ -125,7 +126,11 @@ class SpeedGraderContentViewModel @Inject constructor(
                 assigneeId = assignee.id,
                 userName = if (anonymousGrading) resources.getString(R.string.anonymousGradingStudentLabel) else assignee.name,
                 userUrl = if (!anonymousGrading) assignee.avatarUrl else null,
-                submissionState = getSubmissionStateLabel(submissionFields?.state, submissionFields?.customGradeStatus),
+                submissionState = getSubmissionStateLabel(
+                    submissionFields?.state,
+                    submissionFields?.customGradeStatus,
+                    submissionFields?.statusTag
+                ),
                 dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
                     items = attachments,
@@ -151,7 +156,8 @@ class SpeedGraderContentViewModel @Inject constructor(
             state.copy(
                 submissionState = getSubmissionStateLabel(
                     submissionFields?.state,
-                    submissionFields?.customGradeStatus
+                    submissionFields?.customGradeStatus,
+                    submissionFields?.statusTag
                 )
             )
         }
@@ -159,14 +165,22 @@ class SpeedGraderContentViewModel @Inject constructor(
 
     private fun getSubmissionStateLabel(
         submissionState: SubmissionState?,
-        customGradeStatus: String?
+        customGradeStatus: String?,
+        statusTag: SubmissionStatusTagType?
     ): SubmissionStateLabel {
         return when {
+            statusTag == SubmissionStatusTagType.excused -> SubmissionStateLabel.Excused
+
             !customGradeStatus.isNullOrEmpty() -> SubmissionStateLabel.Custom(
                 R.drawable.ic_flag,
                 R.color.textInfo,
                 customGradeStatus
             )
+
+            submissionState == SubmissionState.graded -> SubmissionStateLabel.Graded
+
+            statusTag == SubmissionStatusTagType.late -> SubmissionStateLabel.Late
+            statusTag == SubmissionStatusTagType.missing -> SubmissionStateLabel.Missing
 
             submissionState in setOf(
                 SubmissionState.submitted,
@@ -175,7 +189,7 @@ class SpeedGraderContentViewModel @Inject constructor(
             ) -> SubmissionStateLabel.Submitted
 
             submissionState == SubmissionState.unsubmitted -> SubmissionStateLabel.NotSubmitted
-            submissionState == SubmissionState.graded -> SubmissionStateLabel.Graded
+
             else -> SubmissionStateLabel.None
         }
     }
