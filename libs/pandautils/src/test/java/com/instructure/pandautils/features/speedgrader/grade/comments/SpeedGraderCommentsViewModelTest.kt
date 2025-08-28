@@ -303,4 +303,73 @@ class SpeedGraderCommentsViewModelTest {
         assert(!viewModel.uiState.value.showAttachmentTypeDialog)
         assert(viewModel.uiState.value.fileSelectorDialogData == null)
     }
+
+    @Test
+    fun `comments for no attempt is shown for the first attempt`() = runTest {
+        coEvery { repository.getCourseFeatures(any()) } returns listOf("assignments_2_student")
+        val attemptFlow = MutableStateFlow(1L)
+        coEvery { selectedAttemptHolder.selectedAttemptIdFlowFor(any()) } returns attemptFlow
+        coEvery { repository.getSubmissionComments(any(), any(), any()) } returns mockk {
+            every { data.submission } returns null
+            every { comments } returns listOf(
+                SubmissionCommentsQuery.Node1(
+                    comment = "Comment for no attempt",
+                    author = SubmissionCommentsQuery.Author(
+                        _id = "1",
+                        name = "Author",
+                        avatarUrl = "avatarUrl",
+                        email = "email@asd.com",
+                        pronouns = "they/them"
+                    ),
+                    mediaObject = null,
+                    createdAt = java.util.Date(),
+                    canReply = true,
+                    draft = false,
+                    attempt = 0,
+                    read = true,
+                    attachments = null,
+                    mediaCommentId = null
+                )
+            )
+        }
+
+        createViewModel()
+        Thread.sleep(100)
+
+        assertEquals(1, viewModel.uiState.value.comments.size)
+    }
+
+    @Test
+    fun `comments for no attempt don't show for non first attempt`() = runTest {
+        coEvery { repository.getCourseFeatures(any()) } returns listOf("assignments_2_student")
+        val attemptFlow = MutableStateFlow(2L)
+        coEvery { selectedAttemptHolder.selectedAttemptIdFlowFor(any()) } returns attemptFlow
+        coEvery { repository.getSubmissionComments(any(), any(), any()) } returns mockk {
+            every { data.submission } returns null
+            every { comments } returns listOf(
+                SubmissionCommentsQuery.Node1(
+                    comment = "Comment for no attempt",
+                    author = SubmissionCommentsQuery.Author(
+                        _id = "1",
+                        name = "Author",
+                        avatarUrl = "avatarUrl",
+                        email = "email@asd.com",
+                        pronouns = "they/them"
+                    ),
+                    mediaObject = null,
+                    createdAt = java.util.Date(),
+                    canReply = true,
+                    draft = false,
+                    attempt = 0,
+                    read = true,
+                    attachments = null,
+                    mediaCommentId = null
+                )
+            )
+        }
+
+        createViewModel()
+        Thread.sleep(100)
+        assertEquals(0, viewModel.uiState.value.comments.size)
+    }
 }
