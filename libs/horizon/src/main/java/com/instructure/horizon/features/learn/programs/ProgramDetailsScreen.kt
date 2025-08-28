@@ -61,10 +61,12 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Mo
         ) {
             Text(uiState.programName, style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_24)
-            ProgramsProgressBar(
-                uiState.progressBarUiState,
-                progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
-            )
+            if (uiState.showProgressBar) {
+                ProgramsProgressBar(
+                    uiState.progressBarUiState,
+                    progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
+                )
+            }
             HorizonSpace(SpaceSize.SPACE_8)
             Text(text = uiState.description, style = HorizonTypography.p1)
             HorizonSpace(SpaceSize.SPACE_16)

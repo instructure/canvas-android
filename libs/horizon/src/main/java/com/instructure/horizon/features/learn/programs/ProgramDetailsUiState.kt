@@ -21,6 +21,7 @@ import com.instructure.horizon.horizonui.platform.LoadingState
 data class ProgramDetailsUiState(
     val loadingState: LoadingState = LoadingState(),
     val programName: String = "",
+    val showProgressBar: Boolean = false,
     val progressBarUiState: ProgressBarUiState = ProgressBarUiState(),
     val description: String = "",
     val tags: List<ProgramDetailTag> = emptyList(),

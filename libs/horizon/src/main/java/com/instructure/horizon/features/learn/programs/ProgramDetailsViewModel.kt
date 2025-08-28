@@ -87,6 +87,7 @@ class ProgramDetailsViewModel @Inject constructor(
             it.copy(
                 loadingState = it.loadingState.copy(isLoading = false, isRefreshing = false),
                 programName = programDetails.name,
+                showProgressBar = shouldShowProgressBar(programDetails),
                 progressBarUiState = ProgressBarUiState(
                     progress = calculateProgress(programDetails),
                     progressBarStatus = progressBarStatus
@@ -113,7 +114,8 @@ class ProgramDetailsViewModel @Inject constructor(
             )
         }
 
-        val moduleItemDurations = courses.flatMap { it.moduleItemsDuration }
+        val requiredCourseIds = program.sortedRequirements.filter { it.required }.map { it.courseId }.toSet()
+        val moduleItemDurations = courses.filter { requiredCourseIds.contains(it.courseId) }.flatMap { it.moduleItemsDuration }
         if (moduleItemDurations.isNotEmpty()) {
             val durationString = getDurationStringFromDurations(moduleItemDurations)
             if (durationString.isNotEmpty()) {
@@ -208,7 +210,7 @@ class ProgramDetailsViewModel @Inject constructor(
             }
         }
 
-        if (course.moduleItemsDuration.isNotEmpty()) {
+        if (course.moduleItemsDuration.isNotEmpty() && courseCardStatus != CourseCardStatus.Completed) {
             val durationString = getDurationStringFromDurations(course.moduleItemsDuration)
             if (durationString.isNotEmpty()) {
                 chips.add(CourseCardChipState(durationString))
@@ -232,19 +234,37 @@ class ProgramDetailsViewModel @Inject constructor(
         return chips
     }
 
+    private fun shouldShowProgressBar(program: Program): Boolean {
+        if (program.sortedRequirements.isEmpty()) return false
+
+        if (program.variant == ProgramVariantType.LINEAR) {
+            val requiredCourses = program.sortedRequirements.filter { it.required }
+            if (requiredCourses.isEmpty()) return false
+        } else {
+            val courseCompletionCount = program.courseCompletionCount.orDefault()
+            if (courseCompletionCount == 0) return false
+        }
+
+        return true
+    }
+
     private fun calculateProgress(program: Program): Double {
         if (program.sortedRequirements.isEmpty()) return 0.0
 
-        return if (program.variant == ProgramVariantType.LINEAR) {
+        if (program.variant == ProgramVariantType.LINEAR) {
             val requiredCourses = program.sortedRequirements.filter { it.required }
+            if (requiredCourses.isEmpty()) return 0.0
+
             val totalProgress = requiredCourses.sumOf { it.progress }
-            (totalProgress / (requiredCourses.size * 100)) * 100
+            return (totalProgress / (requiredCourses.size * 100)) * 100
         } else {
             val courseCompletionCount = program.courseCompletionCount.orDefault()
+            if (courseCompletionCount == 0) return 0.0
+
             val requiredCourses = program.sortedRequirements.filter { it.required }
             val orderedProgresses = requiredCourses.map { it.progress }.sortedDescending()
             val totalProgress = orderedProgresses.take(courseCompletionCount).sum()
-            (totalProgress / (courseCompletionCount * 100)) * 100
+            return (totalProgress / (courseCompletionCount * 100)) * 100
         }
     }
 
