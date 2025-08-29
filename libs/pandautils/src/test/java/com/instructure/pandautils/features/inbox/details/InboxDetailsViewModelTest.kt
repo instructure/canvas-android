@@ -636,7 +636,7 @@ class InboxDetailsViewModelTest {
 
     @Test
     fun `Test restrict_student_access feature flag hides delete button`() {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns true
         val viewModel = getViewModel()
         val uiState = viewModel.uiState.value
 

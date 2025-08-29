@@ -30,7 +30,7 @@ class TeacherInboxComposeBehaviorTest {
 
     @Test
     fun `shouldHideSendIndividual returns true when feature flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns true
 
         val result = behavior.shouldHideSendIndividual()
 
@@ -39,7 +39,7 @@ class TeacherInboxComposeBehaviorTest {
 
     @Test
     fun `shouldHideSendIndividual returns false when feature flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
 
         val result = behavior.shouldHideSendIndividual()
 
@@ -48,7 +48,7 @@ class TeacherInboxComposeBehaviorTest {
 
     @Test
     fun `shouldHideSendIndividual returns false when feature flag throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } throws RuntimeException("Network error")
 
         val result = behavior.shouldHideSendIndividual()
 

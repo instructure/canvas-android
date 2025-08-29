@@ -25,7 +25,7 @@ class TeacherInboxComposeBehavior @Inject constructor(
     
     override suspend fun shouldHideSendIndividual(): Boolean {
         return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+            featureFlagProvider.checkRestrictStudentAccessFlag()
         } catch (e: Exception) {
             false
         }

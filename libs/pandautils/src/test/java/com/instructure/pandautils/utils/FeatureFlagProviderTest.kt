@@ -223,4 +223,34 @@ class FeatureFlagProviderTest {
 
         assertFalse(result)
     }
+
+    @Test
+    fun `checkRestrictStudentAccessFlag returns true when feature flag is enabled`() = runTest {
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("restrict_student_access" to true))
+
+        val result = featureFlagProvider.checkRestrictStudentAccessFlag()
+
+        assertTrue(result)
+    }
+
+    @Test
+    fun `checkRestrictStudentAccessFlag returns false when feature flag is disabled`() = runTest {
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("restrict_student_access" to false))
+
+        val result = featureFlagProvider.checkRestrictStudentAccessFlag()
+
+        assertFalse(result)
+    }
+
+    @Test
+    fun `checkRestrictStudentAccessFlag returns false when feature flag does not exist`() = runTest {
+        every { apiPrefs.user } returns User(id = 1L)
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("other_flag" to true))
+
+        val result = featureFlagProvider.checkRestrictStudentAccessFlag()
+
+        assertFalse(result)
+    }
 }
