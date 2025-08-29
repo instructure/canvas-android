@@ -16,15 +16,26 @@
  */
 package com.instructure.horizon.features.account.reportabug
 
+import android.content.Intent
 import android.webkit.JavascriptInterface
 import android.widget.LinearLayout
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
+import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.views.CanvasWebView
 import kotlinx.coroutines.launch
 
 @Composable
@@ -36,6 +47,15 @@ fun ReportABugWebView(
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         val scope = LocalLifecycleOwner.current.lifecycleScope
+        val activity = LocalContext.current.getActivityOrNull()
+        var webViewReference: CanvasWebView? by remember { mutableStateOf(null) }
+        var request by remember { mutableIntStateOf(0) }
+        val launchPicker = rememberLauncherForActivityResult(
+            contract = ActivityResultContracts.StartActivityForResult()
+        ) { result ->
+            webViewReference?.handleOnActivityResult(request, result.resultCode, result.data)
+        }
+
         ComposeCanvasWebViewWrapper(
             applyOnWebView = {
                 settings.javaScriptEnabled = true
@@ -44,6 +64,20 @@ fun ReportABugWebView(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT
                 )
+
+                activity?.let { addVideoClient(activity) }
+                setCanvasWebChromeClientShowFilePickerCallback(object: CanvasWebView.VideoPickerCallback {
+                    override fun requestStartActivityForResult(
+                        intent: Intent,
+                        requestCode: Int
+                    ) {
+                        request = requestCode
+                        launchPicker.launch(intent)
+                    }
+
+                    override fun permissionsGranted(): Boolean = true
+                })
+                webViewReference = this
             },
             content = """
                 <!DOCTYPE html>
