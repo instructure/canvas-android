@@ -79,7 +79,7 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             status = submission?.status ?: "submitted",
             latePolicyStatus = LatePolicyStatusType.none,
             late = submission?.late ?: false,
-            secondsLate = if (submission?.late.orDefault()) 1.0 else 0.0,
+            secondsLate = if (submission?.late.orDefault()) 86400.0 else 0.0,
             deductedPoints = 0.0,
             score = submission?.score ?: 100.0,
             excused = submission?.excused ?: false,

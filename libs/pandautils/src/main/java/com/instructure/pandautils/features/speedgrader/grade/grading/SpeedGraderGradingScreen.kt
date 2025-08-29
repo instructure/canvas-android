@@ -46,6 +46,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -55,9 +56,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -208,7 +211,7 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                 )
 
                 uiState.daysLate?.let {
-                    LateHeader(it, uiState.submittedAt)
+                    LateHeader(it, uiState.submittedAt, uiState.onLateDaysChange)
                 }
 
                 FinalScore(uiState)
@@ -359,7 +362,21 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
 }
 
 @Composable
-private fun LateHeader(daysLate: Int, submissionDate: Date?) {
+private fun LateHeader(
+    daysLate: Float?,
+    submissionDate: Date?,
+    onLateDaysChange: (Float?) -> Unit
+) {
+    var textFieldValue by remember(daysLate) {
+        mutableStateOf(
+            TextFieldValue(
+                text = numberFormatter.format(daysLate),
+                selection = TextRange.Zero
+            )
+        )
+    }
+    var hasFocusedOnce by remember { mutableStateOf(false) }
+
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -380,7 +397,7 @@ private fun LateHeader(daysLate: Int, submissionDate: Date?) {
                     modifier = Modifier
                         .padding(top = 4.dp)
                         .testTag("speedGraderDueDateValue"),
-                    text = DateHelper.getDateAtTimeString(
+                    text = DateHelper.getDateAtTimeWithYearString(
                         LocalContext.current,
                         R.string.submitted_dateTime,
                         it
@@ -391,12 +408,29 @@ private fun LateHeader(daysLate: Int, submissionDate: Date?) {
             }
         }
 
-        Text(
-            text = daysLate.toString(),
-            color = colorResource(R.color.textDarkest),
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.testTag("speedGraderDaysLateValue")
+        BasicTextFieldWithHintDecoration(
+            modifier = Modifier
+                .testTag("speedGraderDaysLateValue")
+                .onFocusChanged { focusState ->
+                    if (focusState.isFocused && !hasFocusedOnce) {
+                        textFieldValue = textFieldValue.copy(
+                            selection = TextRange(0, textFieldValue.text.length)
+                        )
+                        hasFocusedOnce = true
+                    }
+                },
+            hintColor = colorResource(R.color.textDark),
+            textColor = LocalCourseColor.current,
+            value = textFieldValue,
+            keyboardOptions = KeyboardOptions(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            onValueChange = {
+                textFieldValue = it
+                onLateDaysChange(it.text.toFloatOrNull())
+            },
+            hint = stringResource(R.string.daysLateHint)
         )
     }
 }
@@ -472,8 +506,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
-                modifier = Modifier.padding(end = 8.dp),
-                testTag = "speedGraderCurrentGradeTextField",
+                modifier = Modifier.padding(end = 8.dp).testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -637,7 +670,8 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
-                    .padding(end = 8.dp),
+                    .padding(end = 8.dp)
+                    .testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -645,7 +679,6 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 hint = stringResource(R.string.percentageGradeHint),
                 hintColor = colorResource(R.color.textPlaceholder),
                 textColor = LocalCourseColor.current,
-                testTag = "speedGraderCurrentGradeTextField"
             )
             Text(
                 text = "%",
@@ -719,7 +752,9 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         SliderState(
             value = sliderDrivenScore,
             valueRange = minScore * pointScale..maxScore * pointScale,
-            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(1)
+            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(
+                1
+            )
         )
     }
 
@@ -763,8 +798,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
-                    .padding(end = 8.dp),
-                testTag = "speedGraderCurrentGradeTextField",
+                    .padding(end = 8.dp)
+                    .testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -829,11 +864,12 @@ private fun SpeedGraderGradingContentPreview() {
                 pointsDeducted = 1.0,
                 onScoreChange = {},
                 submittedAt = Date(),
-                daysLate = 4,
+                daysLate = 4f,
                 gradingType = GradingType.points,
                 onPercentageChange = {},
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = {},
+                onLateDaysChange = {}
             )
         )
     }
@@ -855,11 +891,12 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 score = 15.0,
                 onScoreChange = {},
                 submittedAt = Date(),
-                daysLate = 4,
+                daysLate = 4f,
                 gradingType = GradingType.percent,
                 onPercentageChange = {},
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = {},
+                onLateDaysChange = {}
             )
         )
     }
@@ -879,12 +916,13 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
                 grade = "A",
                 score = 15.0,
                 submittedAt = Date(),
-                daysLate = 4,
+                daysLate = 4f,
                 onScoreChange = {},
                 gradingType = GradingType.pass_fail,
                 onPercentageChange = {},
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = {},
+                onLateDaysChange = {}
             )
         )
     }
@@ -908,7 +946,7 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 onPercentageChange = {},
                 pointsDeducted = 2.0,
                 submittedAt = Date(),
-                daysLate = 4,
+                daysLate = 4f,
                 letterGrades = listOf(
                     GradingSchemeRow("A", 90.0),
                     GradingSchemeRow("B", 80.0),
@@ -917,7 +955,8 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                     GradingSchemeRow("F", 0.0)
                 ),
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = {},
+                onLateDaysChange = {}
             )
         )
     }
@@ -936,7 +975,8 @@ private fun SpeedGraderGradingContentErrorPreview() {
                 onPercentageChange = {},
                 onExcuse = {},
                 onStatusChange = {},
-                retryAction = {}
+                retryAction = {},
+                onLateDaysChange = {}
             )
         )
     }
@@ -954,7 +994,8 @@ private fun SpeedGraderGradingContentLoadingPreview() {
                 onScoreChange = {},
                 onPercentageChange = {},
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = {},
+                onLateDaysChange = {}
             )
         )
     }
