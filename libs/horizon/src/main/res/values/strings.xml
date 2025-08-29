@@ -66,8 +66,8 @@
     <string name="overview">Overview</string>
     <string name="scores">Scores</string>
     <string name="notes">Notes</string>
-    <string name="assignmentName">Assignment name</string>
-    <string name="dueDate">Due date</string>
+    <string name="scoresSortingAssignmentNameAscending">Assignment name (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Due date (newest first)</string>
     <string name="scoresItemassignmentName">Name: %1$s</string>
     <string name="scoresItemDueDate">Date: %1$s</string>
     <string name="noDueDate">No due date</string>
