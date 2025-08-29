@@ -42,9 +42,16 @@ object PlannerAPI {
         @POST("planner/overrides")
         fun createPlannerOverride(@Body plannerOverride: PlannerOverride): Call<PlannerOverride>
 
+        @POST("planner/overrides")
+        suspend fun createPlannerOverride(@Body plannerOverride: PlannerOverride, @Tag params: RestParams): DataResult<PlannerOverride>
+
         @FormUrlEncoded
         @PUT("planner/overrides/{overrideId}")
         fun updatePlannerOverride(@Path("overrideId") plannerOverrideId: Long, @Field("marked_complete") complete: Boolean): Call<PlannerOverride>
+
+        @FormUrlEncoded
+        @PUT("planner/overrides/{overrideId}")
+        suspend fun updatePlannerOverride(@Path("overrideId") plannerOverrideId: Long, @Field("marked_complete") complete: Boolean, @Tag params: RestParams): DataResult<PlannerOverride>
 
         @DELETE("planner_notes/{noteId}")
         suspend fun deletePlannerNote(@Path("noteId") noteId: Long, @Tag params: RestParams): DataResult<Unit>

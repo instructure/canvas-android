@@ -27,8 +27,9 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
-import com.instructure.pandautils.utils.color
+import com.instructure.pandautils.utils.courseOrUserColor
 import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toLocalDate
 import com.instructure.student.R
@@ -97,11 +98,12 @@ class ToDoWidgetUpdater(
     ) = WidgetPlannerItem(
         date = plannableDate.toLocalDate(),
         iconRes = getIconForPlannerItem(),
-        canvasContextColor = canvasContext.color,
+        canvasContextColor = canvasContext.courseOrUserColor,
         canvasContextText = getContextNameForPlannerItem(context, courses),
         title = plannable.title,
         dateText = getDateTextForPlannerItem(context).orEmpty(),
         url = getUrl(),
+        tag = getTagForPlannerItem(context)
     )
 
     private fun PlannerItem.getContextNameForPlannerItem(context: Context, courses: List<Course>): String {
