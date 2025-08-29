@@ -42,6 +42,7 @@ fun ComposeCanvasWebViewWrapper(
     title: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
     applyOnWebView: (CanvasWebView.() -> Unit)? = null,
+    applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
     webViewCallbacks: ComposeWebViewCallbacks? = null,
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
@@ -101,6 +102,7 @@ fun ComposeCanvasWebViewWrapper(
                 } else {
                     it.webView.restoreState(webViewState)
                 }
+                applyOnUpdate?.let { applyOnUpdate -> it.applyOnUpdate() }
             },
             onRelease = {
                 it.webView.saveState(webViewState)
