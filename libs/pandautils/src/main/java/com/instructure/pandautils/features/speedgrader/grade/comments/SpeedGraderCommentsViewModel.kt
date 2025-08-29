@@ -119,7 +119,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         subscribeToFileUploadEvents()
         val isAnonymousGrading = response.data.submission?.assignment?.anonymousGrading ?: false
         fetchedComments = response.comments
-            .filter { it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
+            .filter { (it.attempt.toLong() == 0L && selectedAttemptId == 1L) || it.attempt.toLong() == selectedAttemptId || !assignmentEnhancementsEnabled }
             .map { node ->
                 node.let {
                     val isOwnComment = apiPrefs.user?.id?.toString() == it.author?._id
