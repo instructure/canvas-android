@@ -291,7 +291,7 @@ class InboxDetailsViewModel @Inject constructor(
 
     private suspend fun checkRestrictStudentAccessFlag(): Boolean {
         return try {
-            featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+            featureFlagProvider.checkRestrictStudentAccessFlag()
         } catch (e: Exception) {
             false
         }

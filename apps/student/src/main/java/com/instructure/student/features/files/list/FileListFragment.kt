@@ -120,6 +120,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     private val binding by viewBinding(FragmentFileListBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    
+    private var restrictStudentAccessFlag: Boolean = false
 
     @Suppress("unused")
     @PageViewUrl
@@ -192,9 +194,16 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
         if (canvasContext.type == CanvasContext.Type.USER) applyTheme()
         if (folder != null) {
-            configureViews()
+            lifecycleScope.tryLaunch {
+                restrictStudentAccessFlag = checkRestrictStudentAccessFlag()
+                configureViews()
+            } catch {
+                restrictStudentAccessFlag = false
+                configureViews()
+            }
         } else {
             lifecycleScope.tryLaunch {
+                restrictStudentAccessFlag = checkRestrictStudentAccessFlag()
                 folder = if (folderId != 0L) {
                     // If folderId is valid, get folder by ID
                     fileListRepository.getFolder(folderId, true)
@@ -204,6 +213,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 }
                 configureViews()
             } catch {
+                restrictStudentAccessFlag = false
                 toast(R.string.errorOccurred)
                 activity?.onBackPressed()
             }
@@ -376,67 +386,41 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
         // Only show FAB for user files
         if ((isUserFiles || folder?.canUpload == true) && folder?.forSubmissions == false) {
-            lifecycleScope.tryLaunch {
-                val restrictStudentAccess = checkRestrictStudentAccessFlag()
-                
-                // Always show the main FAB and folder creation
-                addFab.setVisible()
-                addFab.onClickWithRequireNetwork { animateFabs() }
-                addFolderFab.onClickWithRequireNetwork {
-                    animateFabs()
-                    createFolder()
-                }
+            configureFabs()
+        }
+    }
 
-                // Set up file upload functionality, but keep it hidden initially
-                if (!restrictStudentAccess) {
-                    addFileFab.setInvisible()
-                    addFileFab.onClickWithRequireNetwork {
-                        animateFabs()
-                        uploadFile()
-                    }
-                } else {
-                    addFileFab.setGone()
-                }
+    private fun configureFabs() = with(binding) {
+        // Always show the main FAB and folder creation
+        addFab.setVisible()
+        addFab.onClickWithRequireNetwork { animateFabs() }
+        addFolderFab.onClickWithRequireNetwork {
+            animateFabs()
+            createFolder()
+        }
 
-                // Add padding to bottom of RecyclerView to account for FAB
-                listView.post {
-                    var bottomPad = addFab.height
-                    bottomPad += (addFab.layoutParams as? MarginLayoutParams)?.let { it.topMargin + it.bottomMargin }
-                            ?: requireContext().DP(32).toInt()
-                    listView.setPadding(
-                            listView.paddingLeft,
-                            listView.paddingTop,
-                            listView.paddingRight,
-                            bottomPad
-                    )
-                }
-            } catch {
-                // If feature flag check fails, show all functionality (default behavior)
-                addFab.setVisible()
-                addFab.onClickWithRequireNetwork { animateFabs() }
-                addFileFab.setInvisible() // Hidden until + icon is clicked
-                addFileFab.onClickWithRequireNetwork {
-                    animateFabs()
-                    uploadFile()
-                }
-                addFolderFab.onClickWithRequireNetwork {
-                    animateFabs()
-                    createFolder()
-                }
-
-                // Add padding to bottom of RecyclerView to account for FAB
-                listView.post {
-                    var bottomPad = addFab.height
-                    bottomPad += (addFab.layoutParams as? MarginLayoutParams)?.let { it.topMargin + it.bottomMargin }
-                            ?: requireContext().DP(32).toInt()
-                    listView.setPadding(
-                            listView.paddingLeft,
-                            listView.paddingTop,
-                            listView.paddingRight,
-                            bottomPad
-                    )
-                }
+        // Set up file upload functionality, but keep it hidden initially
+        if (!restrictStudentAccessFlag) {
+            addFileFab.setInvisible()
+            addFileFab.onClickWithRequireNetwork {
+                animateFabs()
+                uploadFile()
             }
+        } else {
+            addFileFab.setGone()
+        }
+
+        // Add padding to bottom of RecyclerView to account for FAB
+        listView.post {
+            var bottomPad = addFab.height
+            bottomPad += (addFab.layoutParams as? MarginLayoutParams)?.let { it.topMargin + it.bottomMargin }
+                    ?: requireContext().DP(32).toInt()
+            listView.setPadding(
+                    listView.paddingLeft,
+                    listView.paddingTop,
+                    listView.paddingRight,
+                    bottomPad
+            )
         }
     }
 
@@ -444,25 +428,13 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val popup = PopupMenu(requireContext(), anchorView)
         popup.inflate(R.menu.file_folder_options)
         
-        lifecycleScope.tryLaunch {
-            val options = getFileMenuOptionsWithFeatureFlag(item, canvasContext, fileListRepository.isOnline(), folder)
-            with(popup.menu) {
-                // Only show alternate-open option for PDF files
-                findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
-                findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
-                findItem(R.id.rename).isVisible = options.contains(FileMenuType.RENAME)
-                findItem(R.id.delete).isVisible = options.contains(FileMenuType.DELETE)
-            }
-        } catch {
-            // Fallback to default menu options on error
-            val options = getFileMenuOptions(item, canvasContext, fileListRepository.isOnline(), folder)
-            with(popup.menu) {
-                // Only show alternate-open option for PDF files
-                findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
-                findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
-                findItem(R.id.rename).isVisible = options.contains(FileMenuType.RENAME)
-                findItem(R.id.delete).isVisible = options.contains(FileMenuType.DELETE)
-            }
+        val options = getFileMenuOptionsWithFeatureFlag(item, canvasContext, fileListRepository.isOnline(), folder)
+        with(popup.menu) {
+            // Only show alternate-open option for PDF files
+            findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
+            findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
+            findItem(R.id.rename).isVisible = options.contains(FileMenuType.RENAME)
+            findItem(R.id.delete).isVisible = options.contains(FileMenuType.DELETE)
         }
 
         popup.setOnMenuItemClickListener { menuItem ->
@@ -682,17 +654,16 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         }
     }
 
-    private suspend fun getFileMenuOptionsWithFeatureFlag(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean, folder: FileFolder?): List<FileMenuType> {
+    private fun getFileMenuOptionsWithFeatureFlag(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean, folder: FileFolder?): List<FileMenuType> {
         val baseOptions = getFileMenuOptions(fileFolder, canvasContext, isOnline, folder)
         
         // If restrict_student_access feature flag is enabled, remove download options for students
-        val restrictStudentAccess = checkRestrictStudentAccessFlag()
-        if (restrictStudentAccess && canvasContext.type == CanvasContext.Type.COURSE) {
+        if (restrictStudentAccessFlag && canvasContext.type == CanvasContext.Type.COURSE) {
             val course = canvasContext as? Course
             if (course?.isStudent == true) {
                 return baseOptions.filterNot { it == FileMenuType.DOWNLOAD || it == FileMenuType.OPEN_IN_ALTERNATE }
             }
-        } else if (restrictStudentAccess && canvasContext.type == CanvasContext.Type.USER) {
+        } else if (restrictStudentAccessFlag && canvasContext.type == CanvasContext.Type.USER) {
             // For user files, remove download options when feature flag is enabled
             return baseOptions.filterNot { it == FileMenuType.DOWNLOAD || it == FileMenuType.OPEN_IN_ALTERNATE }
         }
