@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.account.reportabug
 
+import android.widget.LinearLayout
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
@@ -27,12 +28,17 @@ fun ReportABugWebView(
     navController: NavController,
 ) {
     HorizonScaffold(
-        title = "Report a problem",
+        title = "Report a bug",
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         ComposeCanvasWebViewWrapper(
             applyOnWebView = {
                 settings.javaScriptEnabled = true
+
+                layoutParams = LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+                )
             },
             content = """
                 <!DOCTYPE html>
@@ -40,7 +46,8 @@ fun ReportABugWebView(
                 <head>
                 <style>
                 body {
-                   height: 1000px;
+                   height: 100%;
+                }
                 </style>
                 <meta name="viewport" content="width=device-width initial-scale=1">
                 </head>
