@@ -18,7 +18,6 @@ package com.instructure.pandautils.features.speedgrader.grade.comments
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import android.webkit.MimeTypeMap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
@@ -205,7 +204,6 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private fun subscribeToFileUploadEvents() {
         viewModelScope.launch {
             fileUploadEventHandler.events.collect { event ->
-                Log.d("ASDF", "FileUploadEvent: $event")
                 when (event) {
                     is FileUploadEvent.UploadStarted -> {
                         onFileUploadStarted(event.workInfoLiveData)
@@ -268,7 +266,9 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     fun handleAction(action: SpeedGraderCommentsAction) {
         when (action) {
             is SpeedGraderCommentsAction.CommentFieldChanged -> {
-                debouncedSaveDraft(action.commentText)
+                if (action.saveDraft) {
+                    debouncedSaveDraft(action.commentText)
+                }
                 _uiState.update { state ->
                     state.copy(commentText = action.commentText)
                 }

@@ -122,7 +122,7 @@ fun SpeedGraderCommentsSection(
             initialCommentValue = state.commentText,
             onSendCommentClicked = {
                 showCommentLibrary = false
-                actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it))
+                actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it, false))
                 actionHandler(SpeedGraderCommentsAction.SendCommentClicked)
             }
         )
