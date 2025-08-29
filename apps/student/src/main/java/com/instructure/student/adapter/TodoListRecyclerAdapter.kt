@@ -221,6 +221,7 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
         val todos = plannerList
             .filter { it.plannerOverride?.markedComplete != true }
             .filter { shownByFilter(it, courseMap) }
+            .filter { !isComplete(it) }
             .sortedBy { it.comparisonDate }
 
         todos.forEach {
@@ -237,6 +238,14 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
             is NoFilter -> true
             is FavoritedCourses -> plannerItem.courseId?.let { courseId -> courseMap.get(courseId)?.isFavorite == true }
                 ?: false
+        }
+    }
+
+    private fun isComplete(plannerItem: PlannerItem): Boolean {
+        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC) {
+            plannerItem.submissionState?.submitted == true
+        } else {
+            false
         }
     }
 

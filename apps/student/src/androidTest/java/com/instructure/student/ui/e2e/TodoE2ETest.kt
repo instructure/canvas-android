@@ -60,7 +60,7 @@ class TodoE2ETest: StudentTest() {
         val quiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 1.days.fromNow.iso8601)
 
         Log.d(PREPARATION_TAG, "Seed another quiz for '${course.name}' course with 8 days from now due date..")
-        val tooFarAwayQuiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 8.days.fromNow.iso8601)
+        val farAwayQuiz = QuizzesApi.createQuiz(course.id, teacher.token, dueAt = 8.days.fromNow.iso8601)
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
@@ -70,12 +70,12 @@ class TodoE2ETest: StudentTest() {
         dashboardPage.clickTodoTab()
 
         Log.d(ASSERTION_TAG, "Assert that '${testAssignment.name}' assignment is displayed and '${borderDateAssignment.name}' assignment is displayed because it's 7 days away from now." +
-                "Assert that '${quiz.title}' quiz is displayed and '${tooFarAwayQuiz.title}' quiz is not displayed because it's end date is more than a week away.")
+                "Assert that '${quiz.title}' quiz is displayed and '${farAwayQuiz.title}' quiz is also displayed.")
         retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() } ) {
             todoPage.assertAssignmentDisplayed(testAssignment)
             todoPage.assertAssignmentDisplayed(borderDateAssignment)
             todoPage.assertQuizDisplayed(quiz)
-            todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
+            todoPage.assertQuizDisplayed(farAwayQuiz)
         }
 
         Log.d(PREPARATION_TAG, "Submit' '${testAssignment.name}' assignment for '${student.name}' student.")
@@ -109,9 +109,8 @@ class TodoE2ETest: StudentTest() {
         todoPage.assertAssignmentDisplayedWithRetries(borderDateAssignment, 5)
         todoPage.assertQuizDisplayed(quiz)
 
-        Log.d(ASSERTION_TAG, "Assert that '${testAssignment}' assignment and '${tooFarAwayQuiz.title}' quiz are not displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${testAssignment}' assignment is not displayed.")
         todoPage.assertAssignmentNotDisplayed(testAssignment)
-        todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
 
         Log.d(PREPARATION_TAG, "Seed an assignment for '${favoriteCourse.name}' course with tomorrow due date.")
         val favoriteCourseAssignment = AssignmentsApi.createAssignment(favoriteCourse.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
@@ -142,7 +141,7 @@ class TodoE2ETest: StudentTest() {
         todoPage.assertAssignmentNotDisplayed(testAssignment)
         todoPage.assertAssignmentNotDisplayed(borderDateAssignment)
         todoPage.assertQuizNotDisplayed(quiz)
-        todoPage.assertQuizNotDisplayed(tooFarAwayQuiz)
+        todoPage.assertQuizNotDisplayed(farAwayQuiz)
     }
 
 }

@@ -7,6 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toDate
 import com.instructure.pandautils.utils.ColorKeeper
@@ -14,6 +15,7 @@ import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.getIconForPlannerItem
 import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.setTextForVisibility
+import com.instructure.pandautils.utils.studentColor
 import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.ViewholderTodoBinding
@@ -41,15 +43,14 @@ class TodoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
             true
         }
 
+        val courseColor = if (item.canvasContext is User) (item.canvasContext as User).studentColor else item.canvasContext.color
         course.text = getContextNameForPlannerItem(context, item)
-        course.setTextColor(item.canvasContext.color)
+        course.setTextColor(courseColor)
         title.text = item.plannable.title
         description.setTextForVisibility(getDateForPlannerItem(context, item))
         tag.setTextForVisibility(item.getTagForPlannerItem(context))
 
-        // Get courseColor
-        val iconColor = item.canvasContext.color
-        val drawable = ColorKeeper.getColoredDrawable(context, item.getIconForPlannerItem(), iconColor)
+        val drawable = ColorKeeper.getColoredDrawable(context, item.getIconForPlannerItem(), courseColor)
         icon.setImageDrawable(drawable)
 
         if (item.isChecked) {
