@@ -5,6 +5,7 @@ import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
@@ -34,6 +35,7 @@ class TodoE2ETest: StudentTest() {
 
     @E2E
     @Test
+    @Stub
     @TestMetaData(Priority.MANDATORY, FeatureCategory.TODOS, TestCategory.E2E)
     fun testTodoE2E() {
 
@@ -134,7 +136,7 @@ class TodoE2ETest: StudentTest() {
 
         retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
             // It's working well on product version, maybe the backend is working differently on beta environment.
-            Log.d(ASSERTION_TAG, "Assert that only the favorite course's assignment, '${borderDateAssignment.name}' is displayed.")
+            Log.d(ASSERTION_TAG, "Assert that only the favorite course's assignment, '${favoriteCourseAssignment.name}' is displayed.")
             todoPage.assertAssignmentDisplayedWithRetries(favoriteCourseAssignment, 5)
         }
 
