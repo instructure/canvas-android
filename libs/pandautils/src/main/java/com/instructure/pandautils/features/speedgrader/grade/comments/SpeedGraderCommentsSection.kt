@@ -39,12 +39,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
@@ -72,8 +74,6 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
-import androidx.compose.ui.window.Dialog
-import androidx.compose.ui.window.DialogProperties
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
@@ -141,7 +141,13 @@ fun SpeedGraderCommentsSection(
             CanvasDivider()
             SpeedGraderCommentInput(
                 commentText = state.commentText,
-                onCommentFieldChanged = { actionHandler(SpeedGraderCommentsAction.CommentFieldChanged(it)) },
+                onCommentFieldChanged = {
+                    actionHandler(
+                        SpeedGraderCommentsAction.CommentFieldChanged(
+                            it
+                        )
+                    )
+                },
                 onCommentLibraryClicked = { showCommentLibrary = true },
                 onAttachmentClicked = { actionHandler(SpeedGraderCommentsAction.AddAttachmentClicked) },
                 sendCommentClicked = { actionHandler(SpeedGraderCommentsAction.SendCommentClicked) },
@@ -215,148 +221,148 @@ fun SpeedGraderCommentsSection(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun AttachmentTypeSelectorDialog(
     actionHandler: (SpeedGraderCommentsAction) -> Unit = {}
 ) {
-    Dialog(
+    ModalBottomSheet(
+        dragHandle = null,
+        shape = RoundedCornerShape(16.dp, 16.dp, 0.dp, 0.dp),
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = colorResource(R.color.backgroundLightestElevated),
         onDismissRequest = {
             actionHandler(SpeedGraderCommentsAction.AttachmentTypeSelectorDialogClosed)
-        }, properties = DialogProperties(usePlatformDefaultWidth = false)
+        }
     ) {
-        Box(modifier = Modifier.fillMaxSize()) {
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .align(Alignment.BottomCenter)
-                    .wrapContentHeight()
-                    .background(colorResource(id = R.color.backgroundLightest)),
-                horizontalAlignment = Alignment.Start
-            ) {
-                val audioPermissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
-                    // Not working, needs to fixed in MBL-19070
-                    if (result) {
-                        actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
-                    }
-                }
-                val videoPermissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { results ->
-                    // Not working, needs to fixed in MBL-19070
-                    if (results.all { it.value }) {
-                        actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
-                    }
-                }
-                val context = LocalContext.current
-                Text(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 16.dp, vertical = 8.dp),
-                    text = stringResource(R.string.select_attachment_type),
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp,
-                    lineHeight = 19.sp,
-                    textAlign = TextAlign.Center,
-                )
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics {
-                            this.role = Role.Button
-                        }
-                        .clickable {
-                            if (isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
-                                actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
-                            } else {
-                                audioPermissionRequest.launch(PermissionUtils.RECORD_AUDIO)
-                            }
-                        }
-                        .padding(horizontal = 22.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_mic),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorResource(id = R.color.textDark)
-                    )
-                    Spacer(modifier = Modifier.width(18.dp))
-                    Text(
-                        text = stringResource(R.string.recordAudio),
-                        fontSize = 16.sp,
-                        lineHeight = 21.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colorResource(id = R.color.textDarkest)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics {
-                            this.role = Role.Button
-                        }
-                        .clickable {
-                            if (isPermissionGranted(context, PermissionUtils.CAMERA) &&
-                                isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)
-                            ) {
-                                actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
-                            } else {
-                                videoPermissionRequest.launch(
-                                    arrayOf(
-                                        PermissionUtils.CAMERA,
-                                        PermissionUtils.RECORD_AUDIO
-                                    )
-                                )
-                            }
-                        }
-                        .padding(horizontal = 22.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_video),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorResource(id = R.color.textDark)
-                    )
-                    Spacer(modifier = Modifier.width(18.dp))
-                    Text(
-                        text = stringResource(R.string.recordVideo),
-                        fontSize = 16.sp,
-                        lineHeight = 21.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colorResource(id = R.color.textDarkest)
-                    )
-                }
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .semantics {
-                            this.role = Role.Button
-                        }
-                        .clickable { actionHandler(SpeedGraderCommentsAction.ChooseFilesClicked) }
-                        .padding(horizontal = 22.dp, vertical = 14.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        painter = painterResource(id = R.drawable.ic_blank_doc),
-                        contentDescription = null,
-                        modifier = Modifier.size(24.dp),
-                        tint = colorResource(id = R.color.textDark)
-                    )
-                    Spacer(modifier = Modifier.width(18.dp))
-                    Text(
-                        text = stringResource(R.string.choose_files),
-                        fontSize = 16.sp,
-                        lineHeight = 21.sp,
-                        fontWeight = FontWeight.SemiBold,
-                        color = colorResource(id = R.color.textDarkest)
-                    )
+
+        val audioPermissionRequest =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+                // Not working, needs to fixed in MBL-19070
+                if (result) {
+                    actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
                 }
             }
+        val videoPermissionRequest =
+            rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestMultiplePermissions()) { results ->
+                // Not working, needs to fixed in MBL-19070
+                if (results.all { it.value }) {
+                    actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
+                }
+            }
+        val context = LocalContext.current
+        Text(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp, vertical = 8.dp),
+            text = stringResource(R.string.select_attachment_type),
+            color = colorResource(id = R.color.textDark),
+            fontSize = 14.sp,
+            lineHeight = 19.sp,
+            textAlign = TextAlign.Center,
+        )
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
+                    this.role = Role.Button
+                }
+                .clickable {
+                    if (isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)) {
+                        actionHandler(SpeedGraderCommentsAction.RecordAudioClicked)
+                    } else {
+                        audioPermissionRequest.launch(PermissionUtils.RECORD_AUDIO)
+                    }
+                }
+                .padding(horizontal = 22.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_mic),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = colorResource(id = R.color.textDark)
+            )
+            Spacer(modifier = Modifier.width(18.dp))
+            Text(
+                text = stringResource(R.string.recordAudio),
+                fontSize = 16.sp,
+                lineHeight = 21.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(id = R.color.textDarkest)
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
+                    this.role = Role.Button
+                }
+                .clickable {
+                    if (isPermissionGranted(context, PermissionUtils.CAMERA) &&
+                        isPermissionGranted(context, PermissionUtils.RECORD_AUDIO)
+                    ) {
+                        actionHandler(SpeedGraderCommentsAction.RecordVideoClicked)
+                    } else {
+                        videoPermissionRequest.launch(
+                            arrayOf(
+                                PermissionUtils.CAMERA,
+                                PermissionUtils.RECORD_AUDIO
+                            )
+                        )
+                    }
+                }
+                .padding(horizontal = 22.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_video),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = colorResource(id = R.color.textDark)
+            )
+            Spacer(modifier = Modifier.width(18.dp))
+            Text(
+                text = stringResource(R.string.recordVideo),
+                fontSize = 16.sp,
+                lineHeight = 21.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(id = R.color.textDarkest)
+            )
+        }
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .semantics {
+                    this.role = Role.Button
+                }
+                .clickable { actionHandler(SpeedGraderCommentsAction.ChooseFilesClicked) }
+                .padding(horizontal = 22.dp, vertical = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_blank_doc),
+                contentDescription = null,
+                modifier = Modifier.size(24.dp),
+                tint = colorResource(id = R.color.textDark)
+            )
+            Spacer(modifier = Modifier.width(18.dp))
+            Text(
+                text = stringResource(R.string.choose_files),
+                fontSize = 16.sp,
+                lineHeight = 21.sp,
+                fontWeight = FontWeight.SemiBold,
+                color = colorResource(id = R.color.textDarkest)
+            )
         }
     }
 }
 
 private fun isPermissionGranted(context: Context, permission: String): Boolean {
-    return ContextCompat.checkSelfPermission(context, permission) == PackageManager.PERMISSION_GRANTED
+    return ContextCompat.checkSelfPermission(
+        context,
+        permission
+    ) == PackageManager.PERMISSION_GRANTED
 }
 
 @Composable
@@ -367,7 +373,8 @@ private fun SpeedGraderCommentItems(
     actionHandler: (SpeedGraderCommentsAction) -> Unit = {}
 ) {
     Column(
-        modifier = modifier.padding(horizontal = 8.dp), verticalArrangement = Arrangement.spacedBy(8.dp)
+        modifier = modifier.padding(horizontal = 8.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
     ) {
         comments.forEach { comment ->
             if (comment.isOwnComment) {
