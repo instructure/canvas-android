@@ -57,20 +57,22 @@ fun ReportABugWebView(
             """.trimIndent(),
             webViewCallbacks = ComposeWebViewCallbacks(onPageFinished = { webView, url ->
                 webView.evaluateJavascript("""
-    const SCRIPT_ID = "jira-issue-collector"
-    const script = document.createElement("script")
-    script.id = SCRIPT_ID
-    script.src =
-      "https://instructure.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/vf1kch/b/0/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=e6b73300"
-    document.body.appendChild(script)
-    
-    window.ATL_JQ_PAGE_PROPS = {
-        triggerFunction: function (showCollectorDialog) {
-  setTimeout(function() {
-  showCollectorDialog();
-}, 1000);
-        }
-    };
+                    const SCRIPT_ID = "jira-issue-collector"
+                    const script = document.createElement("script")
+                    script.id = SCRIPT_ID
+                    script.src =
+                      "https://instructure.atlassian.net/s/d41d8cd98f00b204e9800998ecf8427e-T/vf1kch/b/0/c95134bc67d3a521bb3f4331beb9b804/_/download/batch/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector/com.atlassian.jira.collector.plugin.jira-issue-collector-plugin:issuecollector.js?locale=en-US&collectorId=e6b73300"
+                    script.addEventListener("load", function(){
+                        window.ATL_JQ_PAGE_PROPS = {
+                            triggerFunction: function (showCollectorDialog) {
+                                setTimeout(function() {
+                                    showCollectorDialog();
+                                }, 100);
+                            }
+                        };
+                    });
+                    
+                    document.body.appendChild(script)
                 """.trimIndent(), null)
             }),
             modifier = modifier
