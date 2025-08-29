@@ -71,7 +71,7 @@ import com.instructure.horizon.horizonui.molecules.IconButtonSize
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.modifiers.conditional
-import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
 @Composable
@@ -284,7 +284,7 @@ private fun NoteContent(
                 .padding(24.dp)
         ) {
             Text(
-                text = note.updatedAt.format("MMM d, yyyy"),
+                text = note.updatedAt.localisedFormat("MMM d, yyyy"),
                 style = HorizonTypography.labelSmall,
                 color = HorizonColors.Text.timestamp()
             )

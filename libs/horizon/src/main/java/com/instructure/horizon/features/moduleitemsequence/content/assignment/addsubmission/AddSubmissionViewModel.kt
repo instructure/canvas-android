@@ -31,7 +31,7 @@ import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
 import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
 import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
-import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.localisedFormat
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -360,7 +360,7 @@ class AddSubmissionViewModel @Inject constructor(
         return if (date == null) {
             ""
         } else {
-            context.getString(R.string.assignmentDetails_draftSaved, date.format("MM/dd, h:mm a"))
+            context.getString(R.string.assignmentDetails_draftSaved, date.localisedFormat("MM/dd, h:mm a", context))
         }
     }
 
