@@ -387,9 +387,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                     createFolder()
                 }
 
-                // Only show file upload if not restricted
+                // Set up file upload functionality, but keep it hidden initially
                 if (!restrictStudentAccess) {
-                    addFileFab.setVisible()
+                    addFileFab.setInvisible()
                     addFileFab.onClickWithRequireNetwork {
                         animateFabs()
                         uploadFile()
@@ -414,7 +414,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 // If feature flag check fails, show all functionality (default behavior)
                 addFab.setVisible()
                 addFab.onClickWithRequireNetwork { animateFabs() }
-                addFileFab.setVisible()
+                addFileFab.setInvisible() // Hidden until + icon is clicked
                 addFileFab.onClickWithRequireNetwork {
                     animateFabs()
                     uploadFile()
@@ -640,8 +640,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             addFolderFab.startAnimation(fabHide)
             addFolderFab.isClickable = false
 
-            // Only animate upload FAB if it's visible
-            if (addFileFab.visibility == View.VISIBLE) {
+            // Hide upload FAB if it should be available (not GONE due to restrictions)
+            if (addFileFab.visibility != View.GONE) {
                 addFileFab.startAnimation(fabHide)
                 addFileFab.isClickable = false
                 addFileFab.setInvisible()
@@ -659,8 +659,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 isClickable = true
             }
 
-            // Only animate upload FAB if it's not restricted
-            if (addFileFab.visibility == View.VISIBLE) {
+            if (addFileFab.visibility != View.GONE) {
                 addFileFab.apply {
                     startAnimation(fabReveal)
                     isClickable = true
