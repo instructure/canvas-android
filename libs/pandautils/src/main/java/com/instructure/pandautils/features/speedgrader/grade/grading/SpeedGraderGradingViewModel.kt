@@ -162,11 +162,10 @@ class SpeedGraderGradingViewModel @Inject constructor(
     }
 
     private fun onScoreChanged(score: Float?) {
-        if (score == _uiState.value.enteredScore) return
+        if (_uiState.value.excused.not() && score == _uiState.value.enteredScore) return
         debounceJob?.cancel()
 
         debounceJob = viewModelScope.launch {
-            val originalState = _uiState.value
             delay(300)
             try {
                 repository.updateSubmissionGrade(
