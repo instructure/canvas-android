@@ -82,16 +82,16 @@ fun ReportABugWebView(
             content = """
                 <!DOCTYPE html>
                 <html lang="en">
-                <head>
-                <style>
-                body {
-                   height: 100%;
-                }
-                </style>
-                <meta name="viewport" content="width=device-width initial-scale=1">
-                </head>
-                <body>
-                </body>
+                    <head>
+                        <style>
+                            body {
+                               height: 100%;
+                            }
+                        </style>
+                        <meta name="viewport" content="width=device-width initial-scale=1">
+                    </head>
+                    <body>
+                    </body>
                 </html>
             """.trimIndent(),
             applyOnUpdate = {
@@ -122,10 +122,9 @@ fun ReportABugWebView(
                     document.body.appendChild(script)
                     
                     window.addEventListener('message', (event) => { 
-                          console.log('Message received from iframe:', event.data)
-                           if (event.data === 'cancelFeedbackDialog') {
-                               ${JsReportABugInterface.INTERFACE_NAME}.close()
-                           }
+                       if (event.data === 'cancelFeedbackDialog') {
+                           ${JsReportABugInterface.INTERFACE_NAME}.close()
+                       }
                     });
                 """.trimIndent(), null)
             }),
