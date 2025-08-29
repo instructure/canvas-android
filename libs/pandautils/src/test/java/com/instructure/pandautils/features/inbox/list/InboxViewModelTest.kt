@@ -32,6 +32,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
@@ -59,6 +60,7 @@ class InboxViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val inboxEntryItemCreator: InboxEntryItemCreator = mockk(relaxed = true)
+    private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
 
     private lateinit var viewModel: InboxViewModel
 
@@ -84,6 +86,8 @@ class InboxViewModelTest {
         every { resources.getString(R.string.allCourses) } returns "All Courses"
         every { resources.getString(R.string.errorOccurred) } returns "Error"
         every { resources.getString(R.string.inboxOperationFailed) } returns "Epic Fail"
+
+        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
 
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3]) }
     }
@@ -964,5 +968,5 @@ class InboxViewModelTest {
         coVerify { inboxRepository.getInboxSignature() }
     }
 
-    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator)
+    private fun createViewModel() = InboxViewModel(inboxRepository, resources, inboxEntryItemCreator, featureFlagProvider)
 }
