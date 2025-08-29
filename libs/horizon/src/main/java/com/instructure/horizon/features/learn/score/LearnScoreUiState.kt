@@ -14,7 +14,7 @@ data class LearnScoreUiState(
     val screenState : LoadingState = LoadingState(),
     val courseId: Long = -1,
     val assignmentGroups: List<AssignmentGroupScoreItem> = emptyList(),
-    val selectedSortOption: LearnScoreSortOption = LearnScoreSortOption.AssignmentName,
+    val selectedSortOption: LearnScoreSortOption = LearnScoreSortOption.AssignmentNameAscending,
     val sortedAssignments: List<AssignmentScoreItem> = emptyList(),
     val currentScore: String? = null
 )
@@ -50,6 +50,6 @@ data class AssignmentGroupScoreItem(
 }
 
 enum class LearnScoreSortOption(@StringRes val label: Int) {
-    DueDate(R.string.dueDate),
-    AssignmentName(R.string.assignmentName),
+    DueDateDescending(R.string.scoresSortingDueDateDescending),
+    AssignmentNameAscending(R.string.scoresSortingAssignmentNameAscending),
 }

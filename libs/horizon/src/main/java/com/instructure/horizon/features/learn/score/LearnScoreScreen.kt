@@ -409,7 +409,7 @@ fun LearnScoreContentPreview() {
             currentScore = null,
             assignmentGroups = assignmentGroups.map { AssignmentGroupScoreItem(it) },
             sortedAssignments = assignmentGroups.flatMap { it.assignments.map { AssignmentScoreItem(it) } },
-            selectedSortOption = LearnScoreSortOption.DueDate
+            selectedSortOption = LearnScoreSortOption.DueDateDescending
         ),
         1L,
         NavHostController(LocalContext.current),
