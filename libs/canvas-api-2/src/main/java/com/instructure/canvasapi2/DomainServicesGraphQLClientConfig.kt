@@ -54,3 +54,10 @@ class RedwoodGraphQLClientConfig @Inject constructor(
     url = BuildConfig.REDWOOD_BASE_URL + "/graphql",
     httpClient = adapter.buildOHttpClient()
 )
+
+class JourneyGraphQLClientConfig @Inject constructor(
+    adapter: JourneyAdapter
+): DomainServicesGraphQLClientConfig(
+    url = BuildConfig.JOURNEY_BASE_URL + "/graphql",
+    httpClient = adapter.buildOHttpClient()
+)

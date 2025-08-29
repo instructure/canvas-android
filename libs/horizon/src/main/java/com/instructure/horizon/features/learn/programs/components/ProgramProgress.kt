@@ -16,15 +16,20 @@
 package com.instructure.horizon.features.learn.programs.components
 
 import androidx.compose.foundation.layout.Column
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 data class ProgramProgressState(
     val courses: List<ProgramProgressItemState>,
+    val headerString: String? = null,
 )
 
 @Composable
@@ -33,6 +38,10 @@ fun ProgramProgress(
     modifier: Modifier = Modifier
 ) {
     Column {
+        if (state.headerString != null) {
+            Text(text = state.headerString, style = HorizonTypography.sh4)
+            HorizonSpace(SpaceSize.SPACE_8)
+        }
         state.courses.forEach { course ->
             ProgramProgressItem(
                 state = course,
@@ -148,7 +157,8 @@ private fun ProgramProgressNonSequentialPreview() {
                         )
                     )
                 )
-            )
+            ),
+            headerString = "Completed 2 of 3 courses"
         )
     )
 }

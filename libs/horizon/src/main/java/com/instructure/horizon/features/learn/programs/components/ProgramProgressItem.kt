@@ -66,6 +66,14 @@ sealed class ProgramProgressItemStatus(val borderColor: Color) {
     data object Completed : ProgramProgressItemStatus(HorizonColors.PrimitivesHoney.honey35())
     data object Active : ProgramProgressItemStatus(HorizonColors.LineAndBorder.containerStroke())
     data object Upcoming : ProgramProgressItemStatus(HorizonColors.LineAndBorder.lineStroke())
+
+    companion object {
+        fun fromCourseCardStatus(status: CourseCardStatus): ProgramProgressItemStatus = when (status) {
+            is CourseCardStatus.Completed -> Completed
+            is CourseCardStatus.Enrolled, is CourseCardStatus.InProgress, is CourseCardStatus.Active -> Active
+            is CourseCardStatus.Inactive -> Upcoming
+        }
+    }
 }
 
 @Composable
