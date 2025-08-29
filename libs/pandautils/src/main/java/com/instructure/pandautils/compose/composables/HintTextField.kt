@@ -35,7 +35,6 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
-import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -52,7 +51,6 @@ fun BasicTextFieldWithHintDecoration(
     onValueChange: (String) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
-    testTag: String = "gradeInputField",
     decorationText: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textStyle: TextStyle = LocalTextStyle.current
@@ -66,7 +64,6 @@ fun BasicTextFieldWithHintDecoration(
         },
         hint = hint,
         modifier = modifier,
-        testTag = testTag,
         decorationText = decorationText,
         keyboardOptions = keyboardOptions,
         textStyle = textStyle
@@ -81,7 +78,6 @@ fun BasicTextFieldWithHintDecoration(
     onValueChange: (TextFieldValue) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
-    testTag: String = "gradeInputField",
     decorationText: String? = null,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     textStyle: TextStyle = LocalTextStyle.current
@@ -89,7 +85,7 @@ fun BasicTextFieldWithHintDecoration(
     BasicTextField(
         value = value,
         onValueChange = onValueChange,
-        modifier = modifier.then(Modifier.testTag(testTag)),
+        modifier = modifier,
         keyboardOptions = keyboardOptions,
         textStyle = textStyle.copy(
             color = textColor,

@@ -506,8 +506,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
-                modifier = Modifier.padding(end = 8.dp),
-                testTag = "speedGraderCurrentGradeTextField",
+                modifier = Modifier.padding(end = 8.dp).testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -671,7 +670,8 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
-                    .padding(end = 8.dp),
+                    .padding(end = 8.dp)
+                    .testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -679,7 +679,6 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
                 hint = stringResource(R.string.percentageGradeHint),
                 hintColor = colorResource(R.color.textPlaceholder),
                 textColor = LocalCourseColor.current,
-                testTag = "speedGraderCurrentGradeTextField"
             )
             Text(
                 text = "%",
@@ -799,8 +798,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
                 modifier = Modifier
-                    .padding(end = 8.dp),
-                testTag = "speedGraderCurrentGradeTextField",
+                    .padding(end = 8.dp)
+                    .testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it

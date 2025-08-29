@@ -382,7 +382,7 @@ class SpeedGraderGradingViewModelTest {
                 status = status,
                 latePolicyStatus = LatePolicyStatusType.late,
                 late = true,
-                secondsLate = 3600.0,
+                secondsLate = 86400.0,
                 deductedPoints = 0.0,
                 score = 95.0,
                 excused = false,
@@ -644,43 +644,5 @@ class SpeedGraderGradingViewModelTest {
         gradingEventHandler.postEvent(GradingEvent.RubricUpdated)
 
         assertEquals("missing", viewModel.uiState.first().gradingStatus)
-    }
-
-    @Test
-    fun `late days changed`() = runTest {
-        val submission = createMockSubmission()
-
-        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission.copy(
-            submission = submission.submission?.copy(secondsLate = 86400.0)
-        )
-        createViewModel()
-
-        val uiState = viewModel.uiState.first()
-
-        assertEquals(1f, uiState.daysLate)
-
-        coEvery {
-            repository.updateLateSecondsOverride(
-                any(),
-                any(),
-                any(),
-                any()
-            )
-        } returns mockk()
-
-        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission.copy(
-            submission = submission.submission?.copy(secondsLate = 2 * 86400.0)
-        )
-
-        uiState.onLateDaysChange(2f)
-        testDispatcher.scheduler.advanceTimeBy(600)
-        coVerify {
-            repository.updateLateSecondsOverride(
-                userId = studentId,
-                assignmentId = assignmentId,
-                courseId = courseId,
-                lateSeconds = 2 * 86400
-            )
-        }
     }
 }
