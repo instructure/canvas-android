@@ -16,12 +16,16 @@
  */
 package com.instructure.horizon.features.account.reportabug
 
+import android.webkit.JavascriptInterface
 import android.widget.LinearLayout
 import androidx.compose.runtime.Composable
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
+import kotlinx.coroutines.launch
 
 @Composable
 fun ReportABugWebView(
@@ -31,6 +35,7 @@ fun ReportABugWebView(
         title = "Report a bug",
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
+        val scope = LocalLifecycleOwner.current.lifecycleScope
         ComposeCanvasWebViewWrapper(
             applyOnWebView = {
                 settings.javaScriptEnabled = true
@@ -55,6 +60,14 @@ fun ReportABugWebView(
                 </body>
                 </html>
             """.trimIndent(),
+            applyOnUpdate = {
+                webView.addJavascriptInterface(
+                    JsReportABugInterface(
+                        { scope.launch { navController.popBackStack() } }
+                    ),
+                    JsReportABugInterface.INTERFACE_NAME
+                )
+            },
             webViewCallbacks = ComposeWebViewCallbacks(onPageFinished = { webView, url ->
                 webView.evaluateJavascript("""
                     const SCRIPT_ID = "jira-issue-collector"
@@ -73,9 +86,27 @@ fun ReportABugWebView(
                     });
                     
                     document.body.appendChild(script)
+                    
+                    window.addEventListener('message', (event) => { 
+                          console.log('Message received from iframe:', event.data)
+                           if (event.data === 'cancelFeedbackDialog') {
+                               ${JsReportABugInterface.INTERFACE_NAME}.close()
+                           }
+                    });
                 """.trimIndent(), null)
             }),
             modifier = modifier
         )
+    }
+}
+
+private class JsReportABugInterface(val onNavigateBack: () -> Unit) {
+    @JavascriptInterface
+    fun close() {
+        onNavigateBack()
+    }
+
+    companion object {
+        const val INTERFACE_NAME = "ReportABugInterface"
     }
 }
