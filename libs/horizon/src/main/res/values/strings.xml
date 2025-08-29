@@ -120,6 +120,7 @@
     <string name="accountAdvancedLabel">Advanced</string>
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Give feedback</string>
+    <string name="accountReportABug">Report a bug</string>
     <string name="accountBetaCommunityLabel">Beta community</string>
     <string name="accountFullNameLabel">Full name</string>
     <string name="a11yNavigateBack">Navigate back</string>

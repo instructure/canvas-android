@@ -28,9 +28,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.NavController
+import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeWebViewCallbacks
@@ -43,7 +45,7 @@ fun ReportABugWebView(
     navController: NavController,
 ) {
     HorizonScaffold(
-        title = "Report a bug",
+        title = stringResource(R.string.accountReportABug),
         onBackPressed = { navController.popBackStack() },
     ) { modifier ->
         val scope = LocalLifecycleOwner.current.lifecycleScope

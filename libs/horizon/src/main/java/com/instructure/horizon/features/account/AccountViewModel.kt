@@ -118,8 +118,8 @@ class AccountViewModel @Inject constructor(
         title = context.getString(R.string.accountSupportHeading),
         items = listOf(
             AccountItemState(
-                title = "Report a bug",
-                type = AccountItemType.Open(AccountRoute.BugReportWebView)
+                title = context.getString(R.string.accountReportABug),
+                type = AccountItemType.OpenExternal(AccountRoute.BugReportWebView)
             )
         )
     )

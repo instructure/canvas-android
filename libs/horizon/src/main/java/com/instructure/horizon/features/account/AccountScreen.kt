@@ -166,6 +166,8 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
                 when (item.type) {
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
 
+                    is AccountItemType.OpenExternal -> navController.navigate(item.type.route.route)
+
                     is AccountItemType.LogOut -> {
                         onLogout()
                     }
