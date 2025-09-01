@@ -31,7 +31,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -39,6 +43,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.programs.ProgressBarUiState
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -51,12 +56,15 @@ import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.pandautils.compose.modifiers.conditional
+import com.instructure.pandautils.utils.toPx
 
 data class ProgramCourseCardState(
     val courseName: String,
     val status: CourseCardStatus,
     val courseProgress: Double? = null,
     val chips: List<CourseCardChipState> = emptyList(),
+    val dashedBorder: Boolean = false,
 )
 
 sealed class CourseCardStatus(
@@ -92,7 +100,22 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
     Column(
         modifier
             .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level2)
-            .border(HorizonBorder.level1(state.status.borderColor), HorizonCornerRadius.level2)
+            .conditional(state.dashedBorder) {
+                drawBehind {
+                    val stroke = Stroke(
+                        width = 1.toPx.toFloat(),
+                        pathEffect = PathEffect.dashPathEffect(floatArrayOf(4f, 4f), 0f)
+                    )
+                    drawRoundRect(
+                        color = HorizonColors.LineAndBorder.containerStroke(),
+                        style = stroke,
+                        cornerRadius = CornerRadius(16.toPx.toFloat(), 16.toPx.toFloat())
+                    )
+                }
+            }
+            .conditional(!state.dashedBorder) {
+                border(HorizonBorder.level1(state.status.borderColor), HorizonCornerRadius.level2)
+            }
             .padding(16.dp)
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -109,7 +132,7 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
         }
         if (state.status is CourseCardStatus.InProgress && state.courseProgress != null) {
             HorizonSpace(SpaceSize.SPACE_12)
-            ProgramsProgressBar(state.courseProgress)
+            ProgramsProgressBar(ProgressBarUiState(state.courseProgress))
             HorizonSpace(SpaceSize.SPACE_8)
         }
         if (state.chips.isNotEmpty()) {
@@ -219,6 +242,24 @@ fun ProgramCourseCardInactivePreview() {
             CourseCardChipState("Required"),
             CourseCardChipState("5 hours 2 mins"),
         )
+    )
+    ProgramCourseCard(state, Modifier.fillMaxWidth())
+}
+
+@Composable
+@Preview(showBackground = true)
+fun ProgramCourseCardDashedPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val state = ProgramCourseCardState(
+        courseName = "Sample Course",
+        status = CourseCardStatus.Inactive,
+        courseProgress = 0.0,
+        chips = listOf(
+            CourseCardChipState("Locked", iconRes = R.drawable.lock),
+            CourseCardChipState("Required"),
+            CourseCardChipState("5 hours 2 mins"),
+        ),
+        dashedBorder = true
     )
     ProgramCourseCard(state, Modifier.fillMaxWidth())
 }

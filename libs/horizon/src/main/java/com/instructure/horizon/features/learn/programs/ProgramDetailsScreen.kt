@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -47,38 +48,43 @@ import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
-@OptIn(ExperimentalLayoutApi::class)
+@OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier
-            .padding(horizontal = 24.dp)
-            .verticalScroll(rememberScrollState())
-    ) {
-        Text(uiState.programName, style = HorizonTypography.h3)
-        HorizonSpace(SpaceSize.SPACE_24)
-        ProgramsProgressBar(
-            uiState.progress,
-            progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
-        )
-        HorizonSpace(SpaceSize.SPACE_8)
-        Text(text = uiState.description, style = HorizonTypography.p1)
-        HorizonSpace(SpaceSize.SPACE_16)
-        FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            uiState.tags.forEach { tag ->
-                StatusChip(
-                    StatusChipState(
-                        label = tag.name,
-                        color = StatusChipColor.White,
-                        fill = true,
-                        iconRes = tag.iconRes
-                    )
+    LoadingStateWrapper(loadingState = uiState.loadingState) {
+        Column(
+            modifier = modifier
+                .padding(horizontal = 24.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            Text(uiState.programName, style = HorizonTypography.h3)
+            HorizonSpace(SpaceSize.SPACE_24)
+            if (uiState.showProgressBar) {
+                ProgramsProgressBar(
+                    uiState.progressBarUiState,
+                    progressBarStyle = ProgressBarStyle.WhiteBackground(overrideProgressColor = HorizonColors.Surface.institution())
                 )
             }
+            HorizonSpace(SpaceSize.SPACE_8)
+            Text(text = uiState.description, style = HorizonTypography.p1)
+            HorizonSpace(SpaceSize.SPACE_16)
+            FlowRow(verticalArrangement = Arrangement.spacedBy(8.dp), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                uiState.tags.forEach { tag ->
+                    StatusChip(
+                        StatusChipState(
+                            label = tag.name,
+                            color = StatusChipColor.White,
+                            fill = true,
+                            iconRes = tag.iconRes
+                        )
+                    )
+                }
+            }
+            HorizonSpace(SpaceSize.SPACE_24)
+            ProgramProgress(state = uiState.programProgressState)
         }
-        HorizonSpace(SpaceSize.SPACE_24)
-        ProgramProgress(state = uiState.programProgressState)
     }
 }
 
@@ -89,7 +95,7 @@ private fun ProgramDetailsScreenPreview() {
     ProgramDetailsScreen(
         uiState = ProgramDetailsUiState(
             programName = "Program Name Here",
-            progress = 15.0,
+            progressBarUiState = ProgressBarUiState(progress = 15.0, progressBarStatus = ProgressBarStatus.IN_PROGRESS),
             description = "Learner provider-generated program description At vero eos et accusamus et iusto odio dignissimos ducimus qui blanditis praesentium voluptatum deleniti atque corrupti quos dolores et quas molestias excepturi sint occaecati cupiditate non provident, similique sunt in culpa qui officia deserunt mollitia animi, id est laborum et dolorum fuga. Guidem rerum facilis est et expedita distinctio. Nam libero tempore, cum soluta nobis est eligendi.",
             tags = listOf(
                 ProgramDetailTag("Body Text"),

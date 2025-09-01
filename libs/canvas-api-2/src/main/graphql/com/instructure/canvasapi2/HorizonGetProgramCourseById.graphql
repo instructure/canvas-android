@@ -1,0 +1,25 @@
+query HorizonGetProgramCourseById($courseId: ID!, $pageSize: Int!, $nextCursor: String) {
+    legacyNode(_id: $courseId, type: Course) {
+        ... on Course {
+            id
+            name
+            modulesConnection(first: $pageSize, after: $nextCursor) {
+                pageInfo {
+                    endCursor
+                    startCursor
+                    hasNextPage
+                    hasPreviousPage
+                }
+                edges {
+                    node {
+                        id
+                        moduleItems {
+                            _id
+                            estimatedDuration
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

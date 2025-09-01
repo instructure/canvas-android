@@ -23,25 +23,30 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.canvasapi2.utils.ContextKeeper
-import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.programs.ProgressBarStatus
+import com.instructure.horizon.features.learn.programs.ProgressBarUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
 import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
+import kotlin.math.roundToInt
 
 @Composable
 fun ProgramsProgressBar(
-    progress: Double,
+    progressBarUiState: ProgressBarUiState,
     modifier: Modifier = Modifier,
     progressBarStyle: ProgressBarStyle = ProgressBarStyle.Light(overrideProgressColor = HorizonColors.Surface.institution())
 ) {
     Column(modifier = modifier) {
-        if (progress > 0.0) {
+        if (progressBarUiState.progressBarStatus == ProgressBarStatus.IN_PROGRESS) {
             Text(
-                stringResource(R.string.programsProgressBar_percentComplete, NumberHelper.doubleToPercentage(progress, 0)),
+                stringResource(
+                    R.string.programsProgressBar_percentComplete,
+                    progressBarUiState.progress.roundToInt()
+                ),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Surface.institution()
             )
@@ -54,7 +59,7 @@ fun ProgramsProgressBar(
         }
         HorizonSpace(SpaceSize.SPACE_8)
         ProgressBarSmall(
-            progress,
+            progressBarUiState.progress,
             style = progressBarStyle,
             showLabels = false
         )
@@ -65,9 +70,7 @@ fun ProgramsProgressBar(
 @Composable
 fun ProgramsProgressBarPreview() {
     ContextKeeper.appContext = LocalContext.current
-    ProgramsProgressBar(
-        progress = 75.0,
-    )
+    ProgramsProgressBar(progressBarUiState = ProgressBarUiState(progress = 75.0, progressBarStatus = ProgressBarStatus.IN_PROGRESS))
 }
 
 @Preview(showBackground = true)
@@ -75,6 +78,6 @@ fun ProgramsProgressBarPreview() {
 fun ProgramsProgressBarNotStartedPreview() {
     ContextKeeper.appContext = LocalContext.current
     ProgramsProgressBar(
-        progress = 0.0,
+        progressBarUiState = ProgressBarUiState(progressBarStatus = ProgressBarStatus.NOT_STARTED)
     )
 }
