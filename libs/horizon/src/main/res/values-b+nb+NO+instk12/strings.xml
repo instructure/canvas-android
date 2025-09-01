@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Varslinger</string>
     <string name="accountNotificationEmailToggleLabel">E-post</string>
     <string name="accountNotificationPushToggleLabel">Push-varslinger</string>
+    <string name="accountNotificationSmsToggleLabel">SMS-varsling</string>
     <string name="accountNotificationsFailedToUpdate">Kunne ikke oppdatere varslingspreferanser</string>
     <string name="moduleItemCompleteAllItems">Fullfør alle elementer</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Fullfør alle de påkrevde elementene.</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Ingen meldinger ennå.</string>
     <string name="notesActionMenuCopy">Kopier</string>
     <string name="notesActionMenuAddNote">Legg til notat</string>
+    <string name="notesActionMenuAddImportantNote">Viktig</string>
+    <string name="notesActionMenuAddConfusingNote">Forvirrende</string>
     <string name="attemptCard_score">Resultat: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Forsøk</string>
     <string name="attemptBottomSheet_noAttempts">Denne oppgaven tillater flere forsøk. Når du har sendt inn forsøket, kan du se det her.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Er du sikker på at du vil avslutte? Endringene dine vil ikke bli lagret.</string>
     <string name="exitConfirmationExitButtonLabel">Avslutt</string>
     <string name="exitConfirmationCancelButtonLabel">Avbryt</string>
+    <string name="dashboard_courseInvite">Du har blitt invitert til å bli med i %s.</string>
+    <string name="dashboard_courseInviteAccept">Godta</string>
+    <string name="dashboard_courseInviteFailed">Kunne ikke godta faginvitasjon</string>
+    <string name="dashboard_emptyMessage">Du er for øyeblikket ikke påmeldt i et fag.</string>
+    <string name="learnEmptyMessage">Du er for øyeblikket ikke påmeldt i et fag.</string>
 </resources>

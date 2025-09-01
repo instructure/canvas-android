@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Aviseringar</string>
     <string name="accountNotificationEmailToggleLabel">E-post</string>
     <string name="accountNotificationPushToggleLabel">Push-avisering</string>
+    <string name="accountNotificationSmsToggleLabel">SMS-avisering</string>
     <string name="accountNotificationsFailedToUpdate">Det gick inte att uppdatera aviseringsinställningar</string>
     <string name="moduleItemCompleteAllItems">Slutför alla objekt</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Slutför alla obligatoriska objekt</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Ännu inga meddelanden.</string>
     <string name="notesActionMenuCopy">Kopiera</string>
     <string name="notesActionMenuAddNote">Lägg till anteckning</string>
+    <string name="notesActionMenuAddImportantNote">Viktigt</string>
+    <string name="notesActionMenuAddConfusingNote">Förvirrande</string>
     <string name="attemptCard_score">Resultat: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Försök</string>
     <string name="attemptBottomSheet_noAttempts">Denna uppgift tillåter flera försök. När du har gjort en inlämning kan du se den här.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Vill du avsluta? Dina ändringar kommer inte att sparas.</string>
     <string name="exitConfirmationExitButtonLabel">Avsluta</string>
     <string name="exitConfirmationCancelButtonLabel">Avbryt</string>
+    <string name="dashboard_courseInvite">Du har bjudits in till %s</string>
+    <string name="dashboard_courseInviteAccept">Acceptera</string>
+    <string name="dashboard_courseInviteFailed">Det gick inte att acceptera kursinbjudan</string>
+    <string name="dashboard_emptyMessage">Du är för närvarande inte registrerad i en kurs.</string>
+    <string name="learnEmptyMessage">Du är för närvarande inte registrerad i en kurs.</string>
 </resources>

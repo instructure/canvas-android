@@ -154,6 +154,7 @@
     <string name="accountNotificationsTitle">Уведомления</string>
     <string name="accountNotificationEmailToggleLabel">Адрес электронной почты</string>
     <string name="accountNotificationPushToggleLabel">Пуш-уведомление</string>
+    <string name="accountNotificationSmsToggleLabel">SMS-уведомление</string>
     <string name="accountNotificationsFailedToUpdate">Не удалось обновить предпочтения уведомлений</string>
     <string name="moduleItemCompleteAllItems">Завершить все элементы</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Заполните все обязательные поля</string>
@@ -282,6 +283,8 @@
     <string name="inboxNoMessagesLabel">На данный момент нет сообщений.</string>
     <string name="notesActionMenuCopy">Копировать</string>
     <string name="notesActionMenuAddNote">Добавить примечание</string>
+    <string name="notesActionMenuAddImportantNote">Важный</string>
+    <string name="notesActionMenuAddConfusingNote">Запутанный</string>
     <string name="attemptCard_score">Оценка: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Попытки</string>
     <string name="attemptBottomSheet_noAttempts">Это задание допускает несколько попыток. После отправки вы можете просмотреть ее здесь.</string>
@@ -329,4 +332,9 @@
     <string name="exitConfirmationMessage">Подтвердить выход? Ваши изменения не будут сохранены.</string>
     <string name="exitConfirmationExitButtonLabel">Выход</string>
     <string name="exitConfirmationCancelButtonLabel">Отменить</string>
+    <string name="dashboard_courseInvite">Вы получили приглашение присоединиться к %s</string>
+    <string name="dashboard_courseInviteAccept">Принять</string>
+    <string name="dashboard_courseInviteFailed">Не удалось принять приглашение на курс</string>
+    <string name="dashboard_emptyMessage">Вы в настоящее время не зарегистрированы на курс.</string>
+    <string name="learnEmptyMessage">Вы в настоящее время не зарегистрированы на курс.</string>
 </resources>

@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Meldingen</string>
     <string name="accountNotificationEmailToggleLabel">E-mail</string>
     <string name="accountNotificationPushToggleLabel">Pushbericht</string>
+    <string name="accountNotificationSmsToggleLabel">Sms-bericht</string>
     <string name="accountNotificationsFailedToUpdate">Kan meldingsvoorkeur niet bijwerken</string>
     <string name="moduleItemCompleteAllItems">Alle items voltooien</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Al de vereiste items voltooien</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Nog geen berichten.</string>
     <string name="notesActionMenuCopy">Kopiëren</string>
     <string name="notesActionMenuAddNote">Notitie toevoegen</string>
+    <string name="notesActionMenuAddImportantNote">Belangrijk</string>
+    <string name="notesActionMenuAddConfusingNote">Verwarrend</string>
     <string name="attemptCard_score">Score: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Pogingen</string>
     <string name="attemptBottomSheet_noAttempts">Bij deze opdracht zijn meerdere pogingen toegestaan. Zodra je een opdracht hebt ingeleverd, kun je deze hier bekijken.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Weet je zeker dat je wilt afsluiten? Je wijzigingen worden niet opgeslagen.</string>
     <string name="exitConfirmationExitButtonLabel">Afsluiten</string>
     <string name="exitConfirmationCancelButtonLabel">Annuleren</string>
+    <string name="dashboard_courseInvite">Je bent uitgenodigd om deel te nemen %s</string>
+    <string name="dashboard_courseInviteAccept">Accepteren</string>
+    <string name="dashboard_courseInviteFailed">Kan cursusuitnodiging niet accepteren</string>
+    <string name="dashboard_emptyMessage">Je bent op dit moment niet ingeschreven voor een cursus</string>
+    <string name="learnEmptyMessage">Je bent op dit moment niet ingeschreven voor een cursus</string>
 </resources>

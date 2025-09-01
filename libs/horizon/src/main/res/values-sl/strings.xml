@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Obvestila</string>
     <string name="accountNotificationEmailToggleLabel">E-pošta</string>
     <string name="accountNotificationPushToggleLabel">Potisna sporočila</string>
+    <string name="accountNotificationSmsToggleLabel">Obveščanje po SMS</string>
     <string name="accountNotificationsFailedToUpdate">Posodobitev nastavitve za sporočila ni uspela</string>
     <string name="moduleItemCompleteAllItems">Izpolnite vse elemente</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Izpolnite vse zahtevane elemente</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Še ni sporočil.</string>
     <string name="notesActionMenuCopy">Kopiraj</string>
     <string name="notesActionMenuAddNote">Dodaj opombo</string>
+    <string name="notesActionMenuAddImportantNote">Pomembno</string>
+    <string name="notesActionMenuAddConfusingNote">Zmedeno</string>
     <string name="attemptCard_score">Rezultat: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Poskusi</string>
     <string name="attemptBottomSheet_noAttempts">Ta naloga dovoljuje več poskusov. Ko oddate poskus, si ga lahko ogledate tukaj.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Ali ste prepričani, da želite zapustiti? Vaše spremembe ne bodo shranjene.</string>
     <string name="exitConfirmationExitButtonLabel">Izhod</string>
     <string name="exitConfirmationCancelButtonLabel">Prekliči</string>
+    <string name="dashboard_courseInvite">Povabljeni ste bili, da se pridružite %s</string>
+    <string name="dashboard_courseInviteAccept">Sprejmi</string>
+    <string name="dashboard_courseInviteFailed">Povabila k predmetu ni bilo mogoče sprejeti</string>
+    <string name="dashboard_emptyMessage">Trenutno v predmet niste vpisani.</string>
+    <string name="learnEmptyMessage">Trenutno v predmet niste vpisani.</string>
 </resources>

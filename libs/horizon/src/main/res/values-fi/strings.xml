@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Ilmoitukset</string>
     <string name="accountNotificationEmailToggleLabel">Sähköposti</string>
     <string name="accountNotificationPushToggleLabel">Push notification</string>
+    <string name="accountNotificationSmsToggleLabel">Tekstiviesti-ilmoitus</string>
     <string name="accountNotificationsFailedToUpdate">Ilmoitusasetusten päivittäminen epäonnistui</string>
     <string name="moduleItemCompleteAllItems">Suorita kaikki kohteet</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Suorita kaikki vaaditut kohteet</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Ei vielä viestejä</string>
     <string name="notesActionMenuCopy">Kopioi</string>
     <string name="notesActionMenuAddNote">Lisää huomautus</string>
+    <string name="notesActionMenuAddImportantNote">Tärkeä</string>
+    <string name="notesActionMenuAddConfusingNote">Hämmentävää</string>
     <string name="attemptCard_score">Pistemäärä: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Yrityksiä</string>
     <string name="attemptBottomSheet_noAttempts">Tässä tehtävässä sallitaan useita yrityksiä. Kun olet lähettänyt tehtävän, voit tarkastella sitä täällä.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Haluatko varmasti poistua? Muutoksiasi ei ei tallenneta.</string>
     <string name="exitConfirmationExitButtonLabel">Poistu</string>
     <string name="exitConfirmationCancelButtonLabel">Peruuta</string>
+    <string name="dashboard_courseInvite">Sinut on kutsuttu liittymään %s.</string>
+    <string name="dashboard_courseInviteAccept">Hyväksy</string>
+    <string name="dashboard_courseInviteFailed">Kurssikutsun hyväksyminen epäonnistui</string>
+    <string name="dashboard_emptyMessage">Kaikki tekstikentän sisältö poistetaan lähetyksen jälkeen.</string>
+    <string name="learnEmptyMessage">Kaikki tekstikentän sisältö poistetaan lähetyksen jälkeen.</string>
 </resources>
