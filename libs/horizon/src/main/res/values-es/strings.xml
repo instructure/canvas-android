@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notificaciones</string>
     <string name="accountNotificationEmailToggleLabel">Correo electrónico</string>
     <string name="accountNotificationPushToggleLabel">Notificación automática</string>
+    <string name="accountNotificationSmsToggleLabel">Notificación por SMS</string>
     <string name="accountNotificationsFailedToUpdate">No se pudo actualizar la preferencia de notificación</string>
     <string name="moduleItemCompleteAllItems">Complete todos los ítems</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete todos los ítems obligatorios</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Todavía no hay mensajes.</string>
     <string name="notesActionMenuCopy">Copiar</string>
     <string name="notesActionMenuAddNote">Agregar nota</string>
+    <string name="notesActionMenuAddImportantNote">Importante</string>
+    <string name="notesActionMenuAddConfusingNote">Confuso</string>
     <string name="attemptCard_score">Puntaje: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Intentos</string>
     <string name="attemptBottomSheet_noAttempts">Esta tarea permite múltiples intentos. Una vez que haya enviado su entrega, podrá verla aquí.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">¿Confirma que desea salir? Sus cambios no se guardarán.</string>
     <string name="exitConfirmationExitButtonLabel">Salir</string>
     <string name="exitConfirmationCancelButtonLabel">Cancelar</string>
+    <string name="dashboard_courseInvite">Recibió una invitación para unirse a %s</string>
+    <string name="dashboard_courseInviteAccept">Aceptar</string>
+    <string name="dashboard_courseInviteFailed">No se pudo aceptar la invitación al curso</string>
+    <string name="dashboard_emptyMessage">En este momento, no está inscrito en ningún curso.</string>
+    <string name="learnEmptyMessage">En este momento, no está inscrito en ningún curso.</string>
 </resources>

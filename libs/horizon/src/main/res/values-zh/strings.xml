@@ -142,6 +142,7 @@
     <string name="accountNotificationsTitle">通知</string>
     <string name="accountNotificationEmailToggleLabel">电子邮件</string>
     <string name="accountNotificationPushToggleLabel">推送通知</string>
+    <string name="accountNotificationSmsToggleLabel">短信通知</string>
     <string name="accountNotificationsFailedToUpdate">更新通知偏好设置失败</string>
     <string name="moduleItemCompleteAllItems">完成所有项目</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">完成所有必做项目</string>
@@ -267,6 +268,8 @@
     <string name="inboxNoMessagesLabel">暂无消息。</string>
     <string name="notesActionMenuCopy">复制</string>
     <string name="notesActionMenuAddNote">添加注释</string>
+    <string name="notesActionMenuAddImportantNote">重要的</string>
+    <string name="notesActionMenuAddConfusingNote">困惑</string>
     <string name="attemptCard_score">评分：%1$s/%2$s</string>
     <string name="attemptBottomSheet_header">尝试次数</string>
     <string name="attemptBottomSheet_noAttempts">该作业允许尝试多次。进行提交后，您可以在此处查看。</string>
@@ -314,4 +317,9 @@
     <string name="exitConfirmationMessage">是否确定要退出？您的更改将不会保存。</string>
     <string name="exitConfirmationExitButtonLabel">退出</string>
     <string name="exitConfirmationCancelButtonLabel">取消</string>
+    <string name="dashboard_courseInvite">您收到了加入 %s 的邀请。</string>
+    <string name="dashboard_courseInviteAccept">接受</string>
+    <string name="dashboard_courseInviteFailed">接受课程邀请失败</string>
+    <string name="dashboard_emptyMessage">您目前未注册课程。</string>
+    <string name="learnEmptyMessage">您目前未注册课程。</string>
 </resources>

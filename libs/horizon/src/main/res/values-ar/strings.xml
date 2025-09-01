@@ -162,6 +162,7 @@
     <string name="accountNotificationsTitle">الإعلامات</string>
     <string name="accountNotificationEmailToggleLabel">البريد الإلكتروني</string>
     <string name="accountNotificationPushToggleLabel">إعلام فوري</string>
+    <string name="accountNotificationSmsToggleLabel">إعلام الرسالة النصية القصيرة</string>
     <string name="accountNotificationsFailedToUpdate">فشل تحديث تفضيلات الإعلام</string>
     <string name="moduleItemCompleteAllItems">أكمل كل العناصر</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">أكمل كل العناصر المطلوبة</string>
@@ -292,6 +293,8 @@
     <string name="inboxNoMessagesLabel">لا توجد رسائل بعد.</string>
     <string name="notesActionMenuCopy">نسخ</string>
     <string name="notesActionMenuAddNote">إضافة ملاحظة</string>
+    <string name="notesActionMenuAddImportantNote">أمر هام</string>
+    <string name="notesActionMenuAddConfusingNote">أمر مربك</string>
     <string name="attemptCard_score">النتيجة: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">المحاولات</string>
     <string name="attemptBottomSheet_noAttempts">تسمح لك هذه المهمة بعدة محاولات. بمجرد أن تقوم بالإرسال الخاص بك، سيكون بإمكانك عرضه هنا.</string>
@@ -339,4 +342,9 @@
     <string name="exitConfirmationMessage">هل تريد الخروج بالفعل؟ لن يتم حفظ التغييرات.</string>
     <string name="exitConfirmationExitButtonLabel">خروج</string>
     <string name="exitConfirmationCancelButtonLabel">إلغاء</string>
+    <string name="dashboard_courseInvite">تمت دعوتك للانضمام إلى %s</string>
+    <string name="dashboard_courseInviteAccept">قبول</string>
+    <string name="dashboard_courseInviteFailed">فشل قبول دعوة المساق</string>
+    <string name="dashboard_emptyMessage">أنت غير مسجل حاليًا في مساق.</string>
+    <string name="learnEmptyMessage">أنت غير مسجل حاليًا في مساق.</string>
 </resources>

@@ -58,7 +58,7 @@
     <string name="fileTalkBack">Fichier %s</string>
     <string name="folderTalkBack">Dossier %s</string>
     <string name="addItem">Ajouter un élément</string>
-    <string name="assignment">Tâche</string>
+    <string name="assignment">Travail</string>
     <string name="attachedFiles">Fichiers joints</string>
     <string name="turnIn">Rendre</string>
     <string name="course">Cours</string>
@@ -79,16 +79,16 @@
     <string name="filesSubmittedSuccessfully">Fichiers soumis avec succès.</string>
     <string name="messageSentSuccessfully">Message envoyé avec succès.</string>
     <string name="shareWithCanvas">D’autres applications peuvent partager des fichiers avec Canvas! Recherchez l\'icône ci-dessous dans les applications et appuyez sur Canvas.</string>
-    <string name="shareWithCanvas2">Cela ouvrira cette application. Ensuite, sélectionnez simplement le cours et la tâche correspondants au fichier à téléverser.</string>
+    <string name="shareWithCanvas2">Cela ouvrira cette application. Ensuite, sélectionnez simplement le cours et le travail correspondants au fichier à téléverser.</string>
     <string name="contentDescriptionSocialShare">Icône de partage</string>
-    <string name="submitAssignment">Soumettre la tâche</string>
-    <string name="assignmentHeader">Tâche :</string>
-    <string name="submittingAssignment">Envoi de la tâche&#8230;</string>
+    <string name="submitAssignment">Soumettre le travail</string>
+    <string name="assignmentHeader">Travail :</string>
+    <string name="submittingAssignment">Envoi du travail&#8230;</string>
     <string name="conversations">Conversations </string>
     <string name="inbox">Boîte de réception </string>
     <string name="divider">Séparateur</string>
     <string name="legal">Légal</string>
-    <string name="completeHomework">TERMINER vos tâches personnelles</string>
+    <string name="completeHomework">TERMINER vos travaux personnels</string>
     <string name="takeExam">Passer un examen</string>
     <string name="fileIcon">Icône de fichier</string>
     <string name="uploadingFileNum" formatted="false">Téléversement de %d sur %d</string>
@@ -111,13 +111,13 @@
     <string name="errorGettingPhoto">Une erreur est survenue lors de l’extraction de la photo. Veuillez réessayer.</string>
     <string name="errorTextMissing">Ajouter du texte pour envoyer un message</string>
 
-    <string name="fileUploadNotSupported">Vous ne pouvez téléverser de fichiers pour la tâche sélectionnée.</string>
+    <string name="fileUploadNotSupported">Vous ne pouvez téléverser de fichiers pour le travail sélectionné.</string>
     <string name="noCourseSelected">Veuillez choisir un cours</string>
     <string name="selectCourse">Sélectionner un cours</string>
-    <string name="selectAssignment">Choisir une tâche</string>
-    <string name="loadingAssignments">Chargement des tâches...</string>
-    <string name="noAssignmentSelected">Veuillez choisir une tâche</string>
-    <string name="noAssignmentsWithFileUpload">Ce cours n\'a pas de tâches qui permettent de téléverser des fichiers.</string>
+    <string name="selectAssignment">Choisir un travail</string>
+    <string name="loadingAssignments">Chargement des travaux...</string>
+    <string name="noAssignmentSelected">Veuillez choisir un travail</string>
+    <string name="noAssignmentsWithFileUpload">Ce cours n\'a pas de travaux qui permettent de téléverser des fichiers.</string>
     <string name="teacherNotAllowedFileSubmission">En tant qu’enseignant dans ce cours, vous ne pouvez pas soumettre de fichiers.</string>
     <string name="noFilesUploaded">Vous n\'avez sélectionné aucun fichier.</string>
     <string name="oneOrMoreExtensionNotAllowed">Un ou plusieurs fichiers possèdent une extension de fichier qui n\'est pas autorisée</string>
@@ -158,9 +158,9 @@
     <string name="noAnnouncementsSubtext">Rien n\'a été annoncé pour le moment.</string>
     <string name="noCourses">Aucun cours</string>
     <string name="noCoursesSubtext">Il semblerait qu’il n’y ait aucun cours associé à ce compte. Visitez le site Web pour créer un cours aujourd\'hui.</string>
-    <string name="noAssignments">Aucune tâche</string>
-    <string name="noAssignmentsSubtext">Il semblerait qu’il n’y ait pas de tâche créée dans cet espace. C’est le temps d’y aller et d\'explorer.</string>
-    <string name="noAssignmentsTeacher">Il semblerait qu\'aucune tâche n\'ait encore été publiée.</string>
+    <string name="noAssignments">Aucun travail</string>
+    <string name="noAssignmentsSubtext">Il semblerait qu’il n’y ait pas de travail créé dans cet espace. C’est le temps d’y aller et d\'explorer.</string>
+    <string name="noAssignmentsTeacher">Il semblerait qu\'aucun travail n\'ait encore été publié.</string>
     <string name="noFiles">Aucun fichier</string>
     <string name="noFilesForAssignment">Il n\'y a aucun fichier pour cet envoi</string>
     <string name="noFilesSubtext">Il n\'y a aucun fichier associé à ce compte.</string>
@@ -171,7 +171,7 @@
     <string name="noSubmission">Aucune soumission</string>
     <string name="noSubmissionTeacher">Cet étudiant n\'a rien envoyé pour le moment.</string>
     <string name="locked">Verrouillé</string>
-    <string name="lockedSubtext">Cette tâche est verrouillée jusqu’au %1$s à %2$s.</string>
+    <string name="lockedSubtext">Ce travail est verrouillée jusqu’au %1$s à %2$s.</string>
     <string name="chooseFile">Choisir un fichier</string>
     <string name="chooseFileSubtext">Joindre un fichier à votre envoi en tapotant sur l\'une des options ci-dessous.</string>
     <string name="chooseFileForUploadSubtext">Sélectionnez un fichier à téléverser en appuyant sur une option ci-dessous</string>
@@ -204,7 +204,7 @@
 
     <string name="like">J’aime</string>
     <string name="likes">J’aimes</string>
-    <string name="lockedAssignmentNotModule">Cette tâche est verrouillée.</string>
+    <string name="lockedAssignmentNotModule">Ce travail est verrouillé.</string>
     <string name="deletedEntryNoChildren">Ce paragraphe de discussion supprimé n\'a aucune réponse.</string>
     <string name="deleted">Supprimé</string>
     <string name="deleted_by">[Supprimé par %1$s]</string>
@@ -372,7 +372,7 @@
     <string name="utils_noApps">Votre dispositif ne dispose pas des applications qui peuvent traiter ce fichier.</string>
     <string name="utils_errorGettingPhoto">Une erreur est survenue lors de l’extraction de la photo. Veuillez réessayer.</string>
     <string name="utils_oneOrMoreExtensionNotAllowed">Un ou plusieurs fichiers possèdent une extension de fichier qui n\'est pas autorisée</string>
-    <string name="utils_fileUploadNotSupported">Vous ne pouvez téléverser de fichiers pour la tâche sélectionnée.</string>
+    <string name="utils_fileUploadNotSupported">Vous ne pouvez téléverser de fichiers pour le travail sélectionné.</string>
     <string name="utils_noFilesUploaded">Vous n\'avez sélectionné aucun fichier.</string>
     <string name="utils_attachments">Pièces jointes</string>
     <string name="utils_uploadTo">Téléverser sur </string>
@@ -421,7 +421,7 @@
     <string name="image_upload_error">Erreur de téléversement d’image</string>
     <string name="retry">Réessayer</string>
     <string name="search">Rechercher</string>
-    <string name="searchAssignmentsHint">Rechercher des tâches</string>
+    <string name="searchAssignmentsHint">Rechercher des travaux</string>
     <string name="searchAnnouncementsHint">Recherche des annonces</string>
     <string name="searchDiscussionsHint">Rechercher des discussions</string>
     <string name="searchPagesHint">Rechercher des pages</string>
@@ -474,7 +474,7 @@
     <string name="a11y_announcement">Annonce</string>
     <string name="a11y_discussion_topic">Discussion</string>
     <string name="a11y_calendar_event">Événement du calendrier</string>
-    <string name="a11y_assignment">Tâche</string>
+    <string name="a11y_assignment">Travail</string>
     <string name="a11y_planner_note">Remarque du planificateur</string>
     <string name="a11y_quiz">Questionnaire</string>
     <string name="a11y_todo">À faire</string>
