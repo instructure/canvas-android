@@ -39,12 +39,12 @@ import com.instructure.pandautils.compose.composables.SelectContextUiState
 import com.instructure.pandautils.features.inbox.compose.InboxComposeScreenOptions
 import com.instructure.pandautils.features.inbox.compose.InboxComposeUiState
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.features.inbox.compose.ScreenState
 import com.instructure.pandautils.features.inbox.compose.composables.InboxComposeScreen
 import com.instructure.pandautils.features.inbox.utils.AttachmentCardItem
 import com.instructure.pandautils.features.inbox.utils.AttachmentStatus
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsHiddenFields
+import com.instructure.pandautils.utils.ScreenState
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -141,7 +141,7 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("To"))
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasText("Search"))
+        composeTestRule.onNode(hasContentDescription("Search among Recipients"), true)
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -172,7 +172,7 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("To"))
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasText("Search"))
+        composeTestRule.onNode(hasContentDescription("Search among Recipients"), true)
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -180,10 +180,10 @@ class InboxComposeScreenTest {
             .assertIsDisplayed()
             .assertHasClickAction()
 
-        composeTestRule.onNode(hasText("r2"))
+        composeTestRule.onNode(hasText("r2"), true)
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+        composeTestRule.onNode(hasTestTag("removeButton"), true)
             .assertIsDisplayed()
             .assertHasClickAction()
 
@@ -285,10 +285,10 @@ class InboxComposeScreenTest {
             .assertIsDisplayed()
             .assert(isNotEnabled())
 
-        composeTestRule.onNode(hasText("r2"))
+        composeTestRule.onNode(hasText("r2"), true)
             .assertIsDisplayed()
 
-        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+        composeTestRule.onNode(hasTestTag("removeButton"), true)
             .assertIsDisplayed()
             .assert(isNotEnabled())
 
@@ -354,7 +354,7 @@ class InboxComposeScreenTest {
         composeTestRule.onNode(hasText("r2"))
             .assertIsNotDisplayed()
 
-        composeTestRule.onNode(hasContentDescription("Remove Recipient"))
+        composeTestRule.onNode(hasTestTag("removeButton"))
             .assertIsNotDisplayed()
 
         composeTestRule.onNode(hasText("Send individual message to each recipient"))
@@ -398,6 +398,7 @@ class InboxComposeScreenTest {
         selectedContext: CanvasContext? = null,
         selectedRecipients: List<Recipient> = emptyList(),
         isInlineSearchEnabled: Boolean = true,
+        inlineSearchContentDescription: String = "Search among Recipients",
         sendIndividual: Boolean = false,
         subject: String = "",
         body: String = "",
@@ -408,13 +409,13 @@ class InboxComposeScreenTest {
         return InboxComposeUiState(
             selectContextUiState = SelectContextUiState(selectedCanvasContext = selectedContext),
             recipientPickerUiState = RecipientPickerUiState(selectedRecipients = selectedRecipients),
-            inlineRecipientSelectorState = MultipleValuesRowState(isSearchEnabled = isInlineSearchEnabled, selectedValues = selectedRecipients),
+            inlineRecipientSelectorState = MultipleValuesRowState(isSearchEnabled = isInlineSearchEnabled, selectedValues = selectedRecipients, searchFieldContentDescription = inlineSearchContentDescription),
             screenOption = InboxComposeScreenOptions.None,
             sendIndividual = sendIndividual,
             subject = TextFieldValue(subject),
             body = TextFieldValue(body),
             attachments = attachments.map { AttachmentCardItem(it, AttachmentStatus.UPLOADED, false) },
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             showConfirmationDialog = showConfirmationDialog,
             signatureLoading = signatureLoading
         )

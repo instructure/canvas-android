@@ -33,6 +33,7 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptions
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsMode
 import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FileDownloader
+import com.instructure.pandautils.utils.ScreenState
 import com.instructure.pandautils.utils.debounce
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.launchWithLoadingDelay
@@ -116,8 +117,8 @@ class InboxComposeViewModel @Inject constructor(
 
     private fun initFromOptions(options: InboxComposeOptions?) {
         options?.let {
-            val context = CanvasContext.fromContextCode(options.defaultValues.contextCode, options.defaultValues.contextName)
-            context?.let { loadRecipients(
+            val canvasContext = CanvasContext.fromContextCode(options.defaultValues.contextCode, options.defaultValues.contextName)
+            canvasContext?.let { loadRecipients(
                 "",
                 it,
                 uiState.value.recipientPickerUiState.selectedRole,
@@ -128,7 +129,7 @@ class InboxComposeViewModel @Inject constructor(
                     inboxComposeMode = options.mode,
                     previousMessages = options.previousMessages,
                     selectContextUiState = it.selectContextUiState.copy(
-                        selectedCanvasContext = context
+                        selectedCanvasContext = canvasContext
                     ),
                     recipientPickerUiState = it.recipientPickerUiState.copy(
                         selectedRecipients = options.defaultValues.recipients,
@@ -147,7 +148,7 @@ class InboxComposeViewModel @Inject constructor(
                 )
             }
             initialState = uiState.value
-            context?.let {
+            canvasContext?.let {
                 viewModelScope.launch {
                     if (!options.autoSelectRecipientsFromRoles.isNullOrEmpty()) {
                         _uiState.update {
@@ -158,10 +159,10 @@ class InboxComposeViewModel @Inject constructor(
                             )
                         }
 
-                        val recipients = getRecipientList("", context.contextId, false).dataOrNull.orEmpty()
-                        val roleRecipients = groupRecipientList(context, recipients)
+                        val recipients = getRecipientList("", canvasContext.contextId, false).dataOrNull.orEmpty()
+                        val roleRecipients = groupRecipientList(canvasContext, recipients)
                         val selectedRecipients = mutableListOf<Recipient>()
-                        options.autoSelectRecipientsFromRoles?.forEach { role ->
+                        options.autoSelectRecipientsFromRoles.forEach { role ->
                             roleRecipients[role]?.let { selectedRecipients.addAll(it) }
                         }
 
@@ -449,7 +450,7 @@ class InboxComposeViewModel @Inject constructor(
             try {
                 val contextId = context.contextId + getEnrollmentTypeString(selectedRole)
                 recipients = getRecipientList(searchQuery, contextId, forceRefresh).dataOrThrow
-                if (recipients.isEmpty().not()) { newState = ScreenState.Data }
+                if (recipients.isEmpty().not()) { newState = ScreenState.Content }
             } catch (e: Exception) {
                 newState = ScreenState.Error
             }
@@ -531,7 +532,7 @@ class InboxComposeViewModel @Inject constructor(
                 } catch (e: IllegalStateException) {
                     sendScreenResult(context.getString(R.string.failed_to_send_message))
                 } finally {
-                    _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
+                    _uiState.update { uiState.value.copy(screenState = ScreenState.Content) }
                 }
             }
         }
@@ -562,7 +563,7 @@ class InboxComposeViewModel @Inject constructor(
                 } catch (e: IllegalStateException) {
                     sendScreenResult(context.getString(R.string.failed_to_send_message))
                 } finally {
-                    _uiState.update { uiState.value.copy(screenState = ScreenState.Data) }
+                    _uiState.update { uiState.value.copy(screenState = ScreenState.Content) }
                 }
             }
         }

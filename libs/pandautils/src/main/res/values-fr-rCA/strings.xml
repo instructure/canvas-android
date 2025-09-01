@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Marquer comme terminé</string>
     <string name="a11y_markAsNotDoneWithName">%s Marqué comme non terminé</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Échec du chargement de la signature de la boîte de réception</string>
+    <string name="inboxSignatureSettingsUpdated">Paramètres de la boîte de réception enregistrés!</string>
+    <string name="inboxSignatureSettingsError">Échec de l’enregistrement des paramètres de la boîte de réception</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Inscrivez votre signature ici</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d heure</item>
+        <item quantity="other">%d heures</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minute</item>
+        <item quantity="other">%d minutes</item>
+    </plurals>
 </resources>

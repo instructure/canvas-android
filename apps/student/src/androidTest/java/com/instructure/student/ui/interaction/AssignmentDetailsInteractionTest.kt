@@ -29,7 +29,10 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
 import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
@@ -39,14 +42,22 @@ import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.routeTo
 import com.instructure.student.ui.utils.tokenLogin
+import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
+import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 import org.junit.Assert.assertNotNull
 import org.junit.Test
 import java.util.Calendar
 
 @HiltAndroidTest
+@UninstallModules(CustomGradeStatusModule::class)
 class AssignmentDetailsInteractionTest : StudentComposeTest() {
+
+    @BindValue
+    @JvmField
+    val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
     override fun displaysPageObjects() = Unit
 
     @Test
@@ -70,7 +81,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         )
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
@@ -134,7 +144,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         val expectedDueDate = "January 31, 2023 11:59 PM"
         val course = data.courses.values.first()
         val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString())
-        assignmentListPage.refresh()
+        assignmentListPage.refreshAssignmentList()
         assignmentListPage.clickAssignment(assignmentWithNoDueDate)
 
         assignmentDetailsPage.assertDisplaysDate(expectedDueDate)
@@ -363,7 +373,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         )
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
@@ -559,7 +568,6 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         tokenLogin(data.domain, token, student)
         routeTo("courses/${course.id}/assignments", data.domain)
-        assignmentListPage.waitForPage()
 
         // Let's find and click an assignment with a submission, so that we get meaningful
         // data in the submission details.

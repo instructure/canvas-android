@@ -16,13 +16,18 @@
  */
 package com.instructure.student.util
 
-import com.instructure.canvasapi2.utils.*
+import com.instructure.canvasapi2.utils.BooleanMapPref
+import com.instructure.canvasapi2.utils.BooleanPref
+import com.instructure.canvasapi2.utils.NStringPref
+import com.instructure.canvasapi2.utils.PrefManager
+import com.instructure.canvasapi2.utils.SetPref
+import com.instructure.canvasapi2.utils.StringSetPref
 
 object StudentPrefs : PrefManager("candroidSP") {
 
     var tempCaptureUri by NStringPref()
 
-    var showGradesOnCard by BooleanPref(true)
+    var showGradesOnCard by BooleanPref(false)
 
     var hideCourseColorOverlay by BooleanPref(false)
 
@@ -32,10 +37,13 @@ object StudentPrefs : PrefManager("candroidSP") {
 
     var listDashboard by BooleanPref()
 
+    var gradeWidgetIds by BooleanMapPref()
+
     var gradesSortBy: String? by NStringPref(null, "grades_sort_by")
 
     override fun keepBaseProps() = listOf(
         ::showGradesOnCard,
+        ::gradeWidgetIds,
         ::gradesSortBy
     )
 }

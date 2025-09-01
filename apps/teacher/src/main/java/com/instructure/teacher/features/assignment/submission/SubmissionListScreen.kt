@@ -63,6 +63,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.SearchBar
 import com.instructure.pandautils.compose.composables.UserAvatar
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 
 @Composable
@@ -268,6 +269,7 @@ private fun SubmissionListItem(
                 anonymous = anonymousGrading,
                 imageUrl = submissionListUiState.avatarUrl,
                 name = submissionListUiState.userName,
+                group = submissionListUiState.group
             )
             Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
                 Text(
@@ -275,7 +277,8 @@ private fun SubmissionListItem(
                     fontSize = 16.sp,
                     lineHeight = 24.sp,
                     color = colorResource(id = R.color.textDarkest),
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.SemiBold,
+                    modifier = Modifier.testTag("submissionListItemStudentName")
                 )
                 if (submissionListUiState.isFakeStudent) {
                     Text(
@@ -295,7 +298,8 @@ private fun SubmissionListItem(
                 text = submissionListUiState.grade ?: "-",
                 fontSize = 16.sp,
                 color = courseColor,
-                fontWeight = FontWeight.SemiBold
+                fontWeight = FontWeight.SemiBold,
+                modifier = Modifier.testTag("scoreText")
             )
             if (submissionListUiState.hidden) {
                 Icon(
@@ -319,7 +323,10 @@ private fun SubmissionTag(tag: SubmissionTag, hasDivider: Boolean) {
         tag.icon?.let {
             Icon(
                 painter = painterResource(id = it),
-                contentDescription = stringResource(tag.text),
+                contentDescription = when (tag) {
+                    is SubmissionTag.Predefined -> stringResource(tag.textRes)
+                    is SubmissionTag.Custom -> tag.text
+                },
                 tint = colorResource(id = tag.color ?: R.color.textDark),
                 modifier = Modifier
                     .size(14.dp)
@@ -328,7 +335,10 @@ private fun SubmissionTag(tag: SubmissionTag, hasDivider: Boolean) {
         }
 
         Text(
-            text = stringResource(tag.text),
+            text = when (tag) {
+                is SubmissionTag.Predefined -> stringResource(tag.textRes)
+                is SubmissionTag.Custom -> tag.text
+            },
             fontSize = 12.sp,
             color = colorResource(id = tag.color ?: R.color.textDark),
             modifier = Modifier.padding(end = 4.dp)
@@ -364,7 +374,7 @@ fun SubmissionListScreenPreview() {
                     "Test User",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.LATE, SubmissionTag.NEEDS_GRADING),
+                    listOf(SubmissionTag.Late, SubmissionTag.NeedsGrading),
                     null
                 ),
                 SubmissionUiState(
@@ -373,7 +383,7 @@ fun SubmissionListScreenPreview() {
                     "Test User 2",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                    listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                     null
                 ),
                 SubmissionUiState(
@@ -382,7 +392,7 @@ fun SubmissionListScreenPreview() {
                     "Test User 3",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.NOT_SUBMITTED),
+                    listOf(SubmissionTag.NotSubmitted),
                     null
                 ),
                 SubmissionUiState(
@@ -391,7 +401,7 @@ fun SubmissionListScreenPreview() {
                     "Test User 4",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.MISSING),
+                    listOf(SubmissionTag.Missing),
                     null
                 ),
                 SubmissionUiState(
@@ -400,7 +410,7 @@ fun SubmissionListScreenPreview() {
                     "Test User 5",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.GRADED),
+                    listOf(SubmissionTag.Graded),
                     "100%"
                 ),
                 SubmissionUiState(
@@ -409,8 +419,17 @@ fun SubmissionListScreenPreview() {
                     "Test User 6",
                     true,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.EXCUSED),
+                    listOf(SubmissionTag.Excused),
                     "Excused"
+                ),
+                SubmissionUiState(
+                    7,
+                    7,
+                    "Test User 7",
+                    false,
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.Custom("Custom Status", R.drawable.ic_flag, R.color.textInfo)),
+                    hidden = false
                 )
             )
         ) {}
@@ -435,11 +454,11 @@ fun SubmissionListScreenDarkPreview() {
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
                     listOf(
-                        SubmissionTag.LATE,
-                        SubmissionTag.NEEDS_GRADING,
-                        SubmissionTag.MISSING,
-                        SubmissionTag.EXCUSED,
-                        SubmissionTag.NOT_SUBMITTED
+                        SubmissionTag.Late,
+                        SubmissionTag.NeedsGrading,
+                        SubmissionTag.Missing,
+                        SubmissionTag.Excused,
+                        SubmissionTag.NotSubmitted
                     ),
                     null
                 ),
@@ -449,7 +468,7 @@ fun SubmissionListScreenDarkPreview() {
                     "Test User 2",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.SUBMITTED, SubmissionTag.NEEDS_GRADING),
+                    listOf(SubmissionTag.Submitted, SubmissionTag.NeedsGrading),
                     null
                 ),
                 SubmissionUiState(
@@ -458,7 +477,7 @@ fun SubmissionListScreenDarkPreview() {
                     "Test User 3",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.NOT_SUBMITTED),
+                    listOf(SubmissionTag.NotSubmitted),
                     null
                 ),
                 SubmissionUiState(
@@ -467,7 +486,7 @@ fun SubmissionListScreenDarkPreview() {
                     "Test User 4",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.MISSING),
+                    listOf(SubmissionTag.Missing),
                     null
                 ),
                 SubmissionUiState(
@@ -476,7 +495,7 @@ fun SubmissionListScreenDarkPreview() {
                     "Test User 5",
                     false,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.GRADED),
+                    listOf(SubmissionTag.Graded),
                     "100%"
                 ),
                 SubmissionUiState(
@@ -485,9 +504,18 @@ fun SubmissionListScreenDarkPreview() {
                     "Test User 6",
                     true,
                     "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
-                    listOf(SubmissionTag.EXCUSED),
+                    listOf(SubmissionTag.Excused),
                     "Excused",
                     hidden = true
+                ),
+                SubmissionUiState(
+                    7,
+                    7,
+                    "Test User 7",
+                    false,
+                    "https://www.gravatar.com/avatar/205e460b479e2e5b48aec07710c08d50",
+                    listOf(SubmissionTag.Custom("Custom Status", R.drawable.ic_flag, R.color.textInfo)),
+                    hidden = false
                 )
             )
         ) {}

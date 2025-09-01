@@ -49,7 +49,6 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
-import androidx.compose.material.Divider
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -70,7 +69,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -80,7 +78,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.heading
 import androidx.compose.ui.semantics.invisibleToUser
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
@@ -98,6 +95,7 @@ import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
+import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
@@ -326,54 +324,13 @@ private fun GradesScreenContent(
 
             uiState.items.forEach {
                 stickyHeader {
-                    val headerContentDescription = stringResource(
-                        if (it.expanded) {
-                            R.string.content_description_collapse_content_with_param
-                        } else {
-                            R.string.content_description_expand_content_with_param
-                        }, it.name
-                    )
-                    Column(
-                        modifier = Modifier
-                            .background(colorResource(id = R.color.backgroundLightest))
-                            .clickable {
-                                actionHandler(GradesAction.GroupHeaderClick(it.id))
-                            }
-                            .semantics {
-                                heading()
-                                contentDescription = headerContentDescription
-                                role = Role.Button
-                            }
-                    ) {
-                        Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(
-                                    horizontal = 16.dp,
-                                    vertical = 8.dp
-                                )
-                        ) {
-                            Text(
-                                text = it.name,
-                                color = colorResource(id = R.color.textDark),
-                                fontSize = 14.sp,
-                                modifier = Modifier.semantics {
-                                    invisibleToUser()
-                                }
-                            )
-                            Spacer(modifier = Modifier.weight(1f))
-                            Icon(
-                                painter = painterResource(id = R.drawable.ic_arrow_down),
-                                tint = colorResource(id = R.color.textDarkest),
-                                contentDescription = null,
-                                modifier = Modifier
-                                    .size(16.dp)
-                                    .rotate(if (it.expanded) 180f else 0f)
-                            )
+                    GroupHeader(
+                        name = it.name,
+                        expanded = it.expanded,
+                        onClick = {
+                            actionHandler(GradesAction.GroupHeaderClick(it.id))
                         }
-                        Divider(color = colorResource(id = R.color.backgroundMedium), thickness = .5.dp)
-                    }
+                    )
                 }
 
                 if (it.expanded) {
@@ -564,7 +521,7 @@ fun AssignmentItem(
                     fontSize = 14.sp,
                     modifier = modifier.testTag("assignmentName")
                 )
-                if (uiState.submissionStateLabel != SubmissionStateLabel.NONE) {
+                if (uiState.submissionStateLabel != SubmissionStateLabel.None) {
                     Spacer(modifier = Modifier.width(4.dp))
                     Box(
                         Modifier
@@ -588,7 +545,10 @@ fun AssignmentItem(
                     )
                     Spacer(modifier = Modifier.width(4.dp))
                     Text(
-                        text = stringResource(id = uiState.submissionStateLabel.labelRes),
+                        text = when (uiState.submissionStateLabel) {
+                            is SubmissionStateLabel.Predefined -> stringResource(id = uiState.submissionStateLabel.labelRes)
+                            is SubmissionStateLabel.Custom -> uiState.submissionStateLabel.label
+                        },
                         color = colorResource(id = uiState.submissionStateLabel.colorRes),
                         fontSize = 14.sp
                     )
@@ -628,7 +588,7 @@ private fun GradesScreenPreview() {
                             name = "Assignment 1",
                             dueDate = "Due Date",
                             displayGrade = DisplayGrade("100%", ""),
-                            submissionStateLabel = SubmissionStateLabel.NOT_SUBMITTED
+                            submissionStateLabel = SubmissionStateLabel.NotSubmitted
                         ),
                         AssignmentUiState(
                             id = 2,
@@ -636,7 +596,7 @@ private fun GradesScreenPreview() {
                             name = "Assignment 2",
                             dueDate = "Due Date",
                             displayGrade = DisplayGrade("Complete", ""),
-                            submissionStateLabel = SubmissionStateLabel.GRADED
+                            submissionStateLabel = SubmissionStateLabel.Graded
                         )
                     ),
                     expanded = true
@@ -659,7 +619,7 @@ private fun AssignmentItem1Preview() {
             name = "Assignment 1",
             dueDate = "Due Date",
             displayGrade = DisplayGrade("100%", ""),
-            submissionStateLabel = SubmissionStateLabel.LATE
+            submissionStateLabel = SubmissionStateLabel.Late
         ),
         actionHandler = {},
         userColor = android.graphics.Color.RED

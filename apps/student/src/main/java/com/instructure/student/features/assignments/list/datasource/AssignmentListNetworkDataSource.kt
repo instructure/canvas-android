@@ -17,9 +17,11 @@
 
 package com.instructure.student.features.assignments.list.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
@@ -27,7 +29,8 @@ import com.instructure.canvasapi2.utils.depaginate
 
 class AssignmentListNetworkDataSource(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val customGradeStatusesManager: CustomGradeStatusesManager
 ) : AssignmentListDataSource {
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -62,9 +65,19 @@ class AssignmentListNetworkDataSource(
         return courseApi.getGradingPeriodsForCourse(courseId, params).dataOrThrow.gradingPeriodList
     }
 
-    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course? {
+    override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
-        return courseApi.getCourseWithGrade(courseId, params).dataOrNull
+        return courseApi.getCourseWithGrade(courseId, params).dataOrThrow
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusesManager
+            .getCustomGradeStatuses(courseId, forceNetwork)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            .orEmpty()
     }
 }

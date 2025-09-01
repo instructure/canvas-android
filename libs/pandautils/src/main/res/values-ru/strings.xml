@@ -501,4 +501,20 @@
     <string name="a11y_markAsDoneWithName">%s Отметить как выполненное</string>
     <string name="a11y_markAsNotDoneWithName">%s Отметить как невыполненное</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Не удалось загрузить подпись Inbox</string>
+    <string name="inboxSignatureSettingsUpdated">Настройки Inbox сохранены!</string>
+    <string name="inboxSignatureSettingsError">Не удалось сохранить настройки Inbox</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Добавьте здесь свою подпись</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d час</item>
+        <item quantity="few">%d часа(-ов)</item>
+        <item quantity="many">%d часа(-ов)</item>
+        <item quantity="other">%d часа(-ов)</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d мин</item>
+        <item quantity="few">%d мин</item>
+        <item quantity="many">%d мин</item>
+        <item quantity="other">%d мин</item>
+    </plurals>
 </resources>

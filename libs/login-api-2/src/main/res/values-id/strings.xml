@@ -72,7 +72,8 @@
     <string name="loginHint">Temukan sekolah atau distrik Anda</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Laporkan Masalah</string>
+    <string name="errorReportAProblem">Laporkan masalah</string>
+    <string name="reportAProblemDialogTitle">Laporkan masalah</string>
     <string name="errorReportSubject">Subjek</string>
     <string name="errorReportDescription">Deskripsi</string>
     <string name="errorReportSend">Kirim</string>
@@ -100,7 +101,7 @@
     <string name="findMySchool">Temukan sekolah saya</string>
     <string name="loginWithQRCode">Kode QR</string>
     <string name="locateQRCode">Temukan Kode QR</string>
-    <string name="qrCodeExplanation">Anda akan menemukan kode QR di web di profil akun Anda. Klik \'QR untuk Login Seluler\' di dalam daftar.</string>
+    <string name="qrCodeExplanation">Temukan kode QR di profil akun Anda di web di bawah \'QR untuk Login Seluler\'.</string>
     <string name="qrCodeScanningPrompt">Pindai kode QR dari Canvas untuk login</string>
     <string name="loginWithQRCodeError">Terjadi kesalahan saat login. Silakan buat Kode QR lain dan coba lagi.</string>
     <string name="invalidQRCodeError">Silakan pindai kode QR yang dibuat oleh Canvas</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">Kami telah membuat beberapa perubahan.</string>
     <string name="whatsNewText">Lihat apa yang baru</string>
     <string name="findAnotherSchool">Temukan sekolah lain</string>
+    <string name="qrCodeDisabledExplanation">Jika tidak ada, institusi Anda telah menonaktifkan opsi ini.</string>
 </resources>

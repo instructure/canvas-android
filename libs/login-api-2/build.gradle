@@ -122,6 +122,13 @@ dependencies {
     implementation Libs.ANDROIDX_RECYCLERVIEW
     implementation Libs.ANDROIDX_CONSTRAINT_LAYOUT
 
+    implementation platform(Libs.FIREBASE_BOM) {
+        exclude group: 'com.google.firebase', module: 'firebase-analytics'
+    }
+    implementation (Libs.FIREBASE_CRASHLYTICS) {
+        transitive = true
+    }
+
     implementation (Libs.JOURNEY_ZXING) { transitive = false }
     implementation Libs.JOURNEY_ZXING_CORE
 

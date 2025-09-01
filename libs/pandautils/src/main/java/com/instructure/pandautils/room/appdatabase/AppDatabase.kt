@@ -7,6 +7,7 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
 import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
 import com.instructure.pandautils.room.appdatabase.daos.EnvironmentFeatureFlagsDao
+import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
 import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
 import com.instructure.pandautils.room.appdatabase.daos.ModuleBulkProgressDao
@@ -17,12 +18,16 @@ import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
 import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
 import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
 import com.instructure.pandautils.room.appdatabase.entities.EnvironmentFeatureFlags
+import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
 import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
 import com.instructure.pandautils.room.appdatabase.entities.ModuleBulkProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.PendingSubmissionCommentEntity
 import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
+import com.instructure.pandautils.room.assignment.list.converter.AssignmentFilterConverter
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.assignment.list.entities.AssignmentListSelectedFiltersEntity
 import com.instructure.pandautils.room.common.Converters
 
 @Database(
@@ -36,10 +41,12 @@ import com.instructure.pandautils.room.common.Converters
         PendingSubmissionCommentEntity::class,
         DashboardFileUploadEntity::class,
         ReminderEntity::class,
-        ModuleBulkProgressEntity::class
-    ], version = 10
+        ModuleBulkProgressEntity::class,
+        AssignmentListSelectedFiltersEntity::class,
+        FileDownloadProgressEntity::class
+    ], version = 12
 )
-@TypeConverters(Converters::class)
+@TypeConverters(Converters::class, AssignmentFilterConverter::class)
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun attachmentDao(): AttachmentDao
@@ -61,4 +68,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun reminderDao(): ReminderDao
 
     abstract fun moduleBulkProgressDao(): ModuleBulkProgressDao
+
+    abstract fun assignmentListSelectedFiltersEntityDao(): AssignmentListSelectedFiltersEntityDao
+
+    abstract fun fileDownloadProgressDao(): FileDownloadProgressDao
 }

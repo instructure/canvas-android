@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Signaler un problème</string>
+    <string name="reportAProblemDialogTitle">Signaler un problème</string>
     <string name="errorReportSubject">Sujet</string>
     <string name="errorReportDescription">Description</string>
     <string name="errorReportSend">Envoyer</string>
@@ -99,7 +100,7 @@
     <string name="findMySchool">Trouver mon école</string>
     <string name="loginWithQRCode">QR Code</string>
     <string name="locateQRCode">Localiser un code QR</string>
-    <string name="qrCodeExplanation">Vous trouverez le code QR sur le Web dans votre profil. Cliquez sur « QR pour connexion mobile » dans la liste.</string>
+    <string name="qrCodeExplanation">Trouvez le code QR dans votre profil de compte sur le web sous « QR pour la connexion mobile ».</string>
     <string name="qrCodeScanningPrompt">Scannez un code QR de Canvas pour vous connecter</string>
     <string name="loginWithQRCodeError">Une erreur est survenue pendant la connexion. Veuillez générer un autre code QR, puis réessayez.</string>
     <string name="invalidQRCodeError">Veuillez scanner un code QR généré par Canvas.</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">Nous avons fait quelques changements.</string>
     <string name="whatsNewText">Voir les nouveautés</string>
     <string name="findAnotherSchool">Trouver une autre école</string>
+    <string name="qrCodeDisabledExplanation">S\'il n\'est pas là, votre établissement a désactivé cette option.</string>
 </resources>

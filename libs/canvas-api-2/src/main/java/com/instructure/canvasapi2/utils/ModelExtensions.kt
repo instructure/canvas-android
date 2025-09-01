@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.type.EnrollmentType
 import java.util.Date
 import java.util.regex.Pattern
@@ -217,4 +218,13 @@ fun convertPercentToPointBased(percentScore: Double, scalingFactor: Double): Str
 fun List<GradingPeriod>.getCurrentGradingPeriod(): GradingPeriod? {
     val currentDate = Date()
     return this.firstOrNull { it.startDate?.toDate()?.before(currentDate) == true && it.endDate?.toDate()?.after(currentDate) == true }
+}
+
+fun List<Submission>.countCustomGradeStatus(vararg states: String, requireNoGradeMatch: Boolean = true): Int {
+    return count {
+        !it.excused &&
+                it.customGradeStatusId != null &&
+                it.workflowState in states &&
+                (!requireNoGradeMatch || !it.isGradeMatchesCurrentSubmission || it.grade == null)
+    }
 }

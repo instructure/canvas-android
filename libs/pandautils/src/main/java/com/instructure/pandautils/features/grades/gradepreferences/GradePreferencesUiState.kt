@@ -31,7 +31,7 @@ data class GradePreferencesUiState(
     val sortBy: SortBy = SortBy.DUE_DATE
 ) {
     val isDefault: Boolean
-        get() = selectedGradingPeriod == defaultGradingPeriod && sortBy == SortBy.DUE_DATE
+        get() = selectedGradingPeriod == defaultGradingPeriod
 }
 
 enum class SortBy(@StringRes val titleRes: Int) {

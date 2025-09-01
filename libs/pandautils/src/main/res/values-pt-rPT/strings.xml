@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Marcar como feito</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcar como não feito</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Falha ao carregar a assinatura da caixa de entrada</string>
+    <string name="inboxSignatureSettingsUpdated">Definições da caixa de entrada guardadas!</string>
+    <string name="inboxSignatureSettingsError">Falha ao guardar as definições da caixa de entrada</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Escreva aqui a sua assinatura</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Hora</item>
+        <item quantity="other">%d horas</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Mins</item>
+    </plurals>
 </resources>

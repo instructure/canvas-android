@@ -50,6 +50,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.FileUtils
 import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
+import com.instructure.pandautils.features.submission.SubmissionWorkerAction
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileUploadUtils
@@ -60,13 +61,14 @@ import com.instructure.student.events.ShowConfettiEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsSharedEvent
 import com.instructure.student.mobius.common.FlowSource
 import com.instructure.student.mobius.common.trySend
-import com.instructure.student.room.entities.CreateFileSubmissionEntity
-import com.instructure.student.room.entities.CreatePendingSubmissionCommentEntity
-import com.instructure.student.room.entities.CreateSubmissionEntity
-import com.instructure.student.room.entities.daos.CreateFileSubmissionDao
-import com.instructure.student.room.entities.daos.CreatePendingSubmissionCommentDao
-import com.instructure.student.room.entities.daos.CreateSubmissionCommentFileDao
-import com.instructure.student.room.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.CreatePendingSubmissionCommentEntity
+import com.instructure.pandautils.room.studentdb.entities.CreateSubmissionEntity
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateFileSubmissionDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreatePendingSubmissionCommentDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionCommentFileDao
+import com.instructure.pandautils.room.studentdb.entities.daos.CreateSubmissionDao
+import com.instructure.pandautils.utils.orDefault
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
 import kotlinx.coroutines.Dispatchers
@@ -109,14 +111,14 @@ class SubmissionWorker @AssistedInject constructor(
                     ?: return Result.failure()// Return early if deleted, means it was canceled
             }
 
-            return when (Action.valueOf(action)) {
-                Action.TEXT_ENTRY -> uploadText(submission)
-                Action.FILE_ENTRY -> uploadFileSubmission(submission)
-                Action.MEDIA_ENTRY -> uploadMedia(submission)
-                Action.URL_ENTRY -> uploadUrl(submission, false)
-                Action.STUDIO_ENTRY -> uploadUrl(submission, true)
-                Action.COMMENT_ENTRY -> uploadComment()
-                Action.STUDENT_ANNOTATION -> uploadStudentAnnotation(submission)
+            return when (SubmissionWorkerAction.valueOf(action)) {
+                SubmissionWorkerAction.TEXT_ENTRY -> uploadText(submission)
+                SubmissionWorkerAction.FILE_ENTRY -> uploadFileSubmission(submission)
+                SubmissionWorkerAction.MEDIA_ENTRY -> uploadMedia(submission)
+                SubmissionWorkerAction.URL_ENTRY -> uploadUrl(submission, false)
+                SubmissionWorkerAction.STUDIO_ENTRY -> uploadUrl(submission, true)
+                SubmissionWorkerAction.COMMENT_ENTRY -> uploadComment()
+                SubmissionWorkerAction.STUDENT_ANNOTATION -> uploadStudentAnnotation(submission)
             }
         } catch (e: IllegalArgumentException) {
             Log.e("SubmissionWorker", "Invalid Action")
@@ -125,7 +127,7 @@ class SubmissionWorker @AssistedInject constructor(
     }
 
     private suspend fun showConfetti() {
-        val featuresResult = userApi.getSelfFeatures(RestParams())
+        val featuresResult = userApi.getSelfFeatures(RestParams(shouldLoginOnTokenError = false))
         if (featuresResult.isSuccess) {
             featuresResult.dataOrNull?.find { it.feature == "disable_celebrations" }?.let {
                 if (it.flag.state == "off" || it.flag.state == "allowed") {
@@ -146,7 +148,8 @@ class SubmissionWorker @AssistedInject constructor(
         }
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
         )
         val result = submissionApi.postTextSubmission(
             submission.canvasContext.id,
@@ -163,7 +166,8 @@ class SubmissionWorker @AssistedInject constructor(
         showProgressNotification(submission.assignmentName, submission.id)
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
         )
         val type =
             if (isLti) Assignment.SubmissionType.BASIC_LTI_LAUNCH.apiString else Assignment.SubmissionType.ONLINE_URL.apiString
@@ -210,7 +214,8 @@ class SubmissionWorker @AssistedInject constructor(
 
             val params = RestParams(
                 canvasContext = submission.canvasContext,
-                domain = apiPrefs.overrideDomains[submission.canvasContext.id]
+                domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+                shouldLoginOnTokenError = false
             )
             val mediaSubmissionResult = submissionApi.postMediaSubmission(
                 submission.canvasContext.id,
@@ -258,7 +263,8 @@ class SubmissionWorker @AssistedInject constructor(
         val attachmentIds = completed.mapNotNull { it.attachmentId } + uploadedAttachmentIds
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
         )
         val result = submissionApi.postSubmissionAttachments(
             submission.canvasContext.id,
@@ -300,10 +306,10 @@ class SubmissionWorker @AssistedInject constructor(
 
             // Upload config setup
             val fso = FileSubmitObject(
-                pendingAttachment.name,
-                pendingAttachment.size,
-                pendingAttachment.contentType,
-                pendingAttachment.fullPath
+                pendingAttachment.name.orEmpty(),
+                pendingAttachment.size.orDefault(),
+                pendingAttachment.contentType.orEmpty(),
+                pendingAttachment.fullPath.orEmpty()
             )
             val config = if (groupId == null) {
                 FileUploadConfig.forSubmission(
@@ -488,7 +494,7 @@ class SubmissionWorker @AssistedInject constructor(
             notificationManager.notify(comment.assignmentId.toInt(), notification.build())
 
             notoriousUploader.performUpload(
-                comment.mediaPath,
+                comment.mediaPath.orEmpty(),
                 object : ProgressRequestUpdateListener {
                     override fun onProgressUpdated(
                         progressPercent: Float,
@@ -514,7 +520,8 @@ class SubmissionWorker @AssistedInject constructor(
         try {
             val params = RestParams(
                 canvasContext = comment.canvasContext,
-                domain = apiPrefs.overrideDomains[comment.canvasContext.id]
+                domain = apiPrefs.overrideDomains[comment.canvasContext.id],
+                shouldLoginOnTokenError = false
             )
             val postCommentResult = notoriousResult?.let { result ->
                 submissionApi.postMediaSubmissionComment(
@@ -582,7 +589,8 @@ class SubmissionWorker @AssistedInject constructor(
 
         val params = RestParams(
             canvasContext = submission.canvasContext,
-            domain = apiPrefs.overrideDomains[submission.canvasContext.id]
+            domain = apiPrefs.overrideDomains[submission.canvasContext.id],
+            shouldLoginOnTokenError = false
         )
         val result = submissionApi.postStudentAnnotationSubmission(
             submission.canvasContext.id,
@@ -828,10 +836,6 @@ class SubmissionWorker @AssistedInject constructor(
     }
 
     // endregion
-
-    enum class Action {
-        TEXT_ENTRY, URL_ENTRY, MEDIA_ENTRY, FILE_ENTRY, STUDIO_ENTRY, COMMENT_ENTRY, STUDENT_ANNOTATION
-    }
 
     companion object {
         private const val CHANNEL_ID = "submissionChannel"

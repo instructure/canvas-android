@@ -27,6 +27,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
+import com.instructure.pandautils.activities.BaseViewMediaActivity
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.onClick
@@ -43,7 +46,7 @@ import com.instructure.student.mobius.assignmentDetails.submission.picker.ui.Pic
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsEvent
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.comments.SubmissionCommentsViewState
 import com.instructure.student.mobius.common.ui.MobiusView
-import com.instructure.student.room.StudentDb
+import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.student.router.RouteMatcher
 import com.spotify.mobius.functions.Consumer
 
@@ -170,7 +173,20 @@ class SubmissionCommentsView(
     }
 
     fun openMedia(canvasContext: CanvasContext, contentType: String, url: String, fileName: String) {
-        (activity as? BaseRouterActivity)?.openMedia(canvasContext, contentType, url, fileName, null)
+        if (contentType.startsWith("video") || contentType.startsWith("audio")) {
+            val bundle = BaseViewMediaActivity.makeBundle(url, null, contentType, null, true, null)
+            (activity as? BaseRouterActivity)?.let {
+                RouteMatcher.route(it as FragmentActivity, Route(bundle, RouteContext.MEDIA))
+            }
+        } else {
+            (activity as? BaseRouterActivity)?.openMedia(
+                canvasContext,
+                contentType,
+                url,
+                fileName,
+                null
+            )
+        }
     }
 
     fun showPermissionDeniedToast() {

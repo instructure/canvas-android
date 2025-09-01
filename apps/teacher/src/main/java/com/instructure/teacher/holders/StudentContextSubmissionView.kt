@@ -33,7 +33,7 @@ import com.instructure.teacher.utils.getAssignmentIcon
 import com.instructure.teacher.utils.getColorCompat
 import com.instructure.teacher.utils.getDisplayGrade
 import com.instructure.teacher.utils.getResForSubmission
-import java.util.*
+import java.util.Locale
 
 
 @SuppressLint("ViewConstructor")
@@ -50,16 +50,24 @@ class StudentContextSubmissionView(context: Context, submission: StudentContextC
         binding.assignmentIcon.setColorFilter(courseColor)
 
         // Submission status
-        val (stringRes, colorRes) = getResForSubmission(submission.submissionStatus)
-        if (stringRes == -1 || colorRes == -1) {
-            binding.submissionStatus.setGone()
+        if (!submission.customGradeStatus.isNullOrEmpty()) {
+            binding.submissionStatus.text = submission.customGradeStatus
+            binding.submissionStatus.setTextColor(context.getColorCompat(R.color.textInfo))
         } else {
-            binding.submissionStatus.setText(stringRes)
-            binding.submissionStatus.setTextColor(context.getColorCompat(colorRes))
+            val (stringRes, colorRes) = getResForSubmission(submission.submissionStatus)
+            if (stringRes == -1 || colorRes == -1) {
+                binding.submissionStatus.setGone()
+            } else {
+                binding.submissionStatus.setText(stringRes)
+                binding.submissionStatus.setTextColor(context.getColorCompat(colorRes))
+            }
         }
 
         // Submission grade
-        if (submission.gradingStatus == SubmissionGradingStatus.excused || submission.gradingStatus == SubmissionGradingStatus.graded) {
+        if (submission.gradingStatus == SubmissionGradingStatus.excused ||
+            submission.gradingStatus == SubmissionGradingStatus.graded ||
+            !submission.customGradeStatus.isNullOrEmpty()
+        ) {
             val pointsPossible = submission.assignment?.pointsPossible ?: 0.0
             val displayGrade = getDisplayGrade(
                 context = context,

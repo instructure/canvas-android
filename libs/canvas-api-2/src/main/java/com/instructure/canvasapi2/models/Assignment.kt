@@ -115,12 +115,17 @@ data class Assignment(
         @SerializedName("omit_from_final_grade")
         val omitFromFinalGrade: Boolean = false,
         @SerializedName("hide_in_gradebook")
-        val isHiddenInGradeBook: Boolean = false
+        val isHiddenInGradeBook: Boolean = false,
+        @SerializedName("sub_assignment_tag")
+        val subAssignmentTag: String? = null
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt
 
     val lastActualSubmission: Submission? get() = submission?.takeIf { it.workflowState == "submitted" }
+
+    val lastGradedOrSubmittedSubmission: Submission?
+        get() = submission?.takeIf { it.workflowState == "graded" || it.workflowState == "submitted" }
 
     /**
      * Whether or not the user has submitted this assignment. If the user has not submitted anything, Canvas generates
@@ -232,11 +237,11 @@ data class Assignment(
     override fun describeContents(): Int = 0
 
     fun isMissing(): Boolean {
-        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null)
+        return submission?.missing == true || (!isSubmitted && dueDate?.before(Date()) ?: false && submission?.grade == null && submission?.customGradeStatusId == null)
     }
 
     fun isGraded(): Boolean {
-        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null)
+        return (submission?.grade != null && submission?.workflowState != "pending_review" && submission?.postedAt != null) || submission?.customGradeStatusId != null
     }
 
     fun ltiToolType(): LtiType {

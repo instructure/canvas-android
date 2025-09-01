@@ -30,6 +30,7 @@ import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.webkit.WebView
+import androidx.compose.ui.platform.ComposeView
 import androidx.hilt.work.HiltWorkerFactory
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.matcher.ViewMatchers
@@ -80,7 +81,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
     abstract val isTesting: Boolean
 
-    var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = Matchers.anyOf()
+    var extraAccessibilitySupressions: Matcher<in AccessibilityViewCheckResult>? = anyOf()
 
     val connectivityManager = InstrumentationRegistry.getInstrumentation().context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
 
@@ -269,14 +270,14 @@ abstract class CanvasTest : InstructureTestingContract {
 
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
-                        Matchers.anyOf(
+                        anyOf(
                             // Extra supressions that can be adde to individual tests
                             extraAccessibilitySupressions,
                             // Suppress issues in PsPDFKit, date/time picker, calendar grid
                             isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
 
                             // Suppress, for now, errors about overflow menus being too narrow
-                            Matchers.allOf(
+                            allOf(
                                     isOverflowMenu(),
                                     withOnlyWidthLessThan(48)
                             ),
@@ -298,9 +299,20 @@ abstract class CanvasTest : InstructureTestingContract {
                             // Let's ignore size issues with WebViews, since they do not honor minHeight/minWidth
                             // Note that TouchTargetSizeViewCheck is the *old* name of the check.  The new name would
                             // be "TouchTargetSizeCheck".
-                            Matchers.allOf(
+                            allOf(
                                     matchesViews(ViewMatchers.isAssignableFrom(WebView::class.java)),
-                                    matchesCheckNames(Matchers.`is`("TouchTargetSizeViewCheck"))
+                                    matchesCheckNames(`is`("TouchTargetSizeViewCheck"))
+                            ),
+
+                            allOf(
+                                matchesCheckNames(`is`("SpeakableTextPresentCheck")),
+                                matchesViews(
+                                    ViewMatchers.withParent(
+                                        ViewMatchers.withClassName(
+                                            Matchers.equalTo(ComposeView::class.java.name)
+                                        )
+                                    )
+                                )
                             )
                         )
 
@@ -549,6 +561,10 @@ abstract class CanvasTest : InstructureTestingContract {
         // Does the test device have particularly low screen resolution?
         fun isLowResDevice() : Boolean {
             return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.densityDpi < DisplayMetrics.DENSITY_HIGH
+        }
+
+        fun isCompactDevice(): Boolean {
+            return ApplicationProvider.getApplicationContext<Context?>().resources.displayMetrics.widthPixels < 600
         }
 
         fun turnOffConnectionViaADB() {

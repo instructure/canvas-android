@@ -16,6 +16,9 @@
  */
 package com.instructure.pandautils.utils
 
+import android.content.Context
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.pandautils.R
 import org.threeten.bp.Instant
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
@@ -24,9 +27,13 @@ import org.threeten.bp.ZoneId
 import org.threeten.bp.format.DateTimeFormatter
 import org.threeten.bp.format.DateTimeFormatterBuilder
 import java.text.DateFormat
+import java.text.SimpleDateFormat
+import java.time.format.DateTimeParseException
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
+import kotlin.time.Duration
+import org.threeten.bp.format.DateTimeParseException as ThreeTenDateTimeParseException
 
 fun OffsetDateTime.getShortMonthAndDay(): String {
     // Get year if the year of the due date isn't the current year
@@ -86,8 +93,86 @@ fun Date.toLocalTime(): LocalTime {
     return Instant.ofEpochMilli(this.time).atZone(ZoneId.systemDefault()).toLocalTime()
 }
 
-fun Date.toFormattedString(): String = DateFormat.getDateTimeInstance(
-    DateFormat.MEDIUM,
-    DateFormat.SHORT,
-    Locale.getDefault()
-).format(this)
+fun Date.toFormattedString(
+    dateFormat: Int = DateFormat.MEDIUM,
+    timeFormat: Int = DateFormat.SHORT,
+    locale: Locale = Locale.getDefault()
+): String {
+    return DateFormat.getDateTimeInstance(dateFormat, timeFormat, locale).format(this)
+}
+
+fun String.formatIsoDuration(context: Context): String {
+    return try {
+        val duration = Duration.parse(this)
+        val hours = duration.inWholeHours.toInt()
+        val minutes = (duration.inWholeMinutes % 60).toInt()
+
+        val parts = mutableListOf<String>()
+        if (hours > 0) parts.add(context.resources.getQuantityString(R.plurals.durationHours, hours, hours))
+        if (minutes > 0) parts.add(context.resources.getQuantityString(R.plurals.durationMins, minutes, minutes))
+
+        if (parts.isEmpty()) "" else parts.joinToString(" and ")
+    } catch (e: DateTimeParseException) {
+        FirebaseCrashlytics.getInstance().recordException(e)
+        ""
+    }
+}
+
+fun Date.formatMonthDay(): String {
+    val formatter = SimpleDateFormat("MM/dd", Locale.getDefault())
+    return formatter.format(this)
+}
+
+fun Date.format(pattern: String): String {
+    val formatter = SimpleDateFormat(pattern, Locale.getDefault())
+    return formatter.format(this)
+}
+
+fun Date.formatMonthDayYear(): String {
+    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
+    return formatter.format(this)
+}
+
+fun Date.localisedFormat(
+    pattern: String,
+    context: Context? = null,
+    locale: Locale? = null
+): String {
+    val currentLocal = locale ?: Locale.getDefault()
+
+    val is24HourFormat = if (context == null)
+        false
+    else
+        android.text.format.DateFormat.is24HourFormat(context)
+
+    val hourFormattedPattern = if (is24HourFormat) {
+        pattern
+            .replace("hh", "HH")
+            .replace("h", "H")
+            .replace("a", "")
+    } else {
+        pattern
+            .replace("HH", "hh")
+            .replace("H", "h")
+            .apply { if (!contains("a")) plus("a") }
+    }
+    val bestDatePattern = android.text.format.DateFormat.getBestDateTimePattern(currentLocal, hourFormattedPattern)
+    val formatter = SimpleDateFormat(bestDatePattern, currentLocal)
+    return formatter.format(this)
+}
+
+fun Date.localisedFormatMonthDay(locale: Locale? = null): String {
+    return localisedFormat("MM/dd", locale = locale)
+}
+
+fun Date.localisedFormatMonthDayYear(locale: Locale? = null): String {
+    return localisedFormat("MM/dd/yyyy", locale = locale)
+}
+
+fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {
+    return try {
+        LocalDate.parse(this, formatter)
+    } catch (e: ThreeTenDateTimeParseException) {
+        null
+    }
+}

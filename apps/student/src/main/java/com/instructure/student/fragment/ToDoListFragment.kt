@@ -26,19 +26,22 @@ import android.view.ViewGroup
 import android.widget.RadioButton
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatCheckedTextView
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.ToDo
+import com.instructure.canvasapi2.models.PlannableType
+import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_TO_DO_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.features.calendarevent.details.EventFragment
-import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
+import com.instructure.pandautils.features.calendar.CalendarRouter
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.makeBundle
@@ -49,24 +52,33 @@ import com.instructure.student.R
 import com.instructure.student.adapter.TodoListRecyclerAdapter
 import com.instructure.student.databinding.FragmentListTodoBinding
 import com.instructure.student.databinding.PandaRecyclerRefreshLayoutBinding
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
-import com.instructure.pandautils.utils.accessibilityClassName
 import com.instructure.student.interfaces.NotificationAdapterToFragmentCallback
-import com.instructure.student.router.RouteMatcher
+import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_TO_DO_LIST)
 @PageView
+@AndroidEntryPoint
 class ToDoListFragment : ParentFragment() {
 
     private val binding by viewBinding(FragmentListTodoBinding::bind)
     private lateinit var recyclerViewBinding: PandaRecyclerRefreshLayoutBinding
 
+    @Inject
+    lateinit var plannerApi: PlannerAPI.PlannerInterface
+
+    @Inject
+    lateinit var calendarRouter: CalendarRouter
+
+    @Inject
+    lateinit var apiPrefs: ApiPrefs
+
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
 
     private var recyclerAdapter: TodoListRecyclerAdapter? = null
 
-    private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<ToDo> = object : NotificationAdapterToFragmentCallback<ToDo> {
-        override fun onRowClicked(todo: ToDo, position: Int, isOpenDetail: Boolean) {
+    private var adapterToFragmentCallback: NotificationAdapterToFragmentCallback<PlannerItem> = object : NotificationAdapterToFragmentCallback<PlannerItem> {
+        override fun onRowClicked(todo: PlannerItem, position: Int, isOpenDetail: Boolean) {
             recyclerAdapter?.setSelectedPosition(position)
             onRowClick(todo)
         }
@@ -103,7 +115,7 @@ class ToDoListFragment : ParentFragment() {
                 true
             }
         }
-        recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback)
+        recyclerAdapter = TodoListRecyclerAdapter(requireContext(), canvasContext, adapterToFragmentCallback, plannerApi)
         recyclerAdapter?.let {
             configureRecyclerView(
                 view,
@@ -177,28 +189,30 @@ class ToDoListFragment : ParentFragment() {
         }
     }
 
-    private fun onRowClick(toDo: ToDo?) {
-        when {
-            toDo?.assignment != null -> { // Launch assignment details fragment.
-                if (toDo.assignment!!.discussionTopicHeader != null) {
-                    RouteMatcher.route(
-                        requireActivity(),
-                        DiscussionRouterFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.discussionTopicHeader!!)
-                    )
-                } else {
-                    // Launch assignment details fragment.
-                    RouteMatcher.route(requireActivity(), AssignmentDetailsFragment.makeRoute(toDo.canvasContext!!, toDo.assignment!!.id))
+    private fun onRowClick(toDo: PlannerItem) {
+        when (toDo.plannableType) {
+            PlannableType.ASSIGNMENT -> calendarRouter.openAssignment(toDo.canvasContext, toDo.plannable.id)
+            PlannableType.SUB_ASSIGNMENT -> {
+                val regex = """assignments/(\d+)""".toRegex()
+                val matchResult = regex.find(toDo.htmlUrl.orEmpty())
+                matchResult?.groupValues?.getOrNull(1)?.toLongOrNull()?.let {
+                    calendarRouter.openAssignment(toDo.canvasContext, it)
                 }
             }
-            toDo?.scheduleItem != null -> // It's a Calendar event from the Upcoming API.
-                RouteMatcher.route(requireActivity(), EventFragment.makeRoute(toDo.canvasContext!!, toDo.scheduleItem!!))
-            toDo?.quiz != null -> // It's a Quiz let's launch the quiz details fragment
-                RouteMatcher.route(requireActivity(), BasicQuizViewFragment.makeRoute(toDo.canvasContext!!, toDo.quiz!!, toDo.quiz!!.url!!))
+            PlannableType.DISCUSSION_TOPIC -> calendarRouter.openDiscussion(toDo.canvasContext, toDo.plannable.id, toDo.plannable.assignmentId)
+            PlannableType.QUIZ -> {
+                var htmlUrl = toDo.htmlUrl.orEmpty()
+                if (htmlUrl.startsWith('/')) htmlUrl = apiPrefs.fullDomain + htmlUrl
+                calendarRouter.openQuiz(toDo.canvasContext, htmlUrl)
+            }
+            PlannableType.PLANNER_NOTE -> calendarRouter.openToDo(toDo)
+            PlannableType.CALENDAR_EVENT -> calendarRouter.openCalendarEvent(toDo.canvasContext, toDo.plannable.id)
+            else -> {}
         }
     }
 
     private fun showCourseFilterDialog() {
-        val choices = arrayOf(getString(R.string.favoritedCoursesLabel))
+        val choices = arrayOf(getString(R.string.favoriteCoursesLabel))
         var checkedItem = choices.indexOf(getString(recyclerAdapter?.getFilterMode()?.titleId ?: NoFilter.titleId))
 
         val dialog = AlertDialog.Builder(requireContext(), R.style.AccessibleAccentDialogTheme)
@@ -249,6 +263,6 @@ class ToDoListFragment : ParentFragment() {
 }
 
 sealed class FilterMode(val titleId: Int)
-object FavoritedCourses : FilterMode(R.string.favoritedCoursesLabel)
+object FavoritedCourses : FilterMode(R.string.favoriteCoursesLabel)
 object NoFilter : FilterMode(R.string.allCourses)
 

@@ -19,9 +19,18 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'au.com.dius.pact'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
+
+def pineDebugBaseUrl = "https://pine-api-dev.domain-svcs.nonprod.inseng.io"
+def pineReleaseBaseUrl = "https://pine-api-production.us-east-1.temp.prod.inseng.io"
+
+def cedarDebugBaseUrl = "https://cedar-api-dev.domain-svcs.nonprod.inseng.io"
+def cedarReleaseBaseUrl = "https://cedar-api-production.us-east-1.temp.prod.inseng.io"
+
+def redwoodDebugBaseUrl = "https://redwood-api-dev.domain-svcs.nonprod.inseng.io"
+def redwoodReleaseBaseUrl = "https://redwood-api-production.us-east-1.temp.prod.inseng.io"
+
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -34,9 +43,6 @@ static String isTesting() {
 buildscript {
     repositories {
         mavenCentral()
-    }
-    dependencies {
-        classpath 'au.com.dius:pact-jvm-provider-gradle:4.0.2'
     }
 }
 
@@ -52,7 +58,16 @@ android {
     }
 
     buildTypes {
+        debug {
+            buildConfigField "String", "PINE_BASE_URL", "\"$pineDebugBaseUrl\""
+            buildConfigField "String", "CEDAR_BASE_URL", "\"$cedarDebugBaseUrl\""
+            buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodDebugBaseUrl\""
+        }
         release {
+            buildConfigField "String", "PINE_BASE_URL", "\"$pineReleaseBaseUrl\""
+            buildConfigField "String", "CEDAR_BASE_URL", "\"$cedarReleaseBaseUrl\""
+            buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodReleaseBaseUrl\""
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -82,8 +97,30 @@ android {
 
 apollo {
     service("canvas") {
+        setSourceFolder("com/instructure/canvasapi2")
         packageName.set("com.instructure.canvasapi2")
         mapScalar("URL", "kotlin.String")
+        mapScalar("DateTime", "java.util.Date")
+        mapScalar("ID", "kotlin.String")
+        mapScalar("ISO8601Duration", "kotlin.String")
+
+        generateKotlinModels.set(true)
+
+        generateSourcesDuringGradleSync.set(true)
+    }
+    service("cedar") {
+        setSourceFolder("com/instructure/cedar")
+        packageName.set("com.instructure.cedar")
+        mapScalar("ID", "kotlin.String")
+    }
+    service("pine") {
+        setSourceFolder("com/instructure/pine")
+        packageName.set("com.instructure.pine")
+        mapScalar("ID", "kotlin.String")
+    }
+    service("redwood") {
+        setSourceFolder("com/instructure/redwood")
+        packageName.set("com.instructure.redwood")
         mapScalar("DateTime", "java.util.Date")
         mapScalar("ID", "kotlin.String")
     }
@@ -141,8 +178,6 @@ dependencies {
     testImplementation Libs.JUNIT
     testImplementation Libs.MOCKK
     testImplementation "org.mockito:mockito-inline:2.25.0"
-    testImplementation "au.com.dius:pact-jvm-consumer-junit:4.0.7"
-    testImplementation "au.com.dius:pact-jvm-consumer-java8:4.0.7"
     testImplementation group: 'org.slf4j', name: 'slf4j-nop', version: '1.7.26'
 
     /* Support Libs */
@@ -165,21 +200,6 @@ dependencies {
 
     implementation Libs.ANDROIDX_WORK_MANAGER
     implementation Libs.ANDROIDX_WORK_MANAGER_KTX
-}
 
-// Define our pact-publish object
-// This is designed to be run as part of a bitrise job.  But, in a pinch, you could run it
-// locally and manually fill in the required environment variable values.
-// Also, keep in mind that this will publish ALL contracts in the pacts directory.  If you
-// would like to publish a specific contract, make sure that you have some logic in place to
-// remove the unwanted pact contracts before publishing.
-pact {
-    publish {
-        pactDirectory = System.getenv("BITRISE_SOURCE_DIR") + '/libs/canvas-api-2/build/pacts'
-        pactBrokerUrl = 'https://inst-pact-broker.inseng.net/'
-        pactBrokerUsername = System.getenv("PACT_BROKER_USERNAME")
-        pactBrokerPassword = System.getenv("PACT_BROKER_PASSWORD")
-        tags = [System.getenv("BITRISE_GIT_BRANCH")]
-        version = '1.0.' + System.getenv("BITRISE_BUILD_NUMBER")
-    }
+    implementation Libs.JAVA_JWT
 }

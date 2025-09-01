@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Tilkynna vandamál</string>
+    <string name="reportAProblemDialogTitle">Tilkynna vandamál</string>
     <string name="errorReportSubject">Efni</string>
     <string name="errorReportDescription">Lýsing</string>
     <string name="errorReportSend">Senda</string>
@@ -101,7 +102,7 @@
     <string name="findMySchool">Finna skólann minn</string>
     <string name="loginWithQRCode">QR kóði</string>
     <string name="locateQRCode">Finna QR kóða</string>
-    <string name="qrCodeExplanation">Þú finnur QR kóðann á vefnum á reikningssíðu þinni. Smelltu á ‘QR fyrir innskráningu með snjalltæki‘ í listanum.</string>
+    <string name="qrCodeExplanation">Finndu QR-kóðann á reikningssíðu þinni á vefnum undir \'QR fyrir farsímainnskráningu\'.</string>
     <string name="qrCodeScanningPrompt">Skannaðu QR kóða frá Canvas til að skrá þig inn</string>
     <string name="loginWithQRCodeError">Villa kom upp við innskráningu. Búðu til annan QR kóða og reyndu aftur.</string>
     <string name="invalidQRCodeError">Skannaðu QR kóða sem Canvas bjó til</string>
@@ -128,4 +129,5 @@
     <string name="weMadeChanges">Við höfum gert nokkrar breytingar.</string>
     <string name="whatsNewText">Sjáðu hvað er nýtt</string>
     <string name="findAnotherSchool">Finna annan skóla</string>
+    <string name="qrCodeDisabledExplanation">Ef hann er ekki þar hefur stofnunin þín gert þennan möguleika óvirkan.</string>
 </resources>

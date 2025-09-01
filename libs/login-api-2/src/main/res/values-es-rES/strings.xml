@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Informar sobre un problema</string>
+    <string name="reportAProblemDialogTitle">Informar sobre un problema</string>
     <string name="errorReportSubject">Tema</string>
     <string name="errorReportDescription">Descripción</string>
     <string name="errorReportSend">Enviar</string>
@@ -100,7 +101,7 @@
     <string name="findMySchool">Encontrar mi escuela</string>
     <string name="loginWithQRCode">Código QR</string>
     <string name="locateQRCode">Ubicar código QR</string>
-    <string name="qrCodeExplanation">Encontrarás el código QR en el sitio web, en tu perfil de la cuenta. Haz clic en “QR para Inicio de sesión móvil” en la lista.</string>
+    <string name="qrCodeExplanation">Encuentra el código QR en el perfil de tu cuenta, en el apartado “Código QR para iniciar sesión en dispositivos móviles” de la web.</string>
     <string name="qrCodeScanningPrompt">Escanea un código QR de Canvas para iniciar sesión</string>
     <string name="loginWithQRCodeError">Ha habido un error al iniciar sesión. Genera otro código QR y vuelve a intentarlo.</string>
     <string name="invalidQRCodeError">Escanea un código QR generado por Canvas</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">Hemos realizado algunos cambios.</string>
     <string name="whatsNewText">Ver las novedades</string>
     <string name="findAnotherSchool">Encontrar otra escuela</string>
+    <string name="qrCodeDisabledExplanation">Si no está allí se debe a que tu empresa ha deshabilitado esta opción.</string>
 </resources>

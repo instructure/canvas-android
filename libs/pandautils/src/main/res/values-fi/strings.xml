@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Merkitse valmiiksi</string>
     <string name="a11y_markAsNotDoneWithName">%s Merkitse ei valmiiksi</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Tulevien postien allekirjoitus epäonnistui</string>
+    <string name="inboxSignatureSettingsUpdated">Tulevien postien asetukset tallennettu</string>
+    <string name="inboxSignatureSettingsError">Tulevien asetusten tallentaminen epäonnistui</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Kirjoita allekirjoituksesi tähän</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Tunti</item>
+        <item quantity="other">%d tuntia</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min.</item>
+        <item quantity="other">%d min</item>
+    </plurals>
 </resources>

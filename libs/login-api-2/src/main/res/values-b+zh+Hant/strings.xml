@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">報告問題</string>
+    <string name="reportAProblemDialogTitle">報告問題</string>
     <string name="errorReportSubject">主題</string>
     <string name="errorReportDescription">說明</string>
     <string name="errorReportSend">發送</string>
@@ -99,7 +100,7 @@
     <string name="findMySchool">尋找我的學校</string>
     <string name="loginWithQRCode">QR 碼</string>
     <string name="locateQRCode">尋找 QR 碼</string>
-    <string name="qrCodeExplanation">您可以在您的網上帳戶個人檔案找到這個 QR 碼。點擊列表內的「流動登入 QR 碼」。</string>
+    <string name="qrCodeExplanation">在您網頁的帳戶個人檔案的「行動登入 QR 碼」下找到 QR 碼。</string>
     <string name="qrCodeScanningPrompt">使用 Canvas 掃描 QR 碼以登入</string>
     <string name="loginWithQRCodeError">登入時出現錯誤。請產生另一個 QR 碼然後重試。</string>
     <string name="invalidQRCodeError">請掃描由 Canvas 產生的 QR 碼</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">我們作出了一些變更。</string>
     <string name="whatsNewText">看看有哪些變更</string>
     <string name="findAnotherSchool">尋找其他學校</string>
+    <string name="qrCodeDisabledExplanation">如果不存在，表示您的機構已停用此選項。</string>
 </resources>

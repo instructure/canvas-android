@@ -488,4 +488,16 @@
     <string name="a11y_markAsDoneWithName">%s Đánh dấu là đã xong</string>
     <string name="a11y_markAsNotDoneWithName">%s Đánh dấu là chưa xong</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Tải chữ ký hộp thư đến không thành công</string>
+    <string name="inboxSignatureSettingsUpdated">Đã lưu cài đặt hộp thư đến!</string>
+    <string name="inboxSignatureSettingsError">Lưu cài đặt hộp thư đến không thành công</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Viết chữ ký của bạn ở đây</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Giờ</item>
+        <item quantity="other">%d Giờ</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Phút</item>
+        <item quantity="other">%d Phút</item>
+    </plurals>
 </resources>

@@ -5,6 +5,7 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -21,6 +22,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.utils.Const
@@ -28,7 +30,6 @@ import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.teacher.PSPDFKit.AnnotationComments.AnnotationCommentListFragment
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.files.search.FileSearchFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
@@ -123,7 +124,7 @@ object RouteResolver {
         } else if (EditDashboardFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditDashboardFragment.newInstance(route)
         } else if (AssignmentListFragment::class.java.isAssignableFrom(cls)) {
-            fragment = AssignmentListFragment.getInstance(canvasContext!!, route.arguments)
+            fragment = AssignmentListFragment.newInstance(canvasContext!!, route)
         } else if (AssignmentDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = getAssignmentDetailsFragment(canvasContext, route)
         } else if (DueDatesFragment::class.java.isAssignableFrom(cls)) {
@@ -199,6 +200,8 @@ object RouteResolver {
             fragment = LtiLaunchFragment.newInstance(route)
         } else if (PeopleListFragment::class.java.isAssignableFrom(cls)) {
             fragment = PeopleListFragment.newInstance(canvasContext!!)
+        } else if (SpeedGraderFragment::class.java.isAssignableFrom(cls)) {
+            fragment = SpeedGraderFragment.newInstance(route)
         } else if (StudentContextFragment::class.java.isAssignableFrom(cls)) {
             fragment = StudentContextFragment.newInstance(route.arguments)
         } else if (AttendanceListFragment::class.java.isAssignableFrom(cls)) {

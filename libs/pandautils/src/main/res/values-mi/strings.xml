@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Tohu hei kua oti</string>
     <string name="a11y_markAsNotDoneWithName">%s Tohu hei kāore kua oti</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">I rahua te uta i te waitohu pouakaroto</string>
+    <string name="inboxSignatureSettingsUpdated">Kua tiakina nga tautuhinga pouakaroto!</string>
+    <string name="inboxSignatureSettingsError">I rahua te tiaki i nga tautuhinga pouakaroto</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Tuhia to hainatanga ki konei</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Haora</item>
+        <item quantity="other">%d Haora</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Min</item>
+        <item quantity="other">%d Min</item>
+    </plurals>
 </resources>

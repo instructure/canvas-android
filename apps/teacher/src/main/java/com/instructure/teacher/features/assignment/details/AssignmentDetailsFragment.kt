@@ -21,6 +21,7 @@ import android.webkit.WebView
 import android.widget.Button
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
+import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.Companion.getSubmissionTypeFromAPIString
 import com.instructure.canvasapi2.models.Assignment.Companion.submissionTypeToPrettyPrintString
@@ -36,11 +37,15 @@ import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.interactions.Identity
 import com.instructure.interactions.MasterDetailInteractions
 import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouteContext
 import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.discussion.router.DiscussionRouterFragment
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
+import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.fragments.BasePresenterFragment
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.LongArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
@@ -52,6 +57,7 @@ import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.onClick
 import com.instructure.pandautils.utils.onClickWithRequireNetwork
+import com.instructure.pandautils.utils.postSticky
 import com.instructure.pandautils.utils.setGone
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.pandautils.utils.withArgs
@@ -61,12 +67,10 @@ import com.instructure.teacher.activities.InternalWebViewActivity
 import com.instructure.teacher.databinding.FragmentAssignmentDetailsBinding
 import com.instructure.teacher.dialog.NoInternetConnectionDialog
 import com.instructure.teacher.events.AssignmentDeletedEvent
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.AssignmentUpdatedEvent
 import com.instructure.teacher.events.post
 import com.instructure.teacher.factory.AssignmentDetailPresenterFactory
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
-import com.instructure.teacher.features.assignment.submission.SubmissionListFilter
 import com.instructure.teacher.fragments.DueDatesFragment
 import com.instructure.teacher.fragments.EditAssignmentDetailsFragment
 import com.instructure.teacher.router.RouteMatcher
@@ -75,20 +79,26 @@ import com.instructure.teacher.utils.setupBackButtonWithExpandCollapseAndBack
 import com.instructure.teacher.utils.setupMenu
 import com.instructure.teacher.utils.updateToolbarExpandCollapseIcon
 import com.instructure.teacher.viewinterface.AssignmentDetailsView
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Job
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import java.util.Date
+import javax.inject.Inject
 
 @PageView
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_DETAILS)
+@AndroidEntryPoint
 class AssignmentDetailsFragment : BasePresenterFragment<
         AssignmentDetailsPresenter,
         AssignmentDetailsView,
         FragmentAssignmentDetailsBinding>(),
     AssignmentDetailsView,
     Identity {
+
+    @Inject
+    lateinit var assignmentsApi: AssignmentAPI.AssignmentInterface
 
     private var assignment: Assignment by ParcelableArg(Assignment(), ASSIGNMENT)
     private var course: Course by ParcelableArg(Course())
@@ -127,14 +137,28 @@ class AssignmentDetailsFragment : BasePresenterFragment<
 
     override fun populateAssignmentDetails(assignment: Assignment) = with(binding) {
         this@AssignmentDetailsFragment.assignment = assignment
-        toolbar.setupMenu(R.menu.menu_edit_generic) { openEditPage(assignment) }
+        toolbar.setupMenu(R.menu.menu_assignment_details) { menuItem ->
+            when (menuItem.itemId) {
+                R.id.menu_edit -> {
+                    openEditPage(assignment)
+                }
+
+                R.id.menu_speedGrader -> {
+                    val bundle = SpeedGraderFragment.makeBundle(
+                        courseId = course.id,
+                        assignmentId = assignment.id
+                    )
+                    RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
+                }
+            }
+        }
         swipeRefreshLayout.isRefreshing = false
         setupViews(assignment)
         setupListeners(assignment)
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, course.color, requireContext().getColor(R.color.textLightest))
     }
 
-    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment)
+    override fun getPresenterFactory() = AssignmentDetailPresenterFactory(assignment, assignmentsApi)
 
     override fun onPresenterPrepared(presenter: AssignmentDetailsPresenter) {}
 
@@ -157,7 +181,7 @@ class AssignmentDetailsFragment : BasePresenterFragment<
             presenter.loadData(true)
 
             // Send out bus events to trigger a refresh for assignment list and submission list
-            AssignmentGradedEvent(assignment.id, javaClass.simpleName).post()
+            AssignmentGradedEvent(assignment.id, javaClass.simpleName).postSticky()
             AssignmentUpdatedEvent(assignment.id, javaClass.simpleName).post()
         }
 
@@ -339,8 +363,8 @@ class AssignmentDetailsFragment : BasePresenterFragment<
     //endregion
 
     override fun updateSubmissionDonuts(totalStudents: Int, gradedStudents: Int, needsGradingCount: Int, notSubmitted: Int) = with(binding.donutGroup) {
-        allTitle?.setTextColor(course.color)
-        allIcon?.setColorFilter(course.color)
+        allTitle.setTextColor(course.color)
+        allIcon.setColorFilter(course.color)
         // Submission section
         gradedChart.setSelected(gradedStudents)
         gradedChart.setTotal(totalStudents)

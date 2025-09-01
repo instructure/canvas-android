@@ -72,7 +72,8 @@
     <string name="loginHint">Jwenn lekòl oswa distri ou a</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Rapòte yon Pwoblèm</string>
+    <string name="errorReportAProblem">Rapòte yon pwoblèm</string>
+    <string name="reportAProblemDialogTitle">Rapòte yon pwoblèm</string>
     <string name="errorReportSubject">Sijè</string>
     <string name="errorReportDescription">Deskripsyon</string>
     <string name="errorReportSend">Voye</string>
@@ -99,7 +100,7 @@
     <string name="findMySchool">Jwenn lekòl mwen an</string>
     <string name="loginWithQRCode">Kòd QR</string>
     <string name="locateQRCode">Jwenn Kòd QR</string>
-    <string name="qrCodeExplanation">W ap jwenn kòd QR la sou entènèt nan pwofil ou. Klike sou \'QR pou Koneksyon Mobil\' nan lis la.</string>
+    <string name="qrCodeExplanation">Jwenn Kòd QR la sou profil kont ou sou entènèt la nan seksyon \'QR pou Koneksyon Movil\'.</string>
     <string name="qrCodeScanningPrompt">Eskane yon kòd QR sou Canvas pou ka konekte.</string>
     <string name="loginWithQRCodeError">Te gen yon erè pandan koneksyon an. Tanpri jenere yon lòt Kòd QR epi eseye ankò.</string>
     <string name="invalidQRCodeError">Tanpri eskane yon kòd QR Canvas jenere</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">Nou te fè kèk chanjman.</string>
     <string name="whatsNewText">Gade kisa ki nouvo</string>
     <string name="findAnotherSchool">Jwenn yon lòt lekòl</string>
+    <string name="qrCodeDisabledExplanation">Si l pa la, se paske enstitisyon ou an dezaktive opsyon sa a.</string>
 </resources>

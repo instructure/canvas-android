@@ -17,12 +17,9 @@
 package com.instructure.canvasapi2.managers
 
 import com.instructure.canvasapi2.StatusCallback
-import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.CanvasContext
-import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
 import com.instructure.canvasapi2.utils.weave.apiAsync
@@ -31,7 +28,7 @@ class PlannerManager(private val plannerApi: PlannerAPI) {
 
     fun getPlannerItemsAsync(forceNetwork: Boolean, startDate: String? = null, endDate: String? = null) = apiAsync<List<PlannerItem>> { getPlannerItems(forceNetwork, it, startDate, endDate) }
 
-    private fun getPlannerItems(
+    fun getPlannerItems(
             forceNetwork: Boolean,
             callback: StatusCallback<List<PlannerItem>>,
             startDate: String? = null,
@@ -43,7 +40,7 @@ class PlannerManager(private val plannerApi: PlannerAPI) {
         plannerApi.getPlannerItems(adapter, callback, params, startDate, endDate)
     }
 
-    private fun createPlannerOverride(
+    fun createPlannerOverride(
             forceNetwork: Boolean,
             callback: StatusCallback<PlannerOverride>,
             plannerOverride: PlannerOverride
@@ -56,7 +53,7 @@ class PlannerManager(private val plannerApi: PlannerAPI) {
 
     fun createPlannerOverrideAsync(forceNetwork: Boolean, plannerOverride: PlannerOverride) = apiAsync<PlannerOverride> { createPlannerOverride(forceNetwork, it, plannerOverride) }
 
-    private fun updatePlannerOverride(
+    fun updatePlannerOverride(
             forceNetwork: Boolean,
             callback: StatusCallback<PlannerOverride>,
             completed: Boolean,

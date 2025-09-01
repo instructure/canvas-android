@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Marcio fel wedi’i gwblhau</string>
     <string name="a11y_markAsNotDoneWithName">%s Marcio fel heb ei gwblhau</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Wedi methu llwytho’r llofnod blwch derbyn</string>
+    <string name="inboxSignatureSettingsUpdated">Gosodiadau’r blwch derbyn wedi’u cadw!</string>
+    <string name="inboxSignatureSettingsError">Wedi methu cadw gosodiadau’r blwch derbyn</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Rhowch eich llofnod yma</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d Awr</item>
+        <item quantity="other">%d Awr</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d Munud</item>
+        <item quantity="other">%d Munud</item>
+    </plurals>
 </resources>

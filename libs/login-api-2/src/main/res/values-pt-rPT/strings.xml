@@ -72,7 +72,8 @@
     <string name="loginHint">Encontrar a sua escola ou distrito</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">Relatar um Problema:</string>
+    <string name="errorReportAProblem">Denunciar um problema</string>
+    <string name="reportAProblemDialogTitle">Denunciar um problema</string>
     <string name="errorReportSubject">Assunto</string>
     <string name="errorReportDescription">Descrição</string>
     <string name="errorReportSend">Enviar</string>
@@ -99,7 +100,7 @@
     <string name="findMySchool">Encontrar minha escola</string>
     <string name="loginWithQRCode">Código QR</string>
     <string name="locateQRCode">Localizar código QR</string>
-    <string name="qrCodeExplanation">Você encontrará o código QR na web no seu perfil de conta. Clique em "QR para Login Móvel" na lista.</string>
+    <string name="qrCodeExplanation">Encontre o código QR no perfil da sua conta na web em ”QR para Início de sessão móvel”.</string>
     <string name="qrCodeScanningPrompt">Digitalize um código QR do Canvas para fazer o login</string>
     <string name="loginWithQRCodeError">Houve um erro no registo. Por favor, gere outro QR Code e tente novamente.</string>
     <string name="invalidQRCodeError">Por favor, digitalize um código QR gerado pela Canvas</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">Nós fizemos algumas alterações.</string>
     <string name="whatsNewText">Veja o que há de novo</string>
     <string name="findAnotherSchool">Encontrar outra escola</string>
+    <string name="qrCodeDisabledExplanation">Se não estiver lá, a sua instituição desativou essa opção.</string>
 </resources>

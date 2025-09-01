@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Contrassegna come fatto</string>
     <string name="a11y_markAsNotDoneWithName">%s Contrassegna come non fatto</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Impossibile caricare la firma casella di posta in arrivo</string>
+    <string name="inboxSignatureSettingsUpdated">Impostazioni Posta in arrivo salvate!</string>
+    <string name="inboxSignatureSettingsError">Impossibile salvare le impostazioni casella di posta in arrivo</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Scrivi qui la tua firma</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d ora</item>
+        <item quantity="other">%d ore</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minuto</item>
+        <item quantity="other">%d minuti</item>
+    </plurals>
 </resources>

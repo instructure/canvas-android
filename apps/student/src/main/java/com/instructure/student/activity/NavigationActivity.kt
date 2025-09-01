@@ -50,8 +50,6 @@ import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.CanvasRestAdapter
-import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.GroupManager
 import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -154,6 +152,7 @@ import com.instructure.student.tasks.StudentLogoutTask
 import com.instructure.student.util.Analytics
 import com.instructure.student.util.AppShortcutManager
 import com.instructure.student.util.StudentPrefs
+import com.instructure.student.widget.WidgetUpdater
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
@@ -322,7 +321,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
              from external sources. */
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
-            binding.divider.setVisible(visible)
+            binding.bottomBarDivider.setVisible(visible)
         }
     }
 
@@ -407,6 +406,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         }
 
         scheduleAlarms()
+
+        WidgetUpdater.updateWidgets()
     }
 
     private fun logOfflineEvents(isOnline: Boolean) {
@@ -451,7 +452,7 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         currentFragment?.let {
             val visible = isBottomNavFragment(it) || supportFragmentManager.backStackEntryCount <= 1
             binding.bottomBar.setVisible(visible)
-            binding.divider.setVisible(visible)
+            binding.bottomBarDivider.setVisible(visible)
         }
     }
 

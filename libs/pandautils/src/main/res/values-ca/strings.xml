@@ -488,4 +488,16 @@
     <string name="a11y_markAsDoneWithName">%s Marca-ho com fet</string>
     <string name="a11y_markAsNotDoneWithName">%s Marca-ho com no fet</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">No s’ha pogut carregar la signatura de la safata d\'entrada</string>
+    <string name="inboxSignatureSettingsUpdated">S’ha desat la configuració de la safata d\'entrada!</string>
+    <string name="inboxSignatureSettingsError">No s’ha pogut desar la configuració de la safata d\'entrada</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Poseu aquí la vostra signatura</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d hora</item>
+        <item quantity="other">%d hores</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minuts</item>
+    </plurals>
 </resources>

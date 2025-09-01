@@ -20,6 +20,7 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -46,73 +47,93 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @Stub //Need to wait for the comments to be developed in the new SpeedGrader
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
     fun testCommentLibraryE2E() {
 
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, students = 1, courses = 2)
         val teacher = data.teachersList[0]
         val student = data.studentsList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Make an assignment with a submission for the '${course.name}' course and '${student.name}' student. Set the 'Show suggestions when typing' setting to see the comment library itself.")
+        Log.d(PREPARATION_TAG, "Make an assignment with a submission for the '${course.name}' course and '${student.name}' student. Set the 'Show suggestions when typing' setting to see the comment library itself.")
         val testAssignment = prepareSettingsAndMakeAssignmentWithSubmission(course, student.token, teacher.token, teacher.id)
 
-        Log.d(PREPARATION_TAG,"Generate comments for comment library.")
+        Log.d(PREPARATION_TAG, "Generate comments for comment library.")
         val testComment = "Test Comment"
         val testComment2 = "This is another test comment."
         CommentLibraryApi.createComment(course.id, teacher.token, testComment)
         CommentLibraryApi.createComment(course.id, teacher.token, testComment2)
 
+        Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG,"Navigate to submission's comments tab.")
+        Log.d(STEP_TAG, "Navigate to submission's comments tab.")
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(testAssignment)
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
 
         val testText = "another"
-        Log.d(STEP_TAG,"Type '$testText' word and check if there is only one matching suggestion visible.")
+        Log.d(STEP_TAG, "Type '$testText' word.")
         speedGraderCommentsPage.typeComment(testText)
+
+        Log.d(ASSERTION_TAG, "Assert if there is only one matching suggestion visible.")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(1)
 
+        Log.d(STEP_TAG, "Close the comment library.")
         commentLibraryPage.closeCommentLibrary()
+
+        Log.d(ASSERTION_TAG, "Assert if the comment library is not visible.")
         speedGraderPage.assertCommentLibraryNotVisible()
 
-        Log.d(STEP_TAG, "Clear comment input field and verify if all the suggestions is displayed again.")
+        Log.d(STEP_TAG, "Clear comment input field.")
         speedGraderCommentsPage.clearComment()
+
+        Log.d(ASSERTION_TAG, "Assert if all the suggestions are displayed again.")
         commentLibraryPage.assertSuggestionsCount(2)
 
         val testText2 = "test"
-        Log.d(STEP_TAG,"Type '$testText2' word and check if there are two matching suggestion visible.")
+        Log.d(STEP_TAG, "Close the comment library and type '$testText2' word.")
         commentLibraryPage.closeCommentLibrary()
         speedGraderCommentsPage.typeComment(testText2)
+
+        Log.d(ASSERTION_TAG, "Assert if there are two matching suggestion visible.")
         commentLibraryPage.assertPageObjects()
         commentLibraryPage.assertSuggestionsCount(2)
         commentLibraryPage.assertSuggestionVisible(testComment)
         commentLibraryPage.assertSuggestionVisible(testComment2)
 
-        Log.d(STEP_TAG, "Select a suggestion and check if it's filled into the comment text field and the comment library is closed.")
+        Log.d(STEP_TAG, "Select a suggestion.")
         commentLibraryPage.selectSuggestion(testComment2)
+
+        Log.d(ASSERTION_TAG, "Assert if it's filled into the comment text field and the comment library is closed.")
         speedGraderCommentsPage.assertCommentFieldHasText(testComment2)
         speedGraderPage.assertCommentLibraryNotVisible()
 
-        Log.d(STEP_TAG,"Send the previously selected comment and check if it's successfully sent.")
+        Log.d(STEP_TAG, "Send the previously selected comment.")
         speedGraderCommentsPage.sendComment()
+
+        Log.d(ASSERTION_TAG, "Assert if it's successfully sent.")
         speedGraderCommentsPage.assertDisplaysCommentText(testComment2)
 
-        Log.d(STEP_TAG, "Clear the comment, check if all suggestions are displayed and the comment library is closed.")
+        Log.d(STEP_TAG, "Clear the comment.")
         speedGraderCommentsPage.clearComment()
+
+        Log.d(ASSERTION_TAG, "Assert if all suggestions are displayed and the comment library is closed.")
         commentLibraryPage.assertSuggestionsCount(2)
         commentLibraryPage.closeCommentLibrary()
 
-        Log.d(STEP_TAG,"Type some words which does not match with any of the suggestions in the comment library. Check that suggestions are not visible and empty view is visible.")
+        Log.d(STEP_TAG, "Type some words which does not match with any of the suggestions in the comment library.")
         speedGraderCommentsPage.typeComment("empty filter")
+
+        Log.d(ASSERTION_TAG, "Assert that suggestions are not visible and empty view is visible.")
         commentLibraryPage.assertSuggestionListNotVisible()
         commentLibraryPage.assertEmptyViewVisible()
     }

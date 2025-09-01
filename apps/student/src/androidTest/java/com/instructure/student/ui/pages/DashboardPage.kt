@@ -371,11 +371,11 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
         onView(matcher).scrollTo().assertDisplayed()
     }
 
-    fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String) {
+    fun assertCourseGradeNotDisplayed(courseName: String, courseGrade: String, hasText: Boolean = true) {
         val siblingMatcher = allOf(withId(R.id.textContainer), withDescendant(withId(R.id.titleTextView) + withText(courseName)))
-        val matcher = allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
-
-        onView(matcher).check(matches(Matchers.not(isDisplayed())))
+        val matcher: Matcher<View> = if(hasText) allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView) + withText(courseGrade)), hasSibling(siblingMatcher))
+        else allOf(withId(R.id.gradeLayout), withDescendant(withId(R.id.gradeTextView)), hasSibling(siblingMatcher))
+        onView(matcher).check(matches(anyOf(withEffectiveVisibility(Visibility.GONE), Matchers.not(isDisplayed()))))
     }
 
     fun assertDashboardNotificationDisplayed(title: String, subTitle: String) {
@@ -468,6 +468,14 @@ class DashboardPage : BasePage(R.id.dashboardPage) {
 
     fun goToDashboard() {
         onView(withId(R.id.bottomNavigationHome)).click()
+    }
+
+    fun assertLoginRequiredDialog() {
+        waitForViewWithText(R.string.loginRequired).assertDisplayed()
+    }
+
+    fun clickLogInOnLoginRequiredDialog() {
+        onView(withText("LOG IN")).click()
     }
 
 }

@@ -28,6 +28,7 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.isGroup
+import com.instructure.student.features.calendarevent.createupdate.StudentCreateUpdateEventRepository
 import io.mockk.coEvery
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest

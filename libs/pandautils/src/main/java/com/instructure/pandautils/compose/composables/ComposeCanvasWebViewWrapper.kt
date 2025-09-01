@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.composables
 
+import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -34,37 +35,74 @@ import com.instructure.pandautils.views.CanvasWebViewWrapper
 
 @Composable
 fun ComposeCanvasWebViewWrapper(
-    html: String,
+    content: String,
     modifier: Modifier = Modifier,
+    contentType: String = "text/html",
+    useInAppFormatting: Boolean = true,
     title: String? = null,
     onLtiButtonPressed: ((ltiUrl: String) -> Unit)? = null,
-    applyOnWebView: (CanvasWebView.() -> Unit)? = null
+    applyOnWebView: (CanvasWebView.() -> Unit)? = null,
+    applyOnUpdate: (CanvasWebViewWrapper.() -> Unit)? = null,
+    webViewCallbacks: ComposeWebViewCallbacks? = null,
+    embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
-    val webViewState = rememberSaveable { bundleOf() }
+    val webViewState = rememberSaveable(content) { bundleOf() }
 
     if (LocalInspectionMode.current) {
-        Text(text = html)
+        Text(text = content)
     } else {
         AndroidView(
             factory = {
                 CanvasWebViewWrapper(it).apply {
+                    if (webViewCallbacks != null) {
+                        webView.canvasWebViewClientCallback = object : CanvasWebView.CanvasWebViewClientCallback {
+                            override fun openMediaFromWebView(mime: String, url: String, filename: String) =
+                                webViewCallbacks.openMedia(mime, url, filename)
+
+                            override fun onPageFinishedCallback(webView: WebView, url: String) = webViewCallbacks.onPageFinished(webView, url)
+
+                            override fun onPageStartedCallback(webView: WebView, url: String) = webViewCallbacks.onPageStarted(webView, url)
+
+                            override fun canRouteInternallyDelegate(url: String): Boolean = webViewCallbacks.canRouteInternally(url)
+
+                            override fun routeInternallyCallback(url: String) = webViewCallbacks.routeInternally(url)
+
+                            override fun onReceivedErrorCallback(webView: WebView, errorCode: Int, description: String, failingUrl: String) =
+                                webViewCallbacks.onReceivedError(webView, errorCode, description, failingUrl)
+                        }
+                    }
+                    if (embeddedWebViewCallbacks != null) {
+                        webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
+                            override fun launchInternalWebViewFragment(url: String) =
+                                embeddedWebViewCallbacks.launchInternalWebViewFragment(url)
+
+                            override fun shouldLaunchInternalWebViewFragment(url: String): Boolean =
+                                embeddedWebViewCallbacks.shouldLaunchInternalWebViewFragment(url)
+                        }
+                    }
+
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
                 }
             },
             update = {
                 if (webViewState.isEmpty) {
-                    it.loadHtml(html, title)
+                    if (useInAppFormatting) {
+                        it.loadHtml(content, title)
+                    } else {
+                        it.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), content, contentType, "UTF-8", null)
+                    }
 
                     if (onLtiButtonPressed != null) {
                         it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
                     }
 
-                    if (HtmlContentFormatter.hasGoogleDocsUrl(html)) {
+                    if (HtmlContentFormatter.hasGoogleDocsUrl(content)) {
                         it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
                     }
                 } else {
                     it.webView.restoreState(webViewState)
                 }
+                applyOnUpdate?.let { applyOnUpdate -> it.applyOnUpdate() }
             },
             onRelease = {
                 it.webView.saveState(webViewState)

@@ -89,7 +89,7 @@ class DashboardInteractionTest : ParentComposeTest() {
         goToDashboard(data)
 
         dashboardPage.openLeftSideMenu()
-        leftSideNavigationDrawerPage.clickSwitchUsers()
+        leftSideNavigationDrawerPage.clickChangeUser()
         waitForMatcherWithSleeps(ViewMatchers.withId(R.id.canvasLogo), 20000).check(
             ViewAssertions.matches(
                 ViewMatchers.isDisplayed()
@@ -130,7 +130,7 @@ class DashboardInteractionTest : ParentComposeTest() {
 
         addStudentBottomPage.clickOnQRCode()
 
-        composeTestRule.onNodeWithText("Open Canvas Student").assertIsDisplayed()
+        composeTestRule.onNodeWithText("Open Canvas app").assertIsDisplayed()
     }
 
     private fun initData(): MockCanvas {

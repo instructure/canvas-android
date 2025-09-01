@@ -488,4 +488,16 @@
     <string name="a11y_markAsDoneWithName">%s Merk som ferdig</string>
     <string name="a11y_markAsNotDoneWithName">%s Merket som ikke ferdig</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Kunne ikke laste inn innbokssignatur</string>
+    <string name="inboxSignatureSettingsUpdated">Innboks-innstillinger lagret!</string>
+    <string name="inboxSignatureSettingsError">Kunne ikke lagre innboksinnstillinger</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Skriv signaturen din her</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d time</item>
+        <item quantity="other">%d timer</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d min</item>
+        <item quantity="other">%d minutter</item>
+    </plurals>
 </resources>

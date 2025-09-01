@@ -16,11 +16,19 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
+import com.instructure.canvas.espresso.getHintText
 import com.instructure.espresso.OnViewWithId
+import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
 import com.instructure.espresso.page.BasePage
+import com.instructure.espresso.page.getStringFromResource
+import com.instructure.espresso.page.plus
+import com.instructure.espresso.page.waitForView
+import com.instructure.espresso.page.withId
+import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
 import com.instructure.loginapi.login.R
+import org.junit.Assert.assertEquals
 
 /**
  * Represents the Login Find School Page.
@@ -55,6 +63,23 @@ class LoginFindSchoolPage: BasePage() {
      */
     fun enterDomain(domain: String) {
         domainInputEditText.replaceText(domain)
+    }
+
+    /**
+     * Assert that the schoolText school is displayed in the results.
+     * @param schoolText The school to assert.
+     */
+    fun assertSchoolSearchResults(schoolText: String) {
+        waitForView(withId(R.id.schoolDomain) + withText(schoolText)).assertDisplayed()
+    }
+
+    /**
+     * Assert that the schoolText school is displayed in the results.
+     * @param schoolText The school to assert.
+     */
+    fun assertHintText(schoolText: Int) {
+        val hintText = getHintText(withId(R.id.domainInput))
+        assertEquals(hintText, getStringFromResource(schoolText))
     }
 }
 

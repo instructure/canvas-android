@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Informeu d\'un problema</string>
+    <string name="reportAProblemDialogTitle">Informeu d\'un problema</string>
     <string name="errorReportSubject">Assumpte</string>
     <string name="errorReportDescription">Descripció</string>
     <string name="errorReportSend">Envia</string>
@@ -101,7 +102,7 @@
     <string name="findMySchool">Cerca la meva escola</string>
     <string name="loginWithQRCode">Codi QR</string>
     <string name="locateQRCode">Localitzeu el codi QR</string>
-    <string name="qrCodeExplanation">Trobareu el codi QR a la web, al perfil del vostre usuari. Feu clic a "QR per a inici de sessió mòbil" a la llista.</string>
+    <string name="qrCodeExplanation">Cerqueu el codi QR al perfil del compte a la secció \'QR per a l’inici de sessió mòbil\' del lloc web.</string>
     <string name="qrCodeScanningPrompt">Escanegeu un codi QR del Canvas per iniciar la sessió</string>
     <string name="loginWithQRCodeError">S\'ha produït un error en iniciar la sessió. Genereu un altre codi QR i torneu-ho a provar.</string>
     <string name="invalidQRCodeError">Escanegeu un codi QR generat pel Canvas</string>
@@ -128,4 +129,5 @@
     <string name="weMadeChanges">Hem introduït alguns canvis.</string>
     <string name="whatsNewText">Consulteu les novetats</string>
     <string name="findAnotherSchool">Cerca una altra escola</string>
+    <string name="qrCodeDisabledExplanation">Si no el trobeu allà, la vostra institució haurà desactivat aquesta opció.</string>
 </resources>

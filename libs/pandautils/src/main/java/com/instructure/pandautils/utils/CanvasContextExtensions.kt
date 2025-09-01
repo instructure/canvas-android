@@ -41,6 +41,11 @@ val User?.studentColor: Int get() {
     return if (ColorKeeper.darkTheme) themedColor.dark else themedColor.light
 }
 
+@get:ColorInt
+val CanvasContext?.courseOrUserColor: Int get() {
+    return if (this is User) this.studentColor else this.color
+}
+
 val CanvasContext.isCourse: Boolean get() = this.type == CanvasContext.Type.COURSE
 val CanvasContext.isGroup: Boolean get() = this.type == CanvasContext.Type.GROUP
 val CanvasContext.isCourseOrGroup: Boolean get() = this.type == CanvasContext.Type.GROUP || this.type == CanvasContext.Type.COURSE

@@ -1,0 +1,3 @@
+mutation AnswerPrompt($input: AIPrompt!) {
+    answerPrompt(input: $input)
+}

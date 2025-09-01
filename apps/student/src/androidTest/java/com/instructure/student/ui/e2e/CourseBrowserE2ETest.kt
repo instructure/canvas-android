@@ -35,10 +35,14 @@ import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.PagesApi
+import com.instructure.dataseeding.model.AssignmentApiModel
+import com.instructure.dataseeding.model.DiscussionApiModel
+import com.instructure.dataseeding.model.PageApiModel
 import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -57,66 +61,75 @@ class CourseBrowserE2ETest : StudentComposeTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE_BROWSER, TestCategory.E2E, SecondaryFeatureCategory.SMART_SEARCH)
     fun testSmartSearchE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 1)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course with 2 days ahead due date.")
         val testAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, dueAt = 2.days.fromNow.iso8601, pointsPossible = 15.0, submissionTypes = listOf(
             SubmissionType.ONLINE_TEXT_ENTRY), assignmentName = "Test SmartSearch Assignment")
 
-        Log.d(STEP_TAG,"Seed an announcement for '${course.name}' course.")
+        Log.d(STEP_TAG, "Seed an announcement for '${course.name}' course.")
         val testAnnouncement = DiscussionTopicsApi.createAnnouncement(course.id, teacher.token, announcementTitle = "Test Announcement")
 
-        Log.d(PREPARATION_TAG,"Create a discussion topic for '${course.name}' course.")
+        Log.d(PREPARATION_TAG, "Create a discussion topic for '${course.name}' course.")
         val testDiscussion = DiscussionTopicsApi.createDiscussion(courseId = course.id, token = teacher.token, discussionTitle = "Test Discussion")
 
-        Log.d(PREPARATION_TAG,"Create a published page for course: '${course.name}'.")
+        Log.d(PREPARATION_TAG, "Create a published page for course: '${course.name}'.")
         val testPage = PagesApi.createCoursePage(course.id, teacher.token, published = true, frontPage = false, pageTitle = "Test SmartSearch Page", body = "<h1 id=\"header1\">Test SmartSearch Page</h1>")
 
-        Log.d(STEP_TAG,"Login with user: '${student.name}', login id: '${student.loginId}'.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
 
-        Log.d(STEP_TAG,"Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
+        Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select course: '${course.name}'.")
         dashboardPage.waitForRender()
         Thread.sleep(10000) // Wait for the API creations to complete, sometimes the creation processes are too slow on the API side
         dashboardPage.selectCourse(course)
 
-        Log.d(STEP_TAG,"Assert that the Course Browser Page is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the Course Browser Page is displayed.")
         courseBrowserPage.assertPageObjects()
 
         Log.d(STEP_TAG, "Click on the 'Smart Search' (Magnifying glass) icon on the top right corner of the Course Browser page.")
         courseBrowserPage.clickOnSmartSearch()
 
         val smartSearchText = testAssignment.name.take(4) // "Test" will be the search text.
-        Log.d(STEP_TAG, "Type the '$smartSearchText' into the search input field.")
-        composeTestRule.onNodeWithTag("searchField")
-            .requestFocus()
-            .performClick()
-            .performTextInput(smartSearchText)
-        composeTestRule.onNodeWithTag("searchField").performImeAction()
-        composeTestRule.waitForIdle()
+        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = {
 
-        Log.d(ASSERTION_TAG, "Assert that the '$smartSearchText' text is displayed in the search input field and the filter button is displayed on the search bar.")
-        smartSearchPage.assertQuery(smartSearchText)
-        composeTestRule.onNodeWithTag("filterButton").assertIsDisplayed()
+            composeTestRule.onNodeWithTag("clearButton").performClick()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${course.name}' is displayed under the 'Results in course' section.")
-        smartSearchPage.assertCourse(course.name)
+            Log.d(STEP_TAG, "Type the '$smartSearchText' into the search input field.")
+            composeTestRule.onNodeWithTag("searchField")
+                .requestFocus()
+                .performClick()
+                .performTextInput(smartSearchText)
+            composeTestRule.onNodeWithTag("searchField").performImeAction()
+            composeTestRule.waitForIdle()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testAssignment.name}' assignment is displayed and it's type is 'Assignment'.")
-        smartSearchPage.assertItemDisplayed(testAssignment.name, "Assignment")
+            Log.d(ASSERTION_TAG, "Assert that the '$smartSearchText' text is displayed in the search input field and the filter button is displayed on the search bar.")
+            smartSearchPage.assertQuery(smartSearchText)
+            composeTestRule.onNodeWithTag("filterButton").assertIsDisplayed()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testAnnouncement.title}' announcement is displayed and it's type is 'Announcement'.")
-        smartSearchPage.assertItemDisplayed(testAnnouncement.title, "Announcement")
+            Log.d(ASSERTION_TAG, "Assert that the Smart Search Result List page displays all the corresponding result items and the course itself as well.")
+            assertSmartSearchResults(course.name, testAssignment, testAnnouncement, testDiscussion, testPage)
+        }) {
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testDiscussion.title}' discussion is displayed and it's type is 'Discussion'.")
-        smartSearchPage.assertItemDisplayed(testDiscussion.title, "Discussion")
+            Log.d(STEP_TAG, "Type the '$smartSearchText' into the search input field.")
+            composeTestRule.onNodeWithTag("searchField")
+                .requestFocus()
+                .performClick()
+                .performTextInput(smartSearchText)
+            composeTestRule.onNodeWithTag("searchField").performImeAction()
+            composeTestRule.waitForIdle()
 
-        Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page is displayed and it's type is 'Page'.")
-        smartSearchPage.assertItemDisplayed(testPage.title, "Page")
+            Log.d(ASSERTION_TAG, "Assert that the '$smartSearchText' text is displayed in the search input field and the filter button is displayed on the search bar.")
+            smartSearchPage.assertQuery(smartSearchText)
+            composeTestRule.onNodeWithTag("filterButton").assertIsDisplayed()
+
+            Log.d(ASSERTION_TAG, "Assert that the Smart Search Result List page displays all the corresponding result items and the course itself as well.")
+            assertSmartSearchResults(course.name, testAssignment, testAnnouncement, testDiscussion, testPage)
+        }
 
         Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment.")
         smartSearchPage.clickOnItem(testAssignment.name)
@@ -148,7 +161,8 @@ class CourseBrowserE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Click on the '${testPage.title}' page.")
         smartSearchPage.clickOnItem(testPage.title)
 
-        Log.d(ASSERTION_TAG, "Assert that the previous click action will navigate to the '${testPage.title}' page's details page. (Assert for the URL as we are displaying the URL of the page when navigating to it's details page from a link.")
+        Log.d(ASSERTION_TAG, "Assert that the previous click action will navigate to the '${testPage.title}' page's details page." +
+                "(Assert for the URL as we are displaying the URL of the page when navigating to it's details page from a link.")
         pageDetailsPage.assertToolbarTitle(testPage.url)
 
         Log.d(STEP_TAG, "Navigate back to the Smart Search Result List page.")
@@ -226,11 +240,35 @@ class CourseBrowserE2ETest : StudentComposeTest() {
         smartSearchPage.assertGroupHeaderDisplayed(SmartSearchContentType.ANNOUNCEMENT)
         smartSearchPage.assertGroupHeaderDisplayed(SmartSearchContentType.ASSIGNMENT)
 
+        Log.d(ASSERTION_TAG, "Assert that all the 4 groups has 1 item and it displays by the counter.")
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.WIKI_PAGE)
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.DISCUSSION_TOPIC)
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.ANNOUNCEMENT)
+        smartSearchPage.assertGroupItemCount("1", SmartSearchContentType.ASSIGNMENT)
+
         Log.d(ASSERTION_TAG, "Assert that all the types of result items are displayed on the Smart Search Result page.")
         smartSearchPage.assertItemDisplayed(testPage.title, "Page")
         smartSearchPage.assertItemDisplayed(testAnnouncement.title, "Announcement")
         smartSearchPage.assertItemDisplayed(testDiscussion.title, "Discussion")
         smartSearchPage.assertItemDisplayed(testAssignment.name, "Assignment")
+    }
+
+    private fun assertSmartSearchResults(courseName: String, testAssignment: AssignmentApiModel, testAnnouncement: DiscussionApiModel, testDiscussion: DiscussionApiModel, testPage: PageApiModel) {
+
+        Log.d(ASSERTION_TAG, "Assert that the '${courseName}' is displayed under the 'Results in course' section.")
+        smartSearchPage.assertCourse(courseName)
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testAssignment.name}' assignment is displayed and it's type is 'Assignment'.")
+        smartSearchPage.assertItemDisplayed(testAssignment.name, "Assignment")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testAnnouncement.title}' announcement is displayed and it's type is 'Announcement'.")
+        smartSearchPage.assertItemDisplayed(testAnnouncement.title, "Announcement")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testDiscussion.title}' discussion is displayed and it's type is 'Discussion'.")
+        smartSearchPage.assertItemDisplayed(testDiscussion.title, "Discussion")
+
+        Log.d(ASSERTION_TAG, "Assert that the '${testPage.title}' page is displayed and it's type is 'Page'.")
+        smartSearchPage.assertItemDisplayed(testPage.title, "Page")
     }
 
 }

@@ -16,7 +16,7 @@
 package com.instructure.pandautils.features.calendar
 
 import android.content.Context
-import androidx.annotation.DrawableRes
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.CanvasContext
@@ -32,7 +32,10 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.pandautils.utils.getIconForPlannerItem
+import com.instructure.pandautils.utils.getTagForPlannerItem
 import com.instructure.pandautils.utils.toLocalDate
+import com.instructure.pandautils.utils.toLocalDateOrNull
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.async
@@ -62,10 +65,12 @@ class CalendarViewModel @Inject constructor(
     private val clock: Clock,
     private val calendarPrefs: CalendarPrefs,
     private val calendarStateMapper: CalendarStateMapper,
-    private val calendarSharedEvents: CalendarSharedEvents
+    private val calendarSharedEvents: CalendarSharedEvents,
+    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private var selectedDay = LocalDate.now(clock)
+    private val initialSelectedDayString = savedStateHandle.get<String>(CalendarFragment.SELECTED_DAY)
+    private var selectedDay = initialSelectedDayString?.toLocalDateOrNull() ?: LocalDate.now(clock)
 
     // Helper fields to handle page change animations when a day in a different month is selected
     private var pendingSelectedDay: LocalDate? = null
@@ -282,10 +287,11 @@ class CalendarViewModel @Inject constructor(
                     it.plannable.id,
                     contextName = getContextNameForPlannerItem(it),
                     canvasContext = it.canvasContext,
-                    iconRes = getIconForPlannerItem(it),
+                    iconRes = it.getIconForPlannerItem(),
                     name = it.plannable.title,
                     date = getDateForPlannerItem(it),
-                    status = getStatusForPlannerItem(it)
+                    status = getStatusForPlannerItem(it),
+                    tag = it.getTagForPlannerItem(context),
                 )
             } ?: emptyList()
 
@@ -307,18 +313,6 @@ class CalendarViewModel @Inject constructor(
             }
         } else {
             plannerItem.contextName.orEmpty()
-        }
-    }
-
-    @DrawableRes
-    private fun getIconForPlannerItem(plannerItem: PlannerItem): Int {
-        return when (plannerItem.plannableType) {
-            PlannableType.ASSIGNMENT, PlannableType.SUB_ASSIGNMENT -> R.drawable.ic_assignment
-            PlannableType.QUIZ -> R.drawable.ic_quiz
-            PlannableType.CALENDAR_EVENT -> R.drawable.ic_calendar
-            PlannableType.DISCUSSION_TOPIC -> R.drawable.ic_discussion
-            PlannableType.PLANNER_NOTE -> R.drawable.ic_todo
-            else -> R.drawable.ic_calendar
         }
     }
 

@@ -1,5 +1,5 @@
 <!--
-  ~ Copyright (C) 2024 - present  Instructure, Inc.
+  ~ Copyright (C) 2017 - present  Instructure, Inc.
   ~
   ~     This program is free software: you can redistribute it and/or modify
   ~     it under the terms of the GNU General Public License as published by
@@ -414,7 +414,7 @@
         <item>@string/gpa_scale</item>
     </string-array>
 
-    <string name="not_a_teacher">Not a teacher?</string>
+  <string name="not_a_teacher">Not a teacher?</string>
     <string name="not_a_teacher_tap_to_visit_play_store">One of our other apps might be a better fit. Tap one to visit the Play Store.</string>
 
     <string name="sg_tab_grade">Grade</string>
@@ -447,6 +447,8 @@
     <string name="save_comment">Save comment</string>
     <string name="cancel_editing_comment">Cancel editing comment</string>
     <string name="skip">Skip</string>
+    <string name="collapseGradePanel">Collapse Grade Panel</string>
+    <string name="expandGradePanel">Expand Grade Panel</string>
 
     <!-- Content description for custom criterion rating button including score. e.g. "Custom score 100" -->
     <string name="rating_button_content_description_custom">Custom score %1$s</string>
@@ -512,7 +514,7 @@
     <string name="colorPickerDialogMessage">This is your personal color setting. Only you will see this color for the course.</string>
     <string name="colorPickerError">The course color could not be set at this time.</string>
 
-    <string name="launch_link_in_external_browser">Launch link in external browser</string>
+                                                                <string name="launch_link_in_external_browser">Launch link in external browser</string>
     <string name="contentDescriptionSelectedFile">Selected File</string>
     <string name="contentDescriptionFileIcon">File Icon</string>
     <string name="contentDescriptionExpandPage">Expand Page</string>
@@ -709,7 +711,7 @@
     <string name="termsOfUse">Terms of Use</string>
     <string name="searchGuides">Search the Canvas Guides</string>
     <string name="searchGuidesDetails">Find answers to common questions</string>
-    <string name="reportProblem">Report a Problem</string>
+    <string name="reportProblem">Report a problem</string>
     <string name="reportProblemDetails">If the app misbehaves, let us know</string>
     <string name="requestFeature">Request a Feature</string>
     <string name="requestFeatureDetails">Have an idea to improve the app?</string>
@@ -838,6 +840,7 @@
     <string name="errorDeletingFolder">An error occurred deleting this folder</string>
     <string name="errorUpdatingFile">An error occurred updating this file</string>
     <string name="errorUpdatingFolder">An error occurred updating this folder</string>
+    <string name="errorEmptyTitle">The title cannot be blank</string>
 
     <string name="toDoEmpty">Nothing more to do!\n Enjoy your day.</string>
     <string name="toDoNoSubmissions">There are no submissions to grade for this assignment.</string>

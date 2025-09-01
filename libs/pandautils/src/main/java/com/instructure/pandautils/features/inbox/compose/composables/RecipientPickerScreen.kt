@@ -50,6 +50,11 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.toggleableState
+import androidx.compose.ui.state.ToggleableState
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
@@ -71,7 +76,7 @@ import com.instructure.pandautils.compose.composables.UserAvatar
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerActionHandler
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerScreenOption
 import com.instructure.pandautils.features.inbox.compose.RecipientPickerUiState
-import com.instructure.pandautils.features.inbox.compose.ScreenState
+import com.instructure.pandautils.utils.ScreenState
 import java.util.EnumMap
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -120,7 +125,7 @@ fun RecipientPickerScreen(
                             }
 
                             when (uiState.screenState) {
-                                is ScreenState.Data -> {
+                                is ScreenState.Content -> {
                                     when (screenOption) {
                                         is RecipientPickerScreenOption.Roles -> RecipientPickerRoleScreen(
                                             uiState,
@@ -179,18 +184,24 @@ private fun RecipientPickerRoleScreen(
             }
         } else {
             uiState.allRecipientsToShow?.let {
+                val isSelected = uiState.selectedRecipients.contains(it)
                 item {
                     RoleRow(
                         name = it.name ?: "",
                         roleCount = it.userCount,
-                        isSelected = uiState.selectedRecipients.contains(it),
-                    ) {
-                        actionHandler(
-                            RecipientPickerActionHandler.RecipientClicked(
-                                it
+                        isSelected = isSelected,
+                        onSelect = {
+                            actionHandler(
+                                RecipientPickerActionHandler.RecipientClicked(
+                                    it
+                                )
                             )
-                        )
-                    }
+                        },
+                        modifier = Modifier.semantics {
+                            role = Role.Checkbox
+                            toggleableState = if(isSelected) ToggleableState.On else ToggleableState.Off
+                        }
+                    )
                 }
             }
 
@@ -201,7 +212,11 @@ private fun RecipientPickerRoleScreen(
                     isSelected = false,
                     onSelect = {
                         actionHandler(RecipientPickerActionHandler.RoleClicked(role))
-                    })
+                    },
+                    modifier = Modifier.semantics {
+                        this.role = Role.Button
+                    }
+                )
             }
         }
 
@@ -218,18 +233,24 @@ private fun RecipientPickerPeopleScreen(
             .fillMaxSize()
     ) {
         uiState.allRecipientsToShow?.let {
+            val isSelected = uiState.selectedRecipients.contains(it)
             item {
                 RoleRow(
                     name = it.name ?: "",
                     roleCount = it.userCount,
-                    isSelected = uiState.selectedRecipients.contains(it),
-                ) {
-                    actionHandler(
-                        RecipientPickerActionHandler.RecipientClicked(
-                            it
+                    isSelected = isSelected,
+                    onSelect = {
+                        actionHandler(
+                            RecipientPickerActionHandler.RecipientClicked(
+                                it
+                            )
                         )
-                    )
-                }
+                    },
+                    modifier = Modifier.semantics {
+                        role = Role.Checkbox
+                        toggleableState = if(isSelected) ToggleableState.On else ToggleableState.Off
+                    }
+                )
             }
         }
         items(uiState.recipientsToShow) { recipient ->
@@ -304,10 +325,11 @@ private fun RoleRow(
     roleCount: Int,
     isSelected: Boolean,
     onSelect: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
-        modifier = Modifier
+        modifier = modifier
             .clickable {
                 onSelect()
             }
@@ -361,6 +383,10 @@ private fun RecipientRow(
         modifier = Modifier
             .clickable { onSelect() }
             .padding(horizontal = 8.dp, vertical = 16.dp)
+            .semantics {
+                role = Role.Checkbox
+                toggleableState = if(isSelected) ToggleableState.On else ToggleableState.Off
+            }
     ) {
         UserAvatar(
             imageUrl = recipient.avatarURL,
@@ -482,7 +508,7 @@ fun RecipientPickerRolesScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             searchValue = TextFieldValue(""),
             selectedRecipients = emptyList(),
             recipientsByRole = roleRecipients,
@@ -513,7 +539,7 @@ fun RecipientPickerRecipientsScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Recipients,
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             searchValue = TextFieldValue(""),
             selectedRole = EnrollmentType.TeacherEnrollment,
             selectedRecipients = listOf(roleRecipients[EnrollmentType.TeacherEnrollment]!!.first()),
@@ -545,7 +571,7 @@ fun RecipientPickerSearchScreenPreview() {
         title = "Select Recipients",
         uiState = RecipientPickerUiState(
             screenOption = RecipientPickerScreenOption.Roles,
-            screenState = ScreenState.Data,
+            screenState = ScreenState.Content,
             searchValue = TextFieldValue("John"),
             selectedRecipients = listOf(roleRecipients[EnrollmentType.TeacherEnrollment]!!.first()),
             recipientsByRole = roleRecipients,

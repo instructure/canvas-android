@@ -137,6 +137,7 @@ object Const {
     const val QUIZ_ANSWER_ID = "answer_id"
     const val ANONYMOUS_GRADING = "anonymousGrading"
     const val UNSUPPORTED_DESCRIPTION = "unsupportedDescription"
+    const val WIDGET_EVENT = "widgetEvent"
 
     // Shared File
     const val FILENAME = "fileName"
@@ -175,4 +176,8 @@ object Const {
     const val CLIENT_ID = "clientId"
     const val CLIENT_SECRET = "clientSecret"
     const val IS_ELEMENTARY = "isElementary"
+
+    // Discussion Checkpoints tags
+    const val REPLY_TO_TOPIC = "reply_to_topic"
+    const val REPLY_TO_ENTRY = "reply_to_entry"
 }

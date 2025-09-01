@@ -15,6 +15,7 @@
  */
 package com.instructure.teacher.ui
 
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.addAssignment
 import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
@@ -43,6 +44,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
             url = "http://fake.blah/somePath" // Code/Test will crash w/o a non-null url
     )
 
+    @Stub
     @Test
     override fun displaysPageObjects() {
         goToSpeedGraderCommentsPage(
@@ -52,6 +54,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertPageObjects()
     }
 
+    @Stub
     @Test
     fun displaysAuthorName() {
         val submissionList = goToSpeedGraderCommentsPage(
@@ -63,6 +66,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertDisplaysAuthorName(authorName)
     }
 
+    @Stub
     @Test
     fun displaysCommentText() {
         val submissionList = goToSpeedGraderCommentsPage(
@@ -74,6 +78,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertDisplaysCommentText(commentText)
     }
 
+    @Stub
     @Test
     fun displaysCommentAttachment() {
         val submissionList = goToSpeedGraderCommentsPage(
@@ -86,6 +91,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertDisplaysCommentAttachment(attachment)
     }
 
+    @Stub
     @Test
     fun displaysSubmissionHistory() {
         goToSpeedGraderCommentsPage(
@@ -95,6 +101,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertDisplaysSubmission()
     }
 
+    @Stub
     @Test
     fun displaysSubmissionFile() {
         val submissionList = goToSpeedGraderCommentsPage(
@@ -106,6 +113,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertDisplaysSubmissionFile(fileAttachments)
     }
 
+    @Stub
     @Test
     fun addsNewTextComment() {
         goToSpeedGraderCommentsPage(
@@ -117,6 +125,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         speedGraderCommentsPage.assertDisplaysCommentText(newComment)
     }
 
+    @Stub
     @Test
     fun showsNoCommentsMessage() {
         goToSpeedGraderCommentsPage(
@@ -190,7 +199,7 @@ class SpeedGraderCommentsPageTest : TeacherComposeTest() {
         dashboardPage.openCourse(course)
         courseBrowserPage.openAssignmentsTab()
         assignmentListPage.clickAssignment(assignment)
-        assignmentDetailsPage.openAllSubmissionsPage()
+        assignmentDetailsPage.clickAllSubmissions()
         assignmentSubmissionListPage.clickSubmission(student)
         speedGraderPage.selectCommentsTab()
         speedGraderPage.swipeUpCommentsTab()

@@ -481,4 +481,14 @@
     <string name="a11y_markAsDoneWithName">%s 標記為已完成</string>
     <string name="a11y_markAsNotDoneWithName">%s 標記為未完成</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">無法載入收件匣簽名</string>
+    <string name="inboxSignatureSettingsUpdated">收件匣設定已儲存！</string>
+    <string name="inboxSignatureSettingsError">無法儲存收件匣設定</string>
+    <string name="inboxSignatureTextFieldPlaceholder">在此處編寫您的簽名</string>
+    <plurals name="durationHours">
+        <item quantity="other">%d 小時</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="other">%d 分鐘</item>
+    </plurals>
 </resources>

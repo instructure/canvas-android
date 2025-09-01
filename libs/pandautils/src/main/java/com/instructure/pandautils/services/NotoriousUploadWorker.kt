@@ -34,6 +34,7 @@ import androidx.work.CoroutineWorker
 import androidx.work.ForegroundInfo
 import androidx.work.NetworkType
 import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkerParameters
 import androidx.work.workDataOf
@@ -56,6 +57,7 @@ import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
+import kotlinx.coroutines.flow.Flow
 import kotlin.random.Random
 
 @HiltWorker
@@ -173,7 +175,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
         val mediaType = FileUtils.mediaTypeFromNotoriousCode(result.mediaType)
         val course = CanvasContext.getGenericContext(CanvasContext.Type.COURSE, assignment.courseId, Const.COURSE)
 
-        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id])
+        val params = RestParams(domain = ApiPrefs.overrideDomains[course.id], shouldLoginOnTokenError = false)
         val postMediaSubmissionCommentResult = submissionApi.postMediaSubmissionComment(
             courseId = course.id,
             assignmentId = assignment.id,
@@ -282,7 +284,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
             pageId: String?,
             attemptId: Long?,
             mediaCommentId: Long?
-        ) {
+        ): Flow<WorkInfo> {
             val data = workDataOf(
                 Const.MEDIA_FILE_PATH to mediaFilePath,
                 Const.ASSIGNMENT to assignment?.toJson(),
@@ -299,6 +301,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
                 .build()
 
             WorkManager.getInstance(context).enqueue(workRequest)
+            return WorkManager.getInstance(context).getWorkInfoByIdFlow(workRequest.id)
         }
     }
 }

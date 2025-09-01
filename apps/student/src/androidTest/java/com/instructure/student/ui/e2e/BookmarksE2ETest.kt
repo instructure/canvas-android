@@ -18,6 +18,7 @@ package com.instructure.student.ui.e2e
 
 import android.util.Log
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
@@ -25,12 +26,16 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.CoursesApi
+import com.instructure.dataseeding.api.PagesApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.model.UpdateCourse
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.pages.WebViewTextCheck
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -38,7 +43,8 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class BookmarksE2ETest : StudentTest() {
+class BookmarksE2ETest : StudentComposeTest() {
+
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
@@ -48,16 +54,16 @@ class BookmarksE2ETest : StudentTest() {
     @TestMetaData(Priority.MANDATORY, FeatureCategory.BOOKMARKS, TestCategory.E2E)
     fun testBookmarksE2E() {
 
-        Log.d(PREPARATION_TAG,"Seeding data.")
+        Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(students = 1, teachers = 1, courses = 2)
         val student = data.studentsList[0]
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
-        Log.d(PREPARATION_TAG,"Preparing an assignment which will be saved as a bookmark.")
+        Log.d(PREPARATION_TAG, "Preparing an assignment which will be saved as a bookmark.")
         val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
-        Log.d(STEP_TAG,"Login with user: ${student.name}, login id: ${student.loginId}.")
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
         dashboardPage.waitForRender()
 
@@ -67,44 +73,106 @@ class BookmarksE2ETest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
 
         val bookmarkName = "Assignment Details BM"
-        Log.d(STEP_TAG,"Add a new bookmark with name: $bookmarkName")
+        Log.d(STEP_TAG, "Add a new bookmark with name: '$bookmarkName'")
         assignmentDetailsPage.addBookmark(bookmarkName)
 
-        Log.d(STEP_TAG,"Navigate back to Bookmarks page and assert if the newly created bookmark has displayed.")
+        Log.d(STEP_TAG, "Navigate back to Bookmarks page.")
         ViewUtils.pressBackButton(3)
+
+        Log.d(STEP_TAG, "Click on the 'Bookmarks' menu within the left side menu to open the Bookmarks page.")
         leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the newly created bookmark has displayed.")
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
-        Log.d(STEP_TAG,"Click on $bookmarkName bookmark and assert if it's navigating to the assignment details page.")
+        Log.d(STEP_TAG, "Click on '$bookmarkName' bookmark.")
         bookmarkPage.clickBookmark(bookmarkName)
+
+        Log.d(ASSERTION_TAG, "Assert if the '$bookmarkName' bookmark is navigating to the Assignment Details page.")
         assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
-        Log.d(STEP_TAG,"Navigate back to bookmark page.")
+        Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on the bookmark page's overflow menu.")
         leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the bookmark is displayed.")
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         val newName = "Assignment Details BM Modified"
-        Log.d(STEP_TAG,"Change bookmark's name from $bookmarkName to $newName.")
+        Log.d(STEP_TAG, "Change bookmark's name from '$bookmarkName' to '$newName'.")
         bookmarkPage.changeBookmarkName(bookmarkName, newName)
 
-        Log.d(STEP_TAG,"Refresh bookmark page and assert if the bookmark's name has been changed.")
+        Log.d(ASSERTION_TAG, "Refresh bookmark page and assert if the bookmark's name has been changed.")
         refresh()
         bookmarkPage.assertBookmarkDisplayed(newName)
 
-        Log.d(STEP_TAG,"Click on the previously renamed bookmark and assert if it's still navigating to the corresponding assignment's details page.")
+        Log.d(STEP_TAG, "Click on the previously renamed bookmark.")
         bookmarkPage.clickBookmark(newName)
+
+        Log.d(ASSERTION_TAG, "Assert if it's still navigating to the corresponding assignment's details page.")
         assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
-        Log.d(STEP_TAG,"Navigate back to the bookmark page.")
+        Log.d(STEP_TAG, "Navigate back to the bookmark page.")
         Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Click on the bookmark page's overflow menu.")
         leftSideNavigationDrawerPage.clickBookmarksMenu()
 
-        Log.d(STEP_TAG, "Delete bookmark: $newName.")
+        Log.d(STEP_TAG, "Delete bookmark: '$newName'.")
         bookmarkPage.deleteBookmark(newName)
 
-        Log.d(STEP_TAG,"Assert that empty view is displayed, so the bookmark has been deleted.")
+        Log.d(ASSERTION_TAG, "Assert that empty view is displayed, so the bookmark has been deleted.")
         bookmarkPage.assertEmptyView()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.BUG_CASE, FeatureCategory.BOOKMARKS, TestCategory.E2E)
+    fun testBookmarkCourseHomePageE2E() {
+
+        //Bug Ticket: MBL-18910
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seed a PUBLISHED, FRONT page for '${course.name}' course.")
+        val pagePublishedFront = PagesApi.createCoursePage(course.id, teacher.token, frontPage = true, editingRoles = "public", body = "<h1 id=\"header1\">Front Page Text</h1>")
+
+        Log.d(PREPARATION_TAG, "Update '${course.name}' course to set previously seeded '$pagePublishedFront' Front Page as (Course) Home Page.")
+        CoursesApi.updateCourse(course.id, UpdateCourse(homePage = "wiki"))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Click on 'Home' label to select the course home page, which is currently the '$pagePublishedFront' Front Page.")
+        courseBrowserPage.selectHome()
+
+        val bookmarkName = "Home Front Page Bookmark"
+        Log.d(STEP_TAG, "Add a new bookmark with name: '$bookmarkName'")
+        assignmentDetailsPage.addBookmark(bookmarkName)
+
+        Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
+        ViewUtils.pressBackButton(2)
+
+        Log.d(STEP_TAG, "Click on the 'Bookmarks' menu within the left side menu to open the Bookmarks page.")
+        leftSideNavigationDrawerPage.clickBookmarksMenu()
+
+        Log.d(ASSERTION_TAG, "Assert if the newly created bookmark has displayed.")
+        bookmarkPage.assertBookmarkDisplayed(bookmarkName)
+
+        Log.d(STEP_TAG, "Click on the previously created '$bookmarkName' bookmark.")
+        bookmarkPage.clickBookmark(bookmarkName)
+
+        Log.d(ASSERTION_TAG, "Assert if it's navigating to the '$pagePublishedFront' Front Page.")
+        canvasWebViewPage.runTextChecks(WebViewTextCheck(Locator.ID, "header1", "Front Page Text"))
     }
 
 }

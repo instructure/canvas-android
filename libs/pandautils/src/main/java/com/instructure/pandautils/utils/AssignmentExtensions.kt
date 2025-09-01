@@ -18,6 +18,7 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
@@ -25,6 +26,7 @@ import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 
 
 private const val NO_GRADE_INDICATOR = "-"
@@ -147,5 +149,26 @@ fun Assignment.getGrade(
         "incomplete" -> return DisplayGrade(context.getString(R.string.gradeIncomplete))
         // Other remaining case is where the grade is displayed as a percentage
         else -> if (restrictQuantitativeData) DisplayGrade() else DisplayGrade(grade, gradeContentDescription)
+    }
+}
+
+fun Assignment.getSubmissionStateLabel(customStatuses: List<CustomGradeStatusesQuery.Node>): SubmissionStateLabel {
+    val matchedCustomStatus = submission?.customGradeStatusId?.let { id ->
+        customStatuses.find { it._id.toLongOrNull() == id }
+    }
+
+    return when {
+        matchedCustomStatus != null -> SubmissionStateLabel.Custom(
+            R.drawable.ic_flag,
+            R.color.textInfo,
+            matchedCustomStatus.name
+        )
+
+        submission?.late.orDefault() -> SubmissionStateLabel.Late
+        isMissing() -> SubmissionStateLabel.Missing
+        isGraded().orDefault() -> SubmissionStateLabel.Graded
+        submission?.submittedAt != null -> SubmissionStateLabel.Submitted
+        !isSubmitted -> SubmissionStateLabel.NotSubmitted
+        else -> SubmissionStateLabel.None
     }
 }

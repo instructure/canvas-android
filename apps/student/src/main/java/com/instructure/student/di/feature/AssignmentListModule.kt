@@ -19,38 +19,55 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
+import com.instructure.pandautils.features.assignments.list.AssignmentListRepository
+import com.instructure.pandautils.features.assignments.list.AssignmentListRouter
+import com.instructure.pandautils.room.assignment.list.daos.AssignmentListSelectedFiltersEntityDao
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.assignments.list.AssignmentListRepository
+import com.instructure.student.features.assignments.list.StudentAssignmentListBehavior
+import com.instructure.student.features.assignments.list.StudentAssignmentListRepository
+import com.instructure.student.features.assignments.list.StudentAssignmentListRouter
 import com.instructure.student.features.assignments.list.datasource.AssignmentListLocalDataSource
 import com.instructure.student.features.assignments.list.datasource.AssignmentListNetworkDataSource
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.FragmentComponent
+import dagger.hilt.android.components.ViewModelComponent
 
 @Module
 @InstallIn(FragmentComponent::class)
-class AssignmentListModule {
+class AssignmentListFragmentModule {
+    @Provides
+    fun provideAssignmentListRouter(): AssignmentListRouter {
+        return StudentAssignmentListRouter()
+    }
+}
 
+@Module
+@InstallIn(ViewModelComponent::class)
+class AssignmentListViewModelModule {
     @Provides
     fun provideAssignmentListLocalDataSource(
         assignmentFacade: AssignmentFacade,
         courseFacade: CourseFacade,
-        courseSettingsDao: CourseSettingsDao
+        customGradeStatusDao: CustomGradeStatusDao
     ): AssignmentListLocalDataSource {
-        return AssignmentListLocalDataSource(assignmentFacade, courseFacade, courseSettingsDao)
+        return AssignmentListLocalDataSource(assignmentFacade, courseFacade, customGradeStatusDao)
     }
 
     @Provides
     fun provideAssignmentListNetworkDataSource(
         assignmentApi: AssignmentAPI.AssignmentInterface,
-        courseApi: CourseAPI.CoursesInterface
+        courseApi: CourseAPI.CoursesInterface,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): AssignmentListNetworkDataSource {
-        return AssignmentListNetworkDataSource(assignmentApi, courseApi)
+        return AssignmentListNetworkDataSource(assignmentApi, courseApi, customGradeStatusesManager)
     }
 
     @Provides
@@ -58,8 +75,20 @@ class AssignmentListModule {
         localDataSource: AssignmentListLocalDataSource,
         networkDataSource: AssignmentListNetworkDataSource,
         networkStateProvider: NetworkStateProvider,
-        featureFlagProvider: FeatureFlagProvider
+        featureFlagProvider: FeatureFlagProvider,
+        assignmentListSelectedFiltersEntityDao: AssignmentListSelectedFiltersEntityDao
     ): AssignmentListRepository {
-        return AssignmentListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider)
+        return StudentAssignmentListRepository(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider,
+            assignmentListSelectedFiltersEntityDao
+        )
+    }
+
+    @Provides
+    fun provideAssignmentListBehavior(): AssignmentListBehavior {
+        return StudentAssignmentListBehavior()
     }
 }

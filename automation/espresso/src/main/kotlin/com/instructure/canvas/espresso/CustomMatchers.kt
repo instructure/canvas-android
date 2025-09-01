@@ -19,8 +19,10 @@ package com.instructure.canvas.espresso
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
 import android.widget.RadioButton
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
@@ -313,3 +315,40 @@ private fun countConstraintLayoutsInViewGroup(viewGroup: ViewGroup): Int {
     }
     return count
 }
+
+fun getHintText(matcher: Matcher<View>): String {
+    var text = ""
+    onView(matcher).perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> = isAssignableFrom(AppCompatEditText::class.java)
+
+        override fun getDescription(): String = "getting hint from AppCompatEditText"
+
+        override fun perform(uiController: UiController?, view: View?) {
+            val editText = view as EditText
+            text = editText.hint?.toString() ?: ""
+        }
+    })
+    return text
+}
+
+fun getText(matcher: Matcher<View>): String {
+    var text = ""
+
+    onView(matcher).perform(object : ViewAction {
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(TextView::class.java)
+        }
+
+        override fun getDescription(): String {
+            return "Getting text from a TextView"
+        }
+
+        override fun perform(uiController: UiController?, view: View?) {
+            val tv = view as TextView
+            text = tv.text.toString()
+        }
+    })
+
+    return text
+}
+

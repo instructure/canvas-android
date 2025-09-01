@@ -21,14 +21,17 @@ import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsBehaviour
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsColorProvider
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRepository
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsRouter
 import com.instructure.pandautils.features.assignments.details.AssignmentDetailsSubmissionHandler
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.studentdb.StudentDb
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
@@ -40,7 +43,6 @@ import com.instructure.student.features.assignments.details.StudentAssignmentDet
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsLocalDataSource
 import com.instructure.student.features.assignments.details.datasource.AssignmentDetailsNetworkDataSource
 import com.instructure.student.mobius.common.ui.SubmissionHelper
-import com.instructure.student.room.StudentDb
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -62,15 +64,15 @@ class AssignmentDetailsFragmentModule {
 }
 @Module
 @InstallIn(ViewModelComponent::class)
-class AssignmentDetailsModule {
-
+class AssignmentDetailsViewModelModule {
     @Provides
     fun provideAssignmentDetailsLocalDataSource(
         courseFacade: CourseFacade,
         assignmentFacade: AssignmentFacade,
-        quizDao: QuizDao
+        quizDao: QuizDao,
+        customGradeStatusDao: CustomGradeStatusDao
     ): AssignmentDetailsLocalDataSource {
-        return AssignmentDetailsLocalDataSource(courseFacade, assignmentFacade, quizDao)
+        return AssignmentDetailsLocalDataSource(courseFacade, assignmentFacade, quizDao, customGradeStatusDao)
     }
 
     @Provides
@@ -78,9 +80,16 @@ class AssignmentDetailsModule {
         coursesInterface: CourseAPI.CoursesInterface,
         assignmentInterface: AssignmentAPI.AssignmentInterface,
         quizInterface: QuizAPI.QuizInterface,
-        submissionInterface: SubmissionAPI.SubmissionInterface
+        submissionInterface: SubmissionAPI.SubmissionInterface,
+        customGradeStatusesManager: CustomGradeStatusesManager
     ): AssignmentDetailsNetworkDataSource {
-        return AssignmentDetailsNetworkDataSource(coursesInterface, assignmentInterface, quizInterface, submissionInterface)
+        return AssignmentDetailsNetworkDataSource(
+            coursesInterface,
+            assignmentInterface,
+            quizInterface,
+            submissionInterface,
+            customGradeStatusesManager
+        )
     }
 
     @Provides

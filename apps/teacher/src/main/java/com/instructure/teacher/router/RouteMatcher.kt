@@ -34,6 +34,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.LinkHeaders
 import com.instructure.canvasapi2.utils.Logger
+import com.instructure.canvasapi2.utils.RemoteConfigParam
+import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.interactions.BottomSheetInteractions
 import com.instructure.interactions.InitActivityInteractions
 import com.instructure.interactions.MasterDetailInteractions
@@ -42,6 +44,7 @@ import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouteContext
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.activities.BaseViewMediaActivity
+import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
 import com.instructure.pandautils.features.calendarevent.createupdate.CreateUpdateEventFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.features.calendartodo.createupdate.CreateUpdateToDoFragment
@@ -58,6 +61,7 @@ import com.instructure.pandautils.features.notification.preferences.EmailNotific
 import com.instructure.pandautils.features.notification.preferences.PushNotificationPreferencesFragment
 import com.instructure.pandautils.features.settings.SettingsFragment
 import com.instructure.pandautils.features.settings.inboxsignature.InboxSignatureFragment
+import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.fragments.HtmlContentFragment
 import com.instructure.pandautils.fragments.RemoteConfigParamsFragment
 import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
@@ -76,7 +80,6 @@ import com.instructure.teacher.activities.SpeedGraderActivity
 import com.instructure.teacher.activities.ViewMediaActivity
 import com.instructure.teacher.adapters.StudentContextFragment
 import com.instructure.teacher.features.assignment.details.AssignmentDetailsFragment
-import com.instructure.teacher.features.assignment.list.AssignmentListFragment
 import com.instructure.teacher.features.assignment.submission.SubmissionListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
@@ -412,7 +415,13 @@ object RouteMatcher : BaseRouteMatcher() {
 
     private fun handleSpeedGraderRoute(context: Context, route: Route) {
         Logger.i("RouteMatcher:handleSpeedGraderRoute()")
-        context.startActivity(SpeedGraderActivity.createIntent(context, route))
+        val isV2Enabled = RemoteConfigUtils.getBoolean(RemoteConfigParam.SPEEDGRADER_V2)
+        if (isV2Enabled) {
+            route.primaryClass = SpeedGraderFragment::class.java
+            handleFullscreenRoute(context, route)
+        } else {
+            context.startActivity(SpeedGraderActivity.createIntent(context, route))
+        }
     }
 
     private fun handleWebViewRoute(context: Context, route: Route) {
@@ -485,7 +494,7 @@ object RouteMatcher : BaseRouteMatcher() {
                 .newInstance((canvasContext as Course?)!!)
             DashboardFragment::class.java.isAssignableFrom(cls) -> fragment = DashboardFragment.getInstance()
             AssignmentListFragment::class.java.isAssignableFrom(cls) -> fragment = AssignmentListFragment
-                .getInstance(canvasContext!!, route.arguments)
+                .newInstance(canvasContext!!, route)
             AssignmentDetailsFragment::class.java.isAssignableFrom(cls) -> fragment = getAssignmentDetailsFragment(canvasContext, route)
             DueDatesFragment::class.java.isAssignableFrom(cls) -> fragment = DueDatesFragment
                 .getInstance((canvasContext as Course?)!!, route.arguments)
@@ -517,6 +526,7 @@ object RouteMatcher : BaseRouteMatcher() {
             ViewHtmlFragment::class.java.isAssignableFrom(cls) -> fragment = ViewHtmlFragment.newInstance(route.arguments)
             ViewUnsupportedFileFragment::class.java.isAssignableFrom(cls) -> fragment = ViewUnsupportedFileFragment.newInstance(route.arguments)
             ChooseRecipientsFragment::class.java.isAssignableFrom(cls) -> fragment = ChooseRecipientsFragment.newInstance(route.arguments)
+            SpeedGraderFragment::class.java.isAssignableFrom(cls) -> fragment = SpeedGraderFragment.newInstance(route.arguments)
             SpeedGraderQuizWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = SpeedGraderQuizWebViewFragment.newInstance(route.arguments)
             AnnotationCommentListFragment::class.java.isAssignableFrom(cls) -> fragment = AnnotationCommentListFragment.newInstance(route.arguments)
             CreateDiscussionWebViewFragment::class.java.isAssignableFrom(cls) -> fragment = CreateDiscussionWebViewFragment.newInstance(route)

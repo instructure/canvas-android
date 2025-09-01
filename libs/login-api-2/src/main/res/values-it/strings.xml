@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Segnala un problema</string>
+    <string name="reportAProblemDialogTitle">Segnala un problema</string>
     <string name="errorReportSubject">Oggetto</string>
     <string name="errorReportDescription">Descrizione</string>
     <string name="errorReportSend">Invia</string>
@@ -101,7 +102,7 @@
     <string name="findMySchool">Trova la mia scuola</string>
     <string name="loginWithQRCode">Codice QR</string>
     <string name="locateQRCode">Individua codice QR</string>
-    <string name="qrCodeExplanation">Troverai il codice QR sul web nel tuo profilo dell’account. Fai clic su \'QR per login dispositivo mobile\' nell’elenco.</string>
+    <string name="qrCodeExplanation">Cerca il codice QR nel tuo profilo dell\'account sul web nella sezione \'QR per accesso con dispositivo mobile\'.</string>
     <string name="qrCodeScanningPrompt">Acquisisci un codice QR da Canvas per completare il login</string>
     <string name="loginWithQRCodeError">Si è verificato un errore di login. Genera un altro codice QR e riprova.</string>
     <string name="invalidQRCodeError">Acquisisci un codice QR generato da Canvas</string>
@@ -128,4 +129,5 @@
     <string name="weMadeChanges">Abbiamo apportato qualche modifica.</string>
     <string name="whatsNewText">Guarda le novità</string>
     <string name="findAnotherSchool">Trova un’altra scuola</string>
+    <string name="qrCodeDisabledExplanation">Se non lo trovi, il tuo istituto ha disabilitato questa opzione.</string>
 </resources>

@@ -17,22 +17,29 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
 class LoginInteractionTest : StudentTest() {
+
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
-    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.LOGIN, TestCategory.INTERACTION)
     fun testLogin_canFindSchool() {
-        // Should be able to search for and select a school in the "What's your school's name?" page
+        loginLandingPage.clickFindMySchoolButton()
+        loginFindSchoolPage.assertPageObjects()
+
+        if(isTabletDevice()) loginFindSchoolPage.assertHintText(R.string.schoolInstructureCom)
+        else loginFindSchoolPage.assertHintText(R.string.loginHint)
+
+        loginFindSchoolPage.enterDomain("harv")
+        loginFindSchoolPage.assertSchoolSearchResults("City Harvest Church (Singapore)")
     }
 
     @Test

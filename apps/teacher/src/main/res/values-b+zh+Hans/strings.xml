@@ -696,7 +696,7 @@
     <string name="termsOfUse">使用条款</string>
     <string name="searchGuides">搜索 Canvas 指南</string>
     <string name="searchGuidesDetails">查找常见问题的答案</string>
-    <string name="reportProblem">报告问题</string>
+    <string name="reportProblem">报告一个问题</string>
     <string name="reportProblemDetails">如果应用程序出现异常，告知我们。</string>
     <string name="requestFeature">请求功能</string>
     <string name="requestFeatureDetails">有一个改善应用程序的想法吗？</string>

@@ -27,4 +27,6 @@ interface EventViewModelBehavior {
     val shouldShowMessageFab: Boolean
 
     fun getInboxComposeOptions(canvasContext: CanvasContext?, event: ScheduleItem): InboxComposeOptions
+
+    fun updateWidget()
 }

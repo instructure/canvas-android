@@ -22,8 +22,84 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.room.offline.DatabaseProvider
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.daos.*
-import com.instructure.pandautils.room.offline.facade.*
+import com.instructure.pandautils.room.offline.daos.AssignmentDao
+import com.instructure.pandautils.room.offline.daos.AssignmentGroupDao
+import com.instructure.pandautils.room.offline.daos.AssignmentOverrideDao
+import com.instructure.pandautils.room.offline.daos.AssignmentRubricCriterionDao
+import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
+import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
+import com.instructure.pandautils.room.offline.daos.AttachmentDao
+import com.instructure.pandautils.room.offline.daos.AuthorDao
+import com.instructure.pandautils.room.offline.daos.ConferenceDao
+import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
+import com.instructure.pandautils.room.offline.daos.CourseDao
+import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
+import com.instructure.pandautils.room.offline.daos.CourseGradingPeriodDao
+import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
+import com.instructure.pandautils.room.offline.daos.DashboardCardDao
+import com.instructure.pandautils.room.offline.daos.DiscussionEntryDao
+import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
+import com.instructure.pandautils.room.offline.daos.DiscussionTopicRemoteFileDao
+import com.instructure.pandautils.room.offline.daos.EditDashboardItemDao
+import com.instructure.pandautils.room.offline.daos.EnrollmentDao
+import com.instructure.pandautils.room.offline.daos.FileFolderDao
+import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
+import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.GradesDao
+import com.instructure.pandautils.room.offline.daos.GradingPeriodDao
+import com.instructure.pandautils.room.offline.daos.GroupDao
+import com.instructure.pandautils.room.offline.daos.GroupUserDao
+import com.instructure.pandautils.room.offline.daos.LocalFileDao
+import com.instructure.pandautils.room.offline.daos.LockInfoDao
+import com.instructure.pandautils.room.offline.daos.LockedModuleDao
+import com.instructure.pandautils.room.offline.daos.MasteryPathAssignmentDao
+import com.instructure.pandautils.room.offline.daos.MasteryPathDao
+import com.instructure.pandautils.room.offline.daos.MediaCommentDao
+import com.instructure.pandautils.room.offline.daos.ModuleCompletionRequirementDao
+import com.instructure.pandautils.room.offline.daos.ModuleContentDetailsDao
+import com.instructure.pandautils.room.offline.daos.ModuleItemDao
+import com.instructure.pandautils.room.offline.daos.ModuleNameDao
+import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
+import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
+import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.daos.RemoteFileDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionDao
+import com.instructure.pandautils.room.offline.daos.RubricCriterionRatingDao
+import com.instructure.pandautils.room.offline.daos.RubricSettingsDao
+import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverrideDao
+import com.instructure.pandautils.room.offline.daos.ScheduleItemDao
+import com.instructure.pandautils.room.offline.daos.SectionDao
+import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
+import com.instructure.pandautils.room.offline.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.offline.daos.SubmissionDao
+import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
+import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.daos.TermDao
+import com.instructure.pandautils.room.offline.daos.UserCalendarDao
+import com.instructure.pandautils.room.offline.daos.UserDao
+import com.instructure.pandautils.room.offline.facade.AssignmentFacade
+import com.instructure.pandautils.room.offline.facade.ConferenceFacade
+import com.instructure.pandautils.room.offline.facade.CourseFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicFacade
+import com.instructure.pandautils.room.offline.facade.DiscussionTopicHeaderFacade
+import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
+import com.instructure.pandautils.room.offline.facade.GroupFacade
+import com.instructure.pandautils.room.offline.facade.LockInfoFacade
+import com.instructure.pandautils.room.offline.facade.MasteryPathFacade
+import com.instructure.pandautils.room.offline.facade.ModuleFacade
+import com.instructure.pandautils.room.offline.facade.PageFacade
+import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
+import com.instructure.pandautils.room.offline.facade.SubmissionFacade
+import com.instructure.pandautils.room.offline.facade.SyncSettingsFacade
+import com.instructure.pandautils.room.offline.facade.UserFacade
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -307,7 +383,8 @@ class OfflineModule {
         sectionDao: SectionDao,
         tabDao: TabDao,
         enrollmentFacade: EnrollmentFacade,
-        courseSettingsDao: CourseSettingsDao
+        courseSettingsDao: CourseSettingsDao,
+        apiPrefs: ApiPrefs
     ): CourseFacade {
         return CourseFacade(
             termDao,
@@ -317,7 +394,8 @@ class OfflineModule {
             sectionDao,
             tabDao,
             enrollmentFacade,
-            courseSettingsDao
+            courseSettingsDao,
+            apiPrefs
         )
     }
 
@@ -559,5 +637,10 @@ class OfflineModule {
     @Provides
     fun provideStudioMediaProgressDao(database: OfflineDatabase): StudioMediaProgressDao {
         return database.studioMediaProgressDao()
+    }
+
+    @Provides
+    fun provideCustomGradeStatusDao(database: OfflineDatabase): CustomGradeStatusDao {
+        return database.customGradeStatusDao()
     }
 }

@@ -176,7 +176,7 @@
                                 android:ellipsize="end"
                                 android:importantForAccessibility="no"
                                 android:lines="1"
-                                android:text="@string/offline_content_canvas_student"
+                                android:text="@string/offline_content_canvas"
                                 android:textColor="@color/textDark" />
 
                         </LinearLayout>

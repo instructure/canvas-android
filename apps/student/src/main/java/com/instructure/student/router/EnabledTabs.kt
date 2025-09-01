@@ -2,6 +2,7 @@ package com.instructure.student.router
 
 import android.net.Uri
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -13,9 +14,7 @@ interface EnabledTabs {
     suspend fun initTabs()
 }
 
-class EnabledTabsImpl(
-    private val courseApi: CourseAPI.CoursesInterface
-): EnabledTabs {
+class EnabledTabsImpl: EnabledTabs {
     private var enabledTabs: Map<Long, List<Tab>>? = null
 
     private fun isPathTabEnabled(courseId: Long, uri: Uri): Boolean {
@@ -28,7 +27,10 @@ class EnabledTabsImpl(
         return when {
             pathSegments.last() == "grades" -> true
             pathSegments.last() == "discussion_topics" -> true
+            pathSegments.last() == "collaborations" -> true
             pathSegments.any { it.contains("external_tools") } -> true
+            pathSegments.last() == "wiki" -> tabs.any { it.tabId == Tab.PAGES_ID }
+            pathSegments.last() == "pages" -> tabs.any { it.tabId == Tab.PAGES_ID }
             pathSegments.last() == Tab.SYLLABUS_ID -> tabs.any { relativePath == it.htmlUrl }
             pathSegments.size == 3 -> tabs.any { relativePath == it.htmlUrl }
             else -> true
@@ -57,9 +59,11 @@ class EnabledTabsImpl(
     }
 
     override suspend fun initTabs() {
-        enabledTabs = courseApi.getFirstPageCourses(RestParams(usePerPageQueryParam = true))
+        //This is a hack to get the right domain, otherwise it will use the first domain after app start since it's singleton
+        val api = RestBuilder().build(CourseAPI.CoursesInterface::class.java, RestParams())
+        enabledTabs = api.getFirstPageCourses(RestParams(usePerPageQueryParam = true))
             .depaginate {
-                courseApi.next(it, RestParams(usePerPageQueryParam = true))
+                api.next(it, RestParams(usePerPageQueryParam = true))
             }.dataOrNull?.associate { it.id to (it.tabs ?: emptyList()) } ?: emptyMap()
         enabledTabs?.forEach { entry ->
             entry.value.find { tab -> tab.tabId == Tab.ASSIGNMENTS_ID }?.domain?.let { domain ->

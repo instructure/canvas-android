@@ -487,4 +487,16 @@
     <string name="a11y_markAsDoneWithName">%s Markera som färdig</string>
     <string name="a11y_markAsNotDoneWithName">%s Markera som ej färdig</string>
     <string name="a11y_contentDescriptionUploadDashboardNotification">%s</string>
+    <string name="inboxSignatureError">Det gick inte att läsa in inkorgssignaturen</string>
+    <string name="inboxSignatureSettingsUpdated">Inställningarna för Inkorgen har sparats!</string>
+    <string name="inboxSignatureSettingsError">Det gick inte att spara inkorgens inställningar</string>
+    <string name="inboxSignatureTextFieldPlaceholder">Skriv din signatur här</string>
+    <plurals name="durationHours">
+        <item quantity="one">%d timme</item>
+        <item quantity="other">%d timmar</item>
+    </plurals>
+    <plurals name="durationMins">
+        <item quantity="one">%d minut</item>
+        <item quantity="other">%d minuter</item>
+    </plurals>
 </resources>

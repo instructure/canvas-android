@@ -72,7 +72,8 @@
     <string name="loginHint">あなたの学校または地域を見つける</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">レポートＡ問題</string>
+    <string name="errorReportAProblem">問題を報告する</string>
+    <string name="reportAProblemDialogTitle">問題を報告する</string>
     <string name="errorReportSubject">件名</string>
     <string name="errorReportDescription">説明</string>
     <string name="errorReportSend">送信</string>
@@ -99,7 +100,7 @@
     <string name="findMySchool">私の学校を探す</string>
     <string name="loginWithQRCode">QR コード</string>
     <string name="locateQRCode">QR コードを探す</string>
-    <string name="qrCodeExplanation">QR Code on the Web は、アカウントプロファイル内にあります。リスト内の\'モバイルログイン用の QR\' をクリックします。</string>
+    <string name="qrCodeExplanation">ウェブ上のアカウントプロファイル内の「QRコード（モバイルログイン用）」の下にあるQRコードを探してください。</string>
     <string name="qrCodeScanningPrompt">Canvas から QR コードをスキャンしてログインしてください</string>
     <string name="loginWithQRCodeError">ログイン中にエラーが発生しました。別の QR コードを生成して再試行してください。</string>
     <string name="invalidQRCodeError">Canvas によって生成された QR コードをスキャンしてください</string>
@@ -127,4 +128,5 @@
     <string name="weMadeChanges">2、3の変更がありました。</string>
     <string name="whatsNewText">最新情報を見る</string>
     <string name="findAnotherSchool">別の学校を探す</string>
+    <string name="qrCodeDisabledExplanation">そこにない場合は、ご所属の機関がこのオプションを無効にしています。</string>
 </resources>

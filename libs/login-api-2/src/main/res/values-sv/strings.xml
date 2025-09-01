@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Rapportera ett problem</string>
+    <string name="reportAProblemDialogTitle">Rapportera ett problem</string>
     <string name="errorReportSubject">Ämne</string>
     <string name="errorReportDescription">Beskrivning</string>
     <string name="errorReportSend">Skicka</string>
@@ -101,7 +102,7 @@
     <string name="findMySchool">Hitta min skola</string>
     <string name="loginWithQRCode">QR-kod</string>
     <string name="locateQRCode">Lokalisera QR-kod</string>
-    <string name="qrCodeExplanation">Du hittar QR-koden på webben i din kontoprofil. Klicka på QR for Mobile Login i listan.</string>
+    <string name="qrCodeExplanation">Sök reda på QR-koden i din kontoprofil på webben under QR for Mobile Login.</string>
     <string name="qrCodeScanningPrompt">Skanna en QR-kod från Canvas för att logga in</string>
     <string name="loginWithQRCodeError">Det gick inte att logga in. Generera en annan QR-kod och försök igen.</string>
     <string name="invalidQRCodeError">Skanna en QR-kod som genererats i Canvas.</string>
@@ -128,4 +129,5 @@
     <string name="weMadeChanges">Vi har gjort några ändringar.</string>
     <string name="whatsNewText">Se vad som är nytt</string>
     <string name="findAnotherSchool">Hitta en annan skola</string>
+    <string name="qrCodeDisabledExplanation">Om den inte finns där har ditt lärosäte inaktiverat alternativet.</string>
 </resources>

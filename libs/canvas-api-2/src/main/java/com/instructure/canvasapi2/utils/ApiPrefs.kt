@@ -145,6 +145,10 @@ object ApiPrefs : PrefManager(PREFERENCE_FILE_NAME) {
     val showElementaryView
         get() = canvasForElementary && elementaryDashboardEnabledOverride
 
+    var canvasCareerView by NBooleanPref()
+
+    var canSwitchToCanvasCareer by BooleanPref(defaultValue = false)
+
     var webViewAuthenticationTimestamp by LongPref(0)
 
     /**
