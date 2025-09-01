@@ -28,9 +28,8 @@ import androidx.navigation.navArgument
 import com.instructure.horizon.features.account.navigation.AccountNavigation
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
-import com.instructure.horizon.features.learn.LearnScreen
-import com.instructure.horizon.features.learn.LearnViewModel
-import com.instructure.horizon.features.notebook.NotebookViewModel
+import com.instructure.horizon.features.learn.course.CourseDetailsScreen
+import com.instructure.horizon.features.learn.course.CourseDetailsViewModel
 import com.instructure.horizon.features.skillspace.SkillspaceScreen
 import com.instructure.horizon.features.skillspace.SkillspaceViewModel
 import com.instructure.horizon.horizonui.animation.mainEnterTransition
@@ -74,9 +73,9 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
                     defaultValue = -1
                 }
             )) {
-            val viewModel = hiltViewModel<LearnViewModel>()
+            val viewModel = hiltViewModel<CourseDetailsViewModel>()
             val uiState by viewModel.state.collectAsState()
-            LearnScreen(uiState, mainNavController)
+            CourseDetailsScreen(uiState, mainNavController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             val viewModel = hiltViewModel<SkillspaceViewModel>()

@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs
+package com.instructure.horizon.features.learn.program
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -31,15 +31,15 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.programs.components.CourseCardChipState
-import com.instructure.horizon.features.learn.programs.components.CourseCardStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramCourseCardState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgress
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
-import com.instructure.horizon.features.learn.programs.components.ProgramsProgressBar
-import com.instructure.horizon.features.learn.programs.components.SequentialProgramProgressProperties
+import com.instructure.horizon.features.learn.program.components.CourseCardChipState
+import com.instructure.horizon.features.learn.program.components.CourseCardStatus
+import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
+import com.instructure.horizon.features.learn.program.components.ProgramProgress
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemStatus
+import com.instructure.horizon.features.learn.program.components.ProgramProgressState
+import com.instructure.horizon.features.learn.program.components.ProgramsProgressBar
+import com.instructure.horizon.features.learn.program.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography

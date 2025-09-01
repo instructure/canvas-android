@@ -14,14 +14,14 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn
+package com.instructure.horizon.features.learn.course
 
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
-class LearnRepository @Inject constructor(
+class CourseDetailsRepository @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
     private val apiPrefs: ApiPrefs
 ) {

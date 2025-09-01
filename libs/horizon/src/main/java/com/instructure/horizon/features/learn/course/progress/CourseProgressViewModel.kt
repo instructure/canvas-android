@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.progress
+package com.instructure.horizon.features.learn.course.progress
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -35,14 +35,14 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LearnProgressViewModel @Inject constructor(
+class CourseProgressViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: LearnProgressRepository,
+    private val repository: CourseProgressRepository,
     private val moduleHeaderStateMapper: ModuleHeaderStateMapper,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
-        LearnProgressUiState(
+        CourseProgressUiState(
             screenState = LoadingState(
                 onRefresh = ::refresh,
                 onSnackbarDismiss = ::dismissSnackbar,

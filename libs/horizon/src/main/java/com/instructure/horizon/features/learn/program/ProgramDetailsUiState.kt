@@ -13,9 +13,9 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs
+package com.instructure.horizon.features.learn.program
 
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressState
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class ProgramDetailsUiState(

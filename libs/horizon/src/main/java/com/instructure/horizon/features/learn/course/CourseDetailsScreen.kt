@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn
+package com.instructure.horizon.features.learn.course
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateDpAsState
@@ -71,10 +71,10 @@ import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.note.LearnNotesScreen
-import com.instructure.horizon.features.learn.overview.LearnOverviewScreen
-import com.instructure.horizon.features.learn.progress.LearnProgressScreen
-import com.instructure.horizon.features.learn.score.LearnScoreScreen
+import com.instructure.horizon.features.learn.course.note.CourseNotesScreen
+import com.instructure.horizon.features.learn.course.overview.CourseOverviewScreen
+import com.instructure.horizon.features.learn.course.progress.CourseProgressScreen
+import com.instructure.horizon.features.learn.course.score.CourseScoreScreen
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -90,8 +90,8 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.launch
 
 @Composable
-fun LearnScreen(
-    state: LearnUiState,
+fun CourseDetailsScreen(
+    state: CourseDetailsUiState,
     mainNavController: NavHostController
 ) {
     val activity = LocalContext.current.getActivityOrNull()
@@ -113,9 +113,9 @@ fun LearnScreen(
                 state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
                 state.screenState.isLoading -> LoadingContent()
                 else -> if (state.courses.isEmpty()) {
-                    LearnScreenEmptyContent(state)
+                    CourseDetailsScreenEmptyContent(state)
                 } else {
-                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+                    CourseDetailsScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
                 }
             }
         }
@@ -124,7 +124,7 @@ fun LearnScreen(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun LearnScreenEmptyContent(state: LearnUiState) {
+private fun CourseDetailsScreenEmptyContent(state: CourseDetailsUiState) {
     LoadingStateWrapper(state.screenState) {
         Column(
             verticalArrangement = Arrangement.Center,
@@ -144,8 +144,8 @@ private fun LearnScreenEmptyContent(state: LearnUiState) {
 }
 
 @Composable
-private fun LearnScreenWrapper(
-    state: LearnUiState,
+private fun CourseDetailsScreenWrapper(
+    state: CourseDetailsUiState,
     mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -225,25 +225,25 @@ private fun LearnScreenWrapper(
                         .scale(scaleAnimation)
                 ) {
                     when (index) {
-                        0 -> LearnOverviewScreen(
+                        0 -> CourseOverviewScreen(
                             state.selectedCourse?.courseSyllabus,
                             Modifier
                                 .clip(RoundedCornerShape(cornerAnimation))
                         )
 
-                        1 -> LearnProgressScreen(
+                        1 -> CourseProgressScreen(
                             state.selectedCourse?.courseId ?: -1,
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
-                        2 -> LearnScoreScreen(
+                        2 -> CourseScoreScreen(
                             state.selectedCourse?.courseId ?: -1,
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
 
-                        3 -> LearnNotesScreen(
+                        3 -> CourseNotesScreen(
                             state.selectedCourse?.courseId ?: -1,
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
@@ -256,7 +256,7 @@ private fun LearnScreenWrapper(
 }
 
 @Composable
-private fun Tab(tab: LearnTab, isSelected: Boolean, modifier: Modifier = Modifier) {
+private fun Tab(tab: CourseDetailsTab, isSelected: Boolean, modifier: Modifier = Modifier) {
     val color = if (isSelected) {
         HorizonColors.Text.surfaceInverseSecondary()
     } else {
@@ -400,42 +400,42 @@ private class CollapsingAppBarNestedScrollConnection(
 
 @Composable
 @Preview
-fun LearnScreenLoadingPreview() {
+fun CourseDetailsScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = LearnUiState(
+    val state = CourseDetailsUiState(
         screenState = LoadingState(isLoading = true),
         selectedCourse = null,
-        availableTabs = LearnTab.entries
+        availableTabs = CourseDetailsTab.entries
     )
-    LearnScreen(state, rememberNavController())
+    CourseDetailsScreen(state, rememberNavController())
 }
 
 @Composable
 @Preview
-fun LearnScreenErrorPreview() {
+fun CourseDetailsScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = LearnUiState(
+    val state = CourseDetailsUiState(
         screenState = LoadingState(isError = true, errorMessage = "Error loading course"),
         selectedCourse = null,
-        availableTabs = LearnTab.entries
+        availableTabs = CourseDetailsTab.entries
     )
-    LearnScreen(state, rememberNavController())
+    CourseDetailsScreen(state, rememberNavController())
 }
 
 @Composable
 @Preview
-fun LearnScreenEmptyContentPreview() {
+fun CourseDetailsScreenEmptyContentPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = LearnUiState(
+    val state = CourseDetailsUiState(
         screenState = LoadingState(),
-        availableTabs = LearnTab.entries
+        availableTabs = CourseDetailsTab.entries
     )
-    LearnScreen(state, rememberNavController())
+    CourseDetailsScreen(state, rememberNavController())
 }
 
 @Composable
 @Preview
-fun LearnScreenContentPreview() {
+fun CourseDetailsScreenContentPreview() {
     ContextKeeper.appContext = LocalContext.current
     val course = CourseWithProgress(
         courseId = 123,
@@ -443,11 +443,11 @@ fun LearnScreenContentPreview() {
         courseSyllabus = "Course Overview",
         progress = 0.5,
     )
-    val state = LearnUiState(
+    val state = CourseDetailsUiState(
         screenState = LoadingState(),
         courses = listOf(course),
         selectedCourse = course,
-        availableTabs = LearnTab.entries
+        availableTabs = CourseDetailsTab.entries
     )
-    LearnScreen(state, rememberNavController())
+    CourseDetailsScreen(state, rememberNavController())
 }

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.note
+package com.instructure.horizon.features.learn.course.note
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.runtime.Composable
@@ -29,7 +29,7 @@ import com.instructure.horizon.features.notebook.NotebookScreen
 import com.instructure.horizon.features.notebook.NotebookViewModel
 
 @Composable
-fun LearnNotesScreen(
+fun CourseNotesScreen(
     courseId: Long,
     mainNavController: NavHostController,
     modifier: Modifier = Modifier

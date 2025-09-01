@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs.components
+package com.instructure.horizon.features.learn.program.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text

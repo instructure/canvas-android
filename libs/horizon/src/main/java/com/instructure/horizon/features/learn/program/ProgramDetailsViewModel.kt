@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs
+package com.instructure.horizon.features.learn.program
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -24,13 +24,13 @@ import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.programs.components.CourseCardChipState
-import com.instructure.horizon.features.learn.programs.components.CourseCardStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramCourseCardState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
-import com.instructure.horizon.features.learn.programs.components.SequentialProgramProgressProperties
+import com.instructure.horizon.features.learn.program.components.CourseCardChipState
+import com.instructure.horizon.features.learn.program.components.CourseCardStatus
+import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemStatus
+import com.instructure.horizon.features.learn.program.components.ProgramProgressState
+import com.instructure.horizon.features.learn.program.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus

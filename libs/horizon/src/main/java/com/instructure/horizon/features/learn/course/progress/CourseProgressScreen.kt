@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.progress
+package com.instructure.horizon.features.learn.course.progress
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,11 +57,11 @@ import com.instructure.horizon.navigation.MainNavigationRoute
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnProgressScreen(
+fun CourseProgressScreen(
     courseId: Long,
     mainNavController: NavController,
     modifier: Modifier = Modifier,
-    viewModel: LearnProgressViewModel = hiltViewModel()
+    viewModel: CourseProgressViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
     var previousCourseId: Long? by rememberSaveable { mutableStateOf(null) }
@@ -95,7 +95,7 @@ fun LearnProgressScreen(
 
 @Composable
 private fun LearnProgressContent(
-    state: LearnProgressUiState,
+    state: CourseProgressUiState,
     modifier: Modifier = Modifier,
     courseId: Long,
     mainNavController: NavController
@@ -150,7 +150,7 @@ private fun ModuleSubHeader(subHeader: String, modifier: Modifier = Modifier) {
 @Preview
 private fun LearnProgressScreenPreview() {
     ContextKeeper.appContext = LocalContext.current
-    val state = LearnProgressUiState(
+    val state = CourseProgressUiState(
         moduleItemStates = mapOf(
             1L to Pair(
                 ModuleHeaderState(

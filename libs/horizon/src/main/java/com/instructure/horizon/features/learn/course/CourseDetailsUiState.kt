@@ -14,22 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn
+package com.instructure.horizon.features.learn.course
 
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
 
-data class LearnUiState(
+data class CourseDetailsUiState(
     val screenState: LoadingState = LoadingState(),
     val courses: List<CourseWithProgress> = emptyList(),
     val selectedCourse: CourseWithProgress? = null,
-    val availableTabs: List<LearnTab> = LearnTab.entries,
+    val availableTabs: List<CourseDetailsTab> = CourseDetailsTab.entries,
     val onSelectedCourseChanged: ((CourseWithProgress) -> Unit) = {}
 )
 
-enum class LearnTab(@StringRes val titleRes: Int, ) {
+enum class CourseDetailsTab(@StringRes val titleRes: Int, ) {
     Overview(titleRes = R.string.overview),
     MyProgress(titleRes = R.string.myProgress),
     Scores(titleRes = R.string.scores),

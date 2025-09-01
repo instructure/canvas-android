@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn
+package com.instructure.horizon.features.learn.course
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -30,12 +30,12 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LearnViewModel @Inject constructor(
-    private val learnRepository: LearnRepository,
+class CourseDetailsViewModel @Inject constructor(
+    private val courseDetailsRepository: CourseDetailsRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
     private val _state = MutableStateFlow(
-        LearnUiState(
+        CourseDetailsUiState(
             screenState = LoadingState(
                 onRefresh = ::onRefresh
             ),
@@ -61,7 +61,7 @@ class LearnViewModel @Inject constructor(
     }
 
     private suspend fun getCourses(forceRefresh: Boolean = false) {
-        val courses = learnRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
+        val courses = courseDetailsRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
         val selectedCourse = courses.find { it.courseId == courseId } ?: courses.firstOrNull()
         _state.update {
             state.value.copy(courses = courses, selectedCourse = selectedCourse,)
