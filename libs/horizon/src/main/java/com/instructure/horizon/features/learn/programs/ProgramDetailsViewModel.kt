@@ -143,7 +143,8 @@ class ProgramDetailsViewModel @Inject constructor(
             val chips = createProgramCourseChips(
                 requirement,
                 courses.find { it.courseId == requirement.courseId } ?: CourseWithModuleItemDurations(),
-                courseCardStatus)
+                courseCardStatus,
+                linear)
 
             val sequentialProperties = if (linear) {
                 SequentialProgramProgressProperties(
@@ -184,7 +185,8 @@ class ProgramDetailsViewModel @Inject constructor(
     private fun createProgramCourseChips(
         requirement: ProgramRequirement,
         course: CourseWithModuleItemDurations,
-        courseCardStatus: CourseCardStatus
+        courseCardStatus: CourseCardStatus,
+        linear: Boolean
     ): List<CourseCardChipState> {
         val chips = mutableListOf<CourseCardChipState>()
         if (requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.BLOCKED) {
@@ -204,10 +206,12 @@ class ProgramDetailsViewModel @Inject constructor(
         if (courseCardStatus == CourseCardStatus.Completed) {
             chips.add(CourseCardChipState(context.getString(R.string.programCourseTag_completed)))
         } else {
-            if (requirement.required) {
-                chips.add(CourseCardChipState(context.getString(R.string.programCourseTag_required)))
-            } else {
-                chips.add(CourseCardChipState(context.getString(R.string.programCourseTag_optional)))
+            if (linear) {
+                if (requirement.required) {
+                    chips.add(CourseCardChipState(context.getString(R.string.programCourseTag_required)))
+                } else {
+                    chips.add(CourseCardChipState(context.getString(R.string.programCourseTag_optional)))
+                }
             }
         }
 
