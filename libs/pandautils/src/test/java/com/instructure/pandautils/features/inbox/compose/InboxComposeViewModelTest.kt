@@ -80,7 +80,8 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
         coEvery { context.packageName } returns "com.instructure.teacher" // Default to teacher app
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
+        coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns false
         coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns false
     }
 

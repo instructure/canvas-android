@@ -80,7 +80,8 @@ class InboxDetailsViewModelTest {
             com.instructure.pandautils.R.string.inboxReplySubjectRePrefix,
             conversation.subject
         ) } returns "Re: ${conversation.subject}"
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
+        coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns false
     }
 
     @After
