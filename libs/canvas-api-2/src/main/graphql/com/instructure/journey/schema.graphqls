@@ -1,0 +1,1163 @@
+# Indicates exactly one field must be supplied and this field must not be `null`.
+directive @oneOf on INPUT_OBJECT
+
+type WidgetParamsGQL {
+    courseId: String
+    userId: String
+}
+
+type SkillTaxonomyAccountGQL {
+    # Unique identifier for the account
+    id: ID!
+
+    # Root account UUID for the skill taxonomy
+    rootAccountUuid: String!
+
+    # Creation date of the skill taxonomy account
+    createdAt: DateTime!
+
+    # Groups associated with the skill taxonomy account
+    groups: [SkillTaxonomyGroupGQL!]!
+
+    # Skills associated with the skill taxonomy account
+    taxonomySkills: [SkillTaxonomySkillGQL!]!
+}
+
+# A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+scalar DateTime
+
+type SkillTaxonomyGroupGQL {
+    # Unique identifier for the group
+    id: ID!
+
+    # Name of the skill taxonomy group
+    name: String!
+
+    # Creation date of the group
+    createdAt: DateTime!
+
+    # Last updated date of the group
+    updatedAt: DateTime!
+
+    # Account associated with the skill taxonomy group
+    account: SkillTaxonomyAccountGQL
+
+    # Skills associated with the skill taxonomy group
+    taxonomySkills: [SkillTaxonomySkillGQL!]!
+}
+
+type SkillTaxonomySkillGQL {
+    # Unique identifier for the skill
+    id: ID!
+
+    # Name of the skill
+    name: String!
+
+    # Description of the skill
+    description: String
+
+    # Creation date of the skill
+    createdAt: DateTime!
+
+    # Last updated date of the skill
+    updatedAt: DateTime!
+
+    # Group to which the skill belongs
+    group: SkillTaxonomyGroupGQL
+
+    # Account associated with the skill
+    account: SkillTaxonomyAccountGQL
+    courses: [SkillTaxonomyCourseGQL!]!
+    programs: [ProgramGQL!]!
+    alignmentsGroupedByProficiencyScaleValue(
+        courseId: String!
+    ): [AlignmentsByProficiencyScaleValueGQL!]!
+    coursesGroupedByProficiencyScaleValue(
+        programId: String!
+    ): [CoursesByProficiencyScaleValueGQL!]!
+}
+
+type PopulatedSimilarSkillGQL {
+    # Unique identifier for the skill
+    id: ID
+
+    # Name of the skill
+    name: String!
+
+    # Description of the skill
+    description: String
+
+    # Creation date of the skill
+    createdAt: DateTime!
+
+    # Last updated date of the skill
+    updatedAt: DateTime!
+
+    # Group to which the skill belongs
+    group: SkillTaxonomyGroupGQL
+
+    # Account associated with the skill
+    account: SkillTaxonomyAccountGQL
+    courses: [SkillTaxonomyCourseGQL!]!
+    programs: [ProgramGQL!]!
+}
+
+type SkillGQL {
+    id: String!
+    name: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    taxonomySkill: SkillTaxonomySkillGQL
+    experiences: [ExperienceGQL!]!
+    proficiencyLevel: String
+}
+
+type SimilarSkillGroupGQL {
+    # List of similar skills in the group
+    similarSkills: [PopulatedSimilarSkillGQL!]!
+}
+
+type ChangeTaxonomySkillsResultGQL {
+    # List of similar skill groups found in the taxonomy
+    similarSkillGroups: [SimilarSkillGroupGQL!]!
+
+    # List of skills that were successfully persisted to the taxonomy
+    persistedSkills: [SkillTaxonomySkillGQL!]!
+
+    # List of skill IDs that were deleted from the taxonomy
+    deletedSkills: [ID!]
+}
+
+type SkillTaxonomyProficiencyScaleValueGQL {
+    # Unique identifier for the proficiency scale value
+    id: ID!
+
+    # Level of the proficiency scale value
+    level: Int!
+
+    # String value of the proficiency scale value
+    value: String!
+}
+
+type SkillTaxonomyProficiencyScaleGQL {
+    # Unique identifier for the proficiency scale
+    id: ID!
+
+    # Name of the proficiency scale
+    name: String!
+
+    # Root account UUID for the proficiency scale
+    rootAccountUuid: String
+
+    # Values associated with the proficiency scale
+    values: [SkillTaxonomyProficiencyScaleValueGQL!]!
+}
+
+type SkillTaxonomyCourseGQL {
+    # Unique identifier for the course
+    id: String!
+
+    # Unique identifier for the course in Canvas
+    courseId: String!
+
+    # Learning objects associated with the course
+    learningObjects: [SkillTaxonomyLearningObjectGQL!]!
+    uniqueSkills: Float!
+    skills(moduleId: String, moduleItemId: String): [SkillTaxonomySkillGQL!]!
+}
+
+type SkillTaxonomyLearningObjectGQL {
+    # Unique identifier for the learning object
+    id: String!
+
+    # Content ID of the learning object
+    contentId: String!
+
+    # Type of the learning object
+    type: String!
+
+    # Alignments of the learning object with skills
+    alignments: [SkillTaxonomySkillAlignmentGQL!]!
+
+    # Course associated with the learning object
+    course: SkillTaxonomyCourseGQL
+}
+
+type SkillTaxonomySkillAlignmentGQL {
+    # Unique identifier for the skill alignment
+    id: ID!
+
+    # Module identifier for the skill alignment
+    moduleId: String!
+
+    # Module item identifier for the skill alignment
+    moduleItemId: String!
+
+    # Skill associated with the alignment
+    skill: SkillTaxonomySkillGQL
+
+    # Proficiency scale values for the skill alignment
+    proficiencyScaleValues: [SkillTaxonomyProficiencyScaleValueGQL!]!
+
+    # Learning object associated with the skill alignment
+    learningObject: SkillTaxonomyLearningObjectGQL
+}
+
+type AssociateSkillsToLearningObjectsResultGQL {
+    # List of alignments that were successfully persisted
+    persistedAlignments: [SkillTaxonomySkillAlignmentGQL!]!
+
+    # List of alignment IDs that were deleted
+    deletedAlignments: [ID!]!
+}
+
+type AlignmentsByProficiencyScaleValueGQL {
+    # Proficiency scale value for the skill alignment
+    proficiencyScaleValue: SkillTaxonomyProficiencyScaleValueGQL
+
+    # List of skill alignments for the proficiency scale value
+    alignments: [SkillTaxonomySkillAlignmentGQL!]!
+}
+
+type CoursesByProficiencyScaleValueGQL {
+    # Proficiency scale value specified in the alignment for the skill
+    proficiencyScaleValue: SkillTaxonomyProficiencyScaleValueGQL
+
+    # List of courses for the proficiency scale value
+    courses: [SkillTaxonomyCourseGQL!]!
+}
+
+type ExperienceGQL {
+    id: String!
+    type: String!
+    status: String!
+    skill: SkillGQL
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    fileName: String
+    alignment: SkillTaxonomySkillAlignmentGQL
+}
+
+type ExtractedSkillGQL {
+    name: String!
+}
+
+type CourseRecommendationGQL {
+    courseId: Float!
+    skills: [ExtractedSkillGQL!]!
+}
+
+type CourseRecommendationsGQL {
+    recommendedCourses: [CourseRecommendationGQL!]!
+}
+
+type UserGQL {
+    id: String!
+    canvasId: String!
+    canvasBaseUrl: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    isOnboarded: Boolean!
+}
+
+type ProgramGQL {
+    id: String!
+
+    # Internal name of the program
+    name: String!
+
+    # Public-facing name of the program
+    publicName: String
+
+    # Custom ID associated by the creator
+    customerId: String
+    description: String
+    publishStatus: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    owner: String!
+    startDate: DateTime
+    endDate: DateTime
+
+    # Program variant type (linear or non-linear)
+    variant: ProgramVariantType!
+
+    # Number of courses required for completion in non-linear programs
+    courseCompletionCount: Int
+
+    # Course enrollment type for the program
+    courseEnrollment: CourseEnrollmentType!
+    requirements: [ProgramRequirementGQL!]!
+    enrollments: [ProgramEnrollmentGQL!]!
+    progresses: [ProgramProgressGQL!]!
+    uniqueSkills: Float!
+    skills: [SkillTaxonomySkillGQL!]!
+}
+
+# Type of program variant (linear or non-linear)
+enum ProgramVariantType {
+    LINEAR
+    NON_LINEAR
+}
+
+# Type of course enrollment (self-enrollment or auto-enrollment)
+enum CourseEnrollmentType {
+    AUTO
+    SELF
+}
+
+type ContentLibraryGQL {
+    id: ID!
+    accountId: Float!
+    courseId: Float!
+    externalLinksModuleId: Float
+    externalToolsModuleId: Float
+}
+
+type ContentVersionGQL {
+    id: ID!
+    assetId: Float!
+    assetType: AssetTypeEnum!
+    contentExportId: String!
+    title: String!
+    createdAt: DateTime!
+    courseId: Float
+}
+
+enum AssetTypeEnum {
+    assignment
+    discussion_topic
+    page
+    quiz
+    module
+    module_item
+    external_url
+    external_tool
+    file
+}
+
+type ContentVersionPreviewGQL {
+    url: String
+}
+
+type AssetLinkGQL {
+    id: ID!
+    assetId: Float!
+    assetType: String!
+    courseId: Float!
+    contentLibraryCourseId: Float!
+    detached: Boolean!
+    createdAt: DateTime!
+}
+
+type ProgramEnrollmentGQL {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    enrollee: String!
+}
+
+type ProgramCourseGQL {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    canvasCourseId: String!
+    canvasUrl: String!
+}
+
+type ProgramRequirementGQL {
+    id: String!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    isCompletionRequired: Boolean!
+    isPlaceholder: Boolean!
+    description: String
+
+    # Course enrollment type for this requirement
+    courseEnrollment: String!
+    dependency: ProgramCourseGQL
+    dependent: ProgramCourseGQL!
+}
+
+type ProgramProgressGQL {
+    id: String!
+    requirement: ProgramRequirementGQL!
+    enrollment: ProgramEnrollmentGQL!
+    completionPercentage: Float!
+    courseEnrollmentStatus: ProgramProgressCourseEnrollmentStatus!
+    createdAt: DateTime!
+    updatedAt: DateTime!
+}
+
+enum ProgramProgressCourseEnrollmentStatus {
+    ENROLLED
+    NOT_ENROLLED
+    BLOCKED
+}
+
+type ForceProgressRecalcResultGQL {
+    updated: [String!]!
+    failed: [String!]!
+}
+
+type CrmJwtGQL {
+    # JWT for CRM integration configuration
+    token: String!
+}
+
+type WidgetGroupGQL {
+    id: ID!
+    name: String!
+    description: String!
+    position: Float!
+    widgets: [WidgetGQL!]
+}
+
+type WidgetGQL {
+    id: ID!
+    name: String!
+    type: String!
+    queryParams: WidgetParamsGQL!
+    position: Int
+    refreshIntervalMinutes: Int
+    createdAt: DateTime!
+    updatedAt: DateTime!
+    group: WidgetGroupGQL
+}
+
+type UserMetadataGQL {
+    # Unique identifier for the user metadata
+    id: ID!
+
+    # ID of the associated metadata user
+    userId: ID!
+
+    # Key for the metadata
+    key: String!
+
+    # Value for the metadata
+    value: String!
+
+    # Timestamp when the record was created
+    createdAt: DateTime!
+
+    # Timestamp when the record was last updated
+    updatedAt: DateTime!
+
+    # Associated metadata user
+    user: MetadataUserGQL
+}
+
+type MetadataUserGQL {
+    # Unique identifier for the metadata user; internal to the metadata service
+    id: ID!
+
+    # UUID of the user's Canvas root account
+    canvasRootAccountUuid: ID!
+
+    # User's Canvas UUID
+    canvasUserUuid: ID!
+
+    # List of user's leaders Canvas UUIDs
+    leaderCanvasUserUuids: [ID!]
+
+    # Timestamp when the record was created
+    createdAt: DateTime!
+
+    # Timestamp when the record was last updated
+    updatedAt: DateTime!
+
+    # List of this user's metadata
+    metadata: [UserMetadataGQL!]
+}
+
+type MetadataUsersGql {
+    # List of users
+    users: [MetadataUserGQL!]!
+}
+
+type KeyValuePairGQL {
+    # Metadata key
+    key: String!
+
+    # Metadata value
+    value: String!
+}
+
+type CanvasUserGQL {
+    # Canvas user ID
+    id: ID!
+
+    # User name from Canvas
+    name: String
+
+    # User email from Canvas
+    email: String
+
+    # User sortable name from Canvas
+    sortableName: String
+
+    # User short name from Canvas
+    shortName: String
+
+    # User login ID from Canvas
+    loginId: String
+
+    # User avatar URL from Canvas
+    avatarUrl: String
+
+    # Canvas user UUID
+    uuid: String
+
+    # SIS user ID from Canvas
+    sisUserId: String
+
+    # Integration ID from Canvas
+    integrationId: String
+}
+
+type PersonGQL {
+    # Canvas user ID
+    id: ID!
+
+    # User name from Canvas
+    name: String
+
+    # User email from Canvas
+    email: String
+
+    # User sortable name from Canvas
+    sortableName: String
+
+    # User short name from Canvas
+    shortName: String
+
+    # User login ID from Canvas
+    loginId: String
+
+    # User avatar URL from Canvas
+    avatarUrl: String
+
+    # Canvas user UUID
+    uuid: ID
+
+    # SIS user ID from Canvas
+    sisUserId: String
+
+    # Integration ID from Canvas
+    integrationId: String
+
+    # User metadata from Journey
+    metadata: [KeyValuePairGQL!]
+
+    # Leaders for this user from Canvas
+    leaders: [CanvasUserGQL!]
+
+    # User timezone from Canvas
+    timeZone: String
+
+    # Last login timestamp from Canvas
+    lastLogin: String
+
+    # Account UUID from Journey metadata
+    accountUuid: String!
+}
+
+type PaginationInfoGQL {
+    # Current page number (1-indexed)
+    currentPage: Int!
+
+    # Total number of pages available
+    totalPages: Int
+
+    # Whether there is a next page
+    hasNextPage: Boolean!
+
+    # Whether there is a previous page
+    hasPreviousPage: Boolean!
+}
+
+type PeopleResponseGQL {
+    # List of people (Canvas users enriched with metadata)
+    people: [PersonGQL!]!
+
+    # Pagination information for the query
+    pagination: PaginationInfoGQL!
+}
+
+type InsightMessageModel {
+    id: ID!
+    type: String!
+    status: String!
+
+    # Time at which the message had new data
+    generatedAt: DateTime!
+
+    # Time at which this message had its status last transitioned
+    updatedAt: DateTime!
+    date: DateTime! @deprecated(reason: "Use generatedAt instead")
+    rootAccountId: String!
+    accountId: String!
+    data: InsightMessageDataModel!
+}
+
+union InsightMessageDataModel =
+    LearnersDidCompleteCourse
+    | LearnersDidGainSkills
+    | LearnersDidNotStartCourseYet
+    | LearnersDidReturnAfterIdling
+    | LearnersInCourseAreIdling
+    | MostPopularSkill
+    | PlatformEngagementTrend
+
+type LearnersDidCompleteCourse {
+    course_id: String!
+    learner_ids: [String!]!
+}
+
+type LearnersDidGainSkills {
+    skill_count: Float!
+    learner_ids: [String!]!
+}
+
+type LearnersDidNotStartCourseYet {
+    course_id: String!
+    learner_ids: [String!]!
+}
+
+type LearnersDidReturnAfterIdling {
+    learner_ids: [String!]!
+}
+
+type LearnersInCourseAreIdling {
+    course_id: String!
+    learner_ids: [String!]!
+}
+
+type MostPopularSkill {
+    skill_name: String!
+}
+
+type PlatformEngagementTrend {
+    trend: Float!
+}
+
+type Query {
+    skill(id: String!): SkillGQL
+    skills: [SkillGQL!]!
+    courseRecommendations(
+        proficiencyLevel: String
+        skillIds: [String!]! = []
+    ): CourseRecommendationsGQL!
+    adminUsers(canvasBaseUrl: String!): [UserGQL!]!
+    currentUser: UserGQL!
+
+    # Fetch all skills within the taxonomy for the given account
+    skillTaxonomySkills(accountId: String!): [SkillTaxonomySkillGQL!]!
+
+    # Fetch all available proficiency scales
+    availableProficiencyScales(
+        accountId: String!
+    ): [SkillTaxonomyProficiencyScaleGQL!]!
+
+    # Fetch the currently used proficiency scale for the account
+    currentlyUsedProficiencyScale: SkillTaxonomyProficiencyScaleGQL
+    skillTaxonomyGroups(accountId: String!): [SkillTaxonomyGroupGQL!]!
+    skillTaxonomyCourses(courseIds: [String!]!): [SkillTaxonomyCourseGQL!]!
+    skillTaxonomyCourse(courseId: String!): SkillTaxonomyCourseGQL!
+
+    # Check if skill extraction has run for course/module/module item
+    hasSkillExtractionRun(input: SkillExtractionStatusInputGQL!): Boolean!
+    contentLibraries(accountId: Float!): [ContentLibraryGQL!]!
+    contentLibrary(courseId: Float!): ContentLibraryGQL!
+    contentVersions(
+        assetId: Float
+        assetType: AssetTypeEnum!
+        courseId: Float!
+    ): [ContentVersionGQL!]!
+    currentContentVersions(
+        assetType: AssetTypeEnum!
+        courseId: Float!
+    ): [ContentVersionGQL!]!
+    previewContentVersion(id: ID!): ContentVersionPreviewGQL!
+    assetLinks(
+        assetId: Float!
+        assetType: AssetTypeEnum!
+        contentLibraryCourseId: Float!
+    ): [AssetLinkGQL!]!
+
+    # All programs available for the user to administer, optionally filtered by progress state
+    programs(
+        # Filter programs by progress state
+        filter: ProgramFilterInput
+    ): [ProgramGQL!]!
+
+    # A program by id
+    program(programId: String!): ProgramGQL!
+
+    # All user enrolled programs
+    enrolledPrograms: [ProgramGQL!]!
+    crmConfigJwt: CrmJwtGQL!
+    widgetFileUrl(key: String!): String!
+    widgetsByUser(userAccountId: String!): [WidgetGQL!]!
+    widgetData(
+        widgetId: String!
+        timeSpan: TimeSpanInput!
+        filters: WidgetDataFiltersInput
+    ): [JSON!]!
+    getAthenaQuery(queryExecutionId: String!): JSON!
+    testAthenaResult(key: String!): [JSON!]!
+    listS3Keys: [JSON!]!
+    widgetGroupsByUser(userAccountId: String!): [WidgetGroupGQL!]!
+
+    # Get users (and metadata) matching the specified criteria
+    users(input: UsersQueryInputGQL!): MetadataUsersGql!
+
+    # Get all distinct metadata key-value pairs for a given account
+    distinctMetadataValues(input: UsersQueryInputGQL!): [UserMetadataGQL!]!
+
+    # Get users (and metadata) reporting to a specified user or the current user
+    userSubordinates(input: UserReportsQueryInputGQL!): MetadataUsersGql!
+
+    # Get people (Canvas users enriched with metadata) from a specific account
+    getPeople(input: PeopleQueryInputGQL!): PeopleResponseGQL!
+
+    # Retrieve all insight feed messages for the current user in a specific account.
+    insights(account: String!): [InsightMessageModel!]!
+}
+
+input SkillExtractionStatusInputGQL {
+    # Canvas course ID
+    courseId: String!
+
+    # Optional module ID
+    moduleId: String
+
+    # Optional module item ID
+    moduleItemId: String
+}
+
+input ProgramFilterInput {
+    # Filter by program publish status
+    workflowState: ProgramPublishStatus
+
+    # Filter by program progress state
+    progressState: ProgramProgressState
+}
+
+# The publish status of a program
+enum ProgramPublishStatus {
+    UNPUBLISHED
+    PUBLISHED
+    ARCHIVED
+    DELETED
+}
+
+# The progress state of a program
+enum ProgramProgressState {
+    NOT_STARTED
+    IN_PROGRESS
+    COMPLETED
+}
+
+# The `JSON` scalar type represents JSON values as specified by [ECMA-404](http://www.ecma-international.org/publications/files/ECMA-ST/ECMA-404.pdf).
+scalar JSON
+
+input TimeSpanInput {
+    type: TimeSpanType!
+    startDate: DateTime
+    endDate: DateTime
+}
+
+enum TimeSpanType {
+    TODAY
+    PAST_7_DAYS
+    PAST_30_DAYS
+    PAST_YEAR
+    CUSTOM
+}
+
+input WidgetDataFiltersInput {
+    userUuids: [String!]
+}
+
+input UsersQueryInputGQL {
+    # UUID of the Canvas root account
+    rootAccountUuid: ID!
+
+    # Canvas account ID to check permissions against
+    accountId: String
+
+    # Optional list of Canvas user UUIDs to filter by. If not provided, all users in the root account will be considered.
+    canvasUserUuids: [ID!]
+
+    # Optional filters to apply to user metadata. Only users with metadata matching ALL filters will be returned.
+    metadataFilters: [MetadataFilterInputGQL!]
+}
+
+input MetadataFilterInputGQL {
+    # Key to filter metadata by
+    key: String!
+
+    # Optional value to filter metadata by. If not provided, any value for the key will match.
+    value: String
+}
+
+input UserReportsQueryInputGQL {
+    # UUID of the Canvas root account
+    rootAccountUuid: ID
+
+    # Canvas user UUID of the user whose reports to retrieve
+    canvasUserUuid: ID
+
+    # Whether to include indirect reports. If false, only direct reports are included.
+    includeIndirectReports: Boolean! = false
+}
+
+input PeopleQueryInputGQL {
+    # The Canvas account ID (sub-account or root account)
+    accountId: ID!
+
+    # Optional search term to filter users
+    searchTerm: String
+
+    # Optional filters to apply to user metadata. Only users with metadata matching ALL filters will be returned.
+    metadataFilters: [MetadataFilterInputGQL!]
+
+    # Page number for pagination (1-indexed)
+    page: Int
+}
+
+type Mutation {
+    createSkills(input: CreateSkillsInputGQL!): [SkillGQL!]!
+    startSkillExtractionTaskForUser: Boolean!
+    adminDeleteSkills(skillIds: [String!]!): Boolean!
+    adminDeleteExperiences(experienceIds: [String!]!): Boolean!
+    adminRemoveUser(userId: String!): Boolean!
+
+    # Change the skill taxonomy for the given account
+    changeTaxonomySkills(
+        input: ChangeTaxonomySkillsInputGQL!
+    ): ChangeTaxonomySkillsResultGQL!
+    associateSkillsToLearningObjects(
+        input: AssociateSkillsToLearningObjectsInputGQL!
+    ): AssociateSkillsToLearningObjectsResultGQL!
+    upsertSkillTaxonomyGroups(
+        input: UpsertSkillTaxonomyGroupsInputGQL!
+    ): [SkillTaxonomyGroupGQL!]!
+    sendEvent(input: EventInputGQL!): Boolean!
+    createContentLibrary(accountId: Float!): ContentLibraryGQL!
+    updateContentLibrary(args: ContentLibraryInputGQL!): ContentLibraryGQL!
+    createContentVersion(
+        assetId: Float!
+        assetType: AssetTypeEnum!
+        title: String!
+        courseId: Float!
+        syncSettings: SyncSettingsInputGQL!
+    ): ContentVersionGQL!
+    importContentVersion(
+        courseId: Float!
+        contentVersionId: ID!
+        moduleId: Float!
+        detached: Boolean!
+    ): Float!
+
+    # Create a new program
+    createProgram(program: String): ProgramGQL!
+
+    # Update program metadata
+    updateProgramMetadata(metadata: UpdateProgramMetadataGQL!): ProgramGQL!
+
+    # Delete a program
+    deleteProgram(programId: String!): Boolean!
+
+    # Duplicate an existing program
+    duplicateProgram(programId: String!): ProgramGQL!
+
+    # Unenroll a Journey user from a program
+    unenrollUserFromProgram(enrollmentId: String!, canvasUUID: String!): Boolean!
+
+    # Enroll multiple Journey users to a program
+    batchEnrollUserToProgram(
+        programId: String!
+        userIds: [String!]!
+    ): [ProgramEnrollmentGQL!]!
+
+    # Enroll multiple Journey users to multiple programs
+    batchEnrollUsersToPrograms(
+        programIds: [String!]!
+        enrolleeIds: [String!]!
+    ): [ProgramEnrollmentGQL!]!
+
+    # Override program requirements
+    updateProgramRequirements(
+        programId: String!
+        requirements: [UpdateProgramRequirementsRequirementGQL!]!
+    ): [ProgramRequirementGQL!]!
+
+    # Enroll user to program requirement
+    enroll(progressId: String!): ProgramProgressGQL!
+
+    # Update learner program progresses. This will force recalculation of all progresses for the learner. It can be filtered by Canvas course ID and URL.
+    updateSelfProgresses(
+        canvasCourseFilter: CanvasCourseFilterInputGQL
+    ): ForceProgressRecalcResultGQL!
+    deleteWidget(id: String!, userAccountId: String!): Boolean!
+    createWidget(input: CreateWidgetInput!, userAccountId: String!): WidgetGQL!
+    updateWidget(
+        id: String!
+        userAccountId: String!
+        input: UpdateWidgetInput!
+    ): WidgetGQL!
+    testAthenaQuery: String!
+    runSnapshot: Boolean!
+    createWidgetGroup(input: CreateWidgetGroupInput!): WidgetGroupGQL!
+    deleteWidgetGroup(id: String!): Boolean!
+    updateWidgetGroup(
+        id: String!
+        userAccountId: String!
+        input: UpdateWidgetGroupInput!
+    ): WidgetGroupGQL!
+
+    # Bulk upsert users and metadata
+    bulkUpsertMetadata(input: BulkUpsertMetadataInputGQL!): MetadataUsersGql!
+
+    #
+    #       Answer a prompt using the Cedar AI service
+    #
+    answerPrompt(prompt: String!): String!
+
+    # Mark an insight feed message as read.
+    markInsightAsRead(insight: String!): Boolean!
+
+    # Mark an insight feed message as dismissed.
+    dismissInsights(insights: [String!]!): Boolean!
+}
+
+input CreateSkillsInputGQL {
+    skills: [CreateSkillInputGQL!]!
+    skillExtractionId: String
+}
+
+input CreateSkillInputGQL {
+    name: String!
+}
+
+input ChangeTaxonomySkillsInputGQL {
+    # Canvas account ID
+    accountId: String!
+
+    # List of skills to be created/updated in the taxonomy
+    skillsToPersist: [CreateOrUpdateTaxonomySkillInputGQL!]!
+
+    # List of skill IDs to be removed from the taxonomy
+    skillsToDelete: [ID!]!
+
+    # List of skills to be merged into a single skill
+    merges: [MergeSkillsInputGQL!]!
+}
+
+input CreateOrUpdateTaxonomySkillInputGQL {
+    # Unique identifier for the skill
+    id: ID
+
+    # Name of the skill
+    name: String!
+
+    # Description of the skill
+    description: String!
+
+    # Group ID to which the skill belongs
+    groupId: String
+}
+
+input MergeSkillsInputGQL {
+    # Resulting skill after merging
+    mergedSkill: CreateOrUpdateTaxonomySkillInputGQL!
+
+    # List of skill IDs to be merged into the resulting skill
+    sourceSkillIds: [ID!]!
+}
+
+input AssociateSkillsToLearningObjectsInputGQL {
+    # Unique identifier for the course
+    courseId: String!
+    learningObjects: [CreateOrUpdateAlignmentLearningObjectInputGQL!]!
+
+    # List of skill alignment IDs to delete
+    alignmentsToDelete: [ID!]!
+}
+
+input CreateOrUpdateAlignmentLearningObjectInputGQL {
+    # Unique identifier for the learning object
+    id: ID
+
+    # Unique identifier of the content behind the module item
+    contentId: String!
+
+    # Type of the learning object
+    type: String!
+
+    # List of skill alignments to create or update for the learning object
+    alignmentsToPersist: [CreateOrUpdateSkillTaxonomyAlignmentInputGQL!]!
+}
+
+input CreateOrUpdateSkillTaxonomyAlignmentInputGQL {
+    # Unique identifier for the alignment
+    id: ID
+
+    # Unique identifier of the module
+    moduleId: String!
+
+    # Unique identifier of the module item
+    moduleItemId: String!
+
+    # Unique identifier for the skill
+    skillId: ID!
+
+    # Unique identifiers for the proficiency scale values
+    proficiencyScaleValues: [ID!]!
+}
+
+input UpsertSkillTaxonomyGroupsInputGQL {
+    # Canvas account ID
+    accountId: String!
+
+    # List of skill taxonomy groups to be upserted
+    groups: [UpsertSkillTaxonomyGroupInputGQL!]!
+}
+
+input UpsertSkillTaxonomyGroupInputGQL {
+    # The unique identifier of the group, if updating an existing one
+    id: String
+
+    # The name of the skill taxonomy group
+    name: String!
+}
+
+input EventInputGQL {
+    eventType: String!
+    courseId: String
+    learningObject: EventLearningObjectInputGQL
+    learningObjectType: String
+    moduleId: String
+    moduleItemId: String
+    accountId: String
+}
+
+input EventLearningObjectInputGQL {
+    id: String!
+    type: String!
+}
+
+input ContentLibraryInputGQL {
+    id: String!
+    externalLinksModuleId: Float
+    externalToolsModuleId: Float
+    courseId: Float
+}
+
+input SyncSettingsInputGQL {
+    unpublished: Boolean
+    published: Boolean
+    notStarted: Boolean
+    inProgress: Boolean
+    completed: Boolean
+    concluded: Boolean
+}
+
+input UpdateProgramMetadataGQL {
+    id: String!
+    name: String!
+    publicName: String
+    customerId: String
+    description: String
+    publishStatus: String
+    startDate: DateTime
+    endDate: DateTime
+    variant: String
+    courseCompletionCount: Int
+    courseEnrollment: CourseEnrollmentType
+}
+
+input UpdateProgramRequirementsRequirementGQL {
+    dependency: ProgramRequirementCourseInputGQL
+    dependent: ProgramRequirementCourseInputGQL!
+    isCompletionRequired: Boolean! = true
+    isPlaceholder: Boolean! = false
+    description: String
+
+    # Course enrollment type for this requirement
+    courseEnrollment: String! = "self-enrollment"
+}
+
+input ProgramRequirementCourseInputGQL {
+    canvasCourseId: String!
+    canvasUrl: String!
+}
+
+input CanvasCourseFilterInputGQL {
+    canvasCourseId: String!
+    canvasUrl: String!
+}
+
+input CreateWidgetInput {
+    name: String!
+    type: String!
+    queryParams: String!
+    queryResults: [String!]!
+    refreshIntervalMinutes: Float
+    position: Int
+    widgetGroupId: String
+}
+
+input UpdateWidgetInput {
+    name: String
+    type: String
+    queryParams: String
+    queryResults: [String!]
+    refreshIntervalMinutes: Float
+    position: Int
+    widgetGroupId: String
+}
+
+input CreateWidgetGroupInput {
+    name: String!
+    userAccountId: ID!
+    description: String
+    position: Float
+}
+
+input UpdateWidgetGroupInput {
+    name: String
+    description: String
+    position: Float
+    widgetIds: [ID!]
+}
+
+input BulkUpsertMetadataInputGQL {
+    # List of users with their metadata to upsert
+    users: [MetadataUserInputGQL!]!
+}
+
+input MetadataUserInputGQL {
+    # UUID of the user's Canvas root account
+    canvasRootAccountUuid: ID!
+
+    # User's Canvas UUID
+    canvasUserUuid: ID!
+
+    # List of user's leaders Canvas UUIDs. Set to null to delete the leader association.
+    leaderCanvasUserUuids: [ID!]
+
+    # List of metadata to upsert for this user
+    metadata: [UserMetadataInputGQL!]
+}
+
+input UserMetadataInputGQL {
+    # Key for the metadata
+    key: String!
+
+    # Value for the metadata. Set to null to delete the metadata entry.
+    value: String
+}

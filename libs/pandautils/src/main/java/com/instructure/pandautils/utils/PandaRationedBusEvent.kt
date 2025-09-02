@@ -117,3 +117,6 @@ class FileFolderDeletedEvent(val deletedFileFolder: FileFolder, skipId: String? 
 class FileFolderUpdatedEvent(val updatedFileFolder: FileFolder, skipId: String? = null) : PandaRationedBusEvent<FileFolder>(updatedFileFolder, skipId)
 
 class ConversationUpdatedEvent(conversation: Conversation, skipId: String? = null) : PandaRationedBusEvent<Conversation>(conversation, skipId)
+
+/** A RationedBusEvent for Assignment graded events. @see [PandaRationedBusEvent] */
+class AssignmentGradedEvent(assignmentId: Long, skipId: String? = null) : PandaRationedBusEvent<Long>(assignmentId, skipId)

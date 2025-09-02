@@ -112,13 +112,12 @@ fun TextDropdown(
                     modifier = Modifier.padding(end = 4.dp)
                 )
                 Icon(
-                    painter = painterResource(R.drawable.ic_arrow_down),
+                    painter = painterResource(R.drawable.ic_dropdown_solid),
                     contentDescription = null,
-                    modifier = Modifier.size(16.dp).rotate(rotation.value),
-                    tint = colorResource(R.color.textDark)
+                    modifier = Modifier.size(24.dp).rotate(rotation.value),
+                    tint = color
                 )
             }
-
 
             ExposedDropdownMenu(
                 expanded = expanded,

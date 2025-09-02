@@ -31,6 +31,9 @@ def cedarReleaseBaseUrl = "https://cedar-api-production.us-east-1.temp.prod.inse
 def redwoodDebugBaseUrl = "https://redwood-api-dev.domain-svcs.nonprod.inseng.io"
 def redwoodReleaseBaseUrl = "https://redwood-api-production.us-east-1.temp.prod.inseng.io"
 
+def journeyDebugBaseUrl = "https://journey-server-dev.journey.nonprod.inseng.io"
+def journeyReleaseBaseUrl = "https://journey-server-prod.us-east-1.temp.prod.inseng.io"
+
 
 static String isTesting() {
     if ( System.getenv("IS_TESTING") == "true" ) {
@@ -62,11 +65,13 @@ android {
             buildConfigField "String", "PINE_BASE_URL", "\"$pineDebugBaseUrl\""
             buildConfigField "String", "CEDAR_BASE_URL", "\"$cedarDebugBaseUrl\""
             buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodDebugBaseUrl\""
+            buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyDebugBaseUrl\""
         }
         release {
             buildConfigField "String", "PINE_BASE_URL", "\"$pineReleaseBaseUrl\""
             buildConfigField "String", "CEDAR_BASE_URL", "\"$cedarReleaseBaseUrl\""
             buildConfigField "String", "REDWOOD_BASE_URL", "\"$redwoodReleaseBaseUrl\""
+            buildConfigField "String", "JOURNEY_BASE_URL", "\"$journeyReleaseBaseUrl\""
 
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -121,6 +126,12 @@ apollo {
     service("redwood") {
         setSourceFolder("com/instructure/redwood")
         packageName.set("com.instructure.redwood")
+        mapScalar("DateTime", "java.util.Date")
+        mapScalar("ID", "kotlin.String")
+    }
+    service("journey") {
+        setSourceFolder("com/instructure/journey")
+        packageName.set("com.instructure.journey")
         mapScalar("DateTime", "java.util.Date")
         mapScalar("ID", "kotlin.String")
     }

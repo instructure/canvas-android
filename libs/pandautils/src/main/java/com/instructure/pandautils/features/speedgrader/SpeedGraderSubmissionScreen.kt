@@ -117,7 +117,8 @@ private fun SpeedGraderSubmissionContent(
             },
             bottomContent = {
                 bottomSheetContent(anchoredDraggableState)
-            }
+            },
+            initialAnchor = AnchorPoints.MIDDLE
         )
     }
 }

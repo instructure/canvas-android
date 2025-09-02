@@ -16,9 +16,7 @@
  */
 package com.instructure.student.ui.e2e
 
-import android.os.SystemClock.sleep
 import android.util.Log
-import androidx.test.espresso.Espresso.pressBack
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
@@ -30,11 +28,9 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.isElementDisplayed
 import com.instructure.dataseeding.api.QuizzesApi
 import com.instructure.dataseeding.model.QuizAnswer
 import com.instructure.dataseeding.model.QuizQuestion
@@ -54,13 +50,7 @@ class QuizzesE2ETest: StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    // Fairly basic test of web view-based quizzes.  Seeds/takes a quiz with two multiple-choice
-    // questions.
-    //
-    // STUBBING THIS OUT.  Usually passes locally, but I can't get a simple webClick() to work on FTL.
-    // See comments below.
     @E2E
-    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
     fun testQuizzesE2E() {
@@ -90,99 +80,71 @@ class QuizzesE2ETest: StudentTest() {
         Log.d(STEP_TAG, "Navigate to Quizzes Page.")
         courseBrowserPage.selectQuizzes()
 
-        Log.d(ASSERTION_TAG, "Assert that '${quizPublished.title}' published quiz is displayed and '${quizUnpublished.title}' unpublished quiz has not displayed.")
+        Log.d(ASSERTION_TAG, "Assert that '${quizPublished.title}' published quiz is displayed and '${quizUnpublished.title}' unpublished quiz has not displayed and the quiz group name is displayed.")
         quizListPage.assertQuizDisplayed(quizPublished)
         quizListPage.assertQuizNotDisplayed(quizUnpublished)
+        quizListPage.assertAssignmentQuizzesGroupDisplayed()
+
+        Log.d(STEP_TAG, "Collapse the quiz group.")
+        quizListPage.collapseAssignmentQuizzesGroup()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz is NOT displayed.")
+        quizListPage.assertQuizNotDisplayed(quizPublished)
+
+        Log.d(STEP_TAG, "Expand the quiz group.")
+        quizListPage.expandAssignmentQuizzesGroup()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz is displayed again.")
+        quizListPage.assertQuizDisplayed(quizPublished)
+
+        Log.d(STEP_TAG, "Open the search bar and search for the '${quizUnpublished.title}' quiz.")
+        quizListPage.searchable.clickOnSearchButton()
+        quizListPage.searchable.typeToSearchBar(quizUnpublished.title)
+
+        Log.d(ASSERTION_TAG, "Assert that the empty view is displayed.")
+        quizListPage.assertEmptyStateDisplayed()
+
+        Log.d(STEP_TAG, "Clear the search bar and search for the '${quizPublished.title}' quiz.")
+        quizListPage.searchable.clickOnClearSearchButton()
+        quizListPage.searchable.typeToSearchBar(quizUnpublished.title)
+
+        Log.d(ASSERTION_TAG, "Assert that ONLY the '${quizPublished.title}' quiz is displayed in the search results page.")
+        quizListPage.assertQuizDisplayed(quizPublished)
+        quizListPage.assertQuizItemCount(1)
 
         Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
         quizListPage.selectQuiz(quizPublished)
 
-        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz title is displayed.")
+        Log.d(ASSERTION_TAG, "Assert that the '${quizPublished.title}' quiz title is displayed on the quiz details page.")
         canvasWebViewPage.runTextChecks(WebViewTextCheck(locatorType = Locator.ID, locatorValue = "quiz_title", textValue = quizPublished.title))
 
-        // Launch the quiz
-        // Pressing the "Take the Quiz" button does not work on an FTL Api 25 device.
-        // Not even the logic below, which tries 10 times to press the button!
-        // Every time the button is pressed on an FTL device, we get this console message:
-        //
-        //      09-29 07:24:22.796: I/chromium(7428): [INFO:CONSOLE(29)] "Uncaught TypeError: e.preventDefault(...)
-        //      is not a function", source: https://mobileqa.beta.instructure.com/courses/3092218/quizzes/7177808?force_user=1&persist_headless=1 (29)
-        //
-        // The applicable code is in a script element in the header portion of the web view content:
-        //      <script>
-        //          function _earlyClick(e){
-        //              var c = e.target
-        //              while (c && c.ownerDocument) {
-        //                  if (c.getAttribute('href') == '#' || c.getAttribute('data-method')) {
-        //                      e.preventDefault()
-        //                      (_earlyClick.clicks = _earlyClick.clicks || []).push(c)
-        //                      break
-        //                  }
-        //                  c = c.parentNode
-        //              }
-        //          }
-        //          document.addEventListener('click', _earlyClick)
-        //      </script>
-        //
-        // My best guess is that Espresso-Web is clicking on the wrong location, in an
-        // area where a preventDefault() function does not apply.
-        //
-        // Also, there is some slight variation in webview versions:
-        //      --Local emulator: 55.0.2883.91
-        //      --FTL emulator: 53.0.2785.135
-        // Not sure if that would make a difference.
-        //
-        // Possible solution: Write a custom atom to do the work instead of relying on webClick() via pressButton()
-        var attemptsLeft = 10
-        while(attemptsLeft > 0) {
-            try {
-                canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
+        Log.d(ASSERTION_TAG, "Assert that the 'Take the Quiz' button is displayed on the quiz details page.")
+        canvasWebViewPage.runTextChecks(
+            WebViewTextCheck(
+                locatorType = Locator.ID,
+                locatorValue = "take_quiz_link",
+                textValue = "Take the Quiz"
+            )
+        )
 
-                // If the pressButton() call above was successful, then this check should fail.
-                canvasWebViewPage.runTextChecks(
-                        WebViewTextCheck(
-                                locatorType = Locator.ID,
-                                locatorValue = "take_quiz_link",
-                                textValue = "Take the Quiz"
-                        )
-                )
-                attemptsLeft -= 1
-                sleep(1000) // delay between attempts
-                Log.v("QuizTest", "Retrying take-quiz button press")
-            }
-            catch(t: Throwable) {
-                break
-            }
-        }
+        Log.d(STEP_TAG, "Press 'Take the Quiz' button.")
+        canvasWebViewPage.pressButton(locatorType = Locator.ID, locatorValue = "take_quiz_link")
 
-        // Enter answers to questions.  Right now, only multiple-choice questions are supported.
-        Log.d(STEP_TAG, "Enter answers to the questions:")
+        Log.d(STEP_TAG, "Enter answers to the questions.")
+        Thread.sleep(2000) // Wait for the quiz to load
         for(question in quizQuestions) {
             Log.d(ASSERTION_TAG, "Assert that the following question is displayed: '${question.questionText}'.")
-            quizTakingPage.verifyQuestionDisplayed(question.id!!, question.questionText!!)
+            quizTakingPage.assertQuestionDisplayed(question.id!!, question.questionText!!)
             if(question.questionType == "multiple_choice_question") {
                 Log.d(STEP_TAG, "Choosing an answer for the following question: '${question.questionText}'.")
-                quizTakingPage.selectAnyAnswer(question.id!!) // Just choose any answer
+                quizTakingPage.selectAnyAnswer(question.id!!)
             }
         }
 
-        Log.d(PREPARATION_TAG, "Submit the '${quizPublished.title}' quiz.")
+        Log.d(STEP_TAG, "Submit the '${quizPublished.title}' quiz.")
         quizTakingPage.submitQuiz()
 
-        // Interesting situation here.  If you wait long enough, the web page will update itself,
-        // which affects the number of pressBack() commands that it takes to get back to the
-        // quiz list page, and might also affect whether or not the "Attempt History" portion of
-        // the page is displayed.
-        //
-        // Chosen strategy: pressBack() until you get to the quiz list page,
-        // then reload the quiz details to get the latest info.
-        Log.d(STEP_TAG, "Navigate back to Quizzes Page.")
-        while(!isElementDisplayed(R.id.quizListPage)) pressBack()
-
-        Log.d(STEP_TAG, "Select '${quizPublished.title}' quiz.")
-        quizListPage.selectQuiz(quizPublished)
-
-        sleep(5000)
+        Thread.sleep(3000) // Wait for the quiz submission to finish.
         Log.d(ASSERTION_TAG, "Assert (on web) that the '${quizPublished.title}' quiz now has a history.")
         onWebView(withId(R.id.contentWebView))
                 .withElement(findElement(Locator.ID, "quiz-submission-version-table"))
@@ -195,15 +157,13 @@ class QuizzesE2ETest: StudentTest() {
                 .check(webMatches(getText(),containsString("LATEST")))
 
         Log.d(STEP_TAG, "Navigate back to Course Browser Page.")
-        ViewUtils.pressBackButton(2)
+        ViewUtils.pressBackButton(3)
 
         Log.d(STEP_TAG, "Navigate to Grades Page.")
         courseBrowserPage.selectGrades()
-        // For some reason, this quiz is resulting in a 10/10 grade, although with the weights assigned and
-        // answers given it should be 5/10.  Let's just make sure that a "10" shows up.
+
         Log.d(ASSERTION_TAG, "Assert that the corresponding grade (10) is displayed for '${quizPublished.title}' quiz.")
         courseGradesPage.assertGradeDisplayed(withText(quizPublished.title), containsTextCaseInsensitive("10"))
-
     }
 
     private fun makeQuizQuestions() = listOf(
@@ -227,14 +187,6 @@ class QuizzesE2ETest: StudentTest() {
                 QuizAnswer(id = 1, weight = 0, text = "Who-Who Who-Who")
             )
         )
-
-        // Can't test essay questions yet.  More specifically, can't test answering essay questions.
-    //                QuizQuestion(
-    //                        questionText = "Why should I give you an A?",
-    //                        questionType = "essay_question",
-    //                        pointsPossible = 12,
-    //                        answers = listOf()
-    //                )
     )
 
 }

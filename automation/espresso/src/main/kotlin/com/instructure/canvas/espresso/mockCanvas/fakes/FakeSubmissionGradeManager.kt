@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
+import com.instructure.pandautils.utils.orDefault
 import java.util.Date
 
 class FakeSubmissionGradeManager : SubmissionGradeManager {
@@ -34,40 +35,40 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
         val assignment = MockCanvas.data.assignments[assignmentId]
         val course = MockCanvas.data.courses[assignment?.courseId]
         val submission = MockCanvas.data.submissions[assignmentId]?.get(0)
-        /*val gradingStandard = SubmissionGradeQuery.GradingStandard(  // TODO: This should be mocked somehow else because Data1 is a generated type and uiState.letterGrades expected GradingSchemeRow list.
+        val gradingStandard = SubmissionGradeQuery.GradingStandard1(
             data = listOf(
-                SubmissionGradeQuery.Data1(
-                    baseValue = 90.0,
+                SubmissionGradeQuery.Data2(
+                    baseValue = 0.9,
                     letterGrade = "A"
                 ),
-                SubmissionGradeQuery.Data1(
-                    baseValue = 80.0,
+                SubmissionGradeQuery.Data2(
+                    baseValue = 0.8,
                     letterGrade = "B"
                 ),
-                SubmissionGradeQuery.Data1(
-                    baseValue = 70.0,
+                SubmissionGradeQuery.Data2(
+                    baseValue = 0.7,
                     letterGrade = "C"
                 ),
-                SubmissionGradeQuery.Data1(
-                    baseValue = 60.0,
+                SubmissionGradeQuery.Data2(
+                    baseValue = 0.6,
                     letterGrade = "D"
                 ),
-                SubmissionGradeQuery.Data1(
-                    baseValue = 50.0,
+                SubmissionGradeQuery.Data2(
+                    baseValue = 0.5,
                     letterGrade = "E"
                 ),
-                SubmissionGradeQuery.Data1(
-                    baseValue = 40.0,
+                SubmissionGradeQuery.Data2(
+                    baseValue = 0.4,
                     letterGrade = "F"
                 )
             )
-        )*/
+        )
         val queryAssignment = SubmissionGradeQuery.Assignment(
             dueAt = assignment?.dueDate,
             gradingType = GradingType.entries.firstOrNull { it.rawValue == assignment?.gradingType },
             pointsPossible = assignment?.pointsPossible ?: 100.0,
-            gradingStandard = null, // gradingStandard should be passed once it's mocked out correctly.
-            course = null
+            gradingStandard = null,
+            course = SubmissionGradeQuery.Course(null, gradingStandard, emptyList())
         )
         val dummySubmission = SubmissionGradeQuery.Submission(
             gradingStatus = SubmissionGradingStatus.needs_grading,
@@ -78,7 +79,7 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             status = submission?.status ?: "submitted",
             latePolicyStatus = LatePolicyStatusType.none,
             late = submission?.late ?: false,
-            secondsLate = 0.0,
+            secondsLate = if (submission?.late.orDefault()) 86400.0 else 0.0,
             deductedPoints = 0.0,
             score = submission?.score ?: 100.0,
             excused = submission?.excused ?: false,

@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.pandautils.features.speedgrader.grade.grading.SpeedGraderGradingRepository
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -143,5 +142,32 @@ class SpeedGraderGradingRepositoryTest {
 
         assertEquals(expected, result)
         coVerify { submissionGradeManager.updateSubmissionStatus(1L, null, null) }
+    }
+
+    @Test
+    fun `postSubmissionLateSecondsOverride calls API and returns data`() = runTest {
+        val expectedSubmission = Submission(id = 789L)
+        coEvery {
+            submissionApi.postSubmissionLateSecondsOverride(
+                contextId = 1L,
+                assignmentId = 2L,
+                userId = 3L,
+                lateSeconds = 86400,
+                restParams = any()
+            )
+        } returns DataResult.Success(expectedSubmission)
+
+        val result = repository.updateLateSecondsOverride(3L, 2L, 1L, 86400)
+
+        assertEquals(expectedSubmission, result)
+        coVerify {
+            submissionApi.postSubmissionLateSecondsOverride(
+                contextId = 1L,
+                assignmentId = 2L,
+                userId = 3L,
+                lateSeconds = 86400,
+                restParams = any()
+            )
+        }
     }
 }

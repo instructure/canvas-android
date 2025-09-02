@@ -83,8 +83,8 @@ import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSel
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectInputSize
 import com.instructure.horizon.horizonui.organisms.inputs.singleselect.SingleSelectState
 import com.instructure.pandautils.utils.ViewStyler
-import com.instructure.pandautils.utils.format
 import com.instructure.pandautils.utils.getActivityOrNull
+import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
 const val HORIZON_REFRESH_INBOX_LIST = "horizon_refresh_inbox_list"
@@ -375,7 +375,7 @@ private fun InboxContentItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
-                    text = item.date?.format("MMM dd, yyyy").orEmpty(),
+                    text = item.date?.localisedFormat("MMM dd, yyyy").orEmpty(),
                     style = HorizonTypography.p2,
                     color = HorizonColors.Text.timestamp(),
                 )

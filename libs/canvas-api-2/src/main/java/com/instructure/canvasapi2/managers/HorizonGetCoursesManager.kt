@@ -15,7 +15,9 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.GetCoursesQuery
+import com.instructure.canvasapi2.HorizonGetProgramCourseByIdQuery
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.DataResult
@@ -115,6 +117,41 @@ class HorizonGetCoursesManager {
             null
         }
     }
+
+    suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean = false): DataResult<CourseWithModuleItemDurations> {
+        var hasNextPage = true
+        var nextCursor: String? = null
+        val moduleItemDurations = mutableListOf<String>()
+        var courseName: String? = null
+
+        try {
+            while (hasNextPage) {
+                val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
+                val query = HorizonGetProgramCourseByIdQuery(courseId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
+                val result = QLClientConfig.enqueueQuery(query, forceNetwork = forceNetwork).dataAssertNoErrors
+                val course = result.legacyNode?.onCourse
+                courseName = course?.name
+                val newItems = course?.modulesConnection?.edges
+                    ?.flatMap { it?.node?.moduleItems.orEmpty() }
+                    ?.mapNotNull {
+                        it.estimatedDuration
+                    }.orEmpty()
+                moduleItemDurations.addAll(newItems)
+                hasNextPage = course?.modulesConnection?.pageInfo?.hasNextPage ?: false
+                nextCursor = course?.modulesConnection?.pageInfo?.endCursor
+            }
+
+            return DataResult.Success(
+                CourseWithModuleItemDurations(
+                    courseId = courseId,
+                    courseName = courseName.orEmpty(),
+                    moduleItemsDuration = moduleItemDurations,
+                )
+            )
+        } catch (e: Exception) {
+            return DataResult.Fail(Failure.Exception(e))
+        }
+    }
 }
 
 data class CourseWithProgress(
@@ -147,4 +184,12 @@ data class CourseInvite(
     val courseName: String,
     val enrollmentId: Long,
     val acceptLoading: Boolean = false,
+)
+
+data class CourseWithModuleItemDurations(
+    val courseId: Long = -1,
+    val courseName: String = "",
+    val moduleItemsDuration: List<String> = emptyList(),
+    val startDate: Date? = null,
+    val endDate: Date? = null
 )

@@ -30,10 +30,13 @@ import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
+import com.instructure.canvasapi2.type.SubmissionStatusTagType
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
+import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
+import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -50,7 +53,8 @@ class SpeedGraderContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderContentRepository,
     private val resources: Resources,
-    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder
+    private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder,
+    private val gradingEventHandler: SpeedGraderGradingEventHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(SpeedGraderContentUiState())
@@ -62,6 +66,17 @@ class SpeedGraderContentViewModel @Inject constructor(
     init {
         viewModelScope.launch {
             fetchData()
+            viewModelScope.launch {
+                gradingEventHandler.events.collect {
+                    when (it) {
+                        is GradingEvent.GradeChanged -> {
+                            updateSubmissionState()
+                        }
+
+                        else -> {}
+                    }
+                }
+            }
         }
     }
 
@@ -111,7 +126,11 @@ class SpeedGraderContentViewModel @Inject constructor(
                 assigneeId = assignee.id,
                 userName = if (anonymousGrading) resources.getString(R.string.anonymousGradingStudentLabel) else assignee.name,
                 userUrl = if (!anonymousGrading) assignee.avatarUrl else null,
-                submissionState = getSubmissionStateLabel(submissionFields?.state, submissionFields?.customGradeStatus),
+                submissionState = getSubmissionStateLabel(
+                    submissionFields?.state,
+                    submissionFields?.customGradeStatus,
+                    submissionFields?.statusTag
+                ),
                 dueDate = submissionFields?.assignment?.dueAt,
                 attachmentSelectorUiState = SelectorUiState(
                     items = attachments,
@@ -129,16 +148,39 @@ class SpeedGraderContentViewModel @Inject constructor(
         }
     }
 
+    private suspend fun updateSubmissionState() {
+        val submission = repository.getSubmission(assignmentId, studentId)
+        val submissionFields = submission.submission?.submissionFields
+
+        _uiState.update { state ->
+            state.copy(
+                submissionState = getSubmissionStateLabel(
+                    submissionFields?.state,
+                    submissionFields?.customGradeStatus,
+                    submissionFields?.statusTag
+                )
+            )
+        }
+    }
+
     private fun getSubmissionStateLabel(
         submissionState: SubmissionState?,
-        customGradeStatus: String?
+        customGradeStatus: String?,
+        statusTag: SubmissionStatusTagType?
     ): SubmissionStateLabel {
         return when {
+            statusTag == SubmissionStatusTagType.excused -> SubmissionStateLabel.Excused
+
             !customGradeStatus.isNullOrEmpty() -> SubmissionStateLabel.Custom(
                 R.drawable.ic_flag,
                 R.color.textInfo,
                 customGradeStatus
             )
+
+            submissionState == SubmissionState.graded -> SubmissionStateLabel.Graded
+
+            statusTag == SubmissionStatusTagType.late -> SubmissionStateLabel.Late
+            statusTag == SubmissionStatusTagType.missing -> SubmissionStateLabel.Missing
 
             submissionState in setOf(
                 SubmissionState.submitted,
@@ -147,7 +189,7 @@ class SpeedGraderContentViewModel @Inject constructor(
             ) -> SubmissionStateLabel.Submitted
 
             submissionState == SubmissionState.unsubmitted -> SubmissionStateLabel.NotSubmitted
-            submissionState == SubmissionState.graded -> SubmissionStateLabel.Graded
+
             else -> SubmissionStateLabel.None
         }
     }

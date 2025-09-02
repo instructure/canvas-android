@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Gefðu einkunn eftir birtingu</string>
     <string name="gradeOverride">Hnekking einkunnar</string>
     <string name="currentGrade">Núverandi einkunn</string>
-    <string name="opensInCanvasStudent">Opnast í Canvas Student</string>
+    <string name="opensInCanvasApp">Opnast í Canvas forritinu</string>
     <string name="tab_student_view">Nemandasýn</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Geymsla</string>
     <string name="offline_content_storage_info">%s af %s notað</string>
     <string name="offline_content_other">Önnur smáforrit</string>
-    <string name="offline_content_canvas_student">Canvas nemandi</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Eftir</string>
-    <string name="offline_content_storage_info_a11y_description">Geymsluupplýsingar: %s af %s notað, önnur forrit %d%%, Canvas nemandi %d%%, eftir %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Geymsluupplýsingar: %s af %s notað, önnur forrit %d%%, Canvas %d%%, eftir %d%%</string>
     <string name="offline_content_all_courses">Öll námskeið</string>
     <string name="offline_content_sync">Samhæfa</string>
     <string name="offline_content_selected">%d Valið</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Ertu nemandi eða kennari?</string>
     <string name="studentOrTeacherSubtitle">Eitthvað af hinum öppunum okkar gæti hentað betur. Smelltu á eitt þeirra til að fara í Play Store</string>
     <string name="studentApp">NEMANDI</string>
-    <string name="canvasStudentApp">Canvas nemandi</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">KENNARI</string>
     <string name="canvasTeacherApp">Canvas kennari</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Nemanda bætt við</string>
     <string name="addStudentTitle">Bæta nemanda við&#8230;</string>
     <string name="addStudentQrCodeTitle">QR kóði</string>
-    <string name="addStudentQrCodeExplanation">Nemendur geta búið til QR-kóða með því að nota Canvas Student forritið á fartæki sínu</string>
+    <string name="addStudentQrCodeExplanationCanvas">Nemendur geta búið til QR-kóða með því að nota Canvas forritið á fartæki sínu</string>
     <string name="addStudentPairingCodeTitle">Pörunarkóði</string>
     <string name="addStudentPairingCodeExplanation">Nemendur geta fengið pörunarkóða í gegnum vefsíðu Canvas</string>
     <string name="pairingCodeDialogTitle">Bæta við nemanda</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Hætta við</string>
     <string name="pairingCodeDialogPositiveButton">Í lagi</string>
     <string name="pairingCodeDialogError">Kóðinn þinn er rangur eða útrunninn.</string>
-    <string name="qrPairingTitle">Opnaðu Canvas Student</string>
-    <string name="qrPairingDescription">Þú þarft að opna Canvas Student forrit nemanda þíns til að halda áfram. Farðu í aðalvalmyndina > Stillingar > Para við eftirlitsaðila og skannaðu QR-kóðann sem þú sérð þar.</string>
-    <string name="qrCodePairingPrompt">Skannaðu QR kóða frá Canvas Student til að para</string>
+    <string name="qrPairingTitleCanvas">Opna Canvas forritið</string>
+    <string name="qrPairingDescriptionCanvas">Þú þarft að opna Canvas forrit nemanda þíns til að halda áfram. Farðu í aðalvalmyndina > Stillingar > Para við eftirlitsaðila og skannaðu QR-kóðann sem þú sérð þar.</string>
+    <string name="qrCodePairingPromptCanvas">Skannaðu QR-kóða frá Canvas forritinu til að para</string>
     <string name="a11y_addStudentContentDescription">Bæta við nemanda</string>
     <string name="qrPairingErrorTitle">Útrunninn QR-kóði</string>
     <string name="qrPairingErrorDescription">QR-kóðinn sem þú skannaðir gæti verið útrunninn. Endurnýjaðu kóðann á tæki nemandans og reyndu aftur.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Skráðu þig inn á reikninginn þinn í appinu til að sjá einkunnirnar þínar.</string>
     <string name="widgetSingleGradeSelectCourse">Við skulum velja námskeið</string>
     <string name="widgetGradesErrorLoadingCourses">Villa við sókn á námskeiðum.</string>
+    <string name="settingsSwitchExperience">Skiptu yfir í Canvas Career</string>
 </resources>

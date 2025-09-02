@@ -88,13 +88,29 @@ class TeacherCalendarRepository(
                     .mapContextName()
             }
 
+            val calendarSubAssignments = async {
+                calendarEventApi.getCalendarEvents(
+                    false,
+                    CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT.apiName,
+                    startDate,
+                    endDate,
+                    contextCodes,
+                    restParams
+                ).depaginate {
+                    calendarEventApi.next(it, restParams)
+                }.dataOrThrow
+                    .filterNot { it.isHidden }
+                    .toPlannerItems(PlannableType.SUB_ASSIGNMENT)
+                    .mapContextName()
+            }
+
             val plannerNotes = async {
                 plannerApi.getPlannerNotes(startDate, endDate, contextCodes, restParams).depaginate {
                     plannerApi.nextPagePlannerNotes(it, restParams)
                 }.dataOrThrow.toPlannerItems()
             }
 
-            return@coroutineScope listOf(calendarEvents, calendarAssignments, plannerNotes).awaitAll()
+            return@coroutineScope listOf(calendarEvents, calendarAssignments, calendarSubAssignments, plannerNotes).awaitAll()
         }
 
         return allItems.flatten().sortedBy { it.plannableDate }

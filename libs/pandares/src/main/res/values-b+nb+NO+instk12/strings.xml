@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Vurdering etter publisering</string>
     <string name="gradeOverride">Overstyr vurdering</string>
     <string name="currentGrade">Gjeldende vurdering</string>
-    <string name="opensInCanvasStudent">Åpnes i Canvas Elev</string>
+    <string name="opensInCanvasApp">Åpnes i Canvas-appen</string>
     <string name="tab_student_view">Vis som elev</string>
 
 
@@ -1471,9 +1471,9 @@
     <string name="offline_content_storage">Lagring</string>
     <string name="offline_content_storage_info">%s av %s brukte</string>
     <string name="offline_content_other">Andre apper</string>
-    <string name="offline_content_canvas_student">Canvas-elev</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Resterende</string>
-    <string name="offline_content_storage_info_a11y_description">Lagringsinfo: %s av %s brukt, Andre apper %d%%, Canvas Student %d%%, Gjenværende %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Lagringsinfo: %s av %s brukt, Andre apper %d%%, Canvas %d%%, Gjenværende %d%%</string>
     <string name="offline_content_all_courses">Alle åpne fag</string>
     <string name="offline_content_sync">Synkroniser</string>
     <string name="offline_content_selected">%d er valgt</string>
@@ -1793,7 +1793,7 @@
     <string name="studentOrTeacherTitle">Er du lærer eller elev?</string>
     <string name="studentOrTeacherSubtitle">En av våre andre applikasjoner kan være mer tilpasset. Trykk på en for å gå til Play Store</string>
     <string name="studentApp">ELEV</string>
-    <string name="canvasStudentApp">Canvas-elev</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">LÆRER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1831,7 +1831,7 @@
     <string name="addStudentSuccessfull">Elev lagt til</string>
     <string name="addStudentTitle">Legg til en elev til&#8230;</string>
     <string name="addStudentQrCodeTitle">QR-kode</string>
-    <string name="addStudentQrCodeExplanation">Elever kan opprette en QR-kode ved å bruke Canvas Student-appen på mobilenheten</string>
+    <string name="addStudentQrCodeExplanationCanvas">Elever kan opprette en QR-kode ved å bruke Canvas Student-appen på mobilenheten</string>
     <string name="addStudentPairingCodeTitle">Paringskode</string>
     <string name="addStudentPairingCodeExplanation">Elever kan få en paringskode gjennom Canvas-nettstedet</string>
     <string name="pairingCodeDialogTitle">Legg til elev</string>
@@ -1840,9 +1840,9 @@
     <string name="pairingCodeDialogNegativeButton">Avbryt</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Koden din stemmer ikke eller den er utgått</string>
-    <string name="qrPairingTitle">Åpne Canvas Student</string>
-    <string name="qrPairingDescription">Du må åpne Canvas Student-appen til eleven din for å fortsette. Gå til Hovedmeny > Innstillinger > Paring med observatør og skann QR-koden du ser der.</string>
-    <string name="qrCodePairingPrompt">Skann en QR-kode fra Canvas Student for å pare.</string>
+    <string name="qrPairingTitleCanvas">Åpne Canvas-appen</string>
+    <string name="qrPairingDescriptionCanvas">Du må åpne Canvas Student-appen til eleven din for å fortsette. Gå til Hovedmeny > Innstillinger > Paring med observatør og skann QR-koden du ser der.</string>
+    <string name="qrCodePairingPromptCanvas">Skann en QR-kode fra Canvas-appen for å pare</string>
     <string name="a11y_addStudentContentDescription">Legg til elev</string>
     <string name="qrPairingErrorTitle">Utgått QR-kode</string>
     <string name="qrPairingErrorDescription">QR-koden du skannet kan ha utgått Gjenopprett koden på elevens enhet og prøv igjen.</string>
@@ -2069,4 +2069,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">For å se vurderinger, logg inn på kontoen din i appen.</string>
     <string name="widgetSingleGradeSelectCourse">La oss velge et fag</string>
     <string name="widgetGradesErrorLoadingCourses">Det oppsto en feil ved lasting av fag.</string>
+    <string name="settingsSwitchExperience">Bytt til Canvas Career</string>
 </resources>

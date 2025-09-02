@@ -122,7 +122,7 @@ class SpeedGraderGradingViewModelTest {
             pointsDeducted = 0.0,
             gradingType = GradingType.points,
             loading = false,
-            daysLate = 1,
+            daysLate = 1f,
             submittedAt = dueDate,
             letterGrades = listOf(
                 GradingSchemeRow(
@@ -148,7 +148,8 @@ class SpeedGraderGradingViewModelTest {
             onScoreChange = {},
             onExcuse = {},
             onStatusChange = {},
-            onPercentageChange = {}
+            onPercentageChange = {},
+            onLateDaysChange = {}
         )
 
         createViewModel()
@@ -381,7 +382,7 @@ class SpeedGraderGradingViewModelTest {
                 status = status,
                 latePolicyStatus = LatePolicyStatusType.late,
                 late = true,
-                secondsLate = 3600.0,
+                secondsLate = 86400.0,
                 deductedPoints = 0.0,
                 score = 95.0,
                 excused = false,

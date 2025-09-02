@@ -73,6 +73,7 @@
 
     <!-- Error Report Dialog -->
     <string name="errorReportAProblem">Raportoi ongelma</string>
+    <string name="reportAProblemDialogTitle">Raportoi ongelma</string>
     <string name="errorReportSubject">Aihe</string>
     <string name="errorReportDescription">Kuvaus</string>
     <string name="errorReportSend">Lähetä</string>

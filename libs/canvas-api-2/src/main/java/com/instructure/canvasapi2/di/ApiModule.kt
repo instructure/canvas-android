@@ -67,6 +67,7 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.CedarApiPref
+import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
@@ -414,19 +415,25 @@ class ApiModule {
     @Provides
     @Singleton
     fun providePineApiPrefs(): PineApiPref {
-        return PineApiPref()
+        return PineApiPref
     }
 
     @Provides
     @Singleton
     fun provideCedarApiPrefs(): CedarApiPref {
-        return CedarApiPref()
+        return CedarApiPref
     }
 
     @Provides
     @Singleton
     fun provideRedwoodApiPrefs(): RedwoodApiPref {
-        return RedwoodApiPref()
+        return RedwoodApiPref
+    }
+
+    @Provides
+    @Singleton
+    fun provideJourneyApiPrefs(): JourneyApiPref {
+        return JourneyApiPref
     }
 
     @Provides
