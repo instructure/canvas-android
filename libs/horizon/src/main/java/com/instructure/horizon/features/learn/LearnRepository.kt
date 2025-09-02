@@ -15,17 +15,34 @@
  */
 package com.instructure.horizon.features.learn
 
+import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
+import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.utils.ApiPrefs
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
+import kotlinx.coroutines.coroutineScope
 import javax.inject.Inject
 
 class LearnRepository @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
+    private val journeyApiManager: JourneyApiManager,
     private val apiPrefs: ApiPrefs
 ) {
     suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
         val courseWithProgress = horizonGetCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: -1, forceNetwork).dataOrThrow
         return courseWithProgress
+    }
+
+    suspend fun getPrograms(forceNetwork: Boolean = false): List<Program> {
+        return journeyApiManager.getPrograms(forceNetwork)
+    }
+
+    suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {
+        courseIds.map { id ->
+            async { horizonGetCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
+        }.awaitAll()
     }
 }

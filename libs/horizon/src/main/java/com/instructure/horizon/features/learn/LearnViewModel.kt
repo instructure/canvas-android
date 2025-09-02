@@ -18,9 +18,10 @@ package com.instructure.horizon.features.learn
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.home.COURSE_PREFIX
+import com.instructure.horizon.features.home.PROGRAM_PREFIX
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -37,12 +38,12 @@ class LearnViewModel @Inject constructor(
     private val _state = MutableStateFlow(
         LearnUiState(
             screenState = LoadingState(onRefresh = ::onRefresh),
-            onSelectedCourseChanged = ::onSelectedCourseChanged,
+            onSelectedLearningItemChanged = ::onSelectedLearningItemChanged,
         )
     )
     val state = _state.asStateFlow()
 
-    private val courseId: Long = savedStateHandle["courseId"] ?: -1L
+    private val learningItemId: String = savedStateHandle["learningItemId"] ?: ""
 
     init {
         loadData()
@@ -51,29 +52,53 @@ class LearnViewModel @Inject constructor(
     private fun loadData() {
         viewModelScope.tryLaunch {
             _state.update { it.copy(screenState = it.screenState.copy(isLoading = true)) }
-            getCourses()
+            getLearningItems()
             _state.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
             _state.update { it.copy(screenState = it.screenState.copy(isLoading = false, errorMessage = "Failed to load Courses")) }
         }
     }
 
-    private suspend fun getCourses(forceRefresh: Boolean = false) {
-        val courses = repository.getCoursesWithProgress(forceNetwork = forceRefresh)
-        val selectedCourse = courses.find { it.courseId == courseId } ?: courses.firstOrNull()
+    private suspend fun getLearningItems(forceRefresh: Boolean = false) {
+        val enrolledPrograms = repository.getPrograms(forceNetwork = forceRefresh)
+        val courseIdsInPrograms = enrolledPrograms.flatMap { it.sortedRequirements.map { requirement -> requirement.courseId } }.toSet()
+
+        val standaloneCourses =
+            repository.getCoursesWithProgress(forceNetwork = forceRefresh).filter { !courseIdsInPrograms.contains(it.courseId) }
+
+        val learningItems = enrolledPrograms.map { program ->
+            val programCourses = repository.getCoursesById(program.sortedRequirements.map { it.courseId }, forceNetwork = forceRefresh)
+            LearningItem.ProgramItem(program, programCourses)
+        } + standaloneCourses.map { LearningItem.CourseItem(it) }
+
+        val selectedLearningItem = when {
+            learningItemId.startsWith(COURSE_PREFIX) -> {
+                val courseId = learningItemId.removePrefix(COURSE_PREFIX).toLongOrNull()
+                learningItems.find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
+                    ?: learningItems.firstOrNull()
+            }
+
+            learningItemId.startsWith(PROGRAM_PREFIX) -> {
+                val programId = learningItemId.removePrefix(PROGRAM_PREFIX)
+                learningItems.find { it is LearningItem.ProgramItem && it.program.id == programId } ?: learningItems.firstOrNull()
+            }
+
+            else -> learningItems.firstOrNull()
+        }
+
         _state.update {
-            state.value.copy(courses = courses, selectedCourse = selectedCourse)
+            state.value.copy(learningItems = learningItems, selectedLearningItem = selectedLearningItem)
         }
     }
 
-    private fun onSelectedCourseChanged(course: CourseWithProgress) {
-        _state.value = state.value.copy(selectedCourse = course)
+    private fun onSelectedLearningItemChanged(learningItem: LearningItem) {
+        _state.value = state.value.copy(selectedLearningItem = learningItem)
     }
 
     private fun onRefresh() {
         viewModelScope.tryLaunch {
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = true)) }
-            getCourses(forceRefresh = true)
+            getLearningItems(forceRefresh = true)
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }

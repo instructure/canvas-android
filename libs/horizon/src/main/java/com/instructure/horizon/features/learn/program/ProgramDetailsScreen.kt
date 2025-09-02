@@ -59,7 +59,6 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Mo
                 .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(uiState.programName, style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_24)
             if (uiState.showProgressBar) {
                 ProgramsProgressBar(

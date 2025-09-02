@@ -61,41 +61,41 @@ class ProgramDetailsViewModel @Inject constructor(
     )
     val state = _uiState.asStateFlow()
 
-    init {
-        _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(isLoading = true))
-        }
-        viewModelScope.tryLaunch {
-            loadData()
-        } catch {
-            _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
-            }
-        }
+    private var currentProgramId: String? = null
+
+    fun loadProgramDetails(program: Program, courses: List<CourseWithModuleItemDurations>) {
+        currentProgramId = program.id
+        updateUiState(program, courses)
     }
 
-    private suspend fun loadData(forceNetwork: Boolean = false) {
-        val programDetails = repository.getProgramDetails("", forceNetwork = forceNetwork)
+    private fun updateUiState(program: Program, courses: List<CourseWithModuleItemDurations>) {
         val progressBarStatus =
-            if (programDetails.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
+            if (program.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
                 ProgressBarStatus.IN_PROGRESS
             } else {
                 ProgressBarStatus.NOT_STARTED
             }
-        val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId }, forceNetwork = forceNetwork)
         _uiState.update {
             it.copy(
                 loadingState = it.loadingState.copy(isLoading = false, isRefreshing = false),
-                programName = programDetails.name,
-                showProgressBar = shouldShowProgressBar(programDetails),
+                programName = program.name,
+                showProgressBar = shouldShowProgressBar(program),
                 progressBarUiState = ProgressBarUiState(
-                    progress = calculateProgress(programDetails),
+                    progress = calculateProgress(program),
                     progressBarStatus = progressBarStatus
                 ),
-                description = programDetails.description ?: "",
-                tags = createProgramTags(programDetails, courses),
-                programProgressState = createProgramProgressState(programDetails, courses)
+                description = program.description ?: "",
+                tags = createProgramTags(program, courses),
+                programProgressState = createProgramProgressState(program, courses)
             )
+        }
+    }
+
+    private suspend fun loadData(forceNetwork: Boolean = false) {
+        currentProgramId?.let { programId ->
+            val programDetails = repository.getProgramDetails(programId, forceNetwork = forceNetwork)
+            val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId }, forceNetwork = forceNetwork)
+            updateUiState(programDetails, courses)
         }
     }
 

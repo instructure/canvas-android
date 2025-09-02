@@ -35,6 +35,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -52,6 +53,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.managers.CourseWithProgress
@@ -59,6 +61,8 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.course.CourseDetailsScreen
 import com.instructure.horizon.features.learn.course.CourseDetailsUiState
+import com.instructure.horizon.features.learn.program.ProgramDetailsScreen
+import com.instructure.horizon.features.learn.program.ProgramDetailsViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -91,7 +95,7 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
             when {
                 state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
                 state.screenState.isLoading -> LoadingContent()
-                else -> if (state.courses.isEmpty()) {
+                else -> if (state.learningItems.isEmpty()) {
                     LearnScreenEmptyContent(state)
                 } else {
                     LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
@@ -144,26 +148,43 @@ private fun LearnScreenWrapper(
     ) {
         Column {
             DropDownTitle(
-                courses = state.courses,
-                selectedCourse = state.selectedCourse ?: CourseWithProgress(
-                    courseId = -1, courseName = "", courseSyllabus = "", progress = 0.0
+                learningItems = state.learningItems,
+                selectedItem = state.selectedLearningItem ?: LearningItem.CourseItem(
+                    CourseWithProgress(
+                        courseId = -1, courseName = "", courseSyllabus = "", progress = 0.0
+                    )
                 ),
-                onSelect = { state.onSelectedCourseChanged(it) },
+                onSelect = { state.onSelectedLearningItemChanged(it) },
             )
-            if (state.selectedCourse != null) {
-                CourseDetailsScreen(CourseDetailsUiState(state.selectedCourse), mainNavController)
+            when {
+                (state.selectedLearningItem is LearningItem.CourseItem) -> {
+                    CourseDetailsScreen(CourseDetailsUiState(state.selectedLearningItem.courseWithProgress), mainNavController)
+                }
+
+                (state.selectedLearningItem is LearningItem.ProgramItem) -> {
+                    val programDetailsViewModel = hiltViewModel<ProgramDetailsViewModel>()
+                    LaunchedEffect(state.selectedLearningItem) {
+                        programDetailsViewModel.loadProgramDetails(state.selectedLearningItem.program, state.selectedLearningItem.courses)
+                    }
+                    val programDetailsState by programDetailsViewModel.state.collectAsState()
+                    ProgramDetailsScreen(programDetailsState)
+                }
+
+                else -> {
+                    // No-op, should never happen
+                }
             }
         }
     }
 }
 
 @Composable
-private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: CourseWithProgress, onSelect: (CourseWithProgress) -> Unit) {
+private fun DropDownTitle(learningItems: List<LearningItem>, selectedItem: LearningItem, onSelect: (LearningItem) -> Unit) {
     Column(
         modifier = Modifier
             .padding(start = 24.dp, end = 24.dp, top = 24.dp)
     ) {
-        val showDropDown = courses.size > 1
+        val showDropDown = learningItems.size > 1
 
         val localDensity = LocalDensity.current
         var heightInPx by remember { mutableIntStateOf(0) }
@@ -184,13 +205,13 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
                 .clickable(enabled = showDropDown) { isMenuOpen = !isMenuOpen }
         ) {
             AnimatedContent(
-                selectedCourse.courseName,
+                selectedItem,
                 label = "SelectedCourseName",
                 modifier = Modifier
                     .weight(1f, fill = false)
-            ) { courseName ->
+            ) { selectedItem ->
                 Text(
-                    text = courseName,
+                    text = selectedItem.title,
                     style = HorizonTypography.h3,
                     color = HorizonColors.Text.title(),
                 )
@@ -212,20 +233,20 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
 
         InputDropDownPopup(
             isMenuOpen = isMenuOpen,
-            options = courses.map { it.courseName },
+            options = learningItems,
             width = width,
             verticalOffsetPx = heightInPx,
             onMenuOpenChanged = { isMenuOpen = it },
-            onOptionSelected = { selectedCourse ->
-                onSelect(courses.first { it.courseName == selectedCourse })
+            onOptionSelected = { selectedItem ->
+                onSelect(learningItems.first { it == selectedItem })
             },
-            item = { courseName ->
+            item = { learningItem ->
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .padding(horizontal = 11.dp, vertical = 6.dp)
                 ) {
-                    if (courseName == selectedCourse.courseName) {
+                    if (learningItem == selectedItem) {
                         Icon(
                             painter = painterResource(R.drawable.check),
                             contentDescription = stringResource(R.string.a11y_selectedCourse),
@@ -240,7 +261,7 @@ private fun DropDownTitle(courses: List<CourseWithProgress>, selectedCourse: Cou
                     HorizonSpace(SpaceSize.SPACE_8)
 
                     Text(
-                        text = courseName,
+                        text = learningItem.title,
                         style = HorizonTypography.p1,
                         color = HorizonColors.Text.body(),
                     )
@@ -256,7 +277,7 @@ fun CourseDetailsScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(isLoading = true),
-        selectedCourse = null
+        selectedLearningItem = null
     )
     LearnScreen(state, rememberNavController())
 }
@@ -267,7 +288,7 @@ fun CourseDetailsScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(isError = true, errorMessage = "Error loading course"),
-        selectedCourse = null
+        selectedLearningItem = null
     )
     LearnScreen(state, rememberNavController())
 }
@@ -294,8 +315,8 @@ private fun LearnScreenContentPreview() {
     )
     val state = LearnUiState(
         screenState = LoadingState(),
-        courses = listOf(course),
-        selectedCourse = course
+        learningItems = listOf(LearningItem.CourseItem(course)),
+        selectedLearningItem = LearningItem.CourseItem(course)
     )
     LearnScreen(state, rememberNavController())
 }

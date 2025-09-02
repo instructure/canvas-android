@@ -15,12 +15,26 @@
  */
 package com.instructure.horizon.features.learn
 
+import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class LearnUiState(
     val screenState: LoadingState = LoadingState(),
-    val courses: List<CourseWithProgress> = emptyList(),
-    val selectedCourse: CourseWithProgress? = null,
-    val onSelectedCourseChanged: ((CourseWithProgress) -> Unit) = {}
+    val learningItems: List<LearningItem> = emptyList(),
+    val selectedLearningItem: LearningItem? = null,
+    val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {}
 )
+
+sealed class LearningItem {
+    data class CourseItem(val courseWithProgress: CourseWithProgress) : LearningItem() {
+        override val title: String = courseWithProgress.courseName
+    }
+
+    data class ProgramItem(val program: Program, val courses: List<CourseWithModuleItemDurations>) : LearningItem() {
+        override val title: String = program.name
+    }
+
+    abstract val title: String
+}
