@@ -17,29 +17,28 @@
 
 package com.instructure.student.features.grades.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.models.Submission
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
 import com.instructure.pandautils.room.offline.facade.SubmissionFacade
 
-class GradesListLocalDataSource(
+class GradesLocalDataSource(
     private val courseFacade: CourseFacade,
     private val enrollmentFacade: EnrollmentFacade,
     private val assignmentFacade: AssignmentFacade,
-    private val submissionFacade: SubmissionFacade
-) : GradesListDataSource {
+    private val submissionFacade: SubmissionFacade,
+    private val customGradeStatusDao: CustomGradeStatusDao
+) : GradesDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         return courseFacade.getCourseById(courseId) ?: throw IllegalStateException("Could not load from DB")
-    }
-
-    override suspend fun getObserveeEnrollments(forceNetwork: Boolean): List<Enrollment> {
-        return enrollmentFacade.getAllEnrollments()
     }
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -58,10 +57,6 @@ class GradesListLocalDataSource(
         forceNetwork: Boolean
     ): List<Submission> {
         return submissionFacade.findByAssignmentIds(assignmentIds)
-    }
-
-    override suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course> {
-        return courseFacade.getAllCourses()
     }
 
     override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
@@ -83,5 +78,9 @@ class GradesListLocalDataSource(
 
     override suspend fun getAssignmentGroupsWithAssignments(courseId: Long, forceNetwork: Boolean): List<AssignmentGroup> {
         return assignmentFacade.getAssignmentGroupsWithAssignments(courseId)
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusDao.getStatusesForCourse(courseId).map { it.toApiModel() }
     }
 }

@@ -17,33 +17,30 @@
 
 package com.instructure.student.features.grades.datasource
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.depaginate
 
-class GradesListNetworkDataSource(
+class GradesNetworkDataSource(
     private val courseApi: CourseAPI.CoursesInterface,
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val submissionApi: SubmissionAPI.SubmissionInterface,
-) : GradesListDataSource {
+    private val customGradeStatusesManager: CustomGradeStatusesManager
+) : GradesDataSource {
 
     override suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
         return courseApi.getCourseWithGrade(courseId, params).dataOrThrow
-    }
-
-    override suspend fun getObserveeEnrollments(forceNetwork: Boolean): List<Enrollment> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-
-        return enrollmentApi.firstPageObserveeEnrollments(params).depaginate {
-            enrollmentApi.getNextPage(it, params)
-        }.dataOrThrow
     }
 
     override suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
@@ -79,14 +76,6 @@ class GradesListNetworkDataSource(
         }.dataOrThrow
     }
 
-    override suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course> {
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
-
-        return courseApi.firstPageCoursesWithSyllabus(params).depaginate {
-            courseApi.next(it, params)
-        }.dataOrThrow
-    }
-
     override suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
 
@@ -110,5 +99,15 @@ class GradesListNetworkDataSource(
         return assignmentApi.getFirstPageAssignmentGroupListWithAssignments(courseId, params).depaginate {
             assignmentApi.getNextPageAssignmentGroupListWithAssignments(it, params)
         }.dataOrThrow
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return customGradeStatusesManager
+            .getCustomGradeStatuses(courseId, forceNetwork)
+            ?.course
+            ?.customGradeStatusesConnection
+            ?.nodes
+            ?.filterNotNull()
+            .orEmpty()
     }
 }

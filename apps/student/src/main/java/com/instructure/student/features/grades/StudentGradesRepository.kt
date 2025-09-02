@@ -17,6 +17,7 @@
 
 package com.instructure.student.features.grades
 
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
@@ -30,19 +31,19 @@ import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.student.features.grades.datasource.GradesListDataSource
-import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
-import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
+import com.instructure.student.features.grades.datasource.GradesDataSource
+import com.instructure.student.features.grades.datasource.GradesLocalDataSource
+import com.instructure.student.features.grades.datasource.GradesNetworkDataSource
 import com.instructure.student.util.StudentPrefs
 
-class GradesListRepository(
-    localDataSource: GradesListLocalDataSource,
-    networkDataSource: GradesListNetworkDataSource,
+class StudentGradesRepository(
+    localDataSource: GradesLocalDataSource,
+    networkDataSource: GradesNetworkDataSource,
     networkStateProvider: NetworkStateProvider,
     featureFlagProvider: FeatureFlagProvider,
     private val apiPrefs: ApiPrefs,
     private val studentPrefs: StudentPrefs
-) : Repository<GradesListDataSource>(
+) : Repository<GradesDataSource>(
     localDataSource,
     networkDataSource,
     networkStateProvider,
@@ -89,5 +90,9 @@ class GradesListRepository(
 
     override fun setSortBy(sortBy: SortBy) {
         studentPrefs.gradesSortBy = sortBy.name
+    }
+
+    override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node> {
+        return dataSource().getCustomGradeStatuses(courseId, forceNetwork)
     }
 }

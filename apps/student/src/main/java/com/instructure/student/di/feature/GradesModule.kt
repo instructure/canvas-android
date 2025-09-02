@@ -19,19 +19,20 @@ package com.instructure.student.di.feature
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
-import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SubmissionAPI
+import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.grades.GradesRepository
+import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.EnrollmentFacade
 import com.instructure.pandautils.room.offline.facade.SubmissionFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.NetworkStateProvider
-import com.instructure.student.features.grades.GradesListRepository
-import com.instructure.student.features.grades.datasource.GradesListLocalDataSource
-import com.instructure.student.features.grades.datasource.GradesListNetworkDataSource
+import com.instructure.student.features.grades.StudentGradesRepository
+import com.instructure.student.features.grades.datasource.GradesLocalDataSource
+import com.instructure.student.features.grades.datasource.GradesNetworkDataSource
 import com.instructure.student.util.StudentPrefs
 import dagger.Module
 import dagger.Provides
@@ -47,30 +48,38 @@ class GradesModule {
         courseFacade: CourseFacade,
         enrollmentFacade: EnrollmentFacade,
         assignmentFacade: AssignmentFacade,
-        submissionFacade: SubmissionFacade
-    ): GradesListLocalDataSource {
-        return GradesListLocalDataSource(courseFacade, enrollmentFacade, assignmentFacade, submissionFacade)
+        submissionFacade: SubmissionFacade,
+        customGradeStatusDao: CustomGradeStatusDao
+    ): GradesLocalDataSource {
+        return GradesLocalDataSource(courseFacade, enrollmentFacade, assignmentFacade, submissionFacade, customGradeStatusDao)
     }
 
     @Provides
     fun provideGradesListNetworkDataSource(
         courseApi: CourseAPI.CoursesInterface,
-        enrollmentApi: EnrollmentAPI.EnrollmentInterface,
         assignmentApi: AssignmentAPI.AssignmentInterface,
-        submissionApi: SubmissionAPI.SubmissionInterface
-    ): GradesListNetworkDataSource {
-        return GradesListNetworkDataSource(courseApi, enrollmentApi, assignmentApi, submissionApi)
+        submissionApi: SubmissionAPI.SubmissionInterface,
+        customGradeStatusesManager: CustomGradeStatusesManager
+    ): GradesNetworkDataSource {
+        return GradesNetworkDataSource(courseApi, assignmentApi, submissionApi, customGradeStatusesManager)
     }
 
     @Provides
     fun provideGradesRepository(
-        localDataSource: GradesListLocalDataSource,
-        networkDataSource: GradesListNetworkDataSource,
+        localDataSource: GradesLocalDataSource,
+        networkDataSource: GradesNetworkDataSource,
         networkStateProvider: NetworkStateProvider,
         featureFlagProvider: FeatureFlagProvider,
         apiPrefs: ApiPrefs,
         studentPrefs: StudentPrefs
     ): GradesRepository {
-        return GradesListRepository(localDataSource, networkDataSource, networkStateProvider, featureFlagProvider, apiPrefs, studentPrefs)
+        return StudentGradesRepository(
+            localDataSource,
+            networkDataSource,
+            networkStateProvider,
+            featureFlagProvider,
+            apiPrefs,
+            studentPrefs
+        )
     }
 }
