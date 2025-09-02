@@ -87,7 +87,7 @@ class InboxViewModelTest {
         every { resources.getString(R.string.errorOccurred) } returns "Error"
         every { resources.getString(R.string.inboxOperationFailed) } returns "Epic Fail"
 
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
 
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3]) }
     }

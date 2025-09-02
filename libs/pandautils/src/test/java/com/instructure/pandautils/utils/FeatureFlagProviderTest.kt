@@ -163,7 +163,7 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `Offline is disabled when feature flag is enabled and not user is an elementary user`() = runTest {
+    fun `Offline is disabled when feature flag is enabled and user is an elementary user`() = runTest {
         every { apiPrefs.canvasForElementary } returns true
         coEvery { environmentFeatureFlags.findByUserId(any()) } returns EnvironmentFeatureFlags(1L, mapOf(FEATURE_FLAG_OFFLINE to true))
 
@@ -171,55 +171,31 @@ class FeatureFlagProviderTest {
     }
 
     @Test
-    fun `checkEnvironmentFeatureFlag returns true when feature flag is enabled`() = runTest {
-        val featureFlagName = "test_feature_flag"
+    fun `checkRestrictStudentAccessFlag returns true when feature flag is enabled`() = runTest {
         every { apiPrefs.user } returns User(id = 1L)
-        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf(featureFlagName to true))
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("restrict_student_access" to true))
 
-        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+        val result = featureFlagProvider.checkRestrictStudentAccessFlag()
 
         assertTrue(result)
     }
 
     @Test
-    fun `checkEnvironmentFeatureFlag returns false when feature flag is disabled`() = runTest {
-        val featureFlagName = "test_feature_flag"
+    fun `checkRestrictStudentAccessFlag returns false when feature flag is disabled`() = runTest {
         every { apiPrefs.user } returns User(id = 1L)
-        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf(featureFlagName to false))
+        coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("restrict_student_access" to false))
 
-        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+        val result = featureFlagProvider.checkRestrictStudentAccessFlag()
 
         assertFalse(result)
     }
 
     @Test
-    fun `checkEnvironmentFeatureFlag returns false when feature flag does not exist`() = runTest {
-        val featureFlagName = "non_existent_feature_flag"
+    fun `checkRestrictStudentAccessFlag returns false when feature flag does not exist`() = runTest {
         every { apiPrefs.user } returns User(id = 1L)
         coEvery { environmentFeatureFlags.findByUserId(1L) } returns EnvironmentFeatureFlags(1L, mapOf("other_flag" to true))
 
-        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `checkEnvironmentFeatureFlag returns false when user is null`() = runTest {
-        val featureFlagName = "test_feature_flag"
-        every { apiPrefs.user } returns null
-
-        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
-
-        assertFalse(result)
-    }
-
-    @Test
-    fun `checkEnvironmentFeatureFlag returns false when environment feature flags is null`() = runTest {
-        val featureFlagName = "test_feature_flag"
-        every { apiPrefs.user } returns User(id = 1L)
-        coEvery { environmentFeatureFlags.findByUserId(1L) } returns null
-
-        val result = featureFlagProvider.checkEnvironmentFeatureFlag(featureFlagName)
+        val result = featureFlagProvider.checkRestrictStudentAccessFlag()
 
         assertFalse(result)
     }
