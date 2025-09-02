@@ -35,6 +35,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
+import kotlinx.coroutines.launch
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -194,11 +195,8 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
         if (canvasContext.type == CanvasContext.Type.USER) applyTheme()
         if (folder != null) {
-            lifecycleScope.tryLaunch {
+            lifecycleScope.launch {
                 restrictStudentAccessFlag = checkRestrictStudentAccessFlag()
-                configureViews()
-            } catch {
-                restrictStudentAccessFlag = false
                 configureViews()
             }
         } else {
@@ -372,10 +370,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
         if (recyclerAdapter == null) {
             recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, emptyList(), folder, adapterCallback, fileListRepository)
-            configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
-        } else {
-            configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
         }
+
+        configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
 
         setupToolbarMenu(toolbar)
 
