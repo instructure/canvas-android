@@ -19,14 +19,10 @@ package com.instructure.horizon.features.learn.course
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.horizon.R
-import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class CourseDetailsUiState(
-    val screenState: LoadingState = LoadingState(),
-    val courses: List<CourseWithProgress> = emptyList(),
     val selectedCourse: CourseWithProgress? = null,
     val availableTabs: List<CourseDetailsTab> = CourseDetailsTab.entries,
-    val onSelectedCourseChanged: ((CourseWithProgress) -> Unit) = {}
 )
 
 enum class CourseDetailsTab(@StringRes val titleRes: Int, ) {

@@ -1,20 +1,19 @@
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
+ *     Licensed under the Apache License, Version 2.0 (the "License");
+ *     you may not use this file except in compliance with the License.
+ *     You may obtain a copy of the License at
  *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
+ *     http://www.apache.org/licenses/LICENSE-2.0
  *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
+ *     Unless required by applicable law or agreed to in writing, software
+ *     distributed under the License is distributed on an "AS IS" BASIS,
+ *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ *     See the License for the specific language governing permissions and
+ *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.course
+package com.instructure.horizon.features.learn
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -30,15 +29,14 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class CourseDetailsViewModel @Inject constructor(
-    private val courseDetailsRepository: CourseDetailsRepository,
+class LearnViewModel @Inject constructor(
+    private val repository: LearnRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
+
     private val _state = MutableStateFlow(
-        CourseDetailsUiState(
-            screenState = LoadingState(
-                onRefresh = ::onRefresh
-            ),
+        LearnUiState(
+            screenState = LoadingState(onRefresh = ::onRefresh),
             onSelectedCourseChanged = ::onSelectedCourseChanged,
         )
     )
@@ -61,10 +59,10 @@ class CourseDetailsViewModel @Inject constructor(
     }
 
     private suspend fun getCourses(forceRefresh: Boolean = false) {
-        val courses = courseDetailsRepository.getCoursesWithProgress(forceNetwork = forceRefresh)
+        val courses = repository.getCoursesWithProgress(forceNetwork = forceRefresh)
         val selectedCourse = courses.find { it.courseId == courseId } ?: courses.firstOrNull()
         _state.update {
-            state.value.copy(courses = courses, selectedCourse = selectedCourse,)
+            state.value.copy(courses = courses, selectedCourse = selectedCourse)
         }
     }
 
