@@ -37,4 +37,7 @@ interface PageViewDao {
 
     @Query("SELECT * FROM PageViewEvent")
     suspend fun getAllPageViewEvents(): List<PageViewEvent>
+
+    @Query("SELECT * FROM PageViewEvent WHERE userId = :userId")
+    suspend fun getAllPageViewEventsForUser(userId: Long): List<PageViewEvent>
 }
