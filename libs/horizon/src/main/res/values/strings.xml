@@ -344,4 +344,5 @@
     <string name="programSwitcher_programOverview">Program overview</string>
     <string name="programSwitcher_goBack">All</string>
     <string name="learnScreen_partOfProgram">Part of %s</string>
+    <string name="learnScreen_courseCannotBeOpened">The course cannot be opened.</string>
 </resources>

@@ -32,6 +32,9 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -81,15 +84,27 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.delay
 
 @Composable
-fun LearnScreen(state: LearnUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
+fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
 
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
     }
 
+    val snackbarHostState: SnackbarHostState = remember { SnackbarHostState() }
+
+    LaunchedEffect(state.screenState.snackbarMessage) {
+        if (state.screenState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(state.screenState.snackbarMessage)
+            if (result == SnackbarResult.Dismissed) {
+                state.screenState.onSnackbarDismiss()
+            }
+        }
+    }
+
     Scaffold(
         containerColor = HorizonColors.Surface.pagePrimary(),
+        snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { padding ->
         Column(
             modifier = Modifier
@@ -104,7 +119,7 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController, homeN
                 else -> if (state.learningItems.isEmpty()) {
                     LearnScreenEmptyContent(state)
                 } else {
-                    LearnScreenWrapper(state, mainNavController, homeNavController, Modifier.fillMaxSize())
+                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
                 }
             }
         }
@@ -146,7 +161,6 @@ private fun LearnScreenEmptyContent(state: LearnUiState) {
 private fun LearnScreenWrapper(
     state: LearnUiState,
     mainNavController: NavHostController,
-    homeNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -172,9 +186,12 @@ private fun LearnScreenWrapper(
                         pop()
                     }
                 }
-                Text(text = annotatedString, style = HorizonTypography.p1, modifier = Modifier.padding(horizontal = 24.dp).clickable {
-                    state.onSelectedLearningItemChanged(parentItem)
-                })
+                Text(
+                    text = annotatedString, style = HorizonTypography.p1, modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .clickable {
+                            state.onSelectedLearningItemChanged(parentItem)
+                        })
                 HorizonSpace(SpaceSize.SPACE_16)
             }
             DropDownTitle(
@@ -194,10 +211,13 @@ private fun LearnScreenWrapper(
                 (state.selectedLearningItem is LearningItem.ProgramDetails) -> {
                     val programDetailsViewModel = hiltViewModel<ProgramDetailsViewModel>()
                     LaunchedEffect(state.selectedLearningItem) {
-                        programDetailsViewModel.loadProgramDetails(state.selectedLearningItem.program, state.selectedLearningItem.courses)
+                        programDetailsViewModel.loadProgramDetails(
+                            state.selectedLearningItem.program,
+                            state.selectedLearningItem.courses
+                        )
                     }
                     val programDetailsState by programDetailsViewModel.state.collectAsState()
-                    ProgramDetailsScreen(programDetailsState, homeNavController = homeNavController)
+                    ProgramDetailsScreen(programDetailsState, state.onCourseSelected)
                 }
 
                 else -> {
@@ -358,7 +378,7 @@ fun LearnScreenLoadingPreview() {
         screenState = LoadingState(isLoading = true),
         selectedLearningItem = null
     )
-    LearnScreen(state, rememberNavController(), rememberNavController())
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -369,7 +389,7 @@ fun LearnScreenErrorPreview() {
         screenState = LoadingState(isError = true, errorMessage = "Error loading course"),
         selectedLearningItem = null
     )
-    LearnScreen(state, rememberNavController(), rememberNavController())
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -379,7 +399,7 @@ fun LearnScreenEmptyContentPreview() {
     val state = LearnUiState(
         screenState = LoadingState()
     )
-    LearnScreen(state, rememberNavController(), rememberNavController())
+    LearnScreen(state, rememberNavController())
 }
 
 @Composable
@@ -397,5 +417,5 @@ private fun LearnScreenContentPreview() {
         learningItems = listOf(LearningItem.CourseItem(course)),
         selectedLearningItem = LearningItem.CourseItem(course)
     )
-    LearnScreen(state, rememberNavController(), rememberNavController())
+    LearnScreen(state, rememberNavController())
 }

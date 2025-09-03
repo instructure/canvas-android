@@ -48,6 +48,7 @@ sealed class HomeNavigationRoute(val route: String) {
     data object Learn : HomeNavigationRoute("learn?learningItemId={learningItemId}") {
         fun withCourse(courseId: Long? = null) =
             if (courseId != null) "learn?learningItemId=$COURSE_PREFIX$courseId" else "learn"
+
         fun withProgram(programId: String? = null) =
             if (programId != null) "learn?learningItemId=$PROGRAM_PREFIX$programId" else "learn"
     }
@@ -80,7 +81,7 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
             )) {
             val viewModel = hiltViewModel<LearnViewModel>()
             val uiState by viewModel.state.collectAsState()
-            LearnScreen(uiState, mainNavController = mainNavController, homeNavController = navController)
+            LearnScreen(uiState, mainNavController = mainNavController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             val viewModel = hiltViewModel<SkillspaceViewModel>()

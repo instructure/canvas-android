@@ -41,8 +41,9 @@ class LearnViewModel @Inject constructor(
 
     private val _state = MutableStateFlow(
         LearnUiState(
-            screenState = LoadingState(onRefresh = ::onRefresh),
+            screenState = LoadingState(onRefresh = ::onRefresh, onSnackbarDismiss = ::onSnackbarDismiss),
             onSelectedLearningItemChanged = ::onSelectedLearningItemChanged,
+            onCourseSelected = ::onCourseSelected
         )
     )
     val state = _state.asStateFlow()
@@ -135,6 +136,25 @@ class LearnViewModel @Inject constructor(
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
+        }
+    }
+
+    private fun onCourseSelected(courseId: Long) {
+        val learningItem = _state.value.learningItems
+            .find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
+
+        if (learningItem != null) {
+            _state.value = state.value.copy(selectedLearningItem = learningItem)
+        } else {
+            _state.update {
+                it.copy(screenState = it.screenState.copy(snackbarMessage = context.getString(R.string.learnScreen_courseCannotBeOpened)))
+            }
+        }
+    }
+
+    private fun onSnackbarDismiss() {
+        _state.update {
+            it.copy(screenState = it.screenState.copy(snackbarMessage = null))
         }
     }
 }

@@ -57,16 +57,10 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, homeNavController: NavHostController, modifier: Modifier = Modifier) {
+fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, onCourseSelected: (Long) -> Unit, modifier: Modifier = Modifier) {
     LaunchedEffect(uiState.navigateToCourseId) {
         uiState.navigateToCourseId?.let { courseId ->
-            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseId)) {
-                popUpTo(homeNavController.graph.findStartDestination().id) {
-                    saveState = true
-                }
-                launchSingleTop = true
-                restoreState = false
-            }
+            onCourseSelected(courseId)
             uiState.onNavigateToCourse()
         }
     }
@@ -176,6 +170,6 @@ private fun ProgramDetailsScreenPreview() {
                     )
                 )
             )
-        ), homeNavController = rememberNavController()
+        ), onCourseSelected = {}
     )
 }

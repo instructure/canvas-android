@@ -24,7 +24,8 @@ data class LearnUiState(
     val screenState: LoadingState = LoadingState(),
     val learningItems: List<LearningItem> = emptyList(),
     val selectedLearningItem: LearningItem? = null,
-    val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {}
+    val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {},
+    val onCourseSelected: (Long) -> Unit = {},
 )
 
 sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boolean = true, open val parentItem: LearningItem? = null) {
