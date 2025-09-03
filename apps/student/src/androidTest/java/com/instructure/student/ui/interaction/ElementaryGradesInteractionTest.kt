@@ -28,13 +28,13 @@ import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class ElementaryGradesInteractionTest : StudentTest() {
+class ElementaryGradesInteractionTest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -80,7 +80,7 @@ class ElementaryGradesInteractionTest : StudentTest() {
         val course = data.courses.values.first()
 
         gradesPage.clickGradeRow(course.name)
-        courseGradesPage.assertPageObjects()
+        gradeListPage.assertToolbarTitles(course.name)
 
         Espresso.pressBack()
         gradesPage.assertPageObjects()

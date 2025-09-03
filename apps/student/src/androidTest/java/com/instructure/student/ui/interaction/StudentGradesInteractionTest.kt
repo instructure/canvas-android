@@ -51,7 +51,6 @@ class StudentGradesInteractionTest : GradesInteractionTest() {
 
     override fun initData(addAssignmentGroups: Boolean): MockCanvas {
         return MockCanvas.init(
-            parentCount = 1,
             studentCount = 1,
             courseCount = 1,
             withGradingPeriods = true
