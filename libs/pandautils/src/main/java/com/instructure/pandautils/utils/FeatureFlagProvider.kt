@@ -54,11 +54,15 @@ class FeatureFlagProvider(
         return checkEnvironmentFeatureFlag(FEATURE_FLAG_OFFLINE) && !apiPrefs.canvasForElementary
     }
 
-    suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
+    private suspend fun checkEnvironmentFeatureFlag(featureFlag: String): Boolean {
         return apiPrefs.user?.id?.let { environmentFeatureFlags.findByUserId(it)?.featureFlags?.get(featureFlag) == true } ?: false
     }
 
     suspend fun checkAccountSurveyNotificationsFlag(): Boolean {
         return checkEnvironmentFeatureFlag("account_survey_notifications")
+    }
+
+    suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return checkEnvironmentFeatureFlag("restrict_student_access")
     }
 }

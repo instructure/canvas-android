@@ -80,7 +80,8 @@ class InboxComposeViewModelTest {
         coEvery { inboxComposeRepository.getRecipients(any(), any(), any()) } returns DataResult.Success(emptyList())
         coEvery { context.getString(R.string.messageSentSuccessfully) } returns "Message sent successfully."
         coEvery { context.packageName } returns "com.instructure.teacher" // Default to teacher app
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag(any()) } returns false
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
+        coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns false
         coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns false
     }
 
@@ -176,7 +177,7 @@ class InboxComposeViewModelTest {
     @Test
     fun `Test restrict_student_access feature flag does not apply in Student app`() {
         coEvery { context.packageName } returns "com.instructure.student"
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns true
         
         val viewmodel = getViewModel()
         val uiState = viewmodel.uiState.value
@@ -186,7 +187,7 @@ class InboxComposeViewModelTest {
         assertEquals(false, uiState.sendIndividual)
         
         // Feature flag should not have been checked since it's Student app
-        coVerify(exactly = 0) { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") }
+        coVerify(exactly = 0) { featureFlagProvider.checkRestrictStudentAccessFlag() }
     }
 
     @Test
