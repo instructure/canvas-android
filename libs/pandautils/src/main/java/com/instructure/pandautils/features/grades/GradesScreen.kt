@@ -99,7 +99,6 @@ import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.announceAccessibilityText
 import com.instructure.pandautils.utils.drawableId
 import kotlinx.coroutines.launch
@@ -138,7 +137,7 @@ fun GradesScreen(
                         backgroundColor = Color(color = canvasContextColor),
                         contentColor = colorResource(id = R.color.textLightest),
                         actions = {
-                            FilterIcon(uiState, actionHandler, ThemePrefs.primaryTextColor)
+                            FilterIcon(uiState, actionHandler, colorResource(id = R.color.textLightest))
                         }
                     )
                 }
@@ -427,7 +426,7 @@ private fun GradesCard(
         }
 
         if (showFilterIcon) {
-            FilterIcon(uiState, actionHandler, contextColor)
+            FilterIcon(uiState, actionHandler, Color(color = contextColor))
         }
     }
 }
@@ -436,7 +435,7 @@ private fun GradesCard(
 private fun FilterIcon(
     uiState: GradesUiState,
     actionHandler: (GradesAction) -> Unit,
-    tint: Int
+    tint: Color
 ) {
     Box(
         modifier = Modifier
@@ -459,7 +458,7 @@ private fun FilterIcon(
                 }
             ),
             contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
-            tint = Color(color = tint),
+            tint = tint,
             modifier = Modifier.size(24.dp)
         )
     }
