@@ -284,6 +284,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
+        _uiState.update {
+            it.copy(
+                notebookButtonEnabled = false,
+                aiAssistButtonEnabled = false
+            )
+        }
+
         viewModelScope.tryLaunch {
             val moduleItem =
                 repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
@@ -542,7 +549,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun updateNotebookObjectTypeAndId(objectTypeAndId: Pair<String, String>) {
-        _uiState.update { it.copy(objectTypeAndId = objectTypeAndId) }
+        _uiState.update {
+            it.copy(
+                objectTypeAndId = objectTypeAndId,
+                notebookButtonEnabled = true
+            )
+        }
     }
 
     private fun updateAiAssistContext(source: AiAssistContextSource, content: String) {
@@ -555,6 +567,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
             ),
             contextString = content
         )
+
+        _uiState.update {
+            it.copy(
+                aiAssistButtonEnabled = true
+            )
+        }
     }
 
     private fun courseProgressChanged() {
