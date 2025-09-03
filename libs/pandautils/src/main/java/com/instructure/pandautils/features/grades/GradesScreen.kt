@@ -136,6 +136,7 @@ fun GradesScreen(
                         subtitle = it.subtitle,
                         navigationActionClick = it.navigationActionClick,
                         backgroundColor = Color(color = canvasContextColor),
+                        contentColor = colorResource(id = R.color.textLightest),
                         actions = {
                             FilterIcon(uiState, actionHandler, ThemePrefs.primaryTextColor)
                         }
