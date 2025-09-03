@@ -26,7 +26,7 @@ class StudentCalendarBehavior @Inject constructor(
     
     override suspend fun shouldShowAddEventButton(): Boolean {
         return try {
-            !featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access")
+            !featureFlagProvider.checkRestrictStudentAccessFlag()
         } catch (e: Exception) {
             true
         }

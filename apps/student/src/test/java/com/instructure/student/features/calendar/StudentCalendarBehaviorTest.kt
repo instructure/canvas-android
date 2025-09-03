@@ -31,7 +31,7 @@ class StudentCalendarBehaviorTest {
 
     @Test
     fun `shouldShowAddEventButton returns false when restrict_student_access flag is enabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns true
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns true
 
         val result = behavior.shouldShowAddEventButton()
 
@@ -40,7 +40,7 @@ class StudentCalendarBehaviorTest {
 
     @Test
     fun `shouldShowAddEventButton returns true when restrict_student_access flag is disabled`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } returns false
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
 
         val result = behavior.shouldShowAddEventButton()
 
@@ -49,7 +49,7 @@ class StudentCalendarBehaviorTest {
 
     @Test
     fun `shouldShowAddEventButton returns true when flag check throws exception`() = runTest {
-        coEvery { featureFlagProvider.checkEnvironmentFeatureFlag("restrict_student_access") } throws RuntimeException("Network error")
+        coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } throws RuntimeException("Network error")
 
         val result = behavior.shouldShowAddEventButton()
 
