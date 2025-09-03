@@ -141,6 +141,7 @@ class LearnViewModel @Inject constructor(
 
     private fun onCourseSelected(courseId: Long) {
         val learningItem = _state.value.learningItems
+            .flatMap { if (it is LearningItem.ProgramGroupItem) it.items else listOf(it) }
             .find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
 
         if (learningItem != null) {
