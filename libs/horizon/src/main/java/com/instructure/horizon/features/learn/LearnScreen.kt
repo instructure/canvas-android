@@ -50,7 +50,9 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -150,7 +152,30 @@ private fun LearnScreenWrapper(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Column {
+        Column(modifier = Modifier.padding(top = 24.dp)) {
+            state.selectedLearningItem?.parentItem?.let { parentItem ->
+                val programName = parentItem.title
+                val text = stringResource(R.string.learnScreen_partOfProgram, programName)
+                val annotatedString = buildAnnotatedString {
+                    append(text)
+                    val startIndex = text.indexOf(programName)
+                    if (startIndex >= 0) {
+                        pushStringAnnotation(tag = "PROGRAM_DETAILS", annotation = "PROGRAM_DETAILS")
+                        addStyle(
+                            style = HorizonTypography.buttonTextLarge.copy(
+                                textDecoration = TextDecoration.Underline
+                            ).toSpanStyle(),
+                            start = startIndex,
+                            end = startIndex + (programName.length)
+                        )
+                        pop()
+                    }
+                }
+                Text(text = annotatedString, style = HorizonTypography.p1, modifier = Modifier.padding(horizontal = 24.dp).clickable {
+                    state.onSelectedLearningItemChanged(parentItem)
+                })
+                HorizonSpace(SpaceSize.SPACE_16)
+            }
             DropDownTitle(
                 learningItems = state.learningItems,
                 selectedItem = state.selectedLearningItem ?: LearningItem.CourseItem(
@@ -186,7 +211,7 @@ private fun LearnScreenWrapper(
 private fun DropDownTitle(learningItems: List<LearningItem>, selectedItem: LearningItem, onSelect: (LearningItem) -> Unit) {
     Column(
         modifier = Modifier
-            .padding(start = 24.dp, end = 24.dp, top = 24.dp)
+            .padding(start = 24.dp, end = 24.dp)
     ) {
         val showDropDown = learningItems.size > 1
 

@@ -27,8 +27,8 @@ data class LearnUiState(
     val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {}
 )
 
-sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boolean = true) {
-    data class CourseItem(val courseWithProgress: CourseWithProgress) : LearningItem() {
+sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boolean = true, open val parentItem: LearningItem? = null) {
+    data class CourseItem(val courseWithProgress: CourseWithProgress, override val parentItem: LearningItem? = null) : LearningItem() {
         override val title: String = courseWithProgress.courseName
     }
 

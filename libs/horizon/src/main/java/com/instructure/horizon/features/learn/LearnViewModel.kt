@@ -72,19 +72,25 @@ class LearnViewModel @Inject constructor(
 
         val learningItems = enrolledPrograms.map { program ->
             val programCourses = repository.getCoursesById(program.sortedRequirements.map { it.courseId }, forceNetwork = forceRefresh)
-            val programItems = programCourses.map { courseWithModuleItemDurations ->
+            val programCourseItems = programCourses.map { courseWithModuleItemDurations ->
                 enrolledCourses.find { it.courseId == courseWithModuleItemDurations.courseId }?.let { courseWithProgress ->
                     LearningItem.CourseItem(courseWithProgress)
                 } ?: LearningItem.LockedCourseItem(courseWithModuleItemDurations.courseName)
             }
-            if (programItems.any { it is LearningItem.CourseItem }) {
+            if (programCourseItems.any { it is LearningItem.CourseItem }) {
+                val programDetailsItem =
+                    LearningItem.ProgramDetails(program, programCourses, context.getString(R.string.programSwitcher_programOverview))
                 LearningItem.ProgramGroupItem(
                     program.name,
                     listOf(
                         LearningItem.BackToAllItems(context.getString(R.string.programSwitcher_goBack)),
                         LearningItem.ProgramHeaderItem(program.name),
-                        LearningItem.ProgramDetails(program, programCourses, context.getString(R.string.programSwitcher_programOverview))
-                    ) + programItems
+                        programDetailsItem
+                    ) + programCourseItems.map {
+                        if (it is LearningItem.CourseItem) it.copy(
+                            parentItem = programDetailsItem
+                        ) else it
+                    }
                 )
             } else {
                 LearningItem.ProgramDetails(program, programCourses, program.name)
