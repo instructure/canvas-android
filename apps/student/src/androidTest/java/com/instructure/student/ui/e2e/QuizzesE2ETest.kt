@@ -28,6 +28,7 @@ import androidx.test.espresso.web.webdriver.Locator
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
@@ -50,6 +51,7 @@ class QuizzesE2ETest: StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @Stub("Grades screen has been redesigned, needs to be fixed in ticket MBL-19258")
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.PAGES, TestCategory.E2E)
