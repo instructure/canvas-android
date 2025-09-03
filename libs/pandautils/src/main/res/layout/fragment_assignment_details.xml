@@ -129,6 +129,7 @@
                         app:layout_constraintBottom_toBottomOf="@id/submissionStatusIcon"
                         app:layout_constraintStart_toEndOf="@id/submissionStatusIcon"
                         app:layout_constraintTop_toTopOf="@id/submissionStatusIcon"
+                        app:textColorRes="@{viewModel.data.submissionStatusTint}"
                         tools:text="Submitted" />
 
                     <View

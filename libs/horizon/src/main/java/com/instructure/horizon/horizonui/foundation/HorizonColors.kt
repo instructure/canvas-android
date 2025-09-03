@@ -45,16 +45,14 @@ object HorizonColors {
     }
 
     object PrimitivesGreen {
-        @Composable
-        fun green12() = colorResource(R.color.primitives_green12)
+        fun green12() = Color(0xFFDCEEE4)
         @Composable
         fun green45() = colorResource(R.color.primitives_green45)
         @Composable
         fun green57() = colorResource(R.color.primitives_green57)
         @Composable
         fun green70() = colorResource(R.color.primitives_green70)
-        @Composable
-        fun green82() = colorResource(R.color.primitives_green82)
+        fun green82() = Color(0xFF015B28)
     }
 
     object PrimitivesOrange {
@@ -91,8 +89,7 @@ object HorizonColors {
     }
 
     object PrimitivesGrey {
-        @Composable
-        fun grey11() = colorResource(R.color.primitives_grey11)
+        fun grey11() = Color(0xFFF2F4F4)
         @Composable
         fun grey12() = colorResource(R.color.primitives_grey12)
         @Composable
@@ -186,10 +183,10 @@ object HorizonColors {
     }
 
     object PrimitivesHoney {
+        fun honey12() = Color(0xFFF5E9CA)
         @Composable
         fun honey30() = colorResource(R.color.primitives_honey30)
-        @Composable
-        fun honey35() = colorResource(R.color.primitives_honey35)
+        fun honey35() = Color(0xFFB07E00)
         @Composable
         fun honey40() = colorResource(R.color.primitives_honey40)
         @Composable
@@ -200,8 +197,7 @@ object HorizonColors {
         fun honey57() = colorResource(R.color.primitives_honey57)
         @Composable
         fun honey70() = colorResource(R.color.primitives_honey70)
-        @Composable
-        fun honey90() = colorResource(R.color.primitives_honey90)
+        fun honey90() = Color(0xFF5F4400)
         @Composable
         fun honey110() = colorResource(R.color.primitives_honey110)
     }
@@ -365,13 +361,11 @@ object HorizonColors {
     }
 
     object Surface {
-        @Composable
-        fun attention() = colorResource(R.color.surface_attention)
+        fun attention() = Color(0xFF2B7ABC)
         @Composable
         fun attentionSecondary() = colorResource(R.color.surface_attentionSecondary)
         fun cardPrimary() = Color(0xFFFFFFFF)
-        @Composable
-        fun cardSecondary() = colorResource(R.color.surface_cardSecondary)
+        fun cardSecondary() = Color(0xFFF9F9F9)
         fun divider() = Color(0xFFE8EAEC)
         fun error() = Color(0xFFC71F23)
         fun inversePrimary() = Color(0xFF273540)
@@ -383,8 +377,7 @@ object HorizonColors {
         fun pagePrimary() = Color(0xFFF2F4F4)
         fun pageSecondary() = Color(0xFFFFFFFF)
         fun pageTertiary() = Color(0xFFE8EAEC)
-        @Composable
-        fun warning() = colorResource(R.color.surface_warning)
+        fun warning() = Color(0xFFCF4A00)
         fun success() = Color(0xFF03893D)
         @Composable
         fun aiGradient() = Brush.verticalGradient(

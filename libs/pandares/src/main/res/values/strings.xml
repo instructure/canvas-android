@@ -908,6 +908,16 @@
         <item quantity="other">%s points</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pts</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pt</item>
+        <item quantity="other">\/ %.0f pts</item>
+    </plurals>
+
     <string name="timeLimit">Time Limit</string>
     <string name="newPushNotifications">%1$s New Notifications</string>
     <string name="like">like</string>
@@ -1107,7 +1117,7 @@
     <string name="gradeAfterPosting">Grade after posting</string>
     <string name="gradeOverride">Grade override</string>
     <string name="currentGrade">Current grade</string>
-    <string name="opensInCanvasStudent">Opens in Canvas Student</string>
+    <string name="opensInCanvasApp">Opens in Canvas app</string>
     <string name="tab_student_view">Student View</string>
     <string name="rateOnThePlayStore">Rate on the Play Store</string>
 
@@ -1480,9 +1490,9 @@
     <string name="offline_content_storage">Storage</string>
     <string name="offline_content_storage_info">%s of %s Used</string>
     <string name="offline_content_other">Other Apps</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Remaining</string>
-    <string name="offline_content_storage_info_a11y_description">Storage Info: %s of %s Used, Other Apps %d%%, Canvas Student %d%%, Remaining %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Storage Info: %s of %s Used, Other Apps %d%%, Canvas %d%%, Remaining %d%%</string>
     <string name="offline_content_all_courses">All Courses</string>
     <string name="offline_content_sync">Sync</string>
     <string name="offline_content_selected">%d Selected</string>
@@ -1808,7 +1818,7 @@
     <string name="studentOrTeacherTitle">Are you a student or teacher?</string>
     <string name="studentOrTeacherSubtitle">One of our other apps might be a better fit. Tap one to visit the Play Store</string>
     <string name="studentApp">STUDENT</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">TEACHER</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1846,7 +1856,7 @@
     <string name="addStudentSuccessfull">Student added successfully</string>
     <string name="addStudentTitle">Add student with…</string>
     <string name="addStudentQrCodeTitle">QR Code</string>
-    <string name="addStudentQrCodeExplanation">Students can generate a QR code using the Canvas Student app on their mobile device</string>
+    <string name="addStudentQrCodeExplanationCanvas">Students can generate a QR code using the Canvas app on their mobile device</string>
     <string name="addStudentPairingCodeTitle">Pairing Code</string>
     <string name="addStudentPairingCodeExplanation">Students can obtain a pairing code through the Canvas website</string>
     <string name="pairingCodeDialogTitle">Add Student</string>
@@ -1855,9 +1865,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancel</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Your code is incorrect or expired.</string>
-    <string name="qrPairingTitle">Open Canvas Student</string>
-    <string name="qrPairingDescription">You\'ll need to open your student\'s Canvas Student app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.</string>
-    <string name="qrCodePairingPrompt">Scan a QR code from Canvas Student to pair</string>
+    <string name="qrPairingTitleCanvas">Open Canvas app</string>
+    <string name="qrPairingDescriptionCanvas">You\'ll need to open your student\'s Canvas app to continue. Go into Main Menu > Settings > Pair with Observer and scan the QR code you see there.</string>
+    <string name="qrCodePairingPromptCanvas">Scan a QR code from Canvas app to pair</string>
     <string name="a11y_addStudentContentDescription">Add Student</string>
     <string name="qrPairingErrorTitle">Expired QR Code</string>
     <string name="qrPairingErrorDescription">The QR code you scanned may have expired. Refresh the code on the student\'s device and try again.</string>
@@ -2022,6 +2032,7 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Signature text</string>
     <string name="due_dateTime">Due: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Submitted: %1$s, %2$s</string>
     <string name="noDueDate">No Due Date</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Needs Grading</string>
@@ -2029,6 +2040,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f pts)</item>
     </plurals>
     <string name="noAssignments">No assignments</string>
     <string name="assignmentGroup">Assignment Group</string>
@@ -2086,5 +2101,54 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">To see your grades, please log in to your account in the app.</string>
     <string name="widgetSingleGradeSelectCourse">Let’s choose a course</string>
     <string name="widgetGradesErrorLoadingCourses">An error occurred while loading courses.</string>
+    <string name="settingsSwitchExperience">Switch to Canvas Career</string>
 
+    <string name="speedGraderGradeTabTitle">Grade &amp; Rubric</string>
+    <string name="speedGraderDetailsTabTitle">Details</string>
+    <string name="a11y_contentDescription_expandPanel">Expand panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Collapse panel</string>
+    <string name="pointGradeHint">Write score here</string>
+    <string name="percentageGradeHint">Write percentage here</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Letter Grade</string>
+    <string name="daysLate">Days late</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pt</item>
+        <item quantity="other">%s / %s pts</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Late Penalty</string>
+    <string name="gradingStatus_none">None</string>
+    <string name="gradingStatus_late">Late</string>
+    <string name="gradingStatus_missing">Missing</string>
+    <string name="gradingStatus_extended">Extended</string>
+    <string name="gradingStatus_excused">Excused</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Student Notes</string>
+    <string name="speedGraderStudentNotesLoading">Loading Student notes</string>
+    <string name="speedGraderStudentNotesErrorTitle">Oops! Something Went Wrong</string>
+    <string name="speedGraderStudentNotesErrorDescription">We\'re having trouble showing the student notes.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Refresh</string>
+    <string name="not_graded">Not Graded</string>
+    <string name="speedGraderSubmissionDetails">Submission Details</string>
+    <string name="speedGraderSubmissionDetailsLoading">Loading Submission details</string>
+    <string name="speedGraderWordCount">Word Count</string>
+    <string name="rubricsTitle">Rubrics</string>
+    <string name="rubricScore">Score</string>
+    <string name="rubricScoreHint">Write score here</string>
+    <string name="speedGraderCommentsTitle">Comments (%s)</string>
+    <string name="anonymousGradingStudentLabel">Student</string>
+    <string name="anonymousGradingUserLabel">Anonymous User</string>
+    <string name="rubricNote">Rubric Note</string>
+    <string name="content_description_edit_rubric_comment">Edit rubric note</string>
+    <string name="rubricNoteHint">Note</string>
+    <string name="a11y_sendRubricNoteContentDescription">Send rubric note</string>
+    <string name="select_attachment_type">Select Attachment Type</string>
+    <string name="choose_files">Choose Files</string>
+    <string name="a11y_expanded">Expanded</string>
+    <string name="a11y_collapsed">Collapsed</string>
+    <string name="excuseStudent">Excuse Student</string>
+    <string name="detailsEmptyMessage">We don’t have further details for this Student and Assignment</string>
+    <string name="daysLateHint">Write days late</string>
+    <string name="reply_to_topic">Reply to topic</string>
+    <string name="additional_replies">Additional replies (%d)</string>
 </resources>

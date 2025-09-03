@@ -34,7 +34,7 @@
 
     <!-- Student Strings -->
     <!-- Student Assignment Details -->
-    <string name="assignmentDetails">Détails de la tâche</string>
+    <string name="assignmentDetails">Détails du travail</string>
     <string name="submission_types">Types d’envoi</string>
     <string name="noAssignmentDescriptionStudent">Pas de contenu</string>
     <string name="dueLabel">Échéance</string>
@@ -45,9 +45,9 @@
     <string name="submissionStatusUploadingSubtitle">Tapoter pour voir la progression</string>
     <string name="submissionStatusFailedTitle">Échec de l’envoi</string>
     <string name="submissionStatusFailedSubtitle">Tapoter pour voir les détails</string>
-    <string name="submissionAndRubric">Envoi et rubrique</string>
-    <string name="commentsAndRubric">Commentaires et rubrique</string>
-    <string name="errorLoadingAssignment">Un problème est survenu lors du chargement de cette tâche. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="submissionAndRubric">Envoi et grille de notation</string>
+    <string name="commentsAndRubric">Commentaires et grille de notation</string>
+    <string name="errorLoadingAssignment">Un problème est survenu lors du chargement de ce travail. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="submitted">Envoyé</string>
     <string name="notSubmitted">Non soumis</string>
     <string name="allowedFileTypes">Types de fichiers autorisés</string>
@@ -55,14 +55,14 @@
     <string name="attemptsAllowedLabel">Tentatives autorisées</string>
     <string name="attemptsUsedLabel">Tentatives utilisées</string>
     <string name="noAttemptsLeft">Aucune tentative restante</string>
-    <string name="resubmitAssignment">Envoyer la tâche de nouveau</string>
+    <string name="resubmitAssignment">Envoyer le travail de nouveau</string>
     <string name="launchingExternalTool">Lancement de l\'outil externe...</string>
     <string name="launchExternalTool">Lancer l\'outil externe</string>
     <string name="preview">Aperçu</string>
     <string name="submissionUploadFailedMessage">Le téléversement d\'un ou de plusieurs fichiers a échoué. Vérifiez votre connexion Internet et réessayez l’envoi.</string>
     <string name="submissionUploadByteProgress">%1$s sur %2$s</string>
     <string name="submissionSuccessTitle">Succès de l’envoi!</string>
-    <string name="submissionSuccessMessage">Votre tâche a été envoyée avec succès. Profitez de votre journée!</string>
+    <string name="submissionSuccessMessage">Votre travail a été envoyé avec succès. Profitez de votre journée!</string>
     <string name="submissionDeleteTitle">Annuler l\'envoi</string>
     <string name="submissionDeleteMessage">Cela annulera et supprimera votre envoi.</string>
     <string name="submissionDeleted">Envoi supprimé</string>
@@ -70,7 +70,7 @@
     <string name="gradedSubmissionLabel">Noté</string>
 
     <string name="reminderTitle">Rappel</string>
-    <string name="reminderDescription">Ajouter des notifications de rappel de date d’échéance concernant cette tâche sur cet appareil.</string>
+    <string name="reminderDescription">Ajouter des notifications de rappel de date d’échéance concernant ce travail sur cet appareil.</string>
     <string name="a11y_addReminder">Ajouter un rappel</string>
     <string name="a11y_removeReminder">Retirer un rappel</string>
     <string name="a11y_remove">Retirer</string>
@@ -99,9 +99,9 @@
     <string name="customReminderDays">Jours avant</string>
     <string name="customReminderWeeks">Semaines avant</string>
     <string name="reminderNotificationChannelName">Notifications de rappel</string>
-    <string name="reminderNotificationChannelDescription">Notifications Canvas pour les rappels de tâches.</string>
+    <string name="reminderNotificationChannelDescription">Notifications Canvas pour les rappels de travaux.</string>
     <string name="reminderNotificationTitle">Rappel de la date d’échéance</string>
-    <string name="reminderNotificationDueAtDescription">Cette tâche est dû à %s : %s</string>
+    <string name="reminderNotificationDueAtDescription">Ce travail est dû à %s : %s</string>
     <string name="reminderInPast">Veuillez choisir une heure ultérieure pour votre rappel!</string>
     <string name="reminderAlreadySet">Vous avez déjà défini un rappel pour cette heure</string>
     <string name="deleteReminderTitle">Supprimer le rappel</string>
@@ -125,22 +125,22 @@
     <string name="submission">Envoi</string>
     <string name="submissionVersions">Versions des envois</string>
     <string name="submissionDetailsFileTabName">Fichiers (%d)</string>
-    <string name="rubric">Rubrique</string>
+    <string name="rubric">Grille de notation</string>
     <string name="submissionDetailsErrorTitle">Erreur d’envoi</string>
     <string name="urlSubmissionDisclaimer">Cet envoi correspond à une URL vers une page externe. Nous avons inclus une capture d\'écran de la page au moment où elle a été envoyée.</string>
     <string name="submissionDetailsNoSubmissionYet">Pas d’envoi en ce moment</string>
-    <string name="submissionDetailsAssignmentWasLockedOn">Votre tâche a été verrouillée le %1$s à  %2$s</string>
-    <string name="submissionDetailsAssignmentWillUnlockOn">Votre tâche se déverrouillera le %1$s à %2$s</string>
-    <string name="submissionDetailsAssignmentLockedByModuleName">Votre tâche est verrouillée par module \"%1$s\"</string>
-    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Votre tâche est verrouillée par une exigence de module</string>
-    <string name="submissionDetailsAssignmentLocked">Tâche verrouillée</string>
+    <string name="submissionDetailsAssignmentWasLockedOn">Votre travail a été verrouillé le %1$s à  %2$s</string>
+    <string name="submissionDetailsAssignmentWillUnlockOn">Votre travail se déverrouillera le %1$s à %2$s</string>
+    <string name="submissionDetailsAssignmentLockedByModuleName">Votre travail est verrouillé par module \"%1$s\"</string>
+    <string name="submissionDetailsAssignmentLockedByModulePrereqs">Votre travail est verrouillé par une exigence de module</string>
+    <string name="submissionDetailsAssignmentLocked">Travail verrouillé</string>
     <string name="submissionDetailsNoSubmissionAllowed">Aucun envoi autorisé</string>
     <string name="webPreview">Aperçu de l\'URL saisie</string>
     <string name="websiteUrl">URL du site Web</string>
-    <string name="noneContentMessage">Cette tâche ne permet pas d’envoi en ligne</string>
-    <string name="onPaperContentMessage">Cette tâche ne permet pas d’envoi en ligne</string>
+    <string name="noneContentMessage">Ce travail ne permet pas d’envoi en ligne</string>
+    <string name="onPaperContentMessage">Ce travail ne permet pas d’envoi en ligne</string>
     <string name="noOnlineSubmissions">Aucun envoi en ligne</string>
-    <string name="speedGraderExternalToolMessage">Cette tâche comporte des liens vers un outil externe pour les envois.</string>
+    <string name="speedGraderExternalToolMessage">Ce travail comporte des liens vers un outil externe pour les envois.</string>
     <string name="openTool">Ouvrir Outil</string>
     <string name="a11y_submissionText">Texte de dépôt</string>
 
@@ -158,7 +158,7 @@
 
     <!-- Student rubric tab -->
     <string name="rubricCustomScore">Score personnalisé</string>
-    <string name="rubricEmptyMessage">Il n\'y a aucune rubrique pour cette tâche.</string>
+    <string name="rubricEmptyMessage">Il n\'y a aucune grille de notation pour ce travail.</string>
     <string name="rubricViewLongDescription">Afficher description longue</string>
 
     <!-- Student Submission Comments -->
@@ -167,7 +167,7 @@
     <string name="assignmentSubmissionCommentUploadingMedia">Téléversement de fichier multimédia</string>
     <string name="assignmentSubmissionCommentError">Le téléversement du commentaire a échoué pour %s</string>
     <string name="chooseFileForCommentSubtext">Joindre les fichiers à votre commentaire en tapotant sur l\'une des options ci-dessous</string>
-    <string name="emptySubmissionCommentsSubtext">Avez-vous des questions au sujet de votre tâche?\nEnvoyez un message à votre instructeur.</string>
+    <string name="emptySubmissionCommentsSubtext">Avez-vous des questions au sujet de votre travail?\nEnvoyez un message à votre enseignant(e).</string>
     <string name="submissionCommentErrorMessage">Impossible de transmettre ce message. Tapotez pour essayer de nouveau.</string>
     <string name="mediaUpload">Téléversement de média</string>
     <string name="mediaUploadAudio">Téléversement de fichiers multimédia - Audio</string>
@@ -226,7 +226,7 @@
     <string name="submissionDetailsDueTodayAt">Dû aujourd\'hui à %s</string>
     <string name="submissionDetailsDueTomorrowAt">Dû demain à %s</string>
     <string name="submissionDetailsDueYesterdayAt">Dû hier à %s</string>
-    <string name="submissionDetailsHasNoDueDate">Votre tâche n\'a pas de date d\'échéance</string>
+    <string name="submissionDetailsHasNoDueDate">Votre travail n\'a pas de date d\'échéance</string>
     <string name="submissionDetailsDueAt">Dû le %1$s à %2$s</string> <!--Ex: Due April 2 at 11:59pm-->
     <string name="lowercaseAM">am</string>
     <string name="lowercasePM">pm</string>
@@ -234,10 +234,10 @@
 
     <!-- Assignments -->
     <string name="assignmentLocked">Verrouillé</string>
-    <string name="assignments">Tâches</string>
-    <string name="noDescription">Il n\'y a aucune description pour cette tâche</string>
-    <string name="noAssignmentsInGroup">Pas de tâches dans ce groupe</string>
-    <string name="excusedAssignment">Cette tâche est exemptée et ne sera pas prise en compte dans le calcul total</string>
+    <string name="assignments">Travaux</string>
+    <string name="noDescription">Il n\'y a aucune description pour ce travail</string>
+    <string name="noAssignmentsInGroup">Pas de travaux dans ce groupe</string>
+    <string name="excusedAssignment">Ce travail est exempté et ne sera pas pris en compte dans le calcul total</string>
     <string name="excused">EX</string>
     <string name="sortByDialogTitle">Trier par</string>
     <string name="sortByDialogTimeOption">Heure</string>
@@ -246,10 +246,10 @@
     <string name="sortByType">Trier par type</string>
     <string name="sortByDialogCancel">Annuler</string>
     <string name="assignmentsListDisplayGradingPeriod">Période de notation : Tout</string>
-    <string name="a11y_sortByTimeButton">Trier les boutons des tâches, trier par heure</string>
-    <string name="a11y_sortByTypeButton">Trier les boutons des tâches, trier par type</string>
-    <string name="a11y_assignmentsSortedByTime">Tâches triées par heure</string>
-    <string name="a11y_assignmentsSortedByType">Tâches triées par type</string>
+    <string name="a11y_sortByTimeButton">Trier les boutons des travaux, trier par heure</string>
+    <string name="a11y_sortByTypeButton">Trier les boutons des travaux, trier par type</string>
+    <string name="a11y_assignmentsSortedByTime">Travaux triés par heure</string>
+    <string name="a11y_assignmentsSortedByType">Travaux triés par type</string>
 
     <!-- Assignment editing -->
     <string name="points">Points\u0020</string>
@@ -274,7 +274,7 @@
     <string name="discussionUploadDialog">Téléversement de discussion</string>
     <string name="totalScore">Total :</string>
     <string name="noGradeText">S.O.</string>
-    <string name="checkBoxFinalGradeOption">Baser sur les tâches notées</string>
+    <string name="checkBoxFinalGradeOption">Baser sur les travaux notés</string>
     <string name="checkBoxWhatIfGradeOption">Afficher le score hypothétique</string>
     <string name="whatIfDialogText">Score hypothétique</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
@@ -490,7 +490,7 @@
     <string name="sendMessage">Envoyer un message</string>
     <string name="userAvatar">Avatar de l\'utilisateur</string>
 
-    <string name="assignmentIcon">Icône de la tâche</string>
+    <string name="assignmentIcon">Icône du travail</string>
     <string name="announcementIcon">Icône d\'annonce</string>
     <string name="conversationIcon">Icône de conversation</string>
     <string name="defaultIcon">Icône par défaut</string>
@@ -571,8 +571,8 @@
     <string name="modules">Modules</string>
     <string name="moduleItemMustView">Voir cet élément</string>
     <string name="moduleItemViewed">Vous avez vu cet élément</string>
-    <string name="moduleItemSubmit">Doit soumettre une tâche</string>
-    <string name="moduleItemSubmitted">La tâche est soumise</string>
+    <string name="moduleItemSubmit">Doit soumettre un travail</string>
+    <string name="moduleItemSubmitted">Le travail est soumis</string>
     <string name="moduleItemContribute">Contribuer à cette page</string>
     <string name="moduleItemContributed">Vous avez contribué</string>
     <string name="moduleItemMinScore">Obtenir un score minimum de</string>
@@ -580,7 +580,7 @@
     <string name="prerequisites">Conditions préalables :</string>
     <string name="unlocked">Déverrouillé :</string>
     <string name="locked">Verrouillé</string>
-    <string name="lockedAssignmentDesc">Cette tâche fait partie du module %s et n\'a pas encore été déverrouillée.</string>
+    <string name="lockedAssignmentDesc">Ce travail fait partie du module %s et n\'a pas encore été déverrouillé.</string>
     <string name="lockedPageDesc">Cette page fait partie du module %s et n\'a pas encore été déverrouillée.</string>
     <string name="lockedFileDesc">Ce fichier fait partie du module %s et n\'a pas encore été déverrouillé.</string>
     <string name="lockedQuizDesc">Ce questionnaire fait partie du module %s et n\'a pas encore été déverrouillé.</string>
@@ -593,11 +593,11 @@
     <string name="errorLoadingModules">Une erreur est survenue lors du chargement de vos modules.</string>
 
     <string name="help">Aide</string>
-    <string name="instructor_question">Question de l\'instructeur</string>
+    <string name="instructor_question">Question de l\'enseignant(e)</string>
     <string name="link">Lien</string>
 
     <!-- LockInfoHTMLHelper Strings -->
-    <string name="lockedAssignmentNotModule">Cette tâche est verrouillée.</string>
+    <string name="lockedAssignmentNotModule">Ce travail est verrouillé.</string>
 
     <!-- New Course Layout Strings -->
     <string name="myCourses">Mes cours</string>
@@ -701,8 +701,8 @@
     <string name="dark">Foncé</string>
 
     <!-- Help dialog strings -->
-    <string name="askInstructor">Poser une question à votre instructeur</string>
-    <string name="askInstructorDetails">Les questions sont soumises à votre instructeur</string>
+    <string name="askInstructor">Poser une question à votre enseignant(e)</string>
+    <string name="askInstructorDetails">Les questions sont soumises à votre enseignant(e)</string>
     <string name="searchGuides">Chercher les guides de Canvas</string>
     <string name="canvasGuides">Guides de Canvas</string>
     <string name="searchGuidesDetails">Trouver des réponses aux questions les plus courantes</string>
@@ -740,7 +740,7 @@
 
     <string name="launchSpeedgrader">Lancer Speedgrader</string>
 
-    <string name="search_todo">tâche à faire tâches à faire liste des tâches à faire</string>
+    <string name="search_todo">travail à faire travaux à faire liste des travaux à faire</string>
     <string name="search_course">cours cours classe classes</string>
     <string name="search_grades">note notes</string>
 
@@ -776,10 +776,10 @@
     <string name="close">Fermer</string>
     <string name="closed">Fermé</string>
 
-    <string name="overdueAssignments">Tâches dues très en retard</string>
-    <string name="upcomingAssignments">Tâches à venir</string>
-    <string name="undatedAssignments">Tâches non datées</string>
-    <string name="pastAssignments">Tâches passées</string>
+    <string name="overdueAssignments">Travaux dus très en retard</string>
+    <string name="upcomingAssignments">Travaux à venir</string>
+    <string name="undatedAssignments">Travaux non datés</string>
+    <string name="pastAssignments">Travaux passés</string>
 
     <string name="could_not_find_course">Une erreur est survenue lors de l\'obtention du cours pour cet élément.</string>
     <string name="could_not_find_group">Une erreur est survenue lors de l\'obtention du groupe pour cet élément.</string>
@@ -870,29 +870,29 @@
     <string name="notification_pref_dialog_message">Désirez-vous activer les notifications d\'appareil? Ces réglages peuvent être modifiés plus tard dans Réglages &gt; Notifications &gt; Tous les dispositifs (Settings > Notifications > For all Devices)</string>
     <string name="notification_pref_toast_success">Les notifications ont été activées.</string>
 
-    <string name="notification_desc_due_date">Soyez informé lorsqu\'une date d\'échéance de tâche est modifiée.</string>
+    <string name="notification_desc_due_date">Soyez informé lorsqu\'une date d\'échéance de travail est modifiée.</string>
     <string name="notification_desc_grading_policies">Soyez informé lorsque les politiques de notation de cours sont modifiées.</string>
-    <string name="notification_desc_course_content">Soyez informé lorsque le contenu de cours est modifié sur les WikiPages, les questionnaires, et les tâches.</string>
+    <string name="notification_desc_course_content">Soyez informé lorsque le contenu de cours est modifié sur les WikiPages, les questionnaires, et les travaux.</string>
     <string name="notification_desc_files">Soyez informé lorsqu\'un nouveau fichier est ajouté à votre cours.</string>
     <string name="notification_desc_announcement">Soyez informé lorsqu\'il y a une nouvelle annonce dans votre cours.</string>
     <string name="notification_desc_announcement_created_by_you">Soyez informé lorsque vous créez une annonce et lorsque quelqu\'un répond à votre annonce.</string>
-    <string name="notification_desc_grading">Soyez informé lorsqu\'une tâche ou un envoi a été noté/modifié et lorsqu’une pondération de notation a été modifiée.</string>
+    <string name="notification_desc_grading">Soyez informé lorsqu\'un travail ou un envoi a été noté/modifié et lorsqu’une pondération de notation a été modifiée.</string>
     <string name="notification_desc_invitation">Soyez informé pour les invitations à des conférences Web, des groupes, des collaborations, des examens par les pairs, et des rappels.</string>
-    <string name="notification_desc_all_submissions">Instructeur et administrateur uniquement. Soyez informé lorsqu\'une tâche est envoyée ou soumise de nouveau.</string>
-    <string name="notification_desc_late_grading">Instructeur et administrateur uniquement. Soyez informé lorsqu\'une tâche en retard est envoyée.</string>
+    <string name="notification_desc_all_submissions">Enseignant(e) et administrateur uniquement. Soyez informé lorsqu\'un travail est envoyé ou soumis de nouveau.</string>
+    <string name="notification_desc_late_grading">Enseignant(e) et administrateur uniquement. Soyez informé lorsqu\'un travail en retard est envoyé.</string>
     <string name="notification_desc_submission_comment">Soyez informé lorsqu\'un commentaire est effectué sur votre envoi.</string>
     <string name="notification_desc_discussion">Soyez informé lorsqu\'il y a un nouveau sujet de discussion dans votre cours.</string>
     <string name="notification_desc_discussion_post">Soyez informé lorsqu\'il y a une nouvelle publication dans une discussion où vous êtes abonné.</string>
     <string name="notification_desc_add_to_conversation">Soyez informé lorsque vous êtes ajouté à une conversation.</string>
     <string name="notification_desc_conversation_message">Soyez informé lorsque vous avez un nouveau message dans votre boîte de réception.</string>
     <string name="notification_desc_conversations_created_by_you">Soyez informé lorsque vous créez une nouvelle conversation.</string>
-    <string name="notification_desc_student_appointment_signups">Instructeur et administrateur uniquement. Soyez informé lorsqu\'il y a une inscription de rendez-vous.</string>
+    <string name="notification_desc_student_appointment_signups">Enseignant(e) et administrateur uniquement. Soyez informé lorsqu\'il y a une inscription de rendez-vous.</string>
     <string name="notification_desc_appointment_signups">Soyez informé lorsqu\'il y a une nouvelle inscription dans votre calendrier.</string>
     <string name="notification_desc_appointment_cancelations">Soyez informé lorsqu\'il y a une annulation de rendez-vous.</string>
     <string name="notification_desc_appointment_availability">Soyez informé lorsqu\'un créneau de rendez-vous devient disponible.</string>
     <string name="notification_desc_calendar">Soyez informé sur les nouveaux éléments du calendrier et ceux mis à jour.</string>
     <string name="notification_desc_membership_update">Administrateur uniquement, inscription en attente activée. Soyez informé lorsqu\'une inscription de groupe est acceptée ou rejetée.</string>
-    <string name="notification_desc_admin">Instructeur et administrateur uniquement. Soyez informé sur les inscriptions de cours, les rapports générés, le contenu exporté, les rapports de migration, les nouveaux comptes utilisateurs et les nouveaux groupes d\'étudiants.</string>
+    <string name="notification_desc_admin">Enseignant(e) et administrateur uniquement. Soyez informé sur les inscriptions de cours, les rapports générés, le contenu exporté, les rapports de migration, les nouveaux comptes utilisateurs et les nouveaux groupes d\'étudiants.</string>
     <string name="notification_desc_recording_ready">Soyez informé lorsqu\'un enregistrement de conférence est prêt.</string>
 
     <string name="unlimited">Illimité</string>
@@ -971,8 +971,8 @@
     <string name="defaultLanguageWarning">Votre choix de langue comme défaut du système n\'est pas garanti d\'être pris en charge et impliquera un redémarrage, êtes- vous certain?</string>
     <string name="locked_mastery_paths">Verrouillé jusqu’à ce que \"%s\" soit noté</string>
     <string name="locked_icon">Icône verrouillée</string>
-    <string name="choose_assignment_group">Choisir un groupe de la tâche</string>
-    <string name="chooseAssignmentPath">Choisir un chemin de la tâche</string>
+    <string name="choose_assignment_group">Choisir un groupe du travail</string>
+    <string name="chooseAssignmentPath">Choisir un chemin du travail</string>
     <string name="select">Sélectionner</string>
     <string name="choice_position">Choix %d</string>
     <string name="updating_module_info">Mise à jour des informations de module&#8230;</string>
@@ -994,7 +994,7 @@
     <string name="noFilesSubtextCourse">Il n\'y a aucun fichier associé à ce cours.</string>
     <string name="noFilesSubtextGroup">Il n\'y a aucun fichier associé à ce groupe.</string>
     <string name="fileTypeNotSupported">Type de fichier non pris en charge</string>
-    <string name="fileTypeNotSupportedBody">Cette tâche n\'autorise que certains types de fichiers : %s</string>
+    <string name="fileTypeNotSupportedBody">Ce travail n\'autorise que certains types de fichiers : %s</string>
 
     <array name="file_size_units">
         <item>B</item>
@@ -1010,7 +1010,7 @@
 
     <string name="homePageIdForNotifications">Activité récente</string>
     <string name="homePageIdForModules">Modules</string>
-    <string name="homePageIdForAssignments">Tâches</string>
+    <string name="homePageIdForAssignments">Travaux</string>
     <string name="homePageIdForSyllabus">Plan de cours</string>
 
     <string name="contentDescriptionWidgetRefresh">Actualiser le widget</string>
@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Notation après publication</string>
     <string name="gradeOverride">Surclasser la notation</string>
     <string name="currentGrade">Note actuelle</string>
-    <string name="opensInCanvasStudent">S’ouvre dans Canvas Étudiant</string>
+    <string name="opensInCanvasApp">S’ouvre dans l’application Canvas</string>
     <string name="tab_student_view">Vue étudiant</string>
 
 
@@ -1174,7 +1174,7 @@
     <string name="quizNoTimeLimit">Aucun</string>
     <string name="viewQuiz">Voir le questionnaire</string>
     <string name="viewDiscussion">Voir la discussion</string>
-    <string name="lockedModule">Cette tâche est verrouillée par le module \"%1$s\".</string>
+    <string name="lockedModule">Ce travail est verrouillé par le module \"%1$s\".</string>
     <string name="chooseMediaFile">Choisir le support fichier</string>
     <string name="discussions_unknown_author">Auteur inconnu</string>
     <string name="discussions_unknown_date">Date inconnue</string>
@@ -1185,7 +1185,7 @@
 
     <string name="a11y_gradeCellContentDescriptionHint">Vous pouvez ouvrir les détails de l’envoi à partir d’ici</string>
 
-    <string name="a11y_gradeCellContentDescriptionHintUpdated">Cliquez ici pour voir les détails de l’envoi et de la rubrique.</string>
+    <string name="a11y_gradeCellContentDescriptionHintUpdated">Cliquez ici pour voir les détails de l’envoi et de la grille de notation.</string>
     <string name="a11y_gradeCellContentDescriptionLetterGradeOnly">Note : %s</string>
     <plurals name="minutes">
         <item quantity="one">%s Minute</item>
@@ -1282,7 +1282,7 @@
     <string name="a11y_content_description_inbox_subject">Objet</string>
     <string name="a11y_content_description_inbox_course_spinner">Sélectionner un cours, %s</string>
 
-    <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet étudiant sont masquées du fait que cette tâche est anonyme.</string>
+    <string name="speedGraderAnonymousSubmissionMessage">Les réponses de cet étudiant sont masquées du fait que ce travail est anonyme.</string>
 
     <string name="schedule_marked_as_done">Vous l’avez marqué comme terminé.</string>
     <string name="error_saving_assignment_closed_grading_period">Ne peut pas changer la date d’échéance lors de l’échéance au cours d\'une période de notation fermée.</string>
@@ -1379,16 +1379,16 @@
     <string name="fileUploadError">Le téléversement du fichier a échoué</string>
     <string name="a11y_shareExtensionTargetHeaderContentDescription">Téléversement sur Canvas pour %s.</string>
     <string name="a11y_contentDescriptionShareExtensionTargetMyFilesCheckbox">Téléversement vers Mes Fichiers</string>
-    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envoyer la tâche</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetSubmitAssignmentCheckbox">Envoyer le travail</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinner">Choisir un cours</string>
     <string name="a11y_contentDescriptionShareExtensionTargetCourseSpinnerWithSelectedCourse">Choisissez un cours, le cours sélectionné est : %s</string>
-    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir une tâche</string>
-    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choisissez une tâche, la tâche sélectionnée est : %s</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinner">Choisir un travail</string>
+    <string name="a11y_contentDescriptionShareExtensionTargetAssignmentSpinnerWithSelectedAssignment">Choisissez un travail, le travail sélectionné est : %s</string>
     <string name="a11y_contentDescriptionShareExtensionStatus">%1$s, %2$s</string>
     <string name="cancelFileUploadTitle">Annuler le téléversement?</string>
     <string name="cancelFileUploadMessage">Cela annulera votre téléversement.</string>
-    <string name="menuTitleFilterAssignments">Filtrer les tâches</string>
-    <string name="filterAssignmentDialogTitle">Filtrer les tâches</string>
+    <string name="menuTitleFilterAssignments">Filtrer les travaux</string>
+    <string name="filterAssignmentDialogTitle">Filtrer les travaux</string>
     <string name="filterAssignmentsDialogCancel">Annuler</string>
     <string name="filterAssignmentAll">Tout</string>
     <string name="filterAssignmentLate">En retard</string>
@@ -1398,7 +1398,7 @@
     <string name="createdByStudentView">Créé par Student View</string>
     <string name="discussionErrorToast">Une erreur est survenue. Le sujet n’est peut-être plus disponible.</string>
     <string name="cameraPermissionPermanentlyDenied">L’autorisation de la caméra a été définitivement refusée. Accédez aux paramètres de l’application pour l’autoriser.</string>
-    <string name="unpublish_assignment_error">On ne peut pas annuler la publication d’une tâche s\'il y a des envois d\'étudiants.</string>
+    <string name="unpublish_assignment_error">On ne peut pas annuler la publication d’un travail s\'il y a des envois d\'étudiants.</string>
     <string name="subscribeToCalendar">Souscrire au flux du calendrier</string>
     <string name="subscribeToCalendarMessage">Vous pouvez synchroniser votre calendrier Canvas avec votre compte Google Calendar en cliquant sur le bouton S\'abonner dans cette boîte de dialogue. Ensuite, vous devrez accéder à l\'application Google Agenda sur votre appareil et activer la synchronisation dans les paramètres du nouvel agenda.</string>
     <string name="subscribeButton">S’inscrire</string>
@@ -1458,7 +1458,7 @@
     <string name="aboutLoginTitle">Identifiant de connexion</string>
     <string name="aboutEmailTitle">Adresse électronique</string>
     <string name="aboutVersionTitle">Version</string>
-    <string name="assignmentRefreshError">Un problème est survenu lors du rechargement de cette tâche. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="assignmentRefreshError">Un problème est survenu lors du rechargement de ce travail. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="instructure_logo">Logo d’Instructure</string>
     <string name="preferences">Préférences</string>
     <string name="offlineContent">Contenu hors ligne</string>
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Stockage</string>
     <string name="offline_content_storage_info">%s de %s utilisé</string>
     <string name="offline_content_other">Autres applications</string>
-    <string name="offline_content_canvas_student">Étudiant Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Restant</string>
-    <string name="offline_content_storage_info_a11y_description">Info de stockage : %s de %s utilisées, autres applications %d%%, Étudiant Canvas %d%%, restants %d%%.</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Info de stockage : %s de %s utilisées, autres applications %d%%, Canvas %d%%, restantes %d%%.</string>
     <string name="offline_content_all_courses">Tous les cours</string>
     <string name="offline_content_sync">Synchronisation</string>
     <string name="offline_content_selected">%d sélectionné</string>
@@ -1539,7 +1539,7 @@
         <item quantity="one">Synchronisation de %d cours.</item>
         <item quantity="other">Synchronisation de %d cours.</item>
     </plurals>
-    <string name="assignmentNoLongerAvailable">Cette tâche n’est plus disponible.</string>
+    <string name="assignmentNoLongerAvailable">Ce travail n’est plus disponible.</string>
     <string name="editDashboardOfflineMode">Vous êtes hors ligne</string>
     <string name="editDashboardNoResults">Aucun résultat</string>
     <string name="editDashboardNoResultsMessage">Aucun élément correspondant n’a été trouvé.</string>
@@ -1670,7 +1670,7 @@
     <string name="todoDescriptionLabel">Description</string>
     <string name="todoDeleteConfirmationTitle">Effacer l’élément À faire?</string>
     <string name="todoDeleteConfirmationText">Cette opération supprime définitivement l’élément À faire.</string>
-    <string name="todoDeleteErrorMessage">Une erreur est survenue lors de la suppression de cette tâche À faire. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="todoDeleteErrorMessage">Une erreur est survenue lors de la suppression de ce travail À faire. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="createTodoScreenTitle">Nouvelle action</string>
     <string name="editTodoScreenTitle">Modification à faire</string>
     <string name="createToDoTitleHint">Ajouter un titre</string>
@@ -1678,14 +1678,14 @@
     <string name="createToDoTimeLabel">Heure</string>
     <string name="createToDoCalendarLabel">Calendrier</string>
     <string name="createToDoDetailsLabel">Détails</string>
-    <string name="todoSaveErrorMessage">Une erreur est survenue lors de l’enregistrement de cette tâche À faire. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="todoSaveErrorMessage">Une erreur est survenue lors de l’enregistrement de ce travail À faire. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="selectCalendarScreenTitle">Sélectionner le calendrier</string>
     <string name="errorContentRetryButton">Réessayer</string>
     <string name="eventLocationLabel">Emplacement</string>
     <string name="eventAddressLabel">Adresse</string>
     <string name="eventDetailsLabel">Détails</string>
     <string name="errorLoadingEvent">Il y a eu un problème de chargement de cet événement. Veuillez vérifier votre connexion et réessayer.</string>
-    <string name="errorLoadingTodo">Il y a eu un problème de chargement de cette tâche à faire. Veuillez vérifier votre connexion et réessayer.</string>
+    <string name="errorLoadingTodo">Il y a eu un problème de chargement de ce travail à faire. Veuillez vérifier votre connexion et réessayer.</string>
     <string name="eventDeleteConfirmationTitle">Supprimer l’événement?</string>
     <string name="eventDeleteConfirmationText">Cela supprimera définitivement votre événement.</string>
     <string name="eventDeleteErrorMessage">Une erreur s\'est produite lors de la suppression de cet événement. Veuillez vérifier votre connexion et réessayer.</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Êtes-vous étudiant ou enseignant?</string>
     <string name="studentOrTeacherSubtitle">L’une de nos autres applis pourrait mieux convenir. Tapoter sur l\'une d’entre elles pour vous rendre sur l\'App Store.</string>
     <string name="studentApp">ÉTUDIANT</string>
-    <string name="canvasStudentApp">Étudiant Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">ENSEIGNANT</string>
     <string name="canvasTeacherApp">Enseignant Canvas</string>
     <string name="inboxUnreadCountMoreThan99">Plus de 99</string>
@@ -1800,9 +1800,9 @@
     <string name="parentNoAlerts">Aucune alerte</string>
     <string name="parentNoAlersMessage">Il n’y a rien à notifier pour le moment.</string>
     <string name="errorLoadingAlerts">Une erreur s\'est produite lors du chargement des alertes de votre étudiant.</string>
-    <string name="assignmentMissingAlertTitle">Tâche manquante</string>
-    <string name="assignmentGradeHighAlertTitle">Note de la tâche supérieure à %s</string>
-    <string name="assignmentGradeLowAlertTitle">Note de la tâche inférieure à %s</string>
+    <string name="assignmentMissingAlertTitle">Travail manquant</string>
+    <string name="assignmentGradeHighAlertTitle">Note du travail supérieure à %s</string>
+    <string name="assignmentGradeLowAlertTitle">Note du travail inférieure à %s</string>
     <string name="courseGradeHighAlertTitle">Note du cours supérieure à %s</string>
     <string name="courseGradeLowAlertTitle">Note du cours inférieure à %s</string>
     <string name="courseAnnouncementAlertTitle">Annonce du cours</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Étudiant ajouté avec succès</string>
     <string name="addStudentTitle">Ajouter étudiant avec&#8230;</string>
     <string name="addStudentQrCodeTitle">Code QR</string>
-    <string name="addStudentQrCodeExplanation">Les étudiants peuvent générer un code QR en utilisant l\'application Canvas Student sur leur appareil mobile.</string>
+    <string name="addStudentQrCodeExplanationCanvas">Les élèves peuvent générer un code QR en utilisant l’application Canvas sur leur appareil mobile.</string>
     <string name="addStudentPairingCodeTitle">Jumelage du code</string>
     <string name="addStudentPairingCodeExplanation">Les étudiants peuvent obtenir un code de jumelage sur le site Web de Canvas</string>
     <string name="pairingCodeDialogTitle">Ajouter un étudiant</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Annuler</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Votre code est incorrect ou expiré.</string>
-    <string name="qrPairingTitle">Ouvrir Canvas Student</string>
-    <string name="qrPairingDescription">Vous devrez ouvrir l\'application Canvas Student de votre étudiant pour continuer. Allez dans Menu principal > Paramètres > Jumeler avec l’observateur et scannez le code QR que vous y voyez.</string>
-    <string name="qrCodePairingPrompt">Scanner un code QR à partir de Canvas Student pour le jumeler</string>
+    <string name="qrPairingTitleCanvas">Ouvrir l’application Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Vous devrez ouvrir l’application Canvas de votre élève pour continuer. Allez dans Menu principal > Paramètres > Jumeler avec l’observateur et scannez le code QR que vous y voyez.</string>
+    <string name="qrCodePairingPromptCanvas">Scanner un code QR depuis l’application Canvas pour se jumeler</string>
     <string name="a11y_addStudentContentDescription">Ajouter un étudiant</string>
     <string name="qrPairingErrorTitle">Code QR expiré</string>
     <string name="qrPairingErrorDescription">Le code QR que vous avez scanné peut avoir expiré. Actualisez le code sur l\'appareil de l\'étudiant et réessayez.</string>
@@ -1850,9 +1850,9 @@
     <string name="studioMediaProgressTitle">Supports de Studio</string>
     <string name="alertSettingsTitle">Réglages de l’alerte</string>
     <string name="alertSettingsThresholdsTitle">M’alerter lorsque&#8230;</string>
-    <string name="alertSettingsAssignmentMissing">Tâche manquante</string>
-    <string name="alertSettingsAssignmentGradeHigh">Note de la tâche supérieure à</string>
-    <string name="alertSettingsAssignmentGradeLow">Note de la tâche inférieure à</string>
+    <string name="alertSettingsAssignmentMissing">Travail manquant</string>
+    <string name="alertSettingsAssignmentGradeHigh">Note du travail supérieure à</string>
+    <string name="alertSettingsAssignmentGradeLow">Note du travail inférieure à</string>
     <string name="alertSettingsCourseGradeHigh">Note du cours supérieure à</string>
     <string name="alertSettingsCourseGradeLow">Note du cours inférieure à</string>
     <string name="alertSettingsGlobalAnnouncement">Annonces générales</string>
@@ -1884,15 +1884,15 @@
     <string name="courseSyllabusLabel">Plan de cours</string>
     <string name="courseSummaryLabel">Résumé</string>
     <string name="gradesTotal">Total</string>
-    <string name="gradesBasedOnGraded">Baser sur les tâches notées</string>
+    <string name="gradesBasedOnGraded">Baser sur les travaux notés</string>
     <string name="lateSubmissionLabel">En retard</string>
     <string name="sortByDueDate">Date d’échéance</string>
     <string name="sortByGroup">Groupe</string>
     <string name="gradePreferencesScreenTitle">Préférences de notation</string>
     <string name="gradePreferencesHeaderGradingPeriod">Période de notation</string>
     <string name="gradePreferencesHeaderSortBy">Trier par</string>
-    <string name="gradesEmptyTitle">Aucune tâche</string>
-    <string name="gradesEmptyMessage">Il semblerait qu’il n’y ait pas encore de tâche créée dans cet espace.</string>
+    <string name="gradesEmptyTitle">Aucun travail</string>
+    <string name="gradesEmptyMessage">Il semblerait qu’il n’y ait pas encore de travail créé dans cet espace.</string>
     <string name="errorLoadingGrades">Nous avons des difficultés à charger les notes de votre étudiant. Veuillez recharger la page ou revenir plus tard.</string>
     <string name="errorLoadingCourse">Nous n\'arrivons pas à charger les détails des cours de votre étudiant. Veuillez recharger la page ou revenir plus tard.</string>
     <string name="gradesFilterContentDescription">Filtre</string>
@@ -1902,7 +1902,7 @@
     <string name="gradesRefreshFailed">Échec lors de l’actualisation des notes</string>
     <string name="chooseACourseToMessage">Choisissez un cours pour lequel envoyer un message</string>
     <string name="regardingHiddenMessage">En ce qui concerne : %1$s, %2$s</string>
-    <string name="regardingHiddenMessageWithAssignmentPrefix">En ce qui concerne : %1$s, tâche — %2$s</string>
+    <string name="regardingHiddenMessageWithAssignmentPrefix">En ce qui concerne : %1$s, travail — %2$s</string>
     <string name="regardingHiddenMessageWithEventPrefix">En ce qui concerne : %1$s, événement — %2$s</string>
     <string name="sendMessageAboutAssignment">« Envoyer un message à propos de cette tâche »</string>
     <string name="sendMessageAboutEvent">« Envoyer un message à propos de cet événement »</string>
@@ -1948,7 +1948,7 @@
     <string name="a11y_summaryLockedContentDescription">Verrouillé</string>
     <string name="a11y_summaryQuizContentDescription">Questionnaire</string>
     <string name="a11y_summaryDiscussionContentDescription">Discussion</string>
-    <string name="a11y_summaryAssignmentContentDescription">Tâche</string>
+    <string name="a11y_summaryAssignmentContentDescription">Travail</string>
     <string name="scheduleItemNoDueDate">Aucune date d’échéance</string>
     <string name="a11y_refresh">Actualiser</string>
     <string name="masqueradingAs">Vous agissez en tant que %s</string>
@@ -1961,7 +1961,7 @@
     <string name="smartSearchCourseHeaderTitle">Résultats en cours</string>
     <string name="smartSearchAnnouncementTitle">Annonce</string>
     <string name="smartSearchDiscussionTitle">Discussion</string>
-    <string name="smartSearchAssignmentTitle">Tâche</string>
+    <string name="smartSearchAssignmentTitle">Travail</string>
     <string name="smartSearchPageTitle">Page</string>
     <string name="smartSearchLoadingTitle">Accrochez-vous, nous sommes en train de chercher vos résultats!</string>
     <string name="smartSearchLoadingSubtitle">Nous nous efforçons de trouver les meilleures correspondances à votre recherche. Cela ne prendra pas longtemps! Merci de votre patience.</string>
@@ -1970,7 +1970,7 @@
     <string name="webAccessLimitedMessage">Les interactions sur cette page sont limitées par votre institution.</string>
     <string name="contentDescription_filter">Filtres</string>
     <string name="smartSearchAnnouncementsTitle">Annonces</string>
-    <string name="smartSearchAssignmentsTitle">Tâches</string>
+    <string name="smartSearchAssignmentsTitle">Travaux</string>
     <string name="smartSearchDiscussionTopicsTitle">Sujet de discussion</string>
     <string name="smartSearchPagesTitle">Pages</string>
     <string name="resultTypeTitle">Type de résultat</string>
@@ -1980,7 +1980,7 @@
     <string name="sortByTypeTitle">Saisir</string>
     <string name="smartSearchAnnouncementGroupTitle">Annonces (%d)</string>
     <string name="smartSearchDiscussionGroupTitle">Sujets de discussion (%d)</string>
-    <string name="smartSearchAssignmentGroupTitle">Tâches (%d)</string>
+    <string name="smartSearchAssignmentGroupTitle">Travaux (%d)</string>
     <string name="smartSearchPageGroupTitle">Pages (%d)</string>
     <string name="a11y_commentSentSuccess">Commentaire envoyé avec succès</string>
     <string name="a11y_dragViewContentDescription">Développer le tiroir</string>
@@ -2009,14 +2009,14 @@
     <string name="noDueDate">Aucune date d’échéance</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s a besoin de classement</string>
-    <string name="assignmentListTitle">Liste des tâches</string>
+    <string name="assignmentListTitle">Liste des travaux</string>
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
     </plurals>
-    <string name="noAssignments">Pas de tâche</string>
-    <string name="assignmentGroup">Groupe de tâches</string>
-    <string name="assignmentType">Type de tâche</string>
+    <string name="noAssignments">Pas de travail</string>
+    <string name="assignmentGroup">Groupe de travaux</string>
+    <string name="assignmentType">Type de travail</string>
     <string name="dueDate">Date d’échéance</string>
     <string name="needsGrading">Requiert une notation</string>
     <string name="published">Publié</string>
@@ -2025,13 +2025,13 @@
     <string name="toBeGraded">À noter</string>
     <string name="graded">Noté</string>
     <string name="other">Autre</string>
-    <string name="a11y_filterAssignments">Filtrer les tâches</string>
-    <string name="assignmentFilter">Filtre des tâches</string>
+    <string name="a11y_filterAssignments">Filtrer les travaux</string>
+    <string name="assignmentFilter">Filtre des travaux</string>
     <string name="groupedBy">Regroupés par</string>
     <string name="gradingPeriod">Période de notation :</string>
     <string name="gradingPeriodHeading">Période de notation</string>
     <string name="gradePreferences">Préférences de notation</string>
-    <string name="allAssignments">Toutes les tâches</string>
+    <string name="allAssignments">Toutes les travaux</string>
     <string name="statusFilter">Filtre d’état</string>
     <string name="a11y_contentDescription_filter">Filtre</string>
     <string name="a11y_contentDescription_postPolicy">Politique de publication</string>
@@ -2046,8 +2046,8 @@
     <string name="login">Connexion</string>
     <string name="logout">Déconnexion</string>
     <string name="loginRefreshSameUserError">Vous devez vous connecter avec le même utilisateur.</string>
-    <string name="errorLoadingAssignments">Une erreur s’est produite lors du chargement des tâches</string>
-    <string name="a11y_searchAssignments">Rechercher des tâches</string>
+    <string name="errorLoadingAssignments">Une erreur s’est produite lors du chargement des travaux</string>
+    <string name="a11y_searchAssignments">Rechercher des travaux</string>
     <string name="dueAssignmentListItem">Dû le %1$s</string>
     <string name="a11y_searchAmongRecipients">Rechercher parmi les destinataires</string>
     <string name="a11y_recipientIsRemoved">%1$s est supprimé</string>
@@ -2055,17 +2055,18 @@
     <string name="widgetFromTo">%1$s à %2$s</string>
     <string name="widgetAllDay">Toute la journée</string>
     <string name="widgetErrorTitle">Oops! Une erreur est survenue</string>
-    <string name="widgetErrorSubtitle">Nous avons des difficultés à afficher vos tâches en ce moment. Veuillez réessayer dans un instant ou rendez-vous à l\'application.</string>
+    <string name="widgetErrorSubtitle">Nous avons des difficultés à afficher vos travaux en ce moment. Veuillez réessayer dans un instant ou rendez-vous à l\'application.</string>
     <string name="widgetToDoEmptyTitle">Vous avez terminé pour l’instant!</string>
-    <string name="widgetToDoEmptySubtitle">On dirait que vous êtes disponible pour les 4 prochaines semaines. Voulez-vous ajouter des tâches à accomplir?</string>
+    <string name="widgetToDoEmptySubtitle">On dirait que vous êtes disponible pour les 4 prochaines semaines. Voulez-vous ajouter des travaux à accomplir?</string>
     <string name="widgetNotLoggedInTitle">Connectez-vous!</string>
-    <string name="widgetToDoNotLoggedInSubtitle">Pour voir vos tâches à accomplir, connectez-vous à votre compte dans l\'application. Cela ne prendra qu’une seconde!</string>
-    <string name="a11y_widgetToDoOpenToDoList">Ouvrir l’écran Liste des tâches à accomplir</string>
-    <string name="a11y_widgetToDoCreateNewToDo">Créer une nouvelle tâche à accomplir</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Pour voir vos travaux à accomplir, connectez-vous à votre compte dans l\'application. Cela ne prendra qu’une seconde!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Ouvrir l’écran Liste des travaux à accomplir</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Créer un nouveau travail à accomplir</string>
     <string name="widgetGradesErrorSubtitle">Nous avons du mal à afficher vos notes en ce moment. Veuillez réessayer dans un instant ou rendez-vous à l’application.</string>
     <string name="widgetGradesNotLoggedInSubtitle">Pour voir vos notes, veuillez vous connecter à votre compte dans l’application. Cela ne prendra qu’une seconde!</string>
     <string name="widgetSingleGradeErrorSubtitle">Nous avons du mal à afficher vos notes en ce moment.</string>
     <string name="widgetSingleGradeNotLoggedInSubtitle">Pour voir vos notes, veuillez vous connecter à votre compte dans l\'application.</string>
     <string name="widgetSingleGradeSelectCourse">Choisissons un cours</string>
     <string name="widgetGradesErrorLoadingCourses">Une erreur s’est produite lors du chargement des cours</string>
+    <string name="settingsSwitchExperience">Passer à Canvas Career</string>
 </resources>

@@ -118,8 +118,8 @@ fun String.formatIsoDuration(context: Context): String {
     }
 }
 
-fun Date.formatDayMonth(): String {
-    val formatter = SimpleDateFormat("dd/MM", Locale.getDefault())
+fun Date.formatMonthDay(): String {
+    val formatter = SimpleDateFormat("MM/dd", Locale.getDefault())
     return formatter.format(this)
 }
 
@@ -128,9 +128,45 @@ fun Date.format(pattern: String): String {
     return formatter.format(this)
 }
 
-fun Date.formatDayMonthYear(): String {
-    val formatter = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+fun Date.formatMonthDayYear(): String {
+    val formatter = SimpleDateFormat("MM/dd/yyyy", Locale.getDefault())
     return formatter.format(this)
+}
+
+fun Date.localisedFormat(
+    pattern: String,
+    context: Context? = null,
+    locale: Locale? = null
+): String {
+    val currentLocal = locale ?: Locale.getDefault()
+
+    val is24HourFormat = if (context == null)
+        false
+    else
+        android.text.format.DateFormat.is24HourFormat(context)
+
+    val hourFormattedPattern = if (is24HourFormat) {
+        pattern
+            .replace("hh", "HH")
+            .replace("h", "H")
+            .replace("a", "")
+    } else {
+        pattern
+            .replace("HH", "hh")
+            .replace("H", "h")
+            .apply { if (!contains("a")) plus("a") }
+    }
+    val bestDatePattern = android.text.format.DateFormat.getBestDateTimePattern(currentLocal, hourFormattedPattern)
+    val formatter = SimpleDateFormat(bestDatePattern, currentLocal)
+    return formatter.format(this)
+}
+
+fun Date.localisedFormatMonthDay(locale: Locale? = null): String {
+    return localisedFormat("MM/dd", locale = locale)
+}
+
+fun Date.localisedFormatMonthDayYear(locale: Locale? = null): String {
+    return localisedFormat("MM/dd/yyyy", locale = locale)
 }
 
 fun String.toLocalDateOrNull(formatter: DateTimeFormatter = DateTimeFormatter.ISO_LOCAL_DATE): LocalDate? {

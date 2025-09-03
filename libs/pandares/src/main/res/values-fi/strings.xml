@@ -1106,7 +1106,7 @@
     <string name="gradeAfterPosting">Arvosana lähetyksen jälkeen</string>
     <string name="gradeOverride">Korvaa arvosana</string>
     <string name="currentGrade">Nykyinen arvosana </string>
-    <string name="opensInCanvasStudent">Avautuu Canvas Studentissa</string>
+    <string name="opensInCanvasApp">Avautuu Canvas-sovelluksessa</string>
     <string name="tab_student_view">Opiskelijanäkymä</string>
 
 
@@ -1470,9 +1470,9 @@
     <string name="offline_content_storage">Säilytystila</string>
     <string name="offline_content_storage_info">%s / %s käytetty</string>
     <string name="offline_content_other">Muut sovellukset</string>
-    <string name="offline_content_canvas_student">Canvas-opiskelija</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Jäljelle jäänyt</string>
-    <string name="offline_content_storage_info_a11y_description">Tallennustilan tiedot: %s/%s Käytetty, muut sovellukset %d%%, Canvas Student %d%%, jäljellä %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Tallennustilan tiedot: %s/%s Käytetty, muut sovellukset %d%%, Canvas %d%%, jäljellä %d%%</string>
     <string name="offline_content_all_courses">Kaikki kurssit</string>
     <string name="offline_content_sync">Synkronointi</string>
     <string name="offline_content_selected">%d Valittu:</string>
@@ -1792,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Oletko opiskelija vai opettaja?</string>
     <string name="studentOrTeacherSubtitle">Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napsauta yhtä vieraillaksesi Play Storessa</string>
     <string name="studentApp">OPISKELIJA</string>
-    <string name="canvasStudentApp">Canvas-opiskelija</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">OPETTAJA</string>
     <string name="canvasTeacherApp">Canvas-opettaja</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1830,7 +1830,7 @@
     <string name="addStudentSuccessfull">Opiskelijan tallennus onnistui</string>
     <string name="addStudentTitle">Lisää opiskelija, jolla on...</string>
     <string name="addStudentQrCodeTitle">Viivakoodi</string>
-    <string name="addStudentQrCodeExplanation">Opiskelijat voivat luoda viivakoodin Canvas Student -sovelluksen avulla mobiililaitteellaan.</string>
+    <string name="addStudentQrCodeExplanationCanvas">Opiskelijat voivat luoda viivakoodin Canvas-sovelluksen avulla mobiililaitteellaan.</string>
     <string name="addStudentPairingCodeTitle">Parinmuodostuskoodi</string>
     <string name="addStudentPairingCodeExplanation">Opiskelijat voivat hankkia parinmuodostuskoodin Canvasin verkkosivustolta.</string>
     <string name="pairingCodeDialogTitle">Lisää opiskelija</string>
@@ -1839,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Peruuta</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Koodisi on virheellinen tai vanhentunut.</string>
-    <string name="qrPairingTitle">Avaa Canvas Student</string>
-    <string name="qrPairingDescription">Sinun täytyy avata opiskelijan Canvas Student -sovellus jatkaaksesi. Siirry Päävlikkoon > Asetukset > Muodosta laitepari havaitsijan kanssa ja skannaa siellä näkemäsi viivakoodi.</string>
-    <string name="qrCodePairingPrompt">Yhdistä skannaamalla viivakoodi Canvas Student -sovelluksesta</string>
+    <string name="qrPairingTitleCanvas">Avaa Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Sinun täytyy avata opiskelijan Canvas -sovellus jatkaaksesi. Siirry Päävlikkoon > Asetukset > Muodosta laitepari havaitsijan kanssa ja skannaa siellä näkemäsi viivakoodi.</string>
+    <string name="qrCodePairingPromptCanvas">Yhdistä skannaamalla viivakoodi Canvas-sovelluksesta</string>
     <string name="a11y_addStudentContentDescription">Lisää opiskelija</string>
     <string name="qrPairingErrorTitle">Vanhentunut viivakoodi</string>
     <string name="qrPairingErrorDescription">Skanaamasi viivakoodi on ehkä vanhentunut. Virkistä koodi opiskelijan laitteessa ja yritä uudelleen.</string>
@@ -2068,4 +2068,5 @@
     <string name="widgetSingleGradeNotLoggedInSubtitle">Nähdäksesi arvosanasi, kirjaudu tilillesi sovelluksessa..</string>
     <string name="widgetSingleGradeSelectCourse">Valitaan kurssi</string>
     <string name="widgetGradesErrorLoadingCourses">Kurssien lataamisen yhteydessä tapahtui virhe.</string>
+    <string name="settingsSwitchExperience">Vaihda Canvas-uraan</string>
 </resources>

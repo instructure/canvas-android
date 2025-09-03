@@ -44,7 +44,7 @@ import java.io.File
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionInProgress: Boolean, modifier: Modifier = Modifier) {
+fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionInProgress: Boolean, onFileAdded: (Uri) -> Unit, modifier: Modifier = Modifier) {
     var showBottomSheet by remember { mutableStateOf(false) }
 
     val context = LocalContext.current
@@ -55,7 +55,7 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
     val photoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.TakePicture()) { success ->
         if (success) {
             mediaUri?.let {
-                uiState.onFileAdded(it)
+                onFileAdded(it)
             }
         }
     }
@@ -82,7 +82,7 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
     val videoLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CaptureVideo()) { success ->
         if (success) {
             mediaUri?.let {
-                uiState.onFileAdded(it)
+                onFileAdded(it)
             }
         }
     }
@@ -109,7 +109,9 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
     val filePickerLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.GetContent()
     ) { uri: Uri? ->
-        uri?.let { uiState.onFileAdded(it) }
+        uri?.let {
+            onFileAdded(it)
+        }
     }
 
     val onGalleryClick: () -> Unit = {
@@ -141,7 +143,7 @@ fun AddFileSubmissionContent(uiState: AddSubmissionTypeUiState.File, submissionI
         }
     }, onUploadClick = {
         showBottomSheet = true
-    }, modifier = modifier)
+    }, modifier = modifier, uploadButtonEnabled = uiState.uploadFileEnabled)
 }
 
 private fun takePictureWithFileProvider(
@@ -182,6 +184,7 @@ private fun AddFileSubmissionContentPreview() {
             ),
             onFileAdded = {}
         ),
-        submissionInProgress = false
+        submissionInProgress = false,
+        onFileAdded = {}
     )
 }

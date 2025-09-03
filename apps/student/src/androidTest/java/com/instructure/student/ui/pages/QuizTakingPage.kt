@@ -23,7 +23,7 @@ import androidx.test.espresso.web.webdriver.Locator
 // tailored to quiz taking.
 class QuizTakingPage : CanvasWebViewPage() {
 
-    fun verifyQuestionDisplayed(questionId: Long, questionText: String) {
+    fun assertQuestionDisplayed(questionId: Long, questionText: String) {
         runTextChecks(
                 WebViewTextCheck(locatorType = Locator.ID, locatorValue = "question_${questionId}_question_text", textValue = questionText)
         )

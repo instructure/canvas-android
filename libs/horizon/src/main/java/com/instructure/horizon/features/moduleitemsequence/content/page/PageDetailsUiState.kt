@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
+import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.horizonui.platform.LoadingState
 
@@ -27,5 +28,6 @@ data class PageDetailsUiState(
     val notes: List<Note> = emptyList(),
     val courseId: Long = -1L,
     val pageId: Long = -1L,
-    val pageUrl: String = ""
+    val pageUrl: String = "",
+    val addNote: (highlightedData: NoteHighlightedData, type: String) -> Unit = { _, _ -> },
 )

@@ -28,6 +28,7 @@ import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
@@ -384,6 +385,40 @@ class AssignmentDetailsViewModelTest {
             submission = Submission(submittedAt = Date())
         )
         coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertEquals(expectedLabelText, viewModel.data.value?.submissionStatusText)
+        assertEquals(expectedTint, viewModel.data.value?.submissionStatusTint)
+        assertEquals(expectedIcon, viewModel.data.value?.submissionStatusIcon)
+        assertEquals(true, viewModel.data.value?.submissionStatusVisible)
+    }
+
+    @Test
+    fun `Custom status submission`() {
+        val expectedLabelText = "Custom Status 1"
+        val expectedTint = R.color.textInfo
+        val expectedIcon = R.drawable.ic_flag
+
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(
+            submissionTypesRaw = listOf("online_text_entry"),
+            submission = Submission(
+                submittedAt = Date(),
+                customGradeStatusId = 1,
+                postedAt = Date()
+            )
+        )
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+
+        coEvery { assignmentDetailsRepository.getCustomGradeStatuses(any(), any()) } returns listOf(
+            mockk<CustomGradeStatusesQuery.Node>(relaxed = true) {
+                every { _id } returns "1"
+                every { name } returns "Custom Status 1"
+            }
+        )
 
         val viewModel = getViewModel()
 

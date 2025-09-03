@@ -17,9 +17,11 @@
 package com.instructure.horizon.horizonui.organisms.inputs.singleselect
 
 import androidx.compose.animation.core.animateIntAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -46,6 +48,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.organisms.inputs.common.Input
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputContainer
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
+import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun SingleSelect(
@@ -70,7 +73,7 @@ fun SingleSelect(
             var heightInPx by remember { mutableIntStateOf(0) }
             var width by remember { mutableStateOf(0.dp) }
             InputContainer(
-                isFocused = state.isFocused || state.isMenuOpen,
+                isFocused = false,
                 isError = state.errorText != null,
                 enabled = state.enabled,
                 onClick = { state.onMenuOpenChanged(!state.isMenuOpen) },
@@ -93,8 +96,31 @@ fun SingleSelect(
                     state.onOptionSelected(selectedOption)
                     state.onMenuOpenChanged(false)
                 },
+                item = { option ->
+                    SingleSelectItem(option, state)
+                }
             )
         }
+    }
+}
+
+@Composable
+private fun <T>SingleSelectItem(option: T, state: SingleSelectState) {
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .fillMaxWidth()
+            .conditional(option == state.selectedOption && state.isMenuOpen) {
+                background(HorizonColors.Surface.institution())
+            }
+    ) {
+        Text(
+            text = option.toString(),
+            style = HorizonTypography.p1,
+            color = if (option == state.selectedOption) HorizonColors.Surface.pageSecondary() else HorizonColors.Text.body(),
+            modifier = Modifier
+                .padding(horizontal = 11.dp, vertical = 6.dp)
+        )
     }
 }
 

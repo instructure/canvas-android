@@ -18,6 +18,7 @@
 package com.instructure.pandautils.utils
 
 import android.content.Context
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.Submission
@@ -151,11 +152,23 @@ fun Assignment.getGrade(
     }
 }
 
-fun Assignment.getSubmissionStateLabel() = when {
-    this.submission?.late.orDefault() -> SubmissionStateLabel.LATE
-    this.isMissing() -> SubmissionStateLabel.MISSING
-    this.isGraded().orDefault() -> SubmissionStateLabel.GRADED
-    this.submission?.submittedAt != null -> SubmissionStateLabel.SUBMITTED
-    !this.isSubmitted -> SubmissionStateLabel.NOT_SUBMITTED
-    else -> SubmissionStateLabel.NONE
+fun Assignment.getSubmissionStateLabel(customStatuses: List<CustomGradeStatusesQuery.Node>): SubmissionStateLabel {
+    val matchedCustomStatus = submission?.customGradeStatusId?.let { id ->
+        customStatuses.find { it._id.toLongOrNull() == id }
+    }
+
+    return when {
+        matchedCustomStatus != null -> SubmissionStateLabel.Custom(
+            R.drawable.ic_flag,
+            R.color.textInfo,
+            matchedCustomStatus.name
+        )
+
+        submission?.late.orDefault() -> SubmissionStateLabel.Late
+        isMissing() -> SubmissionStateLabel.Missing
+        isGraded().orDefault() -> SubmissionStateLabel.Graded
+        submission?.submittedAt != null -> SubmissionStateLabel.Submitted
+        !isSubmitted -> SubmissionStateLabel.NotSubmitted
+        else -> SubmissionStateLabel.None
+    }
 }

@@ -33,6 +33,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
+import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.EmailNotificationsPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
@@ -143,6 +144,7 @@ abstract class StudentTest : CanvasTest() {
     val aboutPage = AboutPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
+    val canvasNetworkSignInPage = CanvasNetworkSignInPage()
     val loginSignInPage = LoginSignInPage()
     val moduleProgressionPage = ModuleProgressionPage()
     val modulesPage = ModulesPage()
@@ -156,7 +158,7 @@ abstract class StudentTest : CanvasTest() {
     val pickerSubmissionUploadPage = PickerSubmissionUploadPage()
     val profileSettingsPage = ProfileSettingsPage()
     val qrLoginPage = QRLoginPage()
-    val quizListPage = QuizListPage()
+    val quizListPage = QuizListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn, R.id.backButton))
     val quizTakingPage = QuizTakingPage()
     val goToQuizPage = GoToQuizPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val remoteConfigSettingsPage = RemoteConfigSettingsPage()

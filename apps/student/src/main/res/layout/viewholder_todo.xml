@@ -32,14 +32,19 @@
         android:orientation="vertical">
 
         <TextView
+            android:id="@+id/course"
+            style="@style/AdapterItemCourseNameText"
+            tools:text="Course Abc" />
+
+        <TextView
             android:id="@+id/title"
             style="@style/AdapterItemTitleText"
             tools:text="Course Notification Title" />
 
         <TextView
-            android:id="@+id/course"
-            style="@style/AdapterItemCourseNameText"
-            tools:text="Course Abc" />
+            android:id="@+id/tag"
+            style="@style/AdapterItemDescriptionText"
+            tools:text="Additional replies (2)" />
 
         <TextView
             android:id="@+id/description"

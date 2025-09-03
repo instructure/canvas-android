@@ -36,6 +36,11 @@ import com.instructure.horizon.features.account.notifications.AccountNotificatio
 import com.instructure.horizon.features.account.password.AccountPasswordScreen
 import com.instructure.horizon.features.account.profile.AccountProfileScreen
 import com.instructure.horizon.features.account.profile.AccountProfileViewModel
+import com.instructure.horizon.features.account.reportabug.ReportABugWebView
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 
 @Composable
 fun AccountNavigation(
@@ -46,6 +51,10 @@ fun AccountNavigation(
 
     NavHost(
         navController,
+        enterTransition = { enterTransition },
+        exitTransition = { exitTransition },
+        popEnterTransition = { popEnterTransition },
+        popExitTransition = { popExitTransition },
         startDestination = AccountRoute.Account.route,
         modifier = modifier
     ) {
@@ -81,6 +90,10 @@ fun AccountNavigation(
             val viewModel = hiltViewModel<AccountAdvancedViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AccountAdvancedScreen(uiState, navController)
+        }
+
+        composable(AccountRoute.BugReportWebView.route) {
+            ReportABugWebView(navController)
         }
     }
 }

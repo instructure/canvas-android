@@ -18,6 +18,8 @@ package com.instructure.horizon.features.notebook
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.horizon.features.notebook.common.model.mapToNotes
 import com.instructure.redwood.QueryNotesQuery
@@ -26,7 +28,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -43,25 +44,21 @@ class NotebookViewModel @Inject constructor(
         loadPreviousPage = ::getPreviousPage,
         loadNextPage = ::getNextPage,
         onFilterSelected = ::onFilterSelected,
-        updateContent = { courseId, objectTypeAndId ->
-            this.courseId = courseId
-            this.objectTypeAndId = objectTypeAndId
-            loadData()
-        }
+        updateContent = ::updateContent
     ))
     val uiState = _uiState.asStateFlow()
 
     init {
         loadData()
+        updateScreenState()
     }
 
     private fun loadData(
         after: String? = null,
         before: String? = null,
         courseId: Long? = this.courseId,
-        objectTypeAndId: Pair<String, String>? = this.objectTypeAndId
     ) {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update {
                 it.copy(isLoading = true)
             }
@@ -87,6 +84,15 @@ class NotebookViewModel @Inject constructor(
                     hasNextPage = notesResponse.pageInfo.hasNextPage,
                 )
             }
+        } catch {
+            _uiState.update {
+                it.copy(
+                    isLoading = false,
+                    notes = emptyList(),
+                    hasPreviousPage = false,
+                    hasNextPage = false,
+                )
+            }
         }
     }
 
@@ -103,5 +109,35 @@ class NotebookViewModel @Inject constructor(
             currentState.copy(selectedFilter = newFilter)
         }
         loadData()
+    }
+
+    private fun updateContent(courseId: Long?, objectTypeAndId: Pair<String, String>?) {
+        if (courseId != this.courseId || objectTypeAndId != this.objectTypeAndId) {
+            this.courseId = courseId
+            this.objectTypeAndId = objectTypeAndId
+            loadData()
+        }
+        updateScreenState()
+    }
+
+    fun updateCourseId(courseId: Long?) {
+        if (courseId != this.courseId) {
+            this.courseId = courseId
+            loadData()
+        }
+        updateScreenState()
+    }
+
+    private fun updateScreenState() {
+        if (courseId != null) {
+            _uiState.update { it.copy(showTopBar = false) }
+            if (objectTypeAndId != null) {
+                _uiState.update { it.copy(showFilters = false) }
+            } else {
+                _uiState.update { it.copy(showFilters = true) }
+            }
+        } else {
+            _uiState.update { it.copy(showTopBar = true, showFilters = true) }
+        }
     }
 }

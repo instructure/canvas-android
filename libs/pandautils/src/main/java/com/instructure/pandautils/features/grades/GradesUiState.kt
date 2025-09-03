@@ -57,17 +57,31 @@ data class AssignmentUiState(
     val displayGrade: DisplayGrade
 )
 
-enum class SubmissionStateLabel(
-    @DrawableRes val iconRes: Int,
-    @ColorRes val colorRes: Int,
-    @StringRes val labelRes: Int
-) {
-    NOT_SUBMITTED(R.drawable.ic_unpublish, R.color.backgroundDark, R.string.notSubmitted),
-    MISSING(R.drawable.ic_unpublish, R.color.textDanger, R.string.missingSubmissionLabel),
-    LATE(R.drawable.ic_clock, R.color.textWarning, R.string.lateSubmissionLabel),
-    SUBMITTED(R.drawable.ic_complete, R.color.textSuccess, R.string.submitted),
-    GRADED(R.drawable.ic_complete_solid, R.color.textSuccess, R.string.gradedSubmissionLabel),
-    NONE(0, 0, 0)
+sealed class SubmissionStateLabel {
+    abstract val iconRes: Int
+    abstract val colorRes: Int
+
+    data class Predefined(
+        @DrawableRes override val iconRes: Int,
+        @ColorRes override val colorRes: Int,
+        @StringRes val labelRes: Int
+    ) : SubmissionStateLabel()
+
+    data class Custom(
+        override val iconRes: Int,
+        override val colorRes: Int,
+        val label: String
+    ) : SubmissionStateLabel()
+
+    companion object {
+        val NotSubmitted = Predefined(R.drawable.ic_unpublish, R.color.backgroundDark, R.string.notSubmitted)
+        val Missing = Predefined(R.drawable.ic_unpublish, R.color.textDanger, R.string.missingSubmissionLabel)
+        val Late = Predefined(R.drawable.ic_clock, R.color.textWarning, R.string.lateSubmissionLabel)
+        val Submitted = Predefined(R.drawable.ic_complete, R.color.textSuccess, R.string.submitted)
+        val Graded = Predefined(R.drawable.ic_complete_solid, R.color.textSuccess, R.string.gradedSubmissionLabel)
+        val Excused = Predefined(R.drawable.ic_complete_solid, R.color.textWarning, R.string.gradingStatus_excused)
+        val None = Predefined(0, 0, 0)
+    }
 }
 
 sealed class GradesAction {

@@ -18,6 +18,7 @@
 package com.instructure.horizon.horizonui.molecules
 
 import androidx.annotation.DrawableRes
+import androidx.compose.animation.animateContentSize
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -81,6 +83,7 @@ sealed class ButtonColor(
     data object BlackOutline : ButtonColor(Color.Transparent, HorizonColors.Text.title(), HorizonColors.Surface.inversePrimary())
     data object WhiteOutline : ButtonColor(Color.Transparent, HorizonColors.Text.surfaceColored(), HorizonColors.Surface.pageSecondary())
     data object Danger : ButtonColor(HorizonColors.Surface.error(), HorizonColors.Text.surfaceColored())
+    data object DangerInverse : ButtonColor(HorizonColors.Surface.pageSecondary(), HorizonColors.Text.error())
     data object Ghost : ButtonColor(Color.Transparent, HorizonColors.Text.title())
     data object Institution : ButtonColor(HorizonColors.Surface.institution(), HorizonColors.Text.surfaceColored())
     data object Beige : ButtonColor(HorizonColors.Surface.pagePrimary(), HorizonColors.Text.title())
@@ -155,6 +158,58 @@ fun Button(
 }
 
 @Composable
+fun LoadingButton(
+    label: String,
+    modifier: Modifier = Modifier,
+    contentAlignment: Alignment,
+    width: ButtonWidth = ButtonWidth.RELATIVE,
+    color: ButtonColor = ButtonColor.Black,
+    iconPosition: ButtonIconPosition = ButtonIconPosition.NoIcon,
+    enabled: Boolean = true,
+    loading: Boolean = true,
+    onClick: () -> Unit = {},
+    badge: @Composable (() -> Unit)? = null
+) {
+    val alpha = if (enabled) 1f else 0.5f
+    Box(
+        contentAlignment = contentAlignment,
+        modifier = modifier
+            .background(color = color.backgroundColor.copy(alpha = alpha), shape = HorizonCornerRadius.level6)
+            .animateContentSize()
+    ) {
+        if (loading) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .background(color = color.backgroundColor, shape = HorizonCornerRadius.level6)
+            ) {
+                Spinner(
+                    size = SpinnerSize.EXTRA_SMALL,
+                    color = color.contentColor,
+                    modifier = Modifier
+                        .align(Alignment.Center)
+                        .padding(horizontal = 22.dp, vertical = 10.dp),
+                )
+            }
+        } else {
+            Button(
+                label = label,
+                height = ButtonHeight.NORMAL,
+                width = width,
+                color = ButtonColor.Custom(
+                    backgroundColor = Color.Transparent,
+                    contentColor = color.contentColor
+                ),
+                iconPosition = iconPosition,
+                onClick = onClick,
+                enabled = enabled,
+                badge = badge
+            )
+        }
+    }
+}
+
+@Composable
 @Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
 private fun ButtonBlackPreviews() {
     ContextKeeper.appContext = LocalContext.current
@@ -194,6 +249,13 @@ private fun ButtonBlackOutlinePreviews() {
 private fun ButtonDangerPreviews() {
     ContextKeeper.appContext = LocalContext.current
     ButtonPreview(ButtonColor.Danger)
+}
+
+@Composable
+@Preview(showBackground = true, backgroundColor = 0xFFDDDDDD, heightDp = 800)
+private fun ButtonDangerInversePreviews() {
+    ContextKeeper.appContext = LocalContext.current
+    ButtonPreview(ButtonColor.DangerInverse)
 }
 
 @Composable

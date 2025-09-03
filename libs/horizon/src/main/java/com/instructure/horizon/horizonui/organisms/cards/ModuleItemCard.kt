@@ -47,7 +47,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.model.LearningObjectStatus
 import com.instructure.horizon.model.LearningObjectType
-import com.instructure.pandautils.utils.formatDayMonth
+import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
 
 data class ModuleItemCardState(
@@ -97,7 +97,7 @@ fun ModuleItemCard(state: ModuleItemCardState, modifier: Modifier = Modifier) {
                         ModuleItemText(
                             text = stringResource(
                                 dueStringRes,
-                                state.dueDate.formatDayMonth()
+                                state.dueDate.localisedFormatMonthDay()
                             ),
                             modifier = Modifier.align(Alignment.CenterVertically),
                             color = dueColor

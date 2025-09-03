@@ -26,7 +26,9 @@ data class AccountUiState(
     val userName: String = "",
     val accountGroups: List<AccountGroupState> = emptyList(),
     val updateUserName: (String) -> Unit = {},
-    val performLogout: () -> Unit = {}
+    val performLogout: () -> Unit = {},
+    val switchExperience: () -> Unit = {},
+    val restartApp: Boolean = false,
 )
 
 data class AccountGroupState(
@@ -42,6 +44,7 @@ data class AccountItemState(
 
 sealed class AccountItemType(@DrawableRes val icon: Int) {
     data class Open(val route: AccountRoute) : AccountItemType(R.drawable.arrow_forward)
-    data class OpenInNew(val url: String) : AccountItemType(R.drawable.open_in_new)
+    data class OpenExternal(val route: AccountRoute) : AccountItemType(R.drawable.open_in_new)
     data object LogOut : AccountItemType(R.drawable.logout)
+    data object SwitchExperience : AccountItemType(R.drawable.swap_horiz)
 }
