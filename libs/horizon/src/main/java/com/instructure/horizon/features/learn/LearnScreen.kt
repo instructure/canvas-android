@@ -17,12 +17,12 @@ package com.instructure.horizon.features.learn
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -43,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -67,12 +68,15 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.molecules.Spinner
 import com.instructure.horizon.horizonui.organisms.inputs.common.InputDropDownPopup
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
+import kotlinx.coroutines.delay
 
 @Composable
 fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
@@ -161,7 +165,7 @@ private fun LearnScreenWrapper(
                     CourseDetailsScreen(CourseDetailsUiState(state.selectedLearningItem.courseWithProgress), mainNavController)
                 }
 
-                (state.selectedLearningItem is LearningItem.ProgramItem) -> {
+                (state.selectedLearningItem is LearningItem.ProgramDetails) -> {
                     val programDetailsViewModel = hiltViewModel<ProgramDetailsViewModel>()
                     LaunchedEffect(state.selectedLearningItem) {
                         programDetailsViewModel.loadProgramDetails(state.selectedLearningItem.program, state.selectedLearningItem.courses)
@@ -231,40 +235,89 @@ private fun DropDownTitle(learningItems: List<LearningItem>, selectedItem: Learn
             }
         }
 
+        var options by remember { mutableStateOf(learningItems) }
+
+        LaunchedEffect(selectedItem, isMenuOpen) {
+            if (!options.contains(selectedItem) && !isMenuOpen) {
+                delay(300) // Delay to allow menu to close before changing options
+                val newOptions =
+                    (learningItems.find { it is LearningItem.ProgramGroupItem && it.items.contains(selectedItem) } as LearningItem.ProgramGroupItem?)?.items
+                        ?: learningItems
+                options = newOptions
+            }
+        }
+
         InputDropDownPopup(
             isMenuOpen = isMenuOpen,
-            options = learningItems,
+            options = options,
             width = width,
             verticalOffsetPx = heightInPx,
+            closeMenuAfterSelection = { it.closeOnClick },
+            optionEnabled = { it.clickable },
             onMenuOpenChanged = { isMenuOpen = it },
             onOptionSelected = { selectedItem ->
-                onSelect(learningItems.first { it == selectedItem })
+                when (selectedItem) {
+                    is LearningItem.ProgramGroupItem -> options = selectedItem.items
+                    is LearningItem.BackToAllItems -> options = learningItems
+                    else -> onSelect(options.first { it == selectedItem })
+                }
             },
             item = { learningItem ->
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier
-                        .padding(horizontal = 11.dp, vertical = 6.dp)
-                ) {
-                    if (learningItem == selectedItem) {
-                        Icon(
-                            painter = painterResource(R.drawable.check),
-                            contentDescription = stringResource(R.string.a11y_selectedCourse),
-                            tint = HorizonColors.Icon.default(),
-                            modifier = Modifier
-                                .size(18.dp)
+                Column {
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .conditional(learningItem == selectedItem) {
+                                background(HorizonColors.Surface.inversePrimary())
+                            }
+                            .conditional(learningItem is LearningItem.LockedCourseItem) {
+                                alpha(0.5f)
+                            }
+                            .padding(horizontal = 16.dp, vertical = 10.dp)
+                    ) {
+                        if (learningItem is LearningItem.BackToAllItems) {
+                            Icon(
+                                painter = painterResource(R.drawable.arrow_back),
+                                contentDescription = null,
+                                tint = HorizonColors.Icon.default(),
+                                modifier = Modifier.size(24.dp)
+                            )
+                            HorizonSpace(SpaceSize.SPACE_8)
+                        }
+                        val itemTextColor = when (learningItem) {
+                            selectedItem -> HorizonColors.Surface.pageSecondary()
+                            is LearningItem.ProgramHeaderItem -> HorizonColors.Text.surfaceInverseSecondary()
+                            else -> HorizonColors.Text.body()
+                        }
+                        Text(
+                            text = learningItem.titleInDropdown,
+                            style = if (learningItem is LearningItem.ProgramHeaderItem) HorizonTypography.labelLargeBold else HorizonTypography.buttonTextLarge,
+                            color = itemTextColor,
+                            modifier = Modifier.weight(1f)
                         )
-                    } else {
-                        Spacer(modifier = Modifier.size(18.dp))
+                        if (learningItem is LearningItem.LockedCourseItem) {
+                            HorizonSpace(SpaceSize.SPACE_8)
+                            Icon(
+                                painter = painterResource(R.drawable.lock),
+                                contentDescription = null,
+                                tint = HorizonColors.Icon.default(),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
+                        if (learningItem is LearningItem.ProgramGroupItem) {
+                            HorizonSpace(SpaceSize.SPACE_8)
+                            Icon(
+                                painter = painterResource(R.drawable.arrow_forward),
+                                contentDescription = null,
+                                tint = HorizonColors.Icon.default(),
+                                modifier = Modifier.size(24.dp)
+                            )
+                        }
                     }
-
-                    HorizonSpace(SpaceSize.SPACE_8)
-
-                    Text(
-                        text = learningItem.title,
-                        style = HorizonTypography.p1,
-                        color = HorizonColors.Text.body(),
-                    )
+                    if (learningItem is LearningItem.ProgramHeaderItem) {
+                        HorizonDivider(color = HorizonColors.Surface.divider())
+                    }
                 }
             },
         )

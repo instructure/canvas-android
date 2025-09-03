@@ -15,15 +15,18 @@
  */
 package com.instructure.horizon.features.learn
 
+import android.content.Context
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.R
 import com.instructure.horizon.features.home.COURSE_PREFIX
 import com.instructure.horizon.features.home.PROGRAM_PREFIX
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -31,6 +34,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LearnViewModel @Inject constructor(
+    @ApplicationContext val context: Context,
     private val repository: LearnRepository,
     savedStateHandle: SavedStateHandle,
 ) : ViewModel() {
@@ -63,27 +67,50 @@ class LearnViewModel @Inject constructor(
         val enrolledPrograms = repository.getPrograms(forceNetwork = forceRefresh)
         val courseIdsInPrograms = enrolledPrograms.flatMap { it.sortedRequirements.map { requirement -> requirement.courseId } }.toSet()
 
-        val standaloneCourses =
-            repository.getCoursesWithProgress(forceNetwork = forceRefresh).filter { !courseIdsInPrograms.contains(it.courseId) }
+        val enrolledCourses = repository.getCoursesWithProgress(forceNetwork = forceRefresh)
+        val standaloneCourses = enrolledCourses.filter { !courseIdsInPrograms.contains(it.courseId) }
 
         val learningItems = enrolledPrograms.map { program ->
             val programCourses = repository.getCoursesById(program.sortedRequirements.map { it.courseId }, forceNetwork = forceRefresh)
-            LearningItem.ProgramItem(program, programCourses)
+            val programItems = programCourses.map { courseWithModuleItemDurations ->
+                enrolledCourses.find { it.courseId == courseWithModuleItemDurations.courseId }?.let { courseWithProgress ->
+                    LearningItem.CourseItem(courseWithProgress)
+                } ?: LearningItem.LockedCourseItem(courseWithModuleItemDurations.courseName)
+            }
+            if (programItems.any { it is LearningItem.CourseItem }) {
+                LearningItem.ProgramGroupItem(
+                    program.name,
+                    listOf(
+                        LearningItem.BackToAllItems(context.getString(R.string.programSwitcher_goBack)),
+                        LearningItem.ProgramHeaderItem(program.name),
+                        LearningItem.ProgramDetails(program, programCourses, context.getString(R.string.programSwitcher_programOverview))
+                    ) + programItems
+                )
+            } else {
+                LearningItem.ProgramDetails(program, programCourses, program.name)
+            }
         } + standaloneCourses.map { LearningItem.CourseItem(it) }
+
+        val selectableLearningItems = learningItems
+            .flatMap { if (it is LearningItem.ProgramGroupItem) it.items else listOf(it) }
+            .filter { it is LearningItem.CourseItem || it is LearningItem.ProgramDetails }
 
         val selectedLearningItem = when {
             learningItemId.startsWith(COURSE_PREFIX) -> {
                 val courseId = learningItemId.removePrefix(COURSE_PREFIX).toLongOrNull()
-                learningItems.find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
-                    ?: learningItems.firstOrNull()
+                selectableLearningItems
+                    .find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
+                    ?: selectableLearningItems.firstOrNull()
             }
 
             learningItemId.startsWith(PROGRAM_PREFIX) -> {
                 val programId = learningItemId.removePrefix(PROGRAM_PREFIX)
-                learningItems.find { it is LearningItem.ProgramItem && it.program.id == programId } ?: learningItems.firstOrNull()
+                selectableLearningItems
+                    .find { it is LearningItem.ProgramDetails && it.program.id == programId }
+                    ?: selectableLearningItems.firstOrNull()
             }
 
-            else -> learningItems.firstOrNull()
+            else -> selectableLearningItems.firstOrNull()
         }
 
         _state.update {

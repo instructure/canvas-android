@@ -27,14 +27,37 @@ data class LearnUiState(
     val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {}
 )
 
-sealed class LearningItem {
+sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boolean = true) {
     data class CourseItem(val courseWithProgress: CourseWithProgress) : LearningItem() {
         override val title: String = courseWithProgress.courseName
     }
 
-    data class ProgramItem(val program: Program, val courses: List<CourseWithModuleItemDurations>) : LearningItem() {
+    data class ProgramGroupItem(val programName: String, val items: List<LearningItem>) : LearningItem(closeOnClick = false) {
+        override val title: String = programName
+    }
+
+    data class ProgramDetails(
+        val program: Program,
+        val courses: List<CourseWithModuleItemDurations>,
+        override val titleInDropdown: String
+    ) :
+        LearningItem() {
         override val title: String = program.name
     }
 
+    data class LockedCourseItem(val courseName: String) : LearningItem(clickable = false) {
+        override val title: String = courseName
+    }
+
+    data class BackToAllItems(override val title: String) : LearningItem(closeOnClick = false)
+
+    data class ProgramHeaderItem(val programName: String) : LearningItem(clickable = false) {
+        override val title: String = programName
+    }
+
     abstract val title: String
+    open val titleInDropdown: String
+        get() {
+            return title
+        }
 }
