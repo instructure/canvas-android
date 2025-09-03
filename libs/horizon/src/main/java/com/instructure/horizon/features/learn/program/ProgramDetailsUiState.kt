@@ -26,6 +26,8 @@ data class ProgramDetailsUiState(
     val description: String = "",
     val tags: List<ProgramDetailTag> = emptyList(),
     val programProgressState: ProgramProgressState = ProgramProgressState(courses = emptyList()),
+    val navigateToCourseId: Long? = null,
+    val onNavigateToCourse: () -> Unit = {},
 )
 
 data class ProgramDetailTag(

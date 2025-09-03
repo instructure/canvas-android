@@ -56,7 +56,8 @@ class ProgramDetailsViewModel @Inject constructor(
             loadingState = LoadingState(
                 onRefresh = ::refreshProgram,
                 onSnackbarDismiss = ::dismissSnackbar
-            )
+            ),
+            onNavigateToCourse = ::onNavigateToCourse
         )
     )
     val state = _uiState.asStateFlow()
@@ -156,13 +157,17 @@ class ProgramDetailsViewModel @Inject constructor(
                 )
             } else null
 
+            val courseClickable = requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED
+            val courseClicked = { _uiState.update { it.copy(navigateToCourseId = requirement.courseId) } }
+
             ProgramProgressItemState(
                 courseCard = ProgramCourseCardState(
                     courseName = courses.find { it.courseId == requirement.courseId }?.courseName.orEmpty(),
                     status = courseCardStatus,
                     courseProgress = requirement.progress,
                     chips = chips,
-                    dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed
+                    dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed,
+                    courseClicked = if (courseClickable) courseClicked else null
                 ),
                 sequentialProperties = sequentialProperties
             )
@@ -316,6 +321,12 @@ class ProgramDetailsViewModel @Inject constructor(
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun onNavigateToCourse() {
+        _uiState.update {
+            it.copy(navigateToCourseId = null)
         }
     }
 }

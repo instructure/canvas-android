@@ -25,12 +25,17 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.features.learn.program.components.CourseCardChipState
 import com.instructure.horizon.features.learn.program.components.CourseCardStatus
 import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
@@ -52,7 +57,20 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Modifier) {
+fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, homeNavController: NavHostController, modifier: Modifier = Modifier) {
+    LaunchedEffect(uiState.navigateToCourseId) {
+        uiState.navigateToCourseId?.let { courseId ->
+            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseId)) {
+                popUpTo(homeNavController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = false
+            }
+            uiState.onNavigateToCourse()
+        }
+    }
+
     LoadingStateWrapper(loadingState = uiState.loadingState) {
         Column(
             modifier = modifier
@@ -158,6 +176,6 @@ private fun ProgramDetailsScreenPreview() {
                     )
                 )
             )
-        )
+        ), homeNavController = rememberNavController()
     )
 }

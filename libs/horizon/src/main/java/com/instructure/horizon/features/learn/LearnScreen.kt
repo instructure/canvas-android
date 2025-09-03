@@ -81,7 +81,7 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import kotlinx.coroutines.delay
 
 @Composable
-fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
+fun LearnScreen(state: LearnUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
 
     val activity = LocalContext.current.getActivityOrNull()
     LaunchedEffect(Unit) {
@@ -104,7 +104,7 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
                 else -> if (state.learningItems.isEmpty()) {
                     LearnScreenEmptyContent(state)
                 } else {
-                    LearnScreenWrapper(state, mainNavController, Modifier.fillMaxSize())
+                    LearnScreenWrapper(state, mainNavController, homeNavController, Modifier.fillMaxSize())
                 }
             }
         }
@@ -146,6 +146,7 @@ private fun LearnScreenEmptyContent(state: LearnUiState) {
 private fun LearnScreenWrapper(
     state: LearnUiState,
     mainNavController: NavHostController,
+    homeNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Box(
@@ -196,7 +197,7 @@ private fun LearnScreenWrapper(
                         programDetailsViewModel.loadProgramDetails(state.selectedLearningItem.program, state.selectedLearningItem.courses)
                     }
                     val programDetailsState by programDetailsViewModel.state.collectAsState()
-                    ProgramDetailsScreen(programDetailsState)
+                    ProgramDetailsScreen(programDetailsState, homeNavController = homeNavController)
                 }
 
                 else -> {
@@ -351,34 +352,34 @@ private fun DropDownTitle(learningItems: List<LearningItem>, selectedItem: Learn
 
 @Composable
 @Preview
-fun CourseDetailsScreenLoadingPreview() {
+fun LearnScreenLoadingPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(isLoading = true),
         selectedLearningItem = null
     )
-    LearnScreen(state, rememberNavController())
+    LearnScreen(state, rememberNavController(), rememberNavController())
 }
 
 @Composable
 @Preview
-fun CourseDetailsScreenErrorPreview() {
+fun LearnScreenErrorPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState(isError = true, errorMessage = "Error loading course"),
         selectedLearningItem = null
     )
-    LearnScreen(state, rememberNavController())
+    LearnScreen(state, rememberNavController(), rememberNavController())
 }
 
 @Composable
 @Preview
-fun CourseDetailsScreenEmptyContentPreview() {
+fun LearnScreenEmptyContentPreview() {
     ContextKeeper.appContext = LocalContext.current
     val state = LearnUiState(
         screenState = LoadingState()
     )
-    LearnScreen(state, rememberNavController())
+    LearnScreen(state, rememberNavController(), rememberNavController())
 }
 
 @Composable
@@ -396,5 +397,5 @@ private fun LearnScreenContentPreview() {
         learningItems = listOf(LearningItem.CourseItem(course)),
         selectedLearningItem = LearningItem.CourseItem(course)
     )
-    LearnScreen(state, rememberNavController())
+    LearnScreen(state, rememberNavController(), rememberNavController())
 }
