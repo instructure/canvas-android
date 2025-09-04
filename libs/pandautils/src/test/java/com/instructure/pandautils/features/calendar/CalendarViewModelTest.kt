@@ -67,6 +67,7 @@ class CalendarViewModelTest {
     private val calendarPrefs: CalendarPrefs = mockk(relaxed = true)
     private val calendarStateMapper: CalendarStateMapper = mockk(relaxed = true)
     private val calendarSharedEvents: CalendarSharedEvents = mockk(relaxed = true)
+    private val calendarBehavior: CalendarBehavior = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarViewModel
@@ -135,6 +136,8 @@ class CalendarViewModelTest {
             "1",
             filters = setOf("course_1", "course_2", "group_3", "group_4", "user_5")
         )
+
+        coEvery { calendarBehavior.shouldShowAddEventButton() } returns true
 
         every { savedStateHandle.get<Any>(any()) } returns null
     }
@@ -1240,8 +1243,31 @@ class CalendarViewModelTest {
         )
     }
 
+    @Test
+    fun `showAddEventButton is true when behavior allows it`() = runTest {
+        coEvery { calendarBehavior.shouldShowAddEventButton() } returns true
+        initViewModel()
+
+        assertTrue(viewModel.uiState.value.showAddEventButton)
+    }
+
+    @Test
+    fun `showAddEventButton is false when behavior restricts it`() = runTest {
+        coEvery { calendarBehavior.shouldShowAddEventButton() } returns false
+        initViewModel()
+
+        assertFalse(viewModel.uiState.value.showAddEventButton)
+    }
+
+    @Test
+    fun `behavior shouldShowAddEventButton is called during initialization`() = runTest {
+        initViewModel()
+
+        coVerify { calendarBehavior.shouldShowAddEventButton() }
+    }
+
     private fun initViewModel() {
-        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, savedStateHandle)
+        viewModel = CalendarViewModel(context, calendarRepository, apiPrefs, clock, calendarPrefs, calendarStateMapper, calendarSharedEvents, calendarBehavior, savedStateHandle)
     }
 
     private fun createPlannerItem(
