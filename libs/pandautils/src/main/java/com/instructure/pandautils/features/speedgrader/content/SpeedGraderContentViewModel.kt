@@ -95,7 +95,7 @@ class SpeedGraderContentViewModel @Inject constructor(
         } else {
             Assignee(
                 id = submission.submission?.userId?.toLongOrNull(),
-                name = submissionFields?.user?.name,
+                name = submissionFields?.user?.name as? String,
                 avatarUrl = submissionFields?.user?.avatarUrl
             )
         }
@@ -211,8 +211,26 @@ class SpeedGraderContentViewModel @Inject constructor(
             SubmissionType.ON_PAPER.apiString in (submissionFields?.assignment?.submissionTypes
                 ?: emptyList()).fastMap { it.rawValue } -> OnPaperContent
 
+            submissionFields?.subAssignmentSubmissions?.any { it.missing == false } == true -> {
+                getContentFromSubmissionType(
+                    submission,
+                    Assignment.getSubmissionTypeFromAPIString(submissionFields.assignment?.submissionTypes?.firstOrNull()?.toString()),
+                    submissionFields,
+                    selectedAttempt,
+                    selectedAttachmentId
+                )
+            }
+
             submissionFields?.submissionType == null -> NoSubmissionContent
-            else -> when (Assignment.getSubmissionTypeFromAPIString(submissionFields.submissionType?.rawValue.orEmpty())) {
+
+            else -> getContentFromSubmissionType(
+                submission,
+                Assignment.getSubmissionTypeFromAPIString(submissionFields.submissionType?.rawValue.orEmpty()),
+                submissionFields,
+                selectedAttempt,
+                selectedAttachmentId
+            )
+                /*when (Assignment.getSubmissionTypeFromAPIString(submissionFields.submissionType?.rawValue.orEmpty())) {
 
                 // LTI submission
                 SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
@@ -271,7 +289,74 @@ class SpeedGraderContentViewModel @Inject constructor(
 
                 // Unsupported type
                 else -> UnsupportedContent
+            }*/
+        }
+    }
+
+    private suspend fun getContentFromSubmissionType(
+        submission: SubmissionContentQuery.Submission?,
+        submissionType: SubmissionType?,
+        submissionFields: SubmissionFields,
+        selectedAttempt: Int?,
+        selectedAttachmentId: Long?
+    ): GradeableContent {
+        return when (submissionType) {
+            SubmissionType.BASIC_LTI_LAUNCH -> ExternalToolContent(
+                submissionFields.previewUrl.validOrNull()
+                    ?: submissionFields.assignment?.htmlUrl.validOrNull().orEmpty()
+            )
+
+            // Text submission
+            SubmissionType.ONLINE_TEXT_ENTRY -> TextContent(submissionFields.body ?: "")
+
+            // Media submission
+            SubmissionType.MEDIA_RECORDING -> submissionFields.mediaObject?.let {
+                MediaContent(
+                    uri = Uri.parse(it.mediaSources?.firstOrNull()?.url.orEmpty()),
+                    contentType = it.mediaType?.rawValue,
+                    displayName = it.title
+                )
+            } ?: UnsupportedContent
+
+            // File uploads
+            SubmissionType.ONLINE_UPLOAD -> submissionFields.attachments?.find {
+                it._id.toLong() == selectedAttachmentId
+            }?.let {
+                getAttachmentContent(
+                    it,
+                    submissionFields.assignment?.courseId?.toLong(),
+                    (submissionFields.groupId ?: submission?.userId)?.toLong(),
+                    selectedAttempt?.toLong()
+                )
+            } ?: UnsupportedContent
+
+            // URL Submission
+            SubmissionType.ONLINE_URL -> UrlContent(
+                submissionFields.url.orEmpty(),
+                submissionFields.attachments?.firstOrNull()?.url
+            )
+
+            // Quiz Submission
+            SubmissionType.ONLINE_QUIZ -> handleQuizSubmissionType(submissionFields)
+
+            // Discussion Submission
+            SubmissionType.DISCUSSION_TOPIC -> DiscussionContent(submissionFields.previewUrl?.replace("&show_full_discussion_immediately=true", ""))
+
+            SubmissionType.STUDENT_ANNOTATION -> {
+                try {
+                    val canvaDocSession = repository.createCanvaDocSession(submission?._id.orEmpty(), submissionFields.attempt.toString())
+                    PdfContent(
+                        canvaDocSession.canvadocsSessionUrl.orEmpty(),
+                        submissionFields.assignment?.courseId?.toLong(),
+                        (submissionFields.groupId ?: submission?.userId)?.toLong()
+                    )
+                } catch (e: Exception) {
+                    UnsupportedContent
+                }
             }
+
+            // Unsupported type
+            else -> UnsupportedContent
         }
     }
 

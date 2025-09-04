@@ -48,14 +48,14 @@ object SubmissionAPI {
 
     interface SubmissionInterface {
 
-        @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group&include=sub_assignment_submissions")
         fun getSingleSubmission(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
             @Path("studentId") studentId: Long
         ): Call<Submission>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions/{studentId}?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group&include[]=sub_assignment_submissions")
         suspend fun getSingleSubmission(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,
@@ -252,6 +252,7 @@ object SubmissionAPI {
             @Path("assignmentId") assignmentId: Long, @Path("userId") userId: Long,
             @Query("submission[posted_grade]") assignmentScore: String,
             @Query("submission[excuse]") isExcused: Boolean,
+            @Query("sub_assignment_tag") subAssignmentTag: String? = null,
             @Tag restParams: RestParams
         ): DataResult<Submission>
 
@@ -259,7 +260,7 @@ object SubmissionAPI {
         fun postSubmissionExcusedStatus(
             @Path("contextId") contextId: Long,
             @Path("assignmentId") assignmentId: Long, @Path("userId") userId: Long,
-            @Query("submission[excuse]") isExcused: Boolean
+            @Query("submission[excuse]") isExcused: Boolean,
         ): Call<Submission>
 
         @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
@@ -267,6 +268,7 @@ object SubmissionAPI {
             @Path("contextId") contextId: Long,
             @Path("assignmentId") assignmentId: Long, @Path("userId") userId: Long,
             @Query("submission[excuse]") isExcused: Boolean,
+            @Query("sub_assignment_tag") subAssignmentTag: String? = null,
             @Tag restParams: RestParams
         ): DataResult<Submission>
 

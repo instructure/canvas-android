@@ -65,6 +65,26 @@ query SubmissionGradeQuery($userId: ID!, $assignmentId: ID!, $nextCursor: String
                 }
                 gradeStatuses
             }
+            checkpoints {
+                pointsPossible
+                tag
+                name
+            }
+        }
+        subAssignmentSubmissions {
+            enteredGrade
+            enteredScore
+            grade
+            gradeMatchesCurrentSubmission
+            late
+            latePolicyStatus
+            missing
+            score
+            subAssignmentTag
+            statusTag
+            customGradeStatusId
+            excused
+            secondsLate
         }
     }
 }
@@ -102,9 +122,9 @@ mutation UpdateSubmissionGradeMutation($score: Int!, $submissionId: ID!) {
     }
 }
 
-mutation UpdateSubmissionStatusMutation($submissionId: ID!, $customGradeStatusId: ID, $latePolicyStatus: String) {
+mutation UpdateSubmissionStatusMutation($submissionId: ID!, $customGradeStatusId: ID, $latePolicyStatus: String, $checkpointTag: String) {
     updateSubmissionGradeStatus(
-        input: {submissionId: $submissionId, customGradeStatusId: $customGradeStatusId, latePolicyStatus: $latePolicyStatus}
+        input: {submissionId: $submissionId, customGradeStatusId: $customGradeStatusId, latePolicyStatus: $latePolicyStatus, checkpointTag: $checkpointTag}
     ) {
         submission {
             excused

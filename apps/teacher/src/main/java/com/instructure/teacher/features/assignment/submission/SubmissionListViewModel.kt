@@ -158,7 +158,7 @@ class SubmissionListViewModel @Inject constructor(
                     ?: false
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
-                SubmissionListFilter.MISSING -> submission.submission?.workflowState == "unsubmitted" || submission.submission == null
+                SubmissionListFilter.MISSING -> submission.submission?.workflowState == "unsubmitted" || submission.submission == null || submission.submission?.subAssignmentSubmissions?.all { it.missing } == true
             }
         }
             .filter { it.assignee.name.contains(searchQuery, true) }

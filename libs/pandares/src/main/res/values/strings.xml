@@ -2122,6 +2122,7 @@
     <string name="gradingStatus_missing">Missing</string>
     <string name="gradingStatus_extended">Extended</string>
     <string name="gradingStatus_excused">Excused</string>
+    <string name="gradingStatus_custom">Custom</string>
     <string name="status">Status</string>
     <string name="speedGraderStudentNotes">Student Notes</string>
     <string name="speedGraderStudentNotesLoading">Loading Student notes</string>

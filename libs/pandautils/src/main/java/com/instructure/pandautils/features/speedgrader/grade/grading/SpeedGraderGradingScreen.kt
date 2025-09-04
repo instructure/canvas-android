@@ -77,6 +77,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.pandautils.compose.composables.TextDropdown
+import com.instructure.pandautils.utils.getCheckpointTagString
 import com.instructure.pandautils.utils.orDefault
 import java.text.DecimalFormat
 import java.util.Date
@@ -117,102 +118,169 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
                     .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 12.dp)
             ) {
-                when (uiState.gradingType) {
-                    GradingType.letter_grade -> {
-                        LetterGradeGradingTypeInput(uiState)
-                    }
-
-                    GradingType.pass_fail -> {
-                        CompleteIncompleteGradingTypeInput(uiState)
-                    }
-
-                    GradingType.percent -> {
-                        PercentageGradingTypeInput(uiState)
-                    }
-
-                    GradingType.not_graded -> {}
-
-                    GradingType.gpa_scale -> {
-                        LetterGradeGradingTypeInput(uiState)
-                    }
-
-                    else -> {
-                        PointGradingTypeInput(uiState)
-                    }
-                }
-
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(top = 16.dp)
-                ) {
-                    if (uiState.gradingType != GradingType.pass_fail) {
-                        OutlinedButton(
-                            enabled = uiState.enteredScore != null || uiState.excused,
-                            onClick = { uiState.onScoreChange(null) },
-                            modifier = Modifier
-                                .weight(1f)
-                                .testTag("speedGraderNoGradeButton"),
-                            border = BorderStroke(
-                                1.dp,
-                                LocalCourseColor.current.copy(alpha = if (uiState.enteredScore != null || uiState.excused) 1f else 0.5f)
-                            ),
-                            colors = ButtonDefaults.outlinedButtonColors().copy(
-                                contentColor = LocalCourseColor.current,
-                                disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
-                            )
-                        ) {
-                            Text(
-                                stringResource(R.string.noGrade),
-                                fontSize = 16.sp,
-                                lineHeight = 19.sp
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(16.dp))
-                    }
-                    OutlinedButton(
-                        enabled = uiState.excused.not(),
-                        onClick = { uiState.onExcuse() },
-                        border = BorderStroke(
-                            1.dp,
-                            LocalCourseColor.current.copy(alpha = if (uiState.excused) 0.5f else 1f)
-                        ),
-                        modifier = Modifier
-                            .weight(1f)
-                            .testTag("speedGraderExcuseButton"),
-                        colors = ButtonDefaults.outlinedButtonColors().copy(
-                            contentColor = LocalCourseColor.current,
-                            disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
-                        )
-                    ) {
-                        Text(
-                            stringResource(R.string.gradeExcused),
-                            fontSize = 16.sp,
-                            lineHeight = 19.sp
-                        )
-                    }
-                }
-
-                TextDropdown(
-                    modifier = Modifier.padding(top = 16.dp),
-                    options = uiState.gradingStatuses.map { it.name },
-                    selectedOption = uiState.gradingStatus
-                        ?: stringResource(R.string.gradingStatus_none),
-                    title = stringResource(R.string.status),
-                    onSelection = { selected ->
-                        val status = uiState.gradingStatuses.first { it.name == selected }
-                        uiState.onStatusChange(status)
-                    },
-                    testTag = "speedGraderStatusDropdown",
-                    color = LocalCourseColor.current
-                )
-
-                uiState.daysLate?.let {
-                    LateHeader(it, uiState.submittedAt)
-                }
-
+                GradingContent(uiState)
                 FinalScore(uiState)
             }
+        }
+    }
+}
+
+@Composable
+private fun GradingContent(uiState: SpeedGraderGradingUiState) {
+    if (uiState.checkpoints.isNotEmpty()) {
+        uiState.checkpoints.forEach { checkpoint ->
+            GradingInputBlock(uiState, GradingInputData(
+                tag = checkpoint.label,
+                enteredGrade = checkpoint.enteredGrade,
+                enteredScore = checkpoint.enteredScore,
+                pointsPossible = checkpoint.pointsPossible,
+                excused = checkpoint.excused,
+                gradingStatus = checkpoint.gradingStatus,
+                daysLate = checkpoint.daysLate
+            ))
+            CanvasDivider()
+        }
+    } else {
+        GradingInputBlock(uiState, GradingInputData(
+            enteredGrade = uiState.enteredGrade,
+            enteredScore = uiState.enteredScore,
+            pointsPossible = uiState.pointsPossible,
+            excused = uiState.excused,
+            gradingStatus = uiState.gradingStatus,
+            daysLate = uiState.daysLate
+        ))
+    }
+}
+
+@Composable
+private fun GradingInputBlock(uiState: SpeedGraderGradingUiState, gradingInputData: GradingInputData) {
+    Column(
+        modifier = Modifier
+            .padding(vertical = 16.dp)
+            .fillMaxWidth()
+    ) {
+        if (!gradingInputData.tag.isNullOrEmpty()) {
+            Text(
+                text = gradingInputData.tag.getCheckpointTagString(
+                    ContextKeeper.appContext,
+                    2 // TODO use actual replies needed when api is fixed
+                ).orEmpty(),
+                color = colorResource(R.color.textDark),
+                fontSize = 14.sp,
+                modifier = Modifier
+                    .padding(bottom = 4.dp)
+                    .testTag("speedGraderCheckpointLabel")
+            )
+        }
+
+        when (uiState.gradingType) {
+            GradingType.letter_grade -> {
+                LetterGradeGradingTypeInput(
+                    gradingInputData,
+                    uiState.letterGrades,
+                    onScoreChange = { score -> uiState.onScoreChange(score, gradingInputData.tag) },
+                    onPercentageChange = { percentage -> uiState.onPercentageChange(percentage, gradingInputData.tag) }
+                )
+            }
+
+            GradingType.pass_fail -> {
+                CompleteIncompleteGradingTypeInput(gradingInputData) {
+                    uiState.onScoreChange(it, gradingInputData.tag)
+                }
+            }
+
+            GradingType.percent -> {
+                PercentageGradingTypeInput(gradingInputData) {
+                    uiState.onPercentageChange(it, gradingInputData.tag)
+                }
+            }
+
+            GradingType.not_graded -> {}
+
+            GradingType.gpa_scale -> {
+                LetterGradeGradingTypeInput(
+                    gradingInputData,
+                    uiState.letterGrades,
+                    onScoreChange = { score -> uiState.onScoreChange(score, gradingInputData.tag) },
+                    onPercentageChange = { percentage -> uiState.onPercentageChange(percentage, gradingInputData.tag) }
+                )
+            }
+
+            else -> {
+                PointGradingTypeInput(gradingInputData) {
+                    uiState.onScoreChange(it, gradingInputData.tag)
+                }
+            }
+        }
+
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        ) {
+            if (uiState.gradingType != GradingType.pass_fail) {
+                OutlinedButton(
+                    enabled = gradingInputData.enteredScore != null || gradingInputData.excused,
+                    onClick = { uiState.onScoreChange(null, gradingInputData.tag) },
+                    modifier = Modifier
+                        .weight(1f)
+                        .testTag("speedGraderNoGradeButton"),
+                    border = BorderStroke(
+                        1.dp,
+                        LocalCourseColor.current.copy(alpha = if (gradingInputData.enteredScore != null || gradingInputData.excused) 1f else 0.5f)
+                    ),
+                    colors = ButtonDefaults.outlinedButtonColors().copy(
+                        contentColor = LocalCourseColor.current,
+                        disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                    )
+                ) {
+                    Text(
+                        stringResource(R.string.noGrade),
+                        fontSize = 16.sp,
+                        lineHeight = 19.sp
+                    )
+                }
+                Spacer(modifier = Modifier.width(16.dp))
+            }
+            OutlinedButton(
+                enabled = gradingInputData.excused.not(),
+                onClick = { uiState.onExcuse(gradingInputData.tag) },
+                border = BorderStroke(
+                    1.dp,
+                    LocalCourseColor.current.copy(alpha = if (gradingInputData.excused) 0.5f else 1f)
+                ),
+                modifier = Modifier
+                    .weight(1f)
+                    .testTag("speedGraderExcuseButton"),
+                colors = ButtonDefaults.outlinedButtonColors().copy(
+                    contentColor = LocalCourseColor.current,
+                    disabledContentColor = LocalCourseColor.current.copy(alpha = 0.5f)
+                )
+            ) {
+                Text(
+                    stringResource(R.string.gradeExcused),
+                    fontSize = 16.sp,
+                    lineHeight = 19.sp
+                )
+            }
+        }
+
+        TextDropdown(
+            modifier = Modifier.padding(top = 16.dp),
+            options = uiState.gradingStatuses.map { it.name },
+            selectedOption = gradingInputData.gradingStatus
+                ?: stringResource(R.string.gradingStatus_none),
+            title = stringResource(R.string.status),
+            onSelection = { selected ->
+                val status = uiState.gradingStatuses.first { it.name == selected }
+                uiState.onStatusChange(status, gradingInputData.tag)
+            },
+            testTag = "speedGraderStatusDropdown",
+            color = LocalCourseColor.current
+        )
+
+        gradingInputData.daysLate?.let {
+            LateHeader(it, uiState.submittedAt)
         }
     }
 }
@@ -402,13 +470,18 @@ private fun LateHeader(daysLate: Int, submissionDate: Date?) {
 }
 
 @Composable
-private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val options = uiState.letterGrades.map { it.name }
+private fun LetterGradeGradingTypeInput(
+    gradingInputData: GradingInputData,
+    letterGrades: List<GradingSchemeRow>,
+    onScoreChange: (Float?) -> Unit,
+    onPercentageChange: (Float?) -> Unit
+) {
+    val options = letterGrades.map { it.name }
     val defaultItem =
-        if (uiState.excused) stringResource(R.string.gradeExcused) else stringResource(R.string.not_graded)
+        if (gradingInputData.excused) stringResource(R.string.gradeExcused) else stringResource(R.string.not_graded)
 
-    var textFieldScore by remember(uiState.enteredScore) {
-        mutableStateOf(uiState.enteredScore?.let {
+    var textFieldScore by remember(gradingInputData.enteredScore) {
+        mutableStateOf(gradingInputData.enteredScore?.let {
             numberFormatter.format(
                 it
             )
@@ -416,16 +489,16 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     }
 
     var selectedGrade by remember(
-        uiState.enteredScore,
-        uiState.pointsPossible,
-        uiState.letterGrades
+        gradingInputData.enteredScore,
+        gradingInputData.pointsPossible,
+        letterGrades
     ) {
         mutableStateOf(
-            uiState.enteredScore?.let {
+            gradingInputData.enteredScore?.let {
                 convertScoreToLetterGrade(
                     it.toDouble(),
-                    uiState.pointsPossible.orDefault(),
-                    uiState.letterGrades
+                    gradingInputData.pointsPossible.orDefault(),
+                    letterGrades
                 )
             } ?: defaultItem
         )
@@ -433,15 +506,15 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
-            uiState.onScoreChange(scoreAsFloat)
+        if (scoreAsFloat != gradingInputData.enteredScore) {
+            onScoreChange(scoreAsFloat)
         }
     }
 
     LaunchedEffect(selectedGrade) {
-        if (selectedGrade != uiState.enteredGrade) {
-            uiState.onPercentageChange(
-                uiState.letterGrades
+        if (selectedGrade != gradingInputData.enteredGrade) {
+            onPercentageChange(
+                letterGrades
                     .find { it.name == selectedGrade }
                     ?.value.orDefault()
                     .toFloat() * 100f
@@ -450,7 +523,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     }
 
     Column {
-        if (uiState.letterGrades.isNotEmpty()) {
+        if (letterGrades.isNotEmpty()) {
             TextDropdown(
                 options = options,
                 onSelection = { selectedGrade = it },
@@ -494,8 +567,8 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Text(
                 text = pluralStringResource(
                     R.plurals.pointsPossible,
-                    uiState.pointsPossible?.toInt().orDefault(),
-                    uiState.pointsPossible.orDefault()
+                    gradingInputData.pointsPossible?.toInt().orDefault(),
+                    gradingInputData.pointsPossible.orDefault()
                 ),
                 fontSize = 16.sp,
                 color = colorResource(R.color.textPlaceholder),
@@ -506,9 +579,12 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 }
 
 @Composable
-private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+private fun CompleteIncompleteGradingTypeInput(
+    gradingInputData: GradingInputData,
+    onScoreChange: (Float?) -> Unit
+) {
     val haptic = LocalHapticFeedback.current
-    var grade by remember { mutableStateOf(uiState.enteredGrade ?: "") }
+    var grade by remember { mutableStateOf(gradingInputData.enteredGrade ?: "") }
     Column {
         Row(
             modifier = Modifier
@@ -526,8 +602,8 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
             Text(
                 text = stringResource(
                     R.string.completeIncompleteGradeScore,
-                    uiState.enteredScore ?: 0f,
-                    uiState.pointsPossible.orDefault()
+                    gradingInputData.enteredScore ?: 0f,
+                    gradingInputData.pointsPossible.orDefault()
                 ),
                 fontSize = 16.sp,
                 color = colorResource(R.color.textPlaceholder),
@@ -544,7 +620,7 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 grade = "complete"
-                uiState.onScoreChange(uiState.pointsPossible?.toFloat() ?: 0f)
+                onScoreChange(gradingInputData.pointsPossible?.toFloat() ?: 0f)
             },
             testtag = "speedGraderCompleteRadioButton"
         )
@@ -557,7 +633,7 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 grade = "incomplete"
-                uiState.onScoreChange(0f)
+                onScoreChange(0f)
             },
             testtag = "speedGraderIncompleteRadioButton"
         )
@@ -567,12 +643,12 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
+private fun PercentageGradingTypeInput(gradingInputData: GradingInputData, onPercentageChange: (Float?) -> Unit) {
+    val grade = gradingInputData.enteredGrade?.replace("%", "").orEmpty()
     var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
-    var textFieldScore by remember(uiState.enteredGrade) { mutableStateOf(grade) }
+    var textFieldScore by remember(gradingInputData.enteredGrade) { mutableStateOf(grade) }
 
-    val maxScore by remember(uiState.enteredGrade) {
+    val maxScore by remember(gradingInputData.enteredGrade) {
         mutableFloatStateOf(
             max(
                 grade.toFloatOrNull() ?: 0f, 100f
@@ -588,8 +664,8 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
-            uiState.onPercentageChange(scoreAsFloat)
+        if (scoreAsFloat != gradingInputData.enteredScore) {
+            onPercentageChange(scoreAsFloat)
         }
     }
 
@@ -608,7 +684,7 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         val newScoreFromSlider = sliderState.value
         if (sliderDrivenScore != newScoreFromSlider) {
             sliderDrivenScore = round(newScoreFromSlider)
-            uiState.onPercentageChange(sliderDrivenScore)
+            onPercentageChange(sliderDrivenScore)
             textFieldScore = numberFormatter.format(sliderDrivenScore)
         }
     }
@@ -625,8 +701,8 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Text(
                 text = pluralStringResource(
                     R.plurals.percentGradeScore,
-                    uiState.pointsPossible.orDefault().roundToInt(),
-                    uiState.pointsPossible.orDefault()
+                    gradingInputData.pointsPossible.orDefault().roundToInt(),
+                    gradingInputData.pointsPossible.orDefault()
                 ),
                 modifier = Modifier
                     .padding(start = 8.dp)
@@ -671,14 +747,17 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
+private fun PointGradingTypeInput(
+    gradingInputData: GradingInputData,
+    onScoreChange: (Float?) -> Unit
+) {
     val haptic = LocalHapticFeedback.current
 
-    val maxScore by remember(uiState.enteredScore) {
+    val maxScore by remember(gradingInputData.enteredScore) {
         mutableFloatStateOf(
             max(
-                (uiState.pointsPossible?.toFloat() ?: 10f),
-                uiState.enteredScore ?: 0f
+                (gradingInputData.pointsPossible?.toFloat() ?: 10f),
+                gradingInputData.enteredScore ?: 0f
             )
         )
     }
@@ -693,23 +772,23 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         )
     }
 
-    var sliderDrivenScore by remember(uiState.enteredScore) {
+    var sliderDrivenScore by remember(gradingInputData.enteredScore) {
         mutableFloatStateOf(
-            (uiState.enteredScore ?: 0f) * pointScale
+            (gradingInputData.enteredScore ?: 0f) * pointScale
         )
     }
-    var textFieldScore by remember(uiState.enteredScore) {
-        mutableStateOf(uiState.enteredScore?.let {
+    var textFieldScore by remember(gradingInputData.enteredScore) {
+        mutableStateOf(gradingInputData.enteredScore?.let {
             numberFormatter.format(
                 it
             )
         }.orEmpty())
     }
 
-    val minScore by remember(uiState.enteredScore) {
+    val minScore by remember(gradingInputData.enteredScore) {
         mutableFloatStateOf(
             min(
-                uiState.enteredScore ?: 0f,
+                gradingInputData.enteredScore ?: 0f,
                 0f
             )
         )
@@ -725,13 +804,13 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
-            uiState.onScoreChange(scoreAsFloat)
+        if (scoreAsFloat != gradingInputData.enteredScore) {
+            onScoreChange(scoreAsFloat)
         }
     }
 
-    LaunchedEffect(uiState.enteredScore) {
-        val newScore = uiState.enteredScore
+    LaunchedEffect(gradingInputData.enteredScore) {
+        val newScore = gradingInputData.enteredScore
         if (textFieldScore != newScore?.toString()) {
             textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
         }
@@ -746,7 +825,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
         if (sliderDrivenScore != newScoreFromSlider) {
             sliderDrivenScore = newScoreFromSlider
-            uiState.onScoreChange(newScoreFromSlider)
+            onScoreChange(newScoreFromSlider)
             textFieldScore = numberFormatter.format(newScoreFromSlider)
         }
     }
@@ -785,8 +864,8 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             Text(
                 text = pluralStringResource(
                     R.plurals.pointsPossible,
-                    uiState.pointsPossible?.toInt().orDefault(),
-                    uiState.pointsPossible.orDefault()
+                    gradingInputData.pointsPossible?.toInt().orDefault(),
+                    gradingInputData.pointsPossible.orDefault()
                 ),
                 fontSize = 16.sp,
                 color = colorResource(R.color.textPlaceholder),
@@ -794,7 +873,7 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
-        if ((uiState.enteredScore ?: 0f) <= 100.0) {
+        if ((gradingInputData.enteredScore ?: 0f) <= 100.0) {
             Slider(
                 modifier = Modifier
                     .padding(top = 16.dp)
@@ -827,13 +906,13 @@ private fun SpeedGraderGradingContentPreview() {
                 grade = "14",
                 score = 14.0,
                 pointsDeducted = 1.0,
-                onScoreChange = {},
+                onScoreChange = { _, _ -> },
                 submittedAt = Date(),
                 daysLate = 4,
                 gradingType = GradingType.points,
-                onPercentageChange = {},
+                onPercentageChange = { _, _ -> },
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = { _, _ -> }
             )
         )
     }
@@ -853,13 +932,13 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 enteredScore = 18f,
                 grade = "90%",
                 score = 15.0,
-                onScoreChange = {},
+                onScoreChange = { _, _ -> },
                 submittedAt = Date(),
                 daysLate = 4,
                 gradingType = GradingType.percent,
-                onPercentageChange = {},
+                onPercentageChange = { _, _ -> },
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = { _, _ -> }
             )
         )
     }
@@ -880,11 +959,11 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
                 score = 15.0,
                 submittedAt = Date(),
                 daysLate = 4,
-                onScoreChange = {},
+                onScoreChange = { _, _ -> },
                 gradingType = GradingType.pass_fail,
-                onPercentageChange = {},
+                onPercentageChange = { _, _ -> },
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = { _, _ -> }
             )
         )
     }
@@ -903,9 +982,9 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 enteredScore = 0f,
                 grade = null,
                 score = 15.0,
-                onScoreChange = {},
+                onScoreChange = { _, _ -> },
                 gradingType = GradingType.letter_grade,
-                onPercentageChange = {},
+                onPercentageChange = { _, _ -> },
                 pointsDeducted = 2.0,
                 submittedAt = Date(),
                 daysLate = 4,
@@ -917,7 +996,7 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                     GradingSchemeRow("F", 0.0)
                 ),
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = { _, _ -> }
             )
         )
     }
@@ -932,10 +1011,10 @@ private fun SpeedGraderGradingContentErrorPreview() {
             SpeedGraderGradingUiState(
                 error = true,
                 loading = false,
-                onScoreChange = {},
-                onPercentageChange = {},
+                onScoreChange = { _, _ -> },
+                onPercentageChange = { _, _ -> },
                 onExcuse = {},
-                onStatusChange = {},
+                onStatusChange = { _, _ -> },
                 retryAction = {}
             )
         )
@@ -951,10 +1030,10 @@ private fun SpeedGraderGradingContentLoadingPreview() {
             SpeedGraderGradingUiState(
                 error = false,
                 loading = true,
-                onScoreChange = {},
-                onPercentageChange = {},
+                onScoreChange = { _, _ -> },
+                onPercentageChange = { _, _ -> },
                 onExcuse = {},
-                onStatusChange = {}
+                onStatusChange = { _, _ -> }
             )
         )
     }

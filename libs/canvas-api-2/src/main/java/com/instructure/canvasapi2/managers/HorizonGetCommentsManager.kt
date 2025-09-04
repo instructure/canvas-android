@@ -58,7 +58,7 @@ class HorizonGetCommentsManager {
             edge?.node?.let { commentNode ->
                 Comment(
                     authorId = commentNode.author?._id?.toLong() ?: -1,
-                    authorName = commentNode.author?.shortName ?: "",
+                    authorName = commentNode.author?.shortName as? String ?: "",
                     commentText = commentNode.comment ?: "",
                     createdAt = commentNode.createdAt,
                     attachments = commentNode.attachments?.map { attachment ->

@@ -38,14 +38,37 @@ data class SpeedGraderGradingUiState(
     val gradingStatuses: List<GradeStatus> = emptyList(),
     val gradingStatus: String? = null,
     val gradeHidden: Boolean = false,
-    val onScoreChange: (Float?) -> Unit,
-    val onExcuse: () -> Unit,
-    val onPercentageChange: (Float?) -> Unit,
-    val onStatusChange: (GradeStatus) -> Unit
+    val onScoreChange: (Float?, String?) -> Unit,
+    val onExcuse: (String?) -> Unit,
+    val onPercentageChange: (Float?, String?) -> Unit,
+    val onStatusChange: (GradeStatus, String?) -> Unit,
+    val checkpoints: List<Checkpoint> = emptyList(),
 )
 
 data class GradeStatus(
     val id: Long? = null,
     val statusId: String? = null,
     val name: String
+)
+
+data class Checkpoint(
+    val pointsPossible: Double? = null,
+    val enteredGrade: String? = null,
+    val enteredScore: Float? = null,
+    val grade: String? = null,
+    val score: Double? = null,
+    val label: String? = null,
+    val gradingStatus: String? = null,
+    val excused: Boolean = false,
+    val daysLate: Int? = null,
+)
+
+data class GradingInputData(
+    val tag: String? = null,
+    val enteredGrade: String? = null,
+    val enteredScore: Float? = null,
+    val pointsPossible: Double? = null,
+    val excused: Boolean = false,
+    val gradingStatus: String? = null,
+    val daysLate: Int? = null,
 )

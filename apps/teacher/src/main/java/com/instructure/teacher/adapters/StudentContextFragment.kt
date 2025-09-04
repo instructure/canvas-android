@@ -159,7 +159,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         } else {
             toolbar.setupBackButton(this@StudentContextFragment)
         }
-        toolbar.title = Pronouns.span(student.shortName, student.pronouns)
+        toolbar.title = Pronouns.span(student.shortName as? String, student.pronouns)
         toolbar.subtitle = course.name
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, courseBackgroundColor, requireContext().getColor(R.color.textLightest))
 
@@ -169,7 +169,7 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
         messageButton.setOnClickListener {
             val recipient = Recipient(
                 stringId = student.id,
-                name = student.name,
+                name = student.name as? String,
                 pronouns = student.pronouns,
                 avatarURL = student.avatarUrl,
             )
@@ -187,11 +187,11 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
             RouteMatcher.route(requireActivity(), route)
         }
 
-        studentNameView.text = Pronouns.span(student.shortName, student.pronouns)
+        studentNameView.text = Pronouns.span(student.shortName as? String, student.pronouns)
         studentEmailView.setVisible(student.email.isValid()).text = student.email
 
         // Avatar
-        ProfileUtils.loadAvatarForUser(avatarView, student.name, student.avatarUrl)
+        ProfileUtils.loadAvatarForUser(avatarView, student.name as? String, student.avatarUrl)
 
         // Course and section names
         courseNameView.text = course.name
@@ -313,8 +313,8 @@ class StudentContextFragment : PresenterFragment<StudentContextPresenter, Studen
                 val user = com.instructure.canvasapi2.models.User(
                         avatarUrl = student.avatarUrl,
                         id = student.id.toLongOrNull() ?: 0,
-                        name = student.name ?: "",
-                        shortName = student.shortName,
+                        name = student.name as? String ?: "",
+                        shortName = student.shortName as? String,
                         pronouns = student.pronouns,
                         email = student.email
                 )

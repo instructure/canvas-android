@@ -24,5 +24,5 @@ interface SubmissionGradeManager {
 
     suspend fun updateSubmissionGrade(score: Double, submissionId: Long): UpdateSubmissionGradeMutation.Data
 
-    suspend fun updateSubmissionStatus(submissionId: Long, customGradeStatusId: String? = null, latePolicyStatus: String? = null): UpdateSubmissionStatusMutation.Data
+    suspend fun updateSubmissionStatus(submissionId: Long, customGradeStatusId: String? = null, latePolicyStatus: String? = null, checkpointTag: String? = null): UpdateSubmissionStatusMutation.Data
 }

@@ -42,12 +42,16 @@ class SubmissionRubricManagerImpl : SubmissionRubricManager {
             nextCursor = data.submission?.rubricAssessmentsConnection?.pageInfo?.endCursor
         }
 
-        return data.copy(
-            submission = data.submission?.copy(
-                rubricAssessmentsConnection = data.submission?.rubricAssessmentsConnection?.copy(
-                    edges = assessments
+        data.submission?.let {
+            return data.copy(
+                submission = data.submission?.copy(
+                    rubricAssessmentsConnection = it.rubricAssessmentsConnection.copy(
+                        edges = assessments
+                    )
                 )
             )
-        )
+        }
+
+        return data
     }
 }

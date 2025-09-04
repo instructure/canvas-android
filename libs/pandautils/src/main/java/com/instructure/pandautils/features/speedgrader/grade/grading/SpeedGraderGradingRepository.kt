@@ -31,13 +31,21 @@ class SpeedGraderGradingRepository(
         return submissionGradeManager.getSubmissionGrade(assignmentId, studentId, forceNetwork)
     }
 
-    suspend fun updateSubmissionGrade(score: String, userId: Long, assignmentId: Long, courseId: Long, excused: Boolean): Submission {
+    suspend fun updateSubmissionGrade(
+        score: String,
+        userId: Long,
+        assignmentId: Long,
+        courseId: Long,
+        excused: Boolean,
+        subAssignmentTag: String? = null,
+    ): Submission {
         return submissionApi.postSubmissionGrade(
             contextId = courseId,
             assignmentId = assignmentId,
             userId = userId,
             assignmentScore = score,
             isExcused = excused,
+            subAssignmentTag = subAssignmentTag,
             restParams = RestParams()
         ).dataOrThrow
     }
@@ -45,19 +53,26 @@ class SpeedGraderGradingRepository(
     suspend fun excuseSubmission(
         userId: Long,
         assignmentId: Long,
-        courseId: Long
+        courseId: Long,
+        subAssignmentTag: String? = null,
     ): Submission {
         return submissionApi.postSubmissionExcusedStatus(
             contextId = courseId,
             assignmentId = assignmentId,
             userId = userId,
             isExcused = true,
+            subAssignmentTag = subAssignmentTag,
             restParams = RestParams()
         ).dataOrThrow
     }
 
 
-    suspend fun updateSubmissionStatus(submissionId: Long, customStatusId: String? = null, latePolicyStatus: String? = null): UpdateSubmissionStatusMutation.Data {
-        return submissionGradeManager.updateSubmissionStatus(submissionId, customStatusId, latePolicyStatus)
+    suspend fun updateSubmissionStatus(
+        submissionId: Long,
+        customStatusId: String? = null,
+        latePolicyStatus: String? = null,
+        checkpointTag: String? = null
+    ): UpdateSubmissionStatusMutation.Data {
+        return submissionGradeManager.updateSubmissionStatus(submissionId, customStatusId, latePolicyStatus, checkpointTag)
     }
 }

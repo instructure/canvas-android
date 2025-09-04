@@ -68,7 +68,8 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             gradingType = GradingType.entries.firstOrNull { it.rawValue == assignment?.gradingType },
             pointsPossible = assignment?.pointsPossible ?: 100.0,
             gradingStandard = null,
-            course = SubmissionGradeQuery.Course(null, gradingStandard, emptyList())
+            course = SubmissionGradeQuery.Course(null, gradingStandard, emptyList()),
+            checkpoints = emptyList()
         )
         val dummySubmission = SubmissionGradeQuery.Submission(
             gradingStatus = SubmissionGradingStatus.needs_grading,
@@ -87,7 +88,8 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
             enteredScore = submission?.score ?: 100.0,
             assignment = queryAssignment,
             hideGradeFromStudent = false,
-            submittedAt = Date()
+            submittedAt = Date(),
+            subAssignmentSubmissions = emptyList()
         )
         return SubmissionGradeQuery.Data(submission = dummySubmission)
     }
@@ -102,7 +104,8 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
     override suspend fun updateSubmissionStatus(
         submissionId: Long,
         customGradeStatusId: String?,
-        latePolicyStatus: String?
+        latePolicyStatus: String?,
+        checkpointTag: String?
     ): UpdateSubmissionStatusMutation.Data {
         TODO("Not yet implemented")
     }

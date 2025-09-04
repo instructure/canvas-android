@@ -126,7 +126,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                     SpeedGraderComment(
                         id = it.mediaCommentId.orEmpty(),
                         authorName = getAuthorName(
-                            authorName = it.author?.name,
+                            authorName = it.author?.name as? String,
                             anonymousGrading = isAnonymousGrading,
                             isOwnComment = isOwnComment
                         ),

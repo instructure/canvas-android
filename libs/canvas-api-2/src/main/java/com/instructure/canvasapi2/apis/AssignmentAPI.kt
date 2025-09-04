@@ -54,7 +54,7 @@ object AssignmentAPI {
             @Tag restParams: RestParams
         ): DataResult<LTITool>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics")
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics&include[]=checkpoints&include[]=discussion_topic")
         fun getAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<Assignment>
 
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=score_statistics")
@@ -168,7 +168,7 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
         fun getFirstPageSubmissionsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<List<Submission>>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group")
+        @GET("courses/{courseId}/assignments/{assignmentId}/submissions?include[]=rubric_assessment&include[]=submission_history&include[]=submission_comments&include[]=group&include[]=sub_assignment_submissions")
         suspend fun getFirstPageSubmissionsForAssignment(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long, @Tag params: RestParams): DataResult<List<Submission>>
 
         @GET

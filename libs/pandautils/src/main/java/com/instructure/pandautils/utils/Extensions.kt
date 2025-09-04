@@ -20,7 +20,7 @@ import android.app.Activity
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.net.Uri
+import android.content.res.Resources
 import androidx.annotation.ColorInt
 import androidx.browser.customtabs.CustomTabColorSchemeParams
 import androidx.browser.customtabs.CustomTabsIntent
@@ -41,6 +41,7 @@ import kotlin.coroutines.EmptyCoroutineContext
 import kotlin.math.ln
 import kotlin.math.pow
 import androidx.core.net.toUri
+import com.instructure.pandautils.R
 import java.io.File
 
 fun Any.toJson(): String {
@@ -192,4 +193,21 @@ fun Context.openFile(
     }
 
     startActivity(Intent.createChooser(intent, chooserTitle))
+}
+
+fun String.getCheckpointTagString(context: Context, repliesNeeded: Int?): String? {
+    return this.getCheckpointTagString(context.resources, repliesNeeded)
+}
+
+fun String.getCheckpointTagString(resources: Resources, repliesNeeded: Int?): String? {
+    return if (this == Const.REPLY_TO_TOPIC) {
+        resources.getString(R.string.reply_to_topic)
+    } else if (repliesNeeded != null && repliesNeeded > 0 && this == Const.REPLY_TO_ENTRY) {
+        resources.getString(
+            R.string.additional_replies,
+            repliesNeeded
+        )
+    } else {
+        null
+    }
 }

@@ -48,12 +48,16 @@ class SubmissionContentManagerImpl : SubmissionContentManager {
             nextCursor = connection?.pageInfo?.endCursor
         }
 
-        return data.copy(
-            submission = data.submission?.copy(
-                submissionHistoriesConnection = data.submission?.submissionHistoriesConnection?.copy(
-                    edges = allEdges
+        data.submission?.let {
+            return data.copy(
+                submission = data.submission?.copy(
+                    submissionHistoriesConnection = it.submissionHistoriesConnection.copy(
+                        edges = allEdges
+                    )
                 )
             )
-        )
+        }
+
+        return data
     }
 }

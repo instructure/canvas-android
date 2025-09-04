@@ -75,7 +75,8 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
     override suspend fun updateSubmissionStatus(
         submissionId: Long,
         customGradeStatusId: String?,
-        latePolicyStatus: String?
+        latePolicyStatus: String?,
+        checkpointTag: String?
     ): UpdateSubmissionStatusMutation.Data {
         val statusId = if (customGradeStatusId != null) Optional.present(customGradeStatusId) else Optional.absent()
         val status = if (latePolicyStatus != null) Optional.present(latePolicyStatus) else Optional.absent()
@@ -83,7 +84,8 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
         val mutation = UpdateSubmissionStatusMutation(
             submissionId.toString(),
             statusId,
-            status
+            status,
+            Optional.present(checkpointTag)
         )
         val result = QLClientConfig.enqueueMutation(mutation)
         return result.dataAssertNoErrors

@@ -101,4 +101,21 @@ fragment SubmissionFields on SubmissionInterface {
             }
         }
     }
+    subAssignmentSubmissions {
+        assignmentId
+        customGradeStatusId
+        enteredGrade
+        enteredScore
+        excused
+        grade
+        gradeMatchesCurrentSubmission
+        late
+        latePolicyStatus
+        missing
+        publishedGrade
+        publishedScore
+        score
+        statusTag
+        subAssignmentTag
+    }
 }

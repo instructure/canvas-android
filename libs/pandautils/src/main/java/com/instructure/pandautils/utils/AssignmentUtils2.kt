@@ -62,11 +62,27 @@ object AssignmentUtils2 {
                 return ASSIGNMENT_STATE_EXCUSED
             }
 
+            if (submission.hasSubAssignmentSubmissions) {
+                return if (submission.subAssignmentSubmissions.any { it.excused }) {
+                    ASSIGNMENT_STATE_EXCUSED
+                } else if (submission.subAssignmentSubmissions.all { it.missing }) {
+                    ASSIGNMENT_STATE_MISSING
+                } else if (submission.subAssignmentSubmissions.all { it.grade != null }) {
+                    ASSIGNMENT_STATE_GRADED
+                } else if (submission.subAssignmentSubmissions.any { it.late }) {
+                    ASSIGNMENT_STATE_SUBMITTED_LATE
+                } else {
+                    ASSIGNMENT_STATE_SUBMITTED
+                }
+            }
+
             // Edge Case - Assignment with "fake submission" and no grade
             // Result - MISSING or DUE
             return if (submission.attempt == 0L && submission.grade == null) {
                 if (assignment.dueAt != null && assignment.dueDate!!.time >= Calendar.getInstance().timeInMillis) {
                     checkInClassOrDue(assignment)
+                } else if (assignment.checkpoints?.any {it.dueAt != null && it.dueDate!!.time >= Calendar.getInstance().timeInMillis} == true) {
+                    checkOnTimeOrLate(submission, hasNoGrade(assignment, submission, isTeacher))
                 } else {
                     checkInClassOrMissing(assignment)
                 }
