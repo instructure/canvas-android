@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notifiche</string>
     <string name="accountNotificationEmailToggleLabel">E-mail</string>
     <string name="accountNotificationPushToggleLabel">Notifica push</string>
+    <string name="accountNotificationSmsToggleLabel">Notifica SMS</string>
     <string name="accountNotificationsFailedToUpdate">Impossibile aggiornare la preferenza di notifica</string>
     <string name="moduleItemCompleteAllItems">Completa tutti gli elementi</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Completa tutti gli elementi necessari</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Ancora nessun messaggio.</string>
     <string name="notesActionMenuCopy">Copia</string>
     <string name="notesActionMenuAddNote">Aggiungi nota</string>
+    <string name="notesActionMenuAddImportantNote">Importante</string>
+    <string name="notesActionMenuAddConfusingNote">Confuso</string>
     <string name="attemptCard_score">Punteggio: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Tentativi</string>
     <string name="attemptBottomSheet_noAttempts">Questo compito consente più tentativi. Una volta effettuato un invio, puoi visualizzarlo qui.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Uscire? Le modifiche non saranno salvate.</string>
     <string name="exitConfirmationExitButtonLabel">Esci</string>
     <string name="exitConfirmationCancelButtonLabel">Annulla</string>
+    <string name="dashboard_courseInvite">Sei stato invitato a partecipare a %s</string>
+    <string name="dashboard_courseInviteAccept">Accetta</string>
+    <string name="dashboard_courseInviteFailed">Impossibile accettare l’invito al corso</string>
+    <string name="dashboard_emptyMessage">Al momento non sei iscritto ad alcun corso.</string>
+    <string name="learnEmptyMessage">Al momento non sei iscritto ad alcun corso.</string>
 </resources>

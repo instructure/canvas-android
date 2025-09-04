@@ -59,6 +59,9 @@ data class Plannable(
 
     @SerializedName("all_day")
     val allDay: Boolean?,
+
+    @SerializedName("sub_assignment_tag")
+    val subAssignmentTag: String? = null
 ) : Parcelable {
     val contextType: CanvasContext.Type
         get() = when {

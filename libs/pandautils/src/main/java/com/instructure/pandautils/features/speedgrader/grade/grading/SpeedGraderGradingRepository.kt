@@ -27,11 +27,21 @@ class SpeedGraderGradingRepository(
     private val submissionApi: SubmissionAPI.SubmissionInterface
 ) {
 
-    suspend fun getSubmissionGrade(assignmentId: Long, studentId: Long, forceNetwork: Boolean): SubmissionGradeQuery.Data {
+    suspend fun getSubmissionGrade(
+        assignmentId: Long,
+        studentId: Long,
+        forceNetwork: Boolean
+    ): SubmissionGradeQuery.Data {
         return submissionGradeManager.getSubmissionGrade(assignmentId, studentId, forceNetwork)
     }
 
-    suspend fun updateSubmissionGrade(score: String, userId: Long, assignmentId: Long, courseId: Long, excused: Boolean): Submission {
+    suspend fun updateSubmissionGrade(
+        score: String,
+        userId: Long,
+        assignmentId: Long,
+        courseId: Long,
+        excused: Boolean
+    ): Submission {
         return submissionApi.postSubmissionGrade(
             contextId = courseId,
             assignmentId = assignmentId,
@@ -57,7 +67,30 @@ class SpeedGraderGradingRepository(
     }
 
 
-    suspend fun updateSubmissionStatus(submissionId: Long, customStatusId: String? = null, latePolicyStatus: String? = null): UpdateSubmissionStatusMutation.Data {
-        return submissionGradeManager.updateSubmissionStatus(submissionId, customStatusId, latePolicyStatus)
+    suspend fun updateSubmissionStatus(
+        submissionId: Long,
+        customStatusId: String? = null,
+        latePolicyStatus: String? = null
+    ): UpdateSubmissionStatusMutation.Data {
+        return submissionGradeManager.updateSubmissionStatus(
+            submissionId,
+            customStatusId,
+            latePolicyStatus
+        )
+    }
+
+    suspend fun updateLateSecondsOverride(
+        userId: Long,
+        assignmentId: Long,
+        courseId: Long,
+        lateSeconds: Int
+    ): Submission {
+        return submissionApi.postSubmissionLateSecondsOverride(
+            courseId,
+            assignmentId,
+            userId,
+            lateSeconds,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrThrow
     }
 }

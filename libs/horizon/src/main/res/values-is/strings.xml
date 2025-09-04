@@ -26,7 +26,7 @@
     <string name="dashboard_resumeLearning">Halda áfram námi</string>
     <string name="learningObject_assignment">Verkefni</string>
     <string name="learningObject_File">Skrá</string>
-    <string name="learningObject_externalLink">Ytri tengill</string>
+    <string name="learningObject_externalLink">Utanaðkomandi tengill</string>
     <string name="learningObject_externalTool">Ytra tól</string>
     <string name="learningObject_page">Síða</string>
     <string name="learningObject_assessment">Mat</string>
@@ -63,11 +63,11 @@
     </plurals>
     <string name="moduleHeader_pastDue">%1$d komið fram yfir skiladag</string>
     <string name="a11y_institutionLogoContentDescription">Merki stofnunarinnar</string>
-    <string name="myProgress">Framvindan mín</string>
+    <string name="myProgress">Framvinda mín</string>
     <string name="overview">Yfirlit</string>
     <string name="scores">Einkunnir</string>
     <string name="notes">Athugasemdir</string>
-    <string name="assignmentName">Heiti verkefnis</string>
+    <string name="assignmentName">Titill verkefnis</string>
     <string name="dueDate">Skiladagur</string>
     <string name="scoresItemassignmentName">Nafn: %1$s</string>
     <string name="scoresItemDueDate">Dagsetning: %1$s</string>
@@ -78,7 +78,7 @@
     <string name="sortBy">Raða eftir</string>
     <string name="assignmentGroupWeights">Vægi verkefnahópa</string>
     <string name="weightPercentageValue">Vægi: %1$s\%%</string>
-    <string name="averageScoreHeader">Meðaleinkunn %1$s\%%</string>
+    <string name="averageScoreHeader">Meðaleinkunn: %1$s\%%</string>
     <string name="failedToLoadScores">Ekki tókst að hlaða inn einkunnum</string>
     <string name="failedToLoadPrgress">Ekki tókst að hlaða inn framvindu</string>
     <string name="modulePager_dueDate">Skiladagur %1$s</string>
@@ -89,13 +89,17 @@
     <string name="modulePager_overdue">Vanskil</string>
     <string name="modulePager_locked">Þessu efni var læst.</string>
     <string name="learningObject_locked">Læst efni</string>
-    <string name="moduleProgressScreen_title">Framvindan mín</string>
+    <string name="moduleProgressScreen_title">Framvinda mín</string>
     <string name="moduleProgressScreen_error">Mistókst að hlaða námsmarkmiði</string>
     <plurals name="moduleItemCard_pointsPossible">
         <item quantity="one">%d punktur</item>
         <item quantity="other">%d punktar</item>
     </plurals>
-    <string name="notSubmittedStatusLabel">Ekki lagt fram</string>
+    <plurals name="moduleItemCard_pointsPossibleWithRequirement">
+        <item quantity="one">%1$d pkt. | Ná minnst %2$s</item>
+        <item quantity="other">%1$d pkt. | Ná minnst %2$s</item>
+    </plurals>
+    <string name="notSubmittedStatusLabel">Ekki skilað</string>
     <string name="submittedStatusLabel">Skilað</string>
     <string name="gradedStatusLabel">Metið</string>
     <string name="excusedStatusLabel">Undanþegið</string>
@@ -142,6 +146,7 @@
     <string name="accountNotificationsTitle">Tilkynningar</string>
     <string name="accountNotificationEmailToggleLabel">Tölvupóstur</string>
     <string name="accountNotificationPushToggleLabel">Vöktunartilkynning</string>
+    <string name="accountNotificationSmsToggleLabel">SMS-tilkynning</string>
     <string name="accountNotificationsFailedToUpdate">Ekki tókst að uppfæra tilkynningastillingar</string>
     <string name="moduleItemCompleteAllItems">Ljúka öllum atriðum</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Ljúktu við öll áskilin atriði</string>
@@ -157,7 +162,7 @@
     <string name="accountCalendarFeedSeelctPlaceholder">Veldu dagatalið þitt</string>
     <string name="accountCalendarFeedCopyLinkButtonLabel">Afrita tengil</string>
     <string name="accountCalendarFeedCopiedLinkMessage">Tengill afritaður</string>
-    <string name="accountNotificationsDisabledNotificationsMessage">Vöktunartilkynningar eru núna óvirkar. Þú þarfft að virkja stillingar Android til að kveikja á þeim.</string>
+    <string name="accountNotificationsDisabledNotificationsMessage">Vöktunartilkynningar eru núna óvirkar. Þú þarft að virkja stillingar Android til að kveikja á þeim.</string>
     <string name="accountNotificationsEnableNotificationButtonLabel">Virkja Android tilkynningar</string>
     <string name="externalTool_openInANewTab">Opna í nýjum flipa</string>
     <string name="notificationsTitle">Tilkynningar</string>
@@ -211,9 +216,9 @@
     </plurals>
     <string name="assignmentDetails_newAttempt">Ný tilraun</string>
     <string name="assignmentDetails_textSubmission">Þín textaskil</string>
-    <string name="assignmentDetails_fileSubmission">Upphleðsla á skilum</string>
+    <string name="assignmentDetails_fileSubmission">Þín upphleðsla á skilum</string>
     <string name="assignmentDetilas_submissionTypeText">Texti</string>
-    <string name="assignmentDetilas_submissionTypeFileUpload">Hlaða upp skrá</string>
+    <string name="assignmentDetilas_submissionTypeFileUpload">Upphleðsla skrár</string>
     <string name="assignmentDetails_selectSubmissionType">Veldu skilategund</string>
     <string name="assignmentDetails_tools">Verkfæri</string>
     <string name="assignmentDetails_attemptHistory">Saga tilrauna</string>
@@ -250,6 +255,7 @@
     <string name="addNoteLabelLabel">Merki</string>
     <string name="addNoteAddANoteLabel">Bæta við athugasemd</string>
     <string name="addNoteSaveLabel">Vista</string>
+    <string name="addNoteDeleteLabel">Eyða</string>
     <string name="assignmentDetails_fileTypeNotSupported">Skráargerð er ekki leyfileg</string>
     <string name="assignmentDetails_submissionError">Villa við skil verkefnis</string>
     <string name="assignmentDetails_draftDeleted">Drögunum þínum var eytt.</string>
@@ -267,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Engin skilaboð enn.</string>
     <string name="notesActionMenuCopy">Afrita</string>
     <string name="notesActionMenuAddNote">Bæta við glósu</string>
+    <string name="notesActionMenuAddImportantNote">Mikilvægt</string>
+    <string name="notesActionMenuAddConfusingNote">Ruglingslegt</string>
     <string name="attemptCard_score">Einkunn: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Tilraunir</string>
     <string name="attemptBottomSheet_noAttempts">Þetta verkefni leyfir margar tilraunir. Þegar þú hefur skilað geturðu skoðað þau hér.</string>
@@ -301,9 +309,22 @@
     <string name="inboxComposeSelectRecipientErrorMessage">Veldu viðtakendur</string>
     <string name="inboxComposeSubjectErrorMessage">Sláðu inn efni</string>
     <string name="inboxComposeBodyErrorMessage">Sláðu inn skilaboð</string>
+    <string name="inboxComposeAttachmentsErrorMessage">Hinkraðu eftir að öllum viðhengjum er hlaðið upp</string>
     <string name="inboxComposeCourseErrorMessage">Ekki tókst að hlaða inn námskeiðum</string>
     <string name="inboxComposeRecipientErrorMessage">Mistókst að hlaða inn viðtakendum</string>
     <string name="inboxComposeSendErrorMessage">Tókst ekki að senda skilaboð</string>
     <string name="inboxListConversationCreatedMessage">Samtal búið til</string>
     <string name="noOptionsAvailable">Engir valmöguleikar fyrir hendi</string>
+    <string name="inboxComposeAttachFile">Hengja skrá við</string>
+    <string name="inboxDetailsReplyAttachFile">Hengja skrá við</string>
+    <string name="learnScoreFeedbackLabel">Endurgjöf:</string>
+    <string name="exitConfirmationTitle">Staðfesting á að fara út</string>
+    <string name="exitConfirmationMessage">Viltu örugglega fara út? Breytingarnar verða ekki vistaðar.</string>
+    <string name="exitConfirmationExitButtonLabel">Hætta</string>
+    <string name="exitConfirmationCancelButtonLabel">Hætta við</string>
+    <string name="dashboard_courseInvite">Þér er boðið að taka þátt í %s</string>
+    <string name="dashboard_courseInviteAccept">Samþykkja</string>
+    <string name="dashboard_courseInviteFailed">Boð í námskeið ekki samþykkt</string>
+    <string name="dashboard_emptyMessage">Þú ert ekki innritaður/innrituð í námskeið.</string>
+    <string name="learnEmptyMessage">Þú ert ekki innritaður/innrituð í námskeið.</string>
 </resources>

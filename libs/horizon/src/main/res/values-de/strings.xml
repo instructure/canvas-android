@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Benachrichtigungen</string>
     <string name="accountNotificationEmailToggleLabel">E-Mail</string>
     <string name="accountNotificationPushToggleLabel">Push-Benachrichtigung</string>
+    <string name="accountNotificationSmsToggleLabel">SMS-Benachrichtigung</string>
     <string name="accountNotificationsFailedToUpdate">Aktualisierung der Benachrichtigungspräferenz fehlgeschlagen</string>
     <string name="moduleItemCompleteAllItems">Alle Aufgaben abschließen</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Vervollständigen Sie alle erforderlichen Elemente</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Noch keine Nachrichten.</string>
     <string name="notesActionMenuCopy">Kopie</string>
     <string name="notesActionMenuAddNote">Anmerkung hinzufügen</string>
+    <string name="notesActionMenuAddImportantNote">Wichtig</string>
+    <string name="notesActionMenuAddConfusingNote">Verwirrend</string>
     <string name="attemptCard_score">Punktestand: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Versuche</string>
     <string name="attemptBottomSheet_noAttempts">Bei dieser Aufgabe sind mehrere Versuche möglich. Sobald Sie eine Abgabe gemacht haben, können Sie sie hier ansehen.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Wollen Sie wirklich aufhören? Ihre Änderungen werden nicht gespeichert.</string>
     <string name="exitConfirmationExitButtonLabel">Beenden</string>
     <string name="exitConfirmationCancelButtonLabel">Abbrechen</string>
+    <string name="dashboard_courseInvite">Sie wurden zur Teilnahme an %s eingeladen</string>
+    <string name="dashboard_courseInviteAccept">Akzeptieren</string>
+    <string name="dashboard_courseInviteFailed">Kurseinladung nicht angenommen</string>
+    <string name="dashboard_emptyMessage">Sie sind derzeit nicht für einen Kurs eingeschrieben.</string>
+    <string name="learnEmptyMessage">Sie sind derzeit nicht für einen Kurs eingeschrieben.</string>
 </resources>

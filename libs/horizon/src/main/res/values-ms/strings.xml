@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Pemberitahuan</string>
     <string name="accountNotificationEmailToggleLabel">E-mel</string>
     <string name="accountNotificationPushToggleLabel">Pemberitahuan tolak</string>
+    <string name="accountNotificationSmsToggleLabel">Pemberitahuan SMS</string>
     <string name="accountNotificationsFailedToUpdate">Gagal mengemas kini keutamaan pemberitahuan</string>
     <string name="moduleItemCompleteAllItems">Lengkapkan semua item</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Lengkapkan semua item yang diperlukan</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Belum ada sebarang mesej.</string>
     <string name="notesActionMenuCopy">Salin</string>
     <string name="notesActionMenuAddNote">Tambah nota</string>
+    <string name="notesActionMenuAddImportantNote">Penting</string>
+    <string name="notesActionMenuAddConfusingNote">Mengelirukan</string>
     <string name="attemptCard_score">Skor: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Percubaan</string>
     <string name="attemptBottomSheet_noAttempts">Tugasan ini membenarkan beberapa kali percubaan. Setelah anda membuat serahan, anda boleh melihatnya di sini.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Adakah anda pasti anda ingin keluar? Perubahan anda tidak akan disimpan.</string>
     <string name="exitConfirmationExitButtonLabel">Keluar</string>
     <string name="exitConfirmationCancelButtonLabel">Batal</string>
+    <string name="dashboard_courseInvite">Anda telah dijemput untuk menyertai %s</string>
+    <string name="dashboard_courseInviteAccept">Terima</string>
+    <string name="dashboard_courseInviteFailed">Gagal menerima jemputan kursus</string>
+    <string name="dashboard_emptyMessage">Anda belum berdaftar dalam kursus buat masa ini.</string>
+    <string name="learnEmptyMessage">Anda belum berdaftar dalam kursus buat masa ini.</string>
 </resources>

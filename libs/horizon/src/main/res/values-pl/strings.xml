@@ -154,6 +154,7 @@
     <string name="accountNotificationsTitle">Powiadomienia</string>
     <string name="accountNotificationEmailToggleLabel">Adres e-mail</string>
     <string name="accountNotificationPushToggleLabel">Powiadomienie push</string>
+    <string name="accountNotificationSmsToggleLabel">Powiadomienie SMS</string>
     <string name="accountNotificationsFailedToUpdate">Nie udało się zmienić preferencji dot. powiadomień</string>
     <string name="moduleItemCompleteAllItems">Zakończ wszystkie elementy</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Zakończ wszystkie wymagane elementy</string>
@@ -282,6 +283,8 @@
     <string name="inboxNoMessagesLabel">Brak wiadomości.</string>
     <string name="notesActionMenuCopy">Kopiuj</string>
     <string name="notesActionMenuAddNote">Dodaj notatkę</string>
+    <string name="notesActionMenuAddImportantNote">Ważne</string>
+    <string name="notesActionMenuAddConfusingNote">Niejasne</string>
     <string name="attemptCard_score">Wynik: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Próby</string>
     <string name="attemptBottomSheet_noAttempts">Do tego zadania można podejść wiele razy. Po przesłaniu materiałów można je tutaj wyświetlić.</string>
@@ -329,4 +332,9 @@
     <string name="exitConfirmationMessage">Czy na pewno chcesz zakończyć? Twoje zmiany nie zostaną zapisane.</string>
     <string name="exitConfirmationExitButtonLabel">Wyjdź</string>
     <string name="exitConfirmationCancelButtonLabel">Anuluj</string>
+    <string name="dashboard_courseInvite">Otrzymałeś zaproszenie do %s</string>
+    <string name="dashboard_courseInviteAccept">Akceptuj</string>
+    <string name="dashboard_courseInviteFailed">Nie udało się potwierdzić zaproszenia na kurs</string>
+    <string name="dashboard_emptyMessage">Nie zarejestrowano Cię do żadnego kursu.</string>
+    <string name="learnEmptyMessage">Nie zarejestrowano Cię do żadnego kursu.</string>
 </resources>

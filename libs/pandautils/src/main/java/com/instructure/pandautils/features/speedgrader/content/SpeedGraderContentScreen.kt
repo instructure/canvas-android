@@ -263,6 +263,13 @@ private fun UserHeader(
                 },
                 modifier = Modifier
                     .padding(start = 8.dp)
+                    .testTag(
+                        if (expandedState) {
+                            "collapsePanelButton"
+                        } else {
+                            "expandPanelButton"
+                        }
+                    )
             ) {
                 Icon(
                     painter = painterResource(id = if (expandedState) R.drawable.ic_collapse_bottomsheet else R.drawable.ic_expand_bottomsheet),

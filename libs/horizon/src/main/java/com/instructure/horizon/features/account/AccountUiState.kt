@@ -44,7 +44,7 @@ data class AccountItemState(
 
 sealed class AccountItemType(@DrawableRes val icon: Int) {
     data class Open(val route: AccountRoute) : AccountItemType(R.drawable.arrow_forward)
-    data class OpenInNew(val url: String) : AccountItemType(R.drawable.open_in_new)
+    data class OpenExternal(val route: AccountRoute) : AccountItemType(R.drawable.open_in_new)
     data object LogOut : AccountItemType(R.drawable.logout)
     data object SwitchExperience : AccountItemType(R.drawable.swap_horiz)
 }

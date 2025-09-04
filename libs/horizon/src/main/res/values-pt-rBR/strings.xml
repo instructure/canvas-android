@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notificações</string>
     <string name="accountNotificationEmailToggleLabel">E-mail</string>
     <string name="accountNotificationPushToggleLabel">Notificação por push</string>
+    <string name="accountNotificationSmsToggleLabel">Notificação por SMS</string>
     <string name="accountNotificationsFailedToUpdate">Falha ao atualizar a preferência de notificação</string>
     <string name="moduleItemCompleteAllItems">Conclua todos os itens</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Conclua todos os itens obrigatórios</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Ainda não há mensagens.</string>
     <string name="notesActionMenuCopy">Copiar</string>
     <string name="notesActionMenuAddNote">Adicionar observação</string>
+    <string name="notesActionMenuAddImportantNote">Importante</string>
+    <string name="notesActionMenuAddConfusingNote">Confuso</string>
     <string name="attemptCard_score">Pontuação: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Tentativas</string>
     <string name="attemptBottomSheet_noAttempts">Esta tarefa permite múltiplas tentativas. Depois de enviar uma tarefa, você pode visualizá-la aqui.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Tem certeza de que deseja sair? Suas alterações não serão salvas.</string>
     <string name="exitConfirmationExitButtonLabel">Sair</string>
     <string name="exitConfirmationCancelButtonLabel">Cancelar</string>
+    <string name="dashboard_courseInvite">Você foi convidado para participar %s</string>
+    <string name="dashboard_courseInviteAccept">Aceitar</string>
+    <string name="dashboard_courseInviteFailed">Falha ao aceitar o convite para o curso</string>
+    <string name="dashboard_emptyMessage">Você não está matriculado em nenhum curso no momento.</string>
+    <string name="learnEmptyMessage">Você não está matriculado em nenhum curso no momento.</string>
 </resources>

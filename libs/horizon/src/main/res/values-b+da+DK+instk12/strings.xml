@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notifikationer</string>
     <string name="accountNotificationEmailToggleLabel">E-mail</string>
     <string name="accountNotificationPushToggleLabel">Push-meddelelse</string>
+    <string name="accountNotificationSmsToggleLabel">SMS-besked</string>
     <string name="accountNotificationsFailedToUpdate">Kunne ikke opdatere meddelelsespræferencen</string>
     <string name="moduleItemCompleteAllItems">Færdiggør alle elementer</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Færdiggør alle de nødvendige elementer</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Ingen beskeder endnu.</string>
     <string name="notesActionMenuCopy">Kopi</string>
     <string name="notesActionMenuAddNote">Tilføj note</string>
+    <string name="notesActionMenuAddImportantNote">Vigtigt</string>
+    <string name="notesActionMenuAddConfusingNote">Forvirrende</string>
     <string name="attemptCard_score">Resultat: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Forsøg</string>
     <string name="attemptBottomSheet_noAttempts">Denne opgave tillader flere forsøg. Når du har afleveret noget, kan du se det her.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Er du sikker på, at du vil afslutte? Dine ændringer gemmes ikke.</string>
     <string name="exitConfirmationExitButtonLabel">Afslut</string>
     <string name="exitConfirmationCancelButtonLabel">Annullér</string>
+    <string name="dashboard_courseInvite">Du er blevet inviteret til at blive en del af %s</string>
+    <string name="dashboard_courseInviteAccept">Acceptér</string>
+    <string name="dashboard_courseInviteFailed">Kunne ikke acceptere faginvitation</string>
+    <string name="dashboard_emptyMessage">Du er ikke tilmeldt et fag i øjeblikket.</string>
+    <string name="learnEmptyMessage">Du er ikke tilmeldt et fag i øjeblikket.</string>
 </resources>

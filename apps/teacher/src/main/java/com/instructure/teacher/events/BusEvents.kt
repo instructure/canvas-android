@@ -131,9 +131,6 @@ class AssignmentDeletedEvent(assignmentId: Long, skipId: String? = null) : Ratio
 /** A RationedBusEvent for AssignmentOverride Assignees. @see [RationedBusEvent] */
 class AssigneesUpdatedEvent(dates: EditDateGroups, skipId: String? = null) : RationedBusEvent<EditDateGroups>(dates, skipId)
 
-/** A RationedBusEvent for Assignment graded events. @see [RationedBusEvent] */
-class AssignmentGradedEvent(assignmentId: Long, skipId: String? = null) : RationedBusEvent<Long>(assignmentId, skipId)
-
 /** A RationedBusEvent for Submission update events */
 class SubmissionUpdatedEvent(staleSubmission: Submission, skipId: String? = null) : RationedBusEvent<Submission>(staleSubmission, skipId)
 

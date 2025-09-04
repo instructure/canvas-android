@@ -79,6 +79,7 @@ sealed class SubmissionStateLabel {
         val Late = Predefined(R.drawable.ic_clock, R.color.textWarning, R.string.lateSubmissionLabel)
         val Submitted = Predefined(R.drawable.ic_complete, R.color.textSuccess, R.string.submitted)
         val Graded = Predefined(R.drawable.ic_complete_solid, R.color.textSuccess, R.string.gradedSubmissionLabel)
+        val Excused = Predefined(R.drawable.ic_complete_solid, R.color.textWarning, R.string.gradingStatus_excused)
         val None = Predefined(0, 0, 0)
     }
 }
