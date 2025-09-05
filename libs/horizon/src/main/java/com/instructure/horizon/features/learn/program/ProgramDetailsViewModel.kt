@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs
+package com.instructure.horizon.features.learn.program
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -24,13 +24,13 @@ import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.programs.components.CourseCardChipState
-import com.instructure.horizon.features.learn.programs.components.CourseCardStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramCourseCardState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
-import com.instructure.horizon.features.learn.programs.components.SequentialProgramProgressProperties
+import com.instructure.horizon.features.learn.program.components.CourseCardChipState
+import com.instructure.horizon.features.learn.program.components.CourseCardStatus
+import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemStatus
+import com.instructure.horizon.features.learn.program.components.ProgramProgressState
+import com.instructure.horizon.features.learn.program.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
@@ -56,46 +56,47 @@ class ProgramDetailsViewModel @Inject constructor(
             loadingState = LoadingState(
                 onRefresh = ::refreshProgram,
                 onSnackbarDismiss = ::dismissSnackbar
-            )
+            ),
+            onNavigateToCourse = ::onNavigateToCourse
         )
     )
     val state = _uiState.asStateFlow()
 
-    init {
-        _uiState.update {
-            it.copy(loadingState = it.loadingState.copy(isLoading = true))
-        }
-        viewModelScope.tryLaunch {
-            loadData()
-        } catch {
-            _uiState.update {
-                it.copy(loadingState = it.loadingState.copy(isLoading = false, isError = true))
-            }
-        }
+    private var currentProgramId: String? = null
+
+    fun loadProgramDetails(program: Program, courses: List<CourseWithModuleItemDurations>) {
+        currentProgramId = program.id
+        updateUiState(program, courses)
     }
 
-    private suspend fun loadData(forceNetwork: Boolean = false) {
-        val programDetails = repository.getProgramDetails("", forceNetwork = forceNetwork)
+    private fun updateUiState(program: Program, courses: List<CourseWithModuleItemDurations>) {
         val progressBarStatus =
-            if (programDetails.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
+            if (program.sortedRequirements.any { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED }) {
                 ProgressBarStatus.IN_PROGRESS
             } else {
                 ProgressBarStatus.NOT_STARTED
             }
-        val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId }, forceNetwork = forceNetwork)
         _uiState.update {
             it.copy(
                 loadingState = it.loadingState.copy(isLoading = false, isRefreshing = false),
-                programName = programDetails.name,
-                showProgressBar = shouldShowProgressBar(programDetails),
+                programName = program.name,
+                showProgressBar = shouldShowProgressBar(program),
                 progressBarUiState = ProgressBarUiState(
-                    progress = calculateProgress(programDetails),
+                    progress = calculateProgress(program),
                     progressBarStatus = progressBarStatus
                 ),
-                description = programDetails.description ?: "",
-                tags = createProgramTags(programDetails, courses),
-                programProgressState = createProgramProgressState(programDetails, courses)
+                description = program.description ?: "",
+                tags = createProgramTags(program, courses),
+                programProgressState = createProgramProgressState(program, courses)
             )
+        }
+    }
+
+    private suspend fun loadData(forceNetwork: Boolean = false) {
+        currentProgramId?.let { programId ->
+            val programDetails = repository.getProgramDetails(programId, forceNetwork = forceNetwork)
+            val courses = repository.getCoursesById(programDetails.sortedRequirements.map { it.courseId }, forceNetwork = forceNetwork)
+            updateUiState(programDetails, courses)
         }
     }
 
@@ -156,13 +157,17 @@ class ProgramDetailsViewModel @Inject constructor(
                 )
             } else null
 
+            val courseClickable = requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED
+            val courseClicked = { _uiState.update { it.copy(navigateToCourseId = requirement.courseId) } }
+
             ProgramProgressItemState(
                 courseCard = ProgramCourseCardState(
                     courseName = courses.find { it.courseId == requirement.courseId }?.courseName.orEmpty(),
                     status = courseCardStatus,
                     courseProgress = requirement.progress,
                     chips = chips,
-                    dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed
+                    dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed,
+                    courseClicked = if (courseClickable) courseClicked else null
                 ),
                 sequentialProperties = sequentialProperties
             )
@@ -316,6 +321,12 @@ class ProgramDetailsViewModel @Inject constructor(
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(loadingState = it.loadingState.copy(snackbarMessage = null))
+        }
+    }
+
+    private fun onNavigateToCourse() {
+        _uiState.update {
+            it.copy(navigateToCourseId = null)
         }
     }
 }

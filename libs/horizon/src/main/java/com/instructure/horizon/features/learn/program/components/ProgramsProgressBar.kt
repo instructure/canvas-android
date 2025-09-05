@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs.components
+package com.instructure.horizon.features.learn.program.components
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.material3.Text
@@ -24,8 +24,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.programs.ProgressBarStatus
-import com.instructure.horizon.features.learn.programs.ProgressBarUiState
+import com.instructure.horizon.features.learn.program.ProgressBarStatus
+import com.instructure.horizon.features.learn.program.ProgressBarUiState
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography

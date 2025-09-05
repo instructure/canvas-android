@@ -1,10 +1,10 @@
-package com.instructure.horizon.features.learn.progress
+package com.instructure.horizon.features.learn.course.progress
 
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderState
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardState
 import com.instructure.horizon.horizonui.platform.LoadingState
 
-data class LearnProgressUiState(
+data class CourseProgressUiState(
     val courseId: Long = -1,
     val screenState: LoadingState = LoadingState(),
     val moduleItemStates: Map<Long, Pair<ModuleHeaderState, List<ModuleItemState>>> = emptyMap()
@@ -13,8 +13,4 @@ data class LearnProgressUiState(
 sealed class ModuleItemState {
     data class SubHeader(val subHeader: String): ModuleItemState()
     data class ModuleItemCard(val moduleItemId: Long, val cardState: ModuleItemCardState): ModuleItemState()
-}
-
-sealed class LearnScreenEvents {
-    data class NavigateToModuleItem(val courseId:  Long, val moduleItemId: Long) : LearnScreenEvents()
 }

@@ -152,7 +152,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                     )
                                 )
                             }, onCourseClick = {
-                                homeNavController.navigate(HomeNavigationRoute.Learn.withArgs(courseItem.courseId)) {
+                                homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseItem.courseId)) {
                                     popUpTo(homeNavController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
