@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notifikasyon</string>
     <string name="accountNotificationEmailToggleLabel">Imèl</string>
     <string name="accountNotificationPushToggleLabel">Notifikasyon push</string>
+    <string name="accountNotificationSmsToggleLabel">notifikasyon sms</string>
     <string name="accountNotificationsFailedToUpdate">Echwe pou aktyalize preferans notifikasyon</string>
     <string name="moduleItemCompleteAllItems">Konplete tout eleman yo</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Konplete tout eleman obligatwa yo</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Poko gen mesaj</string>
     <string name="notesActionMenuCopy">Kopye</string>
     <string name="notesActionMenuAddNote">Ajoute nòt</string>
+    <string name="notesActionMenuAddImportantNote">Enpòtan</string>
+    <string name="notesActionMenuAddConfusingNote">Konfizyon</string>
     <string name="attemptCard_score">Nòt: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Tantativ</string>
     <string name="attemptBottomSheet_noAttempts">Devwa sa a otorize plizyè tantativ. Lè w fin fè yon soumisyon, w ap ka wè li la a.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Ou vle soti tout bon? Chanjman w yo pa p sovgade.</string>
     <string name="exitConfirmationExitButtonLabel">Soti</string>
     <string name="exitConfirmationCancelButtonLabel">Anile</string>
+    <string name="dashboard_courseInvite">Yo envite w antre nan %s</string>
+    <string name="dashboard_courseInviteAccept">Aksepte</string>
+    <string name="dashboard_courseInviteFailed">Envitasyon nan kou a pa t aksepte</string>
+    <string name="dashboard_emptyMessage">Ou poko enskri nan yon kou.</string>
+    <string name="learnEmptyMessage">Ou poko enskri nan yon kou.</string>
 </resources>

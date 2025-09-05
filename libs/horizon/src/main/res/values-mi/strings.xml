@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Whakamōhiotanga</string>
     <string name="accountNotificationEmailToggleLabel">Email</string>
     <string name="accountNotificationPushToggleLabel">Panui panui</string>
+    <string name="accountNotificationSmsToggleLabel">He panui SMS</string>
     <string name="accountNotificationsFailedToUpdate">I rahua te whakahou i te manakohanga whakamohiotanga</string>
     <string name="moduleItemCompleteAllItems">Whakaotia nga mea katoa</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Whakaotia nga mea katoa e hiahiatia ana</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Kare ano he karere.</string>
     <string name="notesActionMenuCopy">Tārua</string>
     <string name="notesActionMenuAddNote">Tāpiri tuhipoka</string>
+    <string name="notesActionMenuAddImportantNote">He mea nui</string>
+    <string name="notesActionMenuAddConfusingNote">Whakararuraru</string>
     <string name="attemptCard_score">Kaute: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Ngā whakamātau</string>
     <string name="attemptBottomSheet_noAttempts">Ka taea e tenei taumahi nga nganatanga maha. Ina tukuna e koe he tukunga, ka taea e koe te tiro ki konei.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">E pono ana koe ki te puta? Ko o huringa ka kore e tiakina.</string>
     <string name="exitConfirmationExitButtonLabel">E puta</string>
     <string name="exitConfirmationCancelButtonLabel">Whakakore</string>
+    <string name="dashboard_courseInvite">Kua tonohia koe kia uru mai %s</string>
+    <string name="dashboard_courseInviteAccept">Manakohia</string>
+    <string name="dashboard_courseInviteFailed">I rahua te whakaae ki te powhiri akoranga</string>
+    <string name="dashboard_emptyMessage">I tenei wa kaore koe i whakauru ki tetahi akoranga.</string>
+    <string name="learnEmptyMessage">I tenei wa kaore koe i whakauru ki tetahi akoranga.</string>
 </resources>

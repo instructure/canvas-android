@@ -59,6 +59,11 @@ object DateHelper {
         return format.format(date.time)
     }
 
+    fun getDayMonthYearDateString(context: Context, date: Date): String {
+        val format = if (DateUtils.isToday(date.time)) getPreferredDateFormat(context) else dayMonthYearFormat
+        return format.format(date.time)
+    }
+
     fun getPreferredTimeFormat(context: Context?): SimpleDateFormat {
         return if (DateFormat.is24HourFormat(context)) {
             SimpleDateFormat("HH:mm", Locale.getDefault())
@@ -122,6 +127,15 @@ object DateHelper {
             return null
         }
         val date = getDayMonthDateString(context, dateTime)
+        val time = getFormattedTime(context, dateTime)
+        return context.getString(stringResId, date, time)
+    }
+
+    fun getDateAtTimeWithYearString(context: Context?, stringResId: Int, dateTime: Date?): String? {
+        if (context == null || dateTime == null) {
+            return null
+        }
+        val date = getDayMonthYearDateString(context, dateTime)
         val time = getFormattedTime(context, dateTime)
         return context.getString(stringResId, date, time)
     }

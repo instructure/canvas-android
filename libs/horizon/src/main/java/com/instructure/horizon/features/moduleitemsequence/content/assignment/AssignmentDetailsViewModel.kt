@@ -31,7 +31,7 @@ import com.instructure.horizon.features.moduleitemsequence.ModuleItemContent
 import com.instructure.horizon.horizonui.organisms.cards.AttemptCardState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
-import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.localisedFormat
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -304,7 +304,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         return AttemptCardState(
             attemptNumber = submission.attempt,
             attemptTitle = context.getString(R.string.assignmentDetails_attemptNumber, submission.attempt),
-            date = submission.submittedAt?.format("MM/dd, h:mm a").orEmpty(),
+            date = submission.submittedAt?.localisedFormat("MM/dd, h:mm a", context).orEmpty(),
             score = score,
             selected = selected,
             onClick = onClick

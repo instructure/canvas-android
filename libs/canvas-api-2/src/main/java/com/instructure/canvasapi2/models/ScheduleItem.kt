@@ -69,6 +69,8 @@ data class ScheduleItem(
         val duplicates: List<CalendarEventWrapper> = ArrayList(),
         @SerializedName("workflow_state")
         val workflowState: String? = null,
+        @SerializedName("sub_assignment")
+        val subAssignment: Assignment? = null,
 
         // Not API related - Included here so they get parcelized
         var submissionTypes: List<Assignment.SubmissionType> = ArrayList(),
@@ -91,7 +93,7 @@ data class ScheduleItem(
     var contextType: CanvasContext.Type? = null
         get() {
             if (contextCode == null) {
-                field = CanvasContext.Type.USER;
+                field = CanvasContext.Type.USER
             } else if (field == null) {
                 parseContextCode()
             }
@@ -283,7 +285,16 @@ fun List<ScheduleItem>.toPlannerItems(type: PlannableType): List<PlannerItem> {
         } else {
             type
         }
-        val plannableDate = if (type == PlannableType.ASSIGNMENT) it.assignment?.dueDate else it.startDate
+        val dueDate = when (type) {
+            PlannableType.ASSIGNMENT -> it.assignment?.dueDate
+            PlannableType.SUB_ASSIGNMENT -> it.subAssignment?.dueDate
+            else -> null
+        }
+        val plannableDate = when (type) {
+            PlannableType.ASSIGNMENT -> it.assignment?.dueDate
+            PlannableType.SUB_ASSIGNMENT -> it.subAssignment?.dueDate
+            else -> it.startDate
+        }
         val plannableId = if (plannableType == PlannableType.DISCUSSION_TOPIC && it.assignment?.discussionTopicHeader?.id != null) {
             it.assignment?.discussionTopicHeader?.id!!
         } else {
@@ -307,7 +318,7 @@ fun List<ScheduleItem>.toPlannerItems(type: PlannableType): List<PlannerItem> {
                     it.groupId,
                     it.userId,
                     null,
-                    if (type == PlannableType.ASSIGNMENT) it.assignment?.dueDate else null,
+                    dueDate,
                     it.assignment?.id,
                     null,
                     it.startDate,

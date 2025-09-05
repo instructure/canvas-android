@@ -109,10 +109,10 @@ class LearnScoreViewModel @Inject constructor(
 
     private fun sortAssignments(): List<AssignmentScoreItem> {
         return when (_uiState.value.selectedSortOption) {
-            LearnScoreSortOption.AssignmentName -> assignments.sortedBy { it.name }
-            LearnScoreSortOption.DueDate -> assignments.sortedWith(
-                compareBy(nullsLast()) { it.dueDate }
-            )
+            LearnScoreSortOption.AssignmentNameAscending -> assignments.sortedBy { it.name }
+            LearnScoreSortOption.DueDateDescending -> assignments.sortedWith(
+                compareBy(nullsFirst()) { it.dueDate }
+            ).asReversed()
         }.map { AssignmentScoreItem(it) }
     }
 

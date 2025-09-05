@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
-import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.localisedFormat
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -79,7 +79,7 @@ class NotificationViewModel @Inject constructor(
             NotificationItem(
                 categoryLabel = getNotificationItemCategoryLabel(it),
                 title = getNotificationItemTitle(it),
-                date = it.updatedDate?.format("MMM dd").orEmpty()
+                date = it.updatedDate?.localisedFormat("MMM dd").orEmpty()
             )
         }
         _uiState.update {

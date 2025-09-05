@@ -91,8 +91,8 @@ import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgress
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
+import com.instructure.pandautils.utils.localisedFormat
 import com.instructure.pandautils.utils.orDefault
-import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -265,7 +265,7 @@ private fun HorizonInboxDetailsItem(
             Spacer(modifier = Modifier.weight(1f))
 
             Text(
-                text = item.date.toFormattedString(),
+                text = item.date.localisedFormat("MMM d yyyy, hh mm a", LocalContext.current),
                 style = HorizonTypography.p3,
                 color = HorizonColors.Text.timestamp(),
             )

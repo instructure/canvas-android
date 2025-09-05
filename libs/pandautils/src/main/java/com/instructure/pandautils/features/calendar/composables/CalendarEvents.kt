@@ -219,6 +219,12 @@ fun CalendarEventItem(eventUiState: EventUiState, onEventClick: (Long) -> Unit, 
                 color = colorResource(id = R.color.textDarkest),
                 modifier = Modifier.padding(vertical = 1.dp).testTag("eventTitle")
             )
+            if (!eventUiState.tag.isNullOrEmpty()) Text(
+                text = eventUiState.tag,
+                fontSize = 14.sp,
+                color = colorResource(id = R.color.textDark),
+                modifier = Modifier.padding(vertical = 1.dp).testTag("eventTag")
+            )
             if (eventUiState.date != null) Text(
                 text = eventUiState.date,
                 fontSize = 14.sp,
@@ -295,6 +301,16 @@ fun CalendarEventsPreview() {
                         R.drawable.ic_assignment,
                         "Due Jan 9 at 8:00 AM",
                         "Missing"
+                    ),
+                    EventUiState(
+                        2L,
+                        "Course",
+                        CanvasContext.defaultCanvasContext(),
+                        "Assignment 1",
+                        R.drawable.ic_assignment,
+                        "Due Jan 9 at 8:00 AM",
+                        "Missing",
+                        tag = "Additional replies (2)"
                     )
                 )
             )

@@ -21,10 +21,8 @@ import android.net.Uri
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -154,16 +152,17 @@ private fun SpeedGraderCommentLibraryContent(
                     .fillMaxWidth()
             ) {
                 itemsIndexed(uiState.items) { index, item ->
-                    Spacer(modifier = Modifier.height(14.dp))
                     Text(
                         text = item,
                         fontSize = 16.sp,
                         color = colorResource(id = R.color.textDarkest),
-                        modifier = Modifier.clickable {
-                            uiState.onCommentValueChanged(item)
-                        }
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .clickable {
+                                uiState.onCommentValueChanged(item)
+                            }
+                            .padding(vertical = 14.dp)
                     )
-                    Spacer(modifier = Modifier.height(14.dp))
                     if (index != uiState.items.lastIndex) {
                         CanvasDivider()
                     }

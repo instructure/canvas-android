@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notifications</string>
     <string name="accountNotificationEmailToggleLabel">Email</string>
     <string name="accountNotificationPushToggleLabel">Push notification</string>
+    <string name="accountNotificationSmsToggleLabel">Sms notification</string>
     <string name="accountNotificationsFailedToUpdate">Failed to update notification preference</string>
     <string name="moduleItemCompleteAllItems">Complete all items</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Complete all of the required items</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">No messages yet.</string>
     <string name="notesActionMenuCopy">Copy</string>
     <string name="notesActionMenuAddNote">Add note</string>
+    <string name="notesActionMenuAddImportantNote">Important</string>
+    <string name="notesActionMenuAddConfusingNote">Confusing</string>
     <string name="attemptCard_score">Score: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Attempts</string>
     <string name="attemptBottomSheet_noAttempts">This assignment allows multiple attempts. Once you\'ve made a submission, you can view it here.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Are you sure you want to exit? Your changes will not be saved.</string>
     <string name="exitConfirmationExitButtonLabel">Exit</string>
     <string name="exitConfirmationCancelButtonLabel">Cancel</string>
+    <string name="dashboard_courseInvite">You have been invited to join %s</string>
+    <string name="dashboard_courseInviteAccept">Accept</string>
+    <string name="dashboard_courseInviteFailed">Failed to accept subject invite</string>
+    <string name="dashboard_emptyMessage">You aren’t currently enrolled in a subject.</string>
+    <string name="learnEmptyMessage">You aren’t currently enrolled in a subject.</string>
 </resources>

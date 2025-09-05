@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Plannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.PlannerItem
+import com.instructure.canvasapi2.models.PlannerItemDetails
 import com.instructure.canvasapi2.models.SubmissionState
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -107,6 +108,15 @@ class CalendarViewModelTest {
         every { context.getString(eq(R.string.courseToDo), any()) } answers {
             val args = secondArg<Array<Any>>()
             "${args[0]} To Do"
+        }
+
+        every { context.getString(eq(R.string.reply_to_topic)) } answers {
+            "Reply to topic"
+        }
+
+        every { context.getString(eq(R.string.additional_replies), any()) } answers {
+            val args = secondArg<Array<Any>>()
+            "Additional replies (${args[0]})"
         }
 
         every { context.getString(R.string.calendarRefreshFailed) } returns "Error refreshing events"
@@ -208,13 +218,15 @@ class CalendarViewModelTest {
             ),
             createPlannerItem(2, 4, PlannableType.DISCUSSION_TOPIC, createDate(2023, 4, 19, 12)),
             createPlannerItem(2, 5, PlannableType.PLANNER_NOTE, createDate(2023, 4, 21, 12)),
+            createPlannerItem(2, 6, PlannableType.SUB_ASSIGNMENT, createDate(2023, 4, 20, 12)),
         )
         coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
         initViewModel()
 
         val expectedCurrentEvents = listOf(
             EventUiState(1, "Course 1", Course(1), "Plannable 1", R.drawable.ic_assignment, "Due Apr 20 12:00 PM"),
-            EventUiState(2, "Course 1", Course(1), "Plannable 2", R.drawable.ic_quiz, "Due Apr 20 12:00 PM")
+            EventUiState(2, "Course 1", Course(1), "Plannable 2", R.drawable.ic_quiz, "Due Apr 20 12:00 PM"),
+            EventUiState(6, "Course 2", Course(2), "Plannable 6", R.drawable.ic_discussion, "Due Apr 20 12:00 PM")
         )
         val expectedPreviousEvents = listOf(
             EventUiState(3, "Course 1", Course(1), "Plannable 3", R.drawable.ic_calendar, "Apr 19 12:00 PM - 1:00 PM"),
@@ -270,6 +282,57 @@ class CalendarViewModelTest {
             EventUiState(3, "Course 1", Course(1), "Plannable 3", R.drawable.ic_calendar, "Apr 19 12:00 PM - 1:00 PM"),
             EventUiState(4, "Course 1", Course(1), "Plannable 4", R.drawable.ic_calendar, "Apr 19 10:00 AM"),
             EventUiState(5, "Course 1", Course(1), "Plannable 5", R.drawable.ic_calendar, "Apr 19"),
+        )
+        val expectedState = CalendarScreenUiState(
+            baseCalendarUiState, CalendarEventsUiState(
+                previousPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 19), events = expectedPreviousEvents),
+                currentPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 20)),
+                nextPage = CalendarEventsPageUiState(date = LocalDate.of(2023, 4, 21))
+            )
+        )
+
+        assertEquals(expectedState, viewModel.uiState.value)
+    }
+
+    @Test
+    fun `Calendar events show the correct tag`() {
+        val events = listOf(
+            createPlannerItem(
+                1,
+                3,
+                PlannableType.CALENDAR_EVENT,
+                createDate(2023, 4, 19, 12),
+                startAt = createDate(2023, 4, 19, 12),
+                endAt = createDate(2023, 4, 19, 13)
+            ),
+            createPlannerItem(
+                1,
+                4,
+                PlannableType.SUB_ASSIGNMENT,
+                createDate(2023, 4, 19, 12),
+                startAt = createDate(2023, 4, 19, 10),
+                endAt = createDate(2023, 4, 19, 10),
+                subAssignmentTag = "reply_to_topic",
+                replyRequiredCount = 2
+            ),
+            createPlannerItem(
+                1,
+                5,
+                PlannableType.SUB_ASSIGNMENT,
+                createDate(2023, 4, 19, 12),
+                startAt = createDate(2023, 4, 19, 10),
+                endAt = createDate(2023, 4, 19, 10),
+                subAssignmentTag = "reply_to_entry",
+                replyRequiredCount = 2
+            )
+        )
+        coEvery { calendarRepository.getPlannerItems(any(), any(), any(), any()) } returns events
+        initViewModel()
+
+        val expectedPreviousEvents = listOf(
+            EventUiState(3, "Course 1", Course(1), "Plannable 3", R.drawable.ic_calendar, "Apr 19 12:00 PM - 1:00 PM"),
+            EventUiState(4, "Course 1", Course(1), "Plannable 4", R.drawable.ic_discussion, "Due Apr 19 12:00 PM", tag = "Reply to topic"),
+            EventUiState(5, "Course 1", Course(1), "Plannable 5", R.drawable.ic_discussion, "Due Apr 19 12:00 PM", tag = "Additional replies (2)"),
         )
         val expectedState = CalendarScreenUiState(
             baseCalendarUiState, CalendarEventsUiState(
@@ -1255,7 +1318,9 @@ class CalendarViewModelTest {
         endAt: Date? = null,
         allDay: Boolean = false,
         groupId: Long? = null,
-        userId: Long? = null
+        userId: Long? = null,
+        subAssignmentTag: String? = null,
+        replyRequiredCount: Int? = null
     ): PlannerItem {
         val plannable = Plannable(
             id = plannableId,
@@ -1271,7 +1336,15 @@ class CalendarViewModelTest {
             endAt,
             "details",
             allDay,
+            subAssignmentTag
         )
+        val details = if (replyRequiredCount != null) {
+            PlannerItemDetails(
+                replyRequiredCount = replyRequiredCount
+            )
+        } else {
+            null
+        }
         return PlannerItem(
             courseId,
             null,
@@ -1284,7 +1357,8 @@ class CalendarViewModelTest {
             null,
             submissionState,
             plannerOverride = null,
-            newActivity = null
+            newActivity = null,
+            plannableItemDetails = details,
         )
     }
 

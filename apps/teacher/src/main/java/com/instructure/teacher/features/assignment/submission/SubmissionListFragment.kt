@@ -39,13 +39,13 @@ import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDefaul
 import com.instructure.pandautils.features.inbox.utils.InboxComposeOptionsDisabledFields
 import com.instructure.pandautils.features.speedgrader.SpeedGraderFragment
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.adapters.StudentContextFragment
-import com.instructure.teacher.events.AssignmentGradedEvent
 import com.instructure.teacher.events.SubmissionCommentsUpdated
 import com.instructure.teacher.events.SubmissionFilterChangedEvent
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment

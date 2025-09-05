@@ -66,8 +66,8 @@
     <string name="overview">Overview</string>
     <string name="scores">Scores</string>
     <string name="notes">Notes</string>
-    <string name="assignmentName">Assignment name</string>
-    <string name="dueDate">Due date</string>
+    <string name="scoresSortingAssignmentNameAscending">Assignment name (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Due date (newest first)</string>
     <string name="scoresItemassignmentName">Name: %1$s</string>
     <string name="scoresItemDueDate">Date: %1$s</string>
     <string name="noDueDate">No due date</string>
@@ -120,6 +120,7 @@
     <string name="accountAdvancedLabel">Advanced</string>
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Give feedback</string>
+    <string name="accountReportABug">Report a bug</string>
     <string name="accountBetaCommunityLabel">Beta community</string>
     <string name="accountFullNameLabel">Full name</string>
     <string name="a11yNavigateBack">Navigate back</string>
@@ -326,4 +327,7 @@
     <string name="dashboard_courseInviteFailed">Failed to accept course invite</string>
     <string name="dashboard_emptyMessage">You aren’t currently enrolled in a course.</string>
     <string name="learnEmptyMessage">You aren’t currently enrolled in a course.</string>
+    <string name="programsProgressBar_percentComplete">%s complete</string>
+    <string name="programsProgressBar_notStarted">Not started</string>
+    <string name="programsCourseCard_enrollButton">Enroll</string>
 </resources>
