@@ -19,6 +19,9 @@ package com.instructure.pandautils.features.grades
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -49,6 +52,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -63,8 +67,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -97,6 +103,7 @@ import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -138,6 +145,32 @@ fun GradesScreen(
                         contentColor = colorResource(id = R.color.textLightest),
                         actions = {
                             FilterIcon(uiState, actionHandler, colorResource(id = R.color.textLightest))
+                            if (it.bookmarkable) {
+                                var overflowMenuExpanded by remember { mutableStateOf(false) }
+                                OverflowMenu(
+                                    modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+                                    showMenu = overflowMenuExpanded,
+                                    onDismissRequest = {
+                                        overflowMenuExpanded = !overflowMenuExpanded
+                                    },
+                                    iconColor = colorResource(R.color.textLightest)
+                                ) {
+                                    DropdownMenuItem(
+                                        modifier = Modifier.background(
+                                            color = colorResource(id = R.color.backgroundLightestElevated)
+                                        ),
+                                        onClick = {
+                                            overflowMenuExpanded = !overflowMenuExpanded
+                                            it.addBookmarkClick()
+                                        },
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.addBookmark),
+                                            color = colorResource(id = R.color.textDarkest)
+                                        )
+                                    }
+                                }
+                            }
                         }
                     )
                 }
@@ -333,8 +366,15 @@ private fun GradesScreenContent(
                     )
                 }
 
-                if (it.expanded) {
-                    items(it.assignments) { assignment ->
+                items(
+                    items = it.assignments,
+                    key = { assignment -> assignment.id }
+                ) { assignment ->
+                    AnimatedVisibility(
+                        visible = it.expanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
                         AssignmentItem(assignment, actionHandler, contextColor)
                     }
                 }

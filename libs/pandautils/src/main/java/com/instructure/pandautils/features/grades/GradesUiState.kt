@@ -30,7 +30,9 @@ import com.instructure.pandautils.utils.DisplayGrade
 data class AppBarUiState(
     val title: String,
     val subtitle: String,
-    val navigationActionClick: () -> Unit
+    val navigationActionClick: () -> Unit,
+    val bookmarkable: Boolean,
+    val addBookmarkClick: () -> Unit
 )
 
 data class GradesUiState(

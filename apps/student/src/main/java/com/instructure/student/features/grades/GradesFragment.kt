@@ -28,6 +28,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
 import com.instructure.interactions.bookmarks.Bookmarkable
@@ -48,8 +49,11 @@ import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.makeBundle
+import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.showNoConnectionDialog
 import com.instructure.pandautils.utils.withArgs
 import com.instructure.student.R
+import com.instructure.student.activity.NavigationActivity
 import com.instructure.student.fragment.ParentFragment
 import com.instructure.student.router.RouteMatcher
 import dagger.hilt.android.AndroidEntryPoint
@@ -85,6 +89,14 @@ class GradesFragment : ParentFragment(), Bookmarkable {
                         subtitle = canvasContext.name.orEmpty(),
                         navigationActionClick = {
                             activity?.onBackPressed()
+                        },
+                        bookmarkable = (activity as? NavigationActivity)?.canBookmark().orDefault(),
+                        addBookmarkClick = {
+                            if (APIHelper.hasNetworkConnection()) {
+                                (activity as? NavigationActivity)?.addBookmark()
+                            } else {
+                                showNoConnectionDialog(context)
+                            }
                         }
                     ),
                     canvasContextColor = canvasContext.color
