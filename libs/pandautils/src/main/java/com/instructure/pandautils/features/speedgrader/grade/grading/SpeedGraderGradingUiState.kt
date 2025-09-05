@@ -24,6 +24,11 @@ data class SpeedGraderGradingUiState(
     val loading: Boolean = true,
     val error: Boolean = false,
     val retryAction: (() -> Unit)? = null,
+    val pointsPossible: Double? = null,
+    val enteredScore: Float? = null,
+    val finalGrade: String? = null,
+    val finalScore: Double? = null,
+    val pointsDeducted: Double? = null,
     val gradingType: GradingType? = null,
     val submittedAt: Date? = null,
     val letterGrades: List<GradingSchemeRow> = emptyList(),
@@ -53,5 +58,5 @@ data class GradableAssignment(
     val pointsPossible: Double? = null,
     val excused: Boolean = false,
     val gradingStatus: String? = null,
-    val daysLate: Int? = null,
+    val daysLate: Float? = null,
 )

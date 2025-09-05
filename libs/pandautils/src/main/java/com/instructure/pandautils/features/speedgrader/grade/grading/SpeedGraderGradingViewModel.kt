@@ -25,6 +25,7 @@ import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
+import com.instructure.canvasapi2.utils.capitalized
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
@@ -105,6 +106,11 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 submissionId = submission._id
                 _uiState.update {
                     it.copy(
+                        pointsPossible = submission.assignment?.pointsPossible,
+                        enteredScore = submission.enteredScore?.toFloat(),
+                        finalScore = submission.score,
+                        finalGrade = submission.grade,
+                        pointsDeducted = submission.deductedPoints,
                         gradingType = submission.assignment?.gradingType,
                         loading = false,
                         error = false,
@@ -159,13 +165,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     grade = subAssignment.grade,
                     score = subAssignment.score,
                     tag = subAssignment.subAssignmentTag,
-                    gradingStatus = if (subAssignment.customGradeStatusId != null) {
-                        submission.assignment?.course?.customGradeStatusesConnection?.edges?.firstOrNull { edge ->
-                            edge?.node?._id == subAssignment.customGradeStatusId
-                        }?.node?.name
-                    } else {
-                        getGradeStatusName(subAssignment.statusTag)
-                    },
+                    gradingStatus = subAssignment.statusTag.name.capitalized(),
                     excused = subAssignment.excused.orDefault(),
                     daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null
                 )
@@ -347,6 +347,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     it.copy(
                         error = false,
                         loading = false,
+                        finalScore = submission?.score,
+                        enteredScore = submission?.enteredScore?.toFloat(),
                         /*gradingStatus = submission?.status,
                         score = submission?.score,
                         grade = submission?.grade,

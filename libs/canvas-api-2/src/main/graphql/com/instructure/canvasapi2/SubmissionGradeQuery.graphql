@@ -136,6 +136,23 @@ mutation UpdateSubmissionStatusMutation($submissionId: ID!, $customGradeStatusId
             score
             secondsLate
             deductedPoints
+            subAssignmentSubmissions {
+                assignmentId
+                customGradeStatusId
+                enteredGrade
+                enteredScore
+                excused
+                grade
+                gradeMatchesCurrentSubmission
+                late
+                latePolicyStatus
+                missing
+                publishedGrade
+                publishedScore
+                score
+                statusTag
+                subAssignmentTag
+            }
         }
     }
 }

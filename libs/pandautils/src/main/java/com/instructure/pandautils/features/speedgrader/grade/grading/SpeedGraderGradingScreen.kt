@@ -130,28 +130,17 @@ fun SpeedGraderGradingContent(uiState: SpeedGraderGradingUiState) {
 
 @Composable
 private fun GradingContent(uiState: SpeedGraderGradingUiState) {
-    if (uiState.checkpoints.isNotEmpty()) {
-        uiState.checkpoints.forEach { checkpoint ->
-            GradingInputBlock(uiState, GradableAssignment(
-                tag = checkpoint.label,
-                enteredGrade = checkpoint.enteredGrade,
-                enteredScore = checkpoint.enteredScore,
-                pointsPossible = checkpoint.pointsPossible,
-                excused = checkpoint.excused,
-                gradingStatus = checkpoint.gradingStatus,
-                daysLate = checkpoint.daysLate
-            ))
-            CanvasDivider()
-        }
-    } else {
+    uiState.gradableAssignments.forEach { checkpoint ->
         GradingInputBlock(uiState, GradableAssignment(
-            enteredGrade = uiState.enteredGrade,
-            enteredScore = uiState.enteredScore,
-            pointsPossible = uiState.pointsPossible,
-            excused = uiState.excused,
-            gradingStatus = uiState.gradingStatus,
-            daysLate = uiState.daysLate
+            tag = checkpoint.tag,
+            enteredGrade = checkpoint.enteredGrade,
+            enteredScore = checkpoint.enteredScore,
+            pointsPossible = checkpoint.pointsPossible,
+            excused = checkpoint.excused,
+            gradingStatus = checkpoint.gradingStatus,
+            daysLate = checkpoint.daysLate
         ))
+        CanvasDivider()
     }
 }
 
@@ -294,7 +283,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
         uiState.enteredScore?.let { numberFormatter.format(uiState.enteredScore) } ?: "-"
     val pointsPossible =
         uiState.pointsPossible?.let { numberFormatter.format(uiState.pointsPossible) } ?: "-"
-    val finalScore = uiState.score?.let { numberFormatter.format(uiState.score) } ?: "-"
+    val finalScore = uiState.finalScore?.let { numberFormatter.format(uiState.finalScore) } ?: "-"
 
     Card(
         modifier = Modifier.padding(vertical = 16.dp),
@@ -369,7 +358,7 @@ private fun FinalScore(uiState: SpeedGraderGradingUiState) {
             }
 
 
-            val finalGrade = uiState.grade?.let { grade ->
+            val finalGrade = uiState.finalGrade?.let { grade ->
                 when (uiState.gradingType) {
                     GradingType.points -> {
                         pluralStringResource(
@@ -827,7 +816,7 @@ private fun PointGradingTypeInput(
         )
     }
 
-    val sliderState = remember(uiState.enteredScore, maxScore, minScore) {
+    val sliderState = remember(gradableAssignment.enteredScore, maxScore, minScore) {
         SliderState(
             value = sliderDrivenScore,
             valueRange = minScore * pointScale..maxScore * pointScale,
@@ -933,22 +922,30 @@ private fun SpeedGraderGradingContentPreview() {
     CanvasTheme(courseColor = Color.Magenta) {
         SpeedGraderGradingContent(
             SpeedGraderGradingUiState(
-                excused = true,
                 loading = false,
                 pointsPossible = 20.0,
-                enteredGrade = "15",
                 enteredScore = 15.0f,
-                grade = "14",
-                score = 14.0,
+                finalGrade = "14",
+                finalScore = 14.0,
                 pointsDeducted = 1.0,
                 onScoreChange = { _, _ -> },
                 submittedAt = Date(),
-                daysLate = 4f,
                 gradingType = GradingType.points,
                 onPercentageChange = { _, _ -> },
                 onExcuse = {},
                 onStatusChange = { _, _ -> },
-                onLateDaysChange = {}
+                onLateDaysChange = {},
+                gradableAssignments = listOf(
+                    GradableAssignment(
+                        excused = true,
+                        pointsPossible = 20.0,
+                        enteredGrade = "15",
+                        enteredScore = 15.0f,
+                        grade = "14",
+                        score = 14.0,
+                        daysLate = 4f,
+                    ),
+                )
             )
         )
     }
@@ -964,18 +961,26 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 gradeHidden = true,
                 loading = false,
                 pointsPossible = 20.0,
-                enteredGrade = "90%",
                 enteredScore = 18f,
-                grade = "90%",
-                score = 15.0,
+                finalGrade = "90%",
+                finalScore = 15.0,
                 onScoreChange = { _, _ -> },
                 submittedAt = Date(),
-                daysLate = 4f,
                 gradingType = GradingType.percent,
                 onPercentageChange = { _, _ -> },
                 onExcuse = {},
                 onStatusChange = { _, _ -> },
-                onLateDaysChange = {}
+                onLateDaysChange = {},
+                gradableAssignments = listOf(
+                    GradableAssignment(
+                        pointsPossible = 20.0,
+                        enteredGrade = "90%",
+                        enteredScore = 18f,
+                        grade = "14",
+                        score = 14.0,
+                        daysLate = 4f,
+                    ),
+                )
             )
         )
     }
@@ -990,18 +995,26 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
             SpeedGraderGradingUiState(
                 loading = false,
                 pointsPossible = 20.0,
-                enteredGrade = "incomplete",
                 enteredScore = 0f,
-                grade = "A",
-                score = 15.0,
+                finalGrade = "A",
+                finalScore = 15.0,
                 submittedAt = Date(),
-                daysLate = 4f,
                 onScoreChange = { _, _ -> },
                 gradingType = GradingType.pass_fail,
                 onPercentageChange = { _, _ -> },
                 onExcuse = {},
                 onStatusChange = { _, _ -> },
-                onLateDaysChange = {}
+                onLateDaysChange = {},
+                gradableAssignments = listOf(
+                    GradableAssignment(
+                        pointsPossible = 20.0,
+                        enteredGrade = "incomplete",
+                        enteredScore = 0f,
+                        grade = "A",
+                        score = 15.0,
+                        daysLate = 4f,
+                    ),
+                )
             )
         )
     }
@@ -1016,16 +1029,14 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
             SpeedGraderGradingUiState(
                 loading = false,
                 pointsPossible = 20.5,
-                enteredGrade = "A",
                 enteredScore = 0f,
-                grade = null,
-                score = 15.0,
+                finalGrade = null,
+                finalScore = 15.0,
                 onScoreChange = { _, _ -> },
                 gradingType = GradingType.letter_grade,
                 onPercentageChange = { _, _ -> },
                 pointsDeducted = 2.0,
                 submittedAt = Date(),
-                daysLate = 4f,
                 letterGrades = listOf(
                     GradingSchemeRow("A", 90.0),
                     GradingSchemeRow("B", 80.0),
@@ -1035,7 +1046,18 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 ),
                 onExcuse = {},
                 onStatusChange = { _, _ -> },
-                onLateDaysChange = {}
+                onLateDaysChange = {},
+                gradableAssignments = listOf(
+                    GradableAssignment(
+                        excused = true,
+                        pointsPossible = 20.5,
+                        enteredGrade = "A",
+                        enteredScore = 15.0f,
+                        grade = "A",
+                        score = 15.0,
+                        daysLate = 4f,
+                    ),
+                )
             )
         )
     }
