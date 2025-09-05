@@ -60,6 +60,7 @@ import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -414,7 +415,8 @@ fun SpeedGraderOwnCommentItem(
                 ).orEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
-                    .wrapContentWidth(Alignment.End),
+                    .wrapContentWidth(Alignment.End)
+                    .testTag("ownCommentCreatedAtDate"),
                 fontSize = 12.sp,
                 lineHeight = 16.sp,
                 color = colorResource(id = R.color.textDark),
@@ -432,7 +434,8 @@ fun SpeedGraderOwnCommentItem(
                             color = LocalCourseColor.current,
                             shape = RoundedCornerShape(size = 16.dp)
                         )
-                        .padding(8.dp),
+                        .padding(8.dp)
+                        .testTag("ownCommentText"),
                     fontSize = 14.sp,
                     lineHeight = 19.sp,
                     color = colorResource(id = R.color.textLightest),
@@ -688,6 +691,7 @@ fun SpeedGraderUserCommentItem(
             ) {
                 Text(
                     text = comment.authorName,
+                    modifier = Modifier.testTag("commentAuthorName"),
                     fontSize = 16.sp,
                     lineHeight = 21.sp,
                     fontWeight = FontWeight.SemiBold,
@@ -698,6 +702,7 @@ fun SpeedGraderUserCommentItem(
                     text = DateHelper.getDateTimeString(
                         LocalContext.current, comment.createdAt
                     ).orEmpty(),
+                    modifier = Modifier.testTag("commentCreatedAtDate"),
                     fontSize = 12.sp,
                     lineHeight = 16.sp,
                     color = colorResource(id = R.color.textDark)
