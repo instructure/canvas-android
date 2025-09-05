@@ -341,4 +341,8 @@
         <item quantity="other">Complete %1$d of %2$d courses</item>
     </plurals>
     <string name="programDetails_failedToRefresh">Failed to refresh program.</string>
+    <string name="programSwitcher_programOverview">Program overview</string>
+    <string name="programSwitcher_goBack">All</string>
+    <string name="learnScreen_partOfProgram">Part of %s</string>
+    <string name="learnScreen_courseCannotBeOpened">The course cannot be opened.</string>
 </resources>

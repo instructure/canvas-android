@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs
+package com.instructure.horizon.features.learn.program
 
 import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager

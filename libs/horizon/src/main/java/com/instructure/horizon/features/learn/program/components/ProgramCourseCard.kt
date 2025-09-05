@@ -13,10 +13,11 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs.components
+package com.instructure.horizon.features.learn.program.components
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.graphics.Color
@@ -43,7 +45,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.programs.ProgressBarUiState
+import com.instructure.horizon.features.learn.program.ProgressBarUiState
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -65,6 +67,7 @@ data class ProgramCourseCardState(
     val courseProgress: Double? = null,
     val chips: List<CourseCardChipState> = emptyList(),
     val dashedBorder: Boolean = false,
+    val courseClicked: (() -> Unit)? = null,
 )
 
 sealed class CourseCardStatus(
@@ -115,6 +118,10 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
             }
             .conditional(!state.dashedBorder) {
                 border(HorizonBorder.level1(state.status.borderColor), HorizonCornerRadius.level2)
+            }
+            .clip(HorizonCornerRadius.level2)
+            .conditional(state.courseClicked != null) {
+                clickable { state.courseClicked?.invoke() }
             }
             .padding(16.dp)
     ) {

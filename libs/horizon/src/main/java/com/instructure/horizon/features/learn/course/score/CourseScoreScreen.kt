@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.score
+package com.instructure.horizon.features.learn.course.score
 
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.background
@@ -77,11 +77,11 @@ import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LearnScoreScreen(
+fun CourseScoreScreen(
     courseId: Long,
     mainNavController: NavHostController,
     modifier: Modifier = Modifier,
-    viewModel: LearnScoreViewModel = hiltViewModel()
+    viewModel: CourseScoreViewModel = hiltViewModel()
 ) {
     val state by viewModel.uiState.collectAsState()
     var previousCourseId: Long? by rememberSaveable { mutableStateOf(null) }
@@ -105,10 +105,10 @@ fun LearnScoreScreen(
 
 @Composable
 private fun LearnScoreContent(
-    state: LearnScoreUiState,
+    state: CourseScoreUiState,
     courseId: Long,
     mainNavController: NavHostController,
-    onSelectedSortOptionChanged: (LearnScoreSortOption) -> Unit,
+    onSelectedSortOptionChanged: (CourseScoreSortOption) -> Unit,
     modifier: Modifier = Modifier
 ) {
     var isExpanded by rememberSaveable { mutableStateOf(false) }
@@ -162,9 +162,9 @@ private fun LearnScoreContent(
 
 @Composable
 private fun AssignmentsContent(
-    state: LearnScoreUiState,
+    state: CourseScoreUiState,
     navigateToAssignment: (Long) -> Unit,
-    onSelectedSortOptionChanged: (LearnScoreSortOption) -> Unit,
+    onSelectedSortOptionChanged: (CourseScoreSortOption) -> Unit,
 ) {
     Box(
         contentAlignment = Alignment.Center,
@@ -174,7 +174,7 @@ private fun AssignmentsContent(
     ) {
         var isSelectOpen by remember { mutableStateOf(false) }
         var isSelectFocused by remember { mutableStateOf(false) }
-        val options = LearnScoreSortOption.entries.associateBy { stringResource(it.label) }
+        val options = CourseScoreSortOption.entries.associateBy { stringResource(it.label) }
         Column (
             modifier = Modifier
                 .padding(vertical = 16.dp)
@@ -404,12 +404,12 @@ fun LearnScoreContentPreview() {
         )
     )
     LearnScoreContent(
-        state = LearnScoreUiState(
+        state = CourseScoreUiState(
             screenState = LoadingState(),
             currentScore = null,
             assignmentGroups = assignmentGroups.map { AssignmentGroupScoreItem(it) },
             sortedAssignments = assignmentGroups.flatMap { it.assignments.map { AssignmentScoreItem(it) } },
-            selectedSortOption = LearnScoreSortOption.DueDateDescending
+            selectedSortOption = CourseScoreSortOption.DueDateDescending
         ),
         1L,
         NavHostController(LocalContext.current),

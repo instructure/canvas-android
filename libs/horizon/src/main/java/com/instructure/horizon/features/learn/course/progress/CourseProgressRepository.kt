@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.progress
+package com.instructure.horizon.features.learn.course.progress
 
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
-class LearnProgressRepository @Inject constructor(
+class CourseProgressRepository @Inject constructor(
     private val moduleApi: ModuleAPI.ModuleInterface
 ) {
     suspend fun getModuleItems(

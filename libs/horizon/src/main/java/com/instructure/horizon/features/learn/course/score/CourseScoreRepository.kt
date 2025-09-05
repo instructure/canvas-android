@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.score
+package com.instructure.horizon.features.learn.course.score
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
@@ -25,7 +25,7 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import javax.inject.Inject
 
-class LearnScoreRepository @Inject constructor(
+class CourseScoreRepository @Inject constructor(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
     private val apiPrefs: ApiPrefs

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.score
+package com.instructure.horizon.features.learn.course.score
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
@@ -35,13 +35,13 @@ import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
 @HiltViewModel
-class LearnScoreViewModel @Inject constructor(
+class CourseScoreViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val learnScoreRepository: LearnScoreRepository,
+    private val courseScoreRepository: CourseScoreRepository,
 ): ViewModel() {
 
     private val _uiState = MutableStateFlow(
-        LearnScoreUiState(
+        CourseScoreUiState(
             screenState = LoadingState(
                 onRefresh = ::refresh,
                 onSnackbarDismiss = ::dismissSnackbar,
@@ -76,9 +76,9 @@ class LearnScoreViewModel @Inject constructor(
     }
 
     private suspend fun getData(courseId: Long, forceRefresh: Boolean = false) {
-        val assignmentGroups = learnScoreRepository.getAssignmentGroups(courseId, forceRefresh)
+        val assignmentGroups = courseScoreRepository.getAssignmentGroups(courseId, forceRefresh)
         val assignmentGroupItems = assignmentGroups.map { AssignmentGroupScoreItem(it) }
-        val enrollments = learnScoreRepository.getEnrollments(courseId, forceRefresh)
+        val enrollments = courseScoreRepository.getEnrollments(courseId, forceRefresh)
         val grades = enrollments.first { it.enrollmentState == EnrollmentAPI.STATE_ACTIVE }.grades
         assignments = assignmentGroups.flatMap { it.assignments }
         val sortedAssignments = sortAssignments()
@@ -101,7 +101,7 @@ class LearnScoreViewModel @Inject constructor(
         }
     }
 
-    fun updateSelectedSortOption(sortOption: LearnScoreSortOption) {
+    fun updateSelectedSortOption(sortOption: CourseScoreSortOption) {
         _uiState.update { it.copy(selectedSortOption = sortOption) }
         val sortedAssignments = sortAssignments()
         _uiState.update { it.copy(sortedAssignments = sortedAssignments) }
@@ -109,8 +109,8 @@ class LearnScoreViewModel @Inject constructor(
 
     private fun sortAssignments(): List<AssignmentScoreItem> {
         return when (_uiState.value.selectedSortOption) {
-            LearnScoreSortOption.AssignmentNameAscending -> assignments.sortedBy { it.name }
-            LearnScoreSortOption.DueDateDescending -> assignments.sortedWith(
+            CourseScoreSortOption.AssignmentNameAscending -> assignments.sortedBy { it.name }
+            CourseScoreSortOption.DueDateDescending -> assignments.sortedWith(
                 compareBy(nullsFirst()) { it.dueDate }
             ).asReversed()
         }.map { AssignmentScoreItem(it) }
