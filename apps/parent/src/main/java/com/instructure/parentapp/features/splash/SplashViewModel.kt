@@ -68,6 +68,13 @@ class SplashViewModel @Inject constructor(
             val theme = repository.getTheme()
             theme?.let { _events.send(SplashAction.ApplyTheme(it)) }
 
+            // Fetch environment feature flags for app functionality
+            try {
+                featureFlagProvider.fetchEnvironmentFeatureFlags()
+            } catch (e: Exception) {
+                // Log error but don't block app startup
+            }
+
             if (apiPrefs.canBecomeUser == null && qrMasqueradeId == 0L) {
                 if (apiPrefs.domain.startsWith("siteadmin", true)) {
                     apiPrefs.canBecomeUser = true

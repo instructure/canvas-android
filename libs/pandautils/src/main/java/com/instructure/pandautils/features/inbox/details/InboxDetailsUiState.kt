@@ -29,6 +29,8 @@ data class InboxDetailsUiState(
     val state: ScreenState = ScreenState.Loading,
     val confirmationDialogState: ConfirmationDialogState = ConfirmationDialogState(),
     val showBackButton: Boolean = true,
+    val showDeleteButton: Boolean = true,
+    val showReplyAllButton: Boolean = true,
 )
 
 data class ConfirmationDialogState(

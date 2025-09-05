@@ -188,7 +188,7 @@ fun CalendarScreen(
                         )
                     },
                     expanded = fabExpandedState,
-                    expandedItems = listOf(
+                    expandedItems = listOfNotNull(
                         {
                             ExpandableFabItem(
                                 icon = painterResource(id = R.drawable.ic_todo),
@@ -201,18 +201,20 @@ fun CalendarScreen(
                                     .semantics { traversalIndex = 1f }
                             )
                         },
-                        {
-                            ExpandableFabItem(
-                                icon = painterResource(id = R.drawable.ic_calendar_month_24),
-                                text = stringResource(id = R.string.calendarAddEvent),
-                                modifier = Modifier
-                                    .clickable {
-                                        fabExpandedState.value = false
-                                        actionHandler(CalendarAction.AddEventTapped)
-                                    }
-                                    .semantics { traversalIndex = 2f }
-                            )
-                        }
+                        if (calendarScreenUiState.showAddEventButton) {
+                            {
+                                ExpandableFabItem(
+                                    icon = painterResource(id = R.drawable.ic_calendar_month_24),
+                                    text = stringResource(id = R.string.calendarAddEvent),
+                                    modifier = Modifier
+                                        .clickable {
+                                            fabExpandedState.value = false
+                                            actionHandler(CalendarAction.AddEventTapped)
+                                        }
+                                        .semantics { traversalIndex = 2f }
+                                )
+                            }
+                        } else null
                     )
                 )
             }
