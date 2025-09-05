@@ -19,6 +19,9 @@ package com.instructure.pandautils.features.grades
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -49,6 +52,7 @@ import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Icon
 import androidx.compose.material.Scaffold
@@ -63,8 +67,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -86,15 +92,18 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
 import com.instructure.pandautils.compose.composables.CanvasSwitch
+import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -106,7 +115,9 @@ import kotlinx.coroutines.launch
 @Composable
 fun GradesScreen(
     uiState: GradesUiState,
-    actionHandler: (GradesAction) -> Unit
+    actionHandler: (GradesAction) -> Unit,
+    canvasContextColor: Int,
+    appBarUiState: AppBarUiState? = null,
 ) {
     CanvasTheme {
         val snackbarHostState = remember { SnackbarHostState() }
@@ -124,11 +135,52 @@ fun GradesScreen(
         Scaffold(
             backgroundColor = colorResource(id = R.color.backgroundLightest),
             snackbarHost = { SnackbarHost(hostState = snackbarHostState, modifier = Modifier.testTag("snackbarHost")) },
+            topBar = {
+                appBarUiState?.let {
+                    CanvasThemedAppBar(
+                        title = it.title,
+                        subtitle = it.subtitle,
+                        navigationActionClick = it.navigationActionClick,
+                        backgroundColor = Color(color = canvasContextColor),
+                        contentColor = colorResource(id = R.color.textLightest),
+                        actions = {
+                            FilterIcon(uiState, actionHandler, colorResource(id = R.color.textLightest))
+                            if (it.bookmarkable) {
+                                var overflowMenuExpanded by remember { mutableStateOf(false) }
+                                OverflowMenu(
+                                    modifier = Modifier.background(color = colorResource(id = R.color.backgroundLightestElevated)),
+                                    showMenu = overflowMenuExpanded,
+                                    onDismissRequest = {
+                                        overflowMenuExpanded = !overflowMenuExpanded
+                                    },
+                                    iconColor = colorResource(R.color.textLightest)
+                                ) {
+                                    DropdownMenuItem(
+                                        modifier = Modifier.background(
+                                            color = colorResource(id = R.color.backgroundLightestElevated)
+                                        ),
+                                        onClick = {
+                                            overflowMenuExpanded = !overflowMenuExpanded
+                                            it.addBookmarkClick()
+                                        },
+                                    ) {
+                                        Text(
+                                            text = stringResource(id = R.string.addBookmark),
+                                            color = colorResource(id = R.color.textDarkest)
+                                        )
+                                    }
+                                }
+                            }
+                        }
+                    )
+                }
+            }
         ) { padding ->
             if (uiState.gradePreferencesUiState.show) {
                 GradePreferencesDialog(
                     uiState = uiState,
-                    actionHandler = actionHandler
+                    actionHandler = actionHandler,
+                    canvasContextColor = canvasContextColor
                 )
             }
 
@@ -155,7 +207,7 @@ fun GradesScreen(
 
                     uiState.isLoading -> {
                         Loading(
-                            color = Color(uiState.canvasContextColor),
+                            color = Color(color = canvasContextColor),
                             modifier = Modifier
                                 .fillMaxSize()
                                 .testTag("loading")
@@ -165,8 +217,10 @@ fun GradesScreen(
                     else -> {
                         GradesScreenContent(
                             uiState = uiState,
-                            userColor = uiState.canvasContextColor,
-                            actionHandler = actionHandler
+                            contextColor = canvasContextColor,
+                            actionHandler = actionHandler,
+                            canvasContextColor = canvasContextColor,
+                            showFilterIconOnGradesCard = appBarUiState == null
                         )
                     }
                 }
@@ -176,7 +230,7 @@ fun GradesScreen(
                     modifier = Modifier
                         .align(Alignment.TopCenter)
                         .testTag("pullRefreshIndicator"),
-                    contentColor = Color(uiState.canvasContextColor)
+                    contentColor = Color(color = canvasContextColor)
                 )
             }
         }
@@ -186,7 +240,8 @@ fun GradesScreen(
 @Composable
 private fun GradePreferencesDialog(
     uiState: GradesUiState,
-    actionHandler: (GradesAction) -> Unit
+    actionHandler: (GradesAction) -> Unit,
+    canvasContextColor: Int
 ) {
     FullScreenDialog(
         onDismissRequest = {
@@ -204,7 +259,8 @@ private fun GradePreferencesDialog(
             },
             navigationActionClick = {
                 actionHandler(GradesAction.HideGradePreferences)
-            }
+            },
+            canvasContextColor = canvasContextColor
         )
     }
 }
@@ -213,8 +269,10 @@ private fun GradePreferencesDialog(
 @Composable
 private fun GradesScreenContent(
     uiState: GradesUiState,
-    userColor: Int,
-    actionHandler: (GradesAction) -> Unit
+    contextColor: Int,
+    actionHandler: (GradesAction) -> Unit,
+    showFilterIconOnGradesCard: Boolean,
+    canvasContextColor: Int
 ) {
     val lazyListState = rememberLazyListState()
 
@@ -230,9 +288,10 @@ private fun GradesScreenContent(
         if (isPortrait) {
             GradesCard(
                 uiState = uiState,
-                userColor = userColor,
+                contextColor = contextColor,
                 shouldShowNewText = shouldShowNewText,
-                actionHandler = actionHandler
+                actionHandler = actionHandler,
+                showFilterIcon = showFilterIconOnGradesCard
             )
         }
 
@@ -245,9 +304,10 @@ private fun GradesScreenContent(
                 if (!isPortrait) {
                     GradesCard(
                         uiState = uiState,
-                        userColor = userColor,
+                        contextColor = contextColor,
                         shouldShowNewText = false,
-                        actionHandler = actionHandler
+                        actionHandler = actionHandler,
+                        showFilterIcon = showFilterIconOnGradesCard
                     )
                 }
 
@@ -281,7 +341,7 @@ private fun GradesScreenContent(
                         onCheckedChange = {
                             actionHandler(GradesAction.OnlyGradedAssignmentsSwitchCheckedChange(it))
                         },
-                        color = Color(uiState.canvasContextColor),
+                        color = Color(color = canvasContextColor),
                         modifier = Modifier
                             .height(24.dp)
                             .semantics {
@@ -306,9 +366,16 @@ private fun GradesScreenContent(
                     )
                 }
 
-                if (it.expanded) {
-                    items(it.assignments) { assignment ->
-                        AssignmentItem(assignment, actionHandler, userColor)
+                items(
+                    items = it.assignments,
+                    key = { assignment -> assignment.id }
+                ) { assignment ->
+                    AnimatedVisibility(
+                        visible = it.expanded,
+                        enter = expandVertically(),
+                        exit = shrinkVertically()
+                    ) {
+                        AssignmentItem(assignment, actionHandler, contextColor)
                     }
                 }
             }
@@ -319,15 +386,21 @@ private fun GradesScreenContent(
 @Composable
 private fun GradesCard(
     uiState: GradesUiState,
-    userColor: Int,
+    contextColor: Int,
     shouldShowNewText: Boolean,
-    actionHandler: (GradesAction) -> Unit
+    actionHandler: (GradesAction) -> Unit,
+    showFilterIcon: Boolean
 ) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
             .fillMaxWidth()
-            .padding(start = 16.dp, top = 16.dp, bottom = 16.dp)
+            .padding(
+                top = 16.dp,
+                bottom = 16.dp,
+                start = 16.dp,
+                end = if (showFilterIcon) 0.dp else 16.dp
+            )
     ) {
         Card(
             modifier = Modifier
@@ -391,31 +464,43 @@ private fun GradesCard(
                 }
             }
         }
-        Box(
-            modifier = Modifier
-                .size(48.dp)
-                .clip(CircleShape)
-                .selectable(!uiState.gradePreferencesUiState.isDefault) {
-                    actionHandler(GradesAction.ShowGradePreferences)
-                }
-                .semantics {
-                    role = Role.Button
-                },
-            contentAlignment = Alignment.Center
-        ) {
-            Icon(
-                painter = painterResource(
-                    id = if (uiState.gradePreferencesUiState.isDefault) {
-                        R.drawable.ic_filter
-                    } else {
-                        R.drawable.ic_filter_active
-                    }
-                ),
-                contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
-                tint = Color(userColor),
-                modifier = Modifier.size(24.dp)
-            )
+
+        if (showFilterIcon) {
+            FilterIcon(uiState, actionHandler, Color(color = contextColor))
         }
+    }
+}
+
+@Composable
+private fun FilterIcon(
+    uiState: GradesUiState,
+    actionHandler: (GradesAction) -> Unit,
+    tint: Color
+) {
+    Box(
+        modifier = Modifier
+            .size(48.dp)
+            .clip(CircleShape)
+            .selectable(!uiState.gradePreferencesUiState.isDefault) {
+                actionHandler(GradesAction.ShowGradePreferences)
+            }
+            .semantics {
+                role = Role.Button
+            },
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(
+                id = if (uiState.gradePreferencesUiState.isDefault) {
+                    R.drawable.ic_filter
+                } else {
+                    R.drawable.ic_filter_active
+                }
+            ),
+            contentDescription = stringResource(id = R.string.gradesFilterContentDescription),
+            tint = tint,
+            modifier = Modifier.size(24.dp)
+        )
     }
 }
 
@@ -455,7 +540,7 @@ fun AssignmentItem(
         Icon(
             painter = painterResource(id = uiState.iconRes),
             contentDescription = null,
-            tint = Color(userColor),
+            tint = Color(color = userColor),
             modifier = Modifier
                 .size(24.dp)
                 .semantics {
@@ -513,7 +598,7 @@ fun AssignmentItem(
             if (gradeText.isNotEmpty()) {
                 Text(
                     text = gradeText,
-                    color = Color(userColor),
+                    color = Color(color = userColor),
                     fontSize = 16.sp,
                     modifier = Modifier
                         .semantics {
@@ -559,7 +644,8 @@ private fun GradesScreenPreview() {
             ),
             gradeText = "96% A"
         ),
-        actionHandler = {}
+        actionHandler = {},
+        canvasContextColor = android.graphics.Color.RED
     )
 }
 
@@ -583,23 +669,27 @@ private fun AssignmentItem1Preview() {
 @Preview(showBackground = true)
 @Composable
 private fun GradesScreenEmptyPreview() {
+    ContextKeeper.appContext = LocalContext.current
     GradesScreen(
         uiState = GradesUiState(
             isLoading = false,
             items = emptyList()
         ),
-        actionHandler = {}
+        actionHandler = {},
+        canvasContextColor = android.graphics.Color.RED
     )
 }
 
 @Preview(showBackground = true)
 @Composable
 private fun GradesScreenErrorPreview() {
+    ContextKeeper.appContext = LocalContext.current
     GradesScreen(
         uiState = GradesUiState(
             isLoading = false,
             isError = true
         ),
-        actionHandler = {}
+        actionHandler = {},
+        canvasContextColor = android.graphics.Color.RED
     )
 }

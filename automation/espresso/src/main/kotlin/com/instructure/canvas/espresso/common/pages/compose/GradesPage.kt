@@ -144,4 +144,9 @@ class GradesPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.onNodeWithText("Grading Period", useUnmergedTree = true).assertIsDisplayed()
         composeTestRule.onNodeWithText("Sort By", useUnmergedTree = true).assertIsDisplayed()
     }
+
+    fun assertToolbarTitles(subtitle: String) {
+        composeTestRule.onNodeWithText("Grades", useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNodeWithText(subtitle, useUnmergedTree = true).assertIsDisplayed()
+    }
 }

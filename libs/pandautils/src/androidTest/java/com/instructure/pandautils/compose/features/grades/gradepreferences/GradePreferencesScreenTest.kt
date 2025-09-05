@@ -57,14 +57,14 @@ class GradePreferencesScreenTest {
                     selectedGradingPeriod = null,
                     sortBy = SortBy.DUE_DATE,
                     courseName = "Test Course",
-                    canvasContextColor = Color.RED,
                     gradingPeriods = listOf(
                         GradingPeriod(1, "Period 1"),
                         GradingPeriod(2, "Period 2")
                     )
                 ),
                 onPreferenceChangeSaved = { _, _ -> },
-                navigationActionClick = {}
+                navigationActionClick = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -109,14 +109,14 @@ class GradePreferencesScreenTest {
                     selectedGradingPeriod = GradingPeriod(2, "Period 2"),
                     sortBy = SortBy.DUE_DATE,
                     courseName = "Test Course",
-                    canvasContextColor = Color.RED,
                     gradingPeriods = listOf(
                         GradingPeriod(1, "Period 1"),
                         GradingPeriod(2, "Period 2")
                     )
                 ),
                 onPreferenceChangeSaved = { _, _ -> },
-                navigationActionClick = {}
+                navigationActionClick = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -138,7 +138,6 @@ class GradePreferencesScreenTest {
             selectedGradingPeriod = null,
             sortBy = SortBy.GROUP,
             courseName = "Test Course",
-            canvasContextColor = Color.RED,
             gradingPeriods = emptyList()
         )
 
@@ -146,7 +145,8 @@ class GradePreferencesScreenTest {
             GradePreferencesScreen(
                 uiState = testState,
                 onPreferenceChangeSaved = { _, _ -> },
-                navigationActionClick = {}
+                navigationActionClick = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -170,11 +170,11 @@ class GradePreferencesScreenTest {
                     selectedGradingPeriod = null,
                     sortBy = SortBy.DUE_DATE,
                     courseName = "Test Course",
-                    canvasContextColor = Color.RED,
                     gradingPeriods = emptyList()
                 ),
                 onPreferenceChangeSaved = { _, _ -> },
-                navigationActionClick = {}
+                navigationActionClick = {},
+                canvasContextColor = Color.RED
             )
         }
 

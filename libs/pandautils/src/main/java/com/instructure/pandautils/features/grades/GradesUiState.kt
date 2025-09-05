@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.features.grades
 
-import android.graphics.Color
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -28,11 +27,18 @@ import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.DisplayGrade
 
 
+data class AppBarUiState(
+    val title: String,
+    val subtitle: String,
+    val navigationActionClick: () -> Unit,
+    val bookmarkable: Boolean,
+    val addBookmarkClick: () -> Unit
+)
+
 data class GradesUiState(
     val isLoading: Boolean = true,
     val isError: Boolean = false,
     val isRefreshing: Boolean = false,
-    val canvasContextColor: Int = Color.BLACK,
     val items: List<AssignmentGroupUiState> = emptyList(),
     val gradePreferencesUiState: GradePreferencesUiState = GradePreferencesUiState(),
     val onlyGradedAssignmentsSwitchEnabled: Boolean = true,
