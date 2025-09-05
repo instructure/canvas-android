@@ -47,6 +47,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
@@ -70,6 +71,7 @@ import com.instructure.horizon.features.learn.course.CourseDetailsUiState
 import com.instructure.horizon.features.learn.program.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.ProgramDetailsViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -167,7 +169,7 @@ private fun LearnScreenWrapper(
         modifier = modifier
             .fillMaxSize()
     ) {
-        Column(modifier = Modifier.padding(top = 24.dp)) {
+        Column(modifier = Modifier.padding(top = 16.dp)) {
             val selectedLearningItem = state.selectedLearningItem
             AnimatedContent(selectedLearningItem) { selectedItem ->
                 selectedItem?.parentItem?.let { parentItem ->
@@ -232,17 +234,20 @@ private fun ProgramText(
     }
     Text(
         text = annotatedString, style = HorizonTypography.p1, modifier = Modifier
-            .padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
+            .padding(start = 16.dp, end = 16.dp)
+            .clip(HorizonCornerRadius.level2)
             .clickable {
                 onSelectedLearningItemChanged(programItem)
-            })
+            }
+            .padding(8.dp)
+    )
 }
 
 @Composable
 private fun DropDownTitle(learningItems: List<LearningItem>, selectedItem: LearningItem, onSelect: (LearningItem) -> Unit) {
     Column(
         modifier = Modifier
-            .padding(start = 24.dp, end = 24.dp)
+            .padding(start = 16.dp, end = 16.dp)
     ) {
         val showDropDown = learningItems.size > 1
 
@@ -262,7 +267,9 @@ private fun DropDownTitle(learningItems: List<LearningItem>, selectedItem: Learn
                     heightInPx = it.size.height
                     width = with(localDensity) { it.size.width.toDp() }
                 }
+                .clip(HorizonCornerRadius.level2)
                 .clickable(enabled = showDropDown) { isMenuOpen = !isMenuOpen }
+                .padding(8.dp)
         ) {
             AnimatedContent(
                 selectedItem,

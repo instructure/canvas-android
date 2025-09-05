@@ -119,8 +119,8 @@ open class QLClientConfig {
             block: QLClientConfig.() -> Unit = {}
         ): ApolloResponse<DATA> {
             val config = QLClientConfig()
-            if (forceNetwork) config.fetchPolicy = HttpFetchPolicy.NetworkOnly
             config.block()
+            if (forceNetwork) config.fetchPolicy = HttpFetchPolicy.NetworkOnly
             // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
             val result = config.buildClient().query(query).executeV3()
             return result
