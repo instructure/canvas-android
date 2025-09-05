@@ -257,6 +257,15 @@ object SubmissionAPI {
         ): DataResult<Submission>
 
         @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
+        suspend fun postSubmissionLateSecondsOverride(
+            @Path("contextId") contextId: Long,
+            @Path("assignmentId") assignmentId: Long,
+            @Path("userId") userId: Long,
+            @Query("submission[seconds_late_override]") lateSeconds: Int,
+            @Tag restParams: RestParams
+        ): DataResult<Submission>
+
+        @PUT("courses/{contextId}/assignments/{assignmentId}/submissions/{userId}")
         fun postSubmissionExcusedStatus(
             @Path("contextId") contextId: Long,
             @Path("assignmentId") assignmentId: Long, @Path("userId") userId: Long,

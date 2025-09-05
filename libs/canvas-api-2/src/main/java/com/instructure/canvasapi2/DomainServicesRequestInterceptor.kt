@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CedarApiPref
+import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.restParams
@@ -83,5 +84,14 @@ class RedwoodRequestInterceptor @Inject constructor(
 ) : DomainServicesRequestInterceptor(apiPrefs) {
     override fun intercept(chain: Interceptor.Chain): Response {
         return super.intercept(chain, redwoodApiPref.token)
+    }
+}
+
+class JourneyRequestInterceptor @Inject constructor(
+    private val journeyApiPref: JourneyApiPref,
+    apiPrefs: ApiPrefs
+) : DomainServicesRequestInterceptor(apiPrefs) {
+    override fun intercept(chain: Interceptor.Chain): Response {
+        return super.intercept(chain, journeyApiPref.token)
     }
 }

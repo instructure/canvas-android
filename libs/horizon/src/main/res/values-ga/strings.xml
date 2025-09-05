@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Fógraí</string>
     <string name="accountNotificationEmailToggleLabel">Ríomhphost</string>
     <string name="accountNotificationPushToggleLabel">Brúfhógra</string>
+    <string name="accountNotificationSmsToggleLabel">Fógra SMS</string>
     <string name="accountNotificationsFailedToUpdate">Theip ar rogha fógraí a nuashonrú</string>
     <string name="moduleItemCompleteAllItems">Críochnaigh na míreanna go léir</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Críochnaigh na míreanna riachtanacha go léir</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Níl aon teachtaireachtaí ann fós.</string>
     <string name="notesActionMenuCopy">Cóipeáil</string>
     <string name="notesActionMenuAddNote">Cuir nóta leis</string>
+    <string name="notesActionMenuAddImportantNote">Tábhachtach</string>
+    <string name="notesActionMenuAddConfusingNote">Mearbhall</string>
     <string name="attemptCard_score">Scór: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Iarrachtaí</string>
     <string name="attemptBottomSheet_noAttempts">Ceadaíonn an tasc seo iarrachtaí iolracha. Nuair a bheidh uaslódáil déanta agat, is féidir leat í a fheiceáil anseo.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">An bhfuil tú cinnte gur mhaith leat scoir? Ní shábhálfar do chuid athruithe.</string>
     <string name="exitConfirmationExitButtonLabel">Scoir</string>
     <string name="exitConfirmationCancelButtonLabel">Cealaigh</string>
+    <string name="dashboard_courseInvite">Tá cuireadh tugtha duit páirt a ghlacadh i: %s</string>
+    <string name="dashboard_courseInviteAccept">Glac</string>
+    <string name="dashboard_courseInviteFailed">Theip ar ghlacadh le cuireadh an chúrsa</string>
+    <string name="dashboard_emptyMessage">Níl tú rollaithe i gcúrsa faoi láthair.</string>
+    <string name="learnEmptyMessage">Níl tú rollaithe i gcúrsa faoi láthair.</string>
 </resources>

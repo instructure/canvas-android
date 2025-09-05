@@ -38,7 +38,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalUriHandler
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -158,7 +157,6 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
 
 @Composable
 private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit, modifier: Modifier = Modifier) {
-    val uriHandler = LocalUriHandler.current
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -167,9 +165,8 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
             .clickable {
                 when (item.type) {
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
-                    is AccountItemType.OpenInNew -> {
-                        uriHandler.openUri(item.type.url)
-                    }
+
+                    is AccountItemType.OpenExternal -> navController.navigate(item.type.route.route)
 
                     is AccountItemType.LogOut -> {
                         onLogout()

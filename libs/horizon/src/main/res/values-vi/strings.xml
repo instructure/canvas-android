@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Thông Báo</string>
     <string name="accountNotificationEmailToggleLabel">Email</string>
     <string name="accountNotificationPushToggleLabel">Thông báo đẩy</string>
+    <string name="accountNotificationSmsToggleLabel">Thông báo sms</string>
     <string name="accountNotificationsFailedToUpdate">Cập nhật tùy chọn thông báo không thành công</string>
     <string name="moduleItemCompleteAllItems">Hoàn thành tất cả các mục</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Hoàn thành tất cả các mục bắt buộc</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Chưa có tin nhắn nào.</string>
     <string name="notesActionMenuCopy">Sao chép</string>
     <string name="notesActionMenuAddNote">Thêm ghi chú</string>
+    <string name="notesActionMenuAddImportantNote">Quan trọng</string>
+    <string name="notesActionMenuAddConfusingNote">Gây nhầm lẫn</string>
     <string name="attemptCard_score">Điểm: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Lần Làm</string>
     <string name="attemptBottomSheet_noAttempts">Bài tập này cho phép nhiều lần làm. Khi bạn đã nộp bài, bạn có thể xem tại đây.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Bạn có chắc chắn muốn thoát không? Các thay đổi của bạn sẽ không được lưu lại.</string>
     <string name="exitConfirmationExitButtonLabel">Thoát</string>
     <string name="exitConfirmationCancelButtonLabel">Hủy</string>
+    <string name="dashboard_courseInvite">Bạn đã được mời tham gia %s</string>
+    <string name="dashboard_courseInviteAccept">Chấp Nhận</string>
+    <string name="dashboard_courseInviteFailed">Chấp nhận lời mời khóa học không thành công</string>
+    <string name="dashboard_emptyMessage">Bạn hiện chưa ghi danh vào khóa học nào.</string>
+    <string name="learnEmptyMessage">Bạn hiện chưa ghi danh vào khóa học nào.</string>
 </resources>

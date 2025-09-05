@@ -142,6 +142,7 @@
     <string name="accountNotificationsTitle">通知</string>
     <string name="accountNotificationEmailToggleLabel">E メール</string>
     <string name="accountNotificationPushToggleLabel">プッシュ通知</string>
+    <string name="accountNotificationSmsToggleLabel">SMS 通知</string>
     <string name="accountNotificationsFailedToUpdate">通知優先設定を更新に失敗しました</string>
     <string name="moduleItemCompleteAllItems">すべての項目を完了する</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">必須項目をすべて完了する</string>
@@ -267,6 +268,8 @@
     <string name="inboxNoMessagesLabel">メッセージはまだありません</string>
     <string name="notesActionMenuCopy">コピー</string>
     <string name="notesActionMenuAddNote">注を追加</string>
+    <string name="notesActionMenuAddImportantNote">重要</string>
+    <string name="notesActionMenuAddConfusingNote">混乱</string>
     <string name="attemptCard_score">スコア：%1$s/%2$s</string>
     <string name="attemptBottomSheet_header">回数</string>
     <string name="attemptBottomSheet_noAttempts">この課題は複数回の提出企図が可能です。提出後、ここをクリックすると提出内容を確認できます。</string>
@@ -314,4 +317,9 @@
     <string name="exitConfirmationMessage">本当に終了しますか？変更は保存されません。</string>
     <string name="exitConfirmationExitButtonLabel">終了</string>
     <string name="exitConfirmationCancelButtonLabel">キャンセル</string>
+    <string name="dashboard_courseInvite">%sに参加するよう招待されています</string>
+    <string name="dashboard_courseInviteAccept">同意する</string>
+    <string name="dashboard_courseInviteFailed">コースへの招待を受け入れられませんでした</string>
+    <string name="dashboard_emptyMessage">現在、コースに登録されていません。</string>
+    <string name="learnEmptyMessage">現在、コースに登録されていません。</string>
 </resources>

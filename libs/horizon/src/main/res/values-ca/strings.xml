@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notificacions</string>
     <string name="accountNotificationEmailToggleLabel">Adreça electrònica</string>
     <string name="accountNotificationPushToggleLabel">Notificació d\'inserció</string>
+    <string name="accountNotificationSmsToggleLabel">Notificació per SMS</string>
     <string name="accountNotificationsFailedToUpdate">No s\'ha pogut actualitzar la preferència de notificacions</string>
     <string name="moduleItemCompleteAllItems">Completeu tots els elements</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Completeu tots els elements obligatoris</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Encara no hi ha cap missatge.</string>
     <string name="notesActionMenuCopy">Copia</string>
     <string name="notesActionMenuAddNote">Afegiu la nota</string>
+    <string name="notesActionMenuAddImportantNote">Important</string>
+    <string name="notesActionMenuAddConfusingNote">Confús</string>
     <string name="attemptCard_score">Puntuació: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Intents</string>
     <string name="attemptBottomSheet_noAttempts">Aquesta activitat permet més d\'un intent. Un cop heu fet una entrega, podeu visualitzar-la aquí.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Segur que voleu sortir? No es desaran els canvis.</string>
     <string name="exitConfirmationExitButtonLabel">Surt</string>
     <string name="exitConfirmationCancelButtonLabel">Cancel·la</string>
+    <string name="dashboard_courseInvite">Se us ha convidat a participar en %s</string>
+    <string name="dashboard_courseInviteAccept">Accepta</string>
+    <string name="dashboard_courseInviteFailed">No s’ha pogut acceptar la invitació a l\'assignatura</string>
+    <string name="dashboard_emptyMessage">En aquest moment, no esteu inscrit en cap assignatura.</string>
+    <string name="learnEmptyMessage">En aquest moment, no esteu inscrit en cap assignatura.</string>
 </resources>

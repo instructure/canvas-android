@@ -91,6 +91,8 @@ data class Submission(
         val hasSubAssignmentSubmissions: Boolean = false,
         @SerializedName("sub_assignment_submissions")
         val subAssignmentSubmissions: ArrayList<SubAssignmentSubmission> = arrayListOf(),
+        @SerializedName("seconds_late")
+        val secondsLate: Long? = null,
 
         // Testing purpose fields
         val status: String? = null

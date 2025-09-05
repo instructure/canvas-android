@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Hysbysiadau</string>
     <string name="accountNotificationEmailToggleLabel">E-bost</string>
     <string name="accountNotificationPushToggleLabel">Hysbysiad marchnata</string>
+    <string name="accountNotificationSmsToggleLabel">Hysbysiad SMS</string>
     <string name="accountNotificationsFailedToUpdate">Wedi methu diweddaru dewisiadau hysbysiadau</string>
     <string name="moduleItemCompleteAllItems">Cwblhau pob eitem</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Cwblhau pob eitem angenrheidiol</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Dim negeseuon ar hyn o bryd.</string>
     <string name="notesActionMenuCopy">Copïo</string>
     <string name="notesActionMenuAddNote">Ychwanegu nodyn</string>
+    <string name="notesActionMenuAddImportantNote">Pwysig</string>
+    <string name="notesActionMenuAddConfusingNote">Dryslyd</string>
     <string name="attemptCard_score">Sgôr: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Ymgais</string>
     <string name="attemptBottomSheet_noAttempts">Mae’r aseiniad hwn yn caniatáu mwy nag un ymgais. Unwaith rydych chi wedi gwneud cyflwyniad, fedrwch chi ddim edrych arno yma.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Ydych chi’n siŵr eich bod am adael? Ni fydd eich newidiadau’n cael eu cadw.</string>
     <string name="exitConfirmationExitButtonLabel">Gadael</string>
     <string name="exitConfirmationCancelButtonLabel">Canslo</string>
+    <string name="dashboard_courseInvite">Rydych chi wedi cael gwahoddiad i ymuno â %s</string>
+    <string name="dashboard_courseInviteAccept">Derbyn</string>
+    <string name="dashboard_courseInviteFailed">Wedi methu derbyn gwahoddiad i ymuno â’r cwrs</string>
+    <string name="dashboard_emptyMessage">Dydych chi ddim wedi ymrestru ar gwrs ar hyn o bryd.</string>
+    <string name="learnEmptyMessage">Dydych chi ddim wedi ymrestru ar gwrs ar hyn o bryd.</string>
 </resources>

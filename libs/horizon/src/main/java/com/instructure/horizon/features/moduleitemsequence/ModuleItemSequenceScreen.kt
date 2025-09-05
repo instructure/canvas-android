@@ -146,6 +146,8 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
             onAiAssistClick = { uiState.updateShowAiAssist(true) },
             onNotebookClick = { uiState.updateShowNotebook(true) },
+            notebookEnabled = uiState.notebookButtonEnabled,
+            aiAssistEnabled = uiState.aiAssistButtonEnabled,
             hasUnreadComments = uiState.hasUnreadComments
         )
     }) { contentPadding ->
@@ -530,6 +532,8 @@ private fun ModuleItemSequenceBottomBar(
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    aiAssistEnabled: Boolean = false,
+    notebookEnabled: Boolean = false,
     onAiAssistClick: () -> Unit = {},
     onNotebookClick: () -> Unit = {},
     hasUnreadComments: Boolean = false
@@ -555,12 +559,14 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
+                    enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
+                    enabled = notebookEnabled,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onNotebookClick,

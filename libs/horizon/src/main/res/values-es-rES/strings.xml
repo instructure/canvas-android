@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notificaciones</string>
     <string name="accountNotificationEmailToggleLabel">Correo electrónico</string>
     <string name="accountNotificationPushToggleLabel">Notificación automática</string>
+    <string name="accountNotificationSmsToggleLabel">Notificación por SMS</string>
     <string name="accountNotificationsFailedToUpdate">No se han podido actualizar las preferencias de notificaciones</string>
     <string name="moduleItemCompleteAllItems">Completar todos los ítems</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Completar todos los ítems obligatorios</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">No hay ningún mensaje todavía.</string>
     <string name="notesActionMenuCopy">Copiar</string>
     <string name="notesActionMenuAddNote">Añadir anotación</string>
+    <string name="notesActionMenuAddImportantNote">Importante</string>
+    <string name="notesActionMenuAddConfusingNote">Confuso</string>
     <string name="attemptCard_score">Puntuación: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Intentos</string>
     <string name="attemptBottomSheet_noAttempts">Esta actividad permite múltiples intentos. Una vez que hayas realizado una entrega, podrás verla aquí.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">¿Seguro que quieres salir? No se guardarán los cambios.</string>
     <string name="exitConfirmationExitButtonLabel">Salir</string>
     <string name="exitConfirmationCancelButtonLabel">Cancelar</string>
+    <string name="dashboard_courseInvite">Has recibido una invitación para unirte a %s</string>
+    <string name="dashboard_courseInviteAccept">Aceptar</string>
+    <string name="dashboard_courseInviteFailed">No se ha podido aceptar la invitación a la asignatura</string>
+    <string name="dashboard_emptyMessage">Actualmente no estás inscrito en ninguna asignatura.</string>
+    <string name="learnEmptyMessage">Actualmente no estás inscrito en ninguna asignatura.</string>
 </resources>

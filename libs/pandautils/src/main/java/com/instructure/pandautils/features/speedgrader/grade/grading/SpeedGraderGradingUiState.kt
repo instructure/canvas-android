@@ -35,6 +35,7 @@ data class SpeedGraderGradingUiState(
     val onStatusChange: (GradeStatus, String?) -> Unit,
     val additionalRepliesNeeded: Int? = null,
     val gradableAssignments: List<GradableAssignment> = emptyList(),
+    val onLateDaysChange: (Float?) -> Unit
 )
 
 data class GradeStatus(

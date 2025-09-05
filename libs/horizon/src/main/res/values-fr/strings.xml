@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">Notifications</string>
     <string name="accountNotificationEmailToggleLabel">Adresse e-mail</string>
     <string name="accountNotificationPushToggleLabel">Notification push</string>
+    <string name="accountNotificationSmsToggleLabel">Notification par SMS</string>
     <string name="accountNotificationsFailedToUpdate">Échec de mise à jour des préférences de notification</string>
     <string name="moduleItemCompleteAllItems">Terminer tous les éléments</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Terminer tous les éléments obligatoires</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">Aucun message pour le moment.</string>
     <string name="notesActionMenuCopy">Copier</string>
     <string name="notesActionMenuAddNote">Ajouter une note</string>
+    <string name="notesActionMenuAddImportantNote">Important</string>
+    <string name="notesActionMenuAddConfusingNote">Confus</string>
     <string name="attemptCard_score">Score : %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Tentatives</string>
     <string name="attemptBottomSheet_noAttempts">Plusieurs essais sont autorisés pour ce travail. Une fois que vous avez soumis un travail, vous pouvez le voir ici.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Êtes-vous sûr de vouloir quitter ? Vos modifications ne seront pas enregistrées.</string>
     <string name="exitConfirmationExitButtonLabel">Quitter</string>
     <string name="exitConfirmationCancelButtonLabel">Annuler</string>
+    <string name="dashboard_courseInvite">Vous avez été invité(e) à vous inscrire au cours %s</string>
+    <string name="dashboard_courseInviteAccept">Accepter</string>
+    <string name="dashboard_courseInviteFailed">Échec d’acceptation de l’invitation d’inscription au cours</string>
+    <string name="dashboard_emptyMessage">Vous n’êtes inscrit(e) à un cours actuellement.</string>
+    <string name="learnEmptyMessage">Vous n’êtes inscrit(e) à un cours actuellement.</string>
 </resources>

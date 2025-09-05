@@ -146,6 +146,7 @@
     <string name="accountNotificationsTitle">การแจ้งข้อมูล</string>
     <string name="accountNotificationEmailToggleLabel">อีเมล</string>
     <string name="accountNotificationPushToggleLabel">การแจ้งข้อมูลแบบพุช</string>
+    <string name="accountNotificationSmsToggleLabel">การแจ้งข้อมูลผ่าน SMS</string>
     <string name="accountNotificationsFailedToUpdate">ไม่สามารถอัพเดตค่าปรับแต่งการแจ้งข้อมูล</string>
     <string name="moduleItemCompleteAllItems">ดำเนินการทั้งหมด</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">ดำเนินการตามที่กำหนดทั้งหมด</string>
@@ -272,6 +273,8 @@
     <string name="inboxNoMessagesLabel">ยังไม่มีข้อความ</string>
     <string name="notesActionMenuCopy">คัดลอก</string>
     <string name="notesActionMenuAddNote">เพิ่มหมายเหตุ</string>
+    <string name="notesActionMenuAddImportantNote">สำคัญ</string>
+    <string name="notesActionMenuAddConfusingNote">สับสน</string>
     <string name="attemptCard_score">คะแนน: %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">การดำเนินการ</string>
     <string name="attemptBottomSheet_noAttempts">ภารกิจนี้ทำได้หลายครั้ง หลังจากจัดส่ง คุณสามารถดูรายละเอียดได้ที่นี่</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">แน่ใจว่าต้องการออกหรือไม่ การแก้ไขของคุณจะไม่ถูกบันทึกไว้</string>
     <string name="exitConfirmationExitButtonLabel">ออก</string>
     <string name="exitConfirmationCancelButtonLabel">ยกเลิก</string>
+    <string name="dashboard_courseInvite">คุณได้รับเชิญเข้าร่วม %s</string>
+    <string name="dashboard_courseInviteAccept">ยอมรับ</string>
+    <string name="dashboard_courseInviteFailed">ไม่สามารถตอบรับคำเชิญเข้าร่วมบทเรียน</string>
+    <string name="dashboard_emptyMessage">ปัจจุบันคุณไม่ได้ลงทะเบียนในบทเรียนใด</string>
+    <string name="learnEmptyMessage">ปัจจุบันคุณไม่ได้ลงทะเบียนในบทเรียนใด</string>
 </resources>

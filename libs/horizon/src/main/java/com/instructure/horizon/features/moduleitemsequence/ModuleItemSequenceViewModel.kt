@@ -37,8 +37,8 @@ import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScre
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.formatMonthDay
 import com.instructure.pandautils.utils.formatIsoDuration
+import com.instructure.pandautils.utils.localisedFormatMonthDay
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -243,7 +243,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
             detailTags.add(it.formatIsoDuration(context))
         }
         item.moduleDetails?.dueDate?.let {
-            detailTags.add(context.getString(R.string.modulePager_dueDate, it.formatMonthDay()))
+            detailTags.add(context.getString(R.string.modulePager_dueDate, it.localisedFormatMonthDay()))
         }
         item.moduleDetails?.pointsPossible?.let {
             val points = it.toDoubleOrNull()?.toInt() ?: 0
@@ -284,6 +284,13 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun loadModuleItem(position: Int, moduleItemId: Long) {
+        _uiState.update {
+            it.copy(
+                notebookButtonEnabled = false,
+                aiAssistButtonEnabled = false
+            )
+        }
+
         viewModelScope.tryLaunch {
             val moduleItem =
                 repository.getModuleItem(courseId, moduleItems.find { it.id == moduleItemId }?.moduleId.orDefault(), moduleItemId)
@@ -542,7 +549,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
     }
 
     private fun updateNotebookObjectTypeAndId(objectTypeAndId: Pair<String, String>) {
-        _uiState.update { it.copy(objectTypeAndId = objectTypeAndId) }
+        _uiState.update {
+            it.copy(
+                objectTypeAndId = objectTypeAndId,
+                notebookButtonEnabled = true
+            )
+        }
     }
 
     private fun updateAiAssistContext(source: AiAssistContextSource, content: String) {
@@ -555,6 +567,12 @@ class ModuleItemSequenceViewModel @Inject constructor(
             ),
             contextString = content
         )
+
+        _uiState.update {
+            it.copy(
+                aiAssistButtonEnabled = true
+            )
+        }
     }
 
     private fun courseProgressChanged() {

@@ -27,7 +27,11 @@ class SpeedGraderGradingRepository(
     private val submissionApi: SubmissionAPI.SubmissionInterface
 ) {
 
-    suspend fun getSubmissionGrade(assignmentId: Long, studentId: Long, forceNetwork: Boolean): SubmissionGradeQuery.Data {
+    suspend fun getSubmissionGrade(
+        assignmentId: Long,
+        studentId: Long,
+        forceNetwork: Boolean
+    ): SubmissionGradeQuery.Data {
         return submissionGradeManager.getSubmissionGrade(assignmentId, studentId, forceNetwork)
     }
 
@@ -73,6 +77,26 @@ class SpeedGraderGradingRepository(
         latePolicyStatus: String? = null,
         checkpointTag: String? = null
     ): UpdateSubmissionStatusMutation.Data {
-        return submissionGradeManager.updateSubmissionStatus(submissionId, customStatusId, latePolicyStatus, checkpointTag)
+        return submissionGradeManager.updateSubmissionStatus(
+            submissionId,
+            customStatusId,
+            latePolicyStatus,
+            checkpointTag
+        )
+    }
+
+    suspend fun updateLateSecondsOverride(
+        userId: Long,
+        assignmentId: Long,
+        courseId: Long,
+        lateSeconds: Int
+    ): Submission {
+        return submissionApi.postSubmissionLateSecondsOverride(
+            courseId,
+            assignmentId,
+            userId,
+            lateSeconds,
+            RestParams(isForceReadFromNetwork = true)
+        ).dataOrThrow
     }
 }

@@ -24,7 +24,7 @@
     <string name="bottomNav_aiAssist">Aide à l’IA</string>
     <string name="progressBar_percent">%1$s\%%</string>
     <string name="dashboard_resumeLearning">Continuer l’apprentissage</string>
-    <string name="learningObject_assignment">Tâche</string>
+    <string name="learningObject_assignment">Travail</string>
     <string name="learningObject_File">Fichier</string>
     <string name="learningObject_externalLink">Lien externe</string>
     <string name="learningObject_externalTool">Outil externe</string>
@@ -67,7 +67,7 @@
     <string name="overview">Aperçu</string>
     <string name="scores">Scores</string>
     <string name="notes">Remarques</string>
-    <string name="assignmentName">Nom de la tâche</string>
+    <string name="assignmentName">Nom du travail</string>
     <string name="dueDate">Date d’échéance</string>
     <string name="scoresItemassignmentName">Nom : %1$s</string>
     <string name="scoresItemDueDate">Date : %1$s</string>
@@ -76,7 +76,7 @@
     <string name="scoresItemResult">Résultat : %1$s/%2$s</string>
     <string name="noFeedback">–</string>
     <string name="sortBy">Trier par</string>
-    <string name="assignmentGroupWeights">Pondération de groupe de tâches</string>
+    <string name="assignmentGroupWeights">Pondération de groupe de travaux</string>
     <string name="weightPercentageValue">Pondération : %1$s\%%</string>
     <string name="averageScoreHeader">Note moyenne : %1$s\%%</string>
     <string name="failedToLoadScores">Échec du chargement des scores</string>
@@ -139,13 +139,14 @@
     <string name="accountNoticifationsFailedToLoadMessage">Échec du chargement des paramètres de notification</string>
     <string name="accountNotificationsAnnouncementsAndMessagesHeader">Annonces et messages</string>
     <string name="accountNotificationsAnnouncementsAndMessagesDescription">Recevez une notification à chaque fois que vous recevez une annonce de cours ou un nouveau message.</string>
-    <string name="accountNotificationsDueDatesHeader">Dates d’échéance des tâches</string>
-    <string name="accountNotificationsDueDatesDescription">Recevez une notification chaque fois que la date d’échéance d’une tâche est ajoutée ou modifiée.</string>
+    <string name="accountNotificationsDueDatesHeader">Dates d’échéance des travaux</string>
+    <string name="accountNotificationsDueDatesDescription">Recevez une notification chaque fois que la date d’échéance d’un travail est ajoutée ou modifiée.</string>
     <string name="accountNotificationsScoresHeader">Scores</string>
-    <string name="accountNotificationsScoresDescription">Recevoir une notification à chaque fois qu’une tâche est notée ou que la note est modifiée, et à chaque fois que la pondération de la note est modifiée.</string>
+    <string name="accountNotificationsScoresDescription">Recevoir une notification à chaque fois qu’un travail est noté ou que la note est modifiée, et à chaque fois que la pondération de la note est modifiée.</string>
     <string name="accountNotificationsTitle">Notifications</string>
     <string name="accountNotificationEmailToggleLabel">Adresse électronique</string>
     <string name="accountNotificationPushToggleLabel">Notification « push »</string>
+    <string name="accountNotificationSmsToggleLabel">Notification par SMS</string>
     <string name="accountNotificationsFailedToUpdate">Échec de la mise à jour des préférences de notification</string>
     <string name="moduleItemCompleteAllItems">Achever tous les éléments</string>
     <string name="moduleItemCompleteAllOfTheRequiredItems">Remplir tous les éléments requis</string>
@@ -169,7 +170,7 @@
     <string name="notificationsFailedToRefresh">Échec de l’actualisation des notifications</string>
     <string name="notificationsFailedToLoad">Échec du chargement des notifications</string>
     <string name="notificationsScoredItemTitle">Le score de %1$s est maintenant disponible</string>
-    <string name="notificationsAssignmentScoredCategoryLabel">Tâche notée</string>
+    <string name="notificationsAssignmentScoredCategoryLabel">Travail noté</string>
     <string name="notificationsDueDateChangedCategoryLabel">Changement de la date d’échéance</string>
     <string name="notificationsScoringWeightChangedCategoryLabel">Modification de la pondération de la notation</string>
     <string name="notificationsAnnouncementFromCetegoryLabel">Annonce de %1$s</string>
@@ -228,10 +229,10 @@
     <string name="ai_giveMeKeyTakeaways">Donnez-moi les points clés à retenir</string>
     <string name="ai_tellMeMore">En savoir plus sur ce sujet</string>
     <string name="ai_generateFlashcards">Générer des fiches d’étude</string>
-    <string name="assignmentDetails_submitAssignment">Envoyer la tâche</string>
+    <string name="assignmentDetails_submitAssignment">Envoyer le travail</string>
     <string name="assignmentDetails_deleteDraft">Supprimer l’ébauche</string>
     <string name="assignmentDetails_textEntryHint">Ajouter votre texte</string>
-    <string name="assignmentDetails_submissionSuccessTitle">La tâche a été envoyée.</string>
+    <string name="assignmentDetails_submissionSuccessTitle">Le travail a été envoyé.</string>
     <string name="assignmentDetails_submissionSuccessSubtitle">Nous avons reçu votre envoi. Vous recevrez une notification une fois qu’il aura été examiné.</string>
     <string name="assignmentDetails_submissionSuccessButton">Voir l’envoi</string>
     <string name="assignmentDetails_attemptNumber">Tentative %1$d</string>
@@ -256,7 +257,7 @@
     <string name="addNoteSaveLabel">Enregistrer</string>
     <string name="addNoteDeleteLabel">Supprimer</string>
     <string name="assignmentDetails_fileTypeNotSupported">Le type de fichier n’est pas autorisé</string>
-    <string name="assignmentDetails_submissionError">Erreur lors de l’envoi de la tâche</string>
+    <string name="assignmentDetails_submissionError">Erreur lors de l’envoi du travail</string>
     <string name="assignmentDetails_draftDeleted">Votre ébauche a été supprimée.</string>
     <string name="assessment_startQuiz">Démarrer le questionnaire</string>
     <string name="inboxAllMessagesScopeLabel">Tous les messages</string>
@@ -272,9 +273,11 @@
     <string name="inboxNoMessagesLabel">Aucun message pour l’instant.</string>
     <string name="notesActionMenuCopy">Copie</string>
     <string name="notesActionMenuAddNote">Ajouter une note</string>
+    <string name="notesActionMenuAddImportantNote">Important</string>
+    <string name="notesActionMenuAddConfusingNote">Confusion</string>
     <string name="attemptCard_score">Score : %1$s/%2$s</string>
     <string name="attemptBottomSheet_header">Tentatives</string>
-    <string name="attemptBottomSheet_noAttempts">Cette tâche peut faire l’objet de plusieurs tentatives. Une fois que vous l’avez envoyée, vous pouvez la consulter ici.</string>
+    <string name="attemptBottomSheet_noAttempts">Ce travail peut faire l’objet de plusieurs tentatives. Une fois que vous l’avez envoyé, vous pouvez le consulter ici.</string>
     <string name="assignmentDetails_viewingAttempt">Visualisation de la tentative %d</string>
     <string name="noteHasBeenSavedMessage">Enregistré dans le carnet de notes.</string>
     <string name="noteHasBeenDeletedMessage">Supprimé du carnet de notes.</string>
@@ -319,4 +322,9 @@
     <string name="exitConfirmationMessage">Voulez-vous vraiment quitter? Vos modifications ne seront pas enregistrées.</string>
     <string name="exitConfirmationExitButtonLabel">Quitter</string>
     <string name="exitConfirmationCancelButtonLabel">Annuler</string>
+    <string name="dashboard_courseInvite">Vous avez été invité(e) à rejoindre %s</string>
+    <string name="dashboard_courseInviteAccept">Accepter</string>
+    <string name="dashboard_courseInviteFailed">L\'invitation au cours n\'a pas été acceptée</string>
+    <string name="dashboard_emptyMessage">Vous n\'êtes pas encore inscrit(e) à un cours.</string>
+    <string name="learnEmptyMessage">Vous n\'êtes pas encore inscrit(e) à un cours.</string>
 </resources>

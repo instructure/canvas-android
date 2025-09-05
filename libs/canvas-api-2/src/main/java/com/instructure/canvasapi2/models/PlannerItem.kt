@@ -58,8 +58,10 @@ data class PlannerItem (
     var plannerOverride: PlannerOverride? = null,
 
     @SerializedName("details")
-    val plannableItemDetails: PlannerItemDetails? = null
-): Parcelable {
+    val plannableItemDetails: PlannerItemDetails? = null,
+
+    var isChecked: Boolean = false
+): Parcelable, CanvasComparable<PlannerItem>() {
 
     val canvasContext: CanvasContext
         get() {
@@ -71,6 +73,13 @@ data class PlannerItem (
             plannable.userId?.let { return User(id = it) }
             return CanvasContext.defaultCanvasContext()
         }
+
+    override val id: Long
+        get() = plannable.id
+    override val comparisonDate: Date
+        get() = plannableDate
+    override val comparisonString: String
+        get() = "${plannable.title}${plannable.subAssignmentTag}"
 
 }
 
