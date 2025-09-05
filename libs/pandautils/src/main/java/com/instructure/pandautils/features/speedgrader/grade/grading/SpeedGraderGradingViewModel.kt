@@ -21,6 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.SubmissionGradeQuery
+import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
@@ -101,19 +102,10 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 submissionId = submission._id
                 _uiState.update {
                     it.copy(
-                        pointsPossible = submission.assignment?.pointsPossible,
-                        score = submission.score,
-                        grade = submission.grade,
-                        excused = submission.excused.orDefault(),
-                        enteredGrade = submission.enteredGrade
-                            ?: resources.getString(R.string.not_graded),
-                        enteredScore = submission.enteredScore?.toFloat(),
-                        pointsDeducted = submission.deductedPoints,
                         gradingType = submission.assignment?.gradingType,
                         loading = false,
                         error = false,
                         gradeHidden = submission.hideGradeFromStudent.orDefault(),
-                        daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null,
                         submittedAt = submission.submittedAt,
                         gradingStatuses = submission.assignment?.course?.gradeStatuses
                             ?.map {
@@ -130,14 +122,13 @@ class SpeedGraderGradingViewModel @Inject constructor(
                                             name = it.node?.name.orEmpty()
                                         )
                                     }.orEmpty(),
-                        gradingStatus = submission.status,
                         letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
                             GradingSchemeRow(
                                 gradingStandard.letterGrade.orEmpty(),
                                 gradingStandard.baseValue.orDefault()
                             )
                         }.orEmpty(),
-                        checkpoints = getCheckpoints(submission)
+                        gradableAssignments = getGradableAssignments(submission)
                     )
                 }
             } catch (e: Exception) {
@@ -154,28 +145,83 @@ class SpeedGraderGradingViewModel @Inject constructor(
         }
     }
 
-    private fun getCheckpoints(submission: SubmissionGradeQuery.Submission): List<Checkpoint> {
-        return submission.subAssignmentSubmissions?.map { subAssignment ->
-            Checkpoint(
-                pointsPossible = submission.assignment?.checkpoints?.firstOrNull { it.tag == subAssignment.subAssignmentTag }?.pointsPossible,
-                enteredGrade = subAssignment.enteredGrade
-                    ?: resources.getString(R.string.not_graded),
-                enteredScore = subAssignment.enteredScore?.toFloat(),
-                grade = subAssignment.grade,
-                score = subAssignment.score,
-                label = subAssignment.subAssignmentTag,
-                gradingStatus = if (subAssignment.customGradeStatusId != null) {
-                    submission.assignment?.course?.customGradeStatusesConnection?.edges?.firstOrNull { edge ->
-                        edge?.node?._id == subAssignment.customGradeStatusId
-                    }?.node?.name
-                } else {
-                    getGradeStatusName(subAssignment.statusTag)
-                },
-                excused = subAssignment.excused.orDefault(),
-                daysLate = getDaysLate(subAssignment.secondsLate?.toDouble())
+    private fun getGradableAssignments(submission: SubmissionGradeQuery.Submission): List<GradableAssignment> {
+        return if (!submission.subAssignmentSubmissions.isNullOrEmpty()) {
+            submission.subAssignmentSubmissions?.map { subAssignment ->
+                GradableAssignment(
+                    pointsPossible = submission.assignment?.checkpoints?.firstOrNull { it.tag == subAssignment.subAssignmentTag }?.pointsPossible,
+                    enteredGrade = subAssignment.enteredGrade
+                        ?: resources.getString(R.string.not_graded),
+                    enteredScore = subAssignment.enteredScore?.toFloat(),
+                    grade = subAssignment.grade,
+                    score = subAssignment.score,
+                    tag = subAssignment.subAssignmentTag,
+                    gradingStatus = if (subAssignment.customGradeStatusId != null) {
+                        submission.assignment?.course?.customGradeStatusesConnection?.edges?.firstOrNull { edge ->
+                            edge?.node?._id == subAssignment.customGradeStatusId
+                        }?.node?.name
+                    } else {
+                        getGradeStatusName(subAssignment.statusTag)
+                    },
+                    excused = subAssignment.excused.orDefault(),
+                    daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null
+                )
+            } ?: emptyList()
+        } else {
+            listOf(
+                GradableAssignment(
+                    pointsPossible = submission.assignment?.pointsPossible,
+                    enteredGrade = submission.enteredGrade
+                        ?: resources.getString(R.string.not_graded),
+                    enteredScore = submission.enteredScore?.toFloat(),
+                    grade = submission.grade,
+                    score = submission.score,
+                    excused = submission.excused.orDefault(),
+                    gradingStatus = submission.status,
+                    daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null,
+                )
             )
-        } ?: emptyList()
+        }
     }
+
+    /*private fun getGradableAssignments(submission: UpdateSubmissionStatusMutation.Submission): List<GradableAssignment> {
+        return if (!submission.subAssignmentSubmissions.isNullOrEmpty()) {
+            submission.subAssignmentSubmissions?.map { subAssignment ->
+                GradableAssignment(
+                    pointsPossible = submission.assignment?.checkpoints?.firstOrNull { it.tag == subAssignment.subAssignmentTag }?.pointsPossible,
+                    enteredGrade = subAssignment.enteredGrade
+                        ?: resources.getString(R.string.not_graded),
+                    enteredScore = subAssignment.enteredScore?.toFloat(),
+                    grade = subAssignment.grade,
+                    score = subAssignment.score,
+                    tag = subAssignment.subAssignmentTag,
+                    gradingStatus = if (subAssignment.customGradeStatusId != null) {
+                        submission.assignment?.course?.customGradeStatusesConnection?.edges?.firstOrNull { edge ->
+                            edge?.node?._id == subAssignment.customGradeStatusId
+                        }?.node?.name
+                    } else {
+                        getGradeStatusName(subAssignment.statusTag)
+                    },
+                    excused = subAssignment.excused.orDefault(),
+                    daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null
+                )
+            } ?: emptyList()
+        } else {
+            listOf(
+                GradableAssignment(
+                    pointsPossible = submission.assignment?.pointsPossible,
+                    enteredGrade = submission.enteredGrade
+                        ?: resources.getString(R.string.not_graded),
+                    enteredScore = submission.enteredScore?.toFloat(),
+                    grade = submission.grade,
+                    score = submission.score,
+                    excused = submission.excused.orDefault(),
+                    gradingStatus = submission.status,
+                    daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null,
+                )
+            )
+        }
+    }*/
 
     private fun getGradeStatusName(status: CourseGradeStatus): String {
         return when (status) {
@@ -199,11 +245,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
     }
 
     private fun onScoreChanged(score: Float?, subAssignmentTag: String? = null) {
-        val enteredScore = if (subAssignmentTag != null) {
-            _uiState.value.checkpoints.firstOrNull { it.label == subAssignmentTag }?.enteredScore
-        } else {
-            _uiState.value.enteredScore
-        }
+        val enteredScore = getGradableAssignmentByTag(subAssignmentTag)?.enteredScore
         if (score == enteredScore) return
         debounceJob?.cancel()
 
@@ -240,13 +282,14 @@ class SpeedGraderGradingViewModel @Inject constructor(
     }
 
     private fun onPercentageChanged(percentage: Float?, subAssignmentTag: String? = null,) {
-        val pointsPossible = if (subAssignmentTag != null) {
-            _uiState.value.checkpoints.firstOrNull { it.label == subAssignmentTag }?.pointsPossible
-        } else {
-            _uiState.value.pointsPossible
-        }
+        val pointsPossible = getGradableAssignmentByTag(subAssignmentTag)?.pointsPossible
         val score = percentage?.let { (it / 100) * (pointsPossible ?: 0.0) }
         onScoreChanged(score?.toFloat(), subAssignmentTag)
+    }
+
+    private fun getGradableAssignmentByTag(tag: String?): GradableAssignment? {
+        return _uiState.value.gradableAssignments.firstOrNull { it.tag == tag }
+            ?: uiState.value.gradableAssignments.firstOrNull()
     }
 
     private fun getDaysLate(secondsLate: Double?): Int? {
@@ -301,14 +344,14 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     it.copy(
                         error = false,
                         loading = false,
-                        gradingStatus = submission?.status,
+                        /*gradingStatus = submission?.status,
                         score = submission?.score,
                         grade = submission?.grade,
                         enteredGrade = submission?.enteredGrade,
                         enteredScore = submission?.enteredScore?.toFloat(),
                         pointsDeducted = submission?.deductedPoints,
                         daysLate = if (submission?.late == true) getDaysLate(submission.secondsLate) else null,
-                        excused = submission?.excused.orDefault()
+                        excused = submission?.excused.orDefault()*/
                     )
                 }
             } catch (e: Exception) {

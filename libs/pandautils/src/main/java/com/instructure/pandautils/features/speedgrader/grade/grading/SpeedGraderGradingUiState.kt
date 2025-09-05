@@ -24,25 +24,17 @@ data class SpeedGraderGradingUiState(
     val loading: Boolean = true,
     val error: Boolean = false,
     val retryAction: (() -> Unit)? = null,
-    val pointsPossible: Double? = null,
-    val enteredGrade: String? = null,
-    val enteredScore: Float? = null,
-    val grade: String? = null,
-    val score: Double? = null,
-    val pointsDeducted: Double? = null,
     val gradingType: GradingType? = null,
     val submittedAt: Date? = null,
-    val daysLate: Int? = null,
-    val excused: Boolean = false,
     val letterGrades: List<GradingSchemeRow> = emptyList(),
     val gradingStatuses: List<GradeStatus> = emptyList(),
-    val gradingStatus: String? = null,
     val gradeHidden: Boolean = false,
     val onScoreChange: (Float?, String?) -> Unit,
     val onExcuse: (String?) -> Unit,
     val onPercentageChange: (Float?, String?) -> Unit,
     val onStatusChange: (GradeStatus, String?) -> Unit,
-    val checkpoints: List<Checkpoint> = emptyList(),
+    val additionalRepliesNeeded: Int? = null,
+    val gradableAssignments: List<GradableAssignment> = emptyList(),
 )
 
 data class GradeStatus(
@@ -51,22 +43,12 @@ data class GradeStatus(
     val name: String
 )
 
-data class Checkpoint(
-    val pointsPossible: Double? = null,
+data class GradableAssignment(
+    val tag: String? = null,
     val enteredGrade: String? = null,
     val enteredScore: Float? = null,
     val grade: String? = null,
     val score: Double? = null,
-    val label: String? = null,
-    val gradingStatus: String? = null,
-    val excused: Boolean = false,
-    val daysLate: Int? = null,
-)
-
-data class GradingInputData(
-    val tag: String? = null,
-    val enteredGrade: String? = null,
-    val enteredScore: Float? = null,
     val pointsPossible: Double? = null,
     val excused: Boolean = false,
     val gradingStatus: String? = null,

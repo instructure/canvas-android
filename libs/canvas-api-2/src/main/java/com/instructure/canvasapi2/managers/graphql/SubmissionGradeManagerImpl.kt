@@ -80,12 +80,13 @@ class SubmissionGradeManagerImpl : SubmissionGradeManager {
     ): UpdateSubmissionStatusMutation.Data {
         val statusId = if (customGradeStatusId != null) Optional.present(customGradeStatusId) else Optional.absent()
         val status = if (latePolicyStatus != null) Optional.present(latePolicyStatus) else Optional.absent()
+        val tag = if (checkpointTag != null) Optional.present(checkpointTag) else Optional.absent()
 
         val mutation = UpdateSubmissionStatusMutation(
             submissionId.toString(),
             statusId,
             status,
-            Optional.present(checkpointTag)
+            tag
         )
         val result = QLClientConfig.enqueueMutation(mutation)
         return result.dataAssertNoErrors
