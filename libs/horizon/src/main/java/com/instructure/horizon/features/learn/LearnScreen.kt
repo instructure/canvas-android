@@ -168,35 +168,15 @@ private fun LearnScreenWrapper(
             .fillMaxSize()
     ) {
         Column(modifier = Modifier.padding(top = 24.dp)) {
-            state.selectedLearningItem?.parentItem?.let { parentItem ->
-                val programName = parentItem.title
-                val text = stringResource(R.string.learnScreen_partOfProgram, programName)
-                val annotatedString = buildAnnotatedString {
-                    append(text)
-                    val startIndex = text.indexOf(programName)
-                    if (startIndex >= 0) {
-                        pushStringAnnotation(tag = "PROGRAM_DETAILS", annotation = "PROGRAM_DETAILS")
-                        addStyle(
-                            style = HorizonTypography.buttonTextLarge.copy(
-                                textDecoration = TextDecoration.Underline
-                            ).toSpanStyle(),
-                            start = startIndex,
-                            end = startIndex + (programName.length)
-                        )
-                        pop()
-                    }
+            val selectedLearningItem = state.selectedLearningItem
+            AnimatedContent(selectedLearningItem) { selectedItem ->
+                selectedItem?.parentItem?.let { parentItem ->
+                    ProgramText(parentItem, state.onSelectedLearningItemChanged)
                 }
-                Text(
-                    text = annotatedString, style = HorizonTypography.p1, modifier = Modifier
-                        .padding(horizontal = 24.dp)
-                        .clickable {
-                            state.onSelectedLearningItemChanged(parentItem)
-                        })
-                HorizonSpace(SpaceSize.SPACE_16)
             }
             DropDownTitle(
                 learningItems = state.learningItems,
-                selectedItem = state.selectedLearningItem ?: LearningItem.CourseItem(
+                selectedItem = selectedLearningItem ?: LearningItem.CourseItem(
                     CourseWithProgress(
                         courseId = -1, courseName = "", courseSyllabus = "", progress = 0.0
                     )
@@ -226,6 +206,36 @@ private fun LearnScreenWrapper(
             }
         }
     }
+}
+
+@Composable
+private fun ProgramText(
+    programItem: LearningItem,
+    onSelectedLearningItemChanged: ((LearningItem) -> Unit)
+) {
+    val programName = programItem.title
+    val text = stringResource(R.string.learnScreen_partOfProgram, programName)
+    val annotatedString = buildAnnotatedString {
+        append(text)
+        val startIndex = text.indexOf(programName)
+        if (startIndex >= 0) {
+            pushStringAnnotation(tag = "PROGRAM_DETAILS", annotation = "PROGRAM_DETAILS")
+            addStyle(
+                style = HorizonTypography.buttonTextLarge.copy(
+                    textDecoration = TextDecoration.Underline
+                ).toSpanStyle(),
+                start = startIndex,
+                end = startIndex + (programName.length)
+            )
+            pop()
+        }
+    }
+    Text(
+        text = annotatedString, style = HorizonTypography.p1, modifier = Modifier
+            .padding(start = 24.dp, end = 24.dp, bottom = 16.dp)
+            .clickable {
+                onSelectedLearningItemChanged(programItem)
+            })
 }
 
 @Composable
