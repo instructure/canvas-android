@@ -25,7 +25,7 @@ data class LearnUiState(
     val learningItems: List<LearningItem> = emptyList(),
     val selectedLearningItem: LearningItem? = null,
     val onSelectedLearningItemChanged: ((LearningItem) -> Unit) = {},
-    val onCourseSelected: (Long) -> Unit = {},
+    val onProgramCourseSelected: (String, Long) -> Unit = { _, _ -> },
 )
 
 sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boolean = true, open val parentItem: LearningItem? = null) {
@@ -33,7 +33,7 @@ sealed class LearningItem(val clickable: Boolean = true, val closeOnClick: Boole
         override val title: String = courseWithProgress.courseName
     }
 
-    data class ProgramGroupItem(val programName: String, val items: List<LearningItem>) : LearningItem(closeOnClick = false) {
+    data class ProgramGroupItem(val programId: String, val programName: String, val items: List<LearningItem>) : LearningItem(closeOnClick = false) {
         override val title: String = programName
     }
 
