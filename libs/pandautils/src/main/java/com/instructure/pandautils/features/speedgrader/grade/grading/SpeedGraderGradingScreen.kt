@@ -1029,8 +1029,8 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
             SpeedGraderGradingUiState(
                 loading = false,
                 pointsPossible = 20.5,
-                enteredScore = 0f,
-                finalGrade = null,
+                enteredScore = 15f,
+                finalGrade = "A",
                 finalScore = 15.0,
                 onScoreChange = { _, _ -> },
                 gradingType = GradingType.letter_grade,
@@ -1038,10 +1038,10 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 pointsDeducted = 2.0,
                 submittedAt = Date(),
                 letterGrades = listOf(
-                    GradingSchemeRow("A", 90.0),
-                    GradingSchemeRow("B", 80.0),
-                    GradingSchemeRow("C", 70.0),
-                    GradingSchemeRow("D", 60.0),
+                    GradingSchemeRow("A", 0.90),
+                    GradingSchemeRow("B", 0.80),
+                    GradingSchemeRow("C", 0.70),
+                    GradingSchemeRow("D", 0.60),
                     GradingSchemeRow("F", 0.0)
                 ),
                 onExcuse = {},
@@ -1057,6 +1057,51 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                         score = 15.0,
                         daysLate = 4f,
                     ),
+                )
+            )
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun SpeedGraderCheckpointsGradingContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    CanvasTheme(courseColor = Color.Magenta) {
+        SpeedGraderGradingContent(
+            SpeedGraderGradingUiState(
+                loading = false,
+                pointsPossible = 20.0,
+                enteredScore = 15.0f,
+                finalGrade = "14",
+                finalScore = 14.0,
+                pointsDeducted = 1.0,
+                onScoreChange = { _, _ -> },
+                submittedAt = Date(),
+                gradingType = GradingType.points,
+                onPercentageChange = { _, _ -> },
+                onExcuse = {},
+                onStatusChange = { _, _ -> },
+                onLateDaysChange = {},
+                gradableAssignments = listOf(
+                    GradableAssignment(
+                        excused = true,
+                        pointsPossible = 15.0,
+                        enteredGrade = "11",
+                        enteredScore = 11.0f,
+                        grade = "11",
+                        score = 11.0,
+                        daysLate = 4f,
+                    ),
+                    GradableAssignment(
+                        excused = true,
+                        pointsPossible = 5.0,
+                        enteredGrade = "4",
+                        enteredScore = 4f,
+                        grade = "4",
+                        score = 4.0,
+                        daysLate = 2f,
+                    )
                 )
             )
         )
