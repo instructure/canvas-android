@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.SubmissionGradeQuery
 import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
+import com.instructure.canvasapi2.UpdateSubmissionStatusMutation.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
@@ -347,16 +348,11 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     it.copy(
                         error = false,
                         loading = false,
+                        enteredScore = submission?.enteredScore?.toFloat(),
                         finalScore = submission?.score,
-                        enteredScore = submission?.enteredScore?.toFloat(),
-                        /*gradingStatus = submission?.status,
-                        score = submission?.score,
-                        grade = submission?.grade,
-                        enteredGrade = submission?.enteredGrade,
-                        enteredScore = submission?.enteredScore?.toFloat(),
+                        finalGrade = submission?.grade,
                         pointsDeducted = submission?.deductedPoints,
-                        daysLate = if (submission?.late == true) getDaysLate(submission.secondsLate) else null,
-                        excused = submission?.excused.orDefault()*/
+                        gradableAssignments = updateSubAssignments(it.gradableAssignments, submission?.subAssignmentSubmissions)
                     )
                 }
             } catch (e: Exception) {
@@ -368,6 +364,31 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun updateSubAssignments(currentState: List<GradableAssignment>, subAssignments: List<SubAssignmentSubmission>?): List<GradableAssignment> {
+        val updatedList = mutableListOf<GradableAssignment>()
+        subAssignments?.forEach { subAssignment ->
+            val current = currentState.firstOrNull { it.tag == subAssignment.subAssignmentTag }
+            val updated = current?.copy(
+                enteredGrade = subAssignment.enteredGrade,
+                enteredScore = subAssignment.enteredScore?.toFloat(),
+                grade = subAssignment.grade,
+                score = subAssignment.score,
+                excused = subAssignment.excused ?: current.excused,
+                gradingStatus = subAssignment.statusTag.name.capitalized(),
+                //customGradeStatusId = subAssignment.customGradeStatusId,
+                /*gradingStatus = if (subAssignment.customGradeStatusId != null) {
+                    null
+                } else {
+                    getGradeStatusName(subAssignment.statusTag)
+                },*/
+            )
+            updated?.let {
+                updatedList.add(it)
+            }
+        }
+        return updatedList.ifEmpty { currentState }
     }
 
     private fun onLateDaysChange(lateDays: Float?) {
