@@ -32,7 +32,7 @@ import com.instructure.pandautils.features.file.download.FileDownloadWorker
 import com.instructure.pandautils.room.appdatabase.daos.FileDownloadProgressDao
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressEntity
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
-import com.instructure.pandautils.utils.format
+import com.instructure.pandautils.utils.localisedFormat
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -148,7 +148,7 @@ class CommentsViewModel @Inject constructor(
         val commentCards = commentsData.comments.map {
             CommentCardState(
                 title = it.authorName,
-                date = it.createdAt.format("dd/MM, h:mm a"),
+                date = it.createdAt.localisedFormat("MM/dd, h:mm a", context),
                 subtitle = subtitle,
                 commentText = it.commentText,
                 fromCurrentUser = it.authorId == apiPrefs.user?.id,

@@ -291,7 +291,7 @@
     <string name="Todo">Elenco attività</string>
     <string name="todoFilter">Filtra corsi</string>
     <string name="filterByEllipsis">Filtra per...</string>
-    <string name="favoritedCoursesLabel">Corsi preferiti</string>
+    <string name="favoriteCoursesLabel">Corsi preferiti</string>
     <string name="Event">Evento</string>
     <string name="eventSuccessfulDeletion">Evento eliminato correttamente</string>
     <string name="timeIconDescription">Icona ora</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notifiche</string>
     <string name="todoWidgetTitleLong">Canvas - Elenco attività</string>
     <string name="gradesWidgetTitleLong">Canvas - Voti</string>
+    <string name="gradeWidgetTitleLong">Canvas - Voto</string>
     <string name="notificationWidgetTitleLong">Canvas - Notifiche</string>
     <string name="notLoggedIn">Non hai effettuato l\'accesso</string>
     <string name="widgetStyle">Scegli il tuo stile widget</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Voto dopo pubblicazione</string>
     <string name="gradeOverride">Sostituzione voto</string>
     <string name="currentGrade">Voto attuale </string>
-    <string name="opensInCanvasStudent">Si apre in Canvas Student</string>
+    <string name="opensInCanvasApp">Si apre nell’app Canvas</string>
     <string name="tab_student_view">Student View</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Spazio di archiviazione</string>
     <string name="offline_content_storage_info">%s di %s usato</string>
     <string name="offline_content_other">Altre app</string>
-    <string name="offline_content_canvas_student">Studente Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Rimasto</string>
-    <string name="offline_content_storage_info_a11y_description">Info spazio di archiviazione: %s di %s utilizzato, altre app %d%%, Canvas Student %d%%, Rimanente %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Info spazio di archiviazione: %s di %s utilizzato, Altre app %d%%, Canvas %d%%, Rimanente %d%%</string>
     <string name="offline_content_all_courses">Tutti i corsi</string>
     <string name="offline_content_sync">Sincronizza</string>
     <string name="offline_content_selected">%d selezionato/i</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Guida</string>
     <string name="screenTitleManageStudents">Gestisci studenti</string>
     <string name="screenTitleSettings">Impostazioni</string>
-    <string name="navigationDrawerSwitchUsers">Cambia studenti</string>
     <string name="navigationDrawerLogOut">Disconnetti</string>
     <string name="noStudentsError">Nessuno studente</string>
     <string name="noStudentsErrorDescription">Non stati monitorando alcuno studente.</string>
     <string name="noStudentsRefresh">Aggiorna</string>
     <string name="noGrade">Nessun voto</string>
+    <string name="noGrades">Nessun voto</string>
     <string name="errorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi dello studente.</string>
     <string name="parentNoCourses">Nessun corso</string>
     <string name="parentNoCoursesMessage">I corsi dello studente potrebbero non essere stati ancora pubblicati.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Sei uno studente o un insegnante?</string>
     <string name="studentOrTeacherSubtitle">Una delle altre nostre app potrebbe essere la scelta migliore. Toccane una per visitare Play Store</string>
     <string name="studentApp">STUDENTE</string>
-    <string name="canvasStudentApp">Studente Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">INSEGNANTE</string>
     <string name="canvasTeacherApp">Insegnante Canvas</string>
     <string name="inboxUnreadCountMoreThan99">Più di 99</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Studente aggiunto correttamente</string>
     <string name="addStudentTitle">Aggiungi studente con&#8230;</string>
     <string name="addStudentQrCodeTitle">Codice QR</string>
-    <string name="addStudentQrCodeExplanation">Gli studenti possono generare un codice QR usando l’app Canvas Student sul dispositivo mobile</string>
+    <string name="addStudentQrCodeExplanationCanvas">Gli studenti possono generare un codice QR usando l’app Canvas sul dispositivo mobile</string>
     <string name="addStudentPairingCodeTitle">Codice accoppiamento</string>
     <string name="addStudentPairingCodeExplanation">Gli studenti possono ricevere un codice di abbinamento sul sito web Canvas</string>
     <string name="pairingCodeDialogTitle">Aggiungi studente</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Annulla</string>
     <string name="pairingCodeDialogPositiveButton">OK</string>
     <string name="pairingCodeDialogError">Il tuo codice non è corretto o è scaduto.</string>
-    <string name="qrPairingTitle">Apri Canvas Student</string>
-    <string name="qrPairingDescription">Dovrai aprire la tua app Canvas Student per continuare. Vai in Menu principale > Impostazioni > Abbina con l\'Osservatore e scansiona il codice QR che vedi.</string>
-    <string name="qrCodePairingPrompt">Scansiona un codice QR da Canvas Student per l’associazione</string>
+    <string name="qrPairingTitleCanvas">Apri app Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Dovrai aprire la tua app Canvas studente per continuare. Vai in Menu principale > Impostazioni > Abbina con l\'Osservatore e scansiona il codice QR che vedi.</string>
+    <string name="qrCodePairingPromptCanvas">Scansiona un codice QR dall’app Canvas per l’associazione</string>
     <string name="a11y_addStudentContentDescription">Aggiungi studente</string>
     <string name="qrPairingErrorTitle">Codice QR scaduto</string>
     <string name="qrPairingErrorDescription">Il codice QR scansionato potrebbe essere scaduto. Aggiorna il codice sul dispositivo studente e riprova.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Si è verificato un errore durante il caricamento dei compiti</string>
     <string name="a11y_searchAssignments">Cerca compiti</string>
     <string name="dueAssignmentListItem">Scadenza %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cerca tra i destinatari</string>
+    <string name="a11y_recipientIsRemoved">%1$s rimosso</string>
+    <string name="widgetDueDate">Scade alle %1$s</string>
+    <string name="widgetFromTo">%1$s a %2$s</string>
+    <string name="widgetAllDay">Tutto il giorno</string>
+    <string name="widgetErrorTitle">Spiacenti. Si è verificato un problema</string>
+    <string name="widgetErrorSubtitle">Abbiamo dei problemi a visualizzare subito le tue attività. Riprova tra un attimo o vai all’app.</string>
+    <string name="widgetToDoEmptyTitle">Hai completato il processo per adesso!</string>
+    <string name="widgetToDoEmptySubtitle">Sembra che tu sia libero per le prossime 4 settimane. Aggiungere qualche attività da fare?</string>
+    <string name="widgetNotLoggedInTitle">Accedi!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Per vedere la attività da fare, accedi al tuo account nell’app. Ci vorrà un attimo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Schermata Apri attività da fare</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Crea nuova attività da fare</string>
+    <string name="widgetGradesErrorSubtitle">Abbiamo dei problemi a visualizzare subito i tuoi voti. Riprova tra un attimo o vai all’app.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Per vedere i tuoi voti, accedi al tuo account nell’app. Ci vorrà un attimo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Abbiamo dei problemi a visualizzare subito i tuoi voti.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Per vedere i tuoi voti, accedi al tuo account nell’app.</string>
+    <string name="widgetSingleGradeSelectCourse">Scegli un corso</string>
+    <string name="widgetGradesErrorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi.</string>
+    <string name="settingsSwitchExperience">Passa a Canvas Career</string>
 </resources>

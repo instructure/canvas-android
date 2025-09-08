@@ -19,19 +19,23 @@ package com.instructure.canvasapi2.models
 import com.instructure.canvasapi2.BuildConfig
 
 enum class DomainService(
-    val audience: String,
-    val workflows: String,
+    val baseUrl: String,
+    val workflow: String,
 ) {
     PINE(
-        audience = BuildConfig.PINE_BASE_URL,
-        workflows = "pine",
+        baseUrl = BuildConfig.PINE_BASE_URL,
+        workflow = "pine",
     ),
     CEDAR(
-        audience = BuildConfig.CEDAR_BASE_URL,
-        workflows = "cedar",
+        baseUrl = BuildConfig.CEDAR_BASE_URL,
+        workflow = "cedar",
     ),
     REDWOOD(
-        audience = BuildConfig.REDWOOD_BASE_URL,
-        workflows = "redwood",
+        baseUrl = BuildConfig.REDWOOD_BASE_URL,
+        workflow = "redwood",
     ),
+    JOURNEY(
+        baseUrl = BuildConfig.JOURNEY_BASE_URL,
+        workflow = "journey",
+    )
 }

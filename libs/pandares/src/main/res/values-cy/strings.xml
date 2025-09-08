@@ -291,7 +291,7 @@
     <string name="Todo">Tasgau i’w Gwneud</string>
     <string name="todoFilter">Hidlo Cyrsiau</string>
     <string name="filterByEllipsis">Hidlo yn ôl&#8230;</string>
-    <string name="favoritedCoursesLabel">Cyrsiau wedi’u hoffi</string>
+    <string name="favoriteCoursesLabel">Hoff Gyrsiau</string>
     <string name="Event">Digwyddiad</string>
     <string name="eventSuccessfulDeletion">Wedi llwyddo i ddileu digwyddiad</string>
     <string name="timeIconDescription">Eicon Amser</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Hysbysiadau</string>
     <string name="todoWidgetTitleLong">Canvas - Tasgau i’w Gwneud</string>
     <string name="gradesWidgetTitleLong">Canvas - Graddau</string>
+    <string name="gradeWidgetTitleLong">Canvas - Gradd</string>
     <string name="notificationWidgetTitleLong">Canvas - Hysbysiadau</string>
     <string name="notLoggedIn">Dydych chi ddim wedi’ch mewngofnodi</string>
     <string name="widgetStyle">Dewiswch arddull eich teclyn</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Gradd ar ôl postio</string>
     <string name="gradeOverride">Disodli gradd</string>
     <string name="currentGrade">Gradd bresennol </string>
-    <string name="opensInCanvasStudent">Yn agor ym Myfyriwr Canvas</string>
+    <string name="opensInCanvasApp">Yn agor yn ap Canvas</string>
     <string name="tab_student_view">Gwedd Myfyriwr</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Storio</string>
     <string name="offline_content_storage_info">%s o %s wedi’i ddefnyddio</string>
     <string name="offline_content_other">Apiau Eraill</string>
-    <string name="offline_content_canvas_student">Myfyriwr Canvas</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Yn Weddill</string>
-    <string name="offline_content_storage_info_a11y_description">Gwybodaeth Storio: %s o %s a Ddefnyddiwyd, Apiau eraill %d%%, Canvas Student %d%%, Yn weddill %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Gwybodaeth Storio: %s o %s wedi’i Ddefnyddio, Apiau eraill %d%%, Canvas %d%%, Gweddill %d%%</string>
     <string name="offline_content_all_courses">Pob Cwrs</string>
     <string name="offline_content_sync">Cysoni</string>
     <string name="offline_content_selected">%d Wedi dewis</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Help</string>
     <string name="screenTitleManageStudents">Rheoli Myfyrwyr</string>
     <string name="screenTitleSettings">Gosodiadau</string>
-    <string name="navigationDrawerSwitchUsers">Newid Defnyddwyr</string>
     <string name="navigationDrawerLogOut">Allgofnodi</string>
     <string name="noStudentsError">Dim Myfyrwyr</string>
     <string name="noStudentsErrorDescription">Dydych chi ddim yn arsyllu unrhyw fyfyrwyr.</string>
     <string name="noStudentsRefresh">Adnewyddu</string>
     <string name="noGrade">Dim Gradd</string>
+    <string name="noGrades">Dim graddau</string>
     <string name="errorLoadingCourses">Gwall wrth lwytho cyrsiau eich myfyriwr.</string>
     <string name="parentNoCourses">Dim Cyrsiau</string>
     <string name="parentNoCoursesMessage">Efallai nad yw cyrsiau eich myfyriwr wedi cael eu cyhoeddi eto.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Ai myfyriwr neu athro ydych chi?</string>
     <string name="studentOrTeacherSubtitle">Efallai y byddai un o\'r apiau eraill yn fwy addas. Tapiwch un i fynd i\'r Play Store</string>
     <string name="studentApp">MYFYRIWR</string>
-    <string name="canvasStudentApp">Myfyriwr Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">ATHRO</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Wedi llwyddo i ychwanegu’r myfyriwr</string>
     <string name="addStudentTitle">Ychwanegu myfyriwr gyda...</string>
     <string name="addStudentQrCodeTitle">Cod QR</string>
-    <string name="addStudentQrCodeExplanation">Mae myfyrwyr yn gallu creu cod QR drwy ddefnyddio app Canvas Student ar eu dyfais symudol</string>
+    <string name="addStudentQrCodeExplanationCanvas">Mae myfyrwyr yn gallu creu cod QR drwy ddefnyddio ap Canvas ar eu dyfais symudol</string>
     <string name="addStudentPairingCodeTitle">Cod Paru</string>
     <string name="addStudentPairingCodeExplanation">Mae myfyrwyr yn gallu cael cod paru trwy wefan Canvas</string>
     <string name="pairingCodeDialogTitle">Ychwanegu Myfyriwr</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Canslo</string>
     <string name="pairingCodeDialogPositiveButton">Iawn</string>
     <string name="pairingCodeDialogError">Mae eich cod yn anghywir neu mae wedi dod i ben.</string>
-    <string name="qrPairingTitle">Agor Canvas Student</string>
-    <string name="qrPairingDescription">Bydd angen i chi agor ap Canvas Student eich myfyriwr i barhau. Ewch i\'r Brif Ddewislen > Gosodiadau > Paru ag Arsyllwr a sganiwch y cod QR rydych chi’n ei weld yno.</string>
-    <string name="qrCodePairingPrompt">Sganiwch god QR o Canvas Student i fewngofnodi.</string>
+    <string name="qrPairingTitleCanvas">Agor ap Canvas</string>
+    <string name="qrPairingDescriptionCanvas">I fwrw ymlaen, bydd angen i chi agor eich ap Canvas i fyfyrwyr. Ewch i\'r Brif Ddewislen > Gosodiadau > Paru ag Arsyllwr a sganio’r cod QR rydych chi’n ei weld yno.</string>
+    <string name="qrCodePairingPromptCanvas">Sganiwch god QR o ap Canvas i baru</string>
     <string name="a11y_addStudentContentDescription">Ychwanegu Myfyriwr</string>
     <string name="qrPairingErrorTitle">Cod QR wedi dod i ben</string>
     <string name="qrPairingErrorDescription">Efallai fod y cod QR y gwnaethoch chi ei sganio wedi dod i ben. Adnewyddwch y cod ar ddyfais y myfyriwr a rhowch gynnig arall arni.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Gwall wrth lwytho\'r aseiniadau</string>
     <string name="a11y_searchAssignments">Chwilio Aseiniadau</string>
     <string name="dueAssignmentListItem">Erbyn %1$s</string>
+    <string name="a11y_searchAmongRecipients">Chwilio ymysg Derbynwyr</string>
+    <string name="a11y_recipientIsRemoved">Wedi tynnu %1$s</string>
+    <string name="widgetDueDate">Erbyn %1$s</string>
+    <string name="widgetFromTo">%1$s i %2$s</string>
+    <string name="widgetAllDay">Drwy’r dydd</string>
+    <string name="widgetErrorTitle">Wps! Aeth rhywbeth o’i le</string>
+    <string name="widgetErrorSubtitle">Rydyn ni’n cael trafferth dangos eich tasgau ar hyn o bryd. Rhowch gynnig arall arni nes ymlaen neu ewch i’r ap.</string>
+    <string name="widgetToDoEmptyTitle">Rydych chi wedi gorffen popeth am y tro!</string>
+    <string name="widgetToDoEmptySubtitle">Mae’n ymddangos eich bod chi’n rhydd am y 4 wythnos nesaf. Ydych chi am ychwanegu pethau i’w gwneud?</string>
+    <string name="widgetNotLoggedInTitle">Dewch i ni Fewngofnodi!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">I weld eich pethau i’w gwneud, mewngofnodwch i’ch cyfrif ar yr ap. Fyddwch chi ddim chwinciad!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Agor sgrin y rhestr I’w Gwneud</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Creu Tasg newydd i’w Gwneud</string>
+    <string name="widgetGradesErrorSubtitle">Rydyn ni’n cael trafferth dangos eich graddau ar hyn o bryd. Rhowch gynnig arall arni nes ymlaen neu ewch i’r ap.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">I weld eich graddau, mewngofnodwch i’ch cyfrif ar yr ap. Fyddwch chi ddim chwinciad!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Rydyn ni’n cael trafferth dangos eich graddau ar hyn o bryd.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">I weld eich graddau, mewngofnodwch i’ch cyfrif ar yr ap.</string>
+    <string name="widgetSingleGradeSelectCourse">Dewch i ni ddewis cwrs</string>
+    <string name="widgetGradesErrorLoadingCourses">Gwall wrth lwytho cyrsiau.</string>
+    <string name="settingsSwitchExperience">Newid i Canvas Career</string>
 </resources>

@@ -28,5 +28,7 @@ data class NotebookUiState(
     val hasNextPage: Boolean = false,
     val loadPreviousPage: () -> Unit = {},
     val loadNextPage: () -> Unit = {},
-    val updateContent: (Long?, Pair<String, String>?) -> Unit
+    val updateContent: (Long?, Pair<String, String>?) -> Unit,
+    val showTopBar: Boolean = false,
+    val showFilters: Boolean = false,
 )

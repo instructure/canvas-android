@@ -45,15 +45,17 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.Saver
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
@@ -66,8 +68,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -78,7 +82,7 @@ import androidx.navigation.navArgument
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
-import com.instructure.horizon.features.dashboard.SHOULD_REFRESH_DASHBOARD
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentViewModel
@@ -100,6 +104,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.horizon.horizonui.molecules.Badge
 import com.instructure.horizon.horizonui.molecules.BadgeContent
 import com.instructure.horizon.horizonui.molecules.Button
@@ -122,6 +127,9 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
 import kotlin.math.abs
 
+const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
+const val SHOULD_REFRESH_LEARN_SCREEN = "shouldRefreshLearnScreen"
+
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
     val activity = LocalContext.current.getActivityOrNull()
@@ -138,14 +146,14 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
             onAssignmentToolsClick = uiState.onAssignmentToolsClick,
             onAiAssistClick = { uiState.updateShowAiAssist(true) },
             onNotebookClick = { uiState.updateShowNotebook(true) },
+            notebookEnabled = uiState.notebookButtonEnabled,
+            aiAssistEnabled = uiState.aiAssistButtonEnabled,
             hasUnreadComments = uiState.hasUnreadComments
         )
     }) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
-                    aiContext = uiState.aiContext,
-                    mainNavController = mainNavController,
                     onDismiss = { uiState.updateShowAiAssist(false) },
                 )
             }
@@ -174,7 +182,7 @@ private fun BoxScope.MarkAsDoneButton(markAsDoneState: MarkAsDoneUiState, modifi
         modifier
             .align(Alignment.BottomEnd)
             .padding(end = 24.dp, bottom = 16.dp)
-            .shadow(
+            .horizonShadow(
                 elevation = HorizonElevation.level4,
                 shape = HorizonCornerRadius.level6,
                 clip = false
@@ -218,9 +226,13 @@ private fun ModuleItemSequenceContent(
     onBackPressed: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val scrollConnectionSaver = Saver<MutableState<CollapsingAppBarNestedScrollConnection>, Pair<Int, Int>>(
+        save = { it.value.appBarMaxHeight to it.value.appBarOffset },
+        restore = { (mutableStateOf(CollapsingAppBarNestedScrollConnection(it.first).apply { appBarOffset = it.second })) }
+    )
     val density = LocalDensity.current
-    var moduleHeaderHeight by remember { mutableIntStateOf(0) }
-    var nestedScrollConnection by remember { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
+    var moduleHeaderHeight by rememberSaveable { mutableIntStateOf(0) }
+    var nestedScrollConnection by rememberSaveable(saver = scrollConnectionSaver) { mutableStateOf(CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)) }
     val contentScrollState = rememberScrollState()
 
     Box(
@@ -233,8 +245,9 @@ private fun ModuleItemSequenceContent(
                 .onGloballyPositioned { coordinates ->
                     if (coordinates.size.height != moduleHeaderHeight) {
                         moduleHeaderHeight = coordinates.size.height
+                        val temp = nestedScrollConnection.appBarOffset
                         nestedScrollConnection =
-                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight)
+                            CollapsingAppBarNestedScrollConnection(moduleHeaderHeight).apply { appBarOffset = temp }
                     }
                 }
         ) {
@@ -246,6 +259,7 @@ private fun ModuleItemSequenceContent(
                 onBackPressed = onBackPressed
             )
         }
+        var moduleHeaderHeight = max(0.dp, with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
         LoadingStateWrapper(
             loadingState = uiState.loadingState,
             containerColor = Color.Transparent,
@@ -253,19 +267,26 @@ private fun ModuleItemSequenceContent(
                 .conditional(uiState.loadingState.isLoading || uiState.loadingState.isError) {
                     background(color = HorizonColors.Surface.pageSecondary(), shape = HorizonCornerRadius.level5)
                 }
-                .padding(top = with(density) { moduleHeaderHeight.toDp() } + with(density) { nestedScrollConnection.appBarOffset.toDp() })
+                .padding(top = moduleHeaderHeight)
         ) {
             if (uiState.currentPosition != -1) {
                 val homeEntry =
                     remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
-                LaunchedEffect(Unit) {
-                    homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                LaunchedEffect(uiState.shouldRefreshPreviousScreen) {
+                    if (uiState.shouldRefreshPreviousScreen) {
+                        homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                        homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
+                    }
                 }
 
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
+                var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {
+                    if (uiState.currentPosition != previousPosition) {
+                        nestedScrollConnection.appBarOffset = 0
+                        previousPosition = uiState.currentPosition
+                    }
                     contentScrollState.scrollTo(0)
-                    nestedScrollConnection.appBarOffset = 0
                     if (abs(uiState.currentPosition - pagerState.currentPage) > 1) {
                         pagerState.scrollToPage(uiState.currentPosition)
                     } else {
@@ -278,11 +299,12 @@ private fun ModuleItemSequenceContent(
                     ModuleItemContentScreen(
                         moduleItemUiState,
                         scrollState = contentScrollState,
+                        moduleHeaderHeight = moduleHeaderHeight,
                         mainNavController,
                         uiState.showAssignmentToolsForId,
                         uiState.assignmentToolsOpened,
-                        uiState.updateAiContextString,
-                        uiState.updateObjectTypeAndId
+                        updateAiContext = uiState.updateAiAssistContext,
+                        updateNotebookContext = uiState.updateObjectTypeAndId,
                     )
                 }
             }
@@ -375,11 +397,12 @@ private fun ModuleItemPager(pagerState: PagerState, modifier: Modifier = Modifie
 private fun ModuleItemContentScreen(
     moduleItemUiState: ModuleItemUiState,
     scrollState: ScrollState,
+    moduleHeaderHeight: Dp,
     mainNavController: NavHostController,
     assignmentToolsForId: Long?,
     assignmentToolsOpened: () -> Unit,
-    updateAiContext: (String) -> Unit,
-    updateObjectTypeAndId: (Pair<String, String>) -> Unit,
+    updateAiContext: (AiAssistContextSource, String) -> Unit,
+    updateNotebookContext: (Pair<String, String>) -> Unit,
     modifier: Modifier = Modifier
 ) {
     if (moduleItemUiState.isLoading) {
@@ -397,7 +420,11 @@ private fun ModuleItemContentScreen(
     } else {
         val navController = rememberNavController()
 
-        NavHost(navController, startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(), modifier = modifier) {
+        NavHost(
+            navController,
+            startDestination = moduleItemUiState.moduleItemContent?.routeWithArgs.orEmpty(),
+            modifier = modifier
+        ) {
             composable(
                 route = ModuleItemContent.Assignment.ROUTE, arguments = listOf(
                     navArgument(Const.COURSE_ID) { type = NavType.LongType },
@@ -405,8 +432,6 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<AssignmentDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                updateAiContext(uiState.instructions)
-                updateObjectTypeAndId(Pair("Assignment", uiState.assignmentId.toString()))
                 LaunchedEffect(assignmentToolsForId) {
                     val assignmentId = it.arguments?.getLong(ModuleItemContent.Assignment.ASSIGNMENT_ID) ?: -1L
                     if (assignmentId == assignmentToolsForId) {
@@ -414,9 +439,13 @@ private fun ModuleItemContentScreen(
                         assignmentToolsOpened()
                     }
                 }
+                val assignment = moduleItemUiState.moduleItemContent as? ModuleItemContent.Assignment
                 AssignmentDetailsScreen(
                     uiState = uiState,
-                    scrollState = scrollState
+                    scrollState = scrollState,
+                    moduleHeaderHeight = moduleHeaderHeight,
+                    assignmentSubmitted = assignment?.onSubmitted ?: {},
+                    updateAiContext = { source, content -> updateAiContext(source, content) }
                 )
             }
             composable(
@@ -426,12 +455,12 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<PageDetailsViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                updateAiContext(uiState.pageHtmlContent.orEmpty())
-                updateObjectTypeAndId(Pair("Page", uiState.pageId.toString()))
                 viewModel.refreshNotes()
+                updateNotebookContext("Page" to uiState.pageId.toString())
                 PageDetailsContentScreen(
                     uiState = uiState,
                     scrollState = scrollState,
+                    updateAiContext = { source, content -> updateAiContext(source, content) },
                     mainNavController = mainNavController
                 )
             }
@@ -486,7 +515,8 @@ private fun ModuleItemContentScreen(
                 )) {
                 val viewModel = hiltViewModel<AssessmentViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
-                AssessmentContentScreen(uiState)
+                val assessment = moduleItemUiState.moduleItemContent as? ModuleItemContent.Assessment
+                AssessmentContentScreen(uiState, onAssessmentSubmitted = assessment?.onSubmitted ?: {})
             }
         }
     }
@@ -502,6 +532,8 @@ private fun ModuleItemSequenceBottomBar(
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    aiAssistEnabled: Boolean = false,
+    notebookEnabled: Boolean = false,
     onAiAssistClick: () -> Unit = {},
     onNotebookClick: () -> Unit = {},
     hasUnreadComments: Boolean = false
@@ -527,12 +559,14 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
+                    enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
+                    enabled = notebookEnabled,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onNotebookClick,
@@ -605,8 +639,6 @@ private fun ModuleItemSequenceScreenPreview() {
             ),
             updateShowAiAssist = {},
             updateShowNotebook = {},
-            updateAiContextString = {},
-            updateObjectTypeAndId = {},
         )
     )
 }

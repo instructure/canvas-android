@@ -8,11 +8,13 @@ import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CommunicationChannelsAPI
+import com.instructure.canvasapi2.apis.CanvaDocsAPI
 import com.instructure.canvasapi2.apis.ConferencesApi
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
+import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
@@ -65,6 +67,7 @@ import com.instructure.canvasapi2.managers.UserManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.CanvasAuthenticator
 import com.instructure.canvasapi2.utils.CedarApiPref
+import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import com.instructure.canvasapi2.utils.pageview.PandataApi
@@ -380,6 +383,16 @@ class ApiModule {
     }
 
     @Provides
+    @Singleton
+    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
+        return TokenRefresher(context, loginRouter, eventBus)
+    }
+
+    @Provides
+    fun provideCanvaDocApi(): CanvaDocsAPI.CanvaDocsInterFace {
+        return RestBuilder().build(CanvaDocsAPI.CanvaDocsInterFace::class.java, RestParams())
+    }
+    @Provides
     fun provideStreamApi(): StreamAPI.StreamInterface {
         return RestBuilder().build(StreamAPI.StreamInterface::class.java, RestParams())
     }
@@ -395,12 +408,6 @@ class ApiModule {
     }
 
     @Provides
-    @Singleton
-    fun provideTokenRefresher(@ApplicationContext context: Context, loginRouter: LoginRouter, eventBus: EventBus): TokenRefresher {
-        return TokenRefresher(context, loginRouter, eventBus)
-    }
-
-    @Provides
     fun provideDomainServicesAuthenticationAPI(): DomainServicesAuthenticationAPI {
         return RestBuilder().build(DomainServicesAuthenticationAPI::class.java, RestParams())
     }
@@ -408,19 +415,30 @@ class ApiModule {
     @Provides
     @Singleton
     fun providePineApiPrefs(): PineApiPref {
-        return PineApiPref()
+        return PineApiPref
     }
 
     @Provides
     @Singleton
     fun provideCedarApiPrefs(): CedarApiPref {
-        return CedarApiPref()
+        return CedarApiPref
     }
 
     @Provides
     @Singleton
     fun provideRedwoodApiPrefs(): RedwoodApiPref {
-        return RedwoodApiPref()
+        return RedwoodApiPref
+    }
+
+    @Provides
+    @Singleton
+    fun provideJourneyApiPrefs(): JourneyApiPref {
+        return JourneyApiPref
+    }
+
+    @Provides
+    fun provideExperienceAPI(): ExperienceAPI {
+        return RestBuilder().build(ExperienceAPI::class.java, RestParams())
     }
 }
 

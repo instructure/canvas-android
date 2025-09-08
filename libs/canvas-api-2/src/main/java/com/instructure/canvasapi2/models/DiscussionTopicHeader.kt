@@ -20,7 +20,7 @@ package com.instructure.canvasapi2.models
 import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.utils.toApiString
 import kotlinx.parcelize.Parcelize
-import java.util.*
+import java.util.Date
 
 @Parcelize
 data class DiscussionTopicHeader(
@@ -36,6 +36,8 @@ data class DiscussionTopicHeader(
         // If delayed_post_at isn't null, it represents when the discussion WILL be posted.
         @SerializedName("posted_at")
         var postedDate: Date? = null,
+        @SerializedName("created_at")
+        var createdDate: Date? = null,
         @SerializedName("delayed_post_at")
         var delayedPostDate: Date? = null,
         @SerializedName("last_reply_at")
@@ -67,6 +69,9 @@ data class DiscussionTopicHeader(
         // If true, this topic is an announcement. This requires announcement-posting permissions.
         @SerializedName("is_announcement")
         var announcement: Boolean = false,
+
+        @SerializedName("reply_to_entry_required_count")
+        val replyRequiredCount: Int? = 0,
 
         // If the topic is for grading and a group assignment this will
         // point to the original topic in the course.
@@ -101,10 +106,9 @@ data class DiscussionTopicHeader(
         @SerializedName("sort_by_rating")
         var sortByRating: Boolean = false, // Whether or not entries should be sorted by rating.
 
-        // Context code. This is only set when getting DiscussionTopicHeaders from the announcements API
-        // NOT USED in our code
-        //@SerializedName("context_code")
-        //var contextCode: String? = null,
+        @SerializedName("context_code")
+        var contextCode: String? = null,
+
         var subscribed: Boolean = false,
         @SerializedName("lock_at")
         var lockAt: Date? = null,

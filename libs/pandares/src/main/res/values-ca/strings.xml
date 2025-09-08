@@ -291,7 +291,7 @@
     <string name="Todo">Tasques pendents</string>
     <string name="todoFilter">Filtra les assignatures</string>
     <string name="filterByEllipsis">Filtra per&#8230;</string>
-    <string name="favoritedCoursesLabel">Assignatures preferides</string>
+    <string name="favoriteCoursesLabel">Assignatures preferides</string>
     <string name="Event">Esdeveniment</string>
     <string name="eventSuccessfulDeletion">S\'ha suprimit correctament l\'esdeveniment</string>
     <string name="timeIconDescription">Icona de l\'hora</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Notificacions</string>
     <string name="todoWidgetTitleLong">Canvas: tasques pendents</string>
     <string name="gradesWidgetTitleLong">Canvas: notes</string>
+    <string name="gradeWidgetTitleLong">Canvas: nota</string>
     <string name="notificationWidgetTitleLong">Canvas: notificacions</string>
     <string name="notLoggedIn">No heu iniciat la sessió</string>
     <string name="widgetStyle">Trieu l\'estil de giny</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Nota després de la publicació</string>
     <string name="gradeOverride">Substitució de la nota</string>
     <string name="currentGrade">Nota actual</string>
-    <string name="opensInCanvasStudent">S\'obre al Canvas Student</string>
+    <string name="opensInCanvasApp">S\'obre en l’aplicació Canvas</string>
     <string name="tab_student_view">Vista d\'estudiant</string>
 
 
@@ -1470,9 +1471,9 @@
     <string name="offline_content_storage">Emmagatzematge</string>
     <string name="offline_content_storage_info">S’han utilitzat %s de %s</string>
     <string name="offline_content_other">Altres aplicacions</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Restant</string>
-    <string name="offline_content_storage_info_a11y_description">Informació sobre l’emmagatzematge: %s de %s utilitzat, altres aplicacions %d%%, estudiants del Canvas %d%%, restant %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informació sobre l’emmagatzematge: %s de %s utilitzat, altres aplicacions %d%%, Canvas %d%%, restant %d%%</string>
     <string name="offline_content_all_courses">Totes les assignatures</string>
     <string name="offline_content_sync">Sincronitza</string>
     <string name="offline_content_selected">S’ha seleccionat %d</string>
@@ -1777,12 +1778,12 @@
     <string name="screenTitleHelp">Ajuda</string>
     <string name="screenTitleManageStudents">Administra els estudiants</string>
     <string name="screenTitleSettings">Configuració</string>
-    <string name="navigationDrawerSwitchUsers">Canvia els usuaris</string>
     <string name="navigationDrawerLogOut">Tanca la sessió</string>
     <string name="noStudentsError">Cap estudiant</string>
     <string name="noStudentsErrorDescription">No esteu observant cap estudiant.</string>
     <string name="noStudentsRefresh">Actualitza-ho</string>
     <string name="noGrade">Sense nota</string>
+    <string name="noGrades">Sense nota</string>
     <string name="errorLoadingCourses">S\'ha produït un error en carregar les vostres assignatures de l\'estudiant.</string>
     <string name="parentNoCourses">No hi ha cap assignatura</string>
     <string name="parentNoCoursesMessage">És possible que encara no s\'hagin publicat les vostres assignatures de l\'estudiant.</string>
@@ -1792,7 +1793,7 @@
     <string name="studentOrTeacherTitle">Sou un estudiant o un professor?</string>
     <string name="studentOrTeacherSubtitle">És possible que alguna de les altres aplicacions nostres us sigui més útil. Toqueu-ne una per anar a Play Store</string>
     <string name="studentApp">ESTUDIANT</string>
-    <string name="canvasStudentApp">Estudiant del Canvas</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">PROFESSOR</string>
     <string name="canvasTeacherApp">Professor del Canvas</string>
     <string name="inboxUnreadCountMoreThan99">Més de 99</string>
@@ -1830,7 +1831,7 @@
     <string name="addStudentSuccessfull">S\'ha afegit correctament l’estudiant</string>
     <string name="addStudentTitle">Afegeix un estudiant amb...</string>
     <string name="addStudentQrCodeTitle">Codi QR</string>
-    <string name="addStudentQrCodeExplanation">Al dispositiu mòbil, els estudiants poden generar un codi QR mitjançant l’aplicació Canvas Student</string>
+    <string name="addStudentQrCodeExplanationCanvas">Al dispositiu mòbil, els estudiants poden generar un codi QR mitjançant l’aplicació Canvas</string>
     <string name="addStudentPairingCodeTitle">Codi d\'emparellament</string>
     <string name="addStudentPairingCodeExplanation">Els estudiants poden obtenir un codi d\'emparellament a través del lloc web del Canvas</string>
     <string name="pairingCodeDialogTitle">Afegeix un estudiant</string>
@@ -1839,9 +1840,9 @@
     <string name="pairingCodeDialogNegativeButton">Cancel·la</string>
     <string name="pairingCodeDialogPositiveButton">D\'acord</string>
     <string name="pairingCodeDialogError">El vostre codi no és correcte o ha caducat.</string>
-    <string name="qrPairingTitle">Obriu el Canvas Student</string>
-    <string name="qrPairingDescription">Per continuar, haureu d\'obrir l’aplicació Canvas Student de l’estudiant. Aneu a Menú principal > Configuració > Emparella amb l\'observador i escanegeu el codi QR que s’hi mostra.</string>
-    <string name="qrCodePairingPrompt">Escanegeu un codi QR del Canvas Student per fer l’emparellament</string>
+    <string name="qrPairingTitleCanvas">Obriu l’aplicació Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Per continuar, haureu d\'obrir l’aplicació Canvas de l’estudiant. Aneu a Menú principal > Configuració > Emparella amb l\'observador i escanegeu el codi QR que s’hi mostra.</string>
+    <string name="qrCodePairingPromptCanvas">Escanegeu un codi QR de l’aplicació Canvas per fer l’emparellament</string>
     <string name="a11y_addStudentContentDescription">Afegeix un estudiant</string>
     <string name="qrPairingErrorTitle">Codi QR caducat</string>
     <string name="qrPairingErrorDescription">És possible que el codi QR que heu escanejat ja hagi caducat. Actualitzeu el codi al dispositiu de l’estudiant i torneu a provar-ho.</string>
@@ -2049,4 +2050,24 @@
     <string name="errorLoadingAssignments">S\'ha produït un error en carregar les activitats</string>
     <string name="a11y_searchAssignments">Cerca activitats</string>
     <string name="dueAssignmentListItem">Venç el %1$s</string>
+    <string name="a11y_searchAmongRecipients">Cerqueu entre els destinataris</string>
+    <string name="a11y_recipientIsRemoved">S\'ha suprimit %1$s</string>
+    <string name="widgetDueDate">Venç a les %1$s</string>
+    <string name="widgetFromTo">Del %1$s al %2$s</string>
+    <string name="widgetAllDay">Tot el dia</string>
+    <string name="widgetErrorTitle">Vaja! S’ha produït un error</string>
+    <string name="widgetErrorSubtitle">Estem tenint problemes per mostrar les vostres tasques en aquest moment. Torneu a provar-ho d’aquí a uns instants o aneu a l’aplicació.</string>
+    <string name="widgetToDoEmptyTitle">Ja ho teniu tot fet de moment!</string>
+    <string name="widgetToDoEmptySubtitle">Sembla que esteu lliure durant les properes 4 setmanes. Voleu afegir alguna tasca pendent?</string>
+    <string name="widgetNotLoggedInTitle">Anem a fer que inicieu la sessió!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Per consultar les tasques pendents, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Obriu la pantalla de la llista de tasques pendents</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Creeu una llista nova de tasques pendents</string>
+    <string name="widgetGradesErrorSubtitle">Estem tenint problemes per mostrar les vostres notes en aquest moment. Torneu a provar-ho d’aquí a uns instants o aneu a l’aplicació.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació. Només serà un segon!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Estem tenint problemes per mostrar les vostres notes en aquest moment.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Per consultar les notes, inicieu la sessió al compte a l’aplicació.</string>
+    <string name="widgetSingleGradeSelectCourse">Triem una assignatura</string>
+    <string name="widgetGradesErrorLoadingCourses">S\'ha produït un error en carregar les assignatures.</string>
+    <string name="settingsSwitchExperience">Canvia al Canvas Career</string>
 </resources>

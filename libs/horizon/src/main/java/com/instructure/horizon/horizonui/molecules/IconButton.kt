@@ -28,7 +28,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
@@ -41,6 +40,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.horizonShadow
 import com.instructure.pandautils.compose.modifiers.conditional
 
 enum class IconButtonSize(val size: Dp, val badgeOffset: Dp) {
@@ -136,7 +136,7 @@ fun IconButton(
             alpha(0.5f)
         }
         .conditional(elevation != null) {
-            shadow(elevation = elevation!!, shape = CircleShape)
+            horizonShadow(elevation = elevation!!, shape = CircleShape)
         }
         .conditional(color.secondaryBackgroundColor != null) {
             background(

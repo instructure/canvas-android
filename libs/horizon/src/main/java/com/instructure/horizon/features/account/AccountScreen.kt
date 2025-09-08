@@ -37,7 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -48,6 +48,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.HorizonDivider
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.utils.LocaleUtils
+import com.instructure.pandautils.utils.getActivityOrNull
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -66,13 +68,20 @@ fun AccountScreen(
         }
     }
 
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(state.restartApp) {
+        if (state.restartApp && activity != null) {
+            LocaleUtils.restartApp(activity)
+        }
+    }
+
     LoadingStateWrapper(state.screenState) {
-        AccountContentScreen(state, navController, state.performLogout)
+        AccountContentScreen(state, navController, state.performLogout, state.switchExperience)
     }
 }
 
 @Composable
-private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit) {
+private fun AccountContentScreen(state: AccountUiState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit) {
     LazyColumn(
         contentPadding = PaddingValues(24.dp)
     ) {
@@ -126,6 +135,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
                             accountItem,
                             navController,
                             onLogout,
+                            switchExperience,
                             clipModifier
                         )
 
@@ -146,8 +156,7 @@ private fun AccountContentScreen(state: AccountUiState, navController: NavContro
 }
 
 @Composable
-private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, modifier: Modifier = Modifier) {
-    val uriHandler = LocalUriHandler.current
+private fun AccountItem(item: AccountItemState, navController: NavController, onLogout: () -> Unit, switchExperience: () -> Unit, modifier: Modifier = Modifier) {
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = modifier
@@ -156,12 +165,15 @@ private fun AccountItem(item: AccountItemState, navController: NavController, on
             .clickable {
                 when (item.type) {
                     is AccountItemType.Open -> navController.navigate(item.type.route.route)
-                    is AccountItemType.OpenInNew -> {
-                        uriHandler.openUri(item.type.url)
-                    }
+
+                    is AccountItemType.OpenExternal -> navController.navigate(item.type.route.route)
 
                     is AccountItemType.LogOut -> {
                         onLogout()
+                    }
+
+                    AccountItemType.SwitchExperience -> {
+                        switchExperience()
                     }
                 }
             }

@@ -70,14 +70,14 @@ fun AiAssistFlashcardScreen(
                 }
             }
 
-            Column {
+            Column(modifier = modifier.fillMaxSize()) {
                 HorizontalPager(
                     pagerState,
                     modifier = Modifier.weight(1f)
                 ) { pageIndex ->
                     val flashcardState = state.flashcardList[pageIndex]
                     val paddingAnimation by animateDpAsState(
-                        if (pageIndex == state.currentCardIndex) 32.dp else 64.dp,
+                        if (pageIndex == state.currentCardIndex) 0.dp else 32.dp,
                         label = "FlashcardPagerAnimation",
                     )
 
@@ -100,6 +100,7 @@ fun AiAssistFlashcardScreen(
                     totalPages = state.flashcardList.size,
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
+                        .padding(top = 32.dp, bottom = 24.dp)
                 )
             }
         }

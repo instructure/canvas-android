@@ -20,6 +20,7 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import android.graphics.Color
 import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.BooleanPref
 import com.instructure.canvasapi2.utils.ColorPref
 import com.instructure.canvasapi2.utils.IntPref
@@ -83,10 +84,11 @@ object ThemePrefs : PrefManager("CanvasTheme") {
         val g = Color.green(color)
         val b = Color.blue(color)
         return Color.argb(
-                a,
-                Math.max((r * factor).toInt(), 0),
-                Math.max((g * factor).toInt(), 0),
-                Math.max((b * factor).toInt(), 0))
+            a,
+            Math.max((r * factor).toInt(), 0),
+            Math.max((g * factor).toInt(), 0),
+            Math.max((b * factor).toInt(), 0)
+        )
     }
 
     /**
@@ -117,12 +119,20 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
         val tempButtonColor = parseColor(theme.button, buttonColor) // ic-brand-button--primary-bgd - Primary Button
 
-        buttonColor = ColorUtils.correctContrastForButtonBackground(tempButtonColor, context.getColor(R.color.backgroundLightestElevated), context.getColor(R.color.textLightest))
+        buttonColor = ColorUtils.correctContrastForButtonBackground(
+            tempButtonColor,
+            context.getColor(R.color.backgroundLightestElevated),
+            context.getColor(R.color.textLightest)
+        )
         buttonTextColor = context.getColor(R.color.textLightest)
         textButtonColor = ColorUtils.correctContrastForText(tempButtonColor, context.getColor(R.color.backgroundLightestElevated))
 
         logoUrl = theme.logoUrl
-        mobileLogoUrl = theme.mobileLogoUrl ?: ""
+        mobileLogoUrl = when {
+            theme.mobileLogoUrl.isNullOrEmpty() -> ""
+            theme.mobileLogoUrl?.startsWith("https") == true -> theme.mobileLogoUrl.orEmpty()
+            else -> "${ApiPrefs.fullDomain}${theme.mobileLogoUrl.orEmpty()}"
+        }
         isThemeApplied = true
         canvasTheme = theme
     }

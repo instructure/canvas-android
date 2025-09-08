@@ -37,11 +37,11 @@ class SpeedGraderEmptyFragment : BaseCanvasFragment() {
 
     private val binding by viewBinding(FragmentSpeedgraderEmptyBinding::bind)
 
-    private var mTitle by StringArg()
-    private var mSubtitle by StringArg()
-    private var mMessage by StringArg()
-    private var mIconRes by IntArg()
-    private var mIconUri: Uri? by NullableParcelableArg()
+    private var title by StringArg()
+    private var subtitle by StringArg()
+    private var message by StringArg()
+    private var iconRes by IntArg()
+    private var iconUri: Uri? by NullableParcelableArg()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_speedgrader_empty, container, false)
@@ -49,23 +49,38 @@ class SpeedGraderEmptyFragment : BaseCanvasFragment() {
 
     override fun onResume(): Unit = with(binding) {
         super.onResume()
-        if (mTitle.isNotBlank()) titleTextView.setVisible().text = mTitle
-        if (mSubtitle.isNotBlank()) subtitleTextView.setVisible().text = mSubtitle
-        if (mMessage.isNotBlank()) messageTextView.setVisible().text = mMessage
-        if (mIconUri != null) {
-            Glide.with(requireContext()).load(mIconUri).into(iconImageView.setVisible())
-        } else if (mIconRes > 0) {
-            iconImageView.setVisible().setImageResource(mIconRes)
+        if (title.isNotBlank()) titleTextView.setVisible().text = title
+        if (subtitle.isNotBlank()) subtitleTextView.setVisible().text = subtitle
+        if (message.isNotBlank()) messageTextView.setVisible().text = message
+        if (iconUri != null) {
+            Glide.with(requireContext()).load(iconUri).into(iconImageView.setVisible())
+        } else if (iconRes > 0) {
+            iconImageView.setVisible().setImageResource(iconRes)
         }
     }
 
     companion object {
+
+        const val ICON_RES = "iconRes"
+        const val ICON_URI = "iconUri"
+        const val TITLE = "title"
+        const val SUBTITLE = "subtitle"
+        const val MESSAGE = "message"
+
         fun newInstance(title: String = "", subtitle: String = "", message: String = "", iconRes: Int = 0, iconUri: Uri? = null) = SpeedGraderEmptyFragment().apply {
-            mTitle = title
-            mSubtitle = subtitle
-            mMessage = message
-            mIconRes = iconRes
-            mIconUri = iconUri
+            this.title = title
+            this.subtitle = subtitle
+            this.message = message
+            this.iconRes = iconRes
+            this.iconUri = iconUri
+        }
+
+        fun createBundle(title: String = "", subtitle: String = "", message: String = "", iconRes: Int = 0, iconUri: Uri? = null) = Bundle().apply {
+            putString(TITLE, title)
+            putString(SUBTITLE, subtitle)
+            putString(MESSAGE, message)
+            putInt(ICON_RES, iconRes)
+            putParcelable(ICON_URI, iconUri)
         }
     }
 }

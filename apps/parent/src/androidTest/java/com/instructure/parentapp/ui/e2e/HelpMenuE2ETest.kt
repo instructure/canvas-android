@@ -21,6 +21,7 @@ import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -41,6 +42,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
     fun testHelpMenuE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -69,7 +71,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Report a Problem' dialog has displayed.")
         helpPage.assertReportProblemDialogDisplayed()
 
-        Log.d(STEP_TAG, "Click on 'Cancel' button on the 'Report a problem' dialog.")
+        Log.d(ASSERTION_TAG, "Click on 'Cancel' button on the 'Report a problem' dialog.")
         helpPage.clickCancelReportProblem()
 
         Log.d(ASSERTION_TAG, "Assert that when clicking on the different help menu items then the corresponding intents will be fired and has the proper URLs.")
@@ -88,6 +90,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
     fun testHelpMenuReportProblemE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")

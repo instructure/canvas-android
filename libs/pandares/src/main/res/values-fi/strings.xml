@@ -291,7 +291,7 @@
     <string name="Todo">Tehtävä</string>
     <string name="todoFilter">Suodata kursseja</string>
     <string name="filterByEllipsis">Suodatustapa...</string>
-    <string name="favoritedCoursesLabel">Suosikiksi merkitys kurssit</string>
+    <string name="favoriteCoursesLabel">Suosikkikurssit</string>
     <string name="Event">Tapahtuma</string>
     <string name="eventSuccessfulDeletion">Tapahtuman poisto onnistui</string>
     <string name="timeIconDescription">Ajan kuvake</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Ilmoitukset</string>
     <string name="todoWidgetTitleLong">Canvas - Tehtävälista</string>
     <string name="gradesWidgetTitleLong">Canvas - Arvosanat</string>
+    <string name="gradeWidgetTitleLong">Canvas - Arvosana</string>
     <string name="notificationWidgetTitleLong">Canvas - Ilmoitukset</string>
     <string name="notLoggedIn">Olet nyt kirjautunut sisään.</string>
     <string name="widgetStyle">Valitse pienoisohjelman tyyli</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Arvosana lähetyksen jälkeen</string>
     <string name="gradeOverride">Korvaa arvosana</string>
     <string name="currentGrade">Nykyinen arvosana </string>
-    <string name="opensInCanvasStudent">Avautuu Canvas Studentissa</string>
+    <string name="opensInCanvasApp">Avautuu Canvas-sovelluksessa</string>
     <string name="tab_student_view">Opiskelijanäkymä</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Säilytystila</string>
     <string name="offline_content_storage_info">%s / %s käytetty</string>
     <string name="offline_content_other">Muut sovellukset</string>
-    <string name="offline_content_canvas_student">Canvas-opiskelija</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">Jäljelle jäänyt</string>
-    <string name="offline_content_storage_info_a11y_description">Tallennustilan tiedot: %s/%s Käytetty, muut sovellukset %d%%, Canvas Student %d%%, jäljellä %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Tallennustilan tiedot: %s/%s Käytetty, muut sovellukset %d%%, Canvas %d%%, jäljellä %d%%</string>
     <string name="offline_content_all_courses">Kaikki kurssit</string>
     <string name="offline_content_sync">Synkronointi</string>
     <string name="offline_content_selected">%d Valittu:</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Ohje</string>
     <string name="screenTitleManageStudents">Hallitse opiskelijoita</string>
     <string name="screenTitleSettings">Asetukset</string>
-    <string name="navigationDrawerSwitchUsers">Vaihda käyttäjiä</string>
     <string name="navigationDrawerLogOut">Kirjaudu ulos</string>
     <string name="noStudentsError">Ei opiskelijoita</string>
     <string name="noStudentsErrorDescription">Et tarkkaile yhtään opiskelijaa.</string>
     <string name="noStudentsRefresh">Päivitä</string>
     <string name="noGrade">Ei arvosanaa</string>
+    <string name="noGrades">Ei arvosanoja</string>
     <string name="errorLoadingCourses">Opiskelijasi kurssien latauksessa ilmeni virhe.</string>
     <string name="parentNoCourses">Ei kursseja</string>
     <string name="parentNoCoursesMessage">Tämän opiskelijan kursseja ei ehkä ole vielä julkaistu.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Oletko opiskelija vai opettaja?</string>
     <string name="studentOrTeacherSubtitle">Yksi muista sovelluksistamme saattaa olla paremmin sopiva. Napsauta yhtä vieraillaksesi Play Storessa</string>
     <string name="studentApp">OPISKELIJA</string>
-    <string name="canvasStudentApp">Canvas-opiskelija</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">OPETTAJA</string>
     <string name="canvasTeacherApp">Canvas-opettaja</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Opiskelijan tallennus onnistui</string>
     <string name="addStudentTitle">Lisää opiskelija, jolla on...</string>
     <string name="addStudentQrCodeTitle">Viivakoodi</string>
-    <string name="addStudentQrCodeExplanation">Opiskelijat voivat luoda viivakoodin Canvas Student -sovelluksen avulla mobiililaitteellaan.</string>
+    <string name="addStudentQrCodeExplanationCanvas">Opiskelijat voivat luoda viivakoodin Canvas-sovelluksen avulla mobiililaitteellaan.</string>
     <string name="addStudentPairingCodeTitle">Parinmuodostuskoodi</string>
     <string name="addStudentPairingCodeExplanation">Opiskelijat voivat hankkia parinmuodostuskoodin Canvasin verkkosivustolta.</string>
     <string name="pairingCodeDialogTitle">Lisää opiskelija</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Peruuta</string>
     <string name="pairingCodeDialogPositiveButton">Ok</string>
     <string name="pairingCodeDialogError">Koodisi on virheellinen tai vanhentunut.</string>
-    <string name="qrPairingTitle">Avaa Canvas Student</string>
-    <string name="qrPairingDescription">Sinun täytyy avata opiskelijan Canvas Student -sovellus jatkaaksesi. Siirry Päävlikkoon > Asetukset > Muodosta laitepari havaitsijan kanssa ja skannaa siellä näkemäsi viivakoodi.</string>
-    <string name="qrCodePairingPrompt">Yhdistä skannaamalla viivakoodi Canvas Student -sovelluksesta</string>
+    <string name="qrPairingTitleCanvas">Avaa Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Sinun täytyy avata opiskelijan Canvas -sovellus jatkaaksesi. Siirry Päävlikkoon > Asetukset > Muodosta laitepari havaitsijan kanssa ja skannaa siellä näkemäsi viivakoodi.</string>
+    <string name="qrCodePairingPromptCanvas">Yhdistä skannaamalla viivakoodi Canvas-sovelluksesta</string>
     <string name="a11y_addStudentContentDescription">Lisää opiskelija</string>
     <string name="qrPairingErrorTitle">Vanhentunut viivakoodi</string>
     <string name="qrPairingErrorDescription">Skanaamasi viivakoodi on ehkä vanhentunut. Virkistä koodi opiskelijan laitteessa ja yritä uudelleen.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Palautusten lataamisen yhteydessä tapahtui virhe.</string>
     <string name="a11y_searchAssignments">Hae tehtäviä</string>
     <string name="dueAssignmentListItem">Määräpäivä %1$s</string>
+    <string name="a11y_searchAmongRecipients">Hae vastaanottajien joukosta</string>
+    <string name="a11y_recipientIsRemoved">%1$s poistettu</string>
+    <string name="widgetDueDate">Määräpäivä %1$s</string>
+    <string name="widgetFromTo">%1$s - %2$s</string>
+    <string name="widgetAllDay">Koko päivä</string>
+    <string name="widgetErrorTitle">Hups! Jotakin meni pieleen</string>
+    <string name="widgetErrorSubtitle">Tehtäviesi näyttämisessä on tällä hetkellä ongelmia. Yritä uudelleen hetken kuluttua tai siirry sovellukseen.</string>
+    <string name="widgetToDoEmptyTitle">Olet nyt valmis!</string>
+    <string name="widgetToDoEmptySubtitle">Näyttää siltä, ​​että olet vapaa seuraavat neljä viikkoa. Haluatko lisätä tämän osan?</string>
+    <string name="widgetNotLoggedInTitle">Kirjaudutaan sisään!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Nähdäksesi tehtävälistasi, kirjaudu tilillesi sovelluksessa. Se vie vain hetken!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Avaa tehtävälistanäyttö</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Luo uusi tehtävälista</string>
+    <string name="widgetGradesErrorSubtitle">Arvosanojesi näyttämisessä on tällä hetkellä ongelmia. Yritä uudelleen hetken kuluttua tai siirry sovellukseen.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Nähdäksesi arvosanasi, kirjaudu tilillesi sovelluksessa.. Se vie vain hetken!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Arvosanojesi näyttämisessä on tällä hetkellä ongelmia.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Nähdäksesi arvosanasi, kirjaudu tilillesi sovelluksessa..</string>
+    <string name="widgetSingleGradeSelectCourse">Valitaan kurssi</string>
+    <string name="widgetGradesErrorLoadingCourses">Kurssien lataamisen yhteydessä tapahtui virhe.</string>
+    <string name="settingsSwitchExperience">Vaihda Canvas-uraan</string>
 </resources>

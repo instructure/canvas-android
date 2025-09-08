@@ -382,6 +382,15 @@ class ToDoWidget : GlanceAppWidget() {
                 ),
                 maxLines = 1
             )
+            if (!plannerItem.tag.isNullOrEmpty()) {
+                Text(
+                    text = plannerItem.tag,
+                    style = TextStyle(
+                        color = WidgetColors.textDark,
+                        fontSize = 12.sp
+                    )
+                )
+            }
             Text(
                 text = plannerItem.dateText,
                 style = TextStyle(

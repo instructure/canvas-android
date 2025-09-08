@@ -291,7 +291,7 @@
     <string name="Todo">Čakajoča opravila</string>
     <string name="todoFilter">Filtriraj predmete</string>
     <string name="filterByEllipsis">Filtriraj po ...</string>
-    <string name="favoritedCoursesLabel">Priljubljeni predmeti</string>
+    <string name="favoriteCoursesLabel">Priljubljeni predmeti</string>
     <string name="Event">Dogodek</string>
     <string name="eventSuccessfulDeletion">Dogodek je bil uspešno izbrisan.</string>
     <string name="timeIconDescription">Ikona časa</string>
@@ -692,6 +692,7 @@
     <string name="notificationWidgetTitle">Obvestila</string>
     <string name="todoWidgetTitleLong">Sistem Canvas – Čakajoča opravila</string>
     <string name="gradesWidgetTitleLong">Sistem Canvas – Ocene</string>
+    <string name="gradeWidgetTitleLong">Canvas – Ocena</string>
     <string name="notificationWidgetTitleLong">Sistem Canvas – Obvestila</string>
     <string name="notLoggedIn">Niste prijavljeni.</string>
     <string name="widgetStyle">Izberite slog svojega pripomočka.</string>
@@ -1105,7 +1106,7 @@
     <string name="gradeAfterPosting">Ocena po objavi</string>
     <string name="gradeOverride">Preglasitev ocene</string>
     <string name="currentGrade">Trenutna ocena</string>
-    <string name="opensInCanvasStudent">Odpiranje v Canvas Student</string>
+    <string name="opensInCanvasApp">Odpri v aplikaciji Canvas</string>
     <string name="tab_student_view">Pogled študenta</string>
 
 
@@ -1469,9 +1470,9 @@
     <string name="offline_content_storage">Shramba</string>
     <string name="offline_content_storage_info">%s od %s uporabljenih</string>
     <string name="offline_content_other">Druge aplikacije</string>
-    <string name="offline_content_canvas_student">Študent v sistemu Canvas</string>
+    <string name="offline_content_canvas">Sistem Canvas</string>
     <string name="offline_content_remaining">Preostalo</string>
-    <string name="offline_content_storage_info_a11y_description">Informacije o shrambi: Uporabljeno %s od %s, druge aplikacije %d%%, Canvas Student %d%%, preostalo %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">Informacije o shrambi: Uporabljeno %s od %s, druge aplikacije %d%%, Canvas %d%%, preostalo %d%%</string>
     <string name="offline_content_all_courses">Vsi predmeti</string>
     <string name="offline_content_sync">Sinhronizacija</string>
     <string name="offline_content_selected">Izbrana je možnost %d</string>
@@ -1776,12 +1777,12 @@
     <string name="screenTitleHelp">Pomoč</string>
     <string name="screenTitleManageStudents">Uredi študente</string>
     <string name="screenTitleSettings">Nastavitve</string>
-    <string name="navigationDrawerSwitchUsers">Preklopi uporabnika</string>
     <string name="navigationDrawerLogOut">Odjava</string>
     <string name="noStudentsError">Ni študentov</string>
     <string name="noStudentsErrorDescription">Ne opazujete nobenega študenta.</string>
     <string name="noStudentsRefresh">Osveži</string>
     <string name="noGrade">Ni ocen</string>
+    <string name="noGrades">Ni ocen</string>
     <string name="errorLoadingCourses">Pri nalaganju predmetov vašega študenta je prišlo do napake.</string>
     <string name="parentNoCourses">Ni predmetov</string>
     <string name="parentNoCoursesMessage">Predmeti vašega študenta morda še niso objavljeni.</string>
@@ -1791,7 +1792,7 @@
     <string name="studentOrTeacherTitle">Ste študent ali izvajalec?</string>
     <string name="studentOrTeacherSubtitle">Morda bi bolj ustrezala kakšna druga aplikacija. Tapnite eno od njih, da obiščete trgovino Play Store</string>
     <string name="studentApp">ŠTUDENT</string>
-    <string name="canvasStudentApp">Študent v sistemu Canvas</string>
+    <string name="canvasAppName">Sistem Canvas</string>
     <string name="teacherApp">IZVAJALEC</string>
     <string name="canvasTeacherApp">Izvajalec v sistemu Canvas</string>
     <string name="inboxUnreadCountMoreThan99">99+</string>
@@ -1829,7 +1830,7 @@
     <string name="addStudentSuccessfull">Študent je bil uspešno dodan</string>
     <string name="addStudentTitle">Dodaj študenta s/z ...</string>
     <string name="addStudentQrCodeTitle">Koda QR</string>
-    <string name="addStudentQrCodeExplanation">Študenti lahko ustvarijo kodo QR z aplikacijo Canvas Student na svoji mobilni napravi</string>
+    <string name="addStudentQrCodeExplanationCanvas">Študenti lahko ustvarijo kodo QR z aplikacijo Canvas na svoji mobilni napravi</string>
     <string name="addStudentPairingCodeTitle">Koda za seznanjanje naprave</string>
     <string name="addStudentPairingCodeExplanation">Študenti lahko pridobijo kodo za seznanitev prek spletnega mesta Canvas</string>
     <string name="pairingCodeDialogTitle">Dodaj študenta</string>
@@ -1838,9 +1839,9 @@
     <string name="pairingCodeDialogNegativeButton">Prekliči</string>
     <string name="pairingCodeDialogPositiveButton">V redu</string>
     <string name="pairingCodeDialogError">Vaša koda je nepravilna ali potekla.</string>
-    <string name="qrPairingTitle">Odpiranje Canvas Student</string>
-    <string name="qrPairingDescription">Če želite nadaljevati, odprite aplikacijo Canvas Student za študente. Pojdite v glavni meni > Nastavitve > Seznani s skritim bralcem in odčitajte prikazano kodo QR</string>
-    <string name="qrCodePairingPrompt">Preberite kodo QR iz Canvas Student za seznanjanje</string>
+    <string name="qrPairingTitleCanvas">Odpri aplikacijo Canvas</string>
+    <string name="qrPairingDescriptionCanvas">Če želite nadaljevati, odprite aplikacijo Canvas za študente. Pojdite v glavni meni > Nastavitve > Seznani s skritim bralcem in odčitajte prikazano kodo QR</string>
+    <string name="qrCodePairingPromptCanvas">Preberite kodo QR iz aplikacije Canvas za seznanjanje</string>
     <string name="a11y_addStudentContentDescription">Dodaj študenta</string>
     <string name="qrPairingErrorTitle">Koda QR je potekla</string>
     <string name="qrPairingErrorDescription">Veljavnost kode QR, ki ste jo odčitali, je potekla. Osvežite kodo na študentovi napravi in poskusite znova.</string>
@@ -2048,4 +2049,24 @@
     <string name="errorLoadingAssignments">Med nalaganjem nalog je prišlo do napake</string>
     <string name="a11y_searchAssignments">Iskanje nalog</string>
     <string name="dueAssignmentListItem">Rok %1$s</string>
+    <string name="a11y_searchAmongRecipients">Iskanje med prejemniki</string>
+    <string name="a11y_recipientIsRemoved">%1$s je odstranjen</string>
+    <string name="widgetDueDate">Rok ob %1$s</string>
+    <string name="widgetFromTo">%1$s do %2$s</string>
+    <string name="widgetAllDay">Ves dan</string>
+    <string name="widgetErrorTitle">Ojoj! Prišlo je do težav</string>
+    <string name="widgetErrorSubtitle">Trenutno imamo težave s prikazom vaših opravil. Poskusite znova čez nekaj časa ali pa uporabite aplikacijo.</string>
+    <string name="widgetToDoEmptyTitle">Zaenkrat ste končali!</string>
+    <string name="widgetToDoEmptySubtitle">Kot kaže, ste prosti naslednje 4 tedne. Ali želite dodati nekaj seznamov opravil?</string>
+    <string name="widgetNotLoggedInTitle">Naj vas prijavimo!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">Če si želite ogledati svoja opravila, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
+    <string name="a11y_widgetToDoOpenToDoList">Odpri zaslon s seznamom opravil</string>
+    <string name="a11y_widgetToDoCreateNewToDo">Ustvari nov seznam opravil</string>
+    <string name="widgetGradesErrorSubtitle">Trenutno imamo težave s prikazom vaših ocen. Poskusite znova čez nekaj časa ali pa uporabite aplikacijo.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji. Trajalo bo le sekundo!</string>
+    <string name="widgetSingleGradeErrorSubtitle">Trenutno imamo težave s prikazom vaših ocen.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">Če si želite ogledati svoje ocene, se prijavite v svoj račun v aplikaciji.</string>
+    <string name="widgetSingleGradeSelectCourse">Izberimo predmet</string>
+    <string name="widgetGradesErrorLoadingCourses">Med nalaganjem predmetov je prišlo do napake.</string>
+    <string name="settingsSwitchExperience">Preklopi na Canvas Career</string>
 </resources>

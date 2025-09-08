@@ -72,7 +72,8 @@
     <string name="loginHint">あなたの学校または地域を見つける</string>
 
     <!-- Error Report Dialog -->
-    <string name="errorReportAProblem">レポートＡ問題</string>
+    <string name="errorReportAProblem">問題を報告する</string>
+    <string name="reportAProblemDialogTitle">問題を報告する</string>
     <string name="errorReportSubject">件名</string>
     <string name="errorReportDescription">説明</string>
     <string name="errorReportSend">送信</string>

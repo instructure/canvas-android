@@ -94,7 +94,8 @@ data class EventUiState(
     val name: String,
     @DrawableRes val iconRes: Int,
     val date: String? = null,
-    val status: String? = null
+    val status: String? = null,
+    val tag: String? = null
 )
 
 sealed class CalendarAction {

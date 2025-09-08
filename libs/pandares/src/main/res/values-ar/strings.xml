@@ -310,7 +310,7 @@
     <string name="Todo">قائمة مهام</string>
     <string name="todoFilter">تصفية المساقات</string>
     <string name="filterByEllipsis">التصفية حسب...</string>
-    <string name="favoritedCoursesLabel">المساقات المفضلة</string>
+    <string name="favoriteCoursesLabel">المساقات المفضلة</string>
     <string name="Event">الحدث</string>
     <string name="eventSuccessfulDeletion">تم حذف الحدث بنجاح</string>
     <string name="timeIconDescription">أيقونة الوقت</string>
@@ -735,6 +735,7 @@
     <string name="notificationWidgetTitle">الإعلامات</string>
     <string name="todoWidgetTitleLong">Canvas - قائمة المهام</string>
     <string name="gradesWidgetTitleLong">Canvas - الدرجات</string>
+    <string name="gradeWidgetTitleLong">Canvas - الدرجة</string>
     <string name="notificationWidgetTitleLong">Canvas - الإعلامات</string>
     <string name="notLoggedIn">لست مسجل الدخول الآن.</string>
     <string name="widgetStyle">اختر نمط عنصر واجهة المستخدم</string>
@@ -748,7 +749,7 @@
     <string name="searchGuides">البحث في Canvas Guides</string>
     <string name="canvasGuides">Canvas Guides</string>
     <string name="searchGuidesDetails">احصل على إجابات للأسئلة المتداولة</string>
-    <string name="reportProblem">إبلاغ عن مشكلة</string>
+    <string name="reportProblem">الإبلاغ عن مشكلة</string>
     <string name="reportProblemDetails">أخبرنا إن لم يعمل التطبيق بشكل صحيح</string>
     <string name="requestFeature">طلب ميزة</string>
     <string name="requestFeatureDetails">هل لديك فكرة لتحسين التطبيق؟</string>
@@ -1176,7 +1177,7 @@
     <string name="gradeAfterPosting">التقدير بعد النشر</string>
     <string name="gradeOverride">تجاوز التقدير</string>
     <string name="currentGrade">التقدير الحالي</string>
-    <string name="opensInCanvasStudent">يفتح في Canvas Student</string>
+    <string name="opensInCanvasApp">للفتح في تطبيق Canvas </string>
     <string name="tab_student_view">طريقة عرض الطالب</string>
 
 
@@ -1560,9 +1561,9 @@
     <string name="offline_content_storage">سعة التخزين</string>
     <string name="offline_content_storage_info">تم استخدام %s من %s</string>
     <string name="offline_content_other">تطبيقات أخرى</string>
-    <string name="offline_content_canvas_student">Canvas Student</string>
+    <string name="offline_content_canvas">Canvas</string>
     <string name="offline_content_remaining">المتبقي</string>
-    <string name="offline_content_storage_info_a11y_description">معلومات سعة التخزين: تم استخدام %s من %s، التطبيقات الأخرى %d%%، Canvas Student %d%%، المتبقي %d%%</string>
+    <string name="offline_content_storage_info_a11y_description_canvas">معلومات سعة التخزين: تم استخدام %s من %s، التطبيقات الأخرى %d%%، Canvas %d%%، المتبقي %d%%</string>
     <string name="offline_content_all_courses">جميع المساقات</string>
     <string name="offline_content_sync">مزامنة</string>
     <string name="offline_content_selected">تم تحديد %d</string>
@@ -1899,12 +1900,12 @@
     <string name="screenTitleHelp">التعليمات</string>
     <string name="screenTitleManageStudents">إدارة الطلاب</string>
     <string name="screenTitleSettings">الإعدادات</string>
-    <string name="navigationDrawerSwitchUsers">تبديل المستخدمين</string>
     <string name="navigationDrawerLogOut">تسجيل الخروج</string>
     <string name="noStudentsError">لا يوجد طلاب</string>
     <string name="noStudentsErrorDescription">أنت لا تراقب أي طالب.</string>
     <string name="noStudentsRefresh">تحديث</string>
     <string name="noGrade">لا توجد أي درجة</string>
+    <string name="noGrades">بلا درجات</string>
     <string name="errorLoadingCourses">حدث خطأ أثناء تحميل مساقات الطالب لديك.</string>
     <string name="parentNoCourses">لا يوجد أي مساق</string>
     <string name="parentNoCoursesMessage">ربما لم يتم نشر مساقات الطالب بعد.</string>
@@ -1914,7 +1915,7 @@
     <string name="studentOrTeacherTitle">هل أنت طالب أو معلم؟</string>
     <string name="studentOrTeacherSubtitle">ربما تكون إحدى تطبيقاتنا الأخرى مناسبة بشكل أفضل. اضغط على إحدى التطبيقات لزيارة Play Store</string>
     <string name="studentApp">الطالب</string>
-    <string name="canvasStudentApp">Canvas Student</string>
+    <string name="canvasAppName">Canvas</string>
     <string name="teacherApp">المعلم</string>
     <string name="canvasTeacherApp">Canvas Teacher</string>
     <string name="inboxUnreadCountMoreThan99">أكثر من 99</string>
@@ -1952,7 +1953,7 @@
     <string name="addStudentSuccessfull">تم إضافة الطالب بنجاح</string>
     <string name="addStudentTitle">إضافة طالب بـ...</string>
     <string name="addStudentQrCodeTitle">رمز QR</string>
-    <string name="addStudentQrCodeExplanation">يستطيع الطلاب إنشاء رمز QR باستخدام تطبيق Canvas Student على أجهزتهم المحمولة</string>
+    <string name="addStudentQrCodeExplanationCanvas">يستطيع الطلاب إنشاء رمز QR باستخدام تطبيق Canvas على أجهزتهم المحمولة</string>
     <string name="addStudentPairingCodeTitle">رمز الإقران</string>
     <string name="addStudentPairingCodeExplanation">يمكن للطلاب الحصول على رمز إقران من خلال موقع Canvas على الويب.</string>
     <string name="pairingCodeDialogTitle">إضافة طالب</string>
@@ -1961,9 +1962,9 @@
     <string name="pairingCodeDialogNegativeButton">إلغاء</string>
     <string name="pairingCodeDialogPositiveButton">موافق</string>
     <string name="pairingCodeDialogError">رمزك غير صحيح أو منته الصلاحية.</string>
-    <string name="qrPairingTitle">افتح Canvas Student</string>
-    <string name="qrPairingDescription">ستحتاج إلى فتح تطبيق Canvas Student لدى الطالب للمتابعة. انتقل إلى القائمة الرئيسية > الإعدادات > إقران مع Observer ثم امسح رمز QR الذي تراه هناك.</string>
-    <string name="qrCodePairingPrompt">امسح رمز QR من Canvas Student للإقران</string>
+    <string name="qrPairingTitleCanvas">افتح في تطبيق Canvas</string>
+    <string name="qrPairingDescriptionCanvas">ستحتاج إلى فتح تطبيق Canvas لدى الطالب للمتابعة. انتقل إلى القائمة الرئيسية > الإعدادات > إقران مع Observer ثم امسح رمز QR الذي تراه هناك.</string>
+    <string name="qrCodePairingPromptCanvas">امسح رمز QR من تطبيق Canvas للإقران</string>
     <string name="a11y_addStudentContentDescription">إضافة طالب</string>
     <string name="qrPairingErrorTitle">رمز QR منته الصلاحية</string>
     <string name="qrPairingErrorDescription">ربما يكون رمز QR الذي مسحته انتهت صلاحيته. قم بتحديث الرمز على جهاز الطالب وأعد المحاولة.</string>
@@ -2175,4 +2176,24 @@
     <string name="errorLoadingAssignments">حدث خطأ أثناء تحميل المهام</string>
     <string name="a11y_searchAssignments">البحث عن المهام</string>
     <string name="dueAssignmentListItem">تاريخ الاستحقاق %1$s</string>
+    <string name="a11y_searchAmongRecipients">البحث بين المستلمين</string>
+    <string name="a11y_recipientIsRemoved">تمت إزالة %1$s</string>
+    <string name="widgetDueDate">مستحق في %1$s</string>
+    <string name="widgetFromTo">%1$s إلى %2$s</string>
+    <string name="widgetAllDay">طوال اليوم</string>
+    <string name="widgetErrorTitle">عذراً! حدث خطأ ما</string>
+    <string name="widgetErrorSubtitle">نواجه مشكلة في عرض مهامك في الوقت الحالي. يُرجى إعادة المحاولة بعد فترة وجيزة أو توجه إلى التطبيق.</string>
+    <string name="widgetToDoEmptyTitle">أنت جاهز تمامًا في الوقت الحالي!</string>
+    <string name="widgetToDoEmptySubtitle">يبدو أنك متفرغ للأسابيع الأربعة التالية. هل تريد أن تضيف بعض المهام؟</string>
+    <string name="widgetNotLoggedInTitle">فلنساعدك في تسجيل الدخول!</string>
+    <string name="widgetToDoNotLoggedInSubtitle">لتر قائمة مهامك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
+    <string name="a11y_widgetToDoOpenToDoList">فتح شاشة قائمة المهام</string>
+    <string name="a11y_widgetToDoCreateNewToDo">إنشاء مهمة جديدة</string>
+    <string name="widgetGradesErrorSubtitle">نواجه مشكلة في عرض التقديرات الخاصة بك في الوقت الحالي. يُرجى إعادة المحاولة بعد فترة وجيزة أو توجه إلى التطبيق.</string>
+    <string name="widgetGradesNotLoggedInSubtitle">لتر التقديرات الخاصة بك، يُرجى تسجيل الدخول في حسابك في التطبيق. سيستغرق الأمر ثانية فحسب!</string>
+    <string name="widgetSingleGradeErrorSubtitle">نواجه مشكلة في عرض التقديرات الخاصة بك في الوقت الحالي.</string>
+    <string name="widgetSingleGradeNotLoggedInSubtitle">لتر التقديرات الخاصة بك، يُرجى تسجيل الدخول في حسابك في التطبيق.</string>
+    <string name="widgetSingleGradeSelectCourse">فلنختر مساقًا</string>
+    <string name="widgetGradesErrorLoadingCourses">حدث خطأ أثناء تحميل المساقات.</string>
+    <string name="settingsSwitchExperience">تبديل إلى Canvas Career</string>
 </resources>
