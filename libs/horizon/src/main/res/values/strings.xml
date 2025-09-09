@@ -345,4 +345,7 @@
     <string name="programSwitcher_goBack">All</string>
     <string name="learnScreen_partOfProgram">Part of %s</string>
     <string name="learnScreen_courseCannotBeOpened">The course cannot be opened.</string>
+    <string name="dashboard_partOfProgram">Part of %s</string>
+    <string name="dashboard_viewProgram">Welcome! View your program to enroll in your first course.</string>
+    <string name="dashboard_viewProgramButton">My program</string>
 </resources>
