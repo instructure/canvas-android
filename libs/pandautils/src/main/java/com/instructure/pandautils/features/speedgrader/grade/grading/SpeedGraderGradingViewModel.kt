@@ -21,12 +21,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.SubmissionGradeQuery
-import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
-import com.instructure.canvasapi2.UpdateSubmissionStatusMutation.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
-import com.instructure.canvasapi2.utils.capitalized
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
@@ -79,6 +76,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private var daysLateDebounceJob: Job? = null
 
+    private var customGradeStatuses: List<SubmissionGradeQuery. Edge?>? = null
+
     init {
         loadData()
         viewModelScope.launch {
@@ -105,6 +104,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     repository.getSubmissionGrade(assignmentId, studentId, forceNetwork).submission
                         ?: throw IllegalStateException("Submission not found")
                 submissionId = submission._id
+                customGradeStatuses = submission.assignment?.course?.customGradeStatusesConnection?.edges
                 _uiState.update {
                     it.copy(
                         pointsPossible = submission.assignment?.pointsPossible,
@@ -116,20 +116,20 @@ class SpeedGraderGradingViewModel @Inject constructor(
                         loading = false,
                         error = false,
                         gradeHidden = submission.hideGradeFromStudent.orDefault(),
-                        submittedAt = submission.submittedAt,
+                        submittedAt = submission.submittedAt, // TODO: Handle multiple submissions when api supports it
                         gradingStatuses = submission.assignment?.course?.gradeStatuses
-                            ?.map {
+                            ?.map { gradeStatus ->
                                 GradeStatus(
-                                    statusId = it.rawValue,
-                                    name = getGradeStatusName(it)
+                                    statusId = gradeStatus.rawValue,
+                                    name = getGradeStatusName(gradeStatus)
                                 )
                             }
                             .orEmpty() +
-                                submission.assignment?.course?.customGradeStatusesConnection?.edges?.filterNotNull()
-                                    ?.map {
+                                customGradeStatuses?.filterNotNull()
+                                    ?.map { edge ->
                                         GradeStatus(
-                                            id = it.node?._id?.toLongOrNull(),
-                                            name = it.node?.name.orEmpty()
+                                            id = edge.node?._id?.toLongOrNull(),
+                                            name = edge.node?.name.orEmpty()
                                         )
                                     }.orEmpty(),
                         letterGrades = submission.assignment?.course?.gradingStandard?.data?.map { gradingStandard ->
@@ -166,41 +166,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
                     grade = subAssignment.grade,
                     score = subAssignment.score,
                     tag = subAssignment.subAssignmentTag,
-                    gradingStatus = subAssignment.statusTag.name.capitalized(),
-                    excused = subAssignment.excused.orDefault(),
-                    daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null
-                )
-            } ?: emptyList()
-        } else {
-            listOf(
-                GradableAssignment(
-                    pointsPossible = submission.assignment?.pointsPossible,
-                    enteredGrade = submission.enteredGrade
-                        ?: resources.getString(R.string.not_graded),
-                    enteredScore = submission.enteredScore?.toFloat(),
-                    grade = submission.grade,
-                    score = submission.score,
-                    excused = submission.excused.orDefault(),
-                    gradingStatus = submission.status,
-                    daysLate = if (submission.late == true) getDaysLate(submission.secondsLate) else null,
-                )
-            )
-        }
-    }
-
-    /*private fun getGradableAssignments(submission: UpdateSubmissionStatusMutation.Submission): List<GradableAssignment> {
-        return if (!submission.subAssignmentSubmissions.isNullOrEmpty()) {
-            submission.subAssignmentSubmissions?.map { subAssignment ->
-                GradableAssignment(
-                    pointsPossible = submission.assignment?.checkpoints?.firstOrNull { it.tag == subAssignment.subAssignmentTag }?.pointsPossible,
-                    enteredGrade = subAssignment.enteredGrade
-                        ?: resources.getString(R.string.not_graded),
-                    enteredScore = subAssignment.enteredScore?.toFloat(),
-                    grade = subAssignment.grade,
-                    score = subAssignment.score,
-                    tag = subAssignment.subAssignmentTag,
                     gradingStatus = if (subAssignment.customGradeStatusId != null) {
-                        submission.assignment?.course?.customGradeStatusesConnection?.edges?.firstOrNull { edge ->
+                        customGradeStatuses?.firstOrNull { edge ->
                             edge?.node?._id == subAssignment.customGradeStatusId
                         }?.node?.name
                     } else {
@@ -225,7 +192,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 )
             )
         }
-    }*/
+    }
 
     private fun getGradeStatusName(status: CourseGradeStatus): String {
         return when (status) {
@@ -285,7 +252,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
         }
     }
 
-    private fun onPercentageChanged(percentage: Float?, subAssignmentTag: String? = null,) {
+    private fun onPercentageChanged(percentage: Float?, subAssignmentTag: String? = null) {
         val pointsPossible = getGradableAssignmentByTag(subAssignmentTag)?.pointsPossible
         val score = percentage?.let { (it / 100) * (pointsPossible ?: 0.0) }
         onScoreChanged(score?.toFloat(), subAssignmentTag)
@@ -302,7 +269,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
         }
     }
 
-    private fun onExcuse(subAssignmentTag: String? = null,) {
+    private fun onExcuse(subAssignmentTag: String? = null) {
         viewModelScope.launch {
             try {
                 repository.excuseSubmission(
@@ -330,10 +297,10 @@ class SpeedGraderGradingViewModel @Inject constructor(
         }
     }
 
-    private fun onStatusChange(gradeStatus: GradeStatus, subAssignmentTag: String? = null,) {
+    private fun onStatusChange(gradeStatus: GradeStatus, subAssignmentTag: String? = null) {
         viewModelScope.launch {
             try {
-                val submission = repository.updateSubmissionStatus(
+                repository.updateSubmissionStatus(
                     submissionId.toLong(),
                     gradeStatus.id?.toString(),
                     gradeStatus.statusId,
@@ -344,17 +311,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
                 gradingEventHandler.postEvent(GradingEvent.GradeChanged)
 
-                _uiState.update {
-                    it.copy(
-                        error = false,
-                        loading = false,
-                        enteredScore = submission?.enteredScore?.toFloat(),
-                        finalScore = submission?.score,
-                        finalGrade = submission?.grade,
-                        pointsDeducted = submission?.deductedPoints,
-                        gradableAssignments = updateSubAssignments(it.gradableAssignments, submission?.subAssignmentSubmissions)
-                    )
-                }
+                loadData(forceNetwork = true)
             } catch (e: Exception) {
                 _uiState.update {
                     it.copy(
@@ -364,31 +321,6 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 }
             }
         }
-    }
-
-    private fun updateSubAssignments(currentState: List<GradableAssignment>, subAssignments: List<SubAssignmentSubmission>?): List<GradableAssignment> {
-        val updatedList = mutableListOf<GradableAssignment>()
-        subAssignments?.forEach { subAssignment ->
-            val current = currentState.firstOrNull { it.tag == subAssignment.subAssignmentTag }
-            val updated = current?.copy(
-                enteredGrade = subAssignment.enteredGrade,
-                enteredScore = subAssignment.enteredScore?.toFloat(),
-                grade = subAssignment.grade,
-                score = subAssignment.score,
-                excused = subAssignment.excused ?: current.excused,
-                gradingStatus = subAssignment.statusTag.name.capitalized(),
-                //customGradeStatusId = subAssignment.customGradeStatusId,
-                /*gradingStatus = if (subAssignment.customGradeStatusId != null) {
-                    null
-                } else {
-                    getGradeStatusName(subAssignment.statusTag)
-                },*/
-            )
-            updated?.let {
-                updatedList.add(it)
-            }
-        }
-        return updatedList.ifEmpty { currentState }
     }
 
     private fun onLateDaysChange(lateDays: Float?) {
