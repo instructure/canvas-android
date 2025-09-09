@@ -16,15 +16,13 @@
  */
 package com.instructure.horizon.features.account.navigation
 
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.navigation
 import com.instructure.horizon.features.account.AccountScreen
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
@@ -37,37 +35,25 @@ import com.instructure.horizon.features.account.password.AccountPasswordScreen
 import com.instructure.horizon.features.account.profile.AccountProfileScreen
 import com.instructure.horizon.features.account.profile.AccountProfileViewModel
 import com.instructure.horizon.features.account.reportabug.ReportABugWebView
-import com.instructure.horizon.horizonui.animation.enterTransition
-import com.instructure.horizon.horizonui.animation.exitTransition
-import com.instructure.horizon.horizonui.animation.popEnterTransition
-import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.features.home.HomeNavigationRoute
 
-@Composable
-fun AccountNavigation(
-    mainNavController: NavHostController,
-    modifier: Modifier = Modifier
+fun NavGraphBuilder.accountNavigation(
+    navController: NavHostController,
 ) {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController,
-        enterTransition = { enterTransition },
-        exitTransition = { exitTransition },
-        popEnterTransition = { popEnterTransition },
-        popExitTransition = { popExitTransition },
-        startDestination = AccountRoute.Account.route,
-        modifier = modifier
+    navigation(
+        route = HomeNavigationRoute.Account.route,
+        startDestination = AccountRoute.Account.route
     ) {
         composable(AccountRoute.Account.route) {
             val viewModel = hiltViewModel<AccountViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AccountScreen(uiState, navController, mainNavController)
+            AccountScreen(uiState, navController)
         }
 
         composable(AccountRoute.Profile.route) {
             val viewModel = hiltViewModel<AccountProfileViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AccountProfileScreen(uiState, navController, mainNavController)
+            AccountProfileScreen(uiState, navController)
         }
 
         composable(AccountRoute.Password.route) {

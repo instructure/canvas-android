@@ -17,7 +17,7 @@
 package com.instructure.horizon.features.account.navigation
 
 sealed class AccountRoute(val route: String) {
-    data object Account : AccountRoute("account")
+    data object Account : AccountRoute("account_home")
     data object Profile : AccountRoute("profile")
     data object Password : AccountRoute("password")
     data object Notifications : AccountRoute("notifications")

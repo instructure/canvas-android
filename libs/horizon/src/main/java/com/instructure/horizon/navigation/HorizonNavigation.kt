@@ -32,14 +32,10 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
-import com.instructure.horizon.features.inbox.HorizonInboxScreen
+import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceScreen
 import com.instructure.horizon.features.moduleitemsequence.ModuleItemSequenceViewModel
-import com.instructure.horizon.features.notebook.NotebookScreen
-import com.instructure.horizon.features.notebook.NotebookViewModel
-import com.instructure.horizon.features.notebook.addedit.AddEditNoteScreen
-import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
-import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
+import com.instructure.horizon.features.notebook.navigation.notebookNavigation
 import com.instructure.horizon.features.notification.NotificationScreen
 import com.instructure.horizon.features.notification.NotificationViewModel
 import com.instructure.horizon.horizonui.animation.enterTransition
@@ -55,35 +51,6 @@ sealed class MainNavigationRoute(val route: String) {
     data object Notification : MainNavigationRoute("notification")
     data object Notebook : MainNavigationRoute("notebook")
     data object Inbox : MainNavigationRoute("inbox")
-
-    @Serializable
-    data class AddNotebook(
-        val courseId: String,
-        val objectType: String,
-        val objectId: String,
-        val highlightedTextStartOffset: Int,
-        val highlightedTextEndOffset: Int,
-        val highlightedTextStartContainer: String,
-        val highlightedTextEndContainer: String,
-        val textSelectionStart: Int,
-        val textSelectionEnd: Int,
-        val highlightedText: String,
-        val noteType: String?,
-    ): MainNavigationRoute("add_notebook")
-
-    @Serializable
-    data class EditNotebook(
-        val noteId: String,
-        val highlightedTextStartOffset: Int,
-        val highlightedTextEndOffset: Int,
-        val highlightedTextStartContainer: String,
-        val highlightedTextEndContainer: String,
-        val textSelectionStart: Int,
-        val textSelectionEnd: Int,
-        val highlightedText: String,
-        val noteType: String,
-        val userComment: String,
-    ): MainNavigationRoute("edit_notebook")
 
     @Serializable
     data class ModuleItemSequence(
@@ -111,6 +78,17 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
             navController = navController,
             startDestination = MainNavigationRoute.Home.route
         ) {
+            notebookNavigation(navController) { snackbarMessage, onDismiss ->
+                scope.launch {
+                    if (snackbarMessage != null) {
+                        val result = snackbarHostState.showSnackbar(snackbarMessage)
+                        if (result == SnackbarResult.Dismissed) {
+                            onDismiss()
+                        }
+                    }
+                }
+            }
+            horizonInboxNavigation(navController)
             composable(MainNavigationRoute.Home.route) {
                 HomeScreen(navController, hiltViewModel<HomeViewModel>())
             }
@@ -123,42 +101,6 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 val viewModel = hiltViewModel<NotificationViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 NotificationScreen(uiState, navController)
-            }
-            composable(MainNavigationRoute.Notebook.route) {
-                val viewModel = hiltViewModel<NotebookViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
-                NotebookScreen(navController, uiState)
-            }
-            composable<MainNavigationRoute.AddNotebook> {
-                val viewModel = hiltViewModel<AddNoteViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
-                AddEditNoteScreen(navController, uiState) { snackbarMessage, onDismiss ->
-                    scope.launch {
-                        if (snackbarMessage != null) {
-                            val result = snackbarHostState.showSnackbar(snackbarMessage)
-                            if (result == SnackbarResult.Dismissed) {
-                                onDismiss()
-                            }
-                        }
-                    }
-                }
-            }
-            composable<MainNavigationRoute.EditNotebook> {
-                val viewModel = hiltViewModel<EditNoteViewModel>()
-                val uiState by viewModel.uiState.collectAsState()
-                AddEditNoteScreen(navController, uiState) { snackbarMessage, onDismiss ->
-                    scope.launch {
-                        if (snackbarMessage != null) {
-                            val result = snackbarHostState.showSnackbar(snackbarMessage)
-                            if (result == SnackbarResult.Dismissed) {
-                                onDismiss()
-                            }
-                        }
-                    }
-                }
-            }
-            composable(MainNavigationRoute.Inbox.route) {
-                HorizonInboxScreen(navController)
             }
         }
     }

@@ -17,16 +17,14 @@
 package com.instructure.horizon.features.inbox.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
@@ -41,18 +39,15 @@ import com.instructure.horizon.horizonui.animation.mainEnterTransition
 import com.instructure.horizon.horizonui.animation.mainExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.orDefault
 
-@Composable
-fun HorizonInboxNavigation(
-    mainNavController: NavHostController,
-    navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+fun NavGraphBuilder.horizonInboxNavigation(
+    navController: NavHostController,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = HorizonInboxRoute.InboxList.route,
-        modifier = modifier
+    navigation(
+        route = MainNavigationRoute.Inbox.route,
+        startDestination = HorizonInboxRoute.InboxList.route
     ) {
         composable(
             HorizonInboxRoute.InboxList.route,
@@ -63,7 +58,7 @@ fun HorizonInboxNavigation(
         ) {
             val viewModel = hiltViewModel<HorizonInboxListViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            HorizonInboxListScreen(uiState, mainNavController, navController)
+            HorizonInboxListScreen(uiState, navController)
         }
         composable(
             HorizonInboxRoute.InboxDetails.route,
