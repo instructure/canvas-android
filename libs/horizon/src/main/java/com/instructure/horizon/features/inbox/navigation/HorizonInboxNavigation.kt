@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.inbox.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -26,6 +27,8 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeViewModel
@@ -98,6 +101,32 @@ fun NavGraphBuilder.horizonInboxNavigation(
             val pickerState by pickerViewModel.uiState.collectAsState()
 
             HorizonInboxComposeScreen(uiState, pickerState, navController)
+        }
+        composable(
+            HorizonInboxRoute.InboxDetailsDeepLink.route,
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+            arguments = listOf(
+                navArgument(HorizonInboxRoute.InboxDetails.ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "https://horizon.cd.instructure.com/conversations/{${HorizonInboxRoute.InboxDetails.ID}}"
+                }
+            )
+        ) { backStackEntry ->
+            LaunchedEffect(Unit) {
+                val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
+                navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.Inbox, null)) {
+                    popUpTo(HorizonInboxRoute.InboxList.route) {
+                        inclusive = false
+                    }
+                }
+            }
         }
     }
 }

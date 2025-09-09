@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.inbox.navigation
 
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute.InboxDetails.Companion.ID
 
 sealed class HorizonInboxRoute(val route: String) {
     data object InboxList : HorizonInboxRoute("inbox_list")
@@ -42,4 +43,5 @@ sealed class HorizonInboxRoute(val route: String) {
     }
 
     data object InboxCompose : HorizonInboxRoute("inbox_compose")
+    data object InboxDetailsDeepLink : HorizonInboxRoute("conversations/{$ID}")
 }
