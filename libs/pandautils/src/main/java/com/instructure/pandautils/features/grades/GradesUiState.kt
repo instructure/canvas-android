@@ -54,6 +54,14 @@ data class AssignmentUiState(
     val name: String,
     val dueDate: String,
     val submissionStateLabel: SubmissionStateLabel,
+    val displayGrade: DisplayGrade,
+    val checkpoints: List<DiscussionCheckpointUiState> = emptyList()
+)
+
+data class DiscussionCheckpointUiState(
+    val name: String,
+    val dueDate: String,
+    val submissionStateLabel: SubmissionStateLabel,
     val displayGrade: DisplayGrade
 )
 

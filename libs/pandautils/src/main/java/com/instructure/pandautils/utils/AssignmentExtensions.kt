@@ -21,6 +21,7 @@ import android.content.Context
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradingSchemeRow
+import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
@@ -39,15 +40,18 @@ fun Assignment.getAssignmentIcon() = when {
     else -> R.drawable.ic_assignment
 }
 
-fun Assignment.getGrade(
-    submission: Submission?,
+private fun Assignment.getGrade(
+    noSubmission: Boolean,
+    submissionGrade: String?,
+    submissionScore: Double,
+    excused: Boolean,
+    possiblePoints: Double,
     context: Context,
     restrictQuantitativeData: Boolean,
     gradingScheme: List<GradingSchemeRow>,
     showZeroPossiblePoints: Boolean = false,
     showNotGraded: Boolean = false
 ): DisplayGrade {
-    val possiblePoints = this.pointsPossible
     val pointsPossibleText = NumberHelper.formatDecimal(possiblePoints, 2, true)
 
     val notGradedDisplayGrade = if ((showZeroPossiblePoints || possiblePoints > 0) && !restrictQuantitativeData) {
@@ -64,12 +68,12 @@ fun Assignment.getGrade(
     }
 
     // No submission
-    if (submission == null) {
+    if (noSubmission) {
         return notGradedDisplayGrade
     }
 
     // Excused
-    if (submission.excused) {
+    if (excused) {
         if (restrictQuantitativeData) {
             return DisplayGrade(context.getString(R.string.gradeExcused))
         } else {
@@ -88,7 +92,7 @@ fun Assignment.getGrade(
         }
     }
 
-    val grade = submission.grade ?: return if (showNotGraded) notGradedDisplayGrade else DisplayGrade()
+    val grade = submissionGrade ?: return if (showNotGraded) notGradedDisplayGrade else DisplayGrade()
     val gradeContentDescription = getContentDescriptionForMinusGradeString(grade, context).validOrNull() ?: grade
 
     val gradingType = Assignment.getGradingTypeFromAPIString(this.gradingType.orEmpty())
@@ -101,7 +105,7 @@ fun Assignment.getGrade(
         if (restrictQuantitativeData) {
             return DisplayGrade(grade, gradeContentDescription)
         } else {
-            val scoreText = NumberHelper.formatDecimal(submission.score, 2, true)
+            val scoreText = NumberHelper.formatDecimal(submissionScore, 2, true)
             val possiblePointsText = NumberHelper.formatDecimal(possiblePoints, 2, true)
             return DisplayGrade(
                 context.getString(
@@ -121,12 +125,15 @@ fun Assignment.getGrade(
     }
 
     if (restrictQuantitativeData && this.isGradingTypeQuantitative) {
-        val letterGrade = convertScoreToLetterGrade(submission.score, this.pointsPossible, gradingScheme)
-        return DisplayGrade(letterGrade, getContentDescriptionForMinusGradeString(letterGrade, context).validOrNull() ?: letterGrade)
+        val letterGrade = convertScoreToLetterGrade(submissionScore, possiblePoints, gradingScheme)
+        return DisplayGrade(
+            letterGrade,
+            getContentDescriptionForMinusGradeString(letterGrade, context).validOrNull() ?: letterGrade
+        )
     }
 
     // Numeric grade
-    submission.grade?.toDoubleOrNull()?.let { parsedGrade ->
+    submissionGrade.toDoubleOrNull()?.let { parsedGrade ->
         if (restrictQuantitativeData) return DisplayGrade()
         val formattedGrade = NumberHelper.formatDecimal(parsedGrade, 2, true)
         return DisplayGrade(
@@ -152,8 +159,57 @@ fun Assignment.getGrade(
     }
 }
 
-fun Assignment.getSubmissionStateLabel(customStatuses: List<CustomGradeStatusesQuery.Node>): SubmissionStateLabel {
-    val matchedCustomStatus = submission?.customGradeStatusId?.let { id ->
+fun Assignment.getGrade(
+    submission: Submission?,
+    context: Context,
+    restrictQuantitativeData: Boolean,
+    gradingScheme: List<GradingSchemeRow>,
+    showZeroPossiblePoints: Boolean = false,
+    showNotGraded: Boolean = false
+) = getGrade(
+    noSubmission = submission == null,
+    submissionGrade = submission?.grade,
+    submissionScore = submission?.score.orDefault(),
+    excused = submission?.excused.orDefault(),
+    possiblePoints = pointsPossible.orDefault(),
+    context = context,
+    restrictQuantitativeData = restrictQuantitativeData,
+    gradingScheme = gradingScheme,
+    showZeroPossiblePoints = showZeroPossiblePoints,
+    showNotGraded = showNotGraded
+)
+
+fun Assignment.getSubAssignmentSubmissionGrade(
+    possiblePoints: Double,
+    submission: SubAssignmentSubmission?,
+    context: Context,
+    restrictQuantitativeData: Boolean,
+    gradingScheme: List<GradingSchemeRow>,
+    showZeroPossiblePoints: Boolean = false,
+    showNotGraded: Boolean = false
+) = getGrade(
+    noSubmission = submission == null,
+    submissionGrade = submission?.grade,
+    submissionScore = submission?.score.orDefault(),
+    excused = submission?.excused.orDefault(),
+    possiblePoints = possiblePoints,
+    context = context,
+    restrictQuantitativeData = restrictQuantitativeData,
+    gradingScheme = gradingScheme,
+    showZeroPossiblePoints = showZeroPossiblePoints,
+    showNotGraded = showNotGraded
+)
+
+private fun mapSubmissionStateLabel(
+    customGradeStatusId: Long?,
+    customStatuses: List<CustomGradeStatusesQuery.Node>,
+    late: Boolean,
+    missing: Boolean,
+    graded: Boolean,
+    submitted: Boolean,
+    notSubmitted: Boolean
+): SubmissionStateLabel {
+    val matchedCustomStatus = customGradeStatusId?.let { id ->
         customStatuses.find { it._id.toLongOrNull() == id }
     }
 
@@ -164,11 +220,36 @@ fun Assignment.getSubmissionStateLabel(customStatuses: List<CustomGradeStatusesQ
             matchedCustomStatus.name
         )
 
-        submission?.late.orDefault() -> SubmissionStateLabel.Late
-        isMissing() -> SubmissionStateLabel.Missing
-        isGraded().orDefault() -> SubmissionStateLabel.Graded
-        submission?.submittedAt != null -> SubmissionStateLabel.Submitted
-        !isSubmitted -> SubmissionStateLabel.NotSubmitted
+        late -> SubmissionStateLabel.Late
+        missing -> SubmissionStateLabel.Missing
+        graded -> SubmissionStateLabel.Graded
+        submitted -> SubmissionStateLabel.Submitted
+        notSubmitted -> SubmissionStateLabel.NotSubmitted
         else -> SubmissionStateLabel.None
     }
 }
+
+fun Assignment.getSubmissionStateLabel(
+    customStatuses: List<CustomGradeStatusesQuery.Node>
+) = mapSubmissionStateLabel(
+    submission?.customGradeStatusId,
+    customStatuses,
+    submission?.late.orDefault(),
+    isMissing(),
+    isGraded().orDefault(),
+    submission?.submittedAt != null,
+    !isSubmitted
+)
+
+fun Assignment.getSubAssignmentSubmissionStateLabel(
+    submission: SubAssignmentSubmission?,
+    customStatuses: List<CustomGradeStatusesQuery.Node>
+) = mapSubmissionStateLabel(
+    submission?.customGradeStatusId,
+    customStatuses,
+    submission?.late.orDefault(),
+    submission?.missing.orDefault(),
+    !submission?.grade.isNullOrEmpty(),
+    submitted = false, // TODO: Sub-assignments do not have a submittedAt field
+    notSubmitted = false // TODO: Sub-assignments do not have a submittedAt field
+)

@@ -117,7 +117,7 @@ object AssignmentAPI {
             @Tag restParams: RestParams
         ): DataResult<List<AssignmentGroup>>
 
-        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=all_dates&include[]=overrides&include[]=observed_users&override_assignment_dates=true")
+        @GET("courses/{courseId}/assignment_groups?include[]=assignments&include[]=discussion_topic&include[]=submission&include[]=all_dates&include[]=overrides&include[]=observed_users&override_assignment_dates=true&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getFirstPageAssignmentGroupListWithAssignmentsForObserver(
             @Path("courseId") courseId: Long,
             @Query("grading_period_id") gradingPeriodId: Long?,
