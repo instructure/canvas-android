@@ -28,7 +28,7 @@ data class SpeedGraderContentUiState(
     val userName: String? = null,
     val userUrl: String? = null,
     val submissionState: SubmissionStateLabel = SubmissionStateLabel.None,
-    val dueDate: Date? = null,
+    val dueDates: List<Date> = emptyList(),
     val attachmentSelectorUiState: SelectorUiState = SelectorUiState(),
     val attemptSelectorUiState: SelectorUiState = SelectorUiState(),
     val anonymous: Boolean = false,

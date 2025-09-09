@@ -100,6 +100,12 @@ fragment SubmissionFields on SubmissionInterface {
                 _id
             }
         }
+        checkpoints {
+            pointsPossible
+            tag
+            name
+            dueAt
+        }
     }
     subAssignmentSubmissions {
         assignmentId

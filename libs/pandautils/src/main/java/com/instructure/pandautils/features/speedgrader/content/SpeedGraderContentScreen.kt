@@ -29,9 +29,9 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
@@ -133,7 +133,7 @@ private fun SpeedGraderContentScreen(
                 userUrl = uiState.userUrl,
                 userName = uiState.userName,
                 submissionStatus = uiState.submissionState,
-                dueDate = uiState.dueDate,
+                dueDates = uiState.dueDates,
                 expanded = expanded,
                 onExpandClick = onExpandClick,
                 courseColor = LocalCourseColor.current,
@@ -195,7 +195,7 @@ private fun UserHeader(
     anonymous: Boolean,
     group: Boolean,
     submissionStatus: SubmissionStateLabel,
-    dueDate: Date?,
+    dueDates: List<Date>? = null,
     expanded: Boolean,
     onExpandClick: (() -> Unit)?,
     courseColor: Color,
@@ -206,7 +206,7 @@ private fun UserHeader(
     Row(
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .requiredHeight(64.dp)
+            .heightIn(64.dp, 84.dp)
             .fillMaxWidth()
             .padding(start = 22.dp, top = 12.dp, bottom = 12.dp, end = 22.dp)
     ) {
@@ -233,7 +233,7 @@ private fun UserHeader(
                         modifier = Modifier
                             .padding(top = 4.dp)
                     )
-                    if (dueDate != null) {
+                    if (dueDates != null && dueDates.size == 1) {
                         VerticalDivider(
                             modifier = Modifier
                                 .padding(horizontal = 8.dp)
@@ -244,12 +244,42 @@ private fun UserHeader(
                             DateHelper.getDateAtTimeString(
                                 LocalContext.current,
                                 R.string.due_dateTime,
-                                dueDate
+                                dueDates[0]
                             ).orEmpty(),
                             fontSize = 14.sp,
                             color = colorResource(id = R.color.textDark),
                         )
                     }
+                }
+            }
+            if (dueDates != null && dueDates.size > 1) {
+                Row(
+                    modifier = Modifier.padding(top = 4.dp),
+                    verticalAlignment = Alignment.Bottom
+                ) {
+                    Text(
+                        DateHelper.getDateAtTimeString(
+                            LocalContext.current,
+                            R.string.due_dateTime,
+                            dueDates[0]
+                        ).orEmpty(),
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.textDark)
+                    )
+                    VerticalDivider(
+                        modifier = Modifier
+                            .padding(horizontal = 8.dp)
+                            .height(16.dp),
+                        color = colorResource(id = R.color.borderMedium),
+                    )
+                    Text(
+                        DateHelper.getDateAtTimeString(
+                            LocalContext.current,
+                            dueDates[1]
+                        ).orEmpty(),
+                        fontSize = 14.sp,
+                        color = colorResource(id = R.color.textDark),
+                    )
                 }
             }
         }
@@ -499,7 +529,23 @@ fun UserHeaderPreview() {
     UserHeader(
         userUrl = null,
         userName = "John Doe",
-        dueDate = Date(),
+        dueDates = listOf(Date()),
+        submissionStatus = SubmissionStateLabel.Graded,
+        expanded = false,
+        onExpandClick = null,
+        courseColor = Color(color = android.graphics.Color.BLUE),
+        anonymous = false,
+        group = false
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun UserHeaderCheckpointPreview() {
+    UserHeader(
+        userUrl = null,
+        userName = "John Doe",
+        dueDates = listOf(Date(), Date()),
         submissionStatus = SubmissionStateLabel.Graded,
         expanded = false,
         onExpandClick = null,
@@ -539,7 +585,7 @@ private fun SpeedGraderContentScreenPreview() {
         userUrl = null,
         userName = "John Doe",
         submissionState = SubmissionStateLabel.Graded,
-        dueDate = Date(),
+        dueDates = listOf(Date()),
         attachmentSelectorUiState = SelectorUiState(
             items = listOf(
                 SelectorItem(1, "Item 1"),

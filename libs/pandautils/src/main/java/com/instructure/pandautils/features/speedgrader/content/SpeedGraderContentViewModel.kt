@@ -131,7 +131,7 @@ class SpeedGraderContentViewModel @Inject constructor(
                     submissionFields?.customGradeStatus,
                     submissionFields?.statusTag
                 ),
-                dueDate = submissionFields?.assignment?.dueAt,
+                dueDates = getDueDates(submissionFields),
                 attachmentSelectorUiState = SelectorUiState(
                     items = attachments,
                     selectedItemId = attachments.firstOrNull()?.id,
@@ -145,6 +145,14 @@ class SpeedGraderContentViewModel @Inject constructor(
                 anonymous = anonymousGrading,
                 group = groupSubmission
             )
+        }
+    }
+
+    private fun getDueDates(submissionFields: SubmissionFields?): List<Date> {
+        return if (submissionFields?.assignment?.checkpoints.isNullOrEmpty()) {
+            listOfNotNull(submissionFields?.assignment?.dueAt)
+        } else {
+            submissionFields?.assignment?.checkpoints?.mapNotNull { it.dueAt } ?: emptyList()
         }
     }
 

@@ -131,6 +131,15 @@ object DateHelper {
         return context.getString(stringResId, date, time)
     }
 
+    fun getDateAtTimeString(context: Context?, dateTime: Date?): String? {
+        if (context == null || dateTime == null) {
+            return null
+        }
+        val date = getDayMonthDateString(context, dateTime)
+        val time = getFormattedTime(context, dateTime)
+        return "$date, $time"
+    }
+
     fun getDateAtTimeWithYearString(context: Context?, stringResId: Int, dateTime: Date?): String? {
         if (context == null || dateTime == null) {
             return null
