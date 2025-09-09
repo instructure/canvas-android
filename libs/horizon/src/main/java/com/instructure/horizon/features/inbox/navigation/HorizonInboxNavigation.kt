@@ -28,6 +28,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
@@ -115,7 +116,7 @@ fun NavGraphBuilder.horizonInboxNavigation(
             ),
             deepLinks = listOf(
                 navDeepLink {
-                    uriPattern = "https://horizon.cd.instructure.com/conversations/{${HorizonInboxRoute.InboxDetails.ID}}"
+                    uriPattern = "${ApiPrefs.fullDomain}/conversations/{${HorizonInboxRoute.InboxDetails.ID}}"
                 }
             )
         ) { backStackEntry ->
