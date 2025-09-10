@@ -58,6 +58,7 @@ import com.instructure.horizon.features.notebook.common.composable.NotebookPill
 import com.instructure.horizon.features.notebook.common.composable.NotebookTypeSelect
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.features.notebook.common.model.NotebookType
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -78,7 +79,8 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
-    onDismiss: (() -> Unit)? = null
+    onDismiss: (() -> Unit)? = null,
+    onNoteSelected: ((Note) -> Unit)? = null,
 ) {
     val scrollState = rememberLazyListState()
     Scaffold(
@@ -146,7 +148,7 @@ fun NotebookScreen(
                 items(state.notes) { note ->
                     Column {
                         NoteContent(note) {
-                            mainNavController.navigate(
+                            onNoteSelected?.invoke(note) ?: mainNavController.navigate(
                                 MainNavigationRoute.ModuleItemSequence(
                                     courseId = note.courseId,
                                     moduleItemAssetType = note.objectType.value,
@@ -204,7 +206,23 @@ fun NotebookBottomDialog(
         NotebookScreen(
             mainNavController = mainNavController,
             state = state,
-            onDismiss = { onDismiss() }
+            onDismiss = { onDismiss() },
+            onNoteSelected = { note ->
+                mainNavController.navigate(
+                    NotebookRoute.EditNotebook(
+                        noteId = note.id,
+                        highlightedTextStartOffset = note.highlightedText.range.startOffset,
+                        highlightedTextEndOffset = note.highlightedText.range.endOffset,
+                        highlightedTextStartContainer = note.highlightedText.range.startContainer,
+                        highlightedTextEndContainer = note.highlightedText.range.endContainer,
+                        textSelectionStart = note.highlightedText.textPosition.start,
+                        textSelectionEnd = note.highlightedText.textPosition.end,
+                        highlightedText = note.highlightedText.selectedText,
+                        noteType = note.type.name,
+                        userComment = note.userText
+                    )
+                )
+            }
         )
 
     }
