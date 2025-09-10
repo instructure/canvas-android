@@ -16,9 +16,11 @@
  */
 package com.instructure.horizon.features.account.navigation
 
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
@@ -36,15 +38,27 @@ import com.instructure.horizon.features.account.profile.AccountProfileScreen
 import com.instructure.horizon.features.account.profile.AccountProfileViewModel
 import com.instructure.horizon.features.account.reportabug.ReportABugWebView
 import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.mainEnterTransition
+import com.instructure.horizon.horizonui.animation.mainExitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 
 fun NavGraphBuilder.accountNavigation(
     navController: NavHostController,
 ) {
     navigation(
         route = HomeNavigationRoute.Account.route,
-        startDestination = AccountRoute.Account.route
+        startDestination = AccountRoute.Account.route,
+        enterTransition = { if (isBottomNavDestination()) mainEnterTransition else enterTransition },
+        exitTransition = { if (isBottomNavDestination()) mainExitTransition else exitTransition },
+        popEnterTransition = { if (isBottomNavDestination()) mainEnterTransition else popEnterTransition },
+        popExitTransition = { if (isBottomNavDestination()) mainExitTransition else popExitTransition },
     ) {
-        composable(AccountRoute.Account.route) {
+        composable(
+            route = AccountRoute.Account.route,
+        ) {
             val viewModel = hiltViewModel<AccountViewModel>()
             val uiState by viewModel.uiState.collectAsState()
             AccountScreen(uiState, navController)
@@ -82,4 +96,15 @@ fun NavGraphBuilder.accountNavigation(
             ReportABugWebView(navController)
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isBottomNavDestination(): Boolean {
+    val sourceRoute = this.initialState.destination.route ?: return false
+    val destinationRoute = this.targetState.destination.route ?: return false
+    return sourceRoute.contains(HomeNavigationRoute.Learn.route)
+        || sourceRoute.contains(HomeNavigationRoute.Dashboard.route)
+        || sourceRoute.contains(HomeNavigationRoute.Skillspace.route)
+        || destinationRoute.contains(HomeNavigationRoute.Learn.route)
+        || destinationRoute.contains(HomeNavigationRoute.Dashboard.route)
+        || destinationRoute.contains(HomeNavigationRoute.Skillspace.route)
 }

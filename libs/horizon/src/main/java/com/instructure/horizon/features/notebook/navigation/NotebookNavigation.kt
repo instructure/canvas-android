@@ -22,12 +22,16 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.composable
-import androidx.navigation.navigation
+import androidx.navigation.compose.navigation
 import com.instructure.horizon.features.notebook.NotebookScreen
 import com.instructure.horizon.features.notebook.NotebookViewModel
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteScreen
 import com.instructure.horizon.features.notebook.addedit.add.AddNoteViewModel
 import com.instructure.horizon.features.notebook.addedit.edit.EditNoteViewModel
+import com.instructure.horizon.horizonui.animation.enterTransition
+import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.popEnterTransition
+import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.navigation.MainNavigationRoute
 
 fun NavGraphBuilder.notebookNavigation(
@@ -36,7 +40,11 @@ fun NavGraphBuilder.notebookNavigation(
 ) {
     navigation(
         route = MainNavigationRoute.Notebook.route,
-        startDestination = NotebookRoute.Notebook.route
+        startDestination = NotebookRoute.Notebook.route,
+        enterTransition = { enterTransition },
+        exitTransition = { exitTransition },
+        popEnterTransition = { popEnterTransition },
+        popExitTransition = { popExitTransition },
     ) {
         composable(NotebookRoute.Notebook.route) {
             val viewModel = hiltViewModel<NotebookViewModel>()
