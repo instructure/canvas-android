@@ -103,6 +103,8 @@ fun NavGraphBuilder.horizonInboxNavigation(
 
             HorizonInboxComposeScreen(uiState, pickerState, navController)
         }
+
+        // Conversation Details from deeplink
         composable(
             HorizonInboxRoute.InboxDetailsDeepLink.route,
             enterTransition = { mainEnterTransition },
@@ -123,6 +125,41 @@ fun NavGraphBuilder.horizonInboxNavigation(
             LaunchedEffect(Unit) {
                 val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
                 navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.Inbox, null)) {
+                    popUpTo(HorizonInboxRoute.InboxList.route) {
+                        inclusive = false
+                    }
+                }
+            }
+        }
+
+        // Announcement Details from deeplink
+        composable(
+            HorizonInboxRoute.CourseAnnouncementDetailsDeepLink.route,
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+            arguments = listOf(
+                navArgument(HorizonInboxRoute.InboxDetails.ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+                navArgument(HorizonInboxRoute.InboxDetails.COURSE_ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}/courses/{${HorizonInboxRoute.InboxDetails.COURSE_ID}}/announcements/{${HorizonInboxRoute.InboxDetails.ID}}"
+                },
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}/courses/{${HorizonInboxRoute.InboxDetails.COURSE_ID}}/discussion_topics/{${HorizonInboxRoute.InboxDetails.ID}}"
+                }
+            )
+        ) { backStackEntry ->
+            LaunchedEffect(Unit) {
+                val courseId = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.COURSE_ID) ?: return@LaunchedEffect
+                val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
+                navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.CourseNotification, courseId)) {
                     popUpTo(HorizonInboxRoute.InboxList.route) {
                         inclusive = false
                     }

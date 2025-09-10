@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.inbox.navigation
 
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute.InboxDetails.Companion.COURSE_ID
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute.InboxDetails.Companion.ID
 
 sealed class HorizonInboxRoute(val route: String) {
@@ -44,4 +45,5 @@ sealed class HorizonInboxRoute(val route: String) {
 
     data object InboxCompose : HorizonInboxRoute("inbox_compose")
     data object InboxDetailsDeepLink : HorizonInboxRoute("conversations/{$ID}")
+    data object CourseAnnouncementDetailsDeepLink : HorizonInboxRoute("/courses/{$COURSE_ID}/discussion_topics/{$ID}")
 }
