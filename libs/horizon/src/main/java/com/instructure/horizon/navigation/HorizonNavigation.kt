@@ -21,6 +21,7 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.SnackbarResult
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -28,8 +29,12 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.features.home.HomeScreen
 import com.instructure.horizon.features.home.HomeViewModel
 import com.instructure.horizon.features.inbox.navigation.horizonInboxNavigation
@@ -42,6 +47,8 @@ import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNMENT_ID
+import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -60,6 +67,13 @@ sealed class MainNavigationRoute(val route: String) {
         val moduleItemAssetId: String? = null
     ) :
         MainNavigationRoute("module_item_sequence")
+
+    data object AssignmentDetailsDeepLink : MainNavigationRoute("courses/{$COURSE_ID}assignments/{$ASSIGNMENT_ID}")
+
+    companion object {
+        const val COURSE_ID = "courseId"
+        const val ASSIGNMENT_ID = "assignmentId"
+    }
 }
 
 @Composable
@@ -101,6 +115,43 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                 val viewModel = hiltViewModel<NotificationViewModel>()
                 val uiState by viewModel.uiState.collectAsState()
                 NotificationScreen(uiState, navController)
+            }
+
+            // Assignment Details deep link
+            composable(
+                route = MainNavigationRoute.AssignmentDetailsDeepLink.route,
+                arguments = listOf(
+                    navArgument(COURSE_ID) {
+                        type = NavType.StringType
+                    },
+                    navArgument(ASSIGNMENT_ID) {
+                        type = NavType.StringType
+                    }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/assignments/{${ASSIGNMENT_ID}}"
+                    }
+                )
+            ) { backStackEntry ->
+                LaunchedEffect(Unit) {
+                    val courseId =
+                        backStackEntry.arguments?.getString(COURSE_ID)
+                            ?.toLongOrNull()
+                    val assignmentId =
+                        backStackEntry.arguments?.getString(ASSIGNMENT_ID)
+                            ?.toLongOrNull()
+                    val moduleType = "Assignment"
+                    navController.navigate(
+                        MainNavigationRoute.ModuleItemSequence(
+                            courseId = courseId ?: -1L,
+                            moduleItemAssetType = moduleType,
+                            moduleItemAssetId = assignmentId?.toString()
+                        )
+                    ) {
+                        popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                    }
+                }
             }
         }
     }
