@@ -59,8 +59,8 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
     private var loadJob: WeaveJob? = null
     private var canvasContext: CanvasContext? = null
 
-    private val checkedTodos = HashSet<PlannerItem>()
-    private val deletedTodos = HashSet<PlannerItem>()
+    private val checkedTodos = ArrayList<PlannerItem>()
+    private val deletedTodos = ArrayList<PlannerItem>()
 
     private var isEditMode: Boolean = false
     private var isNoNetwork: Boolean =
@@ -171,8 +171,8 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
             val restParams =
                 RestParams(isForceReadFromNetwork = isRefresh, usePerPageQueryParam = true)
             val plannerItems = plannerApi.getPlannerItems(
-                startDate = LocalDate.now().toApiString(),
-                endDate = null,
+                startDate = LocalDate.now().minusDays(28).toApiString(),
+                endDate = LocalDate.now().plusDays(28).toApiString(),
                 contextCodes = emptyList(),
                 restParams = restParams
             ).depaginate { nextUrl ->
@@ -219,10 +219,19 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
 
     private fun populateAdapter(courseMap: Map<Long, Course>, plannerList: List<PlannerItem>) {
         val todos = plannerList
+            .asSequence()
             .filter { it.plannerOverride?.markedComplete != true }
             .filter { shownByFilter(it, courseMap) }
             .filter { !isComplete(it) }
+            .filter {
+                (it.plannable.dueAt?.after(Date()) == true)
+                        || (it.submissionState?.late == true)
+                        || (it.submissionState?.missing == true)
+                        || (it.plannableType == PlannableType.CALENDAR_EVENT)
+                        || (it.plannableType == PlannableType.PLANNER_NOTE)
+            }
             .sortedBy { it.comparisonDate }
+            .toList()
 
         todos.forEach {
             addOrUpdateItem(DateHelper.getCleanDate(it.comparisonDate.time), it)
