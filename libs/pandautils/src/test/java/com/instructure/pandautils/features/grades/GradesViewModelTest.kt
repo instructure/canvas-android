@@ -26,9 +26,12 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseGrade
+import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.DateHelper
@@ -36,6 +39,7 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DisplayGrade
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -96,6 +100,11 @@ class GradesViewModelTest {
         every { context.getString(R.string.undatedAssignments) } returns "Undated Assignments"
         every { context.getString(R.string.pastAssignments) } returns "Past Assignments"
         every { context.getString(R.string.gradesRefreshFailed) } returns "Grade refresh failed"
+        every { context.getString(R.string.reply_to_topic) } returns "Reply to topic"
+        every { context.getString(R.string.additional_replies, any()) } answers {
+            val args = secondArg<Array<Any>>()
+            "Additional replies (${args[0]})"
+        }
     }
 
     @After
@@ -277,6 +286,75 @@ class GradesViewModelTest {
                             submittedAt = Date(),
                             customGradeStatusId = 1
                         )
+                    ),
+                    Assignment(
+                        id = 6,
+                        name = "Assignment 6",
+                        dueAt = today.minusDays(1).toApiString(),
+                        submissionTypesRaw = listOf(
+                            SubmissionType.discussion_topic.rawValue
+                        ),
+                        submission = Submission(
+                            submittedAt = Date(),
+                            subAssignmentSubmissions = arrayListOf(
+                                SubAssignmentSubmission(
+                                    grade = "A",
+                                    score = 10.0,
+                                    late = true,
+                                    excused = false,
+                                    missing = false,
+                                    latePolicyStatus = null,
+                                    customGradeStatusId = null,
+                                    subAssignmentTag = Const.REPLY_TO_TOPIC,
+                                    enteredGrade = null,
+                                    enteredScore = 0.0,
+                                    userId = 1L,
+                                    isGradeMatchesCurrentSubmission = true
+                                ),
+                                SubAssignmentSubmission(
+                                    grade = null,
+                                    score = 0.0,
+                                    late = false,
+                                    excused = false,
+                                    missing = false,
+                                    latePolicyStatus = null,
+                                    customGradeStatusId = null,
+                                    subAssignmentTag = Const.REPLY_TO_ENTRY,
+                                    enteredGrade = null,
+                                    enteredScore = 0.0,
+                                    userId = 1L,
+                                    isGradeMatchesCurrentSubmission = true
+                                )
+                            ),
+                            grade = "A",
+                            postedAt = Date()
+                        ),
+                        checkpoints = listOf(
+                            Checkpoint(
+                                name = "Reply to topic",
+                                tag = Const.REPLY_TO_TOPIC,
+                                pointsPossible = 10.0,
+                                dueAt = today.plusDays(1).toApiString(),
+                                overrides = null,
+                                onlyVisibleToOverrides = false,
+                                lockAt = null,
+                                unlockAt = null
+                            ),
+                            Checkpoint(
+                                name = "Reply to entry",
+                                tag = Const.REPLY_TO_ENTRY,
+                                pointsPossible = 5.0,
+                                dueAt = today.plusDays(2).toApiString(),
+                                overrides = null,
+                                onlyVisibleToOverrides = false,
+                                lockAt = null,
+                                unlockAt = null
+                            )
+                        ),
+                        pointsPossible = 15.0,
+                        discussionTopicHeader = DiscussionTopicHeader(
+                            replyRequiredCount = 3
+                        )
                     )
                 )
             )
@@ -363,6 +441,28 @@ class GradesViewModelTest {
                                 "Custom Status 1"
                             ),
                             displayGrade = DisplayGrade("")
+                        ),
+                        AssignmentUiState(
+                            id = 6,
+                            iconRes = R.drawable.ic_discussion,
+                            name = "Assignment 6",
+                            dueDate = getFormattedDate(today.minusDays(1)),
+                            submissionStateLabel = SubmissionStateLabel.Graded,
+                            displayGrade = DisplayGrade("A"),
+                            checkpoints = listOf(
+                                DiscussionCheckpointUiState(
+                                    name = "Reply to topic",
+                                    dueDate = getFormattedDate(today.plusDays(1)),
+                                    submissionStateLabel = SubmissionStateLabel.Late,
+                                    displayGrade = DisplayGrade("A"),
+                                ),
+                                DiscussionCheckpointUiState(
+                                    name = "Additional replies (3)",
+                                    dueDate = getFormattedDate(today.plusDays(2)),
+                                    submissionStateLabel = SubmissionStateLabel.None,
+                                    displayGrade = DisplayGrade(),
+                                )
+                            )
                         )
                     )
                 )
@@ -438,6 +538,72 @@ class GradesViewModelTest {
                         submission = Submission(
                             customGradeStatusId = 1
                         )
+                    ),
+                    Assignment(
+                        id = 6,
+                        name = "Assignment 6",
+                        submissionTypesRaw = listOf(
+                            SubmissionType.discussion_topic.rawValue
+                        ),
+                        submission = Submission(
+                            submittedAt = Date(),
+                            subAssignmentSubmissions = arrayListOf(
+                                SubAssignmentSubmission(
+                                    grade = "A",
+                                    score = 10.0,
+                                    late = true,
+                                    excused = false,
+                                    missing = false,
+                                    latePolicyStatus = null,
+                                    customGradeStatusId = null,
+                                    subAssignmentTag = Const.REPLY_TO_TOPIC,
+                                    enteredGrade = null,
+                                    enteredScore = 0.0,
+                                    userId = 1L,
+                                    isGradeMatchesCurrentSubmission = true
+                                ),
+                                SubAssignmentSubmission(
+                                    grade = null,
+                                    score = 0.0,
+                                    late = false,
+                                    excused = false,
+                                    missing = false,
+                                    latePolicyStatus = null,
+                                    customGradeStatusId = null,
+                                    subAssignmentTag = Const.REPLY_TO_ENTRY,
+                                    enteredGrade = null,
+                                    enteredScore = 0.0,
+                                    userId = 1L,
+                                    isGradeMatchesCurrentSubmission = true
+                                )
+                            ),
+                            grade = "A",
+                            postedAt = Date()
+                        ),
+                        checkpoints = listOf(
+                            Checkpoint(
+                                name = "Reply to topic",
+                                tag = Const.REPLY_TO_TOPIC,
+                                pointsPossible = 10.0,
+                                overrides = null,
+                                onlyVisibleToOverrides = false,
+                                lockAt = null,
+                                unlockAt = null
+                            ),
+                            Checkpoint(
+                                name = "Reply to entry",
+                                tag = Const.REPLY_TO_ENTRY,
+                                pointsPossible = 5.0,
+                                overrides = null,
+                                onlyVisibleToOverrides = false,
+                                lockAt = null,
+                                unlockAt = null
+                            )
+                        ),
+                        pointsPossible = 15.0,
+                        discussionTopicHeader = DiscussionTopicHeader(
+                            replyRequiredCount = 3
+                        )
                     )
                 )
             )
@@ -512,6 +678,28 @@ class GradesViewModelTest {
                                 "Custom Status 1"
                             ),
                             displayGrade = DisplayGrade("")
+                        ),
+                        AssignmentUiState(
+                            id = 6,
+                            iconRes = R.drawable.ic_discussion,
+                            name = "Assignment 6",
+                            dueDate = "No due date",
+                            submissionStateLabel = SubmissionStateLabel.Graded,
+                            displayGrade = DisplayGrade("A"),
+                            checkpoints = listOf(
+                                DiscussionCheckpointUiState(
+                                    name = "Reply to topic",
+                                    dueDate = "No due date",
+                                    submissionStateLabel = SubmissionStateLabel.Late,
+                                    displayGrade = DisplayGrade("A"),
+                                ),
+                                DiscussionCheckpointUiState(
+                                    name = "Additional replies (3)",
+                                    dueDate = "No due date",
+                                    submissionStateLabel = SubmissionStateLabel.None,
+                                    displayGrade = DisplayGrade(),
+                                )
+                            )
                         )
                     )
                 )

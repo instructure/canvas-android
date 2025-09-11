@@ -544,6 +544,10 @@ fun AssignmentItem(
                     .clickable {
                         expanded = !expanded
                     }
+                    .semantics {
+                        testTag = "expandDiscussionCheckpoint"
+                        role = Role.Button
+                    }
             ) {
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
