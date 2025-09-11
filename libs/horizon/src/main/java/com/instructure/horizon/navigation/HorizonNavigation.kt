@@ -49,6 +49,8 @@ import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.ASSIGNMENT_ID
 import com.instructure.horizon.navigation.MainNavigationRoute.Companion.COURSE_ID
+import com.instructure.horizon.navigation.MainNavigationRoute.Companion.PAGE_ID
+import com.instructure.horizon.navigation.MainNavigationRoute.Companion.QUIZ_ID
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -69,10 +71,14 @@ sealed class MainNavigationRoute(val route: String) {
         MainNavigationRoute("module_item_sequence")
 
     data object AssignmentDetailsDeepLink : MainNavigationRoute("courses/{$COURSE_ID}assignments/{$ASSIGNMENT_ID}")
+    data object QuizDetailsDeepLink : MainNavigationRoute("courses/{$COURSE_ID}quizzes/{$QUIZ_ID}")
+    data object PageDetailsDeepLink : MainNavigationRoute("courses/{$COURSE_ID}pages/{$PAGE_ID}")
 
     companion object {
         const val COURSE_ID = "courseId"
         const val ASSIGNMENT_ID = "assignmentId"
+        const val QUIZ_ID = "quizId"
+        const val PAGE_ID = "pageId"
     }
 }
 
@@ -150,6 +156,78 @@ fun HorizonNavigation(navController: NavHostController, modifier: Modifier = Mod
                         )
                     ) {
                         popUpTo(MainNavigationRoute.AssignmentDetailsDeepLink.route) { inclusive = true }
+                    }
+                }
+            }
+
+            // Quiz Details deep link
+            composable(
+                route = MainNavigationRoute.QuizDetailsDeepLink.route,
+                arguments = listOf(
+                    navArgument(COURSE_ID) {
+                        type = NavType.StringType
+                    },
+                    navArgument(QUIZ_ID) {
+                        type = NavType.StringType
+                    }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/quizzes/{${QUIZ_ID}}"
+                    }
+                )
+            ) { backStackEntry ->
+                LaunchedEffect(Unit) {
+                    val courseId =
+                        backStackEntry.arguments?.getString(COURSE_ID)
+                            ?.toLongOrNull()
+                    val quizId =
+                        backStackEntry.arguments?.getString(QUIZ_ID)
+                            ?.toLongOrNull()
+                    val moduleType = "Quiz"
+                    navController.navigate(
+                        MainNavigationRoute.ModuleItemSequence(
+                            courseId = courseId ?: -1L,
+                            moduleItemAssetType = moduleType,
+                            moduleItemAssetId = quizId?.toString()
+                        )
+                    ) {
+                        popUpTo(MainNavigationRoute.QuizDetailsDeepLink.route) { inclusive = true }
+                    }
+                }
+            }
+
+            // Page Details deep link
+            composable(
+                route = MainNavigationRoute.PageDetailsDeepLink.route,
+                arguments = listOf(
+                    navArgument(COURSE_ID) {
+                        type = NavType.StringType
+                    },
+                    navArgument(PAGE_ID) {
+                        type = NavType.StringType
+                    }
+                ),
+                deepLinks = listOf(
+                    navDeepLink {
+                        uriPattern = "${ApiPrefs.fullDomain}/courses/{${COURSE_ID}}/pages/{${PAGE_ID}}"
+                    }
+                )
+            ) { backStackEntry ->
+                LaunchedEffect(Unit) {
+                    val courseId =
+                        backStackEntry.arguments?.getString(COURSE_ID)
+                            ?.toLongOrNull()
+                    val pageId = backStackEntry.arguments?.getString(PAGE_ID)
+                    val moduleType = "Page"
+                    navController.navigate(
+                        MainNavigationRoute.ModuleItemSequence(
+                            courseId = courseId ?: -1L,
+                            moduleItemAssetType = moduleType,
+                            moduleItemAssetId = pageId
+                        )
+                    ) {
+                        popUpTo(MainNavigationRoute.PageDetailsDeepLink.route) { inclusive = true }
                     }
                 }
             }
