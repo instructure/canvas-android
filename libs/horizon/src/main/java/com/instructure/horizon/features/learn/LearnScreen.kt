@@ -199,7 +199,7 @@ private fun LearnScreenWrapper(
                         )
                     }
                     val programDetailsState by programDetailsViewModel.state.collectAsState()
-                    ProgramDetailsScreen(programDetailsState, { courseId ->
+                    ProgramDetailsScreen(programDetailsState, mainNavController, { courseId ->
                         state.onProgramCourseSelected(state.selectedLearningItem.program.id, courseId)
                     })
                 }
