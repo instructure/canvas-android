@@ -59,5 +59,6 @@ class JourneyGraphQLClientConfig @Inject constructor(
     adapter: JourneyAdapter
 ): DomainServicesGraphQLClientConfig(
     url = BuildConfig.JOURNEY_BASE_URL + "/graphql",
-    httpClient = adapter.buildOHttpClient()
+    httpClient = adapter.buildOHttpClient(),
+    fetchPolicy = HttpFetchPolicy.CacheFirst
 )
