@@ -219,19 +219,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
 
     private fun populateAdapter(courseMap: Map<Long, Course>, plannerList: List<PlannerItem>) {
         val todos = plannerList
-            .asSequence()
             .filter { it.plannerOverride?.markedComplete != true }
             .filter { shownByFilter(it, courseMap) }
             .filter { !isComplete(it) }
-            .filter {
-                (it.plannable.dueAt?.after(Date()) == true)
-                        || (it.submissionState?.late == true)
-                        || (it.submissionState?.missing == true)
-                        || (it.plannableType == PlannableType.CALENDAR_EVENT)
-                        || (it.plannableType == PlannableType.PLANNER_NOTE)
-            }
             .sortedBy { it.comparisonDate }
-            .toList()
 
         todos.forEach {
             addOrUpdateItem(DateHelper.getCleanDate(it.comparisonDate.time), it)
@@ -251,7 +242,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
     }
 
     private fun isComplete(plannerItem: PlannerItem): Boolean {
-        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC) {
+        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
+            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
+            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
+        ) {
             plannerItem.submissionState?.submitted == true
         } else {
             false
