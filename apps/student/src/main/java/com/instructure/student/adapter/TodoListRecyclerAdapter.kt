@@ -266,6 +266,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
                     return
                 }
 
+                if (todo.plannableType == PlannableType.CALENDAR_EVENT) {
+                    return
+                }
+
                 todo.isChecked = isChecked
                 if (isChecked && !deletedTodos.contains(todo)) {
                     checkedTodos.add(todo)
