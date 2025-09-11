@@ -549,10 +549,18 @@ fun AssignmentItem(
                         role = Role.Button
                     }
             ) {
+                val expandButtonContentDescription = stringResource(
+                    if (expanded) {
+                        R.string.content_description_collapse_content_with_param
+                    } else {
+                        R.string.content_description_expand_content_with_param
+                    },
+                    stringResource(R.string.a11y_discussion_checkpoints)
+                )
                 Icon(
                     painter = painterResource(id = R.drawable.ic_arrow_down),
                     tint = colorResource(id = R.color.textDarkest),
-                    contentDescription = null,
+                    contentDescription = expandButtonContentDescription,
                     modifier = Modifier
                         .size(20.dp)
                         .rotate(iconRotation)
@@ -597,7 +605,9 @@ private fun CheckpointItem(
     userColor: Int
 ) {
     Column(
-        modifier = Modifier.padding(top = 8.dp)
+        modifier = Modifier
+            .padding(top = 8.dp)
+            .semantics(true) {}
     ) {
         Text(
             text = discussionCheckpointUiState.name,
