@@ -55,6 +55,7 @@ fun SpeedGraderGradeScreen() {
         SpeedGraderCommentsScreen(
             expanded = commentsExpanded,
             fixed = commentsFixed,
+            showRubric = showRubric,
             onExpandToggle = {
                 if (!commentsFixed) {
                     commentsExpanded = !commentsExpanded
