@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.learn.overview
+package com.instructure.horizon.features.learn.course.overview
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,7 +38,7 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.launchCustomTab
 
 @Composable
-fun LearnOverviewScreen(
+fun CourseOverviewScreen(
     summaryText: String?,
     modifier: Modifier = Modifier,
 ) {

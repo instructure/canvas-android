@@ -39,12 +39,18 @@ import com.instructure.horizon.horizonui.showroom.ShowroomItem
 import com.instructure.horizon.horizonui.showroom.showroomItems
 import kotlinx.serialization.Serializable
 
+const val COURSE_PREFIX = "course_"
+const val PROGRAM_PREFIX = "program_"
+
 @Serializable
 sealed class HomeNavigationRoute(val route: String) {
     data object Dashboard : HomeNavigationRoute("dashboard")
-    data object Learn : HomeNavigationRoute("learn?courseId={courseId}") {
-        fun withArgs(courseId: Long? = null) =
-            if (courseId != null) "learn?courseId=$courseId" else "learn"
+    data object Learn : HomeNavigationRoute("learn?learningItemId={learningItemId}") {
+        fun withCourse(courseId: Long? = null) =
+            if (courseId != null) "learn?learningItemId=$COURSE_PREFIX$courseId" else "learn"
+
+        fun withProgram(programId: String? = null) =
+            if (programId != null) "learn?learningItemId=$PROGRAM_PREFIX$programId" else "learn"
     }
 
     data object Skillspace : HomeNavigationRoute("skillspace")
@@ -68,14 +74,14 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
         }
         composable(
             route = HomeNavigationRoute.Learn.route, arguments = listOf(
-                navArgument("courseId") {
-                    type = NavType.LongType
-                    defaultValue = -1
+                navArgument("learningItemId") {
+                    type = NavType.StringType
+                    defaultValue = ""
                 }
             )) {
             val viewModel = hiltViewModel<LearnViewModel>()
             val uiState by viewModel.state.collectAsState()
-            LearnScreen(uiState, mainNavController)
+            LearnScreen(uiState, mainNavController = mainNavController)
         }
         composable(HomeNavigationRoute.Skillspace.route) {
             val viewModel = hiltViewModel<SkillspaceViewModel>()

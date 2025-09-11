@@ -13,7 +13,7 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.learn.programs
+package com.instructure.horizon.features.learn.program
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -25,21 +25,26 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.learn.programs.components.CourseCardChipState
-import com.instructure.horizon.features.learn.programs.components.CourseCardStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramCourseCardState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgress
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemState
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressItemStatus
-import com.instructure.horizon.features.learn.programs.components.ProgramProgressState
-import com.instructure.horizon.features.learn.programs.components.ProgramsProgressBar
-import com.instructure.horizon.features.learn.programs.components.SequentialProgramProgressProperties
+import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.learn.program.components.CourseCardChipState
+import com.instructure.horizon.features.learn.program.components.CourseCardStatus
+import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
+import com.instructure.horizon.features.learn.program.components.ProgramProgress
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemState
+import com.instructure.horizon.features.learn.program.components.ProgramProgressItemStatus
+import com.instructure.horizon.features.learn.program.components.ProgramProgressState
+import com.instructure.horizon.features.learn.program.components.ProgramsProgressBar
+import com.instructure.horizon.features.learn.program.components.SequentialProgramProgressProperties
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -52,14 +57,20 @@ import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 
 @OptIn(ExperimentalLayoutApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, modifier: Modifier = Modifier) {
+fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, onCourseSelected: (Long) -> Unit, modifier: Modifier = Modifier) {
+    LaunchedEffect(uiState.navigateToCourseId) {
+        uiState.navigateToCourseId?.let { courseId ->
+            onCourseSelected(courseId)
+            uiState.onNavigateToCourse()
+        }
+    }
+
     LoadingStateWrapper(loadingState = uiState.loadingState) {
         Column(
             modifier = modifier
                 .padding(horizontal = 24.dp)
                 .verticalScroll(rememberScrollState())
         ) {
-            Text(uiState.programName, style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_24)
             if (uiState.showProgressBar) {
                 ProgramsProgressBar(
@@ -159,6 +170,6 @@ private fun ProgramDetailsScreenPreview() {
                     )
                 )
             )
-        )
+        ), onCourseSelected = {}
     )
 }

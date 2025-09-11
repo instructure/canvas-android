@@ -1,4 +1,4 @@
-package com.instructure.horizon.features.learn.score
+package com.instructure.horizon.features.learn.course.score
 
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.Assignment
@@ -10,11 +10,11 @@ import com.instructure.horizon.model.getStatus
 import com.instructure.pandautils.utils.stringValueWithoutTrailingZeros
 import java.util.Date
 
-data class LearnScoreUiState(
+data class CourseScoreUiState(
     val screenState : LoadingState = LoadingState(),
     val courseId: Long = -1,
     val assignmentGroups: List<AssignmentGroupScoreItem> = emptyList(),
-    val selectedSortOption: LearnScoreSortOption = LearnScoreSortOption.AssignmentNameAscending,
+    val selectedSortOption: CourseScoreSortOption = CourseScoreSortOption.AssignmentNameAscending,
     val sortedAssignments: List<AssignmentScoreItem> = emptyList(),
     val currentScore: String? = null
 )
@@ -49,7 +49,7 @@ data class AssignmentGroupScoreItem(
     )
 }
 
-enum class LearnScoreSortOption(@StringRes val label: Int) {
+enum class CourseScoreSortOption(@StringRes val label: Int) {
     DueDateDescending(R.string.scoresSortingDueDateDescending),
     AssignmentNameAscending(R.string.scoresSortingAssignmentNameAscending),
 }
