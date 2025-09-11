@@ -198,7 +198,7 @@ class ToDoWidgetUpdaterTest {
         updater.updateData(context).last()
         coVerify {
             repository.getPlannerItems(
-                startDate = now.toApiString().orEmpty(),
+                startDate = now.minusDays(28).toApiString().orEmpty(),
                 endDate = now.plusDays(28).toApiString().orEmpty(),
                 contextCodes = listOf("course_1", "group_1", "user_1"),
                 forceNetwork = true
