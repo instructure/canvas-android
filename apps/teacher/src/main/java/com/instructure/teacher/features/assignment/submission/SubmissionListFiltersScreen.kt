@@ -118,6 +118,7 @@ private fun SubmissionFilterScreenContent(
                 textColor = colorResource(id = R.color.textLightest),
                 actions = {
                     TextButton(
+                        modifier = Modifier.testTag("appBarDoneButton"),
                         onClick = {
                             if (selectedFilter in listOf(
                                     SubmissionListFilter.BELOW_VALUE,
@@ -264,6 +265,7 @@ private fun SubmissionFilterScreenContent(
                 sections.forEach { section ->
                     CheckboxText(
                         text = section.name.orEmpty(),
+                        testtag = "sectionCheckBox",
                         selected = selectedSections.contains(section.id),
                         color = courseColor,
                         onCheckedChanged = {

@@ -131,7 +131,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Filter by the '${course.name}' (course) section and click the 'Done' button.")
         assignmentSubmissionListPage.filterBySection(course.name)
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is displayed as we set some filter. Assert that the filter label text is the 'All Submissions' text plus the '${course.name}' course name.")
         assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
@@ -152,7 +152,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Espresso.pressBack()
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.filterBySection(course.name)
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
 
         Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is NOT displayed as we just cleared the filter. Assert that the filter label text 'All Submission'.")
         assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
@@ -576,15 +576,10 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Filter by the '${secondSection.name}' section and click the 'Done' button.")
         assignmentSubmissionListPage.filterBySection(secondSection.name)
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
 
-        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions' text.")
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
-
-        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student.")
-        assignmentSubmissionListPage.assertHasSubmission(1)
-        assignmentSubmissionListPage.assertHasStudentSubmission(student)
-        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
+        Log.d(ASSERTION_TAG, "Assert that there are no submission displayed because the '${student.name}' student is not in the '${secondSection.name}' section. Thus, empty view is displayed.")
+        assignmentSubmissionListPage.assertEmptyViewDisplayed()
 
         Log.d(STEP_TAG, "Navigate back to the Assignment Details Page. Open the Edit Page and click on the 'Assign To' spinner to edit assignees.")
         Espresso.pressBack()
@@ -609,7 +604,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the 'Not Submitted' section counter is 1 (out of 1).")
         refresh() // This should be removed once MBL-18991 bug will be fixed (because this should be refreshed automatically after saving the assignment)
-        retryWithIncreasingDelay(times = 20, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry logic here because sometimes the 'Assign To' update on an assignment needs some time to propagate.
+        retryWithIncreasingDelay(times = 25, maxDelay = 3000, catchBlock = { refresh() }) { // We need this retry logic here because sometimes the 'Assign To' update on an assignment needs some time to propagate.
             assignmentDetailsPage.assertNotSubmitted(2, 2)
         }
 
@@ -626,7 +621,7 @@ class AssignmentE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Filter by the '${secondSection.name}' section and click the 'Done' button.")
         assignmentSubmissionListPage.filterBySection(secondSection.name)
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
 
         Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
         assignmentSubmissionListPage.assertFilterLabelText("All Submissions") // I'm not sure if this is right to show this?! Shouldn't we someone display that there is a filter applied for a particular section?
@@ -635,6 +630,37 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.assertHasSubmission(1)
         assignmentSubmissionListPage.assertHasStudentSubmission(student2)
         assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student)
+
+        Log.d(STEP_TAG, "Filter by section (the '${course.name}' course).")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Disable filter for '${secondSection.name}' section and enable filter for '${firstSection.name}' section and click the 'Done' button.")
+        assignmentSubmissionListPage.filterBySection(secondSection.name)
+        assignmentSubmissionListPage.filterBySection(firstSection.name)
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions") // I'm not sure if this is right to show this?! Shouldn't we someone display that there is a filter applied for a particular section?
+
+        Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student since we applied a filter to the '${firstSection.name}' section which the '${student.name}' student is in, and the submission of the '${student2.name}' student is filtered out because it's not in the '${firstSection.name}' section.")
+        assignmentSubmissionListPage.assertHasSubmission(1)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertStudentSubmissionNotDisplayed(student2)
+
+        Log.d(STEP_TAG, "Filter by section (the '${course.name}' course).")
+        assignmentSubmissionListPage.clickFilterButton()
+
+        Log.d(STEP_TAG, "Disable filter for '${firstSection.name}' section and click the 'Done' button.")
+        assignmentSubmissionListPage.filterBySection(firstSection.name)
+        assignmentSubmissionListPage.clickFilterDialogDone()
+
+        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
+        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
+
+        Log.d(ASSERTION_TAG, "Assert that there are 2 submissions displayed, and they are for '${student.name}' and '${student2.name}' students since we does not apply any section filter yet.")
+        assignmentSubmissionListPage.assertHasSubmission(2)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student)
+        assignmentSubmissionListPage.assertHasStudentSubmission(student2)
     }
 
 }

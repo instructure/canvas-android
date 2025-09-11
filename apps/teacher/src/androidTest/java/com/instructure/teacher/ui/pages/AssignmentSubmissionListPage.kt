@@ -20,6 +20,7 @@ import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
 import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasParent
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
@@ -51,14 +52,15 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * Assert displays no submissions view
      *
      */
-    fun assertDisplaysNoSubmissionsView() {
+    fun assertEmptyViewDisplayed() {
+        composeTestRule.onNodeWithTag("EmptyContent").assertIsDisplayed()
         composeTestRule.onNodeWithText("No submissions").assertIsDisplayed()
     }
 
     /**
-     * Assert has student submission
+     * Assert that the student submission IS displayed.
      *
-     * @param canvasUser
+     * @param canvasUser The Canvas user whose submission is to be verified (based on the user's name).
      */
     fun assertHasStudentSubmission(canvasUser: CanvasUserApiModel) {
         composeTestRule.onNode(hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name), useUnmergedTree = true)
@@ -67,9 +69,9 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
-     * Assert that the student submission is not displayed.
+     * Assert that the student submission is NOT displayed.
      *
-     * @param canvasUser
+     * @param canvasUser The Canvas user whose submission is to be verified (based on the user's name).
      */
     fun assertStudentSubmissionNotDisplayed(canvasUser: CanvasUserApiModel) {
         composeTestRule.onNode(hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name), useUnmergedTree = true)
@@ -286,20 +288,30 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
-    Clicks on the "OK" button in the filter dialog.
+    Clicks on the "Done" button in the filter dialog.
      */
-    fun clickFilterDialogOk() {
-        composeTestRule.onNodeWithText("Done")
+    fun clickFilterDialogDone() {
+        composeTestRule.onNode(hasTestTag("appBarDoneButton"), useUnmergedTree = true).performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Filters the submissions by the specified section name.
+     *
+     * @param name The name of the section to filter by.
+     */
+    fun filterBySection(name: String) {
+        composeTestRule.onNode(hasTestTag("sectionCheckBox") and hasAnySibling(hasText(name)), useUnmergedTree = true)
+            .performScrollTo()
             .performClick()
         composeTestRule.waitForIdle()
     }
 
-    fun filterBySection(name: String) {
-        composeTestRule.onNodeWithText(name, useUnmergedTree = true)
-            .performScrollTo()
-            .performClick()
-    }
-
+    /**
+     * Assert that the grades are hidden for the specified student.
+     *
+     * @param studentName The name of the student whose grades should be hidden.
+     */
     fun assertGradesHidden(studentName: String) {
         composeTestRule.onNode(
             hasTestTag("hiddenIcon").and(
@@ -314,12 +326,21 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
             .assertIsDisplayed()
     }
 
+    /**
+     * Click on the 'Not Submitted' filter option.
+     *
+     */
     fun clickFilterNotSubmitted() {
         composeTestRule.onNodeWithText("Not Submitted", useUnmergedTree = true)
             .performScrollTo()
             .performClick()
     }
 
+    /**
+     * Click on a student's avatar based on their name.
+     *
+     * @param name The name of the student whose avatar should be clicked.
+     */
     fun clickOnStudentAvatar(name: String) {
         composeTestRule.onNode(
             hasTestTag("userAvatar").and(

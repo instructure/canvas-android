@@ -26,21 +26,33 @@ import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
 import retrofit2.http.Query
 
 object SectionsApi {
     interface SectionsService {
+
+        @GET("courses/{courseId}/sections")
+        fun getSections(@Path("courseId") courseId: Long): Call<List<SectionApiModel>>
+
         @POST("courses/{courseId}/sections")
         fun createSection(@Path("courseId") courseId: Long, @Body createSection: CreateSectionWrapper): Call<SectionApiModel>
 
         @POST("sections/{sectionId}/enrollments")
-        fun enrollUserToSection(@Path("sectionId") sectionId: Long, @Query("enrollment[user_id]") userId: Long, @Query("enrollment[type]") type: String): Call<EnrollmentApiModel>
+        fun enrollUserToSection(@Path("sectionId") sectionId: Long, @Query("enrollment[user_id]") userId: Long, @Query("enrollment[type]") type: String, @Query("enrollment[enrollment_state]") enrollmentState: String): Call<EnrollmentApiModel>
     }
 
     private val sectionsService: SectionsService by lazy {
         CanvasNetworkAdapter.adminRetrofit.create(SectionsService::class.java)
+    }
+
+    fun getSections(courseId: Long): List<SectionApiModel> {
+        return sectionsService
+            .getSections(courseId = courseId)
+            .execute()
+            .body()!!
     }
 
     fun createSection(courseId: Long, sectionName: String = Randomizer.randomSectionName()): SectionApiModel {
@@ -51,9 +63,9 @@ object SectionsApi {
                 .body()!!
     }
 
-    fun enrollUserToSection(sectionId: Long, userId: Long, enrollmentType: String = "StudentEnrollment"): EnrollmentApiModel {
+    fun enrollUserToSection(sectionId: Long, userId: Long, enrollmentType: String = "StudentEnrollment", enrollmentState: String = "active"): EnrollmentApiModel {
         return sectionsService
-            .enrollUserToSection(sectionId, userId, enrollmentType)
+            .enrollUserToSection(sectionId, userId, enrollmentType, enrollmentState)
             .execute()
             .body()!!
     }
