@@ -290,7 +290,6 @@ class GradesViewModelTest {
                     Assignment(
                         id = 6,
                         name = "Assignment 6",
-                        dueAt = today.minusDays(1).toApiString(),
                         submissionTypesRaw = listOf(
                             SubmissionType.discussion_topic.rawValue
                         ),
@@ -334,7 +333,7 @@ class GradesViewModelTest {
                                 name = "Reply to topic",
                                 tag = Const.REPLY_TO_TOPIC,
                                 pointsPossible = 10.0,
-                                dueAt = today.plusDays(1).toApiString(),
+                                dueAt = today.minusDays(1).toApiString(),
                                 overrides = null,
                                 onlyVisibleToOverrides = false,
                                 lockAt = null,
@@ -446,13 +445,13 @@ class GradesViewModelTest {
                             id = 6,
                             iconRes = R.drawable.ic_discussion,
                             name = "Assignment 6",
-                            dueDate = getFormattedDate(today.minusDays(1)),
+                            dueDate = "No due date",
                             submissionStateLabel = SubmissionStateLabel.Graded,
                             displayGrade = DisplayGrade("A"),
                             checkpoints = listOf(
                                 DiscussionCheckpointUiState(
                                     name = "Reply to topic",
-                                    dueDate = getFormattedDate(today.plusDays(1)),
+                                    dueDate = getFormattedDate(today.minusDays(1)),
                                     submissionStateLabel = SubmissionStateLabel.Late,
                                     displayGrade = DisplayGrade("A"),
                                 ),

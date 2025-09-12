@@ -175,7 +175,7 @@ class GradesViewModel @Inject constructor(
         assignmentGroups
             .flatMap { it.assignments }
             .forEach { assignment ->
-                val dueAt = assignment.dueAt
+                val dueAt = assignment.dueAt ?: assignment.checkpoints.firstOrNull { it.dueAt != null }?.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
                 val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
