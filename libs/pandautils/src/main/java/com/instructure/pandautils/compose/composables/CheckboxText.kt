@@ -43,7 +43,7 @@ fun CheckboxText(
     color: Color,
     onCheckedChanged: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
-    testtag: String = "checkboxText"
+    testTag: String = "checkboxText"
 ) {
     var checked by remember { mutableStateOf(selected) }
     Row (
@@ -60,7 +60,7 @@ fun CheckboxText(
                 checkedColor = color,
                 uncheckedColor = color
             ),
-            modifier = Modifier.testTag(testtag)
+            modifier = Modifier.testTag(testTag)
         )
         Text(
             text = text,

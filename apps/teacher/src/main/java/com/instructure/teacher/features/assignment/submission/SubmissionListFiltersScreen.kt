@@ -265,7 +265,7 @@ private fun SubmissionFilterScreenContent(
                 sections.forEach { section ->
                     CheckboxText(
                         text = section.name.orEmpty(),
-                        testtag = "sectionCheckBox",
+                        testTag = "sectionCheckBox",
                         selected = selectedSections.contains(section.id),
                         color = courseColor,
                         onCheckedChanged = {
