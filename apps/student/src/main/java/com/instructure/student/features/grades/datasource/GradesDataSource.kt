@@ -17,13 +17,16 @@
 
 package com.instructure.student.features.grades.datasource
 
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.CustomGradeStatusesQuery
+import com.instructure.canvasapi2.models.AssignmentGroup
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.canvasapi2.models.Submission
 
-interface GradesListDataSource {
+interface GradesDataSource {
 
     suspend fun getCourseWithGrade(courseId: Long, forceNetwork: Boolean): Course
-
-    suspend fun getObserveeEnrollments(forceNetwork: Boolean): List<Enrollment>
 
     suspend fun getAssignmentGroupsWithAssignmentsForGradingPeriod(
         courseId: Long,
@@ -39,14 +42,12 @@ interface GradesListDataSource {
         forceNetwork: Boolean
     ): List<Submission>
 
-    suspend fun getCoursesWithSyllabus(forceNetwork: Boolean): List<Course>
-
     suspend fun getGradingPeriodsForCourse(courseId: Long, forceNetwork: Boolean): List<GradingPeriod>
 
     suspend fun getUserEnrollmentsForGradingPeriod(
         courseId: Long,
         userId: Long,
-        gradingPeriodId: Long,
+        gradingPeriodId: Long?,
         forceNetwork: Boolean
     ): List<Enrollment>
 
@@ -54,4 +55,6 @@ interface GradesListDataSource {
         courseId: Long,
         forceNetwork: Boolean,
     ): List<AssignmentGroup>
+
+    suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): List<CustomGradeStatusesQuery.Node>
 }

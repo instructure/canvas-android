@@ -17,6 +17,7 @@
 
 package com.instructure.pandautils.compose.features.grades
 
+import android.graphics.Color
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
@@ -54,7 +55,8 @@ class GradesScreenTest {
                 uiState = GradesUiState(
                     isLoading = true
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -70,7 +72,8 @@ class GradesScreenTest {
                     isLoading = false,
                     isError = true
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -89,7 +92,8 @@ class GradesScreenTest {
                     isLoading = false,
                     items = emptyList()
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -149,7 +153,8 @@ class GradesScreenTest {
                     ),
                     gradeText = "87% A"
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -196,7 +201,8 @@ class GradesScreenTest {
                     gradeText = "87% A",
                     isGradeLocked = true
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 
@@ -216,7 +222,8 @@ class GradesScreenTest {
                     isGradeLocked = true,
                     snackbarMessage = "Snackbar message"
                 ),
-                actionHandler = {}
+                actionHandler = {},
+                canvasContextColor = Color.RED
             )
         }
 

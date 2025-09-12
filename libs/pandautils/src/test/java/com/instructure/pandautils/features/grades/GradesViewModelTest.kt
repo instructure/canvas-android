@@ -72,7 +72,6 @@ class GradesViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val context = mockk<Context>(relaxed = true)
-    private val gradesBehaviour = mockk<GradesBehaviour>(relaxed = true)
     private val gradesRepository = mockk<GradesRepository>(relaxed = true)
     private val gradeFormatter = mockk<GradeFormatter>(relaxed = true)
     private val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
@@ -85,7 +84,6 @@ class GradesViewModelTest {
         Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<Long>(COURSE_ID_KEY) } returns 1
-        every { gradesBehaviour.canvasContextColor } returns 1
         coEvery { gradesRepository.getCourseGrade(any(), any(), any(), any()) } returns CourseGrade()
         every { gradesRepository.getSortBy() } returns null
 
@@ -133,9 +131,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = gradingPeriods,
                 defaultGradingPeriod = gradingPeriods.first(),
@@ -172,10 +168,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
-            gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1
-            ),
+            gradePreferencesUiState = GradePreferencesUiState(),
             isError = true
         )
 
@@ -193,9 +186,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
@@ -288,9 +279,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1"
             ),
             items = listOf(
@@ -449,9 +438,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 sortBy = SortBy.GROUP
             ),
@@ -535,9 +522,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
@@ -560,9 +545,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1",
                 gradingPeriods = emptyList()
             ),
@@ -612,10 +595,8 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                courseName = "Course 1",
-                canvasContextColor = 1
+                courseName = "Course 1"
             ),
             items = listOf(
                 AssignmentGroupUiState(
@@ -647,10 +628,8 @@ class GradesViewModelTest {
 
         val show = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                show = true,
-                canvasContextColor = 1
+                show = true
             )
         )
 
@@ -673,10 +652,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
-            gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1
-            ),
+            gradePreferencesUiState = GradePreferencesUiState(),
             onlyGradedAssignmentsSwitchEnabled = false
         )
 
@@ -725,9 +701,7 @@ class GradesViewModelTest {
 
         val loaded = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1"
             ),
             items = listOf(
@@ -793,9 +767,7 @@ class GradesViewModelTest {
 
         val expected = GradesUiState(
             isLoading = false,
-            canvasContextColor = 1,
             gradePreferencesUiState = GradePreferencesUiState(
-                canvasContextColor = 1,
                 courseName = "Course 1"
             ),
             items = listOf(
@@ -834,7 +806,7 @@ class GradesViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = GradesViewModel(context, gradesBehaviour, gradesRepository, gradeFormatter, savedStateHandle)
+        viewModel = GradesViewModel(context, gradesRepository, gradeFormatter, savedStateHandle)
     }
 
     private fun getFormattedDate(localDateTime: LocalDateTime): String {

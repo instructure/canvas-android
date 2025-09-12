@@ -4,6 +4,7 @@ import com.instructure.pandautils.utils.LogoutHelper
 import com.instructure.student.espresso.fakes.FakeEnabledTabs
 import com.instructure.student.router.EnabledTabs
 import com.instructure.student.util.StudentLogoutHelper
+import com.instructure.student.util.StudentPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.components.SingletonComponent
@@ -25,5 +26,11 @@ class TestApplicationModule {
     @Singleton
     fun provideEnabledTabs(): EnabledTabs {
         return FakeEnabledTabs()
+    }
+
+    @Provides
+    @Singleton
+    fun provideStudentPrefs(): StudentPrefs {
+        return StudentPrefs
     }
 }
