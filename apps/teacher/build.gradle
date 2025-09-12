@@ -234,6 +234,13 @@ dependencies {
     androidTestImplementation project(':dataseedingapi')
     androidTestImplementation Libs.JUNIT
 
+    /* Kaspresso for UI Testing */
+    androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.5.3'
+    // Allure support
+    androidTestImplementation "com.kaspersky.android-components:kaspresso-allure-support:1.5.3"
+    // Jetpack Compose support
+    androidTestImplementation "com.kaspersky.android-components:kaspresso-compose-support:1.5.3>"
+
     androidTestUtil(Libs.TEST_ORCHESTRATOR) {
         exclude module: 'support-annotations'
     }

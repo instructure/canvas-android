@@ -93,6 +93,13 @@ dependencies {
     implementation project(':login-api-2')
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
+    androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.5.3'
+    // Allure support
+    androidTestImplementation "com.kaspersky.android-components:kaspresso-allure-support:1.5.3"
+    // Jetpack Compose support
+    androidTestImplementation "com.kaspersky.android-components:kaspresso-compose-support:1.5.3>"
+
+
     implementation project(':pandautils')
 
     // last update: Sept 30 2017
