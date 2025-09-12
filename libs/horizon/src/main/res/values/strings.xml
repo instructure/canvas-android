@@ -348,6 +348,4 @@
     <string name="dashboard_partOfProgram">Part of %s</string>
     <string name="dashboard_viewProgram">Welcome! View your program to enroll in your first course.</string>
     <string name="dashboard_viewProgramButton">My program</string>
-    <string name="learn_failedToLoad">Failed to load programs and courses.</string>
-    <string name="learn_failedToRefresh">Failed to refresh programs and courses.</string>
 </resources>

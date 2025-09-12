@@ -60,7 +60,7 @@ class LearnViewModel @Inject constructor(
             getLearningItems()
             _state.update { it.copy(screenState = it.screenState.copy(isLoading = false)) }
         } catch {
-            _state.update { it.copy(screenState = it.screenState.copy(isLoading = false, errorMessage = context.getString(R.string.learn_failedToLoad), isError = true)) }
+            _state.update { it.copy(screenState = it.screenState.copy(isLoading = false, errorMessage = "Failed to load Courses")) }
         }
     }
 
@@ -134,9 +134,9 @@ class LearnViewModel @Inject constructor(
         viewModelScope.tryLaunch {
             _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = true)) }
             getLearningItems(forceRefresh = true)
-            _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false, isError = false, errorMessage = null)) }
+            _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         } catch {
-            _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false, snackbarMessage = context.getString(R.string.learn_failedToRefresh))) }
+            _state.update { it.copy(screenState = it.screenState.copy(isRefreshing = false)) }
         }
     }
 
