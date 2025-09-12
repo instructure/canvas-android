@@ -54,6 +54,15 @@ data class AssignmentUiState(
     val name: String,
     val dueDate: String,
     val submissionStateLabel: SubmissionStateLabel,
+    val displayGrade: DisplayGrade,
+    val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
+    val checkpointsExpanded: Boolean = false
+)
+
+data class DiscussionCheckpointUiState(
+    val name: String,
+    val dueDate: String,
+    val submissionStateLabel: SubmissionStateLabel,
     val displayGrade: DisplayGrade
 )
 
@@ -93,6 +102,7 @@ sealed class GradesAction {
     data class OnlyGradedAssignmentsSwitchCheckedChange(val checked: Boolean) : GradesAction()
     data class AssignmentClick(val id: Long) : GradesAction()
     data object SnackbarDismissed : GradesAction()
+    data class ToggleCheckpointsExpanded(val assignmentId: Long) : GradesAction()
 }
 
 sealed class GradesViewModelAction {

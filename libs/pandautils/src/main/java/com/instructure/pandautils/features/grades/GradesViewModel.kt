@@ -33,11 +33,15 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.filterHiddenAssignments
 import com.instructure.pandautils.utils.getAssignmentIcon
 import com.instructure.pandautils.utils.getGrade
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.orderedCheckpoints
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -172,7 +176,7 @@ class GradesViewModel @Inject constructor(
         assignmentGroups
             .flatMap { it.assignments }
             .forEach { assignment ->
-                val dueAt = assignment.dueAt
+                val dueAt = assignment.dueAt ?: assignment.orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
                 val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
@@ -218,19 +222,13 @@ class GradesViewModel @Inject constructor(
     private fun mapAssignments(assignments: List<Assignment>) = assignments.sortedBy { it.position }.map { assignment ->
         val iconRes = assignment.getAssignmentIcon()
 
-        val dateText = assignment.dueDate?.let {
-            val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(it)
-            val timeText = DateHelper.getFormattedTime(context, it)
-            context.getString(R.string.due, "$dateText $timeText")
-        } ?: context.getString(R.string.gradesNoDueDate)
-
         val submissionStateLabel = assignment.getSubmissionStateLabel(customStatuses)
 
         AssignmentUiState(
             id = assignment.id,
             iconRes = iconRes,
             name = assignment.name.orEmpty(),
-            dueDate = dateText,
+            dueDate = getDateText(assignment.dueDate),
             submissionStateLabel = submissionStateLabel,
             displayGrade = assignment.getGrade(
                 submission = assignment.submission,
@@ -239,9 +237,46 @@ class GradesViewModel @Inject constructor(
                 gradingScheme = course?.gradingScheme.orEmpty(),
                 showZeroPossiblePoints = true,
                 showNotGraded = true
-            )
+            ),
+            checkpoints = assignment.orderedCheckpoints.map { checkpoint ->
+                val subAssignmentSubmission = assignment.submission?.subAssignmentSubmissions?.find {
+                    it.subAssignmentTag == checkpoint.tag
+                }
+
+                DiscussionCheckpointUiState(
+                    name = when (checkpoint.tag) {
+                        Const.REPLY_TO_TOPIC -> context.getString(R.string.reply_to_topic)
+                        Const.REPLY_TO_ENTRY -> context.getString(
+                            R.string.additional_replies,
+                            assignment.discussionTopicHeader?.replyRequiredCount
+                        )
+                        else -> checkpoint.name.orEmpty()
+                    },
+                    dueDate = getDateText(checkpoint.dueDate),
+                    submissionStateLabel = assignment.getSubAssignmentSubmissionStateLabel(
+                        subAssignmentSubmission,
+                        customStatuses
+                    ),
+                    displayGrade = assignment.getSubAssignmentSubmissionGrade(
+                        possiblePoints = checkpoint.pointsPossible.orDefault(),
+                        submission = subAssignmentSubmission,
+                        context = context,
+                        restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault(),
+                        gradingScheme = course?.gradingScheme.orEmpty(),
+                        showZeroPossiblePoints = true,
+                        showNotGraded = true
+                    )
+                )
+            },
+            checkpointsExpanded = false
         )
     }
+
+    private fun getDateText(dueAt: Date?) = dueAt?.let {
+        val dateText = DateHelper.monthDayYearDateFormatUniversalShort.format(it)
+        val timeText = DateHelper.getFormattedTime(context, it)
+        context.getString(R.string.due, "$dateText $timeText")
+    } ?: context.getString(R.string.gradesNoDueDate)
 
     fun handleAction(action: GradesAction) {
         when (action) {
@@ -298,6 +333,21 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.SnackbarDismissed -> {
                 _uiState.update { it.copy(snackbarMessage = null) }
+            }
+
+            is GradesAction.ToggleCheckpointsExpanded -> {
+                val items = uiState.value.items.map { group ->
+                    group.copy(
+                        assignments = group.assignments.map {
+                            if (it.id == action.assignmentId) {
+                                it.copy(checkpointsExpanded = !it.checkpointsExpanded)
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
+                _uiState.update { it.copy(items = items) }
             }
         }
     }
