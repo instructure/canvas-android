@@ -66,10 +66,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
@@ -445,8 +443,10 @@ fun AssignmentItem(
     userColor: Int,
     modifier: Modifier = Modifier
 ) {
-    var expanded by remember { mutableStateOf(false) }
-    val iconRotation by animateFloatAsState(targetValue = if (expanded) 180f else 0f, label = "expandedIconRotation")
+    val iconRotation by animateFloatAsState(
+        targetValue = if (uiState.checkpointsExpanded) 180f else 0f,
+        label = "expandedIconRotation"
+    )
 
     Row(
         modifier = modifier
@@ -526,7 +526,7 @@ fun AssignmentItem(
                             .testTag("gradeText")
                     )
                 }
-                AnimatedVisibility(visible = expanded) {
+                AnimatedVisibility(visible = uiState.checkpointsExpanded) {
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         uiState.checkpoints.forEach {
                             CheckpointItem(it, userColor)
@@ -542,7 +542,7 @@ fun AssignmentItem(
                     .requiredSize(48.dp)
                     .clip(CircleShape)
                     .clickable {
-                        expanded = !expanded
+                        actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id))
                     }
                     .semantics {
                         testTag = "expandDiscussionCheckpoint"
@@ -550,7 +550,7 @@ fun AssignmentItem(
                     }
             ) {
                 val expandButtonContentDescription = stringResource(
-                    if (expanded) {
+                    if (uiState.checkpointsExpanded) {
                         R.string.content_description_collapse_content_with_param
                     } else {
                         R.string.content_description_expand_content_with_param

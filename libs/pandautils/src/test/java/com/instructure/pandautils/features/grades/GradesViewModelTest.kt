@@ -1021,6 +1021,56 @@ class GradesViewModelTest {
         verify { gradesRepository.setSortBy(SortBy.DUE_DATE) }
     }
 
+    @Test
+    fun `Toggle checkpoints expanded`() {
+        coEvery { gradesRepository.loadCourse(1, any()) } returns Course(id = 1, name = "Course 1")
+        coEvery { gradesRepository.loadGradingPeriods(1, any()) } returns emptyList()
+        coEvery { gradesRepository.loadEnrollments(1, any(), any()) } returns listOf()
+        coEvery { gradesRepository.loadAssignmentGroups(1, any(), any()) } returns listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(
+                    Assignment(
+                        id = 1,
+                        name = "Assignment 1",
+                        submissionTypesRaw = listOf(
+                            SubmissionType.discussion_topic.rawValue
+                        ),
+                        checkpoints = listOf(
+                            Checkpoint(
+                                name = "Reply to topic",
+                                tag = Const.REPLY_TO_TOPIC,
+                                pointsPossible = 10.0,
+                                overrides = null,
+                                onlyVisibleToOverrides = false,
+                                lockAt = null,
+                                unlockAt = null
+                            ),
+                            Checkpoint(
+                                name = "Reply to entry",
+                                tag = Const.REPLY_TO_ENTRY,
+                                pointsPossible = 5.0,
+                                overrides = null,
+                                onlyVisibleToOverrides = false,
+                                lockAt = null,
+                                unlockAt = null
+                            )
+                        )
+                    )
+                )
+            )
+        )
+
+        createViewModel()
+
+        Assert.assertFalse(viewModel.uiState.value.items.first().assignments.first().checkpointsExpanded)
+
+        viewModel.handleAction(GradesAction.ToggleCheckpointsExpanded(1))
+
+        Assert.assertTrue(viewModel.uiState.value.items.first().assignments.first().checkpointsExpanded)
+    }
+
     private fun createViewModel() {
         viewModel = GradesViewModel(context, gradesBehaviour, gradesRepository, gradeFormatter, savedStateHandle)
     }

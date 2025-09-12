@@ -266,7 +266,8 @@ class GradesViewModel @Inject constructor(
                         showNotGraded = true
                     )
                 )
-            }
+            },
+            checkpointsExpanded = false
         )
     }
 
@@ -331,6 +332,21 @@ class GradesViewModel @Inject constructor(
 
             is GradesAction.SnackbarDismissed -> {
                 _uiState.update { it.copy(snackbarMessage = null) }
+            }
+
+            is GradesAction.ToggleCheckpointsExpanded -> {
+                val items = uiState.value.items.map { group ->
+                    group.copy(
+                        assignments = group.assignments.map {
+                            if (it.id == action.assignmentId) {
+                                it.copy(checkpointsExpanded = !it.checkpointsExpanded)
+                            } else {
+                                it
+                            }
+                        }
+                    )
+                }
+                _uiState.update { it.copy(items = items) }
             }
         }
     }
