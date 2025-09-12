@@ -17,6 +17,11 @@
 
 package com.instructure.horizon.features.dashboard
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,7 +45,10 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -56,6 +64,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -95,6 +104,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     val refreshFlow = remember { savedStateHandle.getStateFlow(SHOULD_REFRESH_DASHBOARD, false) }
 
     val shouldRefresh by refreshFlow.collectAsState()
+
+    NotificationPermissionRequest()
 
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
@@ -330,6 +341,32 @@ private fun ProgramsText(
     }
 
     Text(style = HorizonTypography.p1, text = fullText)
+}
+
+@Composable
+private fun NotificationPermissionRequest() {
+    val context = LocalContext.current
+    var hasNotificationPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else true
+        )
+    }
+    var isPermissionRequested by rememberSaveable { mutableStateOf(false) }
+    val permissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+        hasNotificationPermission = result
+    }
+
+    LaunchedEffect(Unit) {
+        if (!hasNotificationPermission && !isPermissionRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            isPermissionRequested = true
+            permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
+    }
 }
 
 @Composable
