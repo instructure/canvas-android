@@ -29,10 +29,21 @@
         <activity
             android:name=".HorizonActivity"
             android:windowSoftInputMode="adjustResize"
-            android:exported="false"
+            android:exported="true"
             android:label="@string/horizon_app_name"
             android:launchMode="singleTask"
-            android:theme="@style/HorizonTheme" />
+            android:theme="@style/HorizonTheme" >
+            <intent-filter android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https"
+                    android:host="*.instructure.com" />
+                <data android:scheme="http"
+                    android:host="*.instructure.com" />
+            </intent-filter>
+
+        </activity>
 
         <activity
             android:name=".features.moduleitemsequence.content.file.ViewMediaActivity"
