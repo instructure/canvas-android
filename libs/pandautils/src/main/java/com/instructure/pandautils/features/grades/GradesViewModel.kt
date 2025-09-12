@@ -41,6 +41,7 @@ import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
 import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.orderedCheckpoints
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.Channel
@@ -175,7 +176,7 @@ class GradesViewModel @Inject constructor(
         assignmentGroups
             .flatMap { it.assignments }
             .forEach { assignment ->
-                val dueAt = assignment.dueAt ?: assignment.checkpoints.firstOrNull { it.dueAt != null }?.dueAt
+                val dueAt = assignment.dueAt ?: assignment.orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt
                 val submission = assignment.submission
                 val isWithoutGradedSubmission = submission == null || submission.isWithoutGradedSubmission
                 val isOverdue = assignment.isAllowedToSubmit && isWithoutGradedSubmission
@@ -237,7 +238,7 @@ class GradesViewModel @Inject constructor(
                 showZeroPossiblePoints = true,
                 showNotGraded = true
             ),
-            checkpoints = assignment.checkpoints.map { checkpoint ->
+            checkpoints = assignment.orderedCheckpoints.map { checkpoint ->
                 val subAssignmentSubmission = assignment.submission?.subAssignmentSubmissions?.find {
                     it.subAssignmentTag == checkpoint.tag
                 }

@@ -20,6 +20,7 @@ package com.instructure.pandautils.utils
 import android.content.Context
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
@@ -28,6 +29,8 @@ import com.instructure.canvasapi2.utils.convertScoreToLetterGrade
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
+import com.instructure.pandautils.utils.Const.REPLY_TO_ENTRY
+import com.instructure.pandautils.utils.Const.REPLY_TO_TOPIC
 
 
 private const val NO_GRADE_INDICATOR = "-"
@@ -253,3 +256,14 @@ fun Assignment.getSubAssignmentSubmissionStateLabel(
     submitted = false, // TODO: Sub-assignments do not have a submittedAt field
     notSubmitted = false // TODO: Sub-assignments do not have a submittedAt field
 )
+
+val Assignment.orderedCheckpoints: List<Checkpoint>
+    get() = checkpoints.sortedWith(
+        compareBy {
+            when (it.tag) {
+                REPLY_TO_TOPIC -> 0
+                REPLY_TO_ENTRY -> 1
+                else -> 2
+            }
+        }
+    )
