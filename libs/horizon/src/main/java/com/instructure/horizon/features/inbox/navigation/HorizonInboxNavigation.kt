@@ -125,8 +125,8 @@ fun NavGraphBuilder.horizonInboxNavigation(
             LaunchedEffect(Unit) {
                 val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
                 navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.Inbox, null)) {
-                    popUpTo(HorizonInboxRoute.InboxList.route) {
-                        inclusive = false
+                    popUpTo(HorizonInboxRoute.InboxDetailsDeepLink.route) {
+                        inclusive = true
                     }
                 }
             }
@@ -160,8 +160,8 @@ fun NavGraphBuilder.horizonInboxNavigation(
                 val courseId = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.COURSE_ID) ?: return@LaunchedEffect
                 val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
                 navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.CourseNotification, courseId)) {
-                    popUpTo(HorizonInboxRoute.InboxList.route) {
-                        inclusive = false
+                    popUpTo(HorizonInboxRoute.InboxDetailsDeepLink.route) {
+                        inclusive = true
                     }
                 }
             }
