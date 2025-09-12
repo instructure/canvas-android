@@ -486,17 +486,18 @@ fun AssignmentItem(
                         Text(
                             text = it.dueDate,
                             color = colorResource(id = R.color.textDark),
-                            fontSize = 14.sp
+                            fontSize = 14.sp,
+                            modifier = Modifier.testTag("assignmentDueDate")
                         )
                     }
-                    SubmissionState(uiState.submissionStateLabel)
+                    SubmissionState(uiState.submissionStateLabel, "submissionStateLabel")
                 } else {
                     FlowRow {
                         Text(
                             text = uiState.dueDate,
                             color = colorResource(id = R.color.textDark),
                             fontSize = 14.sp,
-                            modifier = modifier.testTag("assignmentName")
+                            modifier = Modifier.testTag("assignmentDueDate")
                         )
                         if (uiState.submissionStateLabel != SubmissionStateLabel.None) {
                             Spacer(modifier = Modifier.width(4.dp))
@@ -509,7 +510,7 @@ fun AssignmentItem(
                                     .align(Alignment.CenterVertically)
                             )
                             Spacer(modifier = Modifier.width(4.dp))
-                            SubmissionState(uiState.submissionStateLabel)
+                            SubmissionState(uiState.submissionStateLabel, "submissionStateLabel")
                         }
                     }
                 }
@@ -571,7 +572,7 @@ fun AssignmentItem(
 }
 
 @Composable
-private fun SubmissionState(submissionStateLabel: SubmissionStateLabel) {
+private fun SubmissionState(submissionStateLabel: SubmissionStateLabel, testTag: String) {
     if (submissionStateLabel != SubmissionStateLabel.None) {
         Row {
             Icon(
@@ -592,7 +593,8 @@ private fun SubmissionState(submissionStateLabel: SubmissionStateLabel) {
                     is SubmissionStateLabel.Custom -> submissionStateLabel.label
                 },
                 color = colorResource(id = submissionStateLabel.colorRes),
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                modifier = Modifier.testTag(testTag)
             )
         }
     }
@@ -618,7 +620,8 @@ private fun CheckpointItem(
             Text(
                 text = discussionCheckpointUiState.dueDate,
                 color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp
+                fontSize = 14.sp,
+                modifier = Modifier.testTag("checkpointDueDate")
             )
             if (discussionCheckpointUiState.submissionStateLabel != SubmissionStateLabel.None) {
                 Spacer(modifier = Modifier.width(4.dp))
@@ -631,7 +634,7 @@ private fun CheckpointItem(
                         .align(Alignment.CenterVertically)
                 )
                 Spacer(modifier = Modifier.width(4.dp))
-                SubmissionState(discussionCheckpointUiState.submissionStateLabel)
+                SubmissionState(discussionCheckpointUiState.submissionStateLabel, "checkpointSubmissionStateLabel")
             }
         }
         val gradeText = discussionCheckpointUiState.displayGrade.text
@@ -644,7 +647,7 @@ private fun CheckpointItem(
                     .semantics {
                         contentDescription = discussionCheckpointUiState.displayGrade.contentDescription
                     }
-                    .testTag("gradeText")
+                    .testTag("checkpointGradeText")
             )
         }
     }
