@@ -57,6 +57,7 @@ import com.instructure.pandautils.compose.composables.CanvasDivider
 fun SpeedGraderCommentsScreen(
     expanded: Boolean,
     fixed: Boolean = false,
+    showRubric: Boolean = false,
     onExpandToggle: () -> Unit
 ) {
     val viewModel: SpeedGraderCommentsViewModel = hiltViewModel()
@@ -76,12 +77,14 @@ fun SpeedGraderCommentsScreen(
                 .semantics {
                     stateDescription = if (expanded) stateExpanded else stateCollapsed
                 }
-                .clickable(
-                    enabled = !uiState.isLoading
-                ) {
-                    haptic.performHapticFeedback(HapticFeedbackType.LongPress)
-                    onExpandToggle()
-                }
+                .then(
+                    if (showRubric) Modifier.clickable(
+                        enabled = !uiState.isLoading
+                    ) {
+                        haptic.performHapticFeedback(HapticFeedbackType.LongPress)
+                        onExpandToggle()
+                    } else Modifier
+                )
                 .padding(horizontal = 16.dp)
                 .height(50.dp)
 
