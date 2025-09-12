@@ -434,7 +434,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         speedGraderCommentsPage.assertMediaCommentPreviewDisplayed()
     }
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.COMMENTS, TestCategory.E2E)
@@ -486,9 +485,14 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on '${student.name}' student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)
 
-        Log.d(ASSERTION_TAG, "Assert that '${submissionUploadInfo.fileName}' file. Navigate to Comments Tab and '${commentUploadInfo.fileName}' comment attachment is displayed.")
-        speedGraderPage.selectCommentsTab()
-        speedGraderPage.assertCommentAttachmentDisplayedCommon(commentUploadInfo.fileName, student.shortName)
+        Log.d(STEP_TAG, "Expand the SpeedGrader bottom sheet to see the comments section.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Comments' label is displayed with the corresponding number of comments, which is 1 as we seeded an attachment comment.")
+        speedGraderPage.assertCommentsLabelDisplayed(1)
+
+        Log.d(ASSERTION_TAG, "Assert that '${submissionUploadInfo.fileName}' file is displayed by '${student.name}' author.")
+        speedGraderPage.assertCommentDisplayed(commentUploadInfo.fileName, student.name)
     }
 
 }
