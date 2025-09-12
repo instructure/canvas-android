@@ -43,7 +43,7 @@ class LearnViewModel @Inject constructor(
         LearnUiState(
             screenState = LoadingState(onRefresh = ::onRefresh, onSnackbarDismiss = ::onSnackbarDismiss),
             onSelectedLearningItemChanged = ::onSelectedLearningItemChanged,
-            onCourseSelected = ::onCourseSelected
+            onProgramCourseSelected = ::onProgramCourseSelected
         )
     )
     val state = _state.asStateFlow()
@@ -82,6 +82,7 @@ class LearnViewModel @Inject constructor(
                 val programDetailsItem =
                     LearningItem.ProgramDetails(program, programCourses, context.getString(R.string.programSwitcher_programOverview))
                 LearningItem.ProgramGroupItem(
+                    program.id,
                     program.name,
                     listOf(
                         LearningItem.BackToAllItems(context.getString(R.string.programSwitcher_goBack)),
@@ -139,10 +140,11 @@ class LearnViewModel @Inject constructor(
         }
     }
 
-    private fun onCourseSelected(courseId: Long) {
-        val learningItem = _state.value.learningItems
-            .flatMap { if (it is LearningItem.ProgramGroupItem) it.items else listOf(it) }
-            .find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
+    private fun onProgramCourseSelected(programId: String, courseId: Long) {
+        val courseParentProgram = _state.value.learningItems
+            .find { (it as? LearningItem.ProgramGroupItem)?.programId == programId } as? LearningItem.ProgramGroupItem
+        val learningItem = courseParentProgram?.items
+            ?.find { it is LearningItem.CourseItem && it.courseWithProgress.courseId == courseId }
 
         if (learningItem != null) {
             _state.value = state.value.copy(selectedLearningItem = learningItem)

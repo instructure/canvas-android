@@ -17,6 +17,11 @@
 
 package com.instructure.horizon.features.dashboard
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -40,16 +45,26 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.LinkAnnotation
+import androidx.compose.ui.text.SpanStyle
+import androidx.compose.ui.text.TextLinkStyles
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -66,6 +81,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
@@ -88,6 +104,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     val refreshFlow = remember { savedStateHandle.getStateFlow(SHOULD_REFRESH_DASHBOARD, false) }
 
     val shouldRefresh by refreshFlow.collectAsState()
+
+    NotificationPermissionRequest()
 
     LaunchedEffect(shouldRefresh) {
         if (shouldRefresh) {
@@ -143,6 +161,17 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             )
                             HorizonSpace(SpaceSize.SPACE_16)
                         }
+                        items(uiState.programsUiState) { program ->
+                            DashboardProgramItem(program) {
+                                homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(program.id)) {
+                                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = false
+                                }
+                            }
+                        }
                         itemsIndexed(uiState.coursesUiState) { index, courseItem ->
                             DashboardCourseItem(courseItem, onClick = {
                                 mainNavController.navigate(
@@ -153,6 +182,14 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                                 )
                             }, onCourseClick = {
                                 homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseItem.courseId)) {
+                                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                                        saveState = true
+                                    }
+                                    launchSingleTop = true
+                                    restoreState = false
+                                }
+                            }, onProgramClick = { programId ->
+                                homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(programId)) {
                                     popUpTo(homeNavController.graph.findStartDestination().id) {
                                         saveState = true
                                     }
@@ -210,11 +247,27 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
 }
 
 @Composable
+private fun DashboardProgramItem(
+    programUiState: DashboardProgramUiState,
+    onProgramClick: () -> Unit
+) {
+    Column {
+        Text(text = programUiState.name, style = HorizonTypography.h2)
+        HorizonSpace(SpaceSize.SPACE_12)
+        Text(text = stringResource(R.string.dashboard_viewProgram), style = HorizonTypography.p1)
+        HorizonSpace(SpaceSize.SPACE_24)
+        Button(label = stringResource(R.string.dashboard_viewProgramButton), color = ButtonColor.Institution, onClick = onProgramClick)
+        HorizonSpace(SpaceSize.SPACE_24)
+    }
+}
+
+@Composable
 private fun DashboardCourseItem(
     courseItem: DashboardCourseUiState,
     onClick: () -> Unit,
     onCourseClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    onProgramClick: (String) -> Unit = {}
 ) {
     Column(modifier) {
         Column(
@@ -223,6 +276,10 @@ private fun DashboardCourseItem(
                 .clickable {
                     onCourseClick()
                 }) {
+            if (courseItem.parentPrograms.isNotEmpty()) {
+                ProgramsText(programs = courseItem.parentPrograms, onProgramClick = onProgramClick)
+                HorizonSpace(SpaceSize.SPACE_12)
+            }
             Text(text = courseItem.courseName, style = HorizonTypography.h1)
             HorizonSpace(SpaceSize.SPACE_12)
             ProgressBar(progress = courseItem.courseProgress)
@@ -248,6 +305,67 @@ private fun DashboardCourseItem(
             )
         }
         HorizonSpace(SpaceSize.SPACE_24)
+    }
+}
+
+@Composable
+private fun ProgramsText(
+    programs: List<DashboardCourseProgram>,
+    onProgramClick: (String) -> Unit
+) {
+    val programsAnnotated = buildAnnotatedString {
+        programs.forEachIndexed { i, program ->
+            if (i > 0) append(", ")
+            withLink(
+                LinkAnnotation.Clickable(
+                    tag = program.programId,
+                    styles = TextLinkStyles(
+                        style = SpanStyle(textDecoration = TextDecoration.Underline)
+                    ),
+                    linkInteractionListener = { _ -> onProgramClick(program.programId) }
+                )
+            ) {
+                append(program.programName)
+            }
+        }
+    }
+
+    // String resource can't work with annotated string so we need a temporary placeholder
+    val template = stringResource(R.string.learnScreen_partOfProgram, "__PROGRAMS__")
+
+    val fullText = buildAnnotatedString {
+        val parts = template.split("__PROGRAMS__")
+        append(parts[0])
+        append(programsAnnotated)
+        if (parts.size > 1) append(parts[1])
+    }
+
+    Text(style = HorizonTypography.p1, text = fullText)
+}
+
+@Composable
+private fun NotificationPermissionRequest() {
+    val context = LocalContext.current
+    var hasNotificationPermission by remember {
+        mutableStateOf(
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                ContextCompat.checkSelfPermission(
+                    context,
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) == PackageManager.PERMISSION_GRANTED
+            } else true
+        )
+    }
+    var isPermissionRequested by rememberSaveable { mutableStateOf(false) }
+    val permissionRequest = rememberLauncherForActivityResult(contract = ActivityResultContracts.RequestPermission()) { result ->
+        hasNotificationPermission = result
+    }
+
+    LaunchedEffect(Unit) {
+        if (!hasNotificationPermission && !isPermissionRequested && Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            isPermissionRequested = true
+            permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+        }
     }
 }
 

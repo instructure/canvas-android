@@ -15,6 +15,7 @@
  */
 package com.instructure.horizon
 
+import android.content.Intent
 import android.content.pm.ShortcutManager
 import android.content.res.Configuration
 import android.os.Bundle
@@ -22,13 +23,17 @@ import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.HorizonNavigation
 import com.instructure.pandautils.base.BaseCanvasActivity
+import com.instructure.pandautils.models.PushNotification
+import com.instructure.pandautils.receivers.PushExternalReceiver
 import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
+import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
@@ -49,11 +54,20 @@ class HorizonActivity : BaseCanvasActivity() {
         if (ThemePrefs.appTheme != AppTheme.LIGHT.ordinal) {
             setLightTheme() // Force the light theme for Horizon experience to avoid any glitches.
         }
+
         setContent {
+            val mainNavController = rememberNavController()
+
+            if (savedInstanceState == null) {
+                if (hasUnreadPushNotification(intent.extras) || hasLocalNotificationLink(intent.extras)) {
+                    handlePushNotification(hasUnreadPushNotification(intent.extras))
+                }
+            }
+
             val activity = LocalContext.current.getActivityOrNull()
             if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
             HorizonTheme {
-                HorizonNavigation(rememberNavController())
+                HorizonNavigation(mainNavController)
             }
         }
     }
@@ -61,6 +75,15 @@ class HorizonActivity : BaseCanvasActivity() {
     override fun onResume() {
         super.onResume()
         webViewAuthenticator.authenticateWebViews(lifecycleScope, this)
+    }
+
+    override fun onNewIntent(intent: Intent) {
+        super.onNewIntent(intent)
+        if (hasLocalNotificationLink(intent.extras) ||
+            hasUnreadPushNotification(intent.extras)
+        ) {
+            handlePushNotification(hasUnreadPushNotification(intent.extras))
+        }
     }
 
     private fun setLightTheme() {
@@ -71,5 +94,40 @@ class HorizonActivity : BaseCanvasActivity() {
         val nightModeFlags: Int = resources.configuration.uiMode and Configuration.UI_MODE_NIGHT_MASK
         ColorKeeper.darkTheme = nightModeFlags == Configuration.UI_MODE_NIGHT_YES
         ThemePrefs.isThemeApplied = false
+    }
+
+    private fun handlePushNotification(hasUnreadNotifications: Boolean) {
+        val intent = intent
+        if (intent != null) {
+            val extras = intent.extras
+            if (extras != null) {
+                if (hasUnreadNotifications) {
+                    setPushNotificationAsRead()
+                }
+
+                val htmlUrl = extras.getString(PushNotification.HTML_URL, "").toUri()
+
+            }
+        }
+    }
+
+    private fun hasUnreadPushNotification(extras: Bundle?): Boolean {
+        return (extras != null && extras.containsKey(PushExternalReceiver.NEW_PUSH_NOTIFICATION)
+                && extras.getBoolean(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false))
+    }
+
+    private fun setPushNotificationAsRead() {
+        intent.putExtra(PushExternalReceiver.NEW_PUSH_NOTIFICATION, false)
+        PushNotification.remove(intent)
+    }
+
+    private fun hasLocalNotificationLink(extras: Bundle?): Boolean {
+        val flag = extras != null && extras.containsKey(Const.LOCAL_NOTIFICATION)
+                && extras.getBoolean(Const.LOCAL_NOTIFICATION, false)
+        if (flag) {
+            // Clear the flag if we are handling this, so subsequent app opens don't deep link again
+            extras!!.putBoolean(Const.LOCAL_NOTIFICATION,false)
+        }
+        return flag
     }
 }
