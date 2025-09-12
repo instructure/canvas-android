@@ -13,6 +13,8 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
+@file:OptIn(ExperimentalMaterial3Api::class)
+
 package com.instructure.horizon.features.learn
 
 import androidx.compose.animation.AnimatedContent
@@ -116,7 +118,7 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
             when {
-                state.screenState.isError -> ErrorContent(state.screenState.errorMessage.orEmpty())
+                state.screenState.isError -> ErrorContent(state.screenState, state.screenState.errorMessage.orEmpty())
                 state.screenState.isLoading -> LoadingContent()
                 else -> if (state.learningItems.isEmpty()) {
                     LearnScreenEmptyContent(state)
@@ -129,8 +131,23 @@ fun LearnScreen(state: LearnUiState, mainNavController: NavHostController) {
 }
 
 @Composable
-private fun ErrorContent(errorText: String) {
-    Text(text = errorText, style = HorizonTypography.h3)
+private fun ErrorContent(loadingState: LoadingState, errorMessage: String) {
+    LoadingStateWrapper(loadingState) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(24.dp)
+                .verticalScroll(rememberScrollState()),
+        ) {
+            Text(
+                text = errorMessage,
+                style = HorizonTypography.h3,
+                color = HorizonColors.Text.body(),
+                textAlign = TextAlign.Center
+            )
+        }
+    }
 }
 
 @Composable
