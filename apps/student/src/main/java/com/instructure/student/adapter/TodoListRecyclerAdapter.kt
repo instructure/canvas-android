@@ -170,9 +170,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
             val courses = CourseManager.getCoursesAsync(isRefresh)
             val restParams =
                 RestParams(isForceReadFromNetwork = isRefresh, usePerPageQueryParam = true)
+            val now = LocalDate.now().atStartOfDay()
             val plannerItems = plannerApi.getPlannerItems(
-                startDate = LocalDate.now().minusDays(28).toApiString(),
-                endDate = LocalDate.now().plusDays(28).toApiString(),
+                startDate = now.minusDays(28).toApiString(),
+                endDate = now.plusDays(28).toApiString(),
                 contextCodes = emptyList(),
                 restParams = restParams
             ).depaginate { nextUrl ->
