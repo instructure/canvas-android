@@ -183,6 +183,101 @@ class ToDoWidgetUpdaterTest {
     }
 
     @Test
+    fun `Shows only incomplete items`() = runTest {
+        val submittedAssignmentItem = createPlannerItem(
+            plannableType = PlannableType.ASSIGNMENT,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = true
+        )
+
+        val submittedDiscussionItem = createPlannerItem(
+            plannableType = PlannableType.DISCUSSION_TOPIC,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = true
+        )
+
+        val submittedSubAssignmentItem = createPlannerItem(
+            plannableType = PlannableType.SUB_ASSIGNMENT,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = true
+        )
+
+        val subAssignmentItem = createPlannerItem(
+            plannableType = PlannableType.SUB_ASSIGNMENT,
+            date = createDate(2024, 1, 5, 2),
+            courseId = 1,
+            submitted = false
+        )
+
+        val toDoItem = createPlannerItem(
+            plannableType = PlannableType.PLANNER_NOTE,
+            date = createDate(2023, 10, 1, 12),
+            plannableId = 2,
+            userId = 1,
+            startAt = createDate(2023, 10, 1, 12),
+            endAt = createDate(2023, 10, 1, 13)
+        )
+
+        val calendarEvent = createPlannerItem(
+            plannableType = PlannableType.CALENDAR_EVENT,
+            date = createDate(2025, 5, 21, 12),
+            userId = 1,
+            startAt = createDate(2025, 5, 21, 12),
+            endAt = createDate(2025, 5, 21, 12),
+            contextName = "Context Name",
+            allDay = true
+        )
+
+        coEvery { repository.getCourses(any()) } returns listOf(Course(1, courseCode = "CODE"))
+        coEvery { repository.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(listOf(
+            submittedAssignmentItem,
+            submittedDiscussionItem,
+            submittedSubAssignmentItem,
+            subAssignmentItem,
+            toDoItem,
+            calendarEvent
+        ))
+
+        val expected = ToDoWidgetUiState(
+            WidgetState.Content,
+            listOf(
+                WidgetPlannerItem(
+                    LocalDate.of(2024, 1, 5),
+                    R.drawable.ic_discussion,
+                    subAssignmentItem.canvasContext.color,
+                    "CODE",
+                    "Plannable 1",
+                    "Due at 02:00",
+                    "https://htmlurl.com"
+                ),
+                WidgetPlannerItem(
+                    LocalDate.of(2023, 10, 1),
+                    R.drawable.ic_todo,
+                    apiPrefs.user.color,
+                    "To Do",
+                    "Plannable 2",
+                    "12:00",
+                    "/todos/2"
+                ),
+                WidgetPlannerItem(
+                    LocalDate.of(2025, 5, 21),
+                    R.drawable.ic_calendar,
+                    apiPrefs.user.color,
+                    "Context Name",
+                    "Plannable 1",
+                    "All day",
+                    "/users/1/calendar_events/1"
+                )
+            )
+        )
+        val flow = updater.updateData(context)
+        assertEquals(expected, flow.last())
+    }
+
+    @Test
     fun `Gets calendar filters and calls api with the correct params`() = runTest {
         val now = LocalDate.now().atStartOfDay()
         coEvery { apiPrefs.user } returns User(1L)
@@ -215,7 +310,8 @@ class ToDoWidgetUpdaterTest {
         startAt: Date? = null,
         endAt: Date? = null,
         contextName: String? = null,
-        allDay: Boolean = false
+        allDay: Boolean = false,
+        submitted: Boolean = false
     ): PlannerItem {
         val plannable = Plannable(
             id = plannableId,
@@ -242,7 +338,7 @@ class ToDoWidgetUpdaterTest {
             plannable = plannable,
             plannableDate = date,
             htmlUrl = "https://htmlurl.com",
-            submissionState = SubmissionState(submitted = false),
+            submissionState = SubmissionState(submitted = submitted),
             plannerOverride = PlannerOverride(plannableType = plannableType, plannableId = plannableId),
             newActivity = false
         )
