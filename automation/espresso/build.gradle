@@ -93,6 +93,7 @@ dependencies {
     implementation project(':login-api-2')
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
+    /* Kaspresso for UI Testing */
     androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.5.3'
     // Allure support
     androidTestImplementation "com.kaspersky.android-components:kaspresso-allure-support:1.5.3"
