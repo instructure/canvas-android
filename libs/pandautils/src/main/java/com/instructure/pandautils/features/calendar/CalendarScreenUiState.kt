@@ -25,7 +25,8 @@ import java.util.Locale
 data class CalendarScreenUiState(
     val calendarUiState: CalendarUiState,
     val calendarEventsUiState: CalendarEventsUiState = CalendarEventsUiState(),
-    val snackbarMessage: String? = null
+    val snackbarMessage: String? = null,
+    val showAddEventButton: Boolean = true
 )
 
 data class CalendarUiState(

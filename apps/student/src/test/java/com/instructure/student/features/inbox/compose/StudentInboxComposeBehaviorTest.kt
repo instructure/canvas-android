@@ -14,14 +14,20 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.inbox.details
+package com.instructure.student.features.inbox.compose
 
-import android.content.Context
-import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
-import com.instructure.teacher.utils.isTablet
-import javax.inject.Inject
+import kotlinx.coroutines.test.runTest
+import org.junit.Assert.assertFalse
+import org.junit.Test
 
-class TeacherInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {
-    
-    override fun getShowBackButton(context: Context): Boolean = !context.isTablet
+class StudentInboxComposeBehaviorTest {
+
+    private val behavior = StudentInboxComposeBehavior()
+
+    @Test
+    fun `shouldHideSendIndividual returns false for student`() = runTest {
+        val result = behavior.shouldHideSendIndividual()
+
+        assertFalse(result)
+    }
 }
