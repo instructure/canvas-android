@@ -205,6 +205,16 @@ class ToDoWidgetUpdaterTest {
             submitted = true
         )
 
+        val completedToDoItem = createPlannerItem(
+            plannableType = PlannableType.PLANNER_NOTE,
+            date = createDate(2023, 10, 1, 12),
+            plannableId = 2,
+            userId = 1,
+            startAt = createDate(2023, 10, 1, 12),
+            endAt = createDate(2023, 10, 1, 13),
+            markedComplete = true
+        )
+
         val subAssignmentItem = createPlannerItem(
             plannableType = PlannableType.SUB_ASSIGNMENT,
             date = createDate(2024, 1, 5, 2),
@@ -236,6 +246,7 @@ class ToDoWidgetUpdaterTest {
             submittedAssignmentItem,
             submittedDiscussionItem,
             submittedSubAssignmentItem,
+            completedToDoItem,
             subAssignmentItem,
             toDoItem,
             calendarEvent
@@ -311,7 +322,8 @@ class ToDoWidgetUpdaterTest {
         endAt: Date? = null,
         contextName: String? = null,
         allDay: Boolean = false,
-        submitted: Boolean = false
+        submitted: Boolean = false,
+        markedComplete: Boolean = false
     ): PlannerItem {
         val plannable = Plannable(
             id = plannableId,
@@ -339,7 +351,7 @@ class ToDoWidgetUpdaterTest {
             plannableDate = date,
             htmlUrl = "https://htmlurl.com",
             submissionState = SubmissionState(submitted = submitted),
-            plannerOverride = PlannerOverride(plannableType = plannableType, plannableId = plannableId),
+            plannerOverride = PlannerOverride(plannableType = plannableType, plannableId = plannableId, markedComplete = markedComplete),
             newActivity = false
         )
     }
