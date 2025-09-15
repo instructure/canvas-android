@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -41,7 +42,8 @@ fun CheckboxText(
     selected: Boolean,
     color: Color,
     onCheckedChanged: (Boolean) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    testTag: String = "checkboxText"
 ) {
     var checked by remember { mutableStateOf(selected) }
     Row (
@@ -57,7 +59,8 @@ fun CheckboxText(
             colors = CheckboxDefaults.colors(
                 checkedColor = color,
                 uncheckedColor = color
-            )
+            ),
+            modifier = Modifier.testTag(testTag)
         )
         Text(
             text = text,
