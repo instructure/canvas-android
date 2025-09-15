@@ -17,6 +17,9 @@ package com.instructure.canvasapi2.managers.graphql
 
 import com.instructure.canvasapi2.JourneyGraphQLClientConfig
 import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.Failure
+import com.instructure.journey.EnrollCourseMutation
 import com.instructure.journey.EnrolledProgramsQuery
 import com.instructure.journey.GetProgramByIdQuery
 import com.instructure.journey.fragment.ProgramFields
@@ -38,6 +41,7 @@ data class Program(
 
 data class ProgramRequirement(
     val id: String,
+    val progressId: String,
     val courseId: Long,
     val required: Boolean,
     val progress: Double = 0.0,
@@ -112,10 +116,21 @@ class JourneyApiManager @Inject constructor(
         val progress = progresses.find { it.requirement.id == requirement.id }
         return ProgramRequirement(
             id = requirement.id,
+            progressId = progress?.id ?: "",
             courseId = requirement.dependent.canvasCourseId.toLongOrNull() ?: -1L,
             required = requirement.isCompletionRequired,
             enrollmentStatus = progress?.courseEnrollmentStatus,
             progress = progress?.completionPercentage ?: 0.0
         )
+    }
+
+    suspend fun enrollCourse(progressId: String): DataResult<Unit> {
+        val mutation = EnrollCourseMutation(progressId)
+        val result = QLClientConfig.enqueueMutation(mutation, block = journeyClient.createClientConfigBlock())
+        return if (result.exception != null) {
+            DataResult.Fail(Failure.Exception(result.exception!!))
+        } else {
+            DataResult.Success(Unit)
+        }
     }
 }

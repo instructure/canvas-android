@@ -52,9 +52,9 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
@@ -62,12 +62,15 @@ import com.instructure.pandautils.compose.modifiers.conditional
 import com.instructure.pandautils.utils.toPx
 
 data class ProgramCourseCardState(
+    val id: Long = 0,
     val courseName: String,
     val status: CourseCardStatus,
     val courseProgress: Double? = null,
     val chips: List<CourseCardChipState> = emptyList(),
     val dashedBorder: Boolean = false,
     val courseClicked: (() -> Unit)? = null,
+    val onEnrollClicked: (() -> Unit)? = null,
+    val enrollLoading: Boolean = false,
 )
 
 sealed class CourseCardStatus(
@@ -159,10 +162,13 @@ fun ProgramCourseCard(state: ProgramCourseCardState, modifier: Modifier = Modifi
         if (state.status is CourseCardStatus.Active) {
             HorizonSpace(SpaceSize.SPACE_24)
             Box(modifier = Modifier.fillMaxWidth(), contentAlignment = Alignment.CenterEnd) {
-                Button(
+                LoadingButton(
                     label = stringResource(R.string.programsCourseCard_enrollButton),
                     color = ButtonColor.Institution,
-                    height = ButtonHeight.SMALL
+                    height = ButtonHeight.SMALL,
+                    contentAlignment = Alignment.BottomEnd,
+                    loading = state.enrollLoading,
+                    onClick = { state.onEnrollClicked?.invoke() },
                 )
             }
         }
