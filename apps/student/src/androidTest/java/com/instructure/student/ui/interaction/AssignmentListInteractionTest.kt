@@ -29,7 +29,7 @@ import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

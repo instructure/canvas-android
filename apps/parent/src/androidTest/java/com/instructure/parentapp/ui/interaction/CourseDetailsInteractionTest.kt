@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.parentapp.utils.ParentComposeTest
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

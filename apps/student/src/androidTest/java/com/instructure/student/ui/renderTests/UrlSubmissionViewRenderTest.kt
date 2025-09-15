@@ -17,7 +17,7 @@ package com.instructure.student.ui.renderTests
 
 import com.instructure.espresso.assertCompletelyDisplayed
 import com.instructure.espresso.assertHasText
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.UrlSubmissionViewFragment
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test

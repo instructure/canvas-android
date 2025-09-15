@@ -32,9 +32,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.student.R
-import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.tokenLoginElementary
+import com.instructure.student.ui.utils.extensions.tokenLoginElementary
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

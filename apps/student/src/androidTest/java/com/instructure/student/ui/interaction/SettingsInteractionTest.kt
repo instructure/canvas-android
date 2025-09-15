@@ -18,15 +18,15 @@ package com.instructure.student.ui.interaction
 import android.app.Activity
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.StubMultiAPILevel
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.StubMultiAPILevel
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test

@@ -18,7 +18,7 @@ package com.instructure.student.ui.renderTests
 import android.content.pm.ActivityInfo
 import androidx.test.espresso.action.GeneralLocation
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Submission
@@ -27,9 +27,9 @@ import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
-import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsRepositoryFragment
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

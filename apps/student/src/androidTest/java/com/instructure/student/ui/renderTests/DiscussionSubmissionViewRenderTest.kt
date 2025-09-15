@@ -19,9 +19,9 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.DiscussionSubmissionViewFragment
-import com.instructure.student.ui.pages.renderPages.DiscussionSubmissionViewRenderPage
+import com.instructure.student.ui.renderTests.renderPages.DiscussionSubmissionViewRenderPage
+import com.instructure.student.ui.utils.StudentRenderTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

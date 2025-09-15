@@ -47,8 +47,8 @@ import com.instructure.pandautils.loaders.OpenMediaAsyncTaskLoader
 import com.instructure.pandautils.utils.filecache.FileCache
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.routeTo
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.routeTo
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

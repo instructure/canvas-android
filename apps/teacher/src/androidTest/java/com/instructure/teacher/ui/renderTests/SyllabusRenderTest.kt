@@ -16,14 +16,14 @@
  */
 package com.instructure.teacher.ui.renderTests
 
-import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.teacher.features.syllabus.SyllabusModel
 import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
-import com.instructure.teacher.ui.renderTests.pages.SyllabusRenderPage
+import com.instructure.teacher.ui.renderTests.renderPages.SyllabusRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest

@@ -23,7 +23,7 @@ import com.instructure.canvas.espresso.mockCanvas.addEnrollment
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.parentapp.utils.ParentComposeTest
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

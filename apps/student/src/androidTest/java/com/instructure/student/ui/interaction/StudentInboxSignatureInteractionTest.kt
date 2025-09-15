@@ -41,9 +41,9 @@ import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
+import com.instructure.student.ui.pages.classic.LeftSideNavigationDrawerPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

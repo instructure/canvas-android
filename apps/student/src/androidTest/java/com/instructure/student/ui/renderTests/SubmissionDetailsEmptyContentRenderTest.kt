@@ -21,9 +21,9 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.LockedModule
 import com.instructure.student.R
-import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.SubmissionDetailsEmptyContentModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.emptySubmission.ui.SubmissionDetailsEmptyContentFragment
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

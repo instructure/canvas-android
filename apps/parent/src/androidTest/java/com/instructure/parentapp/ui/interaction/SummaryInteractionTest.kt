@@ -31,7 +31,7 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.getDisplayDate
 import com.instructure.parentapp.utils.ParentComposeTest
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

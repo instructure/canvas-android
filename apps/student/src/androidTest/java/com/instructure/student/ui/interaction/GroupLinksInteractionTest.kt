@@ -36,9 +36,9 @@ import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Tab
-import com.instructure.student.ui.pages.WebViewTextCheck
+import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

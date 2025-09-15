@@ -20,10 +20,10 @@ import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
-import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsRepositoryFragment
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceDetailsViewState
 import com.instructure.student.mobius.conferences.conference_details.ui.ConferenceRecordingViewState
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before

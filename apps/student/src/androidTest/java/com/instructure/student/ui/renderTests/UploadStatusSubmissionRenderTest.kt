@@ -20,7 +20,7 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submission.file.UploadStatusSubmissionModel
 import com.instructure.student.mobius.assignmentDetails.submission.file.ui.UploadStatusSubmissionFragment
 import com.instructure.pandautils.room.studentdb.entities.CreateFileSubmissionEntity

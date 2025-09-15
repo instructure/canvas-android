@@ -17,11 +17,11 @@
 package com.instructure.student.ui.renderTests
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.syllabus.SyllabusModel
 import com.instructure.student.mobius.syllabus.ui.SyllabusRepositoryFragment
 import com.spotify.mobius.runners.WorkRunner

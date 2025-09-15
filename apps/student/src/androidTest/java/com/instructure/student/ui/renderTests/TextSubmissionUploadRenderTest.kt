@@ -21,9 +21,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isEnabled
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.waitForCheck
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submission.text.ui.TextSubmissionUploadFragment
-import com.instructure.student.ui.pages.renderPages.TextSubmissionUploadRenderPage
+import com.instructure.student.ui.renderTests.renderPages.TextSubmissionUploadRenderPage
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not
 import org.junit.Test
