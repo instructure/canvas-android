@@ -42,6 +42,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.time.Duration
 
@@ -57,7 +58,8 @@ class ProgramDetailsViewModel @Inject constructor(
                 onRefresh = ::refreshProgram,
                 onSnackbarDismiss = ::dismissSnackbar
             ),
-            onNavigateToCourse = ::onNavigateToCourse
+            onNavigateToCourse = ::onNavigateToCourse,
+            onDashboardRefreshed = ::dashboardRefreshed
         )
     )
     val state = _uiState.asStateFlow()
@@ -158,16 +160,22 @@ class ProgramDetailsViewModel @Inject constructor(
             } else null
 
             val courseClickable = requirement.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED
-            val courseClicked = { _uiState.update { it.copy(navigateToCourseId = requirement.courseId) } }
+            val courseClicked = {
+                _uiState.update { it.copy(navigateToCourseId = requirement.courseId) }
+            }
 
             ProgramProgressItemState(
                 courseCard = ProgramCourseCardState(
+                    id = requirement.courseId,
                     courseName = courses.find { it.courseId == requirement.courseId }?.courseName.orEmpty(),
                     status = courseCardStatus,
                     courseProgress = requirement.progress,
                     chips = chips,
                     dashedBorder = program.variant == ProgramVariantType.NON_LINEAR && !requirement.required && courseCardStatus != CourseCardStatus.Completed,
-                    courseClicked = if (courseClickable) courseClicked else null
+                    courseClicked = if (courseClickable) courseClicked else null,
+                    onEnrollClicked = {
+                        enrollCourse(requirement.courseId, requirement.progressId)
+                    }
                 ),
                 sequentialProperties = sequentialProperties
             )
@@ -328,5 +336,59 @@ class ProgramDetailsViewModel @Inject constructor(
         _uiState.update {
             it.copy(navigateToCourseId = null)
         }
+    }
+
+    private fun enrollCourse(courseId: Long, progressId: String) {
+        updateCourseEnrollLoadingState(courseId, true)
+        viewModelScope.launch {
+            val enrollResult = repository.enrollCourse(progressId)
+            if (enrollResult.isFail) {
+                updateCourseEnrollLoadingState(courseId, false)
+                _uiState.update {
+                    it.copy(
+                        loadingState = it.loadingState.copy(
+                            snackbarMessage = context.getString(R.string.programDetails_enrollFailed)
+                        )
+                    )
+                }
+                return@launch
+            }
+            try {
+                _uiState.update { it.copy(shouldRefreshDashboard = true) }
+                loadData(forceNetwork = true)
+            } catch (e: Exception) {
+                updateCourseEnrollLoadingState(courseId, false)
+                _uiState.update {
+                    it.copy(
+                        loadingState = it.loadingState.copy(
+                            isRefreshing = false,
+                            snackbarMessage = context.getString(R.string.programDetails_failedToRefresh)
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private fun updateCourseEnrollLoadingState(courseId: Long, loading: Boolean) {
+        val courseToUpdate = _uiState.value.programProgressState.courses.find { it.courseCard.id == courseId }?.courseCard
+            ?: return
+        val updatedCourse = courseToUpdate.copy(enrollLoading = loading)
+        _uiState.update {
+            val updatedCourses = it.programProgressState.courses.map { item ->
+                if (item.courseCard.id == courseId) {
+                    item.copy(courseCard = updatedCourse)
+                } else {
+                    item
+                }
+            }
+            it.copy(
+                programProgressState = it.programProgressState.copy(courses = updatedCourses)
+            )
+        }
+    }
+
+    private fun dashboardRefreshed() {
+        _uiState.update { it.copy(shouldRefreshDashboard = false) }
     }
 }

@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
 import com.instructure.canvasapi2.managers.graphql.Program
+import com.instructure.canvasapi2.utils.DataResult
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.coroutineScope
@@ -29,7 +30,6 @@ class ProgramDetailsRepository @Inject constructor(
     private val getCoursesManager: HorizonGetCoursesManager
 ) {
     suspend fun getProgramDetails(programId: String, forceNetwork: Boolean = false): Program {
-        // TODO This solution might be temporary. When we will have the program switcher we will always request all the programs.
         val program = journeyApiManager.getPrograms(forceNetwork).find { it.id == programId }
             ?: throw IllegalArgumentException("Program with id $programId not found")
         return program
@@ -39,5 +39,9 @@ class ProgramDetailsRepository @Inject constructor(
         courseIds.map { id ->
             async { getCoursesManager.getProgramCourses(id, forceNetwork).dataOrThrow }
         }.awaitAll()
+    }
+
+    suspend fun enrollCourse(progressId: String): DataResult<Unit> {
+        return journeyApiManager.enrollCourse(progressId)
     }
 }
