@@ -20,6 +20,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -27,6 +29,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -39,7 +42,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
+import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.StatusChip
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -67,10 +74,13 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
         modifier = modifier.background(HorizonColors.Surface.pageSecondary())
     ) {
         LazyColumn(
-            contentPadding = PaddingValues(top = 16.dp),
+            contentPadding = PaddingValues(top = 16.dp, bottom = 8.dp),
             modifier = Modifier
                 .weight(1f)
         ) {
+            item {
+                NotificationsHeader(state.unreadCount)
+            }
             if (state.notificationItems.isEmpty()) {
                 item {
                     EmptyNotificationItemContent()
@@ -81,6 +91,25 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
                 }
             }
         }
+    }
+}
+
+@Composable
+private fun NotificationsHeader(unreadCount: Int) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp)
+            .padding(bottom = 12.dp),
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        StatusChip(
+            state = StatusChipState(
+                label = stringResource(R.string.notificationsUnreadCount, unreadCount),
+                color = StatusChipColor.Grey,
+                fill = true
+            )
+        )
     }
 }
 
@@ -98,18 +127,38 @@ private fun NotificationItemContent(
     Column(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 8.dp)
-            .border(HorizonBorder.level2(HorizonColors.LineAndBorder.lineStroke()), HorizonCornerRadius.level2)
-            .padding(horizontal = 24.dp)
+            .border(
+                HorizonBorder.level2(HorizonColors.LineAndBorder.lineStroke()),
+                HorizonCornerRadius.level2
+            )
+            .padding(horizontal = 16.dp)
             .fillMaxWidth()
     ) {
         HorizonSpace(SpaceSize.SPACE_16)
-        StatusChip(
-            state = StatusChipState(
-                label = notificationItem.category.label,
-                color = notificationItem.category.color,
-                fill = true
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            StatusChip(
+                state = StatusChipState(
+                    label = notificationItem.category.label,
+                    color = notificationItem.category.color,
+                    fill = true
+                )
             )
-        )
+
+            Spacer(modifier = Modifier.weight(1f))
+
+            if (!notificationItem.isRead){
+                Badge(
+                    content = BadgeContent.ColorSmall,
+                    type = BadgeType.Custom(
+                        backgroundColor = HorizonColors.Surface.inversePrimary(),
+                        contentColor = HorizonColors.Surface.institution()
+                    )
+                )
+            }
+        }
 
         HorizonSpace(SpaceSize.SPACE_8)
 

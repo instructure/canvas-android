@@ -29,3 +29,7 @@ internal fun StreamItem.isDueDateNotification(): Boolean {
 internal fun StreamItem.isCourseNotification(): Boolean {
     return this.type == "Announcement"
 }
+
+internal fun StreamItem.isGradingPeriodNotification(): Boolean {
+    return this.notificationCategory == "Grading Policies"
+}

@@ -76,15 +76,20 @@ class NotificationViewModel @Inject constructor(
                 title = getNotificationItemTitle(it),
                 courseLabel = if (it.isCourseNotification()) getCourseName(it.courseId) else null,
                 date = it.updatedDate,
+                isRead = it.isReadState,
                 routeUrl = it.url
             )
         }
         val globalNotifications = repository.getGlobalAnnouncements(forceRefresh).map {
             NotificationItem(
-                category = NotificationItemCategory("Announcement", StatusChipColor.Sky),
+                category = NotificationItemCategory(
+                    context.getString(R.string.notificationsAnnouncementCategoryLabel),
+                    StatusChipColor.Sky
+                ),
                 title = it.subject,
                 courseLabel = null,
                 date = it.startDate,
+                isRead = true,
                 routeUrl = null
             )
         }
@@ -117,19 +122,25 @@ class NotificationViewModel @Inject constructor(
     private fun getNotificationItemCategoryLabel(streamItem: StreamItem): NotificationItemCategory {
         if (streamItem.isNotificationItemScored()) {
             return NotificationItemCategory(
-                context.getString(R.string.notificationsAssignmentScoredCategoryLabel),
+                context.getString(R.string.notificationsScoreChangedCategoryLabel),
+                StatusChipColor.Violet
+            )
+        }
+        if (streamItem.isGradingPeriodNotification()) {
+            return NotificationItemCategory(
+                context.getString(R.string.notificationsScoreCategoryLabel),
                 StatusChipColor.Violet
             )
         }
         if (streamItem.isDueDateNotification()) {
             return NotificationItemCategory(
-                "Due Date",
+                context.getString(R.string.notificationsDueDateCategoryLabel),
                 StatusChipColor.Honey
             )
         }
         if (streamItem.isCourseNotification()) {
             return NotificationItemCategory(
-                "Announcement",
+                context.getString(R.string.notificationsAnnouncementCategoryLabel),
                 StatusChipColor.Sky
             )
         }

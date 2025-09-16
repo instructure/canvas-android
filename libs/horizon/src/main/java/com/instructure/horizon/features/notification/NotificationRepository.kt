@@ -36,7 +36,12 @@ class NotificationRepository @Inject constructor(
         return streamApi.getUserStream(restParams)
             .depaginate { streamApi.getNextPageStream(it, restParams) }
             .dataOrThrow
-            .filter { it.isCourseNotification() || it.isDueDateNotification() || it.isNotificationItemScored() }
+            .filter {
+                it.isCourseNotification()
+                    || it.isDueDateNotification()
+                    || it.isNotificationItemScored()
+                    || it.isGradingPeriodNotification()
+            }
     }
 
     suspend fun getGlobalAnnouncements(forceRefresh: Boolean): List<AccountNotification> {
