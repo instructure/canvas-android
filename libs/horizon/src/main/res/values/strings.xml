@@ -66,6 +66,7 @@
     <string name="overview">Overview</string>
     <string name="scores">Scores</string>
     <string name="notes">Notes</string>
+    <string name="tools">Tools</string>
     <string name="scoresSortingAssignmentNameAscending">Assignment name (A-Z)</string>
     <string name="scoresSortingDueDateDescending">Due date (newest first)</string>
     <string name="scoresItemassignmentName">Name: %1$s</string>
@@ -351,4 +352,5 @@
     <string name="programDetails_enrollFailed">Failed to enroll in course.</string>
     <string name="learn_failedToLoad">Failed to load programs and courses.</string>
     <string name="learn_failedToRefresh">Failed to refresh programs and courses.</string>
+    <string name="tools_noLtiTools">There are no external tools for this course.</string>
 </resources>

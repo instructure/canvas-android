@@ -25,9 +25,10 @@ data class CourseDetailsUiState(
     val availableTabs: List<CourseDetailsTab> = CourseDetailsTab.entries,
 )
 
-enum class CourseDetailsTab(@StringRes val titleRes: Int, ) {
+enum class CourseDetailsTab(@StringRes val titleRes: Int) {
     Overview(titleRes = R.string.overview),
     MyProgress(titleRes = R.string.myProgress),
     Scores(titleRes = R.string.scores),
     Notes(titleRes = R.string.notes),
+    Tools(titleRes = R.string.tools),
 }
