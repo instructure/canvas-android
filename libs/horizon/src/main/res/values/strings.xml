@@ -173,7 +173,7 @@
     <string name="notificationsScoreChangedCategoryLabel">Score changed</string>
     <string name="notificationsDueDateCategoryLabel">Due date</string>
     <string name="notificationsScoreCategoryLabel">Score</string>
-    <string name="notificationsAnnouncementCategoryLabel">Score</string>
+    <string name="notificationsAnnouncementCategoryLabel">Announcement</string>
     <string name="notificationsAnnouncementFromCetegoryLabel">Announcement from %1$s</string>
     <string name="notificationsScoreWeightChangedTitle">%1$s\'s score weight was changed</string>
     <string name="notificationsDueOnTitle">%1$s is due on %2$s</string>

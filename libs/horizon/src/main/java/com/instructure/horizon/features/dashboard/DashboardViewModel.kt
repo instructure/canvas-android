@@ -110,6 +110,7 @@ class DashboardViewModel @Inject constructor(
                     dismissInvite(courseInvite.courseId)
                 })
             }
+            loadUnreadCount()
             _uiState.update {
                 it.copy(
                     programsUiState = programsUiState,
@@ -256,6 +257,20 @@ class DashboardViewModel @Inject constructor(
         _uiState.update { currentState ->
             val updatedInvites = currentState.invitesUiState.filterNot { it.courseId == courseId }
             currentState.copy(invitesUiState = updatedInvites)
+        }
+    }
+
+    private suspend fun loadUnreadCount() {
+        val unreadCounts = dashboardRepository.getUnreadCounts(true)
+        val unreadConversations = unreadCounts.firstOrNull { it.type == "Conversation" }?.count ?: 0
+        val unreadNotifications = unreadCounts.filter { it.type != "Conversation" }.sumOf { it.count }
+        _uiState.update {
+            it.copy(
+                unreadCountState = DashboardUnreadState(
+                    unreadConversations = unreadConversations,
+                    unreadNotifications = unreadNotifications
+                )
+            )
         }
     }
 }
