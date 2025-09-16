@@ -18,15 +18,15 @@ package com.instructure.student.ui.renderTests
 
 import android.net.Uri
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.assertNotDisplayed
 import com.instructure.espresso.click
 import com.instructure.pandautils.utils.PandaPrefs
-import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.SubmissionDetailsContentType
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.MediaSubmissionViewFragment
-import com.instructure.student.ui.pages.renderPages.MediaSubmissionViewRenderPage
+import com.instructure.student.ui.renderTests.renderPages.MediaSubmissionViewRenderPage
+import com.instructure.student.ui.utils.StudentRenderTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import org.junit.runner.RunWith

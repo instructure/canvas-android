@@ -22,7 +22,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.features.postpolicies.PostSection
 import com.instructure.teacher.features.postpolicies.ui.PostGradeFragment
 import com.instructure.teacher.features.postpolicies.ui.PostGradeViewState
-import com.instructure.teacher.ui.renderTests.pages.PostGradeRenderPage
+import com.instructure.teacher.ui.renderTests.renderPages.PostGradeRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest

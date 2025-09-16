@@ -12,7 +12,7 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-  - notAnnotation com.instructure.canvas.espresso.E2E, com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.StubTablet, com.instructure.canvas.espresso.OfflineE2E
+  - notAnnotation com.instructure.canvas.espresso.annotations.E2E, com.instructure.canvas.espresso.annotations.Stub, com.instructure.canvas.espresso.annotations.StubTablet, com.instructure.canvas.espresso.annotations.OfflineE2E
   device:
   - model: MediumTablet.arm
     version: 29

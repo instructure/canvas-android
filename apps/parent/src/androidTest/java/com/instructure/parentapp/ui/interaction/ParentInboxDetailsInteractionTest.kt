@@ -30,9 +30,9 @@ import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.DashboardPage
+import com.instructure.parentapp.ui.pages.classic.DashboardPage
 import com.instructure.parentapp.utils.ParentActivityTestRule
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 

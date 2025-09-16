@@ -32,7 +32,7 @@ import com.instructure.teacher.R
 import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.list.ui.ModuleListItemData
 import com.instructure.teacher.features.modules.list.ui.ModuleListViewState
-import com.instructure.teacher.ui.renderTests.pages.ModuleListRenderPage
+import com.instructure.teacher.ui.renderTests.renderPages.ModuleListRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest

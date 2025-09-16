@@ -16,8 +16,7 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
-import com.instructure.canvas.espresso.StubLandscape
-import com.instructure.canvas.espresso.StubTablet
+import com.instructure.canvas.espresso.annotations.StubLandscape
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage

@@ -23,7 +23,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.replaceText
 import com.instructure.espresso.waitForCheck
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submission.url.ui.UrlSubmissionUploadFragment
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers.not

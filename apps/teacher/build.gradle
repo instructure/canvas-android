@@ -38,7 +38,7 @@ android {
         versionCode = 82
         versionName = '2.0.1'
         vectorDrawables.useSupportLibrary = true
-        testInstrumentationRunner 'com.instructure.teacher.ui.espresso.TeacherHiltTestRunner'
+        testInstrumentationRunner 'com.instructure.teacher.espresso.TeacherHiltTestRunner'
         testInstrumentationRunnerArguments disableAnalytics: 'true'
 
         /* BuildConfig fields */

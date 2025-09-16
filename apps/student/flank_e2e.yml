@@ -12,8 +12,8 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-  - annotation com.instructure.canvas.espresso.E2E
-  - notAnnotation com.instructure.canvas.espresso.Stub, com.instructure.canvas.espresso.FlakyE2E, com.instructure.canvas.espresso.KnownBug, com.instructure.canvas.espresso.OfflineE2E
+  - annotation com.instructure.canvas.espresso.annotations.E2E
+  - notAnnotation com.instructure.canvas.espresso.annotations.Stub, com.instructure.canvas.espresso.annotations.FlakyE2E, com.instructure.canvas.espresso.annotations.KnownBug, com.instructure.canvas.espresso.annotations.OfflineE2E
   device:
   - model: Pixel2.arm
     version: 29

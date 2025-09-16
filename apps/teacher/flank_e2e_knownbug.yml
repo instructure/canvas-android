@@ -12,7 +12,7 @@ gcloud:
   record-video: true
   timeout: 60m
   test-targets:
-  - annotation com.instructure.canvas.espresso.KnownBug
+  - annotation com.instructure.canvas.espresso.annotations.KnownBug
   device:
   - model: Nexus6P
     version: 26

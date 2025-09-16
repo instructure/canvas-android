@@ -23,12 +23,12 @@ import com.instructure.espresso.assertGone
 import com.instructure.espresso.assertHasText
 import com.instructure.espresso.assertVisible
 import com.instructure.student.R
-import com.instructure.student.espresso.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFileData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.SubmissionFilesViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.files.ui.SubmissionFilesFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
-import com.instructure.student.ui.pages.renderPages.SubmissionFilesRenderPage
+import com.instructure.student.ui.renderTests.renderPages.SubmissionFilesRenderPage
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test

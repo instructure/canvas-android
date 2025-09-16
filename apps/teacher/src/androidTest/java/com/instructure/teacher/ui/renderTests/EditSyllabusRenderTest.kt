@@ -19,7 +19,7 @@ package com.instructure.teacher.ui.renderTests
 import com.instructure.canvasapi2.models.Course
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusViewState
-import com.instructure.teacher.ui.renderTests.pages.EditSyllabusRenderPage
+import com.instructure.teacher.ui.renderTests.renderPages.EditSyllabusRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest

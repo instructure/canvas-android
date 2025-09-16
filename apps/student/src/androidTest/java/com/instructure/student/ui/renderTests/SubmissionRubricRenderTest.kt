@@ -22,6 +22,7 @@ import androidx.test.espresso.matcher.RootMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasChildCount
 import androidx.test.espresso.matcher.ViewMatchers.isSelected
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.instructure.canvas.espresso.assertFontSizeSP
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
@@ -34,15 +35,14 @@ import com.instructure.espresso.assertVisible
 import com.instructure.espresso.click
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.pandautils.features.assignments.details.mobius.gradeCell.GradeCellViewState
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RatingData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.RubricListData
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricModel
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.SubmissionRubricViewState
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.drawer.rubric.ui.SubmissionRubricFragment
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.ui.SubmissionDetailsTabData
-import com.instructure.student.ui.pages.renderPages.SubmissionRubricRenderPage
-import com.instructure.student.ui.utils.assertFontSizeSP
+import com.instructure.student.ui.renderTests.renderPages.SubmissionRubricRenderPage
 import com.spotify.mobius.runners.WorkRunner
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.CoreMatchers.not

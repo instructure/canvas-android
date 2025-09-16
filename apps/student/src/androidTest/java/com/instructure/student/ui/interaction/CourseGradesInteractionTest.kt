@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Grades
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

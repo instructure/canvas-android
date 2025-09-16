@@ -142,7 +142,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
             // Only continue if we're on Bitrise
             // (More accurately, if we are on FTL launched from Bitrise.)
-            if(splunkToken != null && !splunkToken.isEmpty()) {
+            if(!splunkToken.isNullOrEmpty()) {
                  val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
                 val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 
@@ -271,7 +271,7 @@ abstract class CanvasTest : InstructureTestingContract {
                 // Suppression (exclusion) rules
                 ?.setSuppressingResultMatcher(
                         anyOf(
-                            // Extra supressions that can be adde to individual tests
+                            // Extra suppressions that can be added to individual tests
                             extraAccessibilitySupressions,
                             // Suppress issues in PsPDFKit, date/time picker, calendar grid
                             isExcludedNamedView( listOf("pspdf", "_picker_", "timePicker", "calendar1")),
@@ -345,18 +345,18 @@ abstract class CanvasTest : InstructureTestingContract {
                             // Weeding out id == -1 will filter out a lot of lines from our logs
                             if(view.id != -1) {
                                 try {
-                                    var resourceName = view.context.resources.getResourceName(view.id)
+                                    val resourceName = view.context.resources.getResourceName(view.id)
                                     for (excludedName in excludes) {
                                         if (resourceName.contains(excludedName)) {
                                             //Log.v("AccessibilityExclude", "Caught $resourceName")
                                             return true
                                         }
                                     }
-                                } catch (e: Resources.NotFoundException) {
+                                } catch (_: Resources.NotFoundException) {
                                 }
                             }
 
-                            var parent = view.parent
+                            val parent = view.parent
                             when(parent) {
                                 is View -> view = parent
                                 else -> view = null
@@ -392,7 +392,7 @@ abstract class CanvasTest : InstructureTestingContract {
     // in action bars being to narrow.
     fun withOnlyWidthLessThan(dimInDp: Int) : BaseMatcher<AccessibilityViewCheckResult>
     {
-        var activity = activityRule.activity
+        val activity = activityRule.activity
         val densityDpi = activity.resources.displayMetrics.densityDpi
         val dim_f = dimInDp * (densityDpi.toDouble() / DisplayMetrics.DENSITY_DEFAULT.toDouble())
         val dim = dim_f.toInt()
@@ -431,7 +431,7 @@ abstract class CanvasTest : InstructureTestingContract {
                 when(item) {
                     is AccessibilityViewCheckResult -> {
                         val contentDescription = item.view?.contentDescription
-                        var result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
+                        val result = (contentDescription?.contains("Overflow", ignoreCase = true) ?: false) || (contentDescription?.contains("More options", ignoreCase = true) ?: false)
                         //Log.v("overflowWidth", "isOverflowMenu: contentDescription=${item.view?.contentDescription ?: "unknown"}, result=$result ")
                         return result
                     }
@@ -473,7 +473,7 @@ abstract class CanvasTest : InstructureTestingContract {
                                       (v.width < 48 && v.width < v.minimumWidth) )
 
                         if(toss) {
-                            var resourceName = getResourceName(v)
+                            val resourceName = getResourceName(v)
                             Log.v("underMinSizeOnLowRes",
                                     "Tossing $resourceName, w=${v.width}, h=${v.height}, mw=${v.minimumWidth}, mh=${v.minimumHeight}")
                             return true
@@ -516,7 +516,7 @@ abstract class CanvasTest : InstructureTestingContract {
             inputStream.copyTo(outputStream)
         }
         finally {
-            if(inputStream != null) inputStream.close()
+            inputStream?.close()
             if(outputStream != null) {
                 outputStream.flush()
                 outputStream.close()

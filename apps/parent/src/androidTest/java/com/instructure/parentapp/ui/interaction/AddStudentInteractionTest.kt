@@ -30,7 +30,7 @@ import com.instructure.canvas.espresso.mockCanvas.addPairingCode
 import com.instructure.canvas.espresso.mockCanvas.addStudent
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.parentapp.utils.ParentComposeTest
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.Matchers
 import org.hamcrest.core.AllOf

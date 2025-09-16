@@ -15,10 +15,10 @@
  */
 package com.instructure.student.ui.renderTests
 
-import com.instructure.canvas.espresso.Stub
-import com.instructure.student.espresso.StudentRenderTest
+import com.instructure.canvas.espresso.annotations.Stub
+import com.instructure.student.ui.utils.StudentRenderTest
 import com.instructure.student.mobius.assignmentDetails.submissionDetails.content.TextSubmissionViewFragment
-import com.instructure.student.ui.pages.renderPages.TextSubmissionViewRenderPage
+import com.instructure.student.ui.renderTests.renderPages.TextSubmissionViewRenderPage
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 

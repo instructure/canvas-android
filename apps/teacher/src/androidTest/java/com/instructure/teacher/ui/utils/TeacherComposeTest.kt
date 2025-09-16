@@ -33,8 +33,8 @@ import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SelectContextPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
 import com.instructure.teacher.activities.LoginActivity
-import com.instructure.teacher.ui.pages.AssignmentSubmissionListPage
-import com.instructure.teacher.ui.pages.ProgressPage
+import com.instructure.teacher.ui.pages.compose.AssignmentSubmissionListPage
+import com.instructure.teacher.ui.pages.compose.ProgressPage
 import com.instructure.teacher.ui.pages.compose.SpeedGraderGradePage
 import com.instructure.teacher.ui.pages.compose.SpeedGraderPage
 

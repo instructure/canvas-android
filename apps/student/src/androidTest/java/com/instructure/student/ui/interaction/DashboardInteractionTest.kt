@@ -32,7 +32,7 @@ import com.instructure.pandautils.di.NetworkStateProviderModule
 import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.espresso.fakes.FakeNetworkStateProvider
 import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

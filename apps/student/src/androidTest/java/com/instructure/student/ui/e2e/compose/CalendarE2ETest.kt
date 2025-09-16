@@ -16,16 +16,16 @@
 package com.instructure.student.ui.e2e.compose
 
 import android.util.Log
-import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.pandautils.features.calendar.CalendarPrefs
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.seedData
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.seedData
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Before
 import org.junit.Test
