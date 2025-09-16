@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,14 +14,21 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.teacher.features.inbox.details
+package com.instructure.student.features.calendar
 
-import android.content.Context
-import com.instructure.pandautils.features.inbox.details.InboxDetailsBehavior
-import com.instructure.teacher.utils.isTablet
+import com.instructure.pandautils.features.calendar.CalendarBehavior
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import javax.inject.Inject
 
-class TeacherInboxDetailsBehavior @Inject constructor() : InboxDetailsBehavior() {
+class StudentCalendarBehavior @Inject constructor(
+    private val featureFlagProvider: FeatureFlagProvider
+) : CalendarBehavior {
     
-    override fun getShowBackButton(context: Context): Boolean = !context.isTablet
+    override suspend fun shouldShowAddEventButton(): Boolean {
+        return try {
+            !featureFlagProvider.checkRestrictStudentAccessFlag()
+        } catch (e: Exception) {
+            true
+        }
+    }
 }
