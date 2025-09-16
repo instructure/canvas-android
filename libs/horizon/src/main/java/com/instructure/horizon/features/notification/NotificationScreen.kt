@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.notification
 
+import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
@@ -31,6 +32,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -50,9 +52,10 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.utils.isPreviousDay
+import com.instructure.pandautils.utils.isSameDay
+import com.instructure.pandautils.utils.isSameWeek
 import com.instructure.pandautils.utils.localisedFormat
-import java.time.Duration
-import java.time.Instant
 import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -181,7 +184,7 @@ private fun NotificationItemContent(
         HorizonSpace(SpaceSize.SPACE_4)
 
         Text(
-            text = notificationItem.date.toLocalisedFormat(),
+            text = notificationItem.date.toLocalisedFormat(LocalContext.current),
             style = HorizonTypography.p3,
             color = HorizonColors.Text.timestamp()
         )
@@ -189,14 +192,16 @@ private fun NotificationItemContent(
     }
 }
 
-private fun Date?.toLocalisedFormat(): String {
+private fun Date?.toLocalisedFormat(context: Context): String {
     if (this == null) return ""
-    val lastWeekDate = Date.from(Instant.now().apply { minus(Duration.ofDays(7)) })
-    val isCurrentWeek = this.after(lastWeekDate)
-    val dateFormat = if (isCurrentWeek) {
-        "DDDD"
-    } else {
-        "MMM dd"
+    if (this.isSameDay(Date())) {
+        return context.getString(R.string.notificationsDateToday)
     }
-    return this.localisedFormat(dateFormat)
+    if (this.isPreviousDay(Date())) {
+        return context.getString(R.string.notificationsDateYesterday)
+    }
+    if (this.isSameWeek(Date())) {
+        return this.localisedFormat("EEEE")
+    }
+    return this.localisedFormat("MMM dd, yyyy")
 }

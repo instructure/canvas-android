@@ -78,8 +78,8 @@ sealed class StatusChipColor(val contentColor: Color, val fillColor: Color = Col
     )
 
     data object Violet : StatusChipColor(
-        contentColor = HorizonColors.PrimitivesViolet.violet12,
-        fillColor = HorizonColors.PrimitivesViolet.violet90
+        contentColor = HorizonColors.PrimitivesViolet.violet90,
+        fillColor = HorizonColors.PrimitivesViolet.violet12
     )
 }
 
