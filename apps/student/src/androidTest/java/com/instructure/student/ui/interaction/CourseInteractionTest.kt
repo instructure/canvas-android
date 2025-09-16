@@ -101,7 +101,7 @@ class CourseInteractionTest : StudentTest() {
         val course = data.courses.values.first()
 
         val displayName = "FamousQuote.html"
-        val fileId = data.addFileToCourse(
+        data.addFileToCourse(
                 courseId = course.id,
                 displayName = displayName,
                 fileContent = """
@@ -129,6 +129,36 @@ class CourseInteractionTest : StudentTest() {
                 .check(webMatches(getText(), containsString("Ask not")))
     }
 
+    // Home button should open the front page and display the correct header/title
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.INTERACTION)
+    fun testCourse_homeOpensFrontPageAndShowsTitle() {
+
+        // Use getToCourse which creates a front page and marks it as the course home
+        val data = getToCourse(courseCount = 1, favoriteCourseCount = 1)
+
+        val course1 = data.courses.values.first()
+
+        data.addPageToCourse(
+            courseId = course1.id,
+            pageId = 1,
+            title = "Front Page",
+            body = "<h1 id=\"header1\">Front Page</h1>",
+            published = true
+        )
+        course1.homePage = Course.HomePage.HOME_WIKI
+        // Mark the course to use the front page as its home page
+        //data.courses[course1.id]!!.homePage = Course.HomePage.HOME_WIKI
+
+        // Press Home in the course browser which should open the Front Page created in getToCourse
+        courseBrowserPage.selectHome()
+
+        // Verify that the webview shows our front page header/title
+        onWebView(withId(R.id.contentWebView))
+            .withElement(findElement(Locator.ID, "header1"))
+            .check(webMatches(getText(), containsString("Front Page")))
+    }
+
     /** Utility method to create mocked data, sign student 0 in, and navigate to course 0. */
     private fun getToCourse(
             courseCount: Int = 2, // Need to link from one to the other
@@ -139,8 +169,11 @@ class CourseInteractionTest : StudentTest() {
                 favoriteCourseCount = favoriteCourseCount)
 
         val course1 = data.courses.values.first()
+        // Ensure the Home tab is present in mocked course tabs so the Home button is rendered
+        val homeTab = Tab(position = 0, label = "Home", visibility = "public", tabId = Tab.HOME_ID)
         val pagesTab = Tab(position = 2, label = "Pages", visibility = "public", tabId = Tab.PAGES_ID)
         val filesTab = Tab(position = 3, label = "Files", visibility = "public", tabId = Tab.FILES_ID)
+        data.courseTabs[course1.id]!! += homeTab
         data.courseTabs[course1.id]!! += pagesTab
         data.courseTabs[course1.id]!! += filesTab
 
@@ -155,4 +188,3 @@ class CourseInteractionTest : StudentTest() {
         return data
     }
 }
-
