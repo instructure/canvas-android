@@ -141,6 +141,7 @@ private fun Tab(tab: CourseDetailsTab, isSelected: Boolean, modifier: Modifier =
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .padding(bottom = 2.dp)
     ) {
         Text(
             stringResource(tab.titleRes),
