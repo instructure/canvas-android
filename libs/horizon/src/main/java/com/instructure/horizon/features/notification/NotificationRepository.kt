@@ -16,9 +16,11 @@
  */
 package com.instructure.horizon.features.notification
 
+import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.StreamAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.depaginate
@@ -26,12 +28,21 @@ import javax.inject.Inject
 
 class NotificationRepository @Inject constructor(
     private val streamApi: StreamAPI.StreamInterface,
-    private val courseApi: CourseAPI.CoursesInterface
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val accountNotificationApi: AccountNotificationAPI.AccountNotificationInterface,
 ) {
     suspend fun getNotifications(forceRefresh: Boolean): List<StreamItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceRefresh)
         return streamApi.getUserStream(restParams)
             .depaginate { streamApi.getNextPageStream(it, restParams) }
+            .dataOrThrow
+            .filter { it.isCourseNotification() || it.isDueDateNotification() || it.isNotificationItemScored() }
+    }
+
+    suspend fun getGlobalAnnouncements(forceRefresh: Boolean): List<AccountNotification> {
+        val params = RestParams(isForceReadFromNetwork = forceRefresh, usePerPageQueryParam = true)
+        return accountNotificationApi.getAccountNotifications(params, true, true)
+            .depaginate { accountNotificationApi.getNextPageNotifications(it, params) }
             .dataOrThrow
     }
 

@@ -71,6 +71,16 @@ sealed class StatusChipColor(val contentColor: Color, val fillColor: Color = Col
         contentColor = HorizonColors.Text.title(),
         fillColor = HorizonColors.Surface.pageSecondary()
     )
+
+    data object Sky : StatusChipColor(
+        contentColor = HorizonColors.PrimitivesSky.sky90,
+        fillColor = HorizonColors.PrimitivesSky.sky12
+    )
+
+    data object Violet : StatusChipColor(
+        contentColor = HorizonColors.PrimitivesViolet.violet12,
+        fillColor = HorizonColors.PrimitivesViolet.violet90
+    )
 }
 
 @Composable
@@ -115,6 +125,24 @@ private fun StatusChipPreviewGreen() {
 
 @Composable
 @Preview(showBackground = true)
+private fun StatusChipPreviewSky() {
+    StatusChipPreview(
+        color = StatusChipColor.Sky,
+        iconRes = R.drawable.check_circle_full
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun StatusChipPreviewViolet() {
+    StatusChipPreview(
+        color = StatusChipColor.Violet,
+        iconRes = null
+    )
+}
+
+@Composable
+@Preview(showBackground = true)
 private fun StatusChipPreviewGrey() {
     StatusChipPreview(
         color = StatusChipColor.Grey,
@@ -150,7 +178,7 @@ private fun StatusChipPreviewWhite() {
 }
 
 @Composable
-private fun StatusChipPreview(color: StatusChipColor, iconRes: Int) {
+private fun StatusChipPreview(color: StatusChipColor, iconRes: Int?) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         StatusChip(
             state = StatusChipState(

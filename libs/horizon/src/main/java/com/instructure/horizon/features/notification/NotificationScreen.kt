@@ -17,10 +17,9 @@
 package com.instructure.horizon.features.notification
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -28,22 +27,26 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.HorizonDivider
-import com.instructure.horizon.horizonui.molecules.IconButton
-import com.instructure.horizon.horizonui.molecules.IconButtonColor
+import com.instructure.horizon.horizonui.molecules.StatusChip
+import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.utils.localisedFormat
+import java.time.Duration
+import java.time.Instant
+import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -68,50 +71,14 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
             modifier = Modifier
                 .weight(1f)
         ) {
-            if (state.allNotificationItems.isEmpty()) {
+            if (state.notificationItems.isEmpty()) {
                 item {
                     EmptyNotificationItemContent()
                 }
             } else {
-                items(state.pagedNotificationItems[state.currentPageIndex]) { item ->
-                    Column {
-                        NotificationItemContent(
-                            categoryLabel = item.categoryLabel,
-                            title = item.title,
-                            date = item.date
-                        )
-
-                        HorizonDivider()
-                    }
+                items(state.notificationItems) { item ->
+                    NotificationItemContent(item)
                 }
-            }
-        }
-
-        HorizonDivider()
-
-        if (state.pagedNotificationItems.size > 1) {
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 16.dp)
-            ) {
-                IconButton(
-                    iconRes = R.drawable.chevron_left,
-                    onClick = state.decreasePageIndex,
-                    color = IconButtonColor.Black,
-                    enabled = state.currentPageIndex > 0 && state.pagedNotificationItems.size > 1
-                )
-
-                HorizonSpace(SpaceSize.SPACE_8)
-
-                IconButton(
-                    iconRes = R.drawable.chevron_right,
-                    onClick = state.increasePageIndex,
-                    color = IconButtonColor.Black,
-                    enabled = state.currentPageIndex < state.pagedNotificationItems.lastIndex
-                )
             }
         }
     }
@@ -119,33 +86,43 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
 
 @Composable
 private fun EmptyNotificationItemContent() {
-    NotificationItemContent(
-        categoryLabel = "",
-        title = stringResource(R.string.notificationsEmptyMessage),
-        date = ""
+    Text(
+        stringResource(R.string.notificationsEmptyMessage),
     )
 }
 
 @Composable
 private fun NotificationItemContent(
-    categoryLabel: String,
-    title: String,
-    date: String,
+    notificationItem: NotificationItem
 ) {
     Column(
         modifier = Modifier
-            .padding(horizontal = 24.dp, vertical = 16.dp)
+            .padding(horizontal = 24.dp, vertical = 8.dp)
+            .border(HorizonBorder.level2(HorizonColors.LineAndBorder.lineStroke()), HorizonCornerRadius.level2)
+            .padding(horizontal = 24.dp)
+            .fillMaxWidth()
     ) {
-        Text(
-            text = categoryLabel,
-            style = HorizonTypography.labelSmallBold,
-            color = HorizonColors.Text.timestamp()
+        HorizonSpace(SpaceSize.SPACE_16)
+        StatusChip(
+            state = StatusChipState(
+                label = notificationItem.category.label,
+                color = notificationItem.category.color,
+                fill = true
+            )
         )
 
-        HorizonSpace(SpaceSize.SPACE_4)
+        HorizonSpace(SpaceSize.SPACE_8)
 
+        if (notificationItem.courseLabel != null) {
+            Text(
+                text = notificationItem.courseLabel,
+                style = HorizonTypography.p3,
+                color = HorizonColors.Text.timestamp()
+            )
+            HorizonSpace(SpaceSize.SPACE_8)
+        }
         Text(
-            text = title,
+            text = notificationItem.title,
             style = HorizonTypography.p1,
             color = HorizonColors.Text.body(),
             maxLines = 2,
@@ -155,9 +132,22 @@ private fun NotificationItemContent(
         HorizonSpace(SpaceSize.SPACE_4)
 
         Text(
-            text = date,
-            style = HorizonTypography.labelSmall,
+            text = notificationItem.date.toLocalisedFormat(),
+            style = HorizonTypography.p3,
             color = HorizonColors.Text.timestamp()
         )
+        HorizonSpace(SpaceSize.SPACE_16)
     }
+}
+
+private fun Date?.toLocalisedFormat(): String {
+    if (this == null) return ""
+    val lastWeekDate = Date.from(Instant.now().apply { minus(Duration.ofDays(7)) })
+    val isCurrentWeek = this.after(lastWeekDate)
+    val dateFormat = if (isCurrentWeek) {
+        "DDDD"
+    } else {
+        "MMM dd"
+    }
+    return this.localisedFormat(dateFormat)
 }
