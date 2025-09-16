@@ -41,6 +41,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -93,6 +94,7 @@ fun<T> TabRow(
             .onGloballyPositioned {
                 containerWidth = it.size.width
             }
+            .clipToBounds()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -143,7 +145,6 @@ private fun BoxScope.SelectedTabIndicator(modifier: Modifier = Modifier) {
         modifier = modifier
             .height(1.dp)
             .align(Alignment.BottomStart)
-            .offset(y = 2.dp)
             .background(HorizonColors.Text.surfaceInverseSecondary())
     )
 }
