@@ -28,15 +28,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
@@ -44,7 +38,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.canvasapi2.managers.NoteHighlightedData
 import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
@@ -78,7 +71,8 @@ import java.util.Date
 fun NotebookScreen(
     mainNavController: NavHostController,
     state: NotebookUiState,
-    onDismiss: (() -> Unit)? = null
+    onDismiss: (() -> Unit)? = null,
+    onNoteSelected: ((Note) -> Unit)? = null,
 ) {
     val scrollState = rememberLazyListState()
     Scaffold(
@@ -146,7 +140,7 @@ fun NotebookScreen(
                 items(state.notes) { note ->
                     Column {
                         NoteContent(note) {
-                            mainNavController.navigate(
+                            onNoteSelected?.invoke(note) ?: mainNavController.navigate(
                                 MainNavigationRoute.ModuleItemSequence(
                                     courseId = note.courseId,
                                     moduleItemAssetType = note.objectType.value,
@@ -176,37 +170,6 @@ fun NotebookScreen(
                 }
             }
         }
-    }
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun NotebookBottomDialog(
-    courseId: Long,
-    objectFilter: Pair<String, String>,
-    mainNavController: NavHostController,
-    onDismiss: () -> Unit
-) {
-    val viewModel = hiltViewModel<NotebookViewModel>()
-    val state by viewModel.uiState.collectAsState()
-    val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-
-    ModalBottomSheet(
-        containerColor = HorizonColors.Surface.pagePrimary(),
-        onDismissRequest = { onDismiss() },
-        dragHandle = null,
-        sheetState = bottomSheetState,
-    ) {
-        LaunchedEffect(courseId, objectFilter) {
-            state.updateContent(courseId, objectFilter)
-        }
-
-        NotebookScreen(
-            mainNavController = mainNavController,
-            state = state,
-            onDismiss = { onDismiss() }
-        )
-
     }
 }
 
