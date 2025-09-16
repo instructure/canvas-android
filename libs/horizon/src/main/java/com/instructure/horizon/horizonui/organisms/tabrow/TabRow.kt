@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -49,9 +50,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import kotlin.math.max
 
 @Composable
-fun<T> TabRow(
+fun <T> TabRow(
     tabs: List<T>,
     onTabSelected: (Int) -> Unit,
     selectedIndex: Int,
@@ -76,10 +78,14 @@ fun<T> TabRow(
     val currentOffset by animateIntAsState(
         sizes.take(selectedIndex).sumOf { it }
                 + (selectedIndex) * spacingPx
-                + alignmentOffset
-        ,
+                + alignmentOffset,
         label = "IndicatorAnimation"
     )
+
+    LaunchedEffect(selectedIndex) {
+        val scrollOffset = sizes.take(selectedIndex).sumOf { it } + (selectedIndex) * spacingPx + alignmentOffset
+        scrollState.animateScrollTo(scrollOffset)
+    }
 
     val alignment = when (tabAlignment) {
         Alignment.Start -> Alignment.CenterStart
