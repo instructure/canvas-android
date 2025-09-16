@@ -19,6 +19,7 @@ package com.instructure.horizon.features.notification
 import android.content.Context
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -30,13 +31,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
-import androidx.navigation.NavController
+import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavHostController
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -52,6 +57,8 @@ import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.isPreviousDay
 import com.instructure.pandautils.utils.isSameDay
 import com.instructure.pandautils.utils.isSameWeek
@@ -60,19 +67,24 @@ import java.util.Date
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun NotificationScreen(state: NotificationUiState, mainNavController: NavController) {
+fun NotificationScreen(state: NotificationUiState, mainNavController: NavHostController) {
+    val activity = LocalContext.current.getActivityOrNull()
+    LaunchedEffect(Unit) {
+        if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
+    }
+
     HorizonScaffold(
         title = stringResource(R.string.notificationsTitle),
         onBackPressed = { mainNavController.popBackStack() },
     ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            NotificationContent(state, modifier)
+            NotificationContent(mainNavController, state, modifier)
         }
     }
 }
 
 @Composable
-private fun NotificationContent(state: NotificationUiState, modifier: Modifier = Modifier) {
+private fun NotificationContent(navController: NavHostController, state: NotificationUiState, modifier: Modifier = Modifier) {
     Column(
         modifier = modifier.background(HorizonColors.Surface.pageSecondary())
     ) {
@@ -90,7 +102,7 @@ private fun NotificationContent(state: NotificationUiState, modifier: Modifier =
                 }
             } else {
                 items(state.notificationItems) { item ->
-                    NotificationItemContent(item)
+                    NotificationItemContent(navController, item)
                 }
             }
         }
@@ -125,6 +137,7 @@ private fun EmptyNotificationItemContent() {
 
 @Composable
 private fun NotificationItemContent(
+    navController: NavHostController,
     notificationItem: NotificationItem
 ) {
     Column(
@@ -136,6 +149,21 @@ private fun NotificationItemContent(
             )
             .padding(horizontal = 16.dp)
             .fillMaxWidth()
+            .clickable {
+                when (val route = notificationItem.route) {
+                    is NotificationRoute.DeepLink -> {
+                        val request = NavDeepLinkRequest.Builder
+                            .fromUri(route.deepLink.toUri())
+                            .build()
+
+                        navController.navigate(request)
+                    }
+
+                    is NotificationRoute.ExplicitRoute -> {
+                        navController.navigate(route.route)
+                    }
+                }
+            }
     ) {
         HorizonSpace(SpaceSize.SPACE_16)
         Row(

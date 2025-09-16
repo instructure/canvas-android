@@ -16,10 +16,15 @@ data class NotificationItem(
     val title: String,
     val date: Date?,
     val isRead: Boolean,
-    val routeUrl: String?,
+    val route: NotificationRoute,
 )
 
 data class NotificationItemCategory(
     val label: String,
     val color: StatusChipColor,
 )
+
+sealed class NotificationRoute {
+    data class DeepLink(val deepLink: String): NotificationRoute()
+    data class ExplicitRoute(val route: String): NotificationRoute()
+}

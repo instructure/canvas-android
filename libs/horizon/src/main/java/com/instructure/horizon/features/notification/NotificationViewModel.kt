@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.models.StreamItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
+import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.platform.LoadingState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -77,7 +79,11 @@ class NotificationViewModel @Inject constructor(
                 courseLabel = if (it.isCourseNotification()) getCourseName(it.courseId) else null,
                 date = it.updatedDate,
                 isRead = it.isReadState,
-                routeUrl = it.url
+                route = if (it.assignment?.htmlUrl != null) {
+                    NotificationRoute.DeepLink(it.assignment?.htmlUrl!!)
+                } else {
+                    NotificationRoute.DeepLink(it.htmlUrl)
+                }
             )
         }
         val globalNotifications = repository.getGlobalAnnouncements(forceRefresh).map {
@@ -90,7 +96,13 @@ class NotificationViewModel @Inject constructor(
                 courseLabel = null,
                 date = it.startDate,
                 isRead = true,
-                routeUrl = null
+                route = NotificationRoute.ExplicitRoute(
+                    HorizonInboxRoute.InboxDetails.route(
+                        type = HorizonInboxItemType.AccountNotification,
+                        id = it.id,
+                        courseId = null
+                    )
+                )
             )
         }
 
