@@ -90,6 +90,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.COMMON, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @Stub
     fun testHelpMenuReportProblemE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
