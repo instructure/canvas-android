@@ -6,6 +6,7 @@ import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterOptions
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
 import com.instructure.pandautils.utils.ScreenState
@@ -40,6 +41,8 @@ data class AssignmentGroupItemState(
     val course: Course,
     val assignment: Assignment,
     val customStatuses: List<CustomGradeStatusesQuery.Node>,
+    val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
+    val checkpointsExpanded: Boolean = false,
     val showPublishStateIcon: Boolean = false,
     val showClosedState: Boolean = false,
     val showDueDate: Boolean = false,
@@ -64,6 +67,7 @@ sealed class AssignmentListScreenEvent {
     data class SearchContentChanged(val query: String): AssignmentListScreenEvent()
     data class ChangeOverflowMenuState(val expanded: Boolean): AssignmentListScreenEvent()
     data object Refresh: AssignmentListScreenEvent()
+    data class ToggleCheckpointsExpanded(val assignmentId: Long) : AssignmentListScreenEvent()
 }
 
 sealed class AssignmentListScreenOption {

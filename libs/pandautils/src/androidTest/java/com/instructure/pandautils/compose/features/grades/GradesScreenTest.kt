@@ -30,9 +30,9 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.composeTest.hasDrawable
 import com.instructure.pandares.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
-import com.instructure.pandautils.features.grades.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.GradesScreen
 import com.instructure.pandautils.features.grades.GradesUiState
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
@@ -211,13 +211,15 @@ class GradesScreenTest {
                                             name = "Checkpoint 1",
                                             dueDate = "Due date 1",
                                             submissionStateLabel = SubmissionStateLabel.Graded,
-                                            displayGrade = DisplayGrade("7/10", "")
+                                            displayGrade = DisplayGrade("7/10", ""),
+                                            pointsPossible = 10
                                         ),
                                         DiscussionCheckpointUiState(
                                             name = "Checkpoint 2",
                                             dueDate = "Due date 2",
                                             submissionStateLabel = SubmissionStateLabel.Missing,
-                                            displayGrade = DisplayGrade("-/5", "")
+                                            displayGrade = DisplayGrade("-/5", ""),
+                                            pointsPossible = 5
                                         )
                                     ),
                                     checkpointsExpanded = true
