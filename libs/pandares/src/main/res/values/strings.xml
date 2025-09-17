@@ -2151,5 +2151,7 @@
     <string name="daysLateHint">Write days late</string>
     <string name="reply_to_topic">Reply to topic</string>
     <string name="additional_replies">Additional replies (%d)</string>
+    <string name="reply_to_topic_due">Reply to topic due</string>
+    <string name="additional_replies_due">Additional replies (%d) due</string>
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
 </resources>

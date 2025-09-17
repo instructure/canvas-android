@@ -44,6 +44,7 @@ object Versions {
     const val ENCRYPTED_SHARED_PREFERENCES = "1.0.0"
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
+    const val LIVEDATA = "1.9.0"
 }
 
 object Libs {
@@ -129,6 +130,7 @@ object Libs {
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
     const val COMPOSE_NAVIGATION = "androidx.navigation:navigation-compose:2.8.9"
+    const val COMPOSE_LIVEDATA = "androidx.compose.runtime:runtime-livedata:${Versions.LIVEDATA}"
 
     /* Media and content handling */
     const val PSPDFKIT = "com.pspdfkit:pspdfkit:${Versions.PSPDFKIT}"

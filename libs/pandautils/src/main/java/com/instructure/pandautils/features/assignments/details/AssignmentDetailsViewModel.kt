@@ -22,6 +22,7 @@ import android.content.Context
 import android.content.res.Resources
 import android.net.Uri
 import androidx.annotation.ColorInt
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.ui.graphics.Color
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.LiveData
@@ -67,10 +68,12 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
 import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.orderedCheckpoints
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -134,6 +137,10 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val _reminderViewState = MutableStateFlow(ReminderViewState())
     val reminderViewState = _reminderViewState.asStateFlow()
 
+    private val _dueDatesViewState = mutableStateListOf<ReminderViewState>()
+    val dueDatesViewState: List<ReminderViewState>
+        get() = _dueDatesViewState
+
     var checkingReminderPermission = false
     var checkingNotificationPermission = false
 
@@ -159,7 +166,13 @@ class AssignmentDetailsViewModel @Inject constructor(
                 dueDate = assignment?.dueDate
             ) }
             _data.value?.notifyPropertyChanged(BR.reminders)
+
+
         }
+    }
+
+    private fun updateDueDatesViewState(reminderEntities: List<ReminderEntity>) {
+
     }
 
     fun getVideoUri(fragment: FragmentActivity): Uri? = submissionHandler.getVideoUri(fragment)
@@ -227,6 +240,31 @@ class AssignmentDetailsViewModel @Inject constructor(
                 _reminderViewState.update { it.copy(
                     dueDate = if (assignment?.submission?.excused.orDefault()) null else assignment?.dueDate
                 ) }
+
+                if (assignment?.checkpoints?.isNotEmpty() == true) {
+                    _dueDatesViewState.clear()
+                    assignment?.orderedCheckpoints?.forEach { checkpoint ->
+                        val dueLabel = when (checkpoint.tag) {
+                            Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic_due)
+                            Const.REPLY_TO_ENTRY -> {
+                                application.getString(
+                                    R.string.additional_replies_due,
+                                    assignment?.discussionTopicHeader?.replyRequiredCount ?: 0
+                                )
+                            }
+
+                            else -> application.getString(R.string.dueLabel)
+                        }
+                        _dueDatesViewState.add(
+                            ReminderViewState(
+                                dueLabel = dueLabel,
+                                themeColor = Color.Red,
+                                dueDate = checkpoint.dueDate,
+                                tag = checkpoint.tag,
+                            )
+                        )
+                    }
+                }
                 _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
             } catch (ex: Exception) {
@@ -629,7 +667,7 @@ class AssignmentDetailsViewModel @Inject constructor(
         _reminderViewState.update { it.copy(themeColor = Color(color)) }
     }
 
-    fun showCreateReminderDialog(context: Context, @ColorInt color: Int) {
+    fun showCreateReminderDialog(context: Context, @ColorInt color: Int, tag: String? = null) {
         assignment?.let { assignment ->
             viewModelScope.launch {
                 when {
@@ -639,7 +677,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate
+                        assignment.dueDate,
+                        tag
                     )
                     assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
                         context,
@@ -647,7 +686,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate
+                        assignment.dueDate,
+                        tag
                     )
                     else -> reminderManager.showBeforeDueDateReminderDialog(
                         context,

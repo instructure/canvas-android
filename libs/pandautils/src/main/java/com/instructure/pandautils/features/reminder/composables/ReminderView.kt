@@ -51,7 +51,7 @@ import com.instructure.pandautils.utils.toFormattedString
 @Composable
 fun ReminderView(
     viewState: ReminderViewState,
-    onAddClick: () -> Unit,
+    onAddClick: (String?) -> Unit,
     onRemoveClick: (Long) -> Unit,
 ) {
     CanvasTheme {
@@ -71,9 +71,9 @@ fun ReminderView(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(vertical = 12.dp)
-                    .clickable { onAddClick() }
+                    .clickable { onAddClick(viewState.tag) }
             ) {
-                IconButton(onClick = { onAddClick() }) {
+                IconButton(onClick = { onAddClick(viewState.tag) }) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_add),
                         contentDescription = stringResource(id = R.string.a11y_addReminder),

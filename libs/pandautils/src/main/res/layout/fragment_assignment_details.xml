@@ -279,6 +279,12 @@
                         android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
                         app:layout_constraintTop_toBottomOf="@id/lockedMessageTextView" />
 
+                    <androidx.compose.ui.platform.ComposeView
+                        android:id="@+id/dueComposeView"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toBottomOf="@id/dueDivider" />
+
                     <TextView
                         android:id="@+id/dueLabel"
                         android:layout_width="match_parent"
@@ -290,7 +296,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/dueDivider" />
+                        app:layout_constraintTop_toBottomOf="@id/dueComposeView" />
 
                     <TextView
                         android:id="@+id/dueDateTextView"
