@@ -115,10 +115,11 @@ class ReminderManager(
         contentId: Long,
         contentName: String,
         contentHtmlUrl: String,
-        dueDate: Date?
+        dueDate: Date?,
+        tag: String? = null
     ) {
         showCustomReminderDialog(context).collect { calendar ->
-            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate)
+            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate, tag)
         }
     }
 
@@ -185,7 +186,8 @@ class ReminderManager(
         contentId: Long,
         contentName: String,
         contentHtmlUrl: String,
-        dueDate: Date?
+        dueDate: Date?,
+        tag: String? = null
     ) {
         val alarmTimeInMillis = calendar.timeInMillis
         if (reminderRepository.isReminderAlreadySetForTime(userId, contentId, calendar.timeInMillis)) {
@@ -220,7 +222,8 @@ class ReminderManager(
             contentHtmlUrl,
             reminderTitle,
             reminderMessage,
-            alarmTimeInMillis
+            alarmTimeInMillis,
+            tag
         )
     }
 }
