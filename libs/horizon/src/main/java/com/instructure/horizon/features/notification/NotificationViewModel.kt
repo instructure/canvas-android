@@ -108,7 +108,6 @@ class NotificationViewModel @Inject constructor(
 
         _uiState.update {
             it.copy(
-                unreadCount = userNotifications.count { item -> !item.isRead },
                 notificationItems = (userNotifications + globalNotifications).sortedByDescending { item -> item.date }
             )
         }

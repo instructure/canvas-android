@@ -37,11 +37,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonBorder
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -56,6 +59,7 @@ import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.horizon.horizonui.organisms.scaffolds.HorizonScaffold
+import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -63,7 +67,10 @@ import com.instructure.pandautils.utils.isPreviousDay
 import com.instructure.pandautils.utils.isSameDay
 import com.instructure.pandautils.utils.isSameWeek
 import com.instructure.pandautils.utils.localisedFormat
+import java.text.SimpleDateFormat
+import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -93,9 +100,6 @@ private fun NotificationContent(navController: NavHostController, state: Notific
             modifier = Modifier
                 .weight(1f)
         ) {
-            item {
-                NotificationsHeader(state.unreadCount)
-            }
             if (state.notificationItems.isEmpty()) {
                 item {
                     EmptyNotificationItemContent()
@@ -110,28 +114,13 @@ private fun NotificationContent(navController: NavHostController, state: Notific
 }
 
 @Composable
-private fun NotificationsHeader(unreadCount: Int) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp)
-            .padding(bottom = 12.dp),
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        StatusChip(
-            state = StatusChipState(
-                label = stringResource(R.string.notificationsUnreadCount, unreadCount),
-                color = StatusChipColor.Grey,
-                fill = true
-            )
-        )
-    }
-}
-
-@Composable
 private fun EmptyNotificationItemContent() {
     Text(
         stringResource(R.string.notificationsEmptyMessage),
+        style = HorizonTypography.p1,
+        color = HorizonColors.Text.body(),
+        modifier = Modifier
+            .padding(horizontal = 24.dp, vertical = 8.dp)
     )
 }
 
@@ -147,7 +136,6 @@ private fun NotificationItemContent(
                 HorizonBorder.level2(HorizonColors.LineAndBorder.lineStroke()),
                 HorizonCornerRadius.level2
             )
-            .padding(horizontal = 16.dp)
             .fillMaxWidth()
             .clickable {
                 when (val route = notificationItem.route) {
@@ -164,6 +152,7 @@ private fun NotificationItemContent(
                     }
                 }
             }
+            .padding(horizontal = 16.dp)
     ) {
         HorizonSpace(SpaceSize.SPACE_16)
         Row(
@@ -229,7 +218,77 @@ private fun Date?.toLocalisedFormat(context: Context): String {
         return context.getString(R.string.notificationsDateYesterday)
     }
     if (this.isSameWeek(Date())) {
-        return this.localisedFormat("EEEE")
+        return SimpleDateFormat("EEEE", Locale.getDefault()).format(this)
     }
     return this.localisedFormat("MMM dd, yyyy")
+}
+
+@Composable
+@Preview
+private fun NotificationsScreenPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    val sampleNotifications = listOf(
+        NotificationItem(
+            category = NotificationItemCategory(
+                stringResource(R.string.notificationsDueDateCategoryLabel),
+                StatusChipColor.Honey
+            ),
+            title = "Your assignment is due soon",
+            courseLabel = "Biology 101",
+            date = Date(),
+            isRead = false,
+            route = NotificationRoute.DeepLink("myapp://course/1/assignment/1")
+        ),
+        NotificationItem(
+            category = NotificationItemCategory(
+                stringResource(R.string.notificationsScoreChangedCategoryLabel),
+                StatusChipColor.Violet
+            ),
+            title = "Your score has been updated",
+            courseLabel = "Math 201",
+            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -1) }.time,
+            isRead = true,
+            route = NotificationRoute.ExplicitRoute("course/2/grade")
+        ),
+        NotificationItem(
+            category = NotificationItemCategory(
+                stringResource(R.string.notificationsAnnouncementCategoryLabel),
+                StatusChipColor.Sky
+            ),
+            title = "New announcement in your course",
+            courseLabel = null,
+            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -2) }.time,
+            isRead = false,
+            route = NotificationRoute.DeepLink("myapp://course/3/announcement/1")
+        ),
+        NotificationItem(
+            category = NotificationItemCategory(
+                stringResource(R.string.notificationsAnnouncementCategoryLabel),
+                StatusChipColor.Sky
+            ),
+            title = "New announcement in your course",
+            courseLabel = null,
+            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -6) }.time,
+            isRead = false,
+            route = NotificationRoute.DeepLink("myapp://course/3/announcement/1")
+        ),
+        NotificationItem(
+            category = NotificationItemCategory(
+                stringResource(R.string.notificationsAnnouncementCategoryLabel),
+                StatusChipColor.Sky
+            ),
+            title = "New announcement in your course",
+            courseLabel = null,
+            date = Calendar.getInstance().apply { time = Date(); add(Calendar.DAY_OF_WEEK, -7) }.time,
+            isRead = false,
+            route = NotificationRoute.DeepLink("myapp://course/3/announcement/1")
+        )
+    )
+
+    val previewState = NotificationUiState(
+        screenState = LoadingState(),
+        notificationItems = sampleNotifications
+    )
+
+    NotificationContent(navController = rememberNavController(), state = previewState)
 }

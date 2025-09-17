@@ -7,7 +7,6 @@ import java.util.Date
 data class NotificationUiState(
     val screenState: LoadingState,
     val notificationItems: List<NotificationItem> = emptyList(),
-    val unreadCount: Int = 0,
 )
 
 data class NotificationItem(
