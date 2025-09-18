@@ -53,17 +53,18 @@ class ReminderManager(
         contentName: String,
         contentHtmlUrl: String,
         dueDate: Date,
-        @ColorInt color: Int
+        @ColorInt color: Int,
+        tag: String? = null
     ) {
         showBeforeDueDateReminderDialog(context, dueDate, color).collect { calendar ->
-            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate)
+            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate, tag)
         }
     }
 
     private fun showBeforeDueDateReminderDialog(
         context: Context,
         dueDate: Date,
-        @ColorInt color: Int,
+        @ColorInt color: Int
     ) = callbackFlow<Calendar> {
         val choices = listOf(
             ReminderChoice.Minute(5),
