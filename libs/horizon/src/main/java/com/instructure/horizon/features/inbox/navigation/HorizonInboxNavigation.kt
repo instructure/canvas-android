@@ -160,7 +160,7 @@ fun NavGraphBuilder.horizonInboxNavigation(
                 val courseId = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.COURSE_ID) ?: return@LaunchedEffect
                 val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
                 navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.CourseNotification, courseId)) {
-                    popUpTo(HorizonInboxRoute.InboxDetailsDeepLink.route) {
+                    popUpTo(HorizonInboxRoute.CourseAnnouncementDetailsDeepLink.route) {
                         inclusive = true
                     }
                 }
