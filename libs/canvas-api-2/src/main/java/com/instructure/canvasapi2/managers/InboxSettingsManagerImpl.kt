@@ -15,21 +15,24 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.apollographql.apollo.cache.http.httpCache
 import com.instructure.canvasapi2.InboxSettingsQuery
-import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.UpdateInboxSettingsMutation
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.canvasapi2.utils.toApiString
 
-class InboxSettingsManagerImpl : InboxSettingsManager {
+class InboxSettingsManagerImpl(private val apolloClient: ApolloClient) : InboxSettingsManager {
 
     override suspend fun getInboxSignatureSettings(forceNetwork: Boolean): DataResult<InboxSignatureSettings> {
         return try {
             val query = InboxSettingsQuery()
-            val inboxSettingsData = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
+            val inboxSettingsData =
+                apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
             val inboxSignatureSettings = InboxSignatureSettings(
                 inboxSettingsData.myInboxSettings?.signature.orEmpty(),
                 inboxSettingsData.myInboxSettings?.useSignature ?: false,
@@ -57,9 +60,9 @@ class InboxSettingsManagerImpl : InboxSettingsManager {
                 outOfOfficeLastDate = Optional.present(inboxSignatureSettings.outOfOfficeLastDate)
             )
 
-            val mutationResult = QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
+            val mutationResult = apolloClient.enqueueMutation(mutation).dataAssertNoErrors
 
-            QLClientConfig().buildClient().httpCache.clearAll()
+            apolloClient.httpCache.clearAll()
 
             return DataResult.Success(
                 InboxSignatureSettings(

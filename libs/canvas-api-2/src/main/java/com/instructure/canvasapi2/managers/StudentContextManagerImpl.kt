@@ -15,11 +15,13 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.StudentContextCardQuery
+import com.instructure.canvasapi2.enqueueQuery
 
-class StudentContextManagerImpl : StudentContextManager {
+class StudentContextManagerImpl(private val apolloClient: ApolloClient) : StudentContextManager {
 
     private var submissionPageSize = QLClientConfig.GRAPHQL_PAGE_SIZE
     private var endCursor: String? = null
@@ -33,22 +35,34 @@ class StudentContextManagerImpl : StudentContextManager {
         forceNetwork: Boolean
     ): StudentContextCardQuery.Data {
         this.submissionPageSize = submissionPageSize
-        val query = StudentContextCardQuery(courseId.toString(), userId.toString(), submissionPageSize)
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+        val query =
+            StudentContextCardQuery(courseId.toString(), userId.toString(), submissionPageSize)
+        val result = apolloClient.enqueueQuery(query, forceNetwork)
 
         this.endCursor = result.data?.course?.onCourse?.submissions?.pageInfo?.endCursor
-        this.hasNextPage = result.data?.course?.onCourse?.submissions?.pageInfo?.hasNextPage ?: false
+        this.hasNextPage =
+            result.data?.course?.onCourse?.submissions?.pageInfo?.hasNextPage ?: false
 
         return result.dataAssertNoErrors
     }
 
-    override suspend fun getNextPage(courseId: Long, userId: Long, forceNetwork: Boolean): StudentContextCardQuery.Data? {
+    override suspend fun getNextPage(
+        courseId: Long,
+        userId: Long,
+        forceNetwork: Boolean
+    ): StudentContextCardQuery.Data? {
         if (!hasNextPage) return null
-        val query = StudentContextCardQuery(courseId.toString(), userId.toString(), submissionPageSize, Optional.present(endCursor))
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+        val query = StudentContextCardQuery(
+            courseId.toString(),
+            userId.toString(),
+            submissionPageSize,
+            Optional.present(endCursor)
+        )
+        val result = apolloClient.enqueueQuery(query, forceNetwork)
 
         this.endCursor = result.data?.course?.onCourse?.submissions?.pageInfo?.endCursor
-        this.hasNextPage = result.data?.course?.onCourse?.submissions?.pageInfo?.hasNextPage ?: false
+        this.hasNextPage =
+            result.data?.course?.onCourse?.submissions?.pageInfo?.hasNextPage ?: false
 
         return result.dataAssertNoErrors
     }

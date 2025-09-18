@@ -15,14 +15,15 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
+import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
-import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.enqueueQuery
 
-class CustomGradeStatusesManagerImpl : CustomGradeStatusesManager {
+class CustomGradeStatusesManagerImpl(private val apolloClient: ApolloClient) : CustomGradeStatusesManager {
 
     override suspend fun getCustomGradeStatuses(courseId: Long, forceNetwork: Boolean): CustomGradeStatusesQuery.Data? {
         val query = CustomGradeStatusesQuery(courseId.toString())
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+        val result = apolloClient.enqueueQuery(query, forceNetwork)
         return result.data
     }
 }
