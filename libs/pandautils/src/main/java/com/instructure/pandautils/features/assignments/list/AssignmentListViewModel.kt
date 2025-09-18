@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -47,6 +48,8 @@ import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.orderedCheckpoints
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -96,14 +99,19 @@ class AssignmentListViewModel @Inject constructor(
                 val assignmentGroups = repository.getAssignments(courseId, forceRefresh)
                 val gradingPeriods = repository.getGradingPeriodsForCourse(courseId, forceRefresh)
                 val allAssignment = assignmentGroups.flatMap { it.assignments }
-                val gradingPeriodAssignments = gradingPeriods.associateWith { gradingPeriod ->
-                    repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-                        courseId,
-                        gradingPeriod.id,
-                        forceRefresh
-                    )
-                        .flatMap { it.assignments }
+                val deferredMap = mutableMapOf<GradingPeriod, Deferred<List<AssignmentGroup>>>()
+
+                for (gradingPeriod in gradingPeriods) {
+                    val deferred = viewModelScope.async {
+                        repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+                            courseId,
+                            gradingPeriod.id,
+                            forceRefresh
+                        )
+                    }
+                    deferredMap.put(gradingPeriod, deferred)
                 }
+                val gradingPeriodAssignments = deferredMap.mapValues { it.value.await().flatMap { it.assignments } }
                 val selectedFilters = if (forceRefresh) {
                     uiState.value.selectedFilterData
                 } else {
