@@ -268,7 +268,7 @@
                         android:visibility="@{viewModel.data.fullLocked ? View.VISIBLE : View.GONE}"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@id/reminderBottomDivider" />
+                        app:layout_constraintTop_toBottomOf="@id/dueComposeView" />
 
                     <View
                         android:id="@+id/dueDivider"
@@ -286,52 +286,6 @@
                         app:layout_constraintTop_toBottomOf="@id/dueDivider" />
 
                     <TextView
-                        android:id="@+id/dueLabel"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="24dp"
-                        android:accessibilityHeading="true"
-                        android:text="@string/dueLabel"
-                        android:textColor="@color/textDark"
-                        android:textSize="14sp"
-                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/dueComposeView" />
-
-                    <TextView
-                        android:id="@+id/dueDateTextView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginHorizontal="16dp"
-                        android:layout_marginTop="2dp"
-                        android:text="@{viewModel.data.dueDate}"
-                        android:textColor="@color/textDarkest"
-                        android:textSize="16sp"
-                        android:visibility="@{viewModel.data.dueDate.empty ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/dueLabel" />
-
-                    <View
-                        android:id="@+id/reminderTopDivider"
-                        android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:layout_marginTop="32dp"
-                        android:background="@color/borderMedium"
-                        app:layout_constraintTop_toBottomOf="@id/dueDateTextView" />
-
-                    <androidx.compose.ui.platform.ComposeView
-                        android:id="@+id/reminderComposeView"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        app:layout_constraintTop_toBottomOf="@id/reminderTopDivider" />
-
-                    <View
-                        android:id="@+id/reminderBottomDivider"
-                        android:layout_width="match_parent"
-                        android:layout_height=".5dp"
-                        android:background="@color/borderMedium"
-                        app:layout_constraintTop_toBottomOf="@id/reminderComposeView" />
-
-                    <TextView
                         android:id="@+id/submissionTypesLabel"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -342,7 +296,7 @@
                         android:textColor="@color/textDark"
                         android:textSize="14sp"
                         android:visibility="@{viewModel.data.submissionTypes.empty ? View.GONE : View.VISIBLE}"
-                        app:layout_constraintTop_toBottomOf="@id/reminderComposeView" />
+                        app:layout_constraintTop_toBottomOf="@id/dueComposeView" />
 
                     <TextView
                         android:id="@+id/submissionTypesTextView"

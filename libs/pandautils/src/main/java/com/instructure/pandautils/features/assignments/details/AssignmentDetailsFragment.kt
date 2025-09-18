@@ -145,21 +145,12 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         viewModel.course.value?.let {
             viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(it))
         }
-        binding?.reminderComposeView?.setContent {
-            val state by viewModel.reminderViewState.collectAsState()
-            ReminderView(
-                viewState = state,
-                onAddClick = { checkAlarmPermission() },
-                onRemoveClick = { reminderId ->
-                    viewModel.showDeleteReminderConfirmationDialog(requireContext(), reminderId, assignmentDetailsBehaviour.dialogColor)
-                }
-            )
-        }
+
         binding?.dueComposeView?.setContent {
-            val states = viewModel.dueDatesViewState
+            val states = viewModel.dueDateReminderViewStates
             DueDateReminderLayout(
                 states,
-                onAddClick = { checkAlarmPermission() },
+                onAddClick = { tag -> checkAlarmPermission(tag) },
                 onRemoveClick = { reminderId ->
                     viewModel.showDeleteReminderConfirmationDialog(
                         requireContext(),

@@ -75,7 +75,6 @@ import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -136,12 +135,11 @@ class AssignmentDetailsViewModel @Inject constructor(
 
     private var selectedSubmission: Submission? = null
 
-    private val _reminderViewState = MutableStateFlow(ReminderViewState())
-    val reminderViewState = _reminderViewState.asStateFlow()
-
-    private val _dueDatesViewState = mutableStateListOf<ReminderViewState>()
-    val dueDatesViewState: List<ReminderViewState>
-        get() = _dueDatesViewState
+    private var reminderEntities: List<ReminderEntity> = emptyList()
+    private var themeColor: Color? = null
+    private val _dueDateReminderViewStates = mutableStateListOf<ReminderViewState>()
+    val dueDateReminderViewStates: List<ReminderViewState>
+        get() = _dueDateReminderViewStates
 
     var checkingReminderPermission = false
     var checkingNotificationPermission = false
@@ -163,18 +161,29 @@ class AssignmentDetailsViewModel @Inject constructor(
 
         reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), assignmentId) { reminderEntities ->
             _data.value?.reminders = mapReminders(reminderEntities)
-            _reminderViewState.update { it.copy(
-                reminders = reminderEntities.map { ReminderItem(it.id, it.text, Date(it.time)) },
-                dueDate = assignment?.dueDate
-            ) }
             _data.value?.notifyPropertyChanged(BR.reminders)
 
-
+            this.reminderEntities = reminderEntities
+            updateDueDatesViewState(reminderEntities)
         }
     }
 
     private fun updateDueDatesViewState(reminderEntities: List<ReminderEntity>) {
+        for (i in 0.._dueDateReminderViewStates.lastIndex) {
+            val tag = _dueDateReminderViewStates[i].tag
+            _dueDateReminderViewStates[i] = _dueDateReminderViewStates[i].copy(
+                reminders = getReminderItems(tag)
+            )
+        }
+    }
 
+    private fun getReminderItems(tag: String? = null): List<ReminderItem> {
+        return reminderEntities
+            .filter { it.tag == tag }
+            .sortedBy { it.time }
+            .map {
+                ReminderItem(it.id, it.text, Date(it.time))
+            }
     }
 
     fun getVideoUri(fragment: FragmentActivity): Uri? = submissionHandler.getVideoUri(fragment)
@@ -239,12 +248,9 @@ class AssignmentDetailsViewModel @Inject constructor(
                 isAssignmentEnhancementEnabled = assignmentDetailsRepository.isAssignmentEnhancementEnabled(courseId.orDefault(), forceNetwork)
 
                 assignment = assignmentResult
-                _reminderViewState.update { it.copy(
-                    dueDate = if (assignment?.submission?.excused.orDefault()) null else assignment?.dueDate
-                ) }
 
                 if (assignment?.checkpoints?.isNotEmpty() == true) {
-                    _dueDatesViewState.clear()
+                    _dueDateReminderViewStates.clear()
                     assignment?.orderedCheckpoints?.forEach { checkpoint ->
                         val dueLabel = when (checkpoint.tag) {
                             Const.REPLY_TO_TOPIC -> application.getString(R.string.reply_to_topic_due)
@@ -257,15 +263,28 @@ class AssignmentDetailsViewModel @Inject constructor(
 
                             else -> application.getString(R.string.dueLabel)
                         }
-                        _dueDatesViewState.add(
+                        val subAssignment = assignment?.submission?.subAssignmentSubmissions?.firstOrNull { it.subAssignmentTag == checkpoint.tag }
+                        _dueDateReminderViewStates.add(
                             ReminderViewState(
                                 dueLabel = dueLabel,
-                                themeColor = Color.Red,
-                                dueDate = checkpoint.dueDate,
+                                themeColor = themeColor,
+                                dueDate = if (subAssignment?.excused.orDefault()) null else checkpoint.dueDate,
                                 tag = checkpoint.tag,
+                                reminders = getReminderItems(checkpoint.tag)
                             )
                         )
                     }
+                } else {
+                    _dueDateReminderViewStates.clear()
+                    _dueDateReminderViewStates.add(
+                        ReminderViewState(
+                            dueLabel = application.getString(R.string.dueLabel),
+                            themeColor = themeColor,
+                            dueDate = if (assignment?.submission?.excused.orDefault()) null else assignment?.dueDate,
+                            tag = null,
+                            reminders = getReminderItems()
+                        )
+                    )
                 }
                 _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
@@ -646,29 +665,33 @@ class AssignmentDetailsViewModel @Inject constructor(
     }
 
     fun updateReminderColor(@ColorInt color: Int) {
-        _reminderViewState.update { it.copy(themeColor = Color(color)) }
+        themeColor = Color(color)
+        for (i in 0.._dueDateReminderViewStates.lastIndex) {
+            _dueDateReminderViewStates[i] = _dueDateReminderViewStates[i].copy(themeColor = themeColor)
+        }
     }
 
     fun showCreateReminderDialog(context: Context, @ColorInt color: Int, tag: String? = null) {
         assignment?.let { assignment ->
             viewModelScope.launch {
+                val dueDate = _dueDateReminderViewStates.firstOrNull { it.tag == tag }?.dueDate
                 when {
-                    assignment.dueDate == null -> reminderManager.showCustomReminderDialog(
+                    dueDate == null -> reminderManager.showCustomReminderDialog(
                         context,
                         apiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate,
+                        dueDate,
                         tag
                     )
-                    assignment.dueDate?.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
+                    dueDate.before(Date()).orDefault() -> reminderManager.showCustomReminderDialog(
                         context,
                         apiPrefs.user?.id.orDefault(),
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate,
+                        dueDate,
                         tag
                     )
                     else -> reminderManager.showBeforeDueDateReminderDialog(
@@ -677,8 +700,9 @@ class AssignmentDetailsViewModel @Inject constructor(
                         assignment.id,
                         assignment.name.orEmpty(),
                         assignment.htmlUrl.orEmpty(),
-                        assignment.dueDate ?: Date(),
-                        color
+                        dueDate ?: Date(),
+                        color,
+                        tag
                     )
                 }
             }

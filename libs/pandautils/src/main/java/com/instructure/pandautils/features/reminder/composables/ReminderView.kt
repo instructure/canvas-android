@@ -71,7 +71,9 @@ fun ReminderView(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier
                     .padding(vertical = 12.dp)
-                    .clickable { onAddClick(viewState.tag) }
+                    .clickable {
+                        onAddClick(viewState.tag)
+                    }
             ) {
                 IconButton(onClick = { onAddClick(viewState.tag) }) {
                     Icon(

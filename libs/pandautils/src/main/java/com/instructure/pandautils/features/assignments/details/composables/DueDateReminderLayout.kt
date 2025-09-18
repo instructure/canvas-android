@@ -24,6 +24,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.heading
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandares.R
@@ -39,7 +41,7 @@ fun DueDateReminderLayout(
     onRemoveClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column(modifier = modifier.padding(horizontal = 16.dp)) {
+    Column {
         for (reminderViewState in reminderViewStates) {
             DueDateBlock(reminderViewState)
             ReminderView(
@@ -57,15 +59,17 @@ private fun DueDateBlock(
     reminderViewState: ReminderViewState
 ) {
     Text(
-        modifier = Modifier.padding(top = 24.dp),
+        modifier = Modifier
+            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+            .semantics { heading() },
         text = reminderViewState.dueLabel ?: stringResource(id = R.string.dueLabel),
         color = colorResource(id = R.color.textDark),
         fontSize = 14.sp
     )
     Spacer(modifier = Modifier.height(2.dp))
     Text(
-        modifier = Modifier.padding(bottom = 14.dp),
-        text = "${reminderViewState.dueDate?.toFormattedString()}",
+        modifier = Modifier.padding(bottom = 14.dp, start = 16.dp, end = 16.dp),
+        text = "${reminderViewState.dueDate?.toFormattedString() ?: stringResource(R.string.toDoNoDueDate)}",
         color = colorResource(id = R.color.textDarkest),
         fontSize = 16.sp
     )
