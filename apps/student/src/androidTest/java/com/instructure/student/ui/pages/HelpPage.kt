@@ -43,17 +43,15 @@ import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.CoreMatchers
 
-// This is a little hokey, as the options that appear are somewhat governed by the results of
-// the /api/v1/accounts/self/help_links call.  If that changes a lot over time (thus breaking
-// this test), we can back off to some easier test like "some options are visible".
 class HelpPage : BasePage(R.id.helpDialog) {
+
     private val askInstructorLabel by OnViewWithText(R.string.askInstructor)
     private val searchGuidesLabel by OnViewWithText(R.string.searchGuides)
-    private val reportProblemLabel by OnViewWithStringTextIgnoreCase("Report a problem")
+    private val reportProblemLabel by OnViewWithStringTextIgnoreCase("Report a Problem")
     private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
-    fun verifyAskAQuestion(course: Course, question: String) {
+    fun assertAskYourInstructorDialogDetails(course: Course, question: String) {
         askInstructorLabel.scrollTo().click()
         waitForView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
         onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
@@ -62,7 +60,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(containsTextCaseInsensitive("Send")).assertDisplayed()
     }
 
-    fun verifyAskAQuestion(course: CourseApiModel, question: String) {
+    private fun assertAskYourInstructorDialogDetails(course: CourseApiModel, question: String) {
         askInstructorLabel.scrollTo().click()
         waitForView(withText(course.name)).assertDisplayed() // Verify that our course is selected in the spinner
         onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
@@ -72,7 +70,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     }
 
     fun sendQuestionToInstructor(course: CourseApiModel, question: String) {
-        verifyAskAQuestion(course, question)
+        assertAskYourInstructorDialogDetails(course, question)
         onView(containsTextCaseInsensitive("Send")).click()
     }
 
@@ -80,14 +78,14 @@ class HelpPage : BasePage(R.id.helpDialog) {
         searchGuidesLabel.scrollTo().click()
     }
 
-    fun verifyReportAProblem(subject: String, description: String) {
+    fun assertReportProblemDialogDetails(subject: String, description: String) {
         reportProblemLabel.scrollTo().click()
         onView(withId(R.id.subjectEditText)).typeText(subject)
         Espresso.closeSoftKeyboard()
         onView(withId(R.id.descriptionEditText)).typeText(description)
         Espresso.closeSoftKeyboard()
         // Let's just make sure that the "Send" button is displayed, rather than actually pressing it
-        onView(containsTextCaseInsensitive("Send")).scrollTo().assertDisplayed()
+        assertSendReportProblemButtonDisplayed()
     }
 
     fun assertReportProblemDialogDisplayed() {
@@ -100,6 +98,10 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     fun clickSendReportProblem() {
         onView(containsTextCaseInsensitive("Send")).scrollTo().click()
+    }
+
+    private fun assertSendReportProblemButtonDisplayed() {
+        onView(containsTextCaseInsensitive("Send")).scrollTo().assertDisplayed()
     }
 
     fun clickShareLoveLabel() {

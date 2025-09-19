@@ -146,7 +146,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
         signInStudent()
 
         leftSideNavigationDrawerPage.clickHelpMenu()
-        helpPage.verifyAskAQuestion(course, "Here's a question")
+        helpPage.assertAskYourInstructorDialogDetails(course, "Here's a question")
     }
 
     // Should open the Canvas guides in a WebView
@@ -169,7 +169,7 @@ class NavigationDrawerInteractionTest : StudentTest() {
         signInStudent()
 
         leftSideNavigationDrawerPage.clickHelpMenu()
-        helpPage.verifyReportAProblem("Problem", "It's a problem!")
+        helpPage.assertReportProblemDialogDetails("Problem", "It's a problem!")
     }
 
     // Should send an intent to open the listing for Student App in the Play Store

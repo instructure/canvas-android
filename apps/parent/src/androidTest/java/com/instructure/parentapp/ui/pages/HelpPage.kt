@@ -43,7 +43,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
 
     private val searchGuidesLabel by OnViewWithText(R.string.searchGuides)
 
-    private val reportProblemLabel by OnViewWithText(R.string.reportProblem)
+    private val reportProblemLabel by OnViewWithStringTextIgnoreCase("Report a Problem")
 
     private val submitFeatureLabel by OnViewWithStringTextIgnoreCase("Submit a Feature Idea")
 
