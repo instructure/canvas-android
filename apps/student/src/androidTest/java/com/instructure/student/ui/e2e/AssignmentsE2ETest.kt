@@ -50,6 +50,7 @@ import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
+import com.instructure.student.ui.utils.waitForWorkManagerJobsToFinish
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
@@ -806,7 +807,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
     }
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
@@ -883,7 +883,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
 
-        sleep(2000) // Give the comment time to propagate
+        waitForWorkManagerJobsToFinish(workerTag = "SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -1184,7 +1184,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         SubmissionsApi.gradeSubmission(teacher.token, course.id, passFailAssignment.id, student.id, postedGrade = "Incomplete")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val gpaScaleAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.GPA_SCALE, pointsPossible = 15.0, dueAt =  1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        val gpaScaleAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.GPA_SCALE, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG, "Grade submission: '${gpaScaleAssignment.name}' with 3.7.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, gpaScaleAssignment.id, student.id, postedGrade = "3.7")
