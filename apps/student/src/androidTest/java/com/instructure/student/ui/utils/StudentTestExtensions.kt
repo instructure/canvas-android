@@ -30,6 +30,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.platform.app.InstrumentationRegistry
+import androidx.work.WorkManager
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.models.User
@@ -342,4 +343,17 @@ fun uploadTextFile(
         token,
         fileUploadType
     )
+}
+
+fun waitForWorkManagerJobsToFinish(timeoutMs: Long = 20000L, workerTag: String) {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
+    val workManager = WorkManager.getInstance(context)
+    val start = System.currentTimeMillis()
+    while (true) {
+        val unfinished = workManager.getWorkInfosByTag(workerTag).get()
+            .any { !it.state.isFinished }
+        if (!unfinished) break
+        if (System.currentTimeMillis() - start > timeoutMs) break
+        Thread.sleep(250)
+    }
 }
