@@ -882,8 +882,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
 
-        sleep(2000) // Give the comment time to propagate
-
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
 
