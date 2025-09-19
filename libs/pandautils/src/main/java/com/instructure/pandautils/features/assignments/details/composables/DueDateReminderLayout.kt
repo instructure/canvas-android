@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.heading
@@ -41,9 +42,9 @@ fun DueDateReminderLayout(
     onRemoveClick: (Long) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    Column {
-        for (reminderViewState in reminderViewStates) {
-            DueDateBlock(reminderViewState)
+    Column(modifier = modifier) {
+        reminderViewStates.forEachIndexed { index, reminderViewState ->
+            DueDateBlock(reminderViewState, index)
             ReminderView(
                 viewState = reminderViewState,
                 onAddClick = onAddClick,
@@ -56,12 +57,14 @@ fun DueDateReminderLayout(
 
 @Composable
 private fun DueDateBlock(
-    reminderViewState: ReminderViewState
+    reminderViewState: ReminderViewState,
+    position: Int
 ) {
     Text(
         modifier = Modifier
             .padding(top = 24.dp, start = 16.dp, end = 16.dp)
-            .semantics { heading() },
+            .semantics { heading() }
+            .testTag("dueDateHeaderText-$position"),
         text = reminderViewState.dueLabel ?: stringResource(id = R.string.dueLabel),
         color = colorResource(id = R.color.textDark),
         fontSize = 14.sp
