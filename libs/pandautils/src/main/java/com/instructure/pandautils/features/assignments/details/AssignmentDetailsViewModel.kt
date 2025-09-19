@@ -158,9 +158,6 @@ class AssignmentDetailsViewModel @Inject constructor(
         loadData()
 
         reminderManager.observeRemindersLiveData(apiPrefs.user?.id.orDefault(), assignmentId) { reminderEntities ->
-            _data.value?.reminders = mapReminders(reminderEntities)
-            _data.value?.notifyPropertyChanged(BR.reminders)
-
             this.reminderEntities = reminderEntities
             updateDueDatesViewState(reminderEntities)
         }
@@ -533,8 +530,7 @@ class AssignmentDetailsViewModel @Inject constructor(
             discussionHeaderViewData = discussionHeaderViewData,
             quizDetails = quizViewViewData,
             attemptsViewData = attemptsViewData,
-            hasDraft = hasDraft,
-            reminders = _data.value?.reminders.orEmpty(),
+            hasDraft = hasDraft
         )
     }
 
