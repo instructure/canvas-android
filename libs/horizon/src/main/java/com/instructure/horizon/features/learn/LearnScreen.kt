@@ -69,7 +69,7 @@ import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.learn.course.CourseDetailsScreen
-import com.instructure.horizon.features.learn.course.CourseDetailsUiState
+import com.instructure.horizon.features.learn.course.CourseDetailsViewModel
 import com.instructure.horizon.features.learn.program.ProgramDetailsScreen
 import com.instructure.horizon.features.learn.program.ProgramDetailsViewModel
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -204,7 +204,12 @@ private fun LearnScreenWrapper(
             )
             when {
                 (state.selectedLearningItem is LearningItem.CourseItem) -> {
-                    CourseDetailsScreen(CourseDetailsUiState(state.selectedLearningItem.courseWithProgress), mainNavController)
+                    val courseDetailsViewModel = hiltViewModel<CourseDetailsViewModel>()
+                    LaunchedEffect(state.selectedLearningItem) {
+                        courseDetailsViewModel.loadState(state.selectedLearningItem.courseWithProgress)
+                    }
+                    val courseDetailsState by courseDetailsViewModel.state.collectAsState()
+                    CourseDetailsScreen(courseDetailsState, mainNavController)
                 }
 
                 (state.selectedLearningItem is LearningItem.ProgramDetails) -> {

@@ -36,6 +36,7 @@ import androidx.compose.ui.draw.scale
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
+import com.instructure.horizon.features.learn.course.lti.CourseToolsScreen
 import com.instructure.horizon.features.learn.course.note.CourseNotesScreen
 import com.instructure.horizon.features.learn.course.overview.CourseOverviewScreen
 import com.instructure.horizon.features.learn.course.progress.CourseProgressScreen
@@ -118,6 +119,11 @@ fun CourseDetailsScreen(
                             mainNavController,
                             Modifier.clip(RoundedCornerShape(cornerAnimation))
                         )
+
+                        4 -> CourseToolsScreen(
+                            state.selectedCourse?.courseId ?: -1,
+                            Modifier.clip(RoundedCornerShape(cornerAnimation))
+                        )
                     }
                 }
             }
@@ -135,6 +141,7 @@ private fun Tab(tab: CourseDetailsTab, isSelected: Boolean, modifier: Modifier =
     Box(
         contentAlignment = Alignment.Center,
         modifier = modifier
+            .padding(bottom = 2.dp)
     ) {
         Text(
             stringResource(tab.titleRes),
