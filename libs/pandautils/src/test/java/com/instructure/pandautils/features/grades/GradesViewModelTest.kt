@@ -37,6 +37,7 @@ import com.instructure.canvasapi2.type.SubmissionType
 import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const
@@ -454,12 +455,14 @@ class GradesViewModelTest {
                                     dueDate = getFormattedDate(today.minusDays(1)),
                                     submissionStateLabel = SubmissionStateLabel.Late,
                                     displayGrade = DisplayGrade("A"),
+                                    pointsPossible = 10
                                 ),
                                 DiscussionCheckpointUiState(
                                     name = "Additional replies (3)",
                                     dueDate = getFormattedDate(today.plusDays(2)),
                                     submissionStateLabel = SubmissionStateLabel.None,
                                     displayGrade = DisplayGrade(),
+                                    pointsPossible = 5
                                 )
                             )
                         )
@@ -691,12 +694,14 @@ class GradesViewModelTest {
                                     dueDate = "No due date",
                                     submissionStateLabel = SubmissionStateLabel.Late,
                                     displayGrade = DisplayGrade("A"),
+                                    pointsPossible = 10
                                 ),
                                 DiscussionCheckpointUiState(
                                     name = "Additional replies (3)",
                                     dueDate = "No due date",
                                     submissionStateLabel = SubmissionStateLabel.None,
                                     displayGrade = DisplayGrade(),
+                                    pointsPossible = 5
                                 )
                             )
                         )

@@ -21,10 +21,18 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.rememberSaveable
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDeepLinkRequest
+import androidx.navigation.NavHostController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.HorizonNavigation
@@ -47,6 +55,8 @@ class HorizonActivity : BaseCanvasActivity() {
     @Inject
     lateinit var webViewAuthenticator: WebViewAuthenticator
 
+    private lateinit var navController: NavHostController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val manager = getSystemService(ShortcutManager::class.java)
@@ -56,18 +66,22 @@ class HorizonActivity : BaseCanvasActivity() {
         }
 
         setContent {
-            val mainNavController = rememberNavController()
-
-            if (savedInstanceState == null) {
-                if (hasUnreadPushNotification(intent.extras) || hasLocalNotificationLink(intent.extras)) {
-                    handlePushNotification(hasUnreadPushNotification(intent.extras))
-                }
-            }
+            navController = rememberNavController()
 
             val activity = LocalContext.current.getActivityOrNull()
             if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
             HorizonTheme {
-                HorizonNavigation(mainNavController)
+                HorizonNavigation(navController)
+            }
+
+            var isHandled by rememberSaveable { mutableStateOf(false) }
+            LaunchedEffect(Unit) {
+                if (savedInstanceState == null && !isHandled) {
+                    isHandled = true
+                    if (hasUnreadPushNotification(intent.extras) || hasLocalNotificationLink(intent.extras)) {
+                        handlePushNotification(hasUnreadPushNotification(intent.extras))
+                    }
+                }
             }
         }
     }
@@ -106,7 +120,14 @@ class HorizonActivity : BaseCanvasActivity() {
                 }
 
                 val htmlUrl = extras.getString(PushNotification.HTML_URL, "").toUri()
+                val request = NavDeepLinkRequest.Builder
+                    .fromUri(htmlUrl)
+                    .build()
 
+                navController.navigate(
+                    request,
+                    navOptions = NavOptions.Builder().setLaunchSingleTop(true).build()
+                )
             }
         }
     }

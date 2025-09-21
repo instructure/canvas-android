@@ -16,9 +16,11 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.instructure.canvasapi2.CedarGraphQLClientConfig
-import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.di.CedarApolloClient
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.cedar.AnswerPromptMutation
 import com.instructure.cedar.EvaluateTopicResponseMutation
 import com.instructure.cedar.GenerateQuizMutation
@@ -49,7 +51,7 @@ data class EvaluatedTopic(
 )
 
 class CedarApiManager @Inject constructor(
-    private val cedarClient: CedarGraphQLClientConfig
+    @CedarApolloClient private val cedarClient: ApolloClient
 ) {
     private val model: String = "anthropic.claude-3-sonnet-20240229-v1:0"
     suspend fun answerPrompt(
@@ -63,8 +65,8 @@ class CedarApiManager @Inject constructor(
                 document = Optional.presentIfNotNull(documentBlock),
             )
         )
-        val result = QLClientConfig
-            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors.answerPrompt
 
         return result
@@ -80,8 +82,8 @@ class CedarApiManager @Inject constructor(
                 numberOfParagraphs.toDouble(),
             )
         )
-        val result = QLClientConfig
-            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors.summarizeContent
 
         return result.summarization
@@ -96,8 +98,8 @@ class CedarApiManager @Inject constructor(
         val mutation = GenerateQuizMutation(
             QuizInput(context, numberOfQuestions.toDouble(), numberOfOptionsPerQuestion.toDouble(), maxLengthOfQuestions.toDouble())
         )
-        val result = QLClientConfig
-            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors
 
         return result.generateQuiz.map {
@@ -119,8 +121,8 @@ class CedarApiManager @Inject constructor(
                 comparisonText = comparisonText,
             )
         )
-        val result = QLClientConfig
-            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors.evaluateTopicResponse
 
         return EvaluatedTopic(
@@ -144,8 +146,8 @@ class CedarApiManager @Inject constructor(
                 sourceLanguage = Optional.presentIfNotNull(sourceLanguage)
             )
         )
-        val result = QLClientConfig
-            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors.translateText
 
         return result.translation
@@ -163,16 +165,16 @@ class CedarApiManager @Inject constructor(
                 sourceLanguage = Optional.presentIfNotNull(sourceLanguage)
             )
         )
-        val result = QLClientConfig
-            .enqueueMutation(mutation, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors.translateHTML
         return result.translation
     }
 
     suspend fun sayHello(): String {
         val query = SayHelloQuery()
-        val result = QLClientConfig
-            .enqueueQuery(query, block = cedarClient.createClientConfigBlock())
+        val result = cedarClient
+            .enqueueQuery(query)
             .dataAssertNoErrors.sayHello
 
         return result

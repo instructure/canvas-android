@@ -25,7 +25,7 @@ import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.navArgument
-import com.instructure.horizon.features.account.navigation.AccountNavigation
+import com.instructure.horizon.features.account.navigation.accountNavigation
 import com.instructure.horizon.features.dashboard.DashboardScreen
 import com.instructure.horizon.features.dashboard.DashboardViewModel
 import com.instructure.horizon.features.learn.LearnScreen
@@ -70,7 +70,7 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
         composable(HomeNavigationRoute.Dashboard.route) {
             val viewModel = hiltViewModel<DashboardViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            DashboardScreen(uiState, mainNavController, homeNavController = navController)
+            DashboardScreen(uiState, mainNavController, navController)
         }
         composable(
             route = HomeNavigationRoute.Learn.route, arguments = listOf(
@@ -88,9 +88,8 @@ fun HomeNavigation(navController: NavHostController, mainNavController: NavHostC
             val uiState by viewModel.uiState.collectAsState()
             SkillspaceScreen(uiState)
         }
-        composable(HomeNavigationRoute.Account.route) {
-            AccountNavigation(mainNavController)
-        }
+        accountNavigation(navController)
+
         showroomItems.filterIsInstance<ShowroomItem.Item>()
             .forEach { item ->
                 composable(item.route) {
