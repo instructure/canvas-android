@@ -42,6 +42,7 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:supportsRtl="true"
         android:theme="@style/CanvasMaterialTheme_Default"
+        android:requestLegacyExternalStorage="true"
         tools:overrideLibrary="com.instructure.canvasapi">
 
         <activity android:name="sdk.pendo.io.activities.PendoGateActivity" android:launchMode="singleInstance" android:exported="true">

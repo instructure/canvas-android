@@ -45,6 +45,9 @@ import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ScreenshotTestRule
 import com.instructure.espresso.UiControllerSingleton
 import com.instructure.espresso.page.InstructureTestingContract
+import com.kaspersky.kaspresso.interceptors.watcher.testcase.impl.video.VideoRecordingInterceptor
+import com.kaspersky.kaspresso.kaspresso.Kaspresso
+import com.kaspersky.kaspresso.testcases.api.testcase.TestCase
 import dagger.hilt.android.testing.HiltAndroidRule
 import org.hamcrest.BaseMatcher
 import org.hamcrest.Description
@@ -70,7 +73,12 @@ import java.net.URL
 import javax.inject.Inject
 
 // InstructureTest wrapper for Canvas code
-abstract class CanvasTest : InstructureTestingContract {
+abstract class CanvasTest :
+    TestCase(kaspressoBuilder = Kaspresso.Builder.default().apply {
+        //stepWatcherInterceptors.removeAll { it is ScreenshotStepWatcherInterceptor }
+        testRunWatcherInterceptors.removeAll { it is VideoRecordingInterceptor }
+    }),
+    InstructureTestingContract {
 
     val STEP_TAG = "${this::class.java.simpleName} #STEP# "
     val ASSERTION_TAG = "${this::class.java.simpleName} #ASSERTION# "

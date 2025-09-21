@@ -169,13 +169,6 @@ dependencies {
     androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
 
-    /* Kaspresso for UI Testing */
-    androidTestImplementation 'com.kaspersky.android-components:kaspresso:1.5.3'
-    // Allure support
-    androidTestImplementation "com.kaspersky.android-components:kaspresso-allure-support:1.5.3"
-    // Jetpack Compose support
-    androidTestImplementation "com.kaspersky.android-components:kaspresso-compose-support:1.5.3"
-
     /* Unit Test Dependencies */
     testImplementation Libs.JUNIT
     testImplementation Libs.ROBOLECTRIC

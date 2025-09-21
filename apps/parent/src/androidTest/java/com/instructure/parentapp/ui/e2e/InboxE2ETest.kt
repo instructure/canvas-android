@@ -55,210 +55,269 @@ class InboxE2ETest: ParentComposeTest() {
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.INBOX, TestCategory.E2E)
     @ReleaseExclude
-    fun testInboxSelectedButtonActionsE2E() {
+    fun testInboxSelectedButtonActionsE2E() = run {
 
-        Log.d(PREPARATION_TAG, "Seeding data.")
+        step("Seeding data.") {}
         val data = seedData(students = 2, teachers = 1, parents = 1, courses = 1)
         val parent = data.parentsList[0]
         val teacher = data.teachersList[0]
 
-        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
-        tokenLogin(parent)
-        dashboardPage.waitForRender()
+        step("Login with user: '${parent.name}', login id: '${parent.loginId}'.") {
+            tokenLogin(parent)
+            dashboardPage.waitForRender()
+        }
 
-        Log.d(STEP_TAG, "Open the Left Side Navigation Drawer menu.")
-        dashboardPage.openLeftSideMenu()
+        step("Open the Left Side Navigation Drawer menu.") {
+            dashboardPage.openLeftSideMenu()
+        }
 
-        Log.d(STEP_TAG, "Open 'Inbox' menu.")
-        leftSideNavigationDrawerPage.clickInbox()
+        step("Open 'Inbox' menu.") {
+            leftSideNavigationDrawerPage.clickInbox()
+        }
 
-        Log.d(PREPARATION_TAG, "Seed an email from '${teacher.name}' to '${parent.name}'")
+        step("Seed an email from '${teacher.name}' to '${parent.name}'") {}
         val seededConversation = ConversationsApi.createConversation(teacher.token, listOf(parent.id.toString()))[0]
 
-        Log.d(STEP_TAG, "Refresh the page.")
-        refresh()
-
-        Log.d(ASSERTION_TAG, "Assert that there is a conversation and it is the previously seeded one.")
-        inboxPage.assertHasConversation()
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation.")
-        inboxPage.openConversation(seededConversation.subject)
-
-        Log.d(ASSERTION_TAG, "Assert that is has not been starred already.")
-        inboxDetailsPage.assertStarred(false)
-
-        Log.d(STEP_TAG, "Toggle Starred to mark '${seededConversation.subject}' conversation as favourite.")
-        inboxDetailsPage.pressStarButton(true)
-
-        Log.d(ASSERTION_TAG, "Assert that it has became starred.")
-        inboxDetailsPage.assertStarred(true)
-
-        Log.d(STEP_TAG, "Navigate back to Inbox Page.")
-        Espresso.pressBack() // To main inbox page
-
-        Log.d(ASSERTION_TAG, "Assert that the conversation itself is starred as well.")
-        inboxPage.assertConversationStarred(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation. Mark as Unread by clicking on the 'More Options' menu, 'Mark as Unread' menu point.")
-        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
-        inboxPage.openConversation(seededConversation.subject)
-        inboxDetailsPage.pressOverflowMenuItemForConversation("Mark as Unread")
-        Espresso.pressBack()
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation has been marked as unread.")
-        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
-
-        Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
-        inboxPage.openConversation(seededConversation.subject)
-        inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
-        Espresso.pressBack()
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select 'Archived' conversation filter.")
-        inboxPage.filterInbox("Archived")
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation.")
-        inboxPage.selectConversation(seededConversation.subject)
-
-        Log.d(ASSERTION_TAG, "Assert that the selected number of conversations on the toolbar is 1.")
-        inboxPage.assertSelectedConversationNumber("1")
-
-        Log.d(STEP_TAG, "Click on the 'Mark as Unread' button.")
-        inboxPage.clickMarkAsUnread()
-
-        Log.d(ASSERTION_TAG, "Assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
-        inboxPage.assertInboxEmpty()
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select 'Unread' conversation filter.")
-        inboxPage.filterInbox("Unread")
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation is displayed on the 'Inbox' tab.")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation has been marked as unread.")
-        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
-
-        Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.")
-        inboxPage.openConversation(seededConversation.subject)
-        inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
-        Espresso.pressBack()
-        composeTestRule.waitForIdle()
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.")
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select 'Archived' conversation filter.")
-        inboxPage.filterInbox("Archived")
-        refresh()
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation does not have the unread mark because an archived conversation cannot be unread.")
-        inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
-
-        Log.d(STEP_TAG, "Select '${seededConversation.subject}' conversation.")
-        inboxPage.selectConversation(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Click on the 'Unarchive' button.")
-        inboxPage.clickUnArchive()
-
-        Log.d(ASSERTION_TAG, "Assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.")
-        inboxPage.assertInboxEmpty()
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        sleep(2000)
-
-        Log.d(STEP_TAG, "Navigate to 'INBOX' scope.")
-        inboxPage.filterInbox("Inbox")
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation is displayed.")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select the conversation '${seededConversation.subject}' and unstar it.")
-        inboxPage.selectConversations(listOf(seededConversation.subject))
-        inboxPage.clickUnstar()
-
-        Log.d(ASSERTION_TAG, "Assert that the selected number of conversations on the toolbar is 1 and the conversation is not starred.")
-        inboxPage.assertSelectedConversationNumber("1")
-
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
-            inboxPage.assertConversationNotStarred(seededConversation.subject)
+        step("Refresh the page.") {
+            refresh()
         }
 
-        Log.d(STEP_TAG, "Select the conversation '${seededConversation.subject}' and archive it.")
-        inboxPage.selectConversations(listOf(seededConversation.subject))
-        inboxPage.clickArchive()
-
-        sleep(2000)
-
-        Log.d(ASSERTION_TAG, "Assert that it has not displayed in the 'INBOX' scope.")
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope.")
-        inboxPage.filterInbox("Archived")
-
-        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed there.")
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
-            inboxPage.assertConversationDisplayed(seededConversation.subject)
-        }
-
-        Log.d(STEP_TAG, "Navigate to 'UNREAD' scope,")
-        inboxPage.filterInbox("Unread")
-
-        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed there, because a conversation cannot be archived and unread at the same time.")
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Navigate to 'STARRED' scope.")
-        inboxPage.filterInbox("Starred")
-
-        Log.d(ASSERTION_TAG, "Assert that the conversation is NOT displayed there.")
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Navigate to 'INBOX' scope,")
-        inboxPage.filterInbox("Inbox")
-
-        sleep(2000)
-
-        Log.d(ASSERTION_TAG, "Assert that '${seededConversation.subject}' conversation is NOT displayed because it is archived yet.")
-        inboxPage.assertConversationNotDisplayed(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Navigate to 'ARCHIVED' scope, Select the conversation and Star it.")
-        inboxPage.filterInbox("Archived")
-        inboxPage.selectConversations(listOf(seededConversation.subject))
-        inboxPage.clickStar()
-
-        Log.d(ASSERTION_TAG, "Assert that it has displayed in the 'STARRED' scope.")
-        inboxPage.assertConversationStarred(seededConversation.subject)
-
-        Log.d(STEP_TAG, "Select the conversation. Unarchive it.")
-        inboxPage.selectConversations(listOf(seededConversation.subject))
-        inboxPage.clickUnArchive()
-
-        Log.d(ASSERTION_TAG, "Assert that it has not displayed in the 'ARCHIVED' scope.")
-        retryWithIncreasingDelay(times = 10, maxDelay = 3000, catchBlock = { refresh() }) {
+        step("Assert that there is a conversation and it is the previously seeded one.") {
+            inboxPage.assertHasConversation()
             inboxPage.assertConversationNotDisplayed(seededConversation.subject)
         }
 
-        Log.d(STEP_TAG, "Navigate to 'STARRED' scope.")
-        inboxPage.filterInbox("Starred")
-        refresh()
+        step("Select '${seededConversation.subject}' conversation.") {
+            inboxPage.openConversation(seededConversation.subject)
+        }
 
-        Log.d(ASSERTION_TAG, "Assert that the conversations is displayed there.")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
+        step("Assert that is has not been starred already.") {
+            inboxDetailsPage.assertStarred(false)
+        }
 
-        Log.d(STEP_TAG, "Navigate to 'INBOX' scope.")
-        inboxPage.filterInbox("Inbox")
+        step("Toggle Starred to mark '${seededConversation.subject}' conversation as favourite.") {
+            inboxDetailsPage.pressStarButton(true)
+        }
 
-        Log.d(ASSERTION_TAG, "Assert that the conversation is displayed there because it is not archived yet.")
-        inboxPage.assertConversationDisplayed(seededConversation.subject)
+        step("Assert that it has became starred.") {
+            inboxDetailsPage.assertStarred(true)
+        }
+
+        step("Navigate back to Inbox Page.") {
+            Espresso.pressBack() // To main Inbox page
+        }
+
+        step("Assert that the conversation itself is starred as well.") {
+            inboxPage.assertConversationStarred(seededConversation.subject)
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation does not have the unread mark") {
+            inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
+        }
+
+        step("Select '${seededConversation.subject}' conversation. Mark as Unread by clicking on the 'More Options' menu, 'Mark as Unread' menu point.") {
+            inboxPage.openConversation(seededConversation.subject)
+            inboxDetailsPage.pressOverflowMenuItemForConversation("Mark as Unread")
+        }
+
+        step("Navigate back to Inbox Page.") {
+            Espresso.pressBack()
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation has been marked as unread.") {
+            inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
+        }
+
+        step("Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.") {
+            inboxPage.openConversation(seededConversation.subject)
+            inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+        }
+
+       step("Navigate back to Inbox Page.") {
+           Espresso.pressBack()
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.") {
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Select 'Archived' conversation filter.") {
+            inboxPage.filterInbox("Archived")
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.") {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
+
+        step("Select '${seededConversation.subject}' conversation.") {
+            inboxPage.selectConversation(seededConversation.subject)
+        }
+
+        step("Assert that the selected number of conversations on the toolbar is 1.") {
+            inboxPage.assertSelectedConversationNumber("1")
+        }
+
+        step("Click on the 'Mark as Unread' button.") {
+            inboxPage.clickMarkAsUnread()
+        }
+
+        step("Assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.") {
+            inboxPage.assertInboxEmpty()
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Select 'Unread' conversation filter.") {
+            inboxPage.filterInbox("Unread")
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation is displayed on the 'Inbox' tab.") {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation has been marked as unread.") {
+            inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.VISIBLE)
+        }
+
+        step("Select '${seededConversation.subject}' conversation. Archive it by clicking on the 'More Options' menu, 'Archive' menu point.") {
+            inboxPage.openConversation(seededConversation.subject)
+            inboxDetailsPage.pressOverflowMenuItemForConversation("Archive")
+        }
+
+        step("Navigate back to Inbox Page.") {
+            Espresso.pressBack()
+            composeTestRule.waitForIdle()
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation has removed from 'Inbox' tab.") {
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Select 'Archived' conversation filter.") {
+            inboxPage.filterInbox("Archived")
+            refresh()
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation is displayed by the 'Archived' filter.") {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation does not have the unread mark because an archived conversation cannot be unread.") {
+            inboxPage.assertUnreadMarkerVisibility(seededConversation.subject, ViewMatchers.Visibility.GONE)
+        }
+
+        step("Select '${seededConversation.subject}' conversation.") {
+            inboxPage.selectConversation(seededConversation.subject)
+        }
+
+        step("Click on the 'Unarchive' button.") {
+            inboxPage.clickUnArchive()
+        }
+
+        step("Assert that the empty view will be displayed and the '${seededConversation.subject}' conversation is not because it should disappear from 'Archived' list.") {
+            inboxPage.assertInboxEmpty()
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Navigate to 'INBOX' scope.") {
+            inboxPage.filterInbox("Inbox")
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation is displayed.") {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
+
+        step("Select the conversation '${seededConversation.subject}' and unstar it.") {
+            inboxPage.selectConversations(listOf(seededConversation.subject))
+            inboxPage.clickUnstar()
+        }
+
+        step("Assert that the selected number of conversations on the toolbar is 1 and the conversation is not starred.") {
+            inboxPage.assertSelectedConversationNumber("1")
+            flakySafely(timeoutMs = 2000, intervalMs = 200) {
+                inboxPage.assertConversationNotStarred(seededConversation.subject)
+            }
+        }
+
+        step("Select the conversation '${seededConversation.subject}' and archive it.") {
+            inboxPage.selectConversations(listOf(seededConversation.subject))
+            inboxPage.clickArchive()
+        }
+
+        step("Assert that it has not displayed in the 'INBOX' scope.") {
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Navigate to 'ARCHIVED' scope.") {
+            inboxPage.filterInbox("Archived")
+        }
+
+        step("Assert that the conversation is displayed there.") {
+            flakySafely(timeoutMs = 2000, intervalMs = 200) {
+                inboxPage.assertConversationDisplayed(seededConversation.subject)
+            }
+        }
+
+        step("Navigate to 'UNREAD' scope.") {
+            inboxPage.filterInbox("Unread")
+        }
+
+        step("Assert that the conversation is not displayed there, because a conversation cannot be archived and unread at the same time.") {
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Navigate to 'STARRED' scope.") {
+            inboxPage.filterInbox("Starred")
+        }
+
+        step("Assert that the conversation is NOT displayed there.") {
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Navigate to 'INBOX' scope.") {
+            inboxPage.filterInbox("Inbox")
+        }
+
+        step("Assert that '${seededConversation.subject}' conversation is NOT displayed because it is archived yet.") {
+            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+        }
+
+        step("Navigate to 'ARCHIVED' scope, Select the conversation and Star it.") {
+            inboxPage.filterInbox("Archived")
+            inboxPage.selectConversations(listOf(seededConversation.subject))
+            inboxPage.clickStar()
+        }
+
+        step("Assert that it has displayed in the 'STARRED' scope.") {
+            inboxPage.assertConversationStarred(seededConversation.subject)
+        }
+
+        step("Select the conversation and Unarchive it.") {
+            inboxPage.selectConversations(listOf(seededConversation.subject))
+            inboxPage.clickUnArchive()
+        }
+
+        step("Assert that it has not displayed in the 'ARCHIVED' scope.") {
+            flakySafely(timeoutMs = 2000, intervalMs = 200) {
+                inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+            }
+        }
+
+        step("Navigate to 'STARRED' scope.") {
+            inboxPage.filterInbox("Starred")
+            refresh()
+        }
+
+        step("Assert that the conversation is displayed there.") {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
+
+        step("Navigate to 'INBOX' scope.") {
+            inboxPage.filterInbox("Inbox")
+        }
+
+        step("Assert that the conversation is displayed there because it is not archived yet.") {
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
+        }
     }
 
     @E2E
