@@ -84,7 +84,7 @@ class InboxE2ETest: ParentComposeTest() {
 
         step("Assert that there is a conversation and it is the previously seeded one.") {
             inboxPage.assertHasConversation()
-            inboxPage.assertConversationNotDisplayed(seededConversation.subject)
+            inboxPage.assertConversationDisplayed(seededConversation.subject)
         }
 
         step("Select '${seededConversation.subject}' conversation.") {
