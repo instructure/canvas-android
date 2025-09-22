@@ -19,14 +19,17 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.KeyEvent
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
+import androidx.work.WorkManager
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.TestAppManager
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -883,6 +886,14 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
 
+        val app = ApplicationProvider.getApplicationContext<TestAppManager>()
+        val testDriver = app.testDriver!!
+
+        val workInfos = WorkManager.getInstance(app)
+            .getWorkInfosByTag("SubmissionWorker")
+            .get()
+        val workId = workInfos.first().id
+        testDriver.setAllConstraintsMet(workId)
         waitForWorkManagerJobsToFinish(workerTag = "SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")

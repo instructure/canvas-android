@@ -48,7 +48,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.espresso.TestAppManager
 import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
@@ -183,8 +182,15 @@ abstract class StudentTest : CanvasTest() {
 
     @Before
     fun setupWorkerFactory() {
-        val application = activityRule.activity.application as? TestAppManager
-        application?.workerFactory = workerFactory
+     //   hiltRule.inject()
+      //  val application = activityRule.activity.application as? TestAppManager
+    //    application?.workerFactory = workerFactory
+
+
+//        app = ApplicationProvider.getApplicationContext<TestAppManager>()
+ //       app.workerFactory = app.hiltWorkerFactory
+
+     //   application?.initWorkManager(app)
     }
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.

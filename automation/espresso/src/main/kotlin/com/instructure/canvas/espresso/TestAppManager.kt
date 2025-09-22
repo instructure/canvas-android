@@ -17,23 +17,25 @@
 import android.content.Context
 import android.util.Log
 import androidx.work.Configuration
-import androidx.work.WorkManager
 import androidx.work.WorkerFactory
+import androidx.work.testing.SynchronousExecutor
+import androidx.work.testing.TestDriver
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
-import java.util.concurrent.Executors
 
 open class TestAppManager: AppManager() {
 
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
-        initWorkManager(this)
     }
+
+    var testDriver: TestDriver? = null
 
     var workerFactory: WorkerFactory? = null
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
+        return workerFactory ?: throw IllegalStateException("workerFactory must be set before initializing WorkManager")
     }
 
     override fun performLogoutOnAuthError() = Unit
@@ -42,10 +44,11 @@ open class TestAppManager: AppManager() {
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(Executors.newSingleThreadExecutor())
+                .setExecutor(SynchronousExecutor())
                 .setWorkerFactory(getWorkManagerFactory())
                 .build()
-            WorkManager.initialize(context, config)
+            WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+            testDriver = WorkManagerTestInitHelper.getTestDriver(context)
         } catch (e: IllegalStateException) {
             Log.w("TestAppManager", "WorkManager.initialize() failed, likely already initialized: ${e.message}")
         }
