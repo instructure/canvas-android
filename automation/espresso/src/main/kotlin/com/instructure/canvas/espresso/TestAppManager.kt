@@ -14,15 +14,21 @@
  *     limitations under the License.
  */package com.instructure.canvas.espresso
 
+import android.content.Context
+import android.util.Log
+import androidx.work.Configuration
+import androidx.work.WorkManager
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
+import java.util.concurrent.Executors
 
 open class TestAppManager: AppManager() {
 
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
+        initWorkManager(this)
     }
 
     var workerFactory: WorkerFactory? = null
@@ -31,4 +37,17 @@ open class TestAppManager: AppManager() {
     }
 
     override fun performLogoutOnAuthError() = Unit
+
+    fun initWorkManager(context: Context) {
+        try {
+            val config = Configuration.Builder()
+                .setMinimumLoggingLevel(Log.DEBUG)
+                .setExecutor(Executors.newSingleThreadExecutor())
+                .setWorkerFactory(getWorkManagerFactory())
+                .build()
+            WorkManager.initialize(context, config)
+        } catch (e: IllegalStateException) {
+            Log.w("TestAppManager", "WorkManager.initialize() failed, likely already initialized: ${e.message}")
+        }
+    }
 }
