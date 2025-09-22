@@ -14,6 +14,7 @@
  *     limitations under the License.
  */package com.instructure.canvas.espresso
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.work.Configuration
@@ -26,16 +27,22 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
 open class TestAppManager: AppManager() {
 
+    @SuppressLint("RestrictedApi")
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
+
+        if (workerFactory == null) {
+            workerFactory = WorkerFactory.getDefaultWorkerFactory()
+        }
     }
 
     var testDriver: TestDriver? = null
 
     var workerFactory: WorkerFactory? = null
+    @SuppressLint("RestrictedApi")
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: throw IllegalStateException("workerFactory must be set before initializing WorkManager")
+        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
     }
 
     override fun performLogoutOnAuthError() = Unit
