@@ -959,6 +959,23 @@
         <item quantity="other">%s نقاط</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="zero">نقاط</item>
+        <item quantity="one">نقطة</item>
+        <item quantity="two">نقاط</item>
+        <item quantity="few">نقاط</item>
+        <item quantity="many">نقاط</item>
+        <item quantity="other">نقاط</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="zero">\/ %.0f نقاط</item>
+        <item quantity="one">\/ %.0f نقطة</item>
+        <item quantity="two">\/ %.0f نقاط</item>
+        <item quantity="few">\/ %.0f نقاط</item>
+        <item quantity="many">\/ %.0f نقاط</item>
+        <item quantity="other">\/ %.0f نقاط</item>
+    </plurals>
     <string name="timeLimit">الحد الزمني</string>
     <string name="newPushNotifications">%1$s من الإعلامات الجديدة</string>
     <string name="like">إعجاب</string>
@@ -2129,6 +2146,7 @@
     <string name="inboxSignatureSwitchLabel">التوقيع</string>
     <string name="inboxSignatureTextfieldHeader">نص التوقيع</string>
     <string name="due_dateTime">تاريخ الاستحقاق: %1$s، %2$s</string>
+    <string name="submitted_dateTime">تم الإرسال: %1$s، %2$s</string>
     <string name="noDueDate">لا يوجد تاريخ استحقاق</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s بحاجة إلى تقييم</string>
@@ -2140,6 +2158,14 @@
         <item quantity="few">%d من النقاط</item>
         <item quantity="many">%d من النقاط</item>
         <item quantity="other">%d من النقاط</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="zero">(%.0f نقاط)</item>
+        <item quantity="one">(%.0f نقطة)</item>
+        <item quantity="two">(%.0f نقاط)</item>
+        <item quantity="few">(%.0f نقاط)</item>
+        <item quantity="many">(%.0f نقاط)</item>
+        <item quantity="other">(%.0f نقاط)</item>
     </plurals>
     <string name="noAssignments">لا توجد مهام</string>
     <string name="assignmentGroup">مجموعة المهام</string>
@@ -2196,4 +2222,56 @@
     <string name="widgetSingleGradeSelectCourse">فلنختر مساقًا</string>
     <string name="widgetGradesErrorLoadingCourses">حدث خطأ أثناء تحميل المساقات.</string>
     <string name="settingsSwitchExperience">تبديل إلى Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">الصف الدراسي ومقياس التقييم روبرك</string>
+    <string name="speedGraderDetailsTabTitle">التفاصيل</string>
+    <string name="a11y_contentDescription_expandPanel">توسعة اللوحة</string>
+    <string name="a11y_contentDescription_collapsePanel">طي اللوحة</string>
+    <string name="pointGradeHint">اكتب الدرجة هنا</string>
+    <string name="percentageGradeHint">اكتب النسبة المئوية هنا</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">التقدير بالأحرف</string>
+    <string name="daysLate">أيام تأخير</string>
+    <plurals name="pointTotal">
+        <item quantity="zero">%s / %s نقاط</item>
+        <item quantity="one">%s / %s نقطة</item>
+        <item quantity="two">%s / %s نقاط</item>
+        <item quantity="few">%s / %s نقاط</item>
+        <item quantity="many">%s / %s نقاط</item>
+        <item quantity="other">%s / %s نقاط</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">عقوبة التأخير:</string>
+    <string name="gradingStatus_none">بلا</string>
+    <string name="gradingStatus_late">متأخر</string>
+    <string name="gradingStatus_missing">مفقود</string>
+    <string name="gradingStatus_extended">تم التوسيع</string>
+    <string name="gradingStatus_excused">معفى</string>
+    <string name="status">الحالة</string>
+    <string name="speedGraderStudentNotes">ملاحظات الطالب</string>
+    <string name="speedGraderStudentNotesLoading">جارٍ تحميل ملاحظات الطالب</string>
+    <string name="speedGraderStudentNotesErrorTitle">عذراً! حدث خطأ ما</string>
+    <string name="speedGraderStudentNotesErrorDescription">أنت تواجه مشكلة في إظهار ملاحظات الطالب.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">تحديث</string>
+    <string name="not_graded">لم يتم التقييم</string>
+    <string name="speedGraderSubmissionDetails">تفاصيل الإرسال</string>
+    <string name="speedGraderSubmissionDetailsLoading">جارٍ تحميل تفاصيل إرسال</string>
+    <string name="speedGraderWordCount">عدد الكلمات</string>
+    <string name="rubricsTitle">أدلة التقييم (روبرك)</string>
+    <string name="rubricScore">الدرجة</string>
+    <string name="rubricScoreHint">اكتب الدرجة هنا</string>
+    <string name="speedGraderCommentsTitle">التعليقات (%s)</string>
+    <string name="anonymousGradingStudentLabel">طالب</string>
+    <string name="anonymousGradingUserLabel">مستخدم مجهول</string>
+    <string name="rubricNote">ملاحظة مقياس التقييم</string>
+    <string name="content_description_edit_rubric_comment">تحرير ملاحظة مقياس التقييم</string>
+    <string name="rubricNoteHint">الملاحظة</string>
+    <string name="a11y_sendRubricNoteContentDescription">إرسال ملاحظة مقياس التقييم</string>
+    <string name="select_attachment_type">حدد نوع المرفق</string>
+    <string name="choose_files">اختر الملفات</string>
+    <string name="a11y_expanded">تم التوسيع</string>
+    <string name="a11y_collapsed">تم الطي</string>
+    <string name="excuseStudent">السماح لطالب</string>
+    <string name="detailsEmptyMessage">ليس لدينا تفاصيل إضافية لهذا الطلب وهذه المهمة</string>
+    <string name="daysLateHint">اكتب أيام التأخير</string>
+    <string name="reply_to_topic">الرد على الموضوع</string>
+    <string name="additional_replies">ردود إضافية (%d)</string>
 </resources>

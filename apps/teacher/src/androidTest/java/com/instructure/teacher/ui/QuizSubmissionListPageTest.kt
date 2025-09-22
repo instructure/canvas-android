@@ -58,7 +58,7 @@ class QuizSubmissionListPageTest : TeacherComposeTest() {
                 students = 0,
                 submissions = 0
         )
-        assignmentSubmissionListPage.assertDisplaysNoSubmissionsView()
+        assignmentSubmissionListPage.assertEmptyViewDisplayed()
     }
 
     @Test
@@ -69,7 +69,7 @@ class QuizSubmissionListPageTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmittedLate()
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
         assignmentSubmissionListPage.assertFilterLabelText("Submitted Late")
         assignmentSubmissionListPage.assertHasSubmission()
     }
@@ -80,7 +80,7 @@ class QuizSubmissionListPageTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterUngraded()
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
         assignmentSubmissionListPage.assertFilterLabelText("Haven't Been Graded")
         assignmentSubmissionListPage.assertHasSubmission()
     }

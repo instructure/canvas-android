@@ -31,7 +31,7 @@ import com.instructure.teacher.mobius.common.ui.EffectHandler
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class PostGradeEffectHandler(private val speedGraderGradingEffectHandler: SpeedGraderGradingEventHandler) : EffectHandler<PostGradeView, PostGradeEvent, PostGradeEffect>() {
+class PostGradeEffectHandler(private val speedGraderGradingEffectHandler: SpeedGraderGradingEventHandler, private val postPolicyManager: PostPolicyManager) : EffectHandler<PostGradeView, PostGradeEvent, PostGradeEffect>() {
     override fun accept(effect: PostGradeEffect) {
         launch {
             when (effect) {
@@ -60,13 +60,13 @@ class PostGradeEffectHandler(private val speedGraderGradingEffectHandler: SpeedG
     private suspend fun hideGrades(assignmentId: Long, sections: List<String>) {
         try {
             val progressId = if (sections.isEmpty()) {
-                PostPolicyManager.hideGradesAsync(assignmentId).hideAssignmentGrades?.progress?._id
+                postPolicyManager.hideGradesAsync(assignmentId).hideAssignmentGrades?.progress?._id
             } else {
-                PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections).hideAssignmentGradesForSections?.progress?._id
+                postPolicyManager.hideGradesForSectionsAsync(assignmentId, sections).hideAssignmentGradesForSections?.progress?._id
             }
 
             consumer.accept(PostGradeEvent.PostStarted(progressId))
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             consumer.accept(PostGradeEvent.PostFailed)
         }
     }
@@ -74,13 +74,13 @@ class PostGradeEffectHandler(private val speedGraderGradingEffectHandler: SpeedG
     private suspend fun postGrades(assignmentId: Long, sections: List<String>, gradedOnly: Boolean) {
         try {
             val progressId = if (sections.isEmpty()) {
-                PostPolicyManager.postGradesAsync(assignmentId, gradedOnly).postAssignmentGrades?.progress?._id
+                postPolicyManager.postGradesAsync(assignmentId, gradedOnly).postAssignmentGrades?.progress?._id
             } else {
-                PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections).postAssignmentGradesForSections?.progress?._id
+                postPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections).postAssignmentGradesForSections?.progress?._id
             }
 
             consumer.accept(PostGradeEvent.PostStarted(progressId))
-        } catch (e: Throwable) {
+        } catch (_: Throwable) {
             consumer.accept(PostGradeEvent.PostFailed)
         }
     }

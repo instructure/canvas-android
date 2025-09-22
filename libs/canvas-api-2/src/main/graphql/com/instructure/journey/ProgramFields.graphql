@@ -1,0 +1,43 @@
+fragment ProgramFields on ProgramGQL {
+    id
+    name
+    publicName
+    customerId
+    description
+    owner
+    startDate
+    endDate
+    variant
+    courseCompletionCount
+    progresses {
+        id
+        completionPercentage
+        courseEnrollmentStatus
+        requirement {
+            id
+            dependent {
+                id
+                canvasCourseId
+                canvasUrl
+            }
+        }
+    }
+    requirements {
+        id
+        isCompletionRequired
+        dependency {
+            id
+            canvasCourseId
+            canvasUrl
+        }
+        dependent {
+            id
+            canvasCourseId
+            canvasUrl
+        }
+    }
+    enrollments {
+        id
+        enrollee
+    }
+}

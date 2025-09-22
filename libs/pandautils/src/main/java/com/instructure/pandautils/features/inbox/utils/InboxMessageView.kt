@@ -231,14 +231,14 @@ private fun InboxMessageAuthorView(
             }
 
             message?.let {
-                MessageMenu(it, messageState.cannotReply, actionHandler)
+                MessageMenu(it, messageState.cannotReply, messageState.canReplyAll, messageState.canDelete, actionHandler)
             }
         }
     }
 }
 
 @Composable
-private fun MessageMenu(message: Message, cannotReply: Boolean, actionHandler: (MessageAction) -> Unit) {
+private fun MessageMenu(message: Message, cannotReply: Boolean, canReplyAll: Boolean, canDelete: Boolean, actionHandler: (MessageAction) -> Unit) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
     Box(
         contentAlignment = Alignment.CenterEnd,
@@ -263,7 +263,7 @@ private fun MessageMenu(message: Message, cannotReply: Boolean, actionHandler: (
                 }
             }
 
-            if (!cannotReply){
+            if (!cannotReply && canReplyAll){
                 DropdownMenuItem(
                     onClick = {
                         showMenu = !showMenu
@@ -283,13 +283,15 @@ private fun MessageMenu(message: Message, cannotReply: Boolean, actionHandler: (
                 MessageMenuItem(R.drawable.ic_forward, stringResource(id = R.string.forward))
             }
 
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(MessageAction.DeleteMessage(message))
+            if (canDelete) {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(MessageAction.DeleteMessage(message))
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
             }
 
         }
@@ -315,7 +317,8 @@ fun InboxMessageViewPreviewWithActions() {
                     participatingUserIds = listOf(2),
                     createdAt = ZonedDateTime.now().toString()
                 ),
-                enabledActions = true
+                enabledActions = true,
+                canReplyAll = true
             ),
             actionHandler = {}
         )
@@ -341,7 +344,8 @@ fun InboxMessageViewPreviewWithoutActions() {
                     participatingUserIds = listOf(2),
                     createdAt = ZonedDateTime.now().toString()
                 ),
-                enabledActions = false
+                enabledActions = false,
+                canReplyAll = true
             ),
             actionHandler = {}
         )

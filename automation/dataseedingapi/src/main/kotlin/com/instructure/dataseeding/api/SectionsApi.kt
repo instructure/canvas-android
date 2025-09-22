@@ -20,29 +20,53 @@ package com.instructure.dataseeding.api
 
 import com.instructure.dataseeding.model.CreateSection
 import com.instructure.dataseeding.model.CreateSectionWrapper
+import com.instructure.dataseeding.model.EnrollmentApiModel
 import com.instructure.dataseeding.model.SectionApiModel
 import com.instructure.dataseeding.util.CanvasNetworkAdapter
 import com.instructure.dataseeding.util.Randomizer
 import retrofit2.Call
 import retrofit2.http.Body
+import retrofit2.http.GET
 import retrofit2.http.POST
 import retrofit2.http.Path
+import retrofit2.http.Query
 
 object SectionsApi {
     interface SectionsService {
+
+        @GET("courses/{courseId}/sections")
+        fun getSections(@Path("courseId") courseId: Long): Call<List<SectionApiModel>>
+
         @POST("courses/{courseId}/sections")
         fun createSection(@Path("courseId") courseId: Long, @Body createSection: CreateSectionWrapper): Call<SectionApiModel>
+
+        @POST("sections/{sectionId}/enrollments")
+        fun enrollUserToSection(@Path("sectionId") sectionId: Long, @Query("enrollment[user_id]") userId: Long, @Query("enrollment[type]") type: String, @Query("enrollment[enrollment_state]") enrollmentState: String): Call<EnrollmentApiModel>
     }
 
     private val sectionsService: SectionsService by lazy {
         CanvasNetworkAdapter.adminRetrofit.create(SectionsService::class.java)
     }
 
-    fun createSection(courseId: Long): SectionApiModel {
-        val section = CreateSectionWrapper(CreateSection(name = Randomizer.randomSectionName()))
+    fun getSections(courseId: Long): List<SectionApiModel> {
+        return sectionsService
+            .getSections(courseId = courseId)
+            .execute()
+            .body()!!
+    }
+
+    fun createSection(courseId: Long, sectionName: String = Randomizer.randomSectionName()): SectionApiModel {
+        val section = CreateSectionWrapper(CreateSection(name = sectionName))
         return sectionsService
                 .createSection(courseId, section)
                 .execute()
                 .body()!!
+    }
+
+    fun enrollUserToSection(sectionId: Long, userId: Long, enrollmentType: String = "StudentEnrollment", enrollmentState: String = "active"): EnrollmentApiModel {
+        return sectionsService
+            .enrollUserToSection(sectionId, userId, enrollmentType, enrollmentState)
+            .execute()
+            .body()!!
     }
 }

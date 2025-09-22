@@ -749,7 +749,7 @@ val Attachment.iconRes: Int
         contentType!!.startsWith("image") -> R.drawable.ic_image
         contentType!!.startsWith("video") -> R.drawable.ic_media
         contentType!!.startsWith("audio") -> R.drawable.ic_audio
-        else -> when (filename!!.substringAfterLast('.', "").lowercase(Locale.getDefault())) {
+        else -> when (filename.orEmpty().substringAfterLast('.', "").lowercase(Locale.getDefault())) {
             "doc", "docx" -> R.drawable.ic_document
             "txt" -> R.drawable.ic_document
             "rtf" -> R.drawable.ic_document

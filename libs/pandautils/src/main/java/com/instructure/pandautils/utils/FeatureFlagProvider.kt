@@ -61,4 +61,8 @@ class FeatureFlagProvider(
     suspend fun checkAccountSurveyNotificationsFlag(): Boolean {
         return checkEnvironmentFeatureFlag("account_survey_notifications")
     }
+
+    suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return checkEnvironmentFeatureFlag("restrict_student_access")
+    }
 }

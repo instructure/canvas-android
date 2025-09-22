@@ -56,10 +56,9 @@ import com.instructure.pandautils.utils.getActivityOrNull
 fun AccountScreen(
     state: AccountUiState,
     navController: NavController,
-    mainNavController: NavController,
 ) {
 
-    val renameFlow = remember { mainNavController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(AccountViewModel.CHANGE_USER_NAME, null) }
+    val renameFlow = remember { navController.currentBackStackEntry?.savedStateHandle?.getStateFlow<String?>(AccountViewModel.CHANGE_USER_NAME, null) }
     val rename = renameFlow?.collectAsState()?.value
 
     LaunchedEffect(rename) {

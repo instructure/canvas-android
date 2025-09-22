@@ -15,11 +15,12 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
-import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.SubmissionRubricQuery
+import com.instructure.canvasapi2.enqueueQuery
 
-class SubmissionRubricManagerImpl : SubmissionRubricManager {
+class SubmissionRubricManagerImpl(private val apolloClient: ApolloClient) : SubmissionRubricManager {
 
     override suspend fun getRubrics(assignmentId: Long, userId: Long): SubmissionRubricQuery.Data {
         var hasNextPage = true
@@ -34,7 +35,7 @@ class SubmissionRubricManagerImpl : SubmissionRubricManager {
             val query =
                 SubmissionRubricQuery(assignmentId.toString(), userId.toString(), nextCursorParam)
 
-            data = QLClientConfig.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
+            data = apolloClient.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
             assessments.addAll(data.submission?.rubricAssessmentsConnection?.edges ?: emptyList())
 
             hasNextPage =

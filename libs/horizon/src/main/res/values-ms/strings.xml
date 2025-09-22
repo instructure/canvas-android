@@ -67,8 +67,8 @@
     <string name="overview">Gambaran Keseluruhan</string>
     <string name="scores">Skor</string>
     <string name="notes">Nota</string>
-    <string name="assignmentName">Nama tugasan</string>
-    <string name="dueDate">Tarikh Siap</string>
+    <string name="scoresSortingAssignmentNameAscending">Nama tugasan (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Tarikh siap (terbaru dahulu)</string>
     <string name="scoresItemassignmentName">Nama: %1$s</string>
     <string name="scoresItemDueDate">Tarikh: %1$s</string>
     <string name="noDueDate">Tiada tarikh siap</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Lanjutan</string>
     <string name="accountSupportHeading">Sokongan</string>
     <string name="accountGiveFeedbackLabel">Berikan maklum balas</string>
+    <string name="accountReportABug">Laporkan pepijat</string>
     <string name="accountBetaCommunityLabel">Komuniti beta</string>
     <string name="accountFullNameLabel">Nama penuh</string>
     <string name="a11yNavigateBack">Navigasi ke belakang semula</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Gagal menerima jemputan kursus</string>
     <string name="dashboard_emptyMessage">Anda belum berdaftar dalam kursus buat masa ini.</string>
     <string name="learnEmptyMessage">Anda belum berdaftar dalam kursus buat masa ini.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% selesai</string>
+    <string name="programsProgressBar_notStarted">Belum bermula</string>
+    <string name="programsCourseCard_enrollButton">Daftar</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Diperlukan</string>
+    <string name="programCourseTag_optional">Pilihan</string>
+    <string name="programCourseTag_locked">Berkunci</string>
+    <string name="programCourseTag_completed">Dilengkapkan</string>
+    <string name="programCourseTag_enrolled">Didaftarkan</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Selesai %1$d daripada %2$d kursus</item>
+        <item quantity="other">Selesai %1$d daripada %2$d kursus</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Gagal menyegar semula program</string>
+    <string name="programSwitcher_programOverview">Gambaran keseluruhan program</string>
+    <string name="programSwitcher_goBack">Semua</string>
+    <string name="learnScreen_partOfProgram">Bahagian daripada %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Kursus tidak dapat dibuka.</string>
 </resources>

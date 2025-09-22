@@ -19,6 +19,7 @@ package com.instructure.canvasapi2
 import android.content.Context
 import com.instructure.canvasapi2.utils.CedarAuthenticator
 import com.instructure.canvasapi2.utils.DomainServicesAuthenticator
+import com.instructure.canvasapi2.utils.JourneyAuthenticator
 import com.instructure.canvasapi2.utils.PineAuthenticator
 import com.instructure.canvasapi2.utils.RedwoodAuthenticator
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -94,4 +95,14 @@ class RedwoodAdapter @Inject constructor(
     File(context.cacheDir, "redwood_cache"),
     redwoodAuthenticator,
     redwoodRequestInterceptor
+)
+
+class JourneyAdapter @Inject constructor(
+    @ApplicationContext context: Context,
+    journeyRequestInterceptor: JourneyRequestInterceptor,
+    journeyAuthenticator: JourneyAuthenticator
+) : DomainServicesAdapter(
+    File(context.cacheDir, "journey_cache"),
+    journeyAuthenticator,
+    journeyRequestInterceptor
 )

@@ -66,8 +66,8 @@
     <string name="overview">概要</string>
     <string name="scores">スコア</string>
     <string name="notes">メモ</string>
-    <string name="assignmentName">新しい課題フローでは、グループの作成はまだ処理されていません。</string>
-    <string name="dueDate">期限</string>
+    <string name="scoresSortingAssignmentNameAscending">課題名 (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">期日（最新のものを最初に）</string>
     <string name="scoresItemassignmentName">名前：%1$s</string>
     <string name="scoresItemDueDate">日付:%1$s</string>
     <string name="noDueDate">締切日なし</string>
@@ -117,6 +117,7 @@
     <string name="accountAdvancedLabel">アドバンスト</string>
     <string name="accountSupportHeading">サポート</string>
     <string name="accountGiveFeedbackLabel">フィードバックを与える</string>
+    <string name="accountReportABug">バグを報告する</string>
     <string name="accountBetaCommunityLabel">ベータコミュニティ</string>
     <string name="accountFullNameLabel">フル ネーム</string>
     <string name="a11yNavigateBack">ナビゲートして戻る</string>
@@ -322,4 +323,21 @@
     <string name="dashboard_courseInviteFailed">コースへの招待を受け入れられませんでした</string>
     <string name="dashboard_emptyMessage">現在、コースに登録されていません。</string>
     <string name="learnEmptyMessage">現在、コースに登録されていません。</string>
+    <string name="programsProgressBar_percentComplete">%s\%% 終了</string>
+    <string name="programsProgressBar_notStarted">開始されていない</string>
+    <string name="programsCourseCard_enrollButton">登録</string>
+    <string name="programTag_DateRange">%1$s ～ %2$s</string>
+    <string name="programCourseTag_required">必須</string>
+    <string name="programCourseTag_optional">オプション</string>
+    <string name="programCourseTag_locked">ロックされています</string>
+    <string name="programCourseTag_completed">完了</string>
+    <string name="programCourseTag_enrolled">登録済み</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="other">完了した%1$d / %2$dのコース</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">プログラムを更新できませんでした。</string>
+    <string name="programSwitcher_programOverview">プログラムの概要</string>
+    <string name="programSwitcher_goBack">すべて</string>
+    <string name="learnScreen_partOfProgram">%sの一部</string>
+    <string name="learnScreen_courseCannotBeOpened">コースを開けません</string>
 </resources>

@@ -19,6 +19,8 @@ package com.instructure.pandautils.features.grades
 
 import android.content.res.Configuration
 import androidx.compose.animation.AnimatedContent
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.animation.togetherWith
@@ -39,6 +41,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
@@ -69,6 +72,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -90,11 +94,13 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
 import com.instructure.pandautils.compose.composables.CanvasSwitch
+import com.instructure.pandautils.compose.composables.CheckpointItem
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -439,87 +445,128 @@ fun AssignmentItem(
     userColor: Int,
     modifier: Modifier = Modifier
 ) {
+    val iconRotation by animateFloatAsState(
+        targetValue = if (uiState.checkpointsExpanded) 180f else 0f,
+        label = "expandedIconRotation"
+    )
+
     Row(
         modifier = modifier
             .fillMaxWidth()
             .clickable {
                 actionHandler(GradesAction.AssignmentClick(uiState.id))
             }
-            .padding(12.dp)
+            .padding(start = 12.dp, top = 12.dp, bottom = 12.dp)
             .semantics {
                 role = Role.Button
                 testTag = "assignmentItem"
             }
     ) {
-        Spacer(modifier = Modifier.width(12.dp))
-        Icon(
-            painter = painterResource(id = uiState.iconRes),
-            contentDescription = null,
-            tint = Color(userColor),
-            modifier = Modifier
-                .size(24.dp)
-                .semantics {
-                    drawableId = uiState.iconRes
-                }
-        )
-        Spacer(modifier = Modifier.width(18.dp))
-        Column {
-            Text(
-                text = uiState.name,
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 16.sp
+        Row(
+            modifier = Modifier.weight(1f)
+        ) {
+            Spacer(modifier = Modifier.width(12.dp))
+            Icon(
+                painter = painterResource(id = uiState.iconRes),
+                contentDescription = null,
+                tint = Color(userColor),
+                modifier = Modifier
+                    .size(24.dp)
+                    .semantics {
+                        drawableId = uiState.iconRes
+                    }
             )
-            FlowRow {
+            Spacer(modifier = Modifier.width(18.dp))
+            Column {
                 Text(
-                    text = uiState.dueDate,
-                    color = colorResource(id = R.color.textDark),
-                    fontSize = 14.sp,
-                    modifier = modifier.testTag("assignmentName")
+                    text = uiState.name,
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 16.sp
                 )
-                if (uiState.submissionStateLabel != SubmissionStateLabel.None) {
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Box(
-                        Modifier
-                            .height(16.dp)
-                            .width(1.dp)
-                            .clip(RoundedCornerShape(1.dp))
-                            .background(colorResource(id = R.color.borderMedium))
-                            .align(Alignment.CenterVertically)
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
-                    Icon(
-                        painter = painterResource(id = uiState.submissionStateLabel.iconRes),
-                        contentDescription = null,
-                        tint = colorResource(id = uiState.submissionStateLabel.colorRes),
-                        modifier = Modifier
-                            .size(16.dp)
-                            .align(Alignment.CenterVertically)
-                            .semantics {
-                                drawableId = uiState.submissionStateLabel.iconRes
-                            }
-                    )
-                    Spacer(modifier = Modifier.width(4.dp))
+                if (uiState.checkpoints.isNotEmpty()) {
+                    uiState.checkpoints.forEach {
+                        Text(
+                            text = it.dueDate,
+                            color = colorResource(id = R.color.textDark),
+                            fontSize = 14.sp,
+                            modifier = Modifier.testTag("assignmentDueDate")
+                        )
+                    }
+                    SubmissionState(uiState.submissionStateLabel, "submissionStateLabel")
+                } else {
+                    FlowRow {
+                        Text(
+                            text = uiState.dueDate,
+                            color = colorResource(id = R.color.textDark),
+                            fontSize = 14.sp,
+                            modifier = Modifier.testTag("assignmentDueDate")
+                        )
+                        if (uiState.submissionStateLabel != SubmissionStateLabel.None) {
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Box(
+                                Modifier
+                                    .height(16.dp)
+                                    .width(1.dp)
+                                    .clip(RoundedCornerShape(1.dp))
+                                    .background(colorResource(id = R.color.borderMedium))
+                                    .align(Alignment.CenterVertically)
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            SubmissionState(uiState.submissionStateLabel, "submissionStateLabel")
+                        }
+                    }
+                }
+                val gradeText = uiState.displayGrade.text
+                if (gradeText.isNotEmpty()) {
                     Text(
-                        text = when (uiState.submissionStateLabel) {
-                            is SubmissionStateLabel.Predefined -> stringResource(id = uiState.submissionStateLabel.labelRes)
-                            is SubmissionStateLabel.Custom -> uiState.submissionStateLabel.label
-                        },
-                        color = colorResource(id = uiState.submissionStateLabel.colorRes),
-                        fontSize = 14.sp
+                        text = gradeText,
+                        color = Color(userColor),
+                        fontSize = 16.sp,
+                        modifier = Modifier
+                            .semantics {
+                                contentDescription = uiState.displayGrade.contentDescription
+                            }
+                            .testTag("gradeText")
                     )
+                }
+                AnimatedVisibility(visible = uiState.checkpointsExpanded) {
+                    Column(modifier = Modifier.padding(top = 8.dp)) {
+                        uiState.checkpoints.forEach {
+                            CheckpointItem(it, Color(userColor))
+                        }
+                    }
                 }
             }
-            val gradeText = uiState.displayGrade.text
-            if (gradeText.isNotEmpty()) {
-                Text(
-                    text = gradeText,
-                    color = Color(userColor),
-                    fontSize = 16.sp,
+        }
+        if (uiState.checkpoints.isNotEmpty()) {
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier
+                    .requiredSize(48.dp)
+                    .clip(CircleShape)
+                    .clickable {
+                        actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id))
+                    }
+                    .semantics {
+                        testTag = "expandDiscussionCheckpoint"
+                        role = Role.Button
+                    }
+            ) {
+                val expandButtonContentDescription = stringResource(
+                    if (uiState.checkpointsExpanded) {
+                        R.string.content_description_collapse_content_with_param
+                    } else {
+                        R.string.content_description_expand_content_with_param
+                    },
+                    stringResource(R.string.a11y_discussion_checkpoints)
+                )
+                Icon(
+                    painter = painterResource(id = R.drawable.ic_arrow_down),
+                    tint = colorResource(id = R.color.textDarkest),
+                    contentDescription = expandButtonContentDescription,
                     modifier = Modifier
-                        .semantics {
-                            contentDescription = uiState.displayGrade.contentDescription
-                        }
-                        .testTag("gradeText")
+                        .size(20.dp)
+                        .rotate(iconRotation)
                 )
             }
         }
@@ -565,7 +612,7 @@ private fun GradesScreenPreview() {
 
 @Preview(showBackground = true)
 @Composable
-private fun AssignmentItem1Preview() {
+private fun AssignmentItemPreview() {
     AssignmentItem(
         uiState = AssignmentUiState(
             id = 1,

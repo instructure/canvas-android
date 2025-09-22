@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -31,6 +32,7 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.interactions.bookmarks.Bookmarker
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentFilter
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
@@ -40,8 +42,14 @@ import com.instructure.pandautils.room.assignment.list.entities.toEntity
 import com.instructure.pandautils.room.assignment.list.entities.toModel
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionGrade
+import com.instructure.pandautils.utils.getSubAssignmentSubmissionStateLabel
 import com.instructure.pandautils.utils.orDefault
+import com.instructure.pandautils.utils.orderedCheckpoints
+import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -91,14 +99,19 @@ class AssignmentListViewModel @Inject constructor(
                 val assignmentGroups = repository.getAssignments(courseId, forceRefresh)
                 val gradingPeriods = repository.getGradingPeriodsForCourse(courseId, forceRefresh)
                 val allAssignment = assignmentGroups.flatMap { it.assignments }
-                val gradingPeriodAssignments = gradingPeriods.associateWith { gradingPeriod ->
-                    repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
-                        courseId,
-                        gradingPeriod.id,
-                        forceRefresh
-                    )
-                        .flatMap { it.assignments }
+                val deferredMap = mutableMapOf<GradingPeriod, Deferred<List<AssignmentGroup>>>()
+
+                for (gradingPeriod in gradingPeriods) {
+                    val deferred = viewModelScope.async {
+                        repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(
+                            courseId,
+                            gradingPeriod.id,
+                            forceRefresh
+                        )
+                    }
+                    deferredMap.put(gradingPeriod, deferred)
                 }
+                val gradingPeriodAssignments = deferredMap.mapValues { it.value.await().flatMap { it.assignments } }
                 val selectedFilters = if (forceRefresh) {
                     uiState.value.selectedFilterData
                 } else {
@@ -122,7 +135,12 @@ class AssignmentListViewModel @Inject constructor(
                         gradingPeriodsWithAssignments = gradingPeriodAssignments,
                         listState = assignmentGroups.associate { assignmentGroup ->
                             assignmentGroup.name.orEmpty() to assignmentGroup.assignments.map { assignment ->
-                                assignmentListBehavior.getAssignmentGroupItemState(course, assignment, customStatuses)
+                                assignmentListBehavior.getAssignmentGroupItemState(
+                                    course,
+                                    assignment,
+                                    customStatuses,
+                                    getCheckpoints(assignment, course)
+                                )
                             }
                         },
                         filterOptions = AssignmentListFilterOptions(
@@ -212,6 +230,18 @@ class AssignmentListViewModel @Inject constructor(
                 _uiState.update { it.copy(isRefreshing = true) }
                 getAssignments(true)
             }
+            is AssignmentListScreenEvent.ToggleCheckpointsExpanded -> {
+                val updated = uiState.value.listState.mapValues { entry ->
+                    entry.value.map { item ->
+                        if (item.assignment.id == action.assignmentId) {
+                            item.copy(checkpointsExpanded = !item.checkpointsExpanded)
+                        } else {
+                            item
+                        }
+                    }
+                }
+                _uiState.update { it.copy(listState = updated) }
+            }
         }
     }
 
@@ -228,9 +258,14 @@ class AssignmentListViewModel @Inject constructor(
         filteredAssignments = assignmentFilters.flatMap { assignmentFilter ->
             when(assignmentFilter) {
                 AssignmentFilter.All -> filteredAssignments
-                AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { !it.isSubmitted && it.isOnlineSubmissionType }
-                AssignmentFilter.ToBeGraded -> filteredAssignments.filter { it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType }
-                AssignmentFilter.Graded -> filteredAssignments.filter { it.isGraded() && it.isOnlineSubmissionType }
+                AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { !it.isSubmitted && it.isOnlineSubmissionType } // TODO: Need to filter by Checkpoints but Sub-assignments do not have a submittedAt field yet
+                AssignmentFilter.ToBeGraded -> filteredAssignments.filter { it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType } // TODO: Need to filter by Checkpoints but Sub-assignments do not have a submittedAt field yet
+                AssignmentFilter.Graded -> filteredAssignments.filter {
+                    val hasGradedCheckpoint = it.submission?.subAssignmentSubmissions?.any { subAssignmentSubmission ->
+                        subAssignmentSubmission.grade != null || subAssignmentSubmission.customGradeStatusId != null
+                    }.orDefault()
+                    it.isGraded() || hasGradedCheckpoint && it.isOnlineSubmissionType
+                }
                 AssignmentFilter.Other -> filteredAssignments.filterNot { (!it.isSubmitted && it.isOnlineSubmissionType) || (it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType) || (it.isGraded() && it.isOnlineSubmissionType) }
                 AssignmentFilter.NeedsGrading -> filteredAssignments.filter { it.needsGradingCount > 0 }
                 AssignmentFilter.NotSubmitted -> filteredAssignments.filter { it.unpublishable }
@@ -259,30 +294,32 @@ class AssignmentListViewModel @Inject constructor(
         val groups = when(selectedFilters.selectedGroupByOption) {
             AssignmentGroupByOption.DueDate -> {
                 val undated = filteredAssignments.filter {
-                    it.dueDate == null
+                    it.dueDateIncludingCheckpoints() == null
                 }
                 val upcoming = filteredAssignments.filter {
-                    it.dueDate != null && (it.dueDate ?: Date()) >= Date()
+                    val dueDate = it.dueDateIncludingCheckpoints()
+                    dueDate != null && dueDate >= Date()
                 }
                 val past = filteredAssignments.filter {
-                    it.dueDate != null && (it.dueDate ?: Date()) < Date()
+                    val dueDate = it.dueDateIncludingCheckpoints()
+                    dueDate != null && dueDate < Date()
                 }
                 mapOf(
                     resources.getString(R.string.overdueAssignments) to past.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     },
 
                     resources.getString(R.string.upcomingAssignments) to upcoming.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     },
 
                     resources.getString(R.string.undatedAssignments) to undated.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     }
                 )
@@ -291,7 +328,7 @@ class AssignmentListViewModel @Inject constructor(
                 filteredAssignments.groupBy { it.assignmentGroupId }.map { (key, value) ->
                     uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty() to value.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     }
                 }.toMap()
@@ -308,15 +345,15 @@ class AssignmentListViewModel @Inject constructor(
                 mapOf(
                     resources.getString(R.string.assignments) to assignmentGroup.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     }, resources.getString(R.string.discussion) to discussionsGroup.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     }, resources.getString(R.string.quizzes) to quizzesGroup.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
-                            course, it, customStatuses
+                            course, it, customStatuses, getCheckpoints(it, course)
                         )
                     }
                 )
@@ -329,5 +366,48 @@ class AssignmentListViewModel @Inject constructor(
     private fun getCurrentGradingPeriod(gradingPeriods: List<GradingPeriod>): GradingPeriod? {
         val currentDate = Date()
         return gradingPeriods.firstOrNull { it.startDate?.toDate()?.before(currentDate).orDefault() && it.endDate?.toDate()?.after(currentDate).orDefault() }
+    }
+
+    private fun getCheckpoints(assignment: Assignment, course: Course) = assignment.orderedCheckpoints.map { checkpoint ->
+        val subAssignmentSubmission = assignment.submission?.subAssignmentSubmissions?.find {
+            it.subAssignmentTag == checkpoint.tag
+        }
+
+        DiscussionCheckpointUiState(
+            name = when (checkpoint.tag) {
+                Const.REPLY_TO_TOPIC -> resources.getString(R.string.reply_to_topic)
+                Const.REPLY_TO_ENTRY -> resources.getString(
+                    R.string.additional_replies,
+                    assignment.discussionTopicHeader?.replyRequiredCount
+                )
+
+                else -> checkpoint.name.orEmpty()
+            },
+            dueDate = if (assignment.hasOverrides) {
+                resources.getString(R.string.multipleDueDates)
+            } else {
+                checkpoint.dueDate?.toFormattedString()
+                    ?.let { resources.getString(R.string.due, it) }
+                    ?: resources.getString(R.string.noDueDate)
+            },
+            submissionStateLabel = assignment.getSubAssignmentSubmissionStateLabel(
+                subAssignmentSubmission,
+                customStatuses
+            ),
+            displayGrade = assignment.getSubAssignmentSubmissionGrade(
+                possiblePoints = checkpoint.pointsPossible.orDefault(),
+                submission = subAssignmentSubmission,
+                resources = resources,
+                restrictQuantitativeData = course.settings?.restrictQuantitativeData.orDefault(),
+                gradingScheme = course.gradingScheme,
+                showZeroPossiblePoints = true,
+                showNotGraded = true
+            ),
+            pointsPossible = checkpoint.pointsPossible?.toInt().orDefault()
+        )
+    }
+
+    private fun Assignment.dueDateIncludingCheckpoints(): Date? {
+        return (dueAt ?: orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt).toDate()
     }
 }

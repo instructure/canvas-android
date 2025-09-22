@@ -59,10 +59,10 @@ class ToDoWidgetUpdater(
                 val courses = repository.getCourses(true)
                 val calendarFilters = repository.getCalendarFilters(apiPrefs.user?.id.orDefault(), apiPrefs.fullDomain)
 
-                val startDateTime = LocalDate.now().atStartOfDay()
+                val now = LocalDate.now().atStartOfDay()
                 val plannerItemsDataResult = repository.getPlannerItems(
-                    startDateTime.toApiString().orEmpty(),
-                    startDateTime.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
+                    now.minusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
+                    now.plusDays(PLANNER_DATE_RANGE_DAYS).toApiString().orEmpty(),
                     calendarFilters?.filters.orEmpty().toList(),
                     true
                 )
@@ -73,6 +73,8 @@ class ToDoWidgetUpdater(
                 }
                 // Other errors are handled in catch
                 val plannerItems = plannerItemsDataResult.dataOrThrow
+                    .filter { it.plannerOverride?.markedComplete != true }
+                    .filter { !isComplete(it) }
 
                 val toDoWidgetUiState = ToDoWidgetUiState(
                     if (plannerItems.isEmpty()) {
@@ -89,6 +91,17 @@ class ToDoWidgetUpdater(
                 e.printStackTrace()
                 emit(ToDoWidgetUiState(WidgetState.Error))
             }
+        }
+    }
+
+    private fun isComplete(plannerItem: PlannerItem): Boolean {
+        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
+            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
+            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
+        ) {
+            plannerItem.submissionState?.submitted == true
+        } else {
+            false
         }
     }
 

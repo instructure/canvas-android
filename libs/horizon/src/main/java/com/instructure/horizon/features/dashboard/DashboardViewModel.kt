@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.managers.CourseWithProgress
 import com.instructure.canvasapi2.managers.DashboardCourse
+import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.weave.catch
@@ -27,6 +28,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.formatIsoDuration
 import com.instructure.pandautils.utils.poll
@@ -79,12 +81,20 @@ class DashboardViewModel @Inject constructor(
             validate = { themePrefs.mobileLogoUrl.isNotEmpty() })
         val dashboardContent = dashboardRepository.getDashboardContent(forceNetwork = forceNetwork)
         if (dashboardContent.isSuccess) {
+            val programs = try {
+                dashboardRepository.getPrograms(forceNetwork = forceNetwork)
+            } catch (e: Exception) {
+                emptyList()
+            }
             val coursesResult = dashboardContent.dataOrThrow.courses
             val courseUiStates = coursesResult.map { course ->
                 viewModelScope.async {
-                    mapCourse(course, forceNetwork)
+                    mapCourse(course, programs, forceNetwork)
                 }
             }.awaitAll().filterNotNull()
+            val programsUiState = programs
+                .filter { program -> program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED } }
+                .map { DashboardProgramUiState(it.id, it.name) }
             val inviteResults = dashboardContent.dataOrThrow.courseInvites
             val invites = inviteResults.map { courseInvite ->
                 CourseInviteUiState(courseId = courseInvite.courseId, courseName = courseInvite.courseName, onAccept = {
@@ -100,17 +110,32 @@ class DashboardViewModel @Inject constructor(
                     dismissInvite(courseInvite.courseId)
                 })
             }
-            _uiState.update { it.copy(coursesUiState = courseUiStates, invitesUiState = invites, loadingState = it.loadingState.copy(isError = false)) }
+            _uiState.update {
+                it.copy(
+                    programsUiState = programsUiState,
+                    coursesUiState = courseUiStates,
+                    invitesUiState = invites,
+                    loadingState = it.loadingState.copy(isError = false)
+                )
+            }
         } else {
             handleError()
         }
     }
 
-    private suspend fun mapCourse(dashboardCourse: DashboardCourse, forceNetwork: Boolean): DashboardCourseUiState? {
+    private suspend fun mapCourse(
+        dashboardCourse: DashboardCourse,
+        programs: List<Program>,
+        forceNetwork: Boolean
+    ): DashboardCourseUiState? {
         val nextModuleId = dashboardCourse.nextUpModuleId
         val nextModuleItemId = dashboardCourse.nextUpModuleItemId
+        val parentPrograms =
+            programs
+                .filter { program -> program.sortedRequirements.any { it.courseId == dashboardCourse.course.courseId } }
+                .map { DashboardCourseProgram(it.name, it.id) }
         return if (nextModuleId != null && nextModuleItemId != null) {
-            createCourseUiState(dashboardCourse)
+            createCourseUiState(dashboardCourse, parentPrograms)
         } else if (dashboardCourse.course.progress < 100.0) {
 
             val modules = dashboardRepository.getFirstPageModulesWithItems(
@@ -125,7 +150,7 @@ class DashboardViewModel @Inject constructor(
                 if (nextModuleItemResult == null || nextModuleResult == null) {
                     return null
                 }
-                createCourseUiState(dashboardCourse.course, nextModuleResult, nextModuleItemResult)
+                createCourseUiState(dashboardCourse.course, nextModuleResult, nextModuleItemResult, parentPrograms)
             } else {
                 handleError()
                 null
@@ -137,6 +162,7 @@ class DashboardViewModel @Inject constructor(
                 courseProgress = dashboardCourse.course.progress,
                 completed = true,
                 progressLabel = getProgressLabel(dashboardCourse.course.progress),
+                parentPrograms = parentPrograms
             )
         } else {
             handleError()
@@ -145,7 +171,7 @@ class DashboardViewModel @Inject constructor(
     }
 
     private fun createCourseUiState(
-        dashboardCourse: DashboardCourse
+        dashboardCourse: DashboardCourse, parentPrograms: List<DashboardCourseProgram>
     ) = DashboardCourseUiState(
         courseId = dashboardCourse.course.courseId,
         courseName = dashboardCourse.course.courseName,
@@ -158,13 +184,15 @@ class DashboardViewModel @Inject constructor(
         learningObjectType = if (dashboardCourse.isNewQuiz) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(
             dashboardCourse.nextModuleItemType.orEmpty()
         ),
-        dueDate = dashboardCourse.nextModuleItemDueDate
+        dueDate = dashboardCourse.nextModuleItemDueDate,
+        parentPrograms = parentPrograms
     )
 
     private fun createCourseUiState(
         course: CourseWithProgress,
         nextModule: ModuleObject?,
-        nextModuleItem: ModuleItem
+        nextModuleItem: ModuleItem,
+        parentPrograms: List<DashboardCourseProgram>
     ) = DashboardCourseUiState(
         courseId = course.courseId,
         courseName = course.courseName,
@@ -175,7 +203,8 @@ class DashboardViewModel @Inject constructor(
         progressLabel = getProgressLabel(course.progress),
         remainingTime = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
         learningObjectType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
-        dueDate = nextModuleItem.moduleDetails?.dueDate
+        dueDate = nextModuleItem.moduleDetails?.dueDate,
+        parentPrograms = parentPrograms
     )
 
     private fun getProgressLabel(progress: Double): String {

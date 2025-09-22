@@ -18,6 +18,7 @@ package com.instructure.teacher.features.postpolicies.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.analytics.SCREEN_VIEW_POST_GRADE_POLICY
 import com.instructure.pandautils.analytics.ScreenView
@@ -42,10 +43,12 @@ abstract class PostGradeMobiusFragment : MobiusFragment<PostGradeModel, PostGrad
 
     abstract fun getEventHandler(): SpeedGraderGradingEventHandler
 
+    abstract fun getPolicyManager(): PostPolicyManager
+
     private var assignment: Assignment by ParcelableArg(Assignment(), Const.ASSIGNMENT)
     private var isHidingGrades: Boolean by BooleanArg(false, IS_HIDE_GRADE_MODE)
 
-    override fun makeEffectHandler() = PostGradeEffectHandler(getEventHandler())
+    override fun makeEffectHandler() = PostGradeEffectHandler(getEventHandler(), getPolicyManager())
 
     override fun makeUpdate() = PostGradeUpdate()
 

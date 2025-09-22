@@ -908,6 +908,15 @@
         <item quantity="other">%s คะแนน</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">คะแนน</item>
+        <item quantity="other">คะแนน</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f คะแนน</item>
+        <item quantity="other">\/ %.0f คะแนน</item>
+    </plurals>
     <string name="timeLimit">เกณฑ์เวลา</string>
     <string name="newPushNotifications">%1$s การแจ้งข้อมูลใหม่</string>
     <string name="like">เช่น</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">ลายมือชื่อ</string>
     <string name="inboxSignatureTextfieldHeader">ข้อความลายมือชื่อ</string>
     <string name="due_dateTime">ครบกำหนด: %1$s, %2$s</string>
+    <string name="submitted_dateTime">จัดส่งแล้ว: %1$s, %2$s</string>
     <string name="noDueDate">ไม่มีวันครบกำหนด</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s ต้องให้เกรด</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d คะแนน</item>
         <item quantity="other">%d คะแนน</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f คะแนน)</item>
+        <item quantity="other">(%.0f คะแนน)</item>
     </plurals>
     <string name="noAssignments">ไม่มีภารกิจ</string>
     <string name="assignmentGroup">กลุ่มภารกิจ</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">เลือกบทเรียนกันเลย</string>
     <string name="widgetGradesErrorLoadingCourses">เกิดข้อผิดพลาดขณะโหลดบทเรียน</string>
     <string name="settingsSwitchExperience">สลับไปใช้ Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">เกรดและเกณฑ์การให้คะแนน</string>
+    <string name="speedGraderDetailsTabTitle">รายละเอียด</string>
+    <string name="a11y_contentDescription_expandPanel">ขยายแถบคำสั่ง</string>
+    <string name="a11y_contentDescription_collapsePanel">ย่อแถบคำสั่ง</string>
+    <string name="pointGradeHint">เขียนคะแนนที่นี่</string>
+    <string name="percentageGradeHint">ระบุเปอร์เซ็นต์ที่นี่</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">เกรดแบบตัวอักษร</string>
+    <string name="daysLate">วันที่ล่าช้า</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s คะแนน</item>
+        <item quantity="other">%s / %s คะแนน</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">โทษปรับล่าช้า</string>
+    <string name="gradingStatus_none">ไม่มี</string>
+    <string name="gradingStatus_late">ล่าช้า</string>
+    <string name="gradingStatus_missing">ขาดหาย</string>
+    <string name="gradingStatus_extended">เพิ่มเติม</string>
+    <string name="gradingStatus_excused">ได้รับการยกเว้น</string>
+    <string name="status">สถานะ</string>
+    <string name="speedGraderStudentNotes">หมายเหตุสำหรับผู้เรียน</string>
+    <string name="speedGraderStudentNotesLoading">กำลังโหลดหมายเหตุของผู้เรียน</string>
+    <string name="speedGraderStudentNotesErrorTitle">อุ๊ปส์! มีบางอย่างผิดปกติ</string>
+    <string name="speedGraderStudentNotesErrorDescription">เราพบปัญหาในการแสดงหมายเหตุของผู้เรียน</string>
+    <string name="speedGraderStudentNotesErrorButtonText">รีเฟรช</string>
+    <string name="not_graded">ไม่ได้ลงเกรด</string>
+    <string name="speedGraderSubmissionDetails">รายละเอียดผลงานจัดส่ง</string>
+    <string name="speedGraderSubmissionDetailsLoading">กำลังโหลดรายละเอียดผลงานจัดส่ง</string>
+    <string name="speedGraderWordCount">จำนวนคำ</string>
+    <string name="rubricsTitle">เกณฑ์การให้คะแนน</string>
+    <string name="rubricScore">คะแนน</string>
+    <string name="rubricScoreHint">เขียนคะแนนที่นี่</string>
+    <string name="speedGraderCommentsTitle">ความเห็น (%s)</string>
+    <string name="anonymousGradingStudentLabel">ผู้เรียน</string>
+    <string name="anonymousGradingUserLabel">ผู้ใช้ที่ไม่เปิดเผยตัว</string>
+    <string name="rubricNote">หมายเหตุเกณฑ์การให้คะแนน</string>
+    <string name="content_description_edit_rubric_comment">แก้ไขหมายเหตุเกณฑ์การให้คะแนน</string>
+    <string name="rubricNoteHint">หมายเหตุ</string>
+    <string name="a11y_sendRubricNoteContentDescription">ส่งหมายเหตุเกณฑ์การให้คะแนน</string>
+    <string name="select_attachment_type">เลือกประเภทเอกสารแนบ</string>
+    <string name="choose_files">เลือกไฟล์</string>
+    <string name="a11y_expanded">ขยายแล้ว</string>
+    <string name="a11y_collapsed">ย่อแล้ว</string>
+    <string name="excuseStudent">ยกเว้นผู้เรียน</string>
+    <string name="detailsEmptyMessage">เราไม่มีรายละเอียดเพิ่มเติมสำหรับผุ้เรียน (Student) และ ภารกิจ (Assignment) นี้ในตอนนี้</string>
+    <string name="daysLateHint">เขียนจำนวนวันที่ล่าช้า</string>
+    <string name="reply_to_topic">ตอบกลับไปยังหัวข้อ</string>
+    <string name="additional_replies">การตอบกลับเพิ่มเติม (%d)</string>
 </resources>

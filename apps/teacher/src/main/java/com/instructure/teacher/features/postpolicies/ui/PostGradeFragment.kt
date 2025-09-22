@@ -16,6 +16,7 @@
  */package com.instructure.teacher.features.postpolicies.ui
 
 import android.os.Bundle
+import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
 import com.instructure.pandautils.utils.Const
@@ -28,6 +29,11 @@ class PostGradeFragment : PostGradeMobiusFragment() {
 
     @Inject
     lateinit var speedGraderGradingEventHandler: SpeedGraderGradingEventHandler
+
+    @Inject
+    lateinit var postPolicyManager: PostPolicyManager
+
+    override fun getPolicyManager(): PostPolicyManager = postPolicyManager
 
     override fun getEventHandler(): SpeedGraderGradingEventHandler = speedGraderGradingEventHandler
 

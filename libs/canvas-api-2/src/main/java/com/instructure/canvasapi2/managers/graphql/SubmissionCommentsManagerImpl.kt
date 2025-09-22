@@ -15,13 +15,15 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.CreateSubmissionCommentMutation
-import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.SubmissionCommentsQuery
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.models.SubmissionCommentsResponseWrapper
 
-class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
+class SubmissionCommentsManagerImpl(private val apolloClient: ApolloClient) : SubmissionCommentsManager {
 
     override suspend fun getSubmissionComments(userId: Long, assignmentId: Long, forceNetwork: Boolean): SubmissionCommentsResponseWrapper {
         val allComments = mutableListOf<SubmissionCommentsQuery.Node1>()
@@ -39,7 +41,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
                 commentCursor = Optional.absent()
             )
 
-            val historyData = QLClientConfig.enqueueQuery(query, true).data
+            val historyData = apolloClient.enqueueQuery(query, true).data
             if (initialData == null) initialData = historyData
 
             val historyEdges = historyData
@@ -67,7 +69,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
                         commentCursor = Optional.present(commentCursor)
                     )
 
-                    val commentData = QLClientConfig.enqueueQuery(commentQuery, forceNetwork).data
+                    val commentData = apolloClient.enqueueQuery(commentQuery, forceNetwork).data
 
                     val matchedHistory = commentData
                         ?.submission
@@ -118,7 +120,7 @@ class SubmissionCommentsManagerImpl : SubmissionCommentsManager {
             Optional.Present(attempt),
             Optional.Present(isGroupComment)
         )
-        val result = QLClientConfig.enqueueMutation(mutation)
+        val result = apolloClient.enqueueMutation(mutation)
         return result.dataAssertNoErrors
     }
 }

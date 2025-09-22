@@ -101,7 +101,8 @@ data class ObserveeAssignment(
         val externalToolAttributes: ExternalToolAttributes? = null,
         var isStudioEnabled: Boolean = false,
         @SerializedName("hide_in_gradebook")
-        val isHiddenInGradeBook: Boolean = false
+        val isHiddenInGradeBook: Boolean = false,
+        val checkpoints: List<Checkpoint> = emptyList()
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueAt.toDate()
     override val comparisonString get() = dueAt
@@ -155,7 +156,8 @@ data class ObserveeAssignment(
                 anonymousGrading = this.anonymousGrading,
                 allowedAttempts = this.allowedAttempts,
                 isStudioEnabled = this.isStudioEnabled,
-                isHiddenInGradeBook = this.isHiddenInGradeBook
+                isHiddenInGradeBook = this.isHiddenInGradeBook,
+                checkpoints = this.checkpoints
             )
         } else {
             return null
@@ -207,6 +209,7 @@ data class ObserveeAssignment(
         allowedAttempts = allowedAttempts,
         externalToolAttributes = externalToolAttributes,
         isStudioEnabled = isStudioEnabled,
-        isHiddenInGradeBook = isHiddenInGradeBook
+        isHiddenInGradeBook = isHiddenInGradeBook,
+        checkpoints = checkpoints
     )
 }

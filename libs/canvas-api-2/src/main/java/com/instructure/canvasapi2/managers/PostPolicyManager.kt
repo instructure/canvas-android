@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2019 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     Licensed under the Apache License, Version 2.0 (the "License");
  *     you may not use this file except in compliance with the License.
@@ -12,46 +12,31 @@
  *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
- *
- */
-package com.instructure.canvasapi2.managers
+ */package com.instructure.canvasapi2.managers
 
-import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.HideAssignmentGradesForSectionsMutation
 import com.instructure.canvasapi2.HideAssignmentGradesMutation
 import com.instructure.canvasapi2.PostAssignmentGradesForSectionsMutation
 import com.instructure.canvasapi2.PostAssignmentGradesMutation
-import com.instructure.canvasapi2.QLClientConfig
 
-object PostPolicyManager {
+interface PostPolicyManager {
 
-    suspend fun hideGradesAsync(assignmentId: Long): HideAssignmentGradesMutation.Data {
-        val mutation = HideAssignmentGradesMutation(assignmentId.toString())
-        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
-    }
+    suspend fun hideGradesAsync(assignmentId: Long): HideAssignmentGradesMutation.Data
 
     suspend fun hideGradesForSectionsAsync(
         assignmentId: Long,
         sections: List<String>
-    ): HideAssignmentGradesForSectionsMutation.Data {
-        val mutation = HideAssignmentGradesForSectionsMutation(assignmentId.toString(), sections)
-        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
-    }
+    ): HideAssignmentGradesForSectionsMutation.Data
 
     suspend fun postGradesAsync(
         assignmentId: Long,
         gradedOnly: Boolean
-    ): PostAssignmentGradesMutation.Data {
-        val mutation = PostAssignmentGradesMutation(assignmentId.toString(), Optional.present(gradedOnly))
-        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
-    }
+    ): PostAssignmentGradesMutation.Data
 
     suspend fun postGradesForSectionsAsync(
         assignmentId: Long,
         gradedOnly: Boolean,
         sections: List<String>
-    ): PostAssignmentGradesForSectionsMutation.Data {
-        val mutation = PostAssignmentGradesForSectionsMutation(assignmentId.toString(), Optional.present(gradedOnly), sections)
-        return QLClientConfig.enqueueMutation(mutation).dataAssertNoErrors
-    }
+    ): PostAssignmentGradesForSectionsMutation.Data
+
 }

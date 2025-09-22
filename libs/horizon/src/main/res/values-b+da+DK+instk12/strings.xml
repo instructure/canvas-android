@@ -67,8 +67,8 @@
     <string name="overview">Oversigt</string>
     <string name="scores">Resultater</string>
     <string name="notes">Noter</string>
-    <string name="assignmentName">Opgavens navn</string>
-    <string name="dueDate">Afleveringsdato</string>
+    <string name="scoresSortingAssignmentNameAscending">Opgavenavn (A-Å)</string>
+    <string name="scoresSortingDueDateDescending">Forfaldsdato (nyeste først)</string>
     <string name="scoresItemassignmentName">Navn: %1$s</string>
     <string name="scoresItemDueDate">Dato: %1$s</string>
     <string name="noDueDate">Ingen afleveringsdato</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avanceret</string>
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Giv feedback</string>
+    <string name="accountReportABug">Anmeld en fejl</string>
     <string name="accountBetaCommunityLabel">Betafællesskab</string>
     <string name="accountFullNameLabel">Fulde navn</string>
     <string name="a11yNavigateBack">Naviger tilbage</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Kunne ikke acceptere faginvitation</string>
     <string name="dashboard_emptyMessage">Du er ikke tilmeldt et fag i øjeblikket.</string>
     <string name="learnEmptyMessage">Du er ikke tilmeldt et fag i øjeblikket.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% afsluttet</string>
+    <string name="programsProgressBar_notStarted">Ikke startet</string>
+    <string name="programsCourseCard_enrollButton">Tilmeld</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Påkrævet</string>
+    <string name="programCourseTag_optional">Valgfrit</string>
+    <string name="programCourseTag_locked">Låst</string>
+    <string name="programCourseTag_completed">Fuldført</string>
+    <string name="programCourseTag_enrolled">Tilmeldt</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Afslut %1$d af %2$d fag</item>
+        <item quantity="other">Afslut %1$d af %2$d fag</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Kunne ikke opdatere programmet.</string>
+    <string name="programSwitcher_programOverview">Programoversigt</string>
+    <string name="programSwitcher_goBack">Alle</string>
+    <string name="learnScreen_partOfProgram">En del af %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Faget kan ikke åbnes.</string>
 </resources>
