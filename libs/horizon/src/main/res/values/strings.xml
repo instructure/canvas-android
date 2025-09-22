@@ -66,6 +66,7 @@
     <string name="overview">Overview</string>
     <string name="scores">Scores</string>
     <string name="notes">Notes</string>
+    <string name="tools">Tools</string>
     <string name="scoresSortingAssignmentNameAscending">Assignment name (A-Z)</string>
     <string name="scoresSortingDueDateDescending">Due date (newest first)</string>
     <string name="scoresItemassignmentName">Name: %1$s</string>
@@ -355,4 +356,5 @@
     <string name="notificationsDateToday">Today</string>
     <string name="notificationsDateYesterday">Yesterday</string>
     <string name="notificationsFailedToOpenMessage">Unable to open Notification</string>
+    <string name="tools_noLtiTools">There are no external tools for this course.</string>
 </resources>

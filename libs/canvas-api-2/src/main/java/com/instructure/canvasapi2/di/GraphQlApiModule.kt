@@ -16,10 +16,13 @@
  */
 package com.instructure.canvasapi2.di
 
+import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.CommentLibraryManagerImpl
 import com.instructure.canvasapi2.managers.InboxSettingsManager
 import com.instructure.canvasapi2.managers.InboxSettingsManagerImpl
+import com.instructure.canvasapi2.managers.PostPolicyManager
+import com.instructure.canvasapi2.managers.PostPolicyManagerImpl
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.StudentContextManagerImpl
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
@@ -48,47 +51,52 @@ import dagger.hilt.components.SingletonComponent
 class GraphQlApiModule {
 
     @Provides
-    fun provideCommentLibraryManager(): CommentLibraryManager {
-        return CommentLibraryManagerImpl()
+    fun provideCommentLibraryManager(@DefaultApolloClient apolloClient: ApolloClient): CommentLibraryManager {
+        return CommentLibraryManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideInboxSettingsManager(): InboxSettingsManager {
-        return InboxSettingsManagerImpl()
+    fun provideInboxSettingsManager(@DefaultApolloClient apolloClient: ApolloClient): InboxSettingsManager {
+        return InboxSettingsManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideStudentContextManager(): StudentContextManager {
-        return StudentContextManagerImpl()
+    fun provideStudentContextManager(@DefaultApolloClient apolloClient: ApolloClient): StudentContextManager {
+        return StudentContextManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideAssignmentDetailsManager(): AssignmentDetailsManager {
-        return AssignmentDetailsManagerImpl()
+    fun provideAssignmentDetailsManager(@DefaultApolloClient apolloClient: ApolloClient): AssignmentDetailsManager {
+        return AssignmentDetailsManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideSubmissionContentManager(): SubmissionContentManager {
-        return SubmissionContentManagerImpl()
+    fun provideSubmissionContentManager(@DefaultApolloClient apolloClient: ApolloClient): SubmissionContentManager {
+        return SubmissionContentManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideSubmissionGradeManager(): SubmissionGradeManager {
-        return SubmissionGradeManagerImpl()
+    fun provideSubmissionGradeManager(@DefaultApolloClient apolloClient: ApolloClient): SubmissionGradeManager {
+        return SubmissionGradeManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideSubmissionDetailsManager(): SubmissionDetailsManager {
-        return SubmissionDetailsManagerImpl()
+    fun provideSubmissionDetailsManager(@DefaultApolloClient apolloClient: ApolloClient): SubmissionDetailsManager {
+        return SubmissionDetailsManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideSubmissionRubricManager(): SubmissionRubricManager {
-        return SubmissionRubricManagerImpl()
+    fun provideSubmissionRubricManager(@DefaultApolloClient apolloClient: ApolloClient): SubmissionRubricManager {
+        return SubmissionRubricManagerImpl(apolloClient)
     }
 
     @Provides
-    fun provideSubmissionCommentManager(): SubmissionCommentsManager {
-        return SubmissionCommentsManagerImpl()
+    fun provideSubmissionCommentManager(@DefaultApolloClient apolloClient: ApolloClient): SubmissionCommentsManager {
+        return SubmissionCommentsManagerImpl(apolloClient)
+    }
+
+    @Provides
+    fun providePostPolicyManager(@DefaultApolloClient apolloClient: ApolloClient): PostPolicyManager {
+        return PostPolicyManagerImpl(apolloClient)
     }
 }

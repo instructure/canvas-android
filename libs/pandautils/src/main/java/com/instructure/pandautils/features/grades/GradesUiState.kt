@@ -23,6 +23,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.DisplayGrade
@@ -57,13 +58,6 @@ data class AssignmentUiState(
     val displayGrade: DisplayGrade,
     val checkpoints: List<DiscussionCheckpointUiState> = emptyList(),
     val checkpointsExpanded: Boolean = false
-)
-
-data class DiscussionCheckpointUiState(
-    val name: String,
-    val dueDate: String,
-    val submissionStateLabel: SubmissionStateLabel,
-    val displayGrade: DisplayGrade
 )
 
 sealed class SubmissionStateLabel {

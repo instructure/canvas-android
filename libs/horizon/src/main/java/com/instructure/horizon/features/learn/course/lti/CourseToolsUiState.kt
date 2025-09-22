@@ -13,22 +13,18 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.canvasapi2.di.graphql
+package com.instructure.horizon.features.learn.course.lti
 
-import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.di.DefaultApolloClient
-import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.instructure.horizon.horizonui.platform.LoadingState
 
-@Module
-@InstallIn(SingletonComponent::class)
-class HorizonGetCommentsModule {
+data class CourseToolsUiState(
+    val screenState: LoadingState = LoadingState(),
+    val courseId: Long = 0,
+    val ltiTools: List<LtiToolItem> = emptyList(),
+)
 
-    @Provides
-    fun provideHorizonGetCommentsManager(@DefaultApolloClient apolloClient: ApolloClient): HorizonGetCommentsManager {
-        return HorizonGetCommentsManager(apolloClient)
-    }
-}
+data class LtiToolItem(
+    val title: String,
+    val iconUrl: String?,
+    val url: String,
+)

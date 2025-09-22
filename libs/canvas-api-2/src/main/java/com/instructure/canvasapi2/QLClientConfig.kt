@@ -46,7 +46,7 @@ open class QLClientConfig {
     /** The GraphQL endpoint. Defaults to "<fullDomain>/api/graphql/" */
     var url: String = ApiPrefs.fullDomain + GRAPHQL_ENDPOINT
 
-    /** The [OkHttpClient] to use for this request. Defaults to the client obtained from [CanvasRestAdapter.getOkHttpClient]
+    /** The [OkHttpClient] to use for this request. Defaults to the client obtained from [CanvasRestAdapter.okHttpClient]
      * with a supplementary interceptor to add an additional header. It is recommended to use this default client as it
      * has several useful behaviors such as request logging, read timeouts, and auth/user-agent/referrer header injection. */
     var httpClient: OkHttpClient = CanvasRestAdapter.okHttpClient
@@ -113,30 +113,6 @@ open class QLClientConfig {
             }
         }
 
-        suspend fun <DATA : Query.Data, T : Query<DATA>> enqueueQuery(
-            query: T,
-            forceNetwork: Boolean = false,
-            block: QLClientConfig.() -> Unit = {}
-        ): ApolloResponse<DATA> {
-            val config = QLClientConfig()
-            config.block()
-            if (forceNetwork) config.fetchPolicy = HttpFetchPolicy.NetworkOnly
-            // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
-            val result = config.buildClient().query(query).executeV3()
-            return result
-        }
-
-        suspend fun <DATA : Mutation.Data, T : Mutation<DATA>> enqueueMutation(
-            mutation: T,
-            block: QLClientConfig.() -> Unit = {}
-        ): ApolloResponse<DATA> {
-            val config = QLClientConfig()
-            config.block()
-            // Since we handle errors with exceptions, we keep the compat call of execute because the new doesn't throw exceptions
-            val result = config.buildClient().mutation(mutation).executeV3()
-            return result
-        }
-
         fun clearCacheDirectory(): Boolean {
             return try {
                 cacheFile.deleteRecursively()
@@ -146,4 +122,20 @@ open class QLClientConfig {
             }
         }
     }
+}
+
+suspend fun <T : Query.Data> ApolloClient.enqueueQuery(
+    query: Query<T>,
+    forceNetwork: Boolean = false
+): ApolloResponse<T> {
+    if (forceNetwork) {
+        return this.query(query).httpFetchPolicy(HttpFetchPolicy.NetworkOnly).executeV3()
+    }
+    return this.query(query).executeV3()
+}
+
+suspend fun <T : Mutation.Data>ApolloClient.enqueueMutation(
+    mutation: Mutation<T>
+): ApolloResponse<T> {
+    return this.mutation(mutation).executeV3()
 }
