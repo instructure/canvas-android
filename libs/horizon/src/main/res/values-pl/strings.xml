@@ -69,8 +69,8 @@
     <string name="overview">Omówienie</string>
     <string name="scores">Wyniki</string>
     <string name="notes">Uwagi</string>
-    <string name="assignmentName">Nazwa zadania</string>
-    <string name="dueDate">Termin</string>
+    <string name="scoresSortingAssignmentNameAscending">Nazwa zadania (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Termin (od najnowszych)</string>
     <string name="scoresItemassignmentName">Nazwa: %1$s</string>
     <string name="scoresItemDueDate">Data: %1$s</string>
     <string name="noDueDate">Brak terminu</string>
@@ -129,6 +129,7 @@
     <string name="accountAdvancedLabel">Zaawansowane</string>
     <string name="accountSupportHeading">Pomoc techniczna</string>
     <string name="accountGiveFeedbackLabel">Prześlij opinię</string>
+    <string name="accountReportABug">Zgłoś problem</string>
     <string name="accountBetaCommunityLabel">Społeczność wersji beta</string>
     <string name="accountFullNameLabel">Pełna nazwa</string>
     <string name="a11yNavigateBack">Przejdź wstecz</string>
@@ -337,4 +338,24 @@
     <string name="dashboard_courseInviteFailed">Nie udało się potwierdzić zaproszenia na kurs</string>
     <string name="dashboard_emptyMessage">Nie zarejestrowano Cię do żadnego kursu.</string>
     <string name="learnEmptyMessage">Nie zarejestrowano Cię do żadnego kursu.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% ukończenia.</string>
+    <string name="programsProgressBar_notStarted">Nie rozpoczęto</string>
+    <string name="programsCourseCard_enrollButton">Zapisz się</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Wymagane</string>
+    <string name="programCourseTag_optional">Opcjonalne</string>
+    <string name="programCourseTag_locked">Zablokowany</string>
+    <string name="programCourseTag_completed">Ukończono</string>
+    <string name="programCourseTag_enrolled">Zarejestrowany</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Ukończono %1$d z %2$d kursu</item>
+        <item quantity="few">Ukończono %1$d z %2$d kursów</item>
+        <item quantity="many">Ukończono %1$d z %2$d kursów</item>
+        <item quantity="other">Ukończono %1$d z %2$d kursów</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Nie udało się odświeżyć programu.</string>
+    <string name="programSwitcher_programOverview">Przegląd programu</string>
+    <string name="programSwitcher_goBack">Wszystkie</string>
+    <string name="learnScreen_partOfProgram">Część z %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Nie można otworzyć kursu.</string>
 </resources>

@@ -67,8 +67,8 @@
     <string name="overview">Översikt</string>
     <string name="scores">Resultat:</string>
     <string name="notes">Anteckningar</string>
-    <string name="assignmentName">Uppgiftsnamn</string>
-    <string name="dueDate">Inlämningsdatum</string>
+    <string name="scoresSortingAssignmentNameAscending">Uppgiftsnamn (A–Z)</string>
+    <string name="scoresSortingDueDateDescending">Inlämningsdatum (senaste först)</string>
     <string name="scoresItemassignmentName">Namn: %1$s</string>
     <string name="scoresItemDueDate">Datum: %1$s</string>
     <string name="noDueDate">Inget inlämningsdatum</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avancerat</string>
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Ge återkoppling</string>
+    <string name="accountReportABug">Rapportera en bugg</string>
     <string name="accountBetaCommunityLabel">Beta-community</string>
     <string name="accountFullNameLabel">Fullständigt namn</string>
     <string name="a11yNavigateBack">Navigera tillbaka</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Det gick inte att acceptera kursinbjudan</string>
     <string name="dashboard_emptyMessage">Du är för närvarande inte registrerad i en kurs.</string>
     <string name="learnEmptyMessage">Du är för närvarande inte registrerad i en kurs.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% slutförd</string>
+    <string name="programsProgressBar_notStarted">Ej startade</string>
+    <string name="programsCourseCard_enrollButton">Registrera dig</string>
+    <string name="programTag_DateRange">%1$s/%2$s</string>
+    <string name="programCourseTag_required">Obligatorisk</string>
+    <string name="programCourseTag_optional">Valfri</string>
+    <string name="programCourseTag_locked">Låst</string>
+    <string name="programCourseTag_completed">Slutförd</string>
+    <string name="programCourseTag_enrolled">Registrerad</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Slutför %1$d av %2$d kurs</item>
+        <item quantity="other">Slutför %1$d av %2$d kurser</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Det gick inte att uppdatera programmet.</string>
+    <string name="programSwitcher_programOverview">Programöversikt</string>
+    <string name="programSwitcher_goBack">Alla</string>
+    <string name="learnScreen_partOfProgram">Del av %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Det går inte att öppna kursen.</string>
 </resources>

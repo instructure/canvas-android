@@ -67,8 +67,8 @@
     <string name="overview">Tổng Quan</string>
     <string name="scores">Điểm</string>
     <string name="notes">Lưu Ý</string>
-    <string name="assignmentName">Tên bài tập</string>
-    <string name="dueDate">Ngày đến hạn</string>
+    <string name="scoresSortingAssignmentNameAscending">Tên bài tập (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Ngày đến hạn (mới nhất trước)</string>
     <string name="scoresItemassignmentName">Tên: %1$s</string>
     <string name="scoresItemDueDate">Ngày: %1$s</string>
     <string name="noDueDate">Không có ngày đến hạn</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Nâng cao</string>
     <string name="accountSupportHeading">Hỗ Trợ</string>
     <string name="accountGiveFeedbackLabel">Gửi phản hồi</string>
+    <string name="accountReportABug">Báo cáo lỗi phần mềm</string>
     <string name="accountBetaCommunityLabel">Cộng đồng beta</string>
     <string name="accountFullNameLabel">Tên đầy đủ</string>
     <string name="a11yNavigateBack">Điều hướng quay lại</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Chấp nhận lời mời khóa học không thành công</string>
     <string name="dashboard_emptyMessage">Bạn hiện chưa ghi danh vào khóa học nào.</string>
     <string name="learnEmptyMessage">Bạn hiện chưa ghi danh vào khóa học nào.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% hoàn thành</string>
+    <string name="programsProgressBar_notStarted">Chưa bắt đầu</string>
+    <string name="programsCourseCard_enrollButton">Ghi Danh</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Bắt Buộc</string>
+    <string name="programCourseTag_optional">Tùy chọn</string>
+    <string name="programCourseTag_locked">Bị Khóa</string>
+    <string name="programCourseTag_completed">Đã Hoàn Thành</string>
+    <string name="programCourseTag_enrolled">Đã Ghi Danh</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Hoàn thành %1$d / %2$d khóa học</item>
+        <item quantity="other">Hoàn thành %1$d / %2$d khóa học</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Làm mới chương trình không thành công.</string>
+    <string name="programSwitcher_programOverview">Tổng quát chương trình</string>
+    <string name="programSwitcher_goBack">Tất Cả</string>
+    <string name="learnScreen_partOfProgram">Một phần của %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Không thể mở khóa học.</string>
 </resources>
