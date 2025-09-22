@@ -15,6 +15,8 @@
  */
 package com.instructure.canvasapi2.di.graphql
 
+import com.apollographql.apollo.ApolloClient
+import com.instructure.canvasapi2.di.DefaultApolloClient
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManagerImpl
 import dagger.Module
@@ -27,7 +29,7 @@ import dagger.hilt.components.SingletonComponent
 class CustomGradeStatusModule {
 
     @Provides
-    fun provideCustomGradeStatusesManager(): CustomGradeStatusesManager {
-        return CustomGradeStatusesManagerImpl()
+    fun provideCustomGradeStatusesManager(@DefaultApolloClient apolloClient: ApolloClient): CustomGradeStatusesManager {
+        return CustomGradeStatusesManagerImpl(apolloClient)
     }
 }

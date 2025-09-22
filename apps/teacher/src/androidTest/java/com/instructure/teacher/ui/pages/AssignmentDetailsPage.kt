@@ -336,6 +336,14 @@ class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) 
     }
 
     /**
+     * Assert due date 'For' section.
+     * @param forString The string to assert in the 'For' section.
+     */
+    fun assertDueForString(forString: String) {
+        onView(withId(R.id.dueForTextView) + withText(forString)).assertDisplayed()
+    }
+
+    /**
      * Assert module item details
      *
      * @param moduleItemName

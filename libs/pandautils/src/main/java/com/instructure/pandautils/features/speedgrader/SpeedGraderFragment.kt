@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.models.StudentAssignee
 import com.instructure.canvasapi2.utils.coerceAtLeast
 import com.instructure.canvasapi2.utils.rangeWithin
 import com.instructure.interactions.router.Route
+import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.utils.Const
@@ -54,7 +55,10 @@ class SpeedGraderFragment : BaseCanvasFragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         ThemePrefs.reapplyCanvasTheme(requireActivity())
-        ViewStyler.setStatusBarDark(requireActivity(), CanvasContext.emptyCourseContext(courseId).color)
+        ViewStyler.setStatusBarDark(
+            requireActivity(),
+            CanvasContext.emptyCourseContext(courseId).color
+        )
     }
 
     override fun onCreateView(
@@ -86,13 +90,25 @@ class SpeedGraderFragment : BaseCanvasFragment() {
 
         fun newInstance(route: Route): SpeedGraderFragment {
             return SpeedGraderFragment().apply {
-                arguments = route.arguments
-            }
-        }
-
-        fun newInstance(bundle: Bundle): SpeedGraderFragment {
-            return SpeedGraderFragment().apply {
-                arguments = bundle
+                arguments = if (!route.arguments.isEmpty) {
+                    route.arguments
+                } else {
+                    // We come from push notification, need to build the bundle manually
+                    Bundle().apply {
+                        putLong(
+                            Const.COURSE_ID,
+                            route.paramsHash[RouterParams.COURSE_ID]?.toLong() ?: 0
+                        )
+                        putLong(
+                            Const.ASSIGNMENT_ID,
+                            route.paramsHash[RouterParams.ASSIGNMENT_ID]?.toLong() ?: 0
+                        )
+                        putLong(
+                            RouterParams.SUBMISSION_ID,
+                            route.paramsHash[RouterParams.SUBMISSION_ID]?.toLong() ?: 0
+                        )
+                    }
+                }
             }
         }
 
@@ -116,7 +132,13 @@ class SpeedGraderFragment : BaseCanvasFragment() {
             }
         }
 
-        fun makeBundle(courseId: Long, assignmentId: Long, submissions: List<GradeableStudentSubmission>, selectedIdx: Int, anonymousGrading: Boolean? = null): Bundle {
+        fun makeBundle(
+            courseId: Long,
+            assignmentId: Long,
+            submissions: List<GradeableStudentSubmission>,
+            selectedIdx: Int,
+            anonymousGrading: Boolean? = null
+        ): Bundle {
             return Bundle().apply {
                 putLong(Const.COURSE_ID, courseId)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
@@ -138,9 +160,10 @@ class SpeedGraderFragment : BaseCanvasFragment() {
                 }
 
                 // Only sort when anon grading is off
-                val anonymousGradingOn = anonymousGrading ?: (submissions.firstOrNull()?.submission?.assignment?.anonymousGrading == true)
+                val anonymousGradingOn = anonymousGrading
+                    ?: (submissions.firstOrNull()?.submission?.assignment?.anonymousGrading == true)
 
-                if(!anonymousGradingOn) {
+                if (!anonymousGradingOn) {
                     // We need to sort the submissions so they appear in the same order as the submissions list
                     putParcelableArrayList(Const.SUBMISSION, ArrayList(compactSubmissions.sortedBy {
                         (it.assignee as? StudentAssignee)?.student?.sortableName?.lowercase(Locale.getDefault())

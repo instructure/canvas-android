@@ -35,6 +35,7 @@ import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,7 +54,8 @@ fun SpeedGraderCommentInput(
     onCommentLibraryClicked: () -> Unit = {},
     onAttachmentClicked: () -> Unit = {},
     sendCommentClicked: () -> Unit = {},
-    isOnCommentLibrary: Boolean = false
+    isOnCommentLibrary: Boolean = false,
+    testTag: String = "speedGraderCommentInputField"
 ) {
     Column(
         modifier = modifier
@@ -70,7 +72,8 @@ fun SpeedGraderCommentInput(
             modifier = Modifier
                 .fillMaxWidth()
                 .wrapContentHeight()
-                .background(Color.Transparent),
+                .background(Color.Transparent)
+                .testTag(testTag),
             label = { Text(text = stringResource(R.string.speedGraderCommentHint)) },
             value = commentText,
             maxLines = 5,
@@ -101,6 +104,7 @@ fun SpeedGraderCommentInput(
                 .wrapContentHeight()
         ) {
             IconButton(
+                modifier =  if (!isOnCommentLibrary) Modifier.testTag("commentLibraryButton") else Modifier.testTag("closeCommentLibraryButton"),
                 onClick = onCommentLibraryClicked,
                 colors = IconButtonDefaults.iconButtonColors(contentColor = colorResource(id = R.color.textDark))
             ) {
@@ -114,6 +118,7 @@ fun SpeedGraderCommentInput(
                 )
             }
             IconButton(
+                modifier = Modifier.testTag("commentAttachmentButton"),
                 onClick = onAttachmentClicked,
                 enabled = !isOnCommentLibrary,
                 colors = IconButtonDefaults.iconButtonColors(contentColor = colorResource(id = R.color.textDark))
@@ -125,6 +130,7 @@ fun SpeedGraderCommentInput(
             }
             Spacer(modifier = Modifier.weight(1f))
             IconButton(
+                modifier = Modifier.testTag( if(isOnCommentLibrary) "commentLibrarySendCommentButton" else  "sendCommentButton"),
                 onClick = sendCommentClicked,
                 enabled = commentText.isNotEmpty(),
                 colors = IconButtonDefaults.iconButtonColors(contentColor = LocalCourseColor.current)
@@ -137,3 +143,4 @@ fun SpeedGraderCommentInput(
         }
     }
 }
+

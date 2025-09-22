@@ -67,8 +67,8 @@
     <string name="overview">Oversikt</string>
     <string name="scores">Vurderinger</string>
     <string name="notes">Merknader</string>
-    <string name="assignmentName">Oppgavenavn</string>
-    <string name="dueDate">Forfallsdato</string>
+    <string name="scoresSortingAssignmentNameAscending">Oppgavenavn – (A–Z)</string>
+    <string name="scoresSortingDueDateDescending">Forfallsdato (nyeste først)</string>
     <string name="scoresItemassignmentName">Navn: %1$s</string>
     <string name="scoresItemDueDate">Dato: %1$s</string>
     <string name="noDueDate">Ingen forfallsdato</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avanserte</string>
     <string name="accountSupportHeading">Kundestøtte</string>
     <string name="accountGiveFeedbackLabel">Gi tilbakemelding</string>
+    <string name="accountReportABug">Rapporter et problem</string>
     <string name="accountBetaCommunityLabel">Beta-fellesskap</string>
     <string name="accountFullNameLabel">Fullt navn</string>
     <string name="a11yNavigateBack">Gå tilbake</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Kunne ikke godta emneinvitasjon</string>
     <string name="dashboard_emptyMessage">Du er for øyeblikket ikke påmeldt i et emne.</string>
     <string name="learnEmptyMessage">Du er for øyeblikket ikke påmeldt i et emne.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% fullført</string>
+    <string name="programsProgressBar_notStarted">Ikke startet</string>
+    <string name="programsCourseCard_enrollButton">Delta</string>
+    <string name="programTag_DateRange">%1$s–%2$s</string>
+    <string name="programCourseTag_required">Obligatorisk</string>
+    <string name="programCourseTag_optional">Valgfritt</string>
+    <string name="programCourseTag_locked">Låst</string>
+    <string name="programCourseTag_completed">Godkjent</string>
+    <string name="programCourseTag_enrolled">Registrert</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Fullfør %1$d av %2$d emne</item>
+        <item quantity="other">Fullfør %1$d av %2$d emner</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Kunne ikke oppdatere program.</string>
+    <string name="programSwitcher_programOverview">Programoversikt</string>
+    <string name="programSwitcher_goBack">Alle</string>
+    <string name="learnScreen_partOfProgram">Del av %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Dette emnet kan ikke åpnes.</string>
 </resources>

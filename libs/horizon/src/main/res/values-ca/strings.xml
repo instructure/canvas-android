@@ -67,8 +67,8 @@
     <string name="overview">Vista general</string>
     <string name="scores">Puntuacions</string>
     <string name="notes">Comentaris</string>
-    <string name="assignmentName">Nom de l\'activitat</string>
-    <string name="dueDate">Data de lliurament</string>
+    <string name="scoresSortingAssignmentNameAscending">Nom de l\'activitat (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Data de lliurament (la més recent primer)</string>
     <string name="scoresItemassignmentName">Nom: %1$s</string>
     <string name="scoresItemDueDate">Data: %1$s</string>
     <string name="noDueDate">Sense data de lliurament</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avançat</string>
     <string name="accountSupportHeading">Assistència tècnica</string>
     <string name="accountGiveFeedbackLabel">Feu suggeriments</string>
+    <string name="accountReportABug">Informeu d\'un error</string>
     <string name="accountBetaCommunityLabel">Comunitat beta</string>
     <string name="accountFullNameLabel">Nom complet</string>
     <string name="a11yNavigateBack">Torna enrere</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">No s’ha pogut acceptar la invitació a l\'assignatura</string>
     <string name="dashboard_emptyMessage">En aquest moment, no esteu inscrit en cap assignatura.</string>
     <string name="learnEmptyMessage">En aquest moment, no esteu inscrit en cap assignatura.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% complet</string>
+    <string name="programsProgressBar_notStarted">No s’ha iniciat</string>
+    <string name="programsCourseCard_enrollButton">Inscriu-t’hi</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Requerit</string>
+    <string name="programCourseTag_optional">Opcional</string>
+    <string name="programCourseTag_locked">S’ha bloquejat</string>
+    <string name="programCourseTag_completed">S’ha completat</string>
+    <string name="programCourseTag_enrolled">S’ha inscrit</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Finalitzeu %1$d d’%2$d assignatura</item>
+        <item quantity="other">Finalitzeu %1$d de %2$d assignatures</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">No s\'ha pogut actualitzar el programa.</string>
+    <string name="programSwitcher_programOverview">Vista general del programa</string>
+    <string name="programSwitcher_goBack">Tot</string>
+    <string name="learnScreen_partOfProgram">Part de %s</string>
+    <string name="learnScreen_courseCannotBeOpened">No es pot obrir l’assignatura.</string>
 </resources>

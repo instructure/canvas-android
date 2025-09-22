@@ -37,7 +37,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -47,35 +46,8 @@ import androidx.compose.ui.unit.sp
 fun BasicTextFieldWithHintDecoration(
     hintColor: Color,
     textColor: Color,
-    value: String?,
+    value: String,
     onValueChange: (String) -> Unit,
-    hint: String,
-    modifier: Modifier = Modifier,
-    decorationText: String? = null,
-    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
-    textStyle: TextStyle = LocalTextStyle.current
-) {
-    BasicTextFieldWithHintDecoration(
-        hintColor = hintColor,
-        textColor = textColor,
-        value = if (value != null) TextFieldValue(value) else TextFieldValue(""),
-        onValueChange = {
-            onValueChange(it.text)
-        },
-        hint = hint,
-        modifier = modifier,
-        decorationText = decorationText,
-        keyboardOptions = keyboardOptions,
-        textStyle = textStyle
-    )
-}
-
-@Composable
-fun BasicTextFieldWithHintDecoration(
-    hintColor: Color,
-    textColor: Color,
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
     hint: String,
     modifier: Modifier = Modifier,
     decorationText: String? = null,
@@ -96,7 +68,7 @@ fun BasicTextFieldWithHintDecoration(
         cursorBrush = SolidColor(textColor),
         decorationBox = { innerTextField ->
             Box {
-                if (value.text.isEmpty()) {
+                if (value.isEmpty()) {
                     Text(
                         text = hint,
                         fontSize = 16.sp,

@@ -16,11 +16,13 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.instructure.canvasapi2.QLClientConfig
-import com.instructure.canvasapi2.RedwoodGraphQLClientConfig
+import com.instructure.canvasapi2.di.RedwoodApolloClient
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.redwood.CreateNoteMutation
 import com.instructure.redwood.DeleteNoteMutation
 import com.instructure.redwood.QueryNotesQuery
@@ -39,7 +41,7 @@ enum class NoteObjectType(val value: String) {
 
     companion object {
         fun fromValue(value: String): NoteObjectType? {
-            return values().find { it.value == value }
+            return NoteObjectType.entries.find { it.value == value }
         }
     }
 }
@@ -50,7 +52,7 @@ enum class NoteReaction(val value: String) {
 
     companion object {
         fun fromValue(value: String): NoteReaction? {
-            return values().find { it.value == value }
+            return NoteReaction.entries.find { it.value == value }
         }
     }
 }
@@ -88,7 +90,7 @@ data class NoteItem(
 )
 
 class RedwoodApiManager @Inject constructor(
-    private val redwoodClient: RedwoodGraphQLClientConfig,
+    @RedwoodApolloClient private val redwoodClient: ApolloClient
 ) {
     suspend fun getNotes(
         filter: NoteFilterInput? = null,
@@ -106,8 +108,8 @@ class RedwoodApiManager @Inject constructor(
             before = Optional.presentIfNotNull(before),
             orderBy = Optional.presentIfNotNull(orderBy),
         )
-        val result = QLClientConfig
-            .enqueueQuery(query, block = redwoodClient.createClientConfigBlock())
+        val result = redwoodClient
+            .enqueueQuery(query)
             .dataAssertNoErrors.notes
 
         return result
@@ -137,8 +139,8 @@ class RedwoodApiManager @Inject constructor(
             )
         )
 
-        QLClientConfig
-            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+        redwoodClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors
     }
 
@@ -163,16 +165,16 @@ class RedwoodApiManager @Inject constructor(
             )
         )
 
-        QLClientConfig
-            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+        redwoodClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors
     }
 
     suspend fun deleteNote(noteId: String) {
         val mutation = DeleteNoteMutation(noteId)
 
-        QLClientConfig
-            .enqueueMutation(mutation, block = redwoodClient.createClientConfigBlock())
+        redwoodClient
+            .enqueueMutation(mutation)
             .dataAssertNoErrors
     }
 

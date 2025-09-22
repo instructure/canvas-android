@@ -35,6 +35,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.lifecycleScope
 import androidx.work.WorkInfo
+import kotlinx.coroutines.launch
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.managers.FileFolderManager
 import com.instructure.canvasapi2.models.CanvasContext
@@ -69,6 +70,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.isCourse
 import com.instructure.pandautils.utils.isCourseOrGroup
 import com.instructure.pandautils.utils.isGroup
@@ -113,9 +115,14 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
     @Inject
     lateinit var pageViewUtils: PageViewUtils
 
+    @Inject
+    lateinit var featureFlagProvider: FeatureFlagProvider
+
     private val binding by viewBinding(FragmentFileListBinding::bind)
 
     private var canvasContext by ParcelableArg<CanvasContext>(key = Const.CANVAS_CONTEXT)
+    
+    private var restrictStudentAccessFlag: Boolean = false
 
     @Suppress("unused")
     @PageViewUrl
@@ -188,9 +195,13 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
         if (canvasContext.type == CanvasContext.Type.USER) applyTheme()
         if (folder != null) {
-            configureViews()
+            lifecycleScope.launch {
+                restrictStudentAccessFlag = checkRestrictStudentAccessFlag()
+                configureViews()
+            }
         } else {
             lifecycleScope.tryLaunch {
+                restrictStudentAccessFlag = checkRestrictStudentAccessFlag()
                 folder = if (folderId != 0L) {
                     // If folderId is valid, get folder by ID
                     fileListRepository.getFolder(folderId, true)
@@ -200,6 +211,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 }
                 configureViews()
             } catch {
+                restrictStudentAccessFlag = false
                 toast(R.string.errorOccurred)
                 activity?.onBackPressed()
             }
@@ -357,7 +369,7 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         val isUserFiles = canvasContext.type == CanvasContext.Type.USER
 
         if (recyclerAdapter == null) {
-            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, getFileMenuOptions(folder, canvasContext, fileListRepository.isOnline(), folder), folder, adapterCallback, fileListRepository)
+            recyclerAdapter = FileListRecyclerAdapter(requireContext(), canvasContext, emptyList(), folder, adapterCallback, fileListRepository)
         }
 
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView)
@@ -371,37 +383,50 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
 
         // Only show FAB for user files
         if ((isUserFiles || folder?.canUpload == true) && folder?.forSubmissions == false) {
-            addFab.setVisible()
-            addFab.onClickWithRequireNetwork { animateFabs() }
+            configureFabs()
+        }
+    }
+
+    private fun configureFabs() = with(binding) {
+        // Always show the main FAB and folder creation
+        addFab.setVisible()
+        addFab.onClickWithRequireNetwork { animateFabs() }
+        addFolderFab.onClickWithRequireNetwork {
+            animateFabs()
+            createFolder()
+        }
+
+        // Set up file upload functionality, but keep it hidden initially
+        if (!restrictStudentAccessFlag) {
+            addFileFab.setInvisible()
             addFileFab.onClickWithRequireNetwork {
                 animateFabs()
                 uploadFile()
             }
-            addFolderFab.onClickWithRequireNetwork {
-                animateFabs()
-                createFolder()
-            }
+        } else {
+            addFileFab.setGone()
+        }
 
-            // Add padding to bottom of RecyclerView to account for FAB
-            listView.post {
-                var bottomPad = addFab.height
-                bottomPad += (addFab.layoutParams as? MarginLayoutParams)?.let { it.topMargin + it.bottomMargin }
-                        ?: requireContext().DP(32).toInt()
-                listView.setPadding(
-                        listView.paddingLeft,
-                        listView.paddingTop,
-                        listView.paddingRight,
-                        bottomPad
-                )
-            }
+        // Add padding to bottom of RecyclerView to account for FAB
+        listView.post {
+            var bottomPad = addFab.height
+            bottomPad += (addFab.layoutParams as? MarginLayoutParams)?.let { it.topMargin + it.bottomMargin }
+                    ?: requireContext().DP(32).toInt()
+            listView.setPadding(
+                    listView.paddingLeft,
+                    listView.paddingTop,
+                    listView.paddingRight,
+                    bottomPad
+            )
         }
     }
 
     private fun showOptionMenu(item: FileFolder, anchorView: View) {
         val popup = PopupMenu(requireContext(), anchorView)
         popup.inflate(R.menu.file_folder_options)
+        
+        val options = getFileMenuOptionsWithFeatureFlag(item, canvasContext, fileListRepository.isOnline(), folder)
         with(popup.menu) {
-            val options = getFileMenuOptions(item, canvasContext, fileListRepository.isOnline(), folder)
             // Only show alternate-open option for PDF files
             findItem(R.id.openAlternate).isVisible = options.contains(FileMenuType.OPEN_IN_ALTERNATE)
             findItem(R.id.download).isVisible = options.contains(FileMenuType.DOWNLOAD)
@@ -584,11 +609,14 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
             addFolderFab.startAnimation(fabHide)
             addFolderFab.isClickable = false
 
-            addFileFab.startAnimation(fabHide)
-            addFileFab.isClickable = false
+            // Hide upload FAB if it should be available (not GONE due to restrictions)
+            if (addFileFab.visibility != View.GONE) {
+                addFileFab.startAnimation(fabHide)
+                addFileFab.isClickable = false
+                addFileFab.setInvisible()
+            }
 
             // Needed for accessibility
-            addFileFab.setInvisible()
             addFolderFab.setInvisible()
             mFabOpen = false
         } else {
@@ -600,17 +628,44 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
                 isClickable = true
             }
 
-            addFileFab.apply {
-                startAnimation(fabReveal)
-                isClickable = true
+            if (addFileFab.visibility != View.GONE) {
+                addFileFab.apply {
+                    startAnimation(fabReveal)
+                    isClickable = true
+                }
+                addFileFab.setVisible()
             }
 
             // Needed for accessibility
-            addFileFab.setVisible()
             addFolderFab.setVisible()
 
             mFabOpen = true
         }
+    }
+
+    private suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return try {
+            featureFlagProvider.checkRestrictStudentAccessFlag()
+        } catch (e: Exception) {
+            false
+        }
+    }
+
+    private fun getFileMenuOptionsWithFeatureFlag(fileFolder: FileFolder?, canvasContext: CanvasContext, isOnline: Boolean, folder: FileFolder?): List<FileMenuType> {
+        val baseOptions = getFileMenuOptions(fileFolder, canvasContext, isOnline, folder)
+        
+        // If restrict_student_access feature flag is enabled, remove download options for students
+        if (restrictStudentAccessFlag && canvasContext.type == CanvasContext.Type.COURSE) {
+            val course = canvasContext as? Course
+            if (course?.isStudent == true) {
+                return baseOptions.filterNot { it == FileMenuType.DOWNLOAD || it == FileMenuType.OPEN_IN_ALTERNATE }
+            }
+        } else if (restrictStudentAccessFlag && canvasContext.type == CanvasContext.Type.USER) {
+            // For user files, remove download options when feature flag is enabled
+            return baseOptions.filterNot { it == FileMenuType.DOWNLOAD || it == FileMenuType.OPEN_IN_ALTERNATE }
+        }
+        
+        return baseOptions
     }
 
     @Suppress("unused")

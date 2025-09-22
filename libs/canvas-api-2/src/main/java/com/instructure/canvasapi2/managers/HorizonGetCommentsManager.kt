@@ -15,15 +15,16 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.GetUnreadCommentCountQuery
 import com.instructure.canvasapi2.HorizonGetSubmissionCommentsQuery
-import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.enqueueQuery
 import java.util.Date
 
 private const val SUBMISSION_COMMENTS_PAGE_SIZE = 5
 
-class HorizonGetCommentsManager {
+class HorizonGetCommentsManager(private val apolloClient: ApolloClient) {
 
     suspend fun getComments(
         assignmentId: Long,
@@ -46,7 +47,7 @@ class HorizonGetCommentsManager {
             last = Optional.presentIfNotNull(last),
             attempt = Optional.present(attempt)
         )
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+        val result = apolloClient.enqueueQuery(query, forceNetwork)
 
         val newEndCursor = result.data?.submission?.onSubmission?.commentsConnection?.pageInfo?.endCursor
         val hasNextPage = result.data?.submission?.onSubmission?.commentsConnection?.pageInfo?.hasNextPage ?: false
@@ -89,7 +90,7 @@ class HorizonGetCommentsManager {
             assignmentId.toString(),
             userId.toString()
         )
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork)
+        val result = apolloClient.enqueueQuery(query, forceNetwork)
 
         return result.data?.submission?.onSubmission?.unreadCommentCount ?: 0
     }

@@ -16,16 +16,17 @@
 
 package com.instructure.canvasapi2.managers.graphql
 
-import com.instructure.canvasapi2.QLClientConfig
+import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.SubmissionDetailsQuery
+import com.instructure.canvasapi2.enqueueQuery
 
-class SubmissionDetailsManagerImpl : SubmissionDetailsManager {
+class SubmissionDetailsManagerImpl(private val apolloClient: ApolloClient) : SubmissionDetailsManager {
     override suspend fun getSubmissionDetails(
         userId: Long,
         assignmentId: Long
     ): SubmissionDetailsQuery.Data {
         val query = SubmissionDetailsQuery(userId.toString(), assignmentId.toString())
-        val result = QLClientConfig.enqueueQuery(query)
+        val result = apolloClient.enqueueQuery(query)
         return result.dataAssertNoErrors
     }
 }

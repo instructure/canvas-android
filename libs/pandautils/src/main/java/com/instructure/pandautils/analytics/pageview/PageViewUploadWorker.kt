@@ -60,7 +60,7 @@ class PageViewUploadWorker @AssistedInject constructor(
             val orphanDate = Date(System.currentTimeMillis() - MAX_ORPHAN_AGE)
             val maxAgeDate = Date(System.currentTimeMillis() - MAX_EVENT_AGE)
 
-            val (localEvents, oldEvents) = pageViewDao.getAllPageViewEvents()
+            val (localEvents, oldEvents) = pageViewDao.getAllPageViewEventsForUser(apiPrefs.user?.id ?: 0)
                 .filter { it.eventDuration > 0 || it.timestamp.before(orphanDate) }
                 .partition { it.timestamp.after(maxAgeDate) }
 

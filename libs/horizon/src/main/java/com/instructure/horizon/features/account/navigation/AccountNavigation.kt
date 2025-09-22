@@ -16,15 +16,15 @@
  */
 package com.instructure.horizon.features.account.navigation
 
-import androidx.compose.runtime.Composable
+import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.navigation
 import com.instructure.horizon.features.account.AccountScreen
 import com.instructure.horizon.features.account.AccountViewModel
 import com.instructure.horizon.features.account.advanced.AccountAdvancedScreen
@@ -37,37 +37,37 @@ import com.instructure.horizon.features.account.password.AccountPasswordScreen
 import com.instructure.horizon.features.account.profile.AccountProfileScreen
 import com.instructure.horizon.features.account.profile.AccountProfileViewModel
 import com.instructure.horizon.features.account.reportabug.ReportABugWebView
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.animation.enterTransition
 import com.instructure.horizon.horizonui.animation.exitTransition
+import com.instructure.horizon.horizonui.animation.mainEnterTransition
+import com.instructure.horizon.horizonui.animation.mainExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
 
-@Composable
-fun AccountNavigation(
-    mainNavController: NavHostController,
-    modifier: Modifier = Modifier
+fun NavGraphBuilder.accountNavigation(
+    navController: NavHostController,
 ) {
-    val navController = rememberNavController()
-
-    NavHost(
-        navController,
-        enterTransition = { enterTransition },
-        exitTransition = { exitTransition },
-        popEnterTransition = { popEnterTransition },
-        popExitTransition = { popExitTransition },
+    navigation(
+        route = HomeNavigationRoute.Account.route,
         startDestination = AccountRoute.Account.route,
-        modifier = modifier
+        enterTransition = { if (isBottomNavDestination()) mainEnterTransition else enterTransition },
+        exitTransition = { if (isBottomNavDestination()) mainExitTransition else exitTransition },
+        popEnterTransition = { if (isBottomNavDestination()) mainEnterTransition else popEnterTransition },
+        popExitTransition = { if (isBottomNavDestination()) mainExitTransition else popExitTransition },
     ) {
-        composable(AccountRoute.Account.route) {
+        composable(
+            route = AccountRoute.Account.route,
+        ) {
             val viewModel = hiltViewModel<AccountViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AccountScreen(uiState, navController, mainNavController)
+            AccountScreen(uiState, navController)
         }
 
         composable(AccountRoute.Profile.route) {
             val viewModel = hiltViewModel<AccountProfileViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            AccountProfileScreen(uiState, navController, mainNavController)
+            AccountProfileScreen(uiState, navController)
         }
 
         composable(AccountRoute.Password.route) {
@@ -96,4 +96,15 @@ fun AccountNavigation(
             ReportABugWebView(navController)
         }
     }
+}
+
+private fun AnimatedContentTransitionScope<NavBackStackEntry>.isBottomNavDestination(): Boolean {
+    val sourceRoute = this.initialState.destination.route ?: return false
+    val destinationRoute = this.targetState.destination.route ?: return false
+    return sourceRoute.contains(HomeNavigationRoute.Learn.route)
+        || sourceRoute.contains(HomeNavigationRoute.Dashboard.route)
+        || sourceRoute.contains(HomeNavigationRoute.Skillspace.route)
+        || destinationRoute.contains(HomeNavigationRoute.Learn.route)
+        || destinationRoute.contains(HomeNavigationRoute.Dashboard.route)
+        || destinationRoute.contains(HomeNavigationRoute.Skillspace.route)
 }

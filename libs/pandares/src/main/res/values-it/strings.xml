@@ -908,6 +908,15 @@
         <item quantity="other">%s punti</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pt</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pt</item>
+        <item quantity="other">\/ %.0f pt</item>
+    </plurals>
     <string name="timeLimit">Limite di tempo</string>
     <string name="newPushNotifications">%1$s nuove notifiche</string>
     <string name="like">mi piace</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Firma</string>
     <string name="inboxSignatureTextfieldHeader">Testo firma</string>
     <string name="due_dateTime">Scadenza: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Inviato: %1$s, %2$s</string>
     <string name="noDueDate">Nessuna data di scadenza</string>
     <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
     <string name="needsGradingCount">%1$s richiedono la valutazione</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d punto</item>
         <item quantity="other">%d punti</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f pt)</item>
     </plurals>
     <string name="noAssignments">Nessun compito</string>
     <string name="assignmentGroup">Gruppo di compiti</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Scegli un corso</string>
     <string name="widgetGradesErrorLoadingCourses">Si è verificato un errore durante il caricamento dei corsi.</string>
     <string name="settingsSwitchExperience">Passa a Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Voto e Rubrica</string>
+    <string name="speedGraderDetailsTabTitle">Dettagli</string>
+    <string name="a11y_contentDescription_expandPanel">Espandi pannello</string>
+    <string name="a11y_contentDescription_collapsePanel">Comprimi pannello</string>
+    <string name="pointGradeHint">Scrivi punteggio qui</string>
+    <string name="percentageGradeHint">Scrivi percentuale qui</string>
+    <string name="completeIncompleteGradeScore">%.0f/%.0f</string>
+    <string name="letterGrade">Voto in lettere</string>
+    <string name="daysLate">Giorni in ritardo</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pt</item>
+        <item quantity="other">%s / %s pt</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Penale ritardo</string>
+    <string name="gradingStatus_none">Nessuno</string>
+    <string name="gradingStatus_late">In ritardo</string>
+    <string name="gradingStatus_missing">Mancante</string>
+    <string name="gradingStatus_extended">Esteso</string>
+    <string name="gradingStatus_excused">Giustificato</string>
+    <string name="status">Stato</string>
+    <string name="speedGraderStudentNotes">Note studente</string>
+    <string name="speedGraderStudentNotesLoading">Caricamento note studente</string>
+    <string name="speedGraderStudentNotesErrorTitle">Spiacenti. Si è verificato un problema</string>
+    <string name="speedGraderStudentNotesErrorDescription">Si sono verificati dei problemi nel visualizzare le note studente.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Aggiorna</string>
+    <string name="not_graded">Non valutato</string>
+    <string name="speedGraderSubmissionDetails">Dettagli consegna</string>
+    <string name="speedGraderSubmissionDetailsLoading">Caricamento dettagli consegna</string>
+    <string name="speedGraderWordCount">Conteggio parole</string>
+    <string name="rubricsTitle">Rubriche</string>
+    <string name="rubricScore">Punteggio</string>
+    <string name="rubricScoreHint">Scrivi punteggio qui</string>
+    <string name="speedGraderCommentsTitle">Commenti (%s)</string>
+    <string name="anonymousGradingStudentLabel">Studente</string>
+    <string name="anonymousGradingUserLabel">Utente anonimo</string>
+    <string name="rubricNote">Nora rubrica</string>
+    <string name="content_description_edit_rubric_comment">Modifica nota rubrica</string>
+    <string name="rubricNoteHint">Nota</string>
+    <string name="a11y_sendRubricNoteContentDescription">Invia nota rubrica</string>
+    <string name="select_attachment_type">Seleziona tipo di allegato</string>
+    <string name="choose_files">Scegli file</string>
+    <string name="a11y_expanded">Esteso</string>
+    <string name="a11y_collapsed">Compresso</string>
+    <string name="excuseStudent">Giustifica studente</string>
+    <string name="detailsEmptyMessage">Non abbiamo altri dettagli per questo Studente e questo Compito</string>
+    <string name="daysLateHint">Scrivi giorni di ritardo</string>
+    <string name="reply_to_topic">Rispondi all\'argomento</string>
+    <string name="additional_replies">Risposte aggiuntive (%d)</string>
 </resources>

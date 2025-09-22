@@ -908,6 +908,15 @@
         <item quantity="other">%s punten</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">ptn</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">V %.0f pt</item>
+        <item quantity="other">V %.0f ptn</item>
+    </plurals>
     <string name="timeLimit">Tijdslimiet</string>
     <string name="newPushNotifications">%1$s Nieuwe meldingen</string>
     <string name="like">like</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Handtekening</string>
     <string name="inboxSignatureTextfieldHeader">Tekst handtekening</string>
     <string name="due_dateTime">Inleverdatum: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Ingeleverd: %1$s, %2$s</string>
     <string name="noDueDate">Geen inleverdatum</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s moet worden beoordeeld</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d punt</item>
         <item quantity="other">%d punten</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f ptn)</item>
     </plurals>
     <string name="noAssignments">Geen opdrachten</string>
     <string name="assignmentGroup">Opdrachtgroep</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Laten we cursus kiezen</string>
     <string name="widgetGradesErrorLoadingCourses">Er is een fout opgetreden tijdens het laden van cursussen.</string>
     <string name="settingsSwitchExperience">Schakel over naar Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Cijfer en rubriek</string>
+    <string name="speedGraderDetailsTabTitle">Details</string>
+    <string name="a11y_contentDescription_expandPanel">Panel uitvouwen</string>
+    <string name="a11y_contentDescription_collapsePanel">Panel samenvouwen</string>
+    <string name="pointGradeHint">Noteer hier de score</string>
+    <string name="percentageGradeHint">Noteer hier het percentage</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Beoordeling in lettervorm</string>
+    <string name="daysLate">Dagen te laat</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pt</item>
+        <item quantity="other">%s / %s ptn</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Sanctie indien te laat</string>
+    <string name="gradingStatus_none">Geen</string>
+    <string name="gradingStatus_late">Te laat</string>
+    <string name="gradingStatus_missing">Ontbrekend</string>
+    <string name="gradingStatus_extended">Verlengd</string>
+    <string name="gradingStatus_excused">Vrijgesteld</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Notities over cursist</string>
+    <string name="speedGraderStudentNotesLoading">Notities over cursist laden</string>
+    <string name="speedGraderStudentNotesErrorTitle">Oeps! Er is iets misgegaan</string>
+    <string name="speedGraderStudentNotesErrorDescription">We kunnen de notities over de cursist niet weergeven.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Vernieuwen</string>
+    <string name="not_graded">Niet beoordeeld</string>
+    <string name="speedGraderSubmissionDetails">Details inlevering</string>
+    <string name="speedGraderSubmissionDetailsLoading">Bezig met laden van inleveringsdetails</string>
+    <string name="speedGraderWordCount">Aantal woorden</string>
+    <string name="rubricsTitle">Rubrieken</string>
+    <string name="rubricScore">Score</string>
+    <string name="rubricScoreHint">Noteer hier de score</string>
+    <string name="speedGraderCommentsTitle">Opmerkingen (%s)</string>
+    <string name="anonymousGradingStudentLabel">Cursist</string>
+    <string name="anonymousGradingUserLabel">Anonieme gebruiker</string>
+    <string name="rubricNote">Rubrieknotitie</string>
+    <string name="content_description_edit_rubric_comment">Rubrieknotitie bewerken</string>
+    <string name="rubricNoteHint">Opmerking</string>
+    <string name="a11y_sendRubricNoteContentDescription">Verstuur een rubrieknotitie</string>
+    <string name="select_attachment_type">Type bijlage selecteren</string>
+    <string name="choose_files">Bestanden kiezen</string>
+    <string name="a11y_expanded">Uitgevouwen</string>
+    <string name="a11y_collapsed">Samengevouwen</string>
+    <string name="excuseStudent">Cursist vrijstellen</string>
+    <string name="detailsEmptyMessage">We hebben geen verdere details over deze cursist en opdracht</string>
+    <string name="daysLateHint">Schrijf het aantal dagen te laat op</string>
+    <string name="reply_to_topic">Reageer op onderwerp</string>
+    <string name="additional_replies">Aanvullende reacties (%d)</string>
 </resources>

@@ -21,6 +21,7 @@ import java.util.Date
 
 data class DashboardUiState(
     val logoUrl: String = "",
+    val programsUiState: List<DashboardProgramUiState> = emptyList(),
     val coursesUiState: List<DashboardCourseUiState> = emptyList(),
     val invitesUiState: List<CourseInviteUiState> = emptyList(),
     val loadingState: LoadingState = LoadingState(),
@@ -37,7 +38,13 @@ data class DashboardCourseUiState(
     val progressLabel: String? = null,
     val remainingTime: String? = null,
     val learningObjectType: LearningObjectType? = null,
-    val dueDate: Date? = null
+    val dueDate: Date? = null,
+    val parentPrograms: List<DashboardCourseProgram> = emptyList()
+)
+
+data class DashboardCourseProgram(
+    val programName: String = "",
+    val programId: String = "",
 )
 
 data class CourseInviteUiState(
@@ -46,4 +53,9 @@ data class CourseInviteUiState(
     val onAccept: () -> Unit,
     val onDismiss: () -> Unit,
     val acceptLoading: Boolean = false,
+)
+
+data class DashboardProgramUiState(
+    val id: String,
+    val name: String,
 )

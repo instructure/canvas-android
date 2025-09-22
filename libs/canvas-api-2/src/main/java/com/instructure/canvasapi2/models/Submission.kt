@@ -89,6 +89,10 @@ data class Submission(
         val customGradeStatusId: Long? = null,
         @SerializedName("seconds_late")
         val secondsLate: Long? = null,
+        @SerializedName("has_sub_assignment_submissions")
+        val hasSubAssignmentSubmissions: Boolean = false,
+        @SerializedName("sub_assignment_submissions")
+        val subAssignmentSubmissions: ArrayList<SubAssignmentSubmission> = arrayListOf(),
 
         // Testing purpose fields
         val status: String? = null

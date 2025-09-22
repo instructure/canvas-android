@@ -41,6 +41,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -51,6 +54,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
@@ -125,6 +129,7 @@ import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
+import kotlinx.coroutines.launch
 import kotlin.math.abs
 
 const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
@@ -135,20 +140,29 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
     val activity = LocalContext.current.getActivityOrNull()
     if (activity != null) ViewStyler.setStatusBarColor(activity, ThemePrefs.brandColor, true)
     if (uiState.progressScreenState.visible) ProgressScreen(uiState.progressScreenState, uiState.loadingState)
-    Scaffold(containerColor = HorizonColors.Surface.institution(), bottomBar = {
-        ModuleItemSequenceBottomBar(
-            showNextButton = uiState.currentPosition < uiState.items.size - 1,
-            showPreviousButton = uiState.currentPosition > 0,
-            showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
-            showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
-            onNextClick = uiState.onNextClick,
-            onPreviousClick = uiState.onPreviousClick,
-            onAssignmentToolsClick = uiState.onAssignmentToolsClick,
-            onAiAssistClick = { uiState.updateShowAiAssist(true) },
-            onNotebookClick = { uiState.updateShowNotebook(true) },
-            hasUnreadComments = uiState.hasUnreadComments
-        )
-    }) { contentPadding ->
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
+
+    Scaffold(
+        containerColor = HorizonColors.Surface.institution(),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
+        bottomBar = {
+            ModuleItemSequenceBottomBar(
+                showNextButton = uiState.currentPosition < uiState.items.size - 1,
+                showPreviousButton = uiState.currentPosition > 0,
+                showNotebookButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Page,
+                showAssignmentToolsButton = uiState.currentItem?.moduleItemContent is ModuleItemContent.Assignment,
+                onNextClick = uiState.onNextClick,
+                onPreviousClick = uiState.onPreviousClick,
+                onAssignmentToolsClick = uiState.onAssignmentToolsClick,
+                onAiAssistClick = { uiState.updateShowAiAssist(true) },
+                onNotebookClick = { uiState.updateShowNotebook(true) },
+                notebookEnabled = uiState.notebookButtonEnabled,
+                aiAssistEnabled = uiState.aiAssistButtonEnabled,
+                hasUnreadComments = uiState.hasUnreadComments
+            )
+        }
+    ) { contentPadding ->
         Box(modifier = Modifier.padding(contentPadding)) {
             if (uiState.showAiAssist) {
                 AiAssistantScreen(
@@ -159,7 +173,15 @@ fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: Modu
                 NotebookBottomDialog(
                     uiState.courseId,
                     uiState.objectTypeAndId,
-                    mainNavController,
+                    { snackbarMessage, onDismiss ->
+                        scope.launch {
+                            if (snackbarMessage != null) {
+                                val result = snackbarHostState.showSnackbar(snackbarMessage)
+                                if (result == SnackbarResult.Dismissed) {
+                                    onDismiss()
+                                }
+                            }
+                        } },
                     { uiState.updateShowNotebook(false) }
                 )
             }
@@ -530,6 +552,8 @@ private fun ModuleItemSequenceBottomBar(
     onPreviousClick: () -> Unit,
     onAssignmentToolsClick: () -> Unit,
     modifier: Modifier = Modifier,
+    aiAssistEnabled: Boolean = false,
+    notebookEnabled: Boolean = false,
     onAiAssistClick: () -> Unit = {},
     onNotebookClick: () -> Unit = {},
     hasUnreadComments: Boolean = false
@@ -555,12 +579,14 @@ private fun ModuleItemSequenceBottomBar(
             ) {
                 IconButton(
                     iconRes = R.drawable.ai,
+                    enabled = aiAssistEnabled,
                     color = IconButtonColor.Ai,
                     elevation = HorizonElevation.level4,
                     onClick = onAiAssistClick,
                 )
                 if (showNotebookButton) IconButton(
                     iconRes = R.drawable.menu_book_notebook,
+                    enabled = notebookEnabled,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
                     onClick = onNotebookClick,

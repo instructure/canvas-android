@@ -908,6 +908,15 @@
         <item quantity="other">%s point</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">point</item>
+        <item quantity="other">point</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pkt</item>
+        <item quantity="other">\/ %.0f pkt</item>
+    </plurals>
     <string name="timeLimit">Tidsbegrænsning</string>
     <string name="newPushNotifications">%1$s nye meddelelser</string>
     <string name="like">lide</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Signatur</string>
     <string name="inboxSignatureTextfieldHeader">Signaturtekst</string>
     <string name="due_dateTime">Forfalder: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Afleveret: %1$s, %2$s</string>
     <string name="noDueDate">Ingen afleveringsdato</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Skal bedømmes</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d point</item>
         <item quantity="other">%d point</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pkt)</item>
+        <item quantity="other">(%.0f pkt)</item>
     </plurals>
     <string name="noAssignments">Ingen opgaver</string>
     <string name="assignmentGroup">Opgavegruppe</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Lad os vælge et fag</string>
     <string name="widgetGradesErrorLoadingCourses">Der opstod en fejl under indlæsning af fag.</string>
     <string name="settingsSwitchExperience">Skift til Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Vurdering og vurderingskriterie</string>
+    <string name="speedGraderDetailsTabTitle">Nærmere oplysninger</string>
+    <string name="a11y_contentDescription_expandPanel">Udvid panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Skjul panel</string>
+    <string name="pointGradeHint">Skriv resultat her</string>
+    <string name="percentageGradeHint">Skriv procent her</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Bogstavvurderinger</string>
+    <string name="daysLate">Dage for sent</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pkt</item>
+        <item quantity="other">%s / %s point</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Straf for sen aflevering</string>
+    <string name="gradingStatus_none">Ingen</string>
+    <string name="gradingStatus_late">Sen</string>
+    <string name="gradingStatus_missing">Mangler</string>
+    <string name="gradingStatus_extended">Udvidet</string>
+    <string name="gradingStatus_excused">Undskyldt</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Elevnotater</string>
+    <string name="speedGraderStudentNotesLoading">Indlæser elevnotater</string>
+    <string name="speedGraderStudentNotesErrorTitle">Ups! Noget gik galt</string>
+    <string name="speedGraderStudentNotesErrorDescription">Vi har problemer med at vise elevnotater.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Opdater</string>
+    <string name="not_graded">Ikke bedømt</string>
+    <string name="speedGraderSubmissionDetails">Afleveringsdetaljer</string>
+    <string name="speedGraderSubmissionDetailsLoading">Indlæser afleveringsoplysninger</string>
+    <string name="speedGraderWordCount">Ordtælling</string>
+    <string name="rubricsTitle">Vurderingskriterier</string>
+    <string name="rubricScore">Resultat</string>
+    <string name="rubricScoreHint">Skriv resultat her</string>
+    <string name="speedGraderCommentsTitle">Kommentarer (%s)</string>
+    <string name="anonymousGradingStudentLabel">Elev</string>
+    <string name="anonymousGradingUserLabel">Anonym bruger</string>
+    <string name="rubricNote">Vurderingskriterier note</string>
+    <string name="content_description_edit_rubric_comment">Rediger vurderingskriterier note</string>
+    <string name="rubricNoteHint">Bemærk</string>
+    <string name="a11y_sendRubricNoteContentDescription">Send vurderingskriterier note</string>
+    <string name="select_attachment_type">Vælg bilagstype</string>
+    <string name="choose_files">Vælg filer</string>
+    <string name="a11y_expanded">Udvidet</string>
+    <string name="a11y_collapsed">Skjult</string>
+    <string name="excuseStudent">Fritag elev</string>
+    <string name="detailsEmptyMessage">Vi har ikke yderligere oplysninger om denne elev og opgave</string>
+    <string name="daysLateHint">Skriv dage forsinket</string>
+    <string name="reply_to_topic">Svar på emne</string>
+    <string name="additional_replies">Yderligere svar (%d)</string>
 </resources>
