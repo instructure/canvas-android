@@ -263,7 +263,7 @@ class DashboardViewModel @Inject constructor(
     private suspend fun loadUnreadCount() {
         val unreadCounts = dashboardRepository.getUnreadCounts(true)
         val unreadConversations = unreadCounts.firstOrNull { it.type == "Conversation" }?.count ?: 0
-        val unreadNotifications = unreadCounts.filter { it.type != "Conversation" }.sumOf { it.count }
+        val unreadNotifications = unreadCounts.filter { it.type == "Message" }.sumOf { it.unreadCount }
         _uiState.update {
             it.copy(
                 unreadCountState = DashboardUnreadState(

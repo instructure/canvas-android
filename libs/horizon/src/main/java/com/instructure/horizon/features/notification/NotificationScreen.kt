@@ -29,11 +29,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
@@ -67,6 +72,7 @@ import com.instructure.pandautils.utils.isPreviousDay
 import com.instructure.pandautils.utils.isSameDay
 import com.instructure.pandautils.utils.isSameWeek
 import com.instructure.pandautils.utils.localisedFormat
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
@@ -76,22 +82,37 @@ import java.util.Locale
 @Composable
 fun NotificationScreen(state: NotificationUiState, mainNavController: NavHostController) {
     val activity = LocalContext.current.getActivityOrNull()
+    val snackbarHostState = remember { SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         if (activity != null) ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
     }
 
     HorizonScaffold(
         title = stringResource(R.string.notificationsTitle),
+        snackbarHost = { SnackbarHost(hostState = snackbarHostState) },
         onBackPressed = { mainNavController.popBackStack() },
     ) { modifier ->
         LoadingStateWrapper(state.screenState) {
-            NotificationContent(mainNavController, state, modifier)
+            NotificationContent(
+                mainNavController,
+                state,
+                showSnackbar = { message ->
+                    scope.launch { snackbarHostState.showSnackbar(message) }
+                },
+                modifier
+            )
         }
     }
 }
 
 @Composable
-private fun NotificationContent(navController: NavHostController, state: NotificationUiState, modifier: Modifier = Modifier) {
+private fun NotificationContent(
+    navController: NavHostController,
+    state: NotificationUiState,
+    showSnackbar: (String) -> Unit,
+    modifier: Modifier = Modifier
+) {
     Column(
         modifier = modifier.background(HorizonColors.Surface.pageSecondary())
     ) {
@@ -106,7 +127,7 @@ private fun NotificationContent(navController: NavHostController, state: Notific
                 }
             } else {
                 items(state.notificationItems) { item ->
-                    NotificationItemContent(navController, item)
+                    NotificationItemContent(navController, item, showSnackbar)
                 }
             }
         }
@@ -127,8 +148,10 @@ private fun EmptyNotificationItemContent() {
 @Composable
 private fun NotificationItemContent(
     navController: NavHostController,
-    notificationItem: NotificationItem
+    notificationItem: NotificationItem,
+    showSnackbar: (String) -> Unit
 ) {
+    val context = LocalContext.current
     Column(
         modifier = Modifier
             .padding(horizontal = 24.dp, vertical = 8.dp)
@@ -136,6 +159,7 @@ private fun NotificationItemContent(
                 HorizonBorder.level2(HorizonColors.LineAndBorder.lineStroke()),
                 HorizonCornerRadius.level2
             )
+            .clip(HorizonCornerRadius.level2)
             .fillMaxWidth()
             .clickable {
                 when (val route = notificationItem.route) {
@@ -144,7 +168,11 @@ private fun NotificationItemContent(
                             .fromUri(route.deepLink.toUri())
                             .build()
 
-                        navController.navigate(request)
+                        try {
+                            navController.navigate(request)
+                        } catch (e: IllegalArgumentException) {
+                            showSnackbar(context.getString(R.string.notificationsFailedToOpenMessage))
+                        }
                     }
 
                     is NotificationRoute.ExplicitRoute -> {
@@ -290,5 +318,5 @@ private fun NotificationsScreenPreview() {
         notificationItems = sampleNotifications
     )
 
-    NotificationContent(navController = rememberNavController(), state = previewState)
+    NotificationContent(navController = rememberNavController(), state = previewState, {})
 }

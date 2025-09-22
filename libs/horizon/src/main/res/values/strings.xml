@@ -354,4 +354,5 @@
     <string name="learn_failedToRefresh">Failed to refresh programs and courses.</string>
     <string name="notificationsDateToday">Today</string>
     <string name="notificationsDateYesterday">Yesterday</string>
+    <string name="notificationsFailedToOpenMessage">Unable to open Notification</string>
 </resources>
