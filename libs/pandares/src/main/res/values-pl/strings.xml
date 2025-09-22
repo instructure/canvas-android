@@ -934,6 +934,19 @@
         <item quantity="other">%s punkty</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pkt</item>
+        <item quantity="few">pkt</item>
+        <item quantity="many">pkt</item>
+        <item quantity="other">pkt</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pkt</item>
+        <item quantity="few">\/ %.0f pkt</item>
+        <item quantity="many">\/ %.0f pkt</item>
+        <item quantity="other">\/ %.0f pkt</item>
+    </plurals>
     <string name="timeLimit">Limit czasu</string>
     <string name="newPushNotifications">Nowe powiadomienia: %1$s</string>
     <string name="like">lubię to</string>
@@ -2068,6 +2081,7 @@
     <string name="inboxSignatureSwitchLabel">Podpis</string>
     <string name="inboxSignatureTextfieldHeader">Treść podpisu</string>
     <string name="due_dateTime">Termin: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Wysłano: %1$s, %2$s</string>
     <string name="noDueDate">Brak terminu</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s wymaga oceny</string>
@@ -2077,6 +2091,12 @@
         <item quantity="few">%d punkty</item>
         <item quantity="many">%d punkty</item>
         <item quantity="other">%d punkty</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pkt)</item>
+        <item quantity="few">(%.0f pkt)</item>
+        <item quantity="many">(%.0f pkt)</item>
+        <item quantity="other">(%.0f pkt)</item>
     </plurals>
     <string name="noAssignments">Brak zadań</string>
     <string name="assignmentGroup">Grupa zadań</string>
@@ -2133,4 +2153,54 @@
     <string name="widgetSingleGradeSelectCourse">Wybierzmy kurs</string>
     <string name="widgetGradesErrorLoadingCourses">Wystąpił błąd podczas wczytywania kursów.</string>
     <string name="settingsSwitchExperience">Przełącz na Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Stopnie i kryteria ocen</string>
+    <string name="speedGraderDetailsTabTitle">Szczegóły</string>
+    <string name="a11y_contentDescription_expandPanel">Rozwiń panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Zwiń panel</string>
+    <string name="pointGradeHint">Wpisz wynik tutaj</string>
+    <string name="percentageGradeHint">Wpisz wartość procentową tutaj</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Ocena literowa</string>
+    <string name="daysLate">Dni po terminie</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pkt</item>
+        <item quantity="few">%s / %s pkt</item>
+        <item quantity="many">%s / %s pkt</item>
+        <item quantity="other">%s / %s pkt</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Kara za spóźnienie</string>
+    <string name="gradingStatus_none">Brak</string>
+    <string name="gradingStatus_late">Po terminie</string>
+    <string name="gradingStatus_missing">Brak</string>
+    <string name="gradingStatus_extended">Rozszerzone</string>
+    <string name="gradingStatus_excused">Usprawiedliwiony</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Uwagi dla uczestnika</string>
+    <string name="speedGraderStudentNotesLoading">Wczytywanie uwag dla uczestnika</string>
+    <string name="speedGraderStudentNotesErrorTitle">Ups! Coś poszło nie tak</string>
+    <string name="speedGraderStudentNotesErrorDescription">Wystąpił problem z wyświetleniem uwag dla uczestnika.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Odśwież</string>
+    <string name="not_graded">Nie oceniono</string>
+    <string name="speedGraderSubmissionDetails">Szczegółowe informacje dot. przesłanego zadania</string>
+    <string name="speedGraderSubmissionDetailsLoading">Wczytywanie szczegółów materiałów</string>
+    <string name="speedGraderWordCount">Liczba słów</string>
+    <string name="rubricsTitle">Kryteria ocen</string>
+    <string name="rubricScore">Wynik</string>
+    <string name="rubricScoreHint">Wpisz wynik tutaj</string>
+    <string name="speedGraderCommentsTitle">Komentarze (%s)</string>
+    <string name="anonymousGradingStudentLabel">Uczestnik</string>
+    <string name="anonymousGradingUserLabel">Anonimowy Użytkownik</string>
+    <string name="rubricNote">Notatka do kryteriów oceny</string>
+    <string name="content_description_edit_rubric_comment">Edytuj notatkę do kryteriów oceny</string>
+    <string name="rubricNoteHint">Uwaga</string>
+    <string name="a11y_sendRubricNoteContentDescription">Prześlij notatkę do kryteriów oceny</string>
+    <string name="select_attachment_type">Wybierz typ załącznika</string>
+    <string name="choose_files">Wybierz pliki</string>
+    <string name="a11y_expanded">Rozwinięte</string>
+    <string name="a11y_collapsed">Schowany</string>
+    <string name="excuseStudent">Zwolnij uczestnika z obowiązku</string>
+    <string name="detailsEmptyMessage">Nie mamy dodatkowych informacji dla tego uczestnika ani zadania</string>
+    <string name="daysLateHint">Wpisz dni spóźnienia</string>
+    <string name="reply_to_topic">Odpowiedź na temat</string>
+    <string name="additional_replies">Dodatkowe odpowiedzi (%d)</string>
 </resources>

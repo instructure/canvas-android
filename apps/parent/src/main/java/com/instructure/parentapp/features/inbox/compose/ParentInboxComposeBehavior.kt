@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2025 - present Instructure, Inc.
+ * Copyright (C) 2024 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,13 +14,11 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.inbox
+package com.instructure.parentapp.features.inbox.compose
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxNavigation
+import com.instructure.pandautils.features.inbox.compose.InboxComposeBehavior
+import javax.inject.Inject
 
-@Composable
-fun HorizonInboxScreen(mainNavController: NavHostController) {
-    HorizonInboxNavigation(mainNavController)
+class ParentInboxComposeBehavior @Inject constructor() : InboxComposeBehavior {
+    override suspend fun shouldHideSendIndividual(): Boolean = false
 }

@@ -15,8 +15,10 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
-import com.instructure.canvasapi2.JourneyGraphQLClientConfig
-import com.instructure.canvasapi2.QLClientConfig
+import com.apollographql.apollo.ApolloClient
+import com.instructure.canvasapi2.di.JourneyApolloClient
+import com.instructure.canvasapi2.enqueueMutation
+import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import com.instructure.journey.EnrollCourseMutation
@@ -49,11 +51,11 @@ data class ProgramRequirement(
 )
 
 class JourneyApiManager @Inject constructor(
-    private val journeyClient: JourneyGraphQLClientConfig
+    @JourneyApolloClient private val journeyClient: ApolloClient
 ) {
     suspend fun getPrograms(forceNetwork: Boolean): List<Program> {
         val query = EnrolledProgramsQuery()
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork = forceNetwork, block = journeyClient.createClientConfigBlock())
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork)
         return result.dataAssertNoErrors.enrolledPrograms.map {
             mapEnrolledProgram(it.programFields)
         }
@@ -61,7 +63,7 @@ class JourneyApiManager @Inject constructor(
 
     suspend fun getProgramById(programId: String, forceNetwork: Boolean): Program {
         val query = GetProgramByIdQuery(programId)
-        val result = QLClientConfig.enqueueQuery(query, forceNetwork = forceNetwork, block = journeyClient.createClientConfigBlock())
+        val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork)
         return mapEnrolledProgram(result.dataAssertNoErrors.program.programFields)
     }
 
@@ -126,7 +128,7 @@ class JourneyApiManager @Inject constructor(
 
     suspend fun enrollCourse(progressId: String): DataResult<Unit> {
         val mutation = EnrollCourseMutation(progressId)
-        val result = QLClientConfig.enqueueMutation(mutation, block = journeyClient.createClientConfigBlock())
+        val result = journeyClient.enqueueMutation(mutation)
         return if (result.exception != null) {
             DataResult.Fail(Failure.Exception(result.exception!!))
         } else {

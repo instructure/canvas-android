@@ -94,11 +94,13 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.NoRippleInteractionSource
 import com.instructure.pandautils.compose.composables.CanvasSwitch
+import com.instructure.pandautils.compose.composables.CheckpointItem
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.GroupHeader
 import com.instructure.pandautils.compose.composables.Loading
+import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.features.grades.gradepreferences.GradePreferencesScreen
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.announceAccessibilityText
@@ -530,7 +532,7 @@ fun AssignmentItem(
                 AnimatedVisibility(visible = uiState.checkpointsExpanded) {
                     Column(modifier = Modifier.padding(top = 8.dp)) {
                         uiState.checkpoints.forEach {
-                            CheckpointItem(it, userColor)
+                            CheckpointItem(it, Color(userColor))
                         }
                     }
                 }
@@ -567,88 +569,6 @@ fun AssignmentItem(
                         .rotate(iconRotation)
                 )
             }
-        }
-    }
-}
-
-@Composable
-private fun SubmissionState(submissionStateLabel: SubmissionStateLabel, testTag: String) {
-    if (submissionStateLabel != SubmissionStateLabel.None) {
-        Row {
-            Icon(
-                painter = painterResource(id = submissionStateLabel.iconRes),
-                contentDescription = null,
-                tint = colorResource(id = submissionStateLabel.colorRes),
-                modifier = Modifier
-                    .size(16.dp)
-                    .align(Alignment.CenterVertically)
-                    .semantics {
-                        drawableId = submissionStateLabel.iconRes
-                    }
-            )
-            Spacer(modifier = Modifier.width(4.dp))
-            Text(
-                text = when (submissionStateLabel) {
-                    is SubmissionStateLabel.Predefined -> stringResource(id = submissionStateLabel.labelRes)
-                    is SubmissionStateLabel.Custom -> submissionStateLabel.label
-                },
-                color = colorResource(id = submissionStateLabel.colorRes),
-                fontSize = 14.sp,
-                modifier = Modifier.testTag(testTag)
-            )
-        }
-    }
-}
-
-@OptIn(ExperimentalLayoutApi::class)
-@Composable
-private fun CheckpointItem(
-    discussionCheckpointUiState: DiscussionCheckpointUiState,
-    userColor: Int
-) {
-    Column(
-        modifier = Modifier
-            .padding(top = 8.dp)
-            .semantics(true) {}
-    ) {
-        Text(
-            text = discussionCheckpointUiState.name,
-            color = colorResource(id = R.color.textDarkest),
-            fontSize = 16.sp
-        )
-        FlowRow {
-            Text(
-                text = discussionCheckpointUiState.dueDate,
-                color = colorResource(id = R.color.textDark),
-                fontSize = 14.sp,
-                modifier = Modifier.testTag("checkpointDueDate")
-            )
-            if (discussionCheckpointUiState.submissionStateLabel != SubmissionStateLabel.None) {
-                Spacer(modifier = Modifier.width(4.dp))
-                Box(
-                    Modifier
-                        .height(16.dp)
-                        .width(1.dp)
-                        .clip(RoundedCornerShape(1.dp))
-                        .background(colorResource(id = R.color.borderMedium))
-                        .align(Alignment.CenterVertically)
-                )
-                Spacer(modifier = Modifier.width(4.dp))
-                SubmissionState(discussionCheckpointUiState.submissionStateLabel, "checkpointSubmissionStateLabel")
-            }
-        }
-        val gradeText = discussionCheckpointUiState.displayGrade.text
-        if (gradeText.isNotEmpty()) {
-            Text(
-                text = gradeText,
-                color = Color(userColor),
-                fontSize = 16.sp,
-                modifier = Modifier
-                    .semantics {
-                        contentDescription = discussionCheckpointUiState.displayGrade.contentDescription
-                    }
-                    .testTag("checkpointGradeText")
-            )
         }
     }
 }

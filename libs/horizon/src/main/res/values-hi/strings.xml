@@ -67,8 +67,8 @@
     <string name="overview">अवलोकन</string>
     <string name="scores">अंक</string>
     <string name="notes">नोट्स</string>
-    <string name="assignmentName">असाइनमेंट नाम</string>
-    <string name="dueDate">नियत तिथि</string>
+    <string name="scoresSortingAssignmentNameAscending">असाइनमेंट नाम (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">नियत तिथि (नवीनतम सबसे पहले)</string>
     <string name="scoresItemassignmentName">नाम: %1$s</string>
     <string name="scoresItemDueDate">तिथि: %1$s</string>
     <string name="noDueDate">कोई नियत तिथि नहीं</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">उन्नत</string>
     <string name="accountSupportHeading">समर्थन</string>
     <string name="accountGiveFeedbackLabel">फ़ीडबैक दें</string>
+    <string name="accountReportABug">बग की रिपोर्ट करें</string>
     <string name="accountBetaCommunityLabel">बीटा कम्युनिटी</string>
     <string name="accountFullNameLabel">पूरा नाम</string>
     <string name="a11yNavigateBack">वापस नेविगेट करें</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">पाठ्यक्रम आमंत्रण स्वीकार करने में विफल</string>
     <string name="dashboard_emptyMessage">आप वर्तमान में किसी पाठ्यक्रम में नामांकित नहीं हैं।</string>
     <string name="learnEmptyMessage">आप वर्तमान में किसी पाठ्यक्रम में नामांकित नहीं हैं।</string>
+    <string name="programsProgressBar_percentComplete">%s\%% पूरा हुआ</string>
+    <string name="programsProgressBar_notStarted">शुरू नहीं हुआ</string>
+    <string name="programsCourseCard_enrollButton">नामांकन करें</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">आवश्यक</string>
+    <string name="programCourseTag_optional">वैकल्पिक</string>
+    <string name="programCourseTag_locked">लॉक किया गया</string>
+    <string name="programCourseTag_completed">पूरा हुआ</string>
+    <string name="programCourseTag_enrolled">नामांकन किया गया</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">%2$d में से %1$d पाठ्यक्रम पूरा करें</item>
+        <item quantity="other">%2$d में से %1$d पाठ्यक्रम पूरे करें</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">कार्यक्रम रिफ़्रेश करने में विफल</string>
+    <string name="programSwitcher_programOverview">कार्यक्रम अवलोकन</string>
+    <string name="programSwitcher_goBack">सभी</string>
+    <string name="learnScreen_partOfProgram">%s का हिस्सा</string>
+    <string name="learnScreen_courseCannotBeOpened">पाठ्यक्रम नहीं खोला जा सकता।</string>
 </resources>

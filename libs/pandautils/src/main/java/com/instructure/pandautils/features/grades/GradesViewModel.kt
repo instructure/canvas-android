@@ -32,6 +32,7 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.gradepreferences.SortBy
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.filterHiddenAssignments
@@ -232,7 +233,7 @@ class GradesViewModel @Inject constructor(
             submissionStateLabel = submissionStateLabel,
             displayGrade = assignment.getGrade(
                 submission = assignment.submission,
-                context = context,
+                resources = context.resources,
                 restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault(),
                 gradingScheme = course?.gradingScheme.orEmpty(),
                 showZeroPossiblePoints = true,
@@ -260,12 +261,13 @@ class GradesViewModel @Inject constructor(
                     displayGrade = assignment.getSubAssignmentSubmissionGrade(
                         possiblePoints = checkpoint.pointsPossible.orDefault(),
                         submission = subAssignmentSubmission,
-                        context = context,
+                        resources = context.resources,
                         restrictQuantitativeData = course?.settings?.restrictQuantitativeData.orDefault(),
                         gradingScheme = course?.gradingScheme.orEmpty(),
                         showZeroPossiblePoints = true,
                         showNotGraded = true
-                    )
+                    ),
+                    pointsPossible = checkpoint.pointsPossible?.toInt().orDefault()
                 )
             },
             checkpointsExpanded = false

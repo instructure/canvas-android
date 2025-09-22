@@ -895,6 +895,13 @@
         <item quantity="other">%s 分</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="other">得分</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="other">\/ %.0f 分</item>
+    </plurals>
     <string name="timeLimit">时间限制</string>
     <string name="newPushNotifications">%1$s 条新通知</string>
     <string name="like">喜欢</string>
@@ -1975,12 +1982,16 @@
     <string name="inboxSignatureSwitchLabel">签名</string>
     <string name="inboxSignatureTextfieldHeader">签名文本</string>
     <string name="due_dateTime">到期：%1$s，%2$s</string>
+    <string name="submitted_dateTime">已提交：%1$s，%2$s</string>
     <string name="noDueDate">无截止日期</string>
     <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
     <string name="needsGradingCount">%1$s 需要评分</string>
     <string name="assignmentListTitle">作业列表</string>
     <plurals name="assignmentListMaxpoints">
         <item quantity="other">%d 分</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="other">（%.0f 分）</item>
     </plurals>
     <string name="noAssignments">无作业</string>
     <string name="assignmentGroup">作业小组</string>
@@ -2037,4 +2048,51 @@
     <string name="widgetSingleGradeSelectCourse">请选择课程</string>
     <string name="widgetGradesErrorLoadingCourses">加载课程时出错。</string>
     <string name="settingsSwitchExperience">切换到 Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">评分和评价量规</string>
+    <string name="speedGraderDetailsTabTitle">详情</string>
+    <string name="a11y_contentDescription_expandPanel">展开面板</string>
+    <string name="a11y_contentDescription_collapsePanel">折叠面板</string>
+    <string name="pointGradeHint">在此处写下分数</string>
+    <string name="percentageGradeHint">在此处写下百分比</string>
+    <string name="completeIncompleteGradeScore">%.0f/%.0f</string>
+    <string name="letterGrade">字母评分</string>
+    <string name="daysLate">延迟天数</string>
+    <plurals name="pointTotal">
+        <item quantity="other">%s / %s 分</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">迟交罚分</string>
+    <string name="gradingStatus_none">无</string>
+    <string name="gradingStatus_late">迟交</string>
+    <string name="gradingStatus_missing">未交</string>
+    <string name="gradingStatus_extended">扩展</string>
+    <string name="gradingStatus_excused">已免除</string>
+    <string name="status">状态</string>
+    <string name="speedGraderStudentNotes">学生备注</string>
+    <string name="speedGraderStudentNotesLoading">正在加载学生备注</string>
+    <string name="speedGraderStudentNotesErrorTitle">糟糕！遇到错误</string>
+    <string name="speedGraderStudentNotesErrorDescription">显示学生备注时遇到问题。</string>
+    <string name="speedGraderStudentNotesErrorButtonText">刷新</string>
+    <string name="not_graded">未评分</string>
+    <string name="speedGraderSubmissionDetails">提交详细信息</string>
+    <string name="speedGraderSubmissionDetailsLoading">正在加载提交详细信息</string>
+    <string name="speedGraderWordCount">字数统计</string>
+    <string name="rubricsTitle">评价量规</string>
+    <string name="rubricScore">评分</string>
+    <string name="rubricScoreHint">在此处写下分数</string>
+    <string name="speedGraderCommentsTitle">备注 (%s)</string>
+    <string name="anonymousGradingStudentLabel">学生</string>
+    <string name="anonymousGradingUserLabel">匿名用户</string>
+    <string name="rubricNote">评价量规备注</string>
+    <string name="content_description_edit_rubric_comment">编辑评价量规备注</string>
+    <string name="rubricNoteHint">注</string>
+    <string name="a11y_sendRubricNoteContentDescription">发送评价量规备注</string>
+    <string name="select_attachment_type">选择附件类型</string>
+    <string name="choose_files">选择文件</string>
+    <string name="a11y_expanded">已扩展</string>
+    <string name="a11y_collapsed">折叠</string>
+    <string name="excuseStudent">免除学生</string>
+    <string name="detailsEmptyMessage">没有关于此学生和作业的更多详情</string>
+    <string name="daysLateHint">输入延迟天数</string>
+    <string name="reply_to_topic">回复主题</string>
+    <string name="additional_replies">更多回复 (%d)</string>
 </resources>
