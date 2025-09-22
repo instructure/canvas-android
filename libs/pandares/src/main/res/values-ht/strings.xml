@@ -908,6 +908,15 @@
         <item quantity="other">%s pwen</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pwen</item>
+        <item quantity="other">pwen</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pwen</item>
+        <item quantity="other">\/ %.0f pwen</item>
+    </plurals>
     <string name="timeLimit">Limit Tan</string>
     <string name="newPushNotifications">%1$s Nouvo Avètisman</string>
     <string name="like">jèm</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Siyati</string>
     <string name="inboxSignatureTextfieldHeader">Tèks siyati</string>
     <string name="due_dateTime">Delè: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Soumèt: %1$s, %2$s</string>
     <string name="noDueDate">San Delè</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Bezwen Evalyasyon</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d pwen</item>
         <item quantity="other">%d pwen</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pwen)</item>
+        <item quantity="other">(%.0f pwen)</item>
     </plurals>
     <string name="noAssignments">Pa gen sesyon</string>
     <string name="assignmentGroup">Sesyon Gwoup</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">An n chwazi yon kou</string>
     <string name="widgetGradesErrorLoadingCourses">Yon erè fèt pandan chajman kou yo:</string>
     <string name="settingsSwitchExperience">Chanje a Karyè Canvas</string>
+    <string name="speedGraderGradeTabTitle">Nòt &amp; Ribrik</string>
+    <string name="speedGraderDetailsTabTitle">Detay</string>
+    <string name="a11y_contentDescription_expandPanel">Elaji Panèl</string>
+    <string name="a11y_contentDescription_collapsePanel">Retresi Panèl</string>
+    <string name="pointGradeHint">Ekri rezilta a isit la</string>
+    <string name="percentageGradeHint">Ekri pousantaj la isit la</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Nòt an Lèt</string>
+    <string name="daysLate">Jou an reta</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pwen</item>
+        <item quantity="other">%s / %s pwen</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Penalite pou Reta</string>
+    <string name="gradingStatus_none">Okenn</string>
+    <string name="gradingStatus_late">An reta</string>
+    <string name="gradingStatus_missing">Manke</string>
+    <string name="gradingStatus_extended">Elaji</string>
+    <string name="gradingStatus_excused">Egzante</string>
+    <string name="status">Estati</string>
+    <string name="speedGraderStudentNotes">Nòt Elèv</string>
+    <string name="speedGraderStudentNotesLoading">Chajman Nòt Elèv</string>
+    <string name="speedGraderStudentNotesErrorTitle">Oops! Gen yon Bagay ki Pase Mal</string>
+    <string name="speedGraderStudentNotesErrorDescription">Nou\ gen pwoblèm pou afiche nòt elèv la.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Aktyalize</string>
+    <string name="not_graded">Pa Klase</string>
+    <string name="speedGraderSubmissionDetails">Detay Soumisyon</string>
+    <string name="speedGraderSubmissionDetailsLoading">Chajman detay Soumisyon</string>
+    <string name="speedGraderWordCount">Kantite Mo</string>
+    <string name="rubricsTitle">Ribrik</string>
+    <string name="rubricScore">Nòt</string>
+    <string name="rubricScoreHint">Ekri rezilta a isit la</string>
+    <string name="speedGraderCommentsTitle">Kòmantè (%s)</string>
+    <string name="anonymousGradingStudentLabel">Elèv</string>
+    <string name="anonymousGradingUserLabel">Itilizatè Anomin</string>
+    <string name="rubricNote">Nòt Ribrik</string>
+    <string name="content_description_edit_rubric_comment">Modifye nòt ribrik</string>
+    <string name="rubricNoteHint">Nòt</string>
+    <string name="a11y_sendRubricNoteContentDescription">Voye nòt ribrik</string>
+    <string name="select_attachment_type">Seleksyone Tip Atachman</string>
+    <string name="choose_files">Chwazi Fichye</string>
+    <string name="a11y_expanded">Elaji</string>
+    <string name="a11y_collapsed">Redwi</string>
+    <string name="excuseStudent">Eskiz Elèv</string>
+    <string name="detailsEmptyMessage">Nou pa gen lòt detay pou Elèv sa a ak Devwa sa a</string>
+    <string name="daysLateHint">Ekri jou reta yo</string>
+    <string name="reply_to_topic">Reponn a sijè</string>
+    <string name="additional_replies">Plis repons (%d)</string>
 </resources>

@@ -67,8 +67,8 @@
     <string name="overview">Descripción general</string>
     <string name="scores">Puntajes</string>
     <string name="notes">Notas</string>
-    <string name="assignmentName">Nombre de la tarea</string>
-    <string name="dueDate">Fecha de entrega</string>
+    <string name="scoresSortingAssignmentNameAscending">Nombre de la tarea (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Fecha de entrega (de la más reciente a la más antigua)</string>
     <string name="scoresItemassignmentName">Nombre: %1$s</string>
     <string name="scoresItemDueDate">Fecha: %1$s</string>
     <string name="noDueDate">No hay fecha de entrega</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avanzada</string>
     <string name="accountSupportHeading">Soporte técnico</string>
     <string name="accountGiveFeedbackLabel">Proporcione retroalimentación</string>
+    <string name="accountReportABug">Reportar un problema</string>
     <string name="accountBetaCommunityLabel">Comunidad beta</string>
     <string name="accountFullNameLabel">Nombre completo</string>
     <string name="a11yNavigateBack">Volver atrás</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">No se pudo aceptar la invitación al curso</string>
     <string name="dashboard_emptyMessage">En este momento, no está inscrito en ningún curso.</string>
     <string name="learnEmptyMessage">En este momento, no está inscrito en ningún curso.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% completo</string>
+    <string name="programsProgressBar_notStarted">No iniciado</string>
+    <string name="programsCourseCard_enrollButton">Inscribir</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Obligatorio</string>
+    <string name="programCourseTag_optional">Opcional</string>
+    <string name="programCourseTag_locked">Bloqueado</string>
+    <string name="programCourseTag_completed">Completado</string>
+    <string name="programCourseTag_enrolled">Inscrito</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Completar %1$d de %2$d curso</item>
+        <item quantity="other">Completar %1$d de %2$d cursos</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">No se pudo actualizar el programa.</string>
+    <string name="programSwitcher_programOverview">Resumen del programa</string>
+    <string name="programSwitcher_goBack">Todo</string>
+    <string name="learnScreen_partOfProgram">Parte de %s</string>
+    <string name="learnScreen_courseCannotBeOpened">No se puede abrir el curso.</string>
 </resources>
