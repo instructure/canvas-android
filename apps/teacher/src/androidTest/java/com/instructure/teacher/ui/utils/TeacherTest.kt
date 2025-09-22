@@ -90,7 +90,7 @@ abstract class TeacherTest : CanvasTest() {
 
     override val isTesting = BuildConfig.IS_TESTING
 
-    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    val uiDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     /**
      * Required for auto complete of page objects within tests

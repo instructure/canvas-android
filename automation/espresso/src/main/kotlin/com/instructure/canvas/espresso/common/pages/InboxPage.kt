@@ -18,7 +18,6 @@ package com.instructure.canvas.espresso.common.pages
 
 import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.action.ViewActions
-import androidx.test.espresso.assertion.ViewAssertions.doesNotExist
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
@@ -31,11 +30,8 @@ import com.instructure.canvas.espresso.scrollRecyclerView
 import com.instructure.canvas.espresso.waitForMatcherWithRefreshes
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
-import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.RecyclerViewItemCountGreaterThanAssertion
-import com.instructure.espresso.WaitForViewWithId
 import com.instructure.espresso.assertDisplayed
-import com.instructure.espresso.assertVisibility
 import com.instructure.espresso.click
 import com.instructure.espresso.longClick
 import com.instructure.espresso.page.BasePage
@@ -43,85 +39,113 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
 import com.instructure.espresso.page.waitForView
 import com.instructure.espresso.page.waitForViewWithId
-import com.instructure.espresso.page.waitForViewWithText
 import com.instructure.espresso.page.withAncestor
 import com.instructure.espresso.page.withId
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.scrollTo
+import com.instructure.espresso.scrollToKakao
 import com.instructure.espresso.swipeLeft
 import com.instructure.espresso.swipeRight
 import com.instructure.pandautils.R
+import io.github.kakaocup.kakao.common.views.KView
+import io.github.kakaocup.kakao.recycler.KRecyclerView
+import io.github.kakaocup.kakao.text.KTextView
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.not
 
 class InboxPage : BasePage(R.id.inboxPage) {
 
-    private val createMessageButton by OnViewWithId(R.id.addMessage)
-    private val scopeButton by OnViewWithId(R.id.scopeFilter)
-    private val filterButton by OnViewWithId(R.id.courseFilter)
-    private val inboxRecyclerView by WaitForViewWithId(R.id.inboxRecyclerView)
-    private val editToolbar by OnViewWithId(R.id.editToolbar, autoAssert = false)
+    private val createMessageButton = KView { withId(R.id.addMessage) }
+    private val scopeButton = KView { withId(R.id.scopeFilter) }
+    private val filterButton = KView { withId(R.id.courseFilter) }
+    private val inboxRecyclerView = KRecyclerView(builder = { withId(R.id.inboxRecyclerView) }, itemTypeBuilder = {})
+    private val editToolbar = KView { withId(R.id.editToolbar) }
+
 
     fun assertConversationDisplayed(subject: String) {
-        val matcher = withText(subject)
-        onView(matcher).scrollTo().assertDisplayed()
+        KTextView { withText(subject) }.scrollToKakao().isDisplayed()
     }
 
     fun assertConversationWithRecipientsDisplayed(recipients: String) {
-        val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
-        onView(matcher).scrollTo().assertDisplayed()
+        KTextView {
+            withId(R.id.userName)
+            isDescendantOfA { withId(R.id.inboxRecyclerView) }
+            withText(recipients)
+        }.scrollToKakao()
+            .isDisplayed()
     }
 
     fun assertConversationNotDisplayed(subject: String) {
-        val matcher = withText(subject)
-        onView(matcher).check(doesNotExist())
+        KTextView { withText(subject) }.doesNotExist()
     }
 
     fun assertMessageBodyDisplayed(messageBody: String) {
         val matcher = allOf(withId(R.id.message), withText(messageBody))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the new message body shows up
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).assertDisplayed()
+        KTextView { withText(messageBody) }.isDisplayed()
     }
 
     fun openConversation(subject: String) {
         val matcher = withText(subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).click()
+        KTextView { withText(subject) }.click()
     }
 
     fun openConversationWithRecipients(recipients: String) {
-        val matcher = withId(R.id.userName) + withAncestor(R.id.inboxRecyclerView) + withText(recipients)
-        onView(matcher).scrollTo().click()
+        KTextView {
+            withId(R.id.userName)
+            isDescendantOfA { withId(R.id.inboxRecyclerView) }
+            withText(recipients)
+        }.scrollToKakao()
+            .click()
     }
 
     fun openConversation(conversation: Conversation) {
-        waitForView(withId(R.id.inboxRecyclerView))
+        KView { withId(R.id.inboxRecyclerView) }.isDisplayed()
         val matcher = withText(conversation.subject)
         scrollRecyclerView(R.id.inboxRecyclerView, matcher)
-        onView(matcher).scrollTo().click()
+        KTextView { withText(conversation.subject) }
+            .scrollToKakao()
+            .click()
     }
 
     fun filterInbox(filterFor: String) {
-        waitForView(withId(R.id.scopeFilterText))
+        KView { withId(R.id.scopeFilterText) }.isDisplayed()
         scopeButton.click()
-        waitForViewWithText(filterFor).click()
+        KTextView { withText(filterFor) }
+            .also { it.isDisplayed() }
+            .click()
     }
 
     fun selectInboxFilter(course: Course) {
         filterButton.click()
-        waitForViewWithText(course.name).click()
+        KTextView { withText(course.name) }
+            .also { it.isDisplayed() }
+            .click()
+
     }
 
     fun selectInboxFilter(courseName: String) {
         filterButton.click()
-        waitForViewWithText(courseName).click()
+        KTextView { withText(courseName) }
+            .also { it.isDisplayed() }
+            .click()
     }
 
     fun clearCourseFilter() {
-        waitForView(withId(R.id.courseFilter)).click()
-        onView(withId(R.id.clear) + withText(R.string.inboxClearFilter)).click()
+        KView { withId(R.id.courseFilter) }
+            .also { it.isDisplayed() }
+            .click()
+
+        KTextView {
+            withId(R.id.clear)
+            withText(R.string.inboxClearFilter)
+        }
+            .also { it.isDisplayed() }
+            .click()
     }
+
 
     fun pressNewMessageButton() {
         createMessageButton.click()
@@ -135,7 +159,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
             hasSibling(withId(R.id.date)),
             hasSibling(allOf(withId(R.id.subjectView), withText(subject))))
         waitForMatcherWithRefreshes(matcher) // May need to refresh before the star shows up
-        onView(matcher).scrollTo().assertDisplayed()
+        KView { withMatcher(matcher) }.scrollToKakao().isDisplayed()
     }
 
     fun assertConversationNotStarred(subject: String) {
@@ -189,7 +213,7 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun assertConversationCountIsGreaterThan(count: Int) {
-        inboxRecyclerView.check(RecyclerViewItemCountGreaterThanAssertion(count))
+        inboxRecyclerView.view.check(RecyclerViewItemCountGreaterThanAssertion(count))
     }
 
     fun selectConversation(conversationSubject: String) {
@@ -276,7 +300,11 @@ class InboxPage : BasePage(R.id.inboxPage) {
     }
 
     fun assertEditToolbarIs(visibility: ViewMatchers.Visibility) {
-        editToolbar.assertVisibility(visibility)
+        when (visibility) {
+            ViewMatchers.Visibility.VISIBLE -> editToolbar.isVisible()
+            ViewMatchers.Visibility.INVISIBLE -> editToolbar.isInvisible()
+            ViewMatchers.Visibility.GONE -> editToolbar.isGone()
+        }
     }
 
     fun assertConversationSubject(expectedSubject: String) {

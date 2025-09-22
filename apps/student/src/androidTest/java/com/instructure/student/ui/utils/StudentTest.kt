@@ -109,7 +109,7 @@ import java.io.File
 
 abstract class StudentTest : CanvasTest() {
 
-    val device: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+    val uiDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
 
     override val isTesting = BuildConfig.IS_TESTING
 

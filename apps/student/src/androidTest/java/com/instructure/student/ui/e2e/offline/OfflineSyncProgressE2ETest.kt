@@ -98,7 +98,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
         syncProgressPage.assertCourseTabSynced("Syllabus")
         syncProgressPage.assertCourseTabSynced("Announcements")
         syncProgressPage.assertCourseTabSynced("Grades")
-        device.waitForIdle()
+        uiDevice.waitForIdle()
 
         Log.d(STEP_TAG, "Navigate back to Dashboard Page and wait for it to be rendered.")
         Espresso.pressBack()
@@ -109,7 +109,7 @@ class OfflineSyncProgressE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        OfflineTestUtils.waitForNetworkToGoOffline(device)
+        OfflineTestUtils.waitForNetworkToGoOffline(uiDevice)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()

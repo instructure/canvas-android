@@ -433,8 +433,8 @@ class ModulesE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Click on 'Publish Module only' and confirm it via the publish dialog.")
         moduleListPage.clickOnText(R.string.publishModuleOnly)
         moduleListPage.clickOnText(R.string.publishDialogPositiveButton)
-        device.waitForWindowUpdate(null, 3000)
-        device.waitForIdle()
+        uiDevice.waitForWindowUpdate(null, 3000)
+        uiDevice.waitForIdle()
 
         Log.d(ASSERTION_TAG, "Assert that only the '${module.name}' module became published, but it's items (except '${assignment.name}' assignment) remaining unpublished.")
         moduleListPage.assertModuleIsPublished(module.name)

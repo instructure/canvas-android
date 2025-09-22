@@ -23,7 +23,6 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.utils.toApiString
@@ -63,7 +62,7 @@ class InAppUpdatePageTest : TeacherTest() {
     @JvmField
     val updateManager: UpdateManager = UpdateManager(appUpdateManager, notificationManager, updatePrefs)
 
-    private val uiDevice by lazy { UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()) }
+    private val localUiDevice by lazy { UiDevice.getInstance(InstrumentationRegistry.getInstrumentation()) }
 
     private fun goToDashboard() {
         val data = MockCanvas.init(
@@ -257,15 +256,15 @@ class InAppUpdatePageTest : TeacherTest() {
         appUpdateManager.downloadStarts()
         appUpdateManager.downloadCompletes()
 
-        uiDevice.openNotification()
-        uiDevice.wait(Until.hasObject(By.textStartsWith(context.getString(R.string.app_name))), 2)
-        val title = uiDevice.findObject(By.text(expectedTitle))
-        val description = uiDevice.findObject(By.text(expectedDescription))
+        localUiDevice.openNotification()
+        localUiDevice.wait(Until.hasObject(By.textStartsWith(context.getString(R.string.app_name))), 2)
+        val title = localUiDevice.findObject(By.text(expectedTitle))
+        val description = localUiDevice.findObject(By.text(expectedDescription))
 
         assertEquals(expectedTitle, title.text)
         assertEquals(expectedDescription, description.text)
 
-        uiDevice.pressBack()
+        localUiDevice.pressBack()
     }
 
     @Test

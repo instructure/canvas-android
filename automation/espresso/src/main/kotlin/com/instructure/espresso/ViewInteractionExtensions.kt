@@ -22,13 +22,20 @@ import android.view.View
 import androidx.test.espresso.ViewAction
 import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
-import androidx.test.espresso.action.*
+import androidx.test.espresso.action.CoordinatesProvider
+import androidx.test.espresso.action.EspressoKey
+import androidx.test.espresso.action.GeneralLocation
+import androidx.test.espresso.action.GeneralSwipeAction
+import androidx.test.espresso.action.Press
+import androidx.test.espresso.action.Swipe
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.instructure.canvas.espresso.SetViewPagerCurrentItemAction
+import io.github.kakaocup.kakao.common.views.KBaseView
 import org.hamcrest.Matcher
 import org.hamcrest.Matchers
-import java.util.concurrent.*
+import java.util.concurrent.TimeUnit
 
 
 fun ViewInteraction.assertVisible(): ViewInteraction
@@ -113,6 +120,9 @@ fun ViewInteraction.doubleClick(): ViewInteraction = perform(ViewActions.doubleC
 fun ViewInteraction.longClick(): ViewInteraction = perform(ViewActions.longClick())
 
 fun ViewInteraction.scrollTo(): ViewInteraction = perform(NestedScrollViewExtension())
+
+fun <T : KBaseView<T>> T.scrollToKakao(): T { view.perform(NestedScrollViewExtension())
+    return this }
 
 fun ViewInteraction.typeTextIntoFocusedView(arg0: String): ViewInteraction = perform(ViewActions.typeTextIntoFocusedView(arg0))
 

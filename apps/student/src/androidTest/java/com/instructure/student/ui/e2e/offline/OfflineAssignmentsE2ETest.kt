@@ -115,11 +115,11 @@ class OfflineAssignmentsE2ETest : StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
-        device.waitForIdle()
+        uiDevice.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        OfflineTestUtils.waitForNetworkToGoOffline(device)
+        OfflineTestUtils.waitForNetworkToGoOffline(uiDevice)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()

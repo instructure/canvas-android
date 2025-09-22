@@ -81,7 +81,7 @@ class OfflineSyllabusE2ETest : StudentTest() {
 
             Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
             dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
-            device.waitForIdle()
+            uiDevice.waitForIdle()
         }) {
 
             Log.d(STEP_TAG, "Open the '${course.name}' course's 'Manage Offline Content' page via the more menu of the Dashboard Page.")
@@ -96,12 +96,12 @@ class OfflineSyllabusE2ETest : StudentTest() {
 
             Log.d(ASSERTION_TAG, "Assert that the offline sync icon only displayed on the synced course's course card.")
             dashboardPage.assertCourseOfflineSyncIconVisible(course.name)
-            device.waitForIdle()
+            uiDevice.waitForIdle()
         }
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        OfflineTestUtils.waitForNetworkToGoOffline(device)
+        OfflineTestUtils.waitForNetworkToGoOffline(uiDevice)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Select '${course.name}' course.")
         dashboardPage.waitForRender()

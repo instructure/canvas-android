@@ -57,7 +57,7 @@ class OfflineLeftSideMenuE2ETest : StudentTest() {
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        OfflineTestUtils.waitForNetworkToGoOffline(device)
+        OfflineTestUtils.waitForNetworkToGoOffline(uiDevice)
 
         Log.d(STEP_TAG, "Wait for the Dashboard Page to be rendered. Refresh the page.")
         dashboardPage.waitForRender()

@@ -89,11 +89,11 @@ class OfflineAllCoursesE2ETest : StudentTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the offline sync icon is displayed on the synced (and favorited) course's course card.")
         dashboardPage.assertCourseOfflineSyncIconVisible(course1.name)
-        device.waitForIdle()
+        uiDevice.waitForIdle()
 
         Log.d(PREPARATION_TAG, "Turn off the Wi-Fi and Mobile Data on the device, so it will go offline.")
         turnOffConnectionViaADB()
-        waitForNetworkToGoOffline(device)
+        waitForNetworkToGoOffline(uiDevice)
 
         Log.d(ASSERTION_TAG, "Assert that '${course1.name}' is the only course which is displayed on the offline mode Dashboard Page.")
         dashboardPage.assertDisplaysCourse(course1)
