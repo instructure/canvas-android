@@ -67,8 +67,8 @@
     <string name="overview">ภาพรวม</string>
     <string name="scores">คะแนน</string>
     <string name="notes">หมายเหตุ</string>
-    <string name="assignmentName">ชื่อภารกิจ</string>
-    <string name="dueDate">วันครบกำหนด</string>
+    <string name="scoresSortingAssignmentNameAscending">ชื่อภารกิจ (A - Z)</string>
+    <string name="scoresSortingDueDateDescending">วันครบกำหนด (ใหม่สุดไปเก่าสุด)</string>
     <string name="scoresItemassignmentName">ชื่อ: %1$s</string>
     <string name="scoresItemDueDate">วันที่: %1$s</string>
     <string name="noDueDate">ไม่มีวันครบกำหนด</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">ขั้นสูง</string>
     <string name="accountSupportHeading">ฝ่ายบริการ</string>
     <string name="accountGiveFeedbackLabel">ให้ข้อเสนอแนะ</string>
+    <string name="accountReportABug">แจ้งปัญหา</string>
     <string name="accountBetaCommunityLabel">กลุ่มเบต้า</string>
     <string name="accountFullNameLabel">ชื่อนามสกุล</string>
     <string name="a11yNavigateBack">ย้อนกลับ</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">ไม่สามารถตอบรับคำเชิญเข้าร่วมบทเรียน</string>
     <string name="dashboard_emptyMessage">ปัจจุบันคุณไม่ได้ลงทะเบียนในบทเรียนใด</string>
     <string name="learnEmptyMessage">ปัจจุบันคุณไม่ได้ลงทะเบียนในบทเรียนใด</string>
+    <string name="programsProgressBar_percentComplete">เสร็จสิ้น %s\%%</string>
+    <string name="programsProgressBar_notStarted">ไม่ได้เริ่มต้น</string>
+    <string name="programsCourseCard_enrollButton">ลงทะเบียน</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">บังคับ</string>
+    <string name="programCourseTag_optional">เผื่อเลือก</string>
+    <string name="programCourseTag_locked">ล็อคแล้ว</string>
+    <string name="programCourseTag_completed">เสร็จสิ้นแล้ว</string>
+    <string name="programCourseTag_enrolled">ลงทะเบียนแล้ว</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">ผ่าน %1$d จาก %2$d บทเรียน</item>
+        <item quantity="other">ผ่าน %1$d จาก %2$d บทเรียน</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">ไม่สามารถรีเฟรชหลักสูตรได้</string>
+    <string name="programSwitcher_programOverview">ภาพรวมหลักสูตร</string>
+    <string name="programSwitcher_goBack">ทั้งหมด</string>
+    <string name="learnScreen_partOfProgram">ส่วนเนื้อหาจาก %s</string>
+    <string name="learnScreen_courseCannotBeOpened">ไม่สามารถเปิดบทเรียนได้</string>
 </resources>
