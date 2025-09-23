@@ -16,14 +16,35 @@
  */
 package com.instructure.student.espresso
 
+import android.content.Context
+import android.util.Log
+import androidx.work.Configuration
 import androidx.work.WorkerFactory
+import androidx.work.testing.SynchronousExecutor
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.student.util.BaseAppManager
 
 open class TestAppManager : BaseAppManager() {
 
     var workerFactory: WorkerFactory? = null
 
+    override fun onCreate() {
+        super.onCreate()
+        initWorkManagerForTesting(this)
+    }
+
     override fun getWorkManagerFactory(): WorkerFactory {
         return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
+    }
+
+    fun initWorkManagerForTesting(context: Context) {
+        val config = Configuration.Builder()
+            .setExecutor(SynchronousExecutor())
+            .setWorkerFactory(workerFactory!!)
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .build()
+        
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+        Log.d("TestAppManager", "WorkManager initialized for testing with HiltWorkerFactory and SynchronousExecutor.")
     }
 }

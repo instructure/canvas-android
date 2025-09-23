@@ -19,14 +19,17 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.KeyEvent
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
+import androidx.work.WorkManager
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.TestAppManager
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -50,6 +53,7 @@ import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
+import com.instructure.student.ui.utils.waitForWorkManagerJobsToFinish
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
@@ -806,7 +810,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
     }
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
@@ -883,7 +886,15 @@ class AssignmentsE2ETest: StudentComposeTest() {
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
 
-        sleep(2000) // Give the comment time to propagate
+        val app = ApplicationProvider.getApplicationContext<TestAppManager>()
+        val testDriver = app.testDriver!!
+
+        val workInfos = WorkManager.getInstance(app)
+            .getWorkInfosByTag("SubmissionWorker")
+            .get()
+        val workId = workInfos.first().id
+        testDriver.setAllConstraintsMet(workId)
+        waitForWorkManagerJobsToFinish(workerTag = "SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
@@ -1184,7 +1195,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         SubmissionsApi.gradeSubmission(teacher.token, course.id, passFailAssignment.id, student.id, postedGrade = "Incomplete")
 
         Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val gpaScaleAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.GPA_SCALE, pointsPossible = 15.0, dueAt =  1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+        val gpaScaleAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.GPA_SCALE, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
 
         Log.d(PREPARATION_TAG, "Grade submission: '${gpaScaleAssignment.name}' with 3.7.")
         SubmissionsApi.gradeSubmission(teacher.token, course.id, gpaScaleAssignment.id, student.id, postedGrade = "3.7")

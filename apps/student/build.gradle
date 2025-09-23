@@ -233,6 +233,7 @@ dependencies {
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
+    androidTestImplementation "androidx.work:work-testing:2.9.1" // Added this line
 
     /* Unit Test Dependencies */
     testImplementation Libs.JUNIT
