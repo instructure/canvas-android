@@ -353,4 +353,5 @@
     <string name="learn_failedToLoad">Failed to load programs and courses.</string>
     <string name="learn_failedToRefresh">Failed to refresh programs and courses.</string>
     <string name="tools_noLtiTools">There are no external tools for this course.</string>
+    <string name="dashboard_courseHasNoModules">Course has no modules</string>
 </resources>
