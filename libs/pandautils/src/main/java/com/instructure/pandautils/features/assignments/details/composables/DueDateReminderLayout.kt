@@ -48,7 +48,8 @@ fun DueDateReminderLayout(
             ReminderView(
                 viewState = reminderViewState,
                 onAddClick = onAddClick,
-                onRemoveClick = onRemoveClick
+                onRemoveClick = onRemoveClick,
+                modifier = Modifier.testTag("reminderView-$index")
             )
             CanvasDivider()
         }
@@ -71,8 +72,10 @@ private fun DueDateBlock(
     )
     Spacer(modifier = Modifier.height(2.dp))
     Text(
-        modifier = Modifier.padding(bottom = 14.dp, start = 16.dp, end = 16.dp),
-        text = "${reminderViewState.dueDate?.toFormattedString() ?: stringResource(R.string.toDoNoDueDate)}",
+        modifier = Modifier
+            .padding(bottom = 14.dp, start = 16.dp, end = 16.dp)
+            .testTag("dueDateText-$position"),
+        text = reminderViewState.dueDate?.toFormattedString() ?: stringResource(R.string.toDoNoDueDate),
         color = colorResource(id = R.color.textDarkest),
         fontSize = 16.sp
     )

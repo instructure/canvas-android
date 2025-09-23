@@ -18,6 +18,7 @@ package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -35,6 +36,13 @@ import com.instructure.canvas.espresso.mockcanvas.addRubricToAssignment
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockCanvas.addAssignment
+import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
+import com.instructure.canvas.espresso.mockCanvas.addRubricToAssignment
+import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
@@ -46,19 +54,18 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
-import org.junit.Rule
 import org.junit.Test
 import java.util.Date
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
-class SubmissionDetailsInteractionTest : StudentTest() {
+class SubmissionDetailsInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField
@@ -67,11 +74,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
-
-    @get:Rule
-    val composeTestRule = createEmptyComposeRule()
-
-    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     // Should be able to add a comment on a submission
     @Test

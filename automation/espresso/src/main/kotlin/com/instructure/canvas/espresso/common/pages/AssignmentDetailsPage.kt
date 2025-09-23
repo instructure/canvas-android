@@ -18,6 +18,12 @@ package com.instructure.canvas.espresso.common.pages
 
 import android.view.View
 import android.widget.ScrollView
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.assertTextEquals
+import androidx.compose.ui.test.isDisplayed
+import androidx.compose.ui.test.junit4.ComposeTestRule
+import androidx.compose.ui.test.onAllNodesWithTag
+import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.espresso.AmbiguousViewMatcherException
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onData
@@ -68,10 +74,9 @@ import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 
-open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions) : BasePage(R.id.assignmentDetailsPage) {
+open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, private val composeTestRule: ComposeTestRule) : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
     val points by OnViewWithId(R.id.points)
-    val date by OnViewWithId(R.id.dueDateTextView)
     val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)
 
     fun assertDisplayToolbarTitle() {
@@ -86,8 +91,8 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(allOf(withText(courseNameText), withParent(R.id.toolbar))).assertDisplayed()
     }
 
-    fun assertDisplaysDate(dateText: String) {
-        date.assertHasText(dateText)
+    fun assertDisplaysDate(dateText: String, position: Int = 0) {
+        composeTestRule.onNodeWithTag("dueDateText-$position").assertTextEquals(dateText).isDisplayed()
     }
 
     fun assertAssignmentDetails(assignment: Assignment) {
@@ -254,8 +259,8 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         onView(anyOf(withText(submissionType) + withAncestor(R.id.customPanel), withId(R.id.submissionTypesTextView) + withText(submissionType))).assertDisplayed()
     }
 
-    fun assertReminderViewDisplayed() {
-        onView(withId(R.id.reminderComposeView)).assertDisplayed()
+    fun assertReminderViewDisplayed(position: Int = 0) {
+        composeTestRule.onNodeWithTag("reminderView-$position").assertIsDisplayed()
     }
 
     fun assertNoDescriptionViewDisplayed() {

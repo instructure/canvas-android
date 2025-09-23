@@ -77,7 +77,7 @@ object AssignmentAPI {
         @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
         fun getAssignmentIncludeObservees(@Path("courseId") courseId: Long, @Path("assignmentId") assignmentId: Long): Call<ObserveeAssignment>
 
-        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history")
+        @GET("courses/{courseId}/assignments/{assignmentId}?include[]=submission&include[]=rubric_assessment&needs_grading_count_by_section=true&override_assignment_dates=true&all_dates=true&include[]=overrides&include[]=observed_users&include[]=score_statistics&include[]=submission_history&include[]=checkpoints&include[]=discussion_topic&include[]=sub_assignment_submissions")
         suspend fun getAssignmentIncludeObservees(
             @Path("courseId") courseId: Long,
             @Path("assignmentId") assignmentId: Long,

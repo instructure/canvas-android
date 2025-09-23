@@ -57,7 +57,7 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.R
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -68,7 +68,7 @@ import java.net.URLEncoder
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
-class ModuleInteractionTest : StudentTest() {
+class ModuleInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField

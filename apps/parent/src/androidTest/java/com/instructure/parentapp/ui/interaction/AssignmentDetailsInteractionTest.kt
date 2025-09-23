@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.AlertType
 import com.instructure.canvasapi2.models.AlertWorkflowState
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.utils.toFormattedString
@@ -104,13 +105,48 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
     fun testDisplayDueDate() {
         val data = setupData()
         val calendar = Calendar.getInstance().apply { set(2023, 0, 31, 23, 59, 0) }
-        val expectedDueDate = "January 31, 2023 11:59 PM"
+        val expectedDueDate = "Jan 31, 2023 11:59 PM"
         val course = data.courses.values.first()
         val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString())
 
         gotoAssignment(data, assignmentWithNoDueDate)
 
         assignmentDetailsPage.assertDisplaysDate(expectedDueDate)
+    }
+
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testDisplayDueDates() {
+        val data = setupData()
+        var calendar = Calendar.getInstance().apply { set(2023, 0, 29, 23, 59, 0) }
+        val expectedReplyToTopicDueDate = "Jan 29, 2023 11:59 PM"
+        val replyToTopicDueDate = calendar.time.toApiString()
+
+        calendar = Calendar.getInstance().apply { set(2023, 0, 31, 23, 59, 0) }
+        val expectedReplyToEntryDueDate = "Jan 31, 2023 11:59 PM"
+        val replyToEntryDueDate = calendar.time.toApiString()
+        val course = data.courses.values.first()
+
+        val checkpoints = listOf(
+            Checkpoint(
+                name = "Reply to Topic",
+                tag = "reply_to_topic",
+                dueAt = replyToTopicDueDate,
+                pointsPossible = 10.0
+            ),
+            Checkpoint(
+                name = "Reply to Entry",
+                tag = "reply_to_entry",
+                dueAt = replyToEntryDueDate,
+                pointsPossible = 10.0
+            )
+        )
+        val assignmentWithNoDueDate = data.addAssignment(course.id, name = "Test Assignment", dueAt = calendar.time.toApiString(), checkpoints = checkpoints)
+
+        gotoAssignment(data, assignmentWithNoDueDate)
+
+        assignmentDetailsPage.assertDisplaysDate(expectedReplyToTopicDueDate, 0)
+        assignmentDetailsPage.assertDisplaysDate(expectedReplyToEntryDueDate, 1)
     }
 
     @Test
@@ -270,6 +306,38 @@ class AssignmentDetailsInteractionTest : ParentComposeTest() {
         gotoAssignment(data, assignment)
 
         assignmentReminderPage.assertReminderSectionDisplayed()
+    }
+
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.INTERACTION)
+    fun testReminderSectionsAreVisibleWhenThereAreNoFutureDueDates() {
+        val data = setupData()
+        val course = data.courses.values.first()
+
+        val pastDate = Calendar.getInstance().apply {
+            add(Calendar.DAY_OF_MONTH, -1)
+        }.time.toApiString()
+
+        val checkpoints = listOf(
+            Checkpoint(
+                name = "Reply to Topic",
+                tag = "reply_to_topic",
+                dueAt = pastDate,
+                pointsPossible = 10.0
+            ),
+            Checkpoint(
+                name = "Reply to Entry",
+                tag = "reply_to_entry",
+                dueAt = pastDate,
+                pointsPossible = 10.0
+            )
+        )
+        val assignment = data.addAssignment(course.id, name = "Test Assignment", dueAt = pastDate, checkpoints = checkpoints)
+
+        gotoAssignment(data, assignment)
+
+        assignmentDetailsPage.assertReminderViewDisplayed(0)
+        assignmentDetailsPage.assertReminderViewDisplayed(1)
     }
 
     @Test
