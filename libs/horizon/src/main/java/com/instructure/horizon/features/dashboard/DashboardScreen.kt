@@ -34,8 +34,6 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -66,14 +64,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
-import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
 import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -85,10 +82,7 @@ import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.ProgressBar
-import com.instructure.horizon.horizonui.organisms.Alert
-import com.instructure.horizon.horizonui.organisms.AlertType
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
 import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
@@ -144,62 +138,8 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
                             HorizonSpace(SpaceSize.SPACE_24)
                         }
-                        items(uiState.invitesUiState) { inviteItem ->
-                            Alert(
-                                stringResource(R.string.dashboard_courseInvite, inviteItem.courseName),
-                                alertType = AlertType.Info,
-                                buttons = {
-                                    LoadingButton(
-                                        label = stringResource(R.string.dashboard_courseInviteAccept),
-                                        contentAlignment = Alignment.CenterStart,
-                                        color = ButtonColor.Black,
-                                        onClick = inviteItem.onAccept,
-                                        loading = inviteItem.acceptLoading
-                                    )
-                                },
-                                onDismiss = if (inviteItem.acceptLoading) null else inviteItem.onDismiss
-                            )
-                            HorizonSpace(SpaceSize.SPACE_16)
-                        }
-                        items(uiState.programsUiState) { program ->
-                            DashboardProgramItem(program) {
-                                homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(program.id)) {
-                                    popUpTo(homeNavController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = false
-                                }
-                            }
-                        }
-                        itemsIndexed(uiState.coursesUiState) { index, courseItem ->
-                            DashboardCourseItem(courseItem, onClick = {
-                                mainNavController.navigate(
-                                    MainNavigationRoute.ModuleItemSequence(
-                                        courseItem.courseId,
-                                        courseItem.nextModuleItemId
-                                    )
-                                )
-                            }, onCourseClick = {
-                                homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(courseItem.courseId)) {
-                                    popUpTo(homeNavController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = false
-                                }
-                            }, onProgramClick = { programId ->
-                                homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(programId)) {
-                                    popUpTo(homeNavController.graph.findStartDestination().id) {
-                                        saveState = true
-                                    }
-                                    launchSingleTop = true
-                                    restoreState = false
-                                }
-                            })
-                            if (index < uiState.coursesUiState.size - 1) {
-                                HorizonSpace(SpaceSize.SPACE_48)
-                            }
+                        item {
+                            DashboardCourseSection(mainNavController, homeNavController)
                         }
                     })
             }
@@ -300,7 +240,7 @@ private fun DashboardCourseItem(
                     remainingTime = courseItem.remainingTime,
                     dueDate = courseItem.dueDate,
                     learningObjectType = courseItem.learningObjectType,
-                    onClick = onClick
+                    onClick = onClick,
                 )
             )
         }

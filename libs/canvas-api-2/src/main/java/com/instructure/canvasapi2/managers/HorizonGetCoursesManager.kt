@@ -53,6 +53,17 @@ class HorizonGetCoursesManager {
         }
     }
 
+    suspend fun getEnrollments(userId: Long, forceNetwork: Boolean): DataResult<List<GetCoursesQuery.Enrollment>> {
+        return try {
+            val query = GetCoursesQuery(userId.toString())
+            val result = QLClientConfig.enqueueQuery(query, forceNetwork).dataAssertNoErrors
+
+            return DataResult.Success(result.legacyNode?.onUser?.enrollments.orEmpty())
+        } catch (e: Exception) {
+            DataResult.Fail(Failure.Exception(e))
+        }
+    }
+
     suspend fun getDashboardContent(userId: Long, forceNetwork: Boolean): DataResult<DashboardContent> {
         return try {
             val query = GetCoursesQuery(userId.toString())
