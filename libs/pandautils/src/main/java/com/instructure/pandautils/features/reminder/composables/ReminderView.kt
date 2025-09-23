@@ -51,12 +51,13 @@ import com.instructure.pandautils.utils.toFormattedString
 @Composable
 fun ReminderView(
     viewState: ReminderViewState,
+    modifier: Modifier = Modifier,
     onAddClick: (String?) -> Unit,
     onRemoveClick: (Long) -> Unit,
 ) {
     CanvasTheme {
         Column(
-            modifier = Modifier
+            modifier = modifier
                 .fillMaxWidth()
                 .padding(vertical = 24.dp, horizontal = 16.dp)
         ) {

@@ -31,16 +31,17 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 @HiltAndroidTest
-class ImportantDatesE2ETest : StudentTest() {
+class ImportantDatesE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

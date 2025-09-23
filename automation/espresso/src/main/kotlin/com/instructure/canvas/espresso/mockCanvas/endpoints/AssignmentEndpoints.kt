@@ -219,5 +219,6 @@ private fun Assignment.toObserveeAssignment() = ObserveeAssignment(
     moderatedGrading = moderatedGrading,
     anonymousGrading = anonymousGrading,
     allowedAttempts = allowedAttempts,
-    isStudioEnabled = isStudioEnabled
+    isStudioEnabled = isStudioEnabled,
+    checkpoints = checkpoints,
 )
