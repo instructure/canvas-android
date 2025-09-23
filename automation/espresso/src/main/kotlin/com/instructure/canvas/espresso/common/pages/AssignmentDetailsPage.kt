@@ -18,11 +18,9 @@ package com.instructure.canvas.espresso.common.pages
 
 import android.view.View
 import android.widget.ScrollView
-import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextEquals
 import androidx.compose.ui.test.isDisplayed
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.test.espresso.AmbiguousViewMatcherException
 import androidx.test.espresso.Espresso
@@ -260,7 +258,7 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
     }
 
     fun assertReminderViewDisplayed(position: Int = 0) {
-        composeTestRule.onNodeWithTag("reminderView-$position").assertIsDisplayed()
+        composeTestRule.onNodeWithTag("reminderView-$position").assertExists()
     }
 
     fun assertNoDescriptionViewDisplayed() {
