@@ -19,6 +19,7 @@ package com.instructure.horizon.features.dashboard.course
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardButtonState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
@@ -34,6 +35,20 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
     val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(programs) }
     val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
     return (invitationStates + active + completed).sortedByDescending { it.lastAccessed }
+}
+
+internal fun List<Program>.mapToDashboardCourseCardState(): List<DashboardCourseCardState> {
+    return this.map { program ->
+        DashboardCourseCardState(
+            title = program.name,
+            description = "Welcome! View your program to enroll in your first course.",
+            buttonState = DashboardCourseCardButtonState(
+                label = "Program details",
+                iconRes = R.drawable.arrow_forward,
+                onClickAction = CardClickAction.NavigateToProgram(program.id),
+            ),
+        )
+    }
 }
 
 private fun GetCoursesQuery.Enrollment.isInvited(): Boolean {

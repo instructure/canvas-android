@@ -88,7 +88,7 @@ class DashboardCourseViewModel @Inject constructor(
                     },
                 ))
             } else state
-        }
+        } + programs.mapToDashboardCourseCardState()
 
         _uiState.update { it.copy(courses = courseCardStates) }
     }

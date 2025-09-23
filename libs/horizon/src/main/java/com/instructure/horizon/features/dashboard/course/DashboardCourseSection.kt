@@ -21,6 +21,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -70,7 +71,10 @@ private fun DashboardCourseSectionContent(
     homeNavController: NavHostController
 ) {
     val pagerstate = rememberPagerState { state.courses.size }
-    HorizontalPager(pagerstate) {
+    HorizontalPager(
+        pagerstate,
+        verticalAlignment = Alignment.Top
+    ) {
         DashboardCourseItem(state.courses[it], mainNavController, homeNavController)
     }
 }
