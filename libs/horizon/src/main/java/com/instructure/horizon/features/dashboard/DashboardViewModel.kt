@@ -148,7 +148,13 @@ class DashboardViewModel @Inject constructor(
                 val nextModuleResult = modules.dataOrThrow.find { module -> module.id == nextModuleItemResult?.moduleId }
 
                 if (nextModuleItemResult == null || nextModuleResult == null) {
-                    return null
+                    return DashboardCourseUiState(
+                        courseId = dashboardCourse.course.courseId,
+                        courseName = dashboardCourse.course.courseName,
+                        courseProgress = dashboardCourse.course.progress,
+                        parentPrograms = parentPrograms,
+                        hasModuleItems = false
+                    )
                 }
                 createCourseUiState(dashboardCourse.course, nextModuleResult, nextModuleItemResult, parentPrograms)
             } else {

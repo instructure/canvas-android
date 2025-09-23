@@ -39,7 +39,8 @@ data class DashboardCourseUiState(
     val remainingTime: String? = null,
     val learningObjectType: LearningObjectType? = null,
     val dueDate: Date? = null,
-    val parentPrograms: List<DashboardCourseProgram> = emptyList()
+    val parentPrograms: List<DashboardCourseProgram> = emptyList(),
+    val hasModuleItems: Boolean = true,
 )
 
 data class DashboardCourseProgram(

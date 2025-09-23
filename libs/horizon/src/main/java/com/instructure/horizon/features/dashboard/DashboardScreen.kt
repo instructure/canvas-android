@@ -289,6 +289,8 @@ private fun DashboardCourseItem(
             Text(text = stringResource(R.string.dashboard_courseCompleted), style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_12)
             Text(text = stringResource(R.string.dashboard_courseCompletedDescription), style = HorizonTypography.p1)
+        } else if (!courseItem.hasModuleItems) {
+            Text(text = stringResource(R.string.dashboard_courseHasNoModules), style = HorizonTypography.p1)
         } else {
             Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
             HorizonSpace(SpaceSize.SPACE_12)
