@@ -19,6 +19,7 @@ package com.instructure.horizon.features.dashboard.course
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
+import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardButtonState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardParentProgramState
@@ -27,8 +28,9 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
     programs: List<Program>,
     nextModuleForCourse: suspend (Long?) -> DashboardCourseCardModuleItemState?,
+    acceptInvite: suspend (courseId: Long, enrollmentId: Long) -> Unit
 ): List<DashboardCourseCardState> {
-    val invitationStates = this.filter { it.isInvited() }.map { it.mapInvitation() }
+    val invitationStates = this.filter { it.isInvited() }.map { it.mapInvitation(acceptInvite) }
     val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(programs) }
     val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
     return (invitationStates + active + completed).sortedByDescending { it.lastAccessed }
@@ -46,7 +48,7 @@ private fun GetCoursesQuery.Enrollment.isActive(): Boolean {
     return this.state == EnrollmentWorkflowState.active
 }
 
-private fun GetCoursesQuery.Enrollment.mapInvitation(): DashboardCourseCardState {
+private fun GetCoursesQuery.Enrollment.mapInvitation(acceptInvite: suspend (Long, Long) -> Unit): DashboardCourseCardState {
     return DashboardCourseCardState(
         parentPrograms = null,
         imageUrl = null,
@@ -57,9 +59,12 @@ private fun GetCoursesQuery.Enrollment.mapInvitation(): DashboardCourseCardState
         buttonState = DashboardCourseCardButtonState(
             label = "Accept",
             iconRes = null,
-            onClick = {  }
+            onClickAction = CardClickAction.Action { },
+            action = {
+                acceptInvite(this.course?.id?.toLongOrNull() ?: -1, this.id?.toLongOrNull() ?: -1L)
+            }
         ),
-        onClick = null,
+        onClickAction = null,
         lastAccessed = this.lastActivityAt
     )
 }
@@ -72,7 +77,7 @@ private fun GetCoursesQuery.Enrollment.mapCompleted(programs: List<Program>): Da
                 DashboardCourseCardParentProgramState(
                     programName = program.name,
                     programId = program.id,
-                    onClick = {  }
+                    onClickAction = CardClickAction.NavigateToProgram(program.id)
                 )
             },
         imageUrl = null,
@@ -81,7 +86,7 @@ private fun GetCoursesQuery.Enrollment.mapCompleted(programs: List<Program>): Da
         progress = 1.0,
         moduleItem = null,
         buttonState = null,
-        onClick = null
+        onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L)
     )
 }
 
@@ -96,7 +101,7 @@ private suspend fun GetCoursesQuery.Enrollment.mapActive(
                 DashboardCourseCardParentProgramState(
                     programName = program.name,
                     programId = program.id,
-                    onClick = {  }
+                    onClickAction = CardClickAction.NavigateToProgram(program.id)
                 )
             },
         imageUrl = this.course?.image_download_url,
@@ -105,7 +110,7 @@ private suspend fun GetCoursesQuery.Enrollment.mapActive(
         progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
         moduleItem = nextModuleForCourse(this.course?.id?.toLongOrNull()),
         buttonState = null,
-        onClick = null,
+        onClickAction = CardClickAction.NavigateToCourse(this.course?.id?.toLongOrNull() ?: -1L),
         lastAccessed = this.lastActivityAt
     )
 }

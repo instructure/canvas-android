@@ -22,7 +22,9 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
+import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 import com.instructure.horizon.model.LearningObjectType
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -48,7 +50,7 @@ class DashboardCourseViewModel @Inject constructor(
         _uiState.update { it.copy(state = DashboardItemState.LOADING) }
 
         viewModelScope.tryLaunch {
-            fetchCourseData(forceNetwork = false)
+            fetchData(forceNetwork = false)
             _uiState.update { it.copy(state = DashboardItemState.SUCCESS) }
         } catch {
             _uiState.update { it.copy(state = DashboardItemState.ERROR) }
@@ -59,12 +61,33 @@ class DashboardCourseViewModel @Inject constructor(
         loadData()
     }
 
-    private suspend fun fetchCourseData(forceNetwork: Boolean) {
+    private suspend fun fetchData(forceNetwork: Boolean) {
         val enrollments = repository.getEnrollments(forceNetwork)
         val programs = repository.getPrograms(forceNetwork)
 
-        val courseCardStates = enrollments.mapToDashboardCourseCardState(programs) { courseId ->
-            fetchNextModuleState(courseId, forceNetwork)
+        val courseCardStates = enrollments.mapToDashboardCourseCardState(
+            programs = programs,
+            nextModuleForCourse = { courseId ->
+                fetchNextModuleState(courseId, forceNetwork)
+            },
+            acceptInvite = { courseId, enrollmentId ->
+                repository.acceptInvite(courseId, enrollmentId)
+            }
+        ).map { state ->
+            if (state.buttonState?.onClickAction is CardClickAction.Action) {
+                state.copy(buttonState = state.buttonState.copy(
+                    onClickAction = CardClickAction.Action {
+                        viewModelScope.tryLaunch {
+                            updateCourseButtonState(state, isLoading = true)
+                            state.buttonState.action()
+                            onRefresh()
+                            updateCourseButtonState(state, isLoading = false)
+                        } catch {
+                            updateCourseButtonState(state, isLoading = false)
+                        }
+                    },
+                ))
+            } else state
         }
 
         _uiState.update { it.copy(courses = courseCardStates) }
@@ -85,7 +108,25 @@ class DashboardCourseViewModel @Inject constructor(
             moduleItemType = if (nextModuleItem.quizLti) LearningObjectType.ASSESSMENT else LearningObjectType.fromApiString(nextModuleItem.type.orEmpty()),
             dueDate = nextModuleItem.moduleDetails?.dueDate,
             estimatedDuration = nextModuleItem.estimatedDuration?.formatIsoDuration(context),
-            onClick = {  }
+            onClickAction = CardClickAction.NavigateToModuleItem(courseId, nextModuleItem.id)
         )
+    }
+
+    private fun updateCourseButtonState(state: DashboardCourseCardState, isLoading: Boolean) {
+        _uiState.update {
+            it.copy(
+                courses = it.courses.map { originalState ->
+                    if (originalState.title == state.title && originalState.parentPrograms == state.parentPrograms) {
+                        originalState.copy(
+                            buttonState = originalState.buttonState?.copy(
+                                isLoading = isLoading
+                            )
+                        )
+                    } else {
+                        originalState
+                    }
+                }
+            )
+        }
     }
 }

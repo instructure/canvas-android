@@ -35,9 +35,11 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
@@ -54,16 +56,17 @@ import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
-import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 import com.instructure.horizon.horizonui.molecules.ButtonWidth
+import com.instructure.horizon.horizonui.molecules.LoadingButton
 import com.instructure.horizon.horizonui.molecules.Pill
 import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
@@ -76,12 +79,18 @@ import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
 
 @Composable
-fun DashboardCourseCardContent(state: DashboardCourseCardState, modifier: Modifier = Modifier) {
+fun DashboardCourseCardContent(
+    state: DashboardCourseCardState,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+    modifier: Modifier = Modifier
+) {
     DashboardCourseCard(modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .clickable(enabled = state.onClick != null) { state.onClick?.invoke() }
+                .clickable(enabled = state.onClickAction != null) {
+                    handleOnClickAction(state.onClickAction)
+                }
         ) {
             if (!state.imageUrl.isNullOrEmpty()) {
                 CourseImage(imageUrl = state.imageUrl)
@@ -92,7 +101,7 @@ fun DashboardCourseCardContent(state: DashboardCourseCardState, modifier: Modifi
             ){
                 if (!state.parentPrograms.isNullOrEmpty()) {
                     Spacer(Modifier.height(16.dp))
-                    ProgramsText(state.parentPrograms)
+                    ProgramsText(state.parentPrograms, handleOnClickAction)
                 }
                 if (state.title.isNotEmpty()) {
                     Spacer(Modifier.height(16.dp))
@@ -108,11 +117,11 @@ fun DashboardCourseCardContent(state: DashboardCourseCardState, modifier: Modifi
                 }
                 if (state.moduleItem != null) {
                     Spacer(Modifier.height(16.dp))
-                    ModuleItemCard(state.moduleItem)
+                    ModuleItemCard(state.moduleItem, handleOnClickAction)
                 }
                 if (state.buttonState != null) {
                     Spacer(Modifier.height(16.dp))
-                    DashboardCardButton(state.buttonState)
+                    DashboardCardButton(state.buttonState, handleOnClickAction)
                 }
             }
             Spacer(Modifier.height(24.dp))
@@ -161,6 +170,7 @@ private fun CourseImage(imageUrl: String) {
 @Composable
 private fun ProgramsText(
     programs: List<DashboardCourseCardParentProgramState>,
+    handleOnClickAction: (CardClickAction?) -> Unit,
 ) {
     val programsAnnotated = buildAnnotatedString {
         programs.forEachIndexed { i, program ->
@@ -171,7 +181,7 @@ private fun ProgramsText(
                     styles = TextLinkStyles(
                         style = SpanStyle(textDecoration = TextDecoration.Underline)
                     ),
-                    linkInteractionListener = { _ -> program.onClick() }
+                    linkInteractionListener = { _ -> handleOnClickAction(program.onClickAction) }
                 )
             ) {
                 append(program.programName)
@@ -227,7 +237,10 @@ private fun CourseProgress(progress: Double) {
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun ModuleItemCard(state: DashboardCourseCardModuleItemState) {
+private fun ModuleItemCard(
+    state: DashboardCourseCardModuleItemState,
+    handleOnClickAction: (CardClickAction?) -> Unit,
+) {
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -237,7 +250,7 @@ private fun ModuleItemCard(state: DashboardCourseCardModuleItemState) {
                     .copy(alpha = 0.1f), shape = HorizonCornerRadius.level2
             )
             .clip(HorizonCornerRadius.level2)
-            .clickable { state.onClick() }
+            .clickable { handleOnClickAction(state.onClickAction) }
             .padding(16.dp)
     ) {
         Column {
@@ -287,26 +300,33 @@ private fun ModuleItemCard(state: DashboardCourseCardModuleItemState) {
 }
 
 @Composable
-private fun DashboardCardButton(state: DashboardCourseCardButtonState) {
-    Button(
+private fun DashboardCardButton(
+    state: DashboardCourseCardButtonState,
+    handleOnClickAction: (CardClickAction?) -> Unit
+) {
+    LoadingButton(
         label = state.label,
         height = ButtonHeight.NORMAL,
         width = ButtonWidth.RELATIVE,
         color = ButtonColor.BlackOutline,
         iconPosition = if (state.iconRes != null) ButtonIconPosition.End(state.iconRes) else ButtonIconPosition.NoIcon,
-        onClick = state.onClick
+        onClick = { handleOnClickAction(state.onClickAction) },
+        contentAlignment = Alignment.Center,
+        loading = state.isLoading,
     )
 }
 
 @Composable
 @Preview
 private fun DashboardCourseCardWithModulePreview() {
+    ContextKeeper.appContext = LocalContext.current
+
     val state = DashboardCourseCardState(
         parentPrograms = listOf(
             DashboardCourseCardParentProgramState(
                 programName = "Program Name",
                 programId = "1",
-                onClick = {}
+                onClickAction = CardClickAction.Action({})
             )
         ),
         imageUrl = null,
@@ -318,14 +338,14 @@ private fun DashboardCourseCardWithModulePreview() {
             moduleItemType = com.instructure.horizon.model.LearningObjectType.ASSIGNMENT,
             dueDate = Date(),
             estimatedDuration = "5 mins",
-            onClick = {}
+            onClickAction = CardClickAction.Action({})
         ),
         buttonState = DashboardCourseCardButtonState(
             label = "Go to Course",
             iconRes = R.drawable.arrow_forward,
-            onClick = {}
+            onClickAction = CardClickAction.Action({})
         ),
-        onClick = {},
+        onClickAction = CardClickAction.Action({})
     )
-    DashboardCourseCardContent(state)
+    DashboardCourseCardContent(state, {})
 }

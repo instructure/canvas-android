@@ -12,14 +12,14 @@ data class DashboardCourseCardState(
     val progress: Double? = null,
     val moduleItem: DashboardCourseCardModuleItemState? = null,
     val buttonState: DashboardCourseCardButtonState? = null,
-    val onClick: (() -> Unit)? = null,
+    val onClickAction: CardClickAction? = null,
     val lastAccessed: Date? = null,
 )
 
 data class DashboardCourseCardParentProgramState(
     val programName: String,
     val programId: String,
-    val onClick: () -> Unit,
+    val onClickAction: CardClickAction,
 )
 
 data class DashboardCourseCardModuleItemState(
@@ -27,17 +27,20 @@ data class DashboardCourseCardModuleItemState(
     val moduleItemType: LearningObjectType,
     val dueDate: Date? = null,
     val estimatedDuration: String? = null,
-    val onClick: () -> Unit,
+    val onClickAction: CardClickAction,
 )
 
 data class DashboardCourseCardButtonState(
     val label: String,
     @DrawableRes val iconRes: Int? = null,
-    val onClick: () -> Unit,
+    val onClickAction: CardClickAction,
+    val isLoading: Boolean = false,
+    val action: suspend () -> Unit = { },
 )
 
-sealed class CardAction {
-    data class Navigate(val route: String) : CardAction()
-    data class Action(val action: () -> Unit) : CardAction()
-    data object None : CardAction()
+sealed class CardClickAction {
+    data class NavigateToProgram(val programId: String): CardClickAction()
+    data class NavigateToCourse(val courseId: Long): CardClickAction()
+    data class NavigateToModuleItem(val courseId: Long, val moduleItemId: Long): CardClickAction()
+    data class Action(val onClick: () -> Unit): CardClickAction()
 }

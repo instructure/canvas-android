@@ -16,21 +16,22 @@
  */
 package com.instructure.horizon.features.dashboard.course
 
-import androidx.compose.foundation.horizontalScroll
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.pager.HorizontalPager
+import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardContent
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardError
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardLoading
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.features.home.HomeNavigationRoute
+import com.instructure.horizon.navigation.MainNavigationRoute
 
 @Composable
 fun DashboardCourseSection(
@@ -68,14 +69,9 @@ private fun DashboardCourseSectionContent(
     mainNavController: NavHostController,
     homeNavController: NavHostController
 ) {
-    Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .horizontalScroll(rememberScrollState())
-    ) {
-        state.courses.forEach {
-            DashboardCourseItem(it, mainNavController, homeNavController)
-        }
+    val pagerstate = rememberPagerState { state.courses.size }
+    HorizontalPager(pagerstate) {
+        DashboardCourseItem(state.courses[it], mainNavController, homeNavController)
     }
 }
 
@@ -86,6 +82,45 @@ private fun DashboardCourseItem(
     homeNavController: NavHostController
 ) {
     DashboardCourseCardContent(
-        cardState
+        cardState, { handleClickAction(it, mainNavController, homeNavController) }
     )
+}
+
+private fun handleClickAction(
+    action: CardClickAction?,
+    mainNavController: NavHostController,
+    homeNavController: NavHostController
+) {
+    when(action) {
+        is CardClickAction.Action -> {
+            action.onClick()
+        }
+        is CardClickAction.NavigateToCourse -> {
+            homeNavController.navigate(HomeNavigationRoute.Learn.withCourse(action.courseId)) {
+                popUpTo(homeNavController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = false
+            }
+        }
+        is CardClickAction.NavigateToModuleItem -> {
+            mainNavController.navigate(
+                MainNavigationRoute.ModuleItemSequence(
+                    action.courseId,
+                    action.moduleItemId
+                )
+            )
+        }
+        is CardClickAction.NavigateToProgram -> {
+            homeNavController.navigate(HomeNavigationRoute.Learn.withProgram(action.programId)) {
+                popUpTo(homeNavController.graph.findStartDestination().id) {
+                    saveState = true
+                }
+                launchSingleTop = true
+                restoreState = false
+            }
+        }
+        else -> {}
+    }
 }
