@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvasapi2.type.AssetString
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -34,7 +33,7 @@ import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.withAncestor
 import com.instructure.student.R
 import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -47,7 +46,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 @HiltAndroidTest
-class ScheduleE2ETest : StudentTest() {
+class ScheduleE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
