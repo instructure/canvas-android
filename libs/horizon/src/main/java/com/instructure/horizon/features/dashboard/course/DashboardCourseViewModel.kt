@@ -57,8 +57,16 @@ class DashboardCourseViewModel @Inject constructor(
         }
     }
 
-    private fun onRefresh() {
-        loadData()
+    private fun onRefresh(onFinished: () -> Unit = {}) {
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(state = DashboardItemState.LOADING) }
+            fetchData(forceNetwork = true)
+            _uiState.update { it.copy(state = DashboardItemState.SUCCESS) }
+            onFinished()
+        } catch {
+            _uiState.update { it.copy(state = DashboardItemState.ERROR) }
+            onFinished()
+        }
     }
 
     private suspend fun fetchData(forceNetwork: Boolean) {

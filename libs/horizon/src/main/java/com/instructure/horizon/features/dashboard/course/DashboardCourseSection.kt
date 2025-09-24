@@ -16,9 +16,11 @@
  */
 package com.instructure.horizon.features.dashboard.course
 
+import androidx.compose.foundation.gestures.snapping.SnapPosition
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -33,14 +35,27 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.navigation.MainNavigationRoute
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.update
 
 @Composable
 fun DashboardCourseSection(
     mainNavController: NavHostController,
-    homeNavController: NavHostController
+    homeNavController: NavHostController,
+    shouldRefresh: Boolean,
+    refreshState: MutableStateFlow<List<Boolean>>
 ) {
     val viewModel = hiltViewModel<DashboardCourseViewModel>()
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
+            refreshState.update { it + true }
+            state.onRefresh {
+                refreshState.update { it - true }
+            }
+        }
+    }
 
     DashboardCourseSection(state, mainNavController, homeNavController)
 }
@@ -56,7 +71,7 @@ private fun DashboardCourseSection(
             DashboardCourseCardLoading()
         }
         DashboardItemState.ERROR -> {
-            DashboardCourseCardError(state.onRefresh)
+            DashboardCourseCardError({state.onRefresh {} })
         }
         DashboardItemState.SUCCESS -> {
             DashboardCourseSectionContent(state, mainNavController, homeNavController)
@@ -73,6 +88,7 @@ private fun DashboardCourseSectionContent(
     val pagerstate = rememberPagerState { state.courses.size }
     HorizontalPager(
         pagerstate,
+        snapPosition = SnapPosition.Center,
         verticalAlignment = Alignment.Top
     ) {
         DashboardCourseItem(state.courses[it], mainNavController, homeNavController)

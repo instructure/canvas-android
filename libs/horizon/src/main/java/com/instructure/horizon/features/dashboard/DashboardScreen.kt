@@ -22,23 +22,20 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
+import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -49,17 +46,9 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.LinkAnnotation
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.TextLinkStyles
-import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.text.withLink
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -71,77 +60,80 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
-import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
-import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
-import com.instructure.horizon.horizonui.molecules.Button
-import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
-import com.instructure.horizon.horizonui.molecules.ProgressBar
-import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCard
-import com.instructure.horizon.horizonui.organisms.cards.LearningObjectCardState
-import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
 import com.instructure.horizon.navigation.MainNavigationRoute
-import com.instructure.pandautils.utils.ThemePrefs
+import kotlinx.coroutines.flow.MutableStateFlow
+
+const val DASHBOARD_REFRESH = "refreshDashboard"
+const val DASHBOARD_SNACKBAR = "dashboardSnackbar"
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
+    val snackbarHostState = remember { SnackbarHostState() }
 
     val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
     val savedStateHandle = parentEntry.savedStateHandle
 
-    val refreshFlow = remember { savedStateHandle.getStateFlow(SHOULD_REFRESH_DASHBOARD, false) }
+    val externalRefreshFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_REFRESH, false) }
+    val externalRefreshState by externalRefreshFlow.collectAsState()
+    var shouldRefresh by rememberSaveable { mutableStateOf(false) }
 
-    val shouldRefresh by refreshFlow.collectAsState()
+    val snackbarFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_SNACKBAR, "") }
+    val snackbar by snackbarFlow.collectAsState()
+
+    val refreshStateFlow = remember { MutableStateFlow(emptyList<Boolean>()) }
+    val refreshState by refreshStateFlow.collectAsState()
 
     NotificationPermissionRequest()
 
-    LaunchedEffect(shouldRefresh) {
-        if (shouldRefresh) {
-            uiState.loadingState.onRefresh()
-            savedStateHandle[SHOULD_REFRESH_DASHBOARD] = false
+    LaunchedEffect(shouldRefresh, externalRefreshState) {
+        if (shouldRefresh || externalRefreshState) {
+            savedStateHandle[DASHBOARD_REFRESH] = false
+            shouldRefresh = false
         }
     }
 
-    Scaffold(containerColor = HorizonColors.Surface.pagePrimary()) { paddingValues ->
-        val spinnerColor =
-            if (ThemePrefs.isThemeApplied) HorizonColors.Surface.institution() else HorizonColors.Surface.inverseSecondary()
-        LoadingStateWrapper(loadingState = uiState.loadingState, spinnerColor = spinnerColor, modifier = Modifier.padding(paddingValues)) {
-            if (uiState.coursesUiState.isEmpty() && uiState.invitesUiState.isEmpty()) {
-                Column(
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(horizontal = 24.dp)
-                        .verticalScroll(rememberScrollState())
-                        .height(IntrinsicSize.Max)
-                ) {
-                    HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
-                    HorizonSpace(SpaceSize.SPACE_24)
-                    Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                        Text(
-                            stringResource(R.string.dashboard_emptyMessage),
-                            style = HorizonTypography.h3,
-                            textAlign = TextAlign.Center
-                        )
-                    }
-                }
-            } else {
-                LazyColumn(
-                    contentPadding = PaddingValues(start = 24.dp, end = 24.dp),
-                    content = {
-                        item {
-                            HomeScreenTopBar(uiState, mainNavController, modifier = Modifier.height(56.dp))
-                            HorizonSpace(SpaceSize.SPACE_24)
-                        }
-                        item {
-                            DashboardCourseSection(mainNavController, homeNavController)
-                        }
-                    })
+    LaunchedEffect(snackbar) {
+        if (snackbar.isNotEmpty()) {
+            snackbarHostState.showSnackbar(
+                message = snackbar,
+            )
+            savedStateHandle[DASHBOARD_SNACKBAR] = ""
+        }
+    }
+
+    Scaffold(
+        containerColor = HorizonColors.Surface.pagePrimary(),
+        snackbarHost = { SnackbarHost(snackbarHostState) }
+    ) { paddingValues ->
+        PullToRefreshBox(
+            isRefreshing = refreshState.any { true },
+            onRefresh = { shouldRefresh = true },
+        ){
+            Column(
+                modifier = Modifier
+                    .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())
+            ) {
+                HomeScreenTopBar(
+                    uiState,
+                    mainNavController,
+                    modifier = Modifier.height(56.dp)
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+                DashboardCourseSection(
+                    mainNavController,
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
+                Text("Test content to check vertical animations")
             }
         }
     }
@@ -155,7 +147,8 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
             contentScale = ContentScale.Fit,
             modifier = Modifier
                 .weight(1f)
-                .heightIn(max = 44.dp),
+                .heightIn(max = 44.dp)
+                .shimmerEffect(uiState.logoUrl.isEmpty()),
             contentDescription = stringResource(R.string.a11y_institutionLogoContentDescription),
         )
         Spacer(modifier = Modifier.weight(1f))
@@ -184,103 +177,6 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
             color = IconButtonColor.Inverse
         )
     }
-}
-
-@Composable
-private fun DashboardProgramItem(
-    programUiState: DashboardProgramUiState,
-    onProgramClick: () -> Unit
-) {
-    Column {
-        Text(text = programUiState.name, style = HorizonTypography.h2)
-        HorizonSpace(SpaceSize.SPACE_12)
-        Text(text = stringResource(R.string.dashboard_viewProgram), style = HorizonTypography.p1)
-        HorizonSpace(SpaceSize.SPACE_24)
-        Button(label = stringResource(R.string.dashboard_viewProgramButton), color = ButtonColor.Institution, onClick = onProgramClick)
-        HorizonSpace(SpaceSize.SPACE_24)
-    }
-}
-
-@Composable
-private fun DashboardCourseItem(
-    courseItem: DashboardCourseUiState,
-    onClick: () -> Unit,
-    onCourseClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    onProgramClick: (String) -> Unit = {}
-) {
-    Column(modifier) {
-        Column(
-            Modifier
-                .clip(HorizonCornerRadius.level1_5)
-                .clickable {
-                    onCourseClick()
-                }) {
-            if (courseItem.parentPrograms.isNotEmpty()) {
-                ProgramsText(programs = courseItem.parentPrograms, onProgramClick = onProgramClick)
-                HorizonSpace(SpaceSize.SPACE_12)
-            }
-            Text(text = courseItem.courseName, style = HorizonTypography.h1)
-            HorizonSpace(SpaceSize.SPACE_12)
-            ProgressBar(progress = courseItem.courseProgress)
-            HorizonSpace(SpaceSize.SPACE_36)
-        }
-        if (courseItem.completed) {
-            Text(text = stringResource(R.string.dashboard_courseCompleted), style = HorizonTypography.h3)
-            HorizonSpace(SpaceSize.SPACE_12)
-            Text(text = stringResource(R.string.dashboard_courseCompletedDescription), style = HorizonTypography.p1)
-        } else {
-            Text(text = stringResource(R.string.dashboard_resumeLearning), style = HorizonTypography.h3)
-            HorizonSpace(SpaceSize.SPACE_12)
-            LearningObjectCard(
-                LearningObjectCardState(
-                    moduleTitle = courseItem.nextModuleName.orEmpty(),
-                    learningObjectTitle = courseItem.nextModuleItemName.orEmpty(),
-                    progressLabel = courseItem.progressLabel,
-                    remainingTime = courseItem.remainingTime,
-                    dueDate = courseItem.dueDate,
-                    learningObjectType = courseItem.learningObjectType,
-                    onClick = onClick,
-                )
-            )
-        }
-        HorizonSpace(SpaceSize.SPACE_24)
-    }
-}
-
-@Composable
-private fun ProgramsText(
-    programs: List<DashboardCourseProgram>,
-    onProgramClick: (String) -> Unit
-) {
-    val programsAnnotated = buildAnnotatedString {
-        programs.forEachIndexed { i, program ->
-            if (i > 0) append(", ")
-            withLink(
-                LinkAnnotation.Clickable(
-                    tag = program.programId,
-                    styles = TextLinkStyles(
-                        style = SpanStyle(textDecoration = TextDecoration.Underline)
-                    ),
-                    linkInteractionListener = { _ -> onProgramClick(program.programId) }
-                )
-            ) {
-                append(program.programName)
-            }
-        }
-    }
-
-    // String resource can't work with annotated string so we need a temporary placeholder
-    val template = stringResource(R.string.learnScreen_partOfProgram, "__PROGRAMS__")
-
-    val fullText = buildAnnotatedString {
-        val parts = template.split("__PROGRAMS__")
-        append(parts[0])
-        append(programsAnnotated)
-        if (parts.size > 1) append(parts[1])
-    }
-
-    Text(style = HorizonTypography.p1, text = fullText)
 }
 
 @Composable
