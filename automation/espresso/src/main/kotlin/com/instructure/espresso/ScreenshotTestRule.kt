@@ -32,7 +32,7 @@ class ScreenshotTestRule : TestRule {
 
     // Run all test methods tryCount times. Take screenshots on failure.
     // A method rule would allow targeting specific (method.getAnnotation(Retry.class))
-    private val tryCount = 1
+    private val tryCount = 5
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {
