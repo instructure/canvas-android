@@ -469,15 +469,18 @@ private fun ThresholdDialog(
                 )
             )
             val errorText = when {
-                (percentage.toIntOrNull() ?: 100) <= min ->
+                percentage.toBigDecimalOrNull() == null && percentage.isNotEmpty() ->
+                    stringResource(id = R.string.alertSettingsInvalidValueError)
+
+                (percentage.toBigDecimalOrNull() ?: 100.toBigDecimal()) <= min.toBigDecimal() ->
                     stringResource(id = R.string.alertSettingsMinThresholdError, min)
 
-                (percentage.toIntOrNull() ?: 0) >= max ->
+                (percentage.toBigDecimalOrNull() ?: 0.toBigDecimal()) >= max.toBigDecimal() ->
                     stringResource(id = R.string.alertSettingsMaxThresholdError, max)
 
-                else -> null
+                else -> ""
             }
-            if (errorText != null) {
+            if (errorText != "") {
                 LaunchedEffect(Unit) {
                     announceAccessibilityText(context, errorText)
                 }
