@@ -56,6 +56,7 @@ import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAt
 import com.instructure.pandautils.features.assignmentdetails.AssignmentDetailsAttemptViewData
 import com.instructure.pandautils.features.assignments.details.gradecellview.GradeCellViewData
 import com.instructure.pandautils.features.assignments.details.itemviewmodels.ReminderItemViewModel
+import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.reminder.ReminderItem
 import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.features.reminder.ReminderViewState
@@ -65,6 +66,7 @@ import com.instructure.pandautils.room.appdatabase.entities.ReminderEntity
 import com.instructure.pandautils.utils.AssignmentUtils2
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.pandautils.utils.getSubmissionStateLabel
 import com.instructure.pandautils.utils.isAudioVisualExtension
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toFormattedString
@@ -263,35 +265,12 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
 
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
-
-        // Don't mark LTI assignments as missing when overdue as they usually won't have a real submission for it
-        val isMissing = assignment.isMissing() || (assignment.turnInType != Assignment.TurnInType.EXTERNAL_TOOL
-                && assignment.dueAt != null
-                && assignmentState == AssignmentUtils2.ASSIGNMENT_STATE_MISSING)
-
-        val matchedCustomStatus = assignment.submission?.customGradeStatusId?.let { id ->
-            customStatuses.find { it._id.toLongOrNull() == id }
-        }
-
-        val submittedLabelText = when {
-            matchedCustomStatus != null -> matchedCustomStatus.name
-            isMissing -> resources.getString(R.string.missingAssignment)
-            !assignment.isSubmitted -> resources.getString(R.string.notSubmitted)
-            assignment.isGraded() -> resources.getString(R.string.gradedSubmissionLabel)
-            else -> resources.getString(R.string.submitted)
-        }
-
-        val submissionStatusTint = when {
-            matchedCustomStatus != null -> R.color.textInfo
-            assignment.isSubmitted -> R.color.textSuccess
-            isMissing -> R.color.textDanger
-            else -> R.color.textDark
-        }
-
-        val submittedStatusIcon = when {
-            matchedCustomStatus != null -> R.drawable.ic_flag
-            assignment.isSubmitted -> R.drawable.ic_complete_solid
-            else -> R.drawable.ic_no
+        val submissionStateLabel = assignment.getSubmissionStateLabel(customStatuses)
+        val submissionStatusTint = submissionStateLabel.colorRes
+        val submittedStatusIcon = submissionStateLabel.iconRes
+        val submittedLabelText = when (submissionStateLabel) {
+            is SubmissionStateLabel.Predefined -> resources.getString(submissionStateLabel.labelRes)
+            is SubmissionStateLabel.Custom -> submissionStateLabel.label
         }
 
         // Submission Status under title - We only show Graded or nothing at all for PAPER/NONE
