@@ -25,6 +25,8 @@ import com.instructure.interactions.router.RouterParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
+import androidx.core.net.toUri
+import okhttp3.Response
 
 object RouteUtils {
     fun retrieveFileUrl(
@@ -49,10 +51,8 @@ object RouteUtils {
     }
 
     suspend fun getRedirectUrl(uri: Uri): Uri {
-        if (!uri.toString().contains("redirect=")) {
-            return uri
-        }
-        return withContext(Dispatchers.IO) {
+        var response: Response? = null
+        val responseUri = withContext(Dispatchers.IO) {
             try {
                 val client = CanvasRestAdapter.okHttpClient
                     .newBuilder()
@@ -61,25 +61,38 @@ object RouteUtils {
                     .build()
 
                 val request = Request.Builder()
+                    .head()
                     .url(uri.toString())
                     .build()
 
-                val response = client.newCall(request).execute()
+                response = client.newCall(request).execute()
                 response.use {
                     return@withContext if (response.isRedirect) {
                         val header = response.header("Location")
                         if (header != null) {
-                            Uri.parse(header)
+                            getRedirectUrl(header.toUri())
                         } else {
                             uri
                         }
                     } else {
-                        uri
+                        val contentTypeHeader = response.header("content-type")
+                        if (contentTypeHeader != null) {
+                            if (contentTypeHeader.contains("dash") && !uri.toString().endsWith(".mpd")) {
+                                ("$uri.mpd").toUri()
+                            } else {
+                                uri
+                            }
+                        } else {
+                            uri
+                        }
                     }
                 }
             } catch (e: Exception) {
+                response?.close()
                 return@withContext uri
             }
         }
+        response?.close()
+        return responseUri
     }
 }
