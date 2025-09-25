@@ -75,7 +75,6 @@ import com.instructure.horizon.horizonui.molecules.PillType
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.molecules.ProgressBarNumberStyle
 import com.instructure.pandautils.utils.localisedFormatMonthDay
-import com.instructure.pandautils.utils.toFormattedString
 import java.util.Date
 
 @Composable
@@ -226,7 +225,7 @@ private fun DescriptionText(description: String) {
 private fun CourseProgress(progress: Double) {
     Column(Modifier.fillMaxWidth()){
         Text(
-            text = "${progress.toFormattedString()}% complete",
+            text = "${progress.toInt()}% complete",
             style = HorizonTypography.p1,
             color = HorizonColors.Text.title()
         )

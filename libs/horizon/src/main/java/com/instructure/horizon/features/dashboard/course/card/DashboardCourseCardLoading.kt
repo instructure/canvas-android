@@ -36,16 +36,20 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 fun DashboardCourseCardLoading(
     modifier: Modifier = Modifier,
 ) {
-    DashboardCourseCard(modifier) {
+    DashboardCourseCard(modifier.padding(bottom = 8.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()
+                .padding()
         ) {
             Box(
                 Modifier
                     .fillMaxWidth()
                     .aspectRatio(1.69f)
-                    .shimmerEffect(true)
+                    .shimmerEffect(
+                        true,
+                        shape = HorizonCornerRadius.level0,
+                    )
             )
             Column(
                 Modifier

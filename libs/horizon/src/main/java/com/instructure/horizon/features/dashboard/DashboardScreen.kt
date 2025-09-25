@@ -28,8 +28,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -137,23 +136,28 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
-            Column(
+            LazyColumn(
                 modifier = Modifier
                     .padding(paddingValues)
-                    .verticalScroll(rememberScrollState())
             ) {
-                HomeScreenTopBar(
-                    uiState,
-                    mainNavController,
-                    modifier = Modifier.height(56.dp)
-                )
-                HorizonSpace(SpaceSize.SPACE_24)
-                DashboardCourseSection(
-                    mainNavController,
-                    homeNavController,
-                    shouldRefresh,
-                    refreshStateFlow
-                )
+                item {
+                    HomeScreenTopBar(
+                        uiState,
+                        mainNavController,
+                        modifier = Modifier.height(56.dp)
+                    )
+                }
+                item {
+                    Column {
+                        HorizonSpace(SpaceSize.SPACE_24)
+                        DashboardCourseSection(
+                            mainNavController,
+                            homeNavController,
+                            shouldRefresh,
+                            refreshStateFlow
+                        )
+                    }
+                }
             }
         }
     }
