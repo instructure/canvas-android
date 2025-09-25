@@ -1902,6 +1902,7 @@
     <string name="unpairStudentTitle">Delete</string>
     <string name="unpairStudentMessage">This will unpair and remove all enrollments for this student from you account.</string>
     <string name="unpairStudentSuccessfull">Student deleted successfully</string>
+    <string name="alertSettingsInvalidValueError">Invalid value given</string>
     <string name="alertSettingsMinThresholdError">Must be above %d</string>
     <string name="alertSettingsMaxThresholdError">Must be below %d</string>
     <string name="alertSettingsErrorMessage">An error occurred while fetching the alert settings.</string>
