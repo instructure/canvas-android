@@ -36,6 +36,8 @@ import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
+import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
+import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -118,9 +120,23 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
         containerColor = HorizonColors.Surface.pagePrimary(),
         snackbarHost = { SnackbarHost(snackbarHostState) }
     ) { paddingValues ->
+        val pullToRefreshState = rememberPullToRefreshState()
+        val isRefreshing = refreshState.any { it }
         PullToRefreshBox(
-            isRefreshing = refreshState.any { true },
+            isRefreshing = isRefreshing,
             onRefresh = { shouldRefresh = true },
+            state = pullToRefreshState,
+            indicator = {
+                Indicator(
+                    modifier = Modifier
+                        .align(Alignment.TopCenter)
+                        .padding(top = 16.dp),
+                    isRefreshing = isRefreshing,
+                    containerColor = HorizonColors.Surface.pageSecondary(),
+                    color = HorizonColors.Surface.institution(),
+                    state = pullToRefreshState
+                )
+            }
         ){
             Column(
                 modifier = Modifier
