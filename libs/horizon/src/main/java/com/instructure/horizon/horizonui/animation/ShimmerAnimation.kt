@@ -44,8 +44,8 @@ fun Modifier.shimmerEffect(
     enabled: Boolean,
     iterationDurationMillis: Int = 1000,
     shape: Shape = HorizonCornerRadius.level1,
-    backgroundColor: Color = HorizonColors.PrimitivesGrey.grey14(),
-    shimmerColor: Color = HorizonColors.PrimitivesGrey.grey12(),
+    backgroundColor: Color = HorizonColors.PrimitivesGrey.grey14().copy(alpha = 0.5f),
+    shimmerColor: Color = HorizonColors.PrimitivesGrey.grey12().copy(alpha = 0.5f),
     @FloatRange(from = 0.0, to = 1.0) shimmerRatio: Float = 0.5f,
 ): Modifier {
     if (!enabled) return this

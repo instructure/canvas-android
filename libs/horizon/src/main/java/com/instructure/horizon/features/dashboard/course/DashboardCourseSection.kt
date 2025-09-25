@@ -151,6 +151,7 @@ private fun DashboardCourseSectionContent(
                         )
                     }
                     .scale(scaleAnimation)
+                    .align(Alignment.CenterHorizontally)
             )
         }
 
