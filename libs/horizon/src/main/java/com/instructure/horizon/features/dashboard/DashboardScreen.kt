@@ -87,6 +87,12 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     val snackbarFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_SNACKBAR, "") }
     val snackbar by snackbarFlow.collectAsState()
 
+    /*
+    Using a list of booleans to represent each refreshing component.
+    Components get the `shouldRefresh` flag to start refreshing on pull-to-refresh.
+    Each component append the `refreshStateFlow` with `true` when starting to refresh and remove it when done.
+    If any component is refreshing, the dashboard shows the refreshing indicator.
+     */
     val refreshStateFlow = remember { MutableStateFlow(emptyList<Boolean>()) }
     val refreshState by refreshStateFlow.collectAsState()
 
@@ -141,7 +147,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
 @Composable
 private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavController, modifier: Modifier = Modifier) {
-    Row(verticalAlignment = Alignment.Bottom, modifier = modifier) {
+    Row(verticalAlignment = Alignment.Bottom, modifier = modifier.padding(horizontal = 24.dp)) {
         GlideImage(
             model = uiState.logoUrl,
             contentScale = ContentScale.Fit,

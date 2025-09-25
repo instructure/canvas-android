@@ -16,14 +16,24 @@
  */
 package com.instructure.horizon.features.dashboard.course
 
-import androidx.compose.foundation.gestures.snapping.SnapPosition
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.scale
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.unit.IntOffset
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
@@ -68,10 +78,10 @@ private fun DashboardCourseSection(
 ) {
     when(state.state) {
         DashboardItemState.LOADING -> {
-            DashboardCourseCardLoading()
+            DashboardCourseCardLoading(Modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.ERROR -> {
-            DashboardCourseCardError({state.onRefresh {} })
+            DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 24.dp))
         }
         DashboardItemState.SUCCESS -> {
             DashboardCourseSectionContent(state, mainNavController, homeNavController)
@@ -86,12 +96,40 @@ private fun DashboardCourseSectionContent(
     homeNavController: NavHostController
 ) {
     val pagerstate = rememberPagerState { state.courses.size }
+
     HorizontalPager(
         pagerstate,
-        snapPosition = SnapPosition.Center,
-        verticalAlignment = Alignment.Top
+        contentPadding = PaddingValues(horizontal = 24.dp),
+        pageSpacing = 4.dp,
     ) {
-        DashboardCourseItem(state.courses[it], mainNavController, homeNavController)
+        var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
+        val scaleAnimation by animateFloatAsState(
+            if (it == pagerstate.currentPage) 1f else 0.85f,
+            label = "FlashcardPagerAnimation",
+        )
+        val animationDirection by remember(it, pagerstate.currentPage) {
+            mutableStateOf(when {
+                it < pagerstate.currentPage -> 1
+                it > pagerstate.currentPage -> -1
+                else -> 0
+            })
+        }
+        DashboardCourseItem(
+            state.courses[it],
+            mainNavController,
+            homeNavController,
+            Modifier
+                .onGloballyPositioned { coordinates ->
+                    cardWidthList = cardWidthList + (it to coordinates.size.width.toFloat())
+                }
+                .offset {
+                    IntOffset(
+                        (animationDirection * ((cardWidthList[it] ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
+                        0
+                    )
+                }
+                .scale(scaleAnimation)
+        )
     }
 }
 
@@ -99,10 +137,11 @@ private fun DashboardCourseSectionContent(
 private fun DashboardCourseItem(
     cardState: DashboardCourseCardState,
     mainNavController: NavHostController,
-    homeNavController: NavHostController
+    homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     DashboardCourseCardContent(
-        cardState, { handleClickAction(it, mainNavController, homeNavController) }
+        cardState, { handleClickAction(it, mainNavController, homeNavController) }, modifier
     )
 }
 

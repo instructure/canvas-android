@@ -98,7 +98,7 @@ fun DashboardCourseCardContent(
             Column(
                 modifier = Modifier
                     .padding(horizontal = 24.dp)
-            ){
+            ) {
                 if (!state.parentPrograms.isNullOrEmpty()) {
                     Spacer(Modifier.height(16.dp))
                     ProgramsText(state.parentPrograms, handleOnClickAction)
@@ -136,7 +136,7 @@ private fun CourseImage(imageUrl: String) {
     GlideImage(
         imageUrl,
         contentDescription = null,
-        contentScale = ContentScale.FillWidth,
+        contentScale = ContentScale.FillBounds,
         requestBuilderTransform = { it.addListener( object : RequestListener<Drawable> {
             override fun onLoadFailed(
                 e: GlideException?,
