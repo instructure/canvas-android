@@ -47,6 +47,7 @@ import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import kotlin.math.abs
 
 @Composable
 fun DashboardCourseSection(
@@ -102,17 +103,20 @@ private fun DashboardCourseSectionContent(
         contentPadding = PaddingValues(horizontal = 24.dp),
         pageSpacing = 4.dp,
     ) {
+
         var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
         val scaleAnimation by animateFloatAsState(
-            if (it == pagerstate.currentPage) 1f else 0.85f,
-            label = "FlashcardPagerAnimation",
+            if (it == pagerstate.currentPage) {
+                (1 - abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
+            } else {
+                (1f - (0.2f * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
+            },
+            label = "DashboardCourseCardAnimation",
         )
-        val animationDirection by remember(it, pagerstate.currentPage) {
-            mutableStateOf(when {
-                it < pagerstate.currentPage -> 1
-                it > pagerstate.currentPage -> -1
-                else -> 0
-            })
+        val animationDirection =when {
+            it < pagerstate.currentPage -> 1
+            it > pagerstate.currentPage -> -1
+            else -> if (pagerstate.currentPageOffsetFraction > 0) 1 else -1
         }
         DashboardCourseItem(
             state.courses[it],
@@ -124,13 +128,21 @@ private fun DashboardCourseSectionContent(
                 }
                 .offset {
                     IntOffset(
-                        (animationDirection * ((cardWidthList[it] ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
+                        (animationDirection * (((cardWidthList[it] ?: 0f)) / 2 * (1 - scaleAnimation))).toInt(),
                         0
                     )
                 }
                 .scale(scaleAnimation)
         )
     }
+}
+
+private fun Float.convertScaleRange(): Float {
+    val oldMin = -0.5f
+    val oldMax = 0.5f
+    val newMin = -0.2f
+    val newMax = 0.2f
+    return ((this - oldMin) / (oldMax - oldMin) ) * (newMax - newMin) + newMin
 }
 
 @Composable
