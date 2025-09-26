@@ -101,7 +101,7 @@ private fun SubmissionFilterScreenContent(
             )
         }.orEmpty())
     }
-    val selectedSections by remember { mutableStateOf(initialSelectedSections.toMutableSet()) }
+    var selectedSections by remember { mutableStateOf(initialSelectedSections.toSet()) }
     var error by remember { mutableStateOf(false) }
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
@@ -269,10 +269,10 @@ private fun SubmissionFilterScreenContent(
                         selected = selectedSections.contains(section.id),
                         color = courseColor,
                         onCheckedChanged = {
-                            if (selectedSections.contains(section.id)) {
-                                selectedSections.remove(section.id)
+                            selectedSections = if (selectedSections.contains(section.id)) {
+                                selectedSections - section.id
                             } else {
-                                selectedSections.add(section.id)
+                                selectedSections + section.id
                             }
                         },
                         modifier = Modifier.fillMaxWidth()
