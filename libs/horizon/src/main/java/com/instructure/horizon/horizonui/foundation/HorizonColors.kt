@@ -266,6 +266,7 @@ object HorizonColors {
     }
 
     object PrimitivesSky {
+        val sky12 = Color(0xFFDDECF3)
         @Composable
         fun sky30() = colorResource(R.color.primitives_sky30)
         @Composable
@@ -282,6 +283,7 @@ object HorizonColors {
         fun sky70() = colorResource(R.color.primitives_sky70)
         @Composable
         fun sky90() = colorResource(R.color.primitives_sky90)
+        val sky90 = Color(0xFF0F4E6A)
         @Composable
         fun sky110() = colorResource(R.color.primitives_sky110)
     }
@@ -298,6 +300,7 @@ object HorizonColors {
     }
 
     object PrimitivesViolet {
+        val violet12 = Color(0xFFF1E6F5)
         @Composable
         fun violet30() = colorResource(R.color.primitives_violet30)
         @Composable
@@ -314,6 +317,7 @@ object HorizonColors {
         fun violet70() = colorResource(R.color.primitives_violet70)
         @Composable
         fun violet90() = colorResource(R.color.primitives_violet90)
+        val violet90 = Color(0xFF682F82)
         @Composable
         fun violet110() = colorResource(R.color.primitives_violet110)
     }

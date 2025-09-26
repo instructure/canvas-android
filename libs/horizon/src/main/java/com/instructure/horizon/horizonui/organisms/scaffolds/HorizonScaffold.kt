@@ -36,10 +36,12 @@ import com.instructure.horizon.horizonui.organisms.topappbar.HorizonTopAppBar
 fun HorizonScaffold(
     title: String,
     onBackPressed: () -> Unit,
+    snackbarHost: @Composable () -> Unit = {},
     content: @Composable (Modifier) -> Unit,
 ) {
     Scaffold(
         topBar = { HorizonTopAppBar(title, onBackPressed) },
+        snackbarHost = snackbarHost,
         contentColor = HorizonColors.Surface.pagePrimary()
     ) { innerPadding ->
         Box(
