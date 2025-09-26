@@ -265,7 +265,10 @@ class AssignmentDetailsViewModel @Inject constructor(
         }
 
         val assignmentState = AssignmentUtils2.getAssignmentState(assignment, assignment.submission, false)
-        val submissionStateLabel = assignment.getSubmissionStateLabel(customStatuses)
+        val submissionStateLabel = assignment
+            .getSubmissionStateLabel(customStatuses)
+            .takeUnless { it == SubmissionStateLabel.None }
+            ?: SubmissionStateLabel.Submitted
         val submissionStatusTint = submissionStateLabel.colorRes
         val submittedStatusIcon = submissionStateLabel.iconRes
         val submittedLabelText = when (submissionStateLabel) {
