@@ -26,6 +26,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
 import androidx.core.net.toUri
+import com.instructure.canvasapi2.builders.RestParams
 import okhttp3.Response
 
 object RouteUtils {
@@ -56,13 +57,14 @@ object RouteUtils {
             try {
                 val client = CanvasRestAdapter.okHttpClient
                     .newBuilder()
-                    .followRedirects(false)
+                    .followRedirects(true)
                     .cache(null)
                     .build()
 
                 val request = Request.Builder()
                     .head()
                     .url(uri.toString())
+                    .tag(RestParams(disableFileVerifiers = false))
                     .build()
 
                 response = client.newCall(request).execute()
@@ -77,8 +79,9 @@ object RouteUtils {
                     } else {
                         val contentTypeHeader = response.header("content-type")
                         if (contentTypeHeader != null) {
-                            if (contentTypeHeader.contains("dash") && !uri.toString().endsWith(".mpd")) {
-                                ("$uri.mpd").toUri()
+                            val responseUrl = response.request.url.toString()
+                            if (contentTypeHeader.contains("dash") && !responseUrl.endsWith(".mpd")) {
+                                ("$responseUrl.mpd").toUri()
                             } else {
                                 uri
                             }
