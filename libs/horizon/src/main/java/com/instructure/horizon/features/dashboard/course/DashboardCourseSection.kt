@@ -95,10 +95,10 @@ private fun DashboardCourseSection(
 ) {
     when(state.state) {
         DashboardItemState.LOADING -> {
-            DashboardCourseCardLoading(Modifier.padding(horizontal = 24.dp))
+            DashboardCourseCardLoading(Modifier.padding(horizontal = 16.dp))
         }
         DashboardItemState.ERROR -> {
-            DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 24.dp))
+            DashboardCourseCardError({state.onRefresh {} }, Modifier.padding(horizontal = 16.dp))
         }
         DashboardItemState.SUCCESS -> {
             DashboardCourseSectionContent(state, mainNavController, homeNavController)
@@ -122,14 +122,14 @@ private fun DashboardCourseSectionContent(
                 mainNavController,
                 homeNavController,
                 Modifier
-                    .padding(horizontal = 24.dp)
+                    .padding(horizontal = 16.dp)
             )
             Spacer(Modifier.height(16.dp))
         }
 
         HorizontalPager(
             pagerstate,
-            contentPadding = PaddingValues(horizontal = 24.dp),
+            contentPadding = PaddingValues(horizontal = 16.dp),
             pageSpacing = 4.dp,
         ) {
 

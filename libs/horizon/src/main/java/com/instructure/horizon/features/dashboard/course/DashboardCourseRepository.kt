@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.ApiPrefs
-import com.instructure.canvasapi2.utils.DataResult
 import javax.inject.Inject
 
 class DashboardCourseRepository @Inject constructor(
@@ -48,13 +47,13 @@ class DashboardCourseRepository @Inject constructor(
         return journeyApiManager.getPrograms(forceNetwork)
     }
 
-    suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
+    suspend fun getFirstPageModulesWithItems(courseId: Long, forceNetwork: Boolean): List<ModuleObject> {
         val params = RestParams(isForceReadFromNetwork = forceNetwork)
         return moduleApi.getFirstPageModulesWithItems(
             CanvasContext.Type.COURSE.apiString,
             courseId,
             params,
             includes = listOf("estimated_durations")
-        )
+        ).dataOrThrow
     }
 }

@@ -27,6 +27,7 @@ import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 import com.instructure.horizon.model.LearningObjectType
+import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.pandautils.utils.formatIsoDuration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
@@ -109,9 +110,13 @@ class DashboardCourseViewModel @Inject constructor(
             } else state
         }
 
+        val programCardStates = programs
+            .filter { program -> program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED } }
+            .mapToDashboardCourseCardState()
+
         _uiState.update {
             it.copy(
-                programs = programs.mapToDashboardCourseCardState(),
+                programs = programCardStates,
                 courses = courseCardStates
             )
         }
@@ -119,7 +124,7 @@ class DashboardCourseViewModel @Inject constructor(
 
     private suspend fun fetchNextModuleState(courseId: Long?, forceNetwork: Boolean): DashboardCourseCardModuleItemState? {
         if (courseId == null) return null
-        val modules = repository.getFirstPageModulesWithItems(courseId, forceNetwork = forceNetwork).dataOrThrow
+        val modules = repository.getFirstPageModulesWithItems(courseId, forceNetwork = forceNetwork)
         val nextModuleItem = modules.flatMap { module -> module.items }.firstOrNull()
         val nextModule = modules.find { module -> module.id == nextModuleItem?.moduleId }
 

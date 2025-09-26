@@ -85,4 +85,18 @@ dependencies {
     implementation(Libs.FIREBASE_CRASHLYTICS) {
         isTransitive = true
     }
+
+    /* Android Test Dependencies */
+    androidTestImplementation(project(":espresso"))
+    androidTestImplementation(project(":dataseedingapi"))
+
+    /* Unit Test Dependencies */
+    testImplementation(Libs.JUNIT)
+    testImplementation(Libs.ROBOLECTRIC)
+    testImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    testImplementation(Libs.MOCKK)
+    androidTestImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    testImplementation(Libs.KOTLIN_COROUTINES_TEST)
+    testImplementation(Libs.THREETEN_BP)
+    testImplementation(Libs.ANDROIDX_CORE_TESTING)
 }
