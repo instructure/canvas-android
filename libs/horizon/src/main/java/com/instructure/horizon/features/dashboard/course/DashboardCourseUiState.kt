@@ -21,6 +21,7 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 
 data class DashboardCourseUiState(
     val state: DashboardItemState = DashboardItemState.LOADING,
+    val programs: List<DashboardCourseCardState> = emptyList(),
     val courses: List<DashboardCourseCardState> = emptyList(),
     val onRefresh: (onFinished: () -> Unit)-> Unit = { }
 )

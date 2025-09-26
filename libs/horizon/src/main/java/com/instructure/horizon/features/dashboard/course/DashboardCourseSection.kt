@@ -115,6 +115,18 @@ private fun DashboardCourseSectionContent(
     val pagerstate = rememberPagerState { state.courses.size }
 
     Column {
+
+        state.programs.forEach { programCardState ->
+            DashboardCourseItem(
+                programCardState,
+                mainNavController,
+                homeNavController,
+                Modifier
+                    .padding(horizontal = 24.dp)
+            )
+            Spacer(Modifier.height(16.dp))
+        }
+
         HorizontalPager(
             pagerstate,
             contentPadding = PaddingValues(horizontal = 24.dp),
@@ -158,6 +170,8 @@ private fun DashboardCourseSectionContent(
         Spacer(Modifier.height(8.dp))
 
         DashboardCourseCardIndicator(pagerstate)
+
+        Spacer(Modifier.height(16.dp))
     }
 }
 

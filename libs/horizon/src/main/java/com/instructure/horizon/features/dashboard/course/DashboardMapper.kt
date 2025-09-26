@@ -28,13 +28,11 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
     programs: List<Program>,
-    nextModuleForCourse: suspend (Long?) -> DashboardCourseCardModuleItemState?,
-    acceptInvite: suspend (courseId: Long, enrollmentId: Long) -> Unit
+    nextModuleForCourse: suspend (Long?) -> DashboardCourseCardModuleItemState?
 ): List<DashboardCourseCardState> {
-    val invitationStates = this.filter { it.isInvited() }.map { it.mapInvitation(acceptInvite) }
     val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(programs) }
     val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
-    return (invitationStates + active + completed).sortedByDescending { it.lastAccessed }
+    return (active + completed).sortedByDescending { it.lastAccessed }
 }
 
 internal fun List<Program>.mapToDashboardCourseCardState(): List<DashboardCourseCardState> {
@@ -51,37 +49,12 @@ internal fun List<Program>.mapToDashboardCourseCardState(): List<DashboardCourse
     }
 }
 
-private fun GetCoursesQuery.Enrollment.isInvited(): Boolean {
-    return this.state == EnrollmentWorkflowState.invited
-}
-
 private fun GetCoursesQuery.Enrollment.isCompleted(): Boolean {
     return this.state == EnrollmentWorkflowState.completed
 }
 
 private fun GetCoursesQuery.Enrollment.isActive(): Boolean {
     return this.state == EnrollmentWorkflowState.active
-}
-
-private fun GetCoursesQuery.Enrollment.mapInvitation(acceptInvite: suspend (Long, Long) -> Unit): DashboardCourseCardState {
-    return DashboardCourseCardState(
-        parentPrograms = null,
-        imageUrl = null,
-        title = this.course?.name.orEmpty(),
-        description = "You’ve been invited to join this course.",
-        progress = null,
-        moduleItem = null,
-        buttonState = DashboardCourseCardButtonState(
-            label = "Accept",
-            iconRes = null,
-            onClickAction = CardClickAction.Action { },
-            action = {
-                acceptInvite(this.course?.id?.toLongOrNull() ?: -1, this.id?.toLongOrNull() ?: -1L)
-            }
-        ),
-        onClickAction = null,
-        lastAccessed = this.lastActivityAt
-    )
 }
 
 private fun GetCoursesQuery.Enrollment.mapCompleted(programs: List<Program>): DashboardCourseCardState {

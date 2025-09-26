@@ -19,6 +19,7 @@ package com.instructure.horizon.features.dashboard.course
 import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.dashboard.DashboardItemState
@@ -70,17 +71,27 @@ class DashboardCourseViewModel @Inject constructor(
     }
 
     private suspend fun fetchData(forceNetwork: Boolean) {
-        val enrollments = repository.getEnrollments(forceNetwork)
+        var enrollments = repository.getEnrollments(forceNetwork)
         val programs = repository.getPrograms(forceNetwork)
+        val invitations = enrollments.filter { it.state == EnrollmentWorkflowState.invited }
+
+        // Accept invitations automatically
+        if (invitations.isNotEmpty()) {
+            invitations.forEach { enrollment ->
+                repository.acceptInvite(
+                    enrollment.course?.id?.toLongOrNull() ?: return@forEach,
+                    enrollment.id?.toLongOrNull() ?: return@forEach
+                )
+            }
+            enrollments = repository.getEnrollments(true)
+        }
+
 
         val courseCardStates = enrollments.mapToDashboardCourseCardState(
             programs = programs,
             nextModuleForCourse = { courseId ->
                 fetchNextModuleState(courseId, forceNetwork)
             },
-            acceptInvite = { courseId, enrollmentId ->
-                repository.acceptInvite(courseId, enrollmentId)
-            }
         ).map { state ->
             if (state.buttonState?.onClickAction is CardClickAction.Action) {
                 state.copy(buttonState = state.buttonState.copy(
@@ -96,9 +107,14 @@ class DashboardCourseViewModel @Inject constructor(
                     },
                 ))
             } else state
-        } + programs.mapToDashboardCourseCardState()
+        }
 
-        _uiState.update { it.copy(courses = courseCardStates) }
+        _uiState.update {
+            it.copy(
+                programs = programs.mapToDashboardCourseCardState(),
+                courses = courseCardStates
+            )
+        }
     }
 
     private suspend fun fetchNextModuleState(courseId: Long?, forceNetwork: Boolean): DashboardCourseCardModuleItemState? {
