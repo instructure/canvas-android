@@ -54,6 +54,16 @@ allprojects {
         }
         maven { url "https://maven.google.com/" }
     }
+
+    plugins.withType(com.android.build.gradle.BasePlugin) {
+        android {
+            packaging {
+                resources {
+                    excludes += ['META-INF/io.netty.versions.properties']
+                }
+            }
+        }
+    }
 }
 
 task assembleAllApps() {
@@ -72,4 +82,3 @@ configurations.all{
         }
     }
 }
-
