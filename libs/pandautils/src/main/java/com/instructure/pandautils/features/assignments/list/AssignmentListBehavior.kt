@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentGroupByOption
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListFilterData
 import com.instructure.pandautils.features.assignments.list.filter.AssignmentListSelectedFilters
@@ -30,7 +31,8 @@ interface AssignmentListBehavior {
     fun getAssignmentGroupItemState(
         course: Course,
         assignment: Assignment,
-        customStatuses: List<CustomGradeStatusesQuery.Node>
+        customStatuses: List<CustomGradeStatusesQuery.Node>,
+        checkpoints: List<DiscussionCheckpointUiState>
     ): AssignmentGroupItemState
 
     fun getAssignmentFilters(): AssignmentListFilterData

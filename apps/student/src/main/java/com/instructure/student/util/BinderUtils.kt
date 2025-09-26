@@ -48,7 +48,7 @@ object BinderUtils {
         restrictQuantitativeData: Boolean,
         gradingScheme: List<GradingSchemeRow>
     ) {
-        val (grade, contentDescription) = assignment.getGrade(submission, context, restrictQuantitativeData, gradingScheme)
+        val (grade, contentDescription) = assignment.getGrade(submission, context.resources, restrictQuantitativeData, gradingScheme)
         if (!submission.excused && grade.isValid()) {
             textView.text = grade
             textView.contentDescription = contentDescription

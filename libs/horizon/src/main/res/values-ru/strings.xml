@@ -69,8 +69,8 @@
     <string name="overview">Обзор</string>
     <string name="scores">Баллы</string>
     <string name="notes">Заметки</string>
-    <string name="assignmentName">Имя задания</string>
-    <string name="dueDate">Дата выполнения</string>
+    <string name="scoresSortingAssignmentNameAscending">Имя задания (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Срок выполнения (сначала самый последний)</string>
     <string name="scoresItemassignmentName">Имя: %1$s</string>
     <string name="scoresItemDueDate">Дата: %1$s</string>
     <string name="noDueDate">Срок выполнения не задан</string>
@@ -129,6 +129,7 @@
     <string name="accountAdvancedLabel">Продвинутый</string>
     <string name="accountSupportHeading">Поддержка</string>
     <string name="accountGiveFeedbackLabel">Оставить отзыв</string>
+    <string name="accountReportABug">Сообщить о серьезной ошибке</string>
     <string name="accountBetaCommunityLabel">Beta community</string>
     <string name="accountFullNameLabel">Полное имя</string>
     <string name="a11yNavigateBack">Вернуться назад</string>
@@ -337,4 +338,24 @@
     <string name="dashboard_courseInviteFailed">Не удалось принять приглашение на курс</string>
     <string name="dashboard_emptyMessage">Вы в настоящее время не зарегистрированы на курс.</string>
     <string name="learnEmptyMessage">Вы в настоящее время не зарегистрированы на курс.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% завершено</string>
+    <string name="programsProgressBar_notStarted">Не начато</string>
+    <string name="programsCourseCard_enrollButton">Внести</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Необходимо</string>
+    <string name="programCourseTag_optional">Опционально</string>
+    <string name="programCourseTag_locked">Заблокировано</string>
+    <string name="programCourseTag_completed">Завершено</string>
+    <string name="programCourseTag_enrolled">Зачислен</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Завершено %1$d из %2$d курса</item>
+        <item quantity="few">Завершено %1$d из %2$d курсов</item>
+        <item quantity="many">Завершено %1$d из %2$d курсов</item>
+        <item quantity="other">Завершено %1$d из %2$d курсов</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Не удалось обновить программу.</string>
+    <string name="programSwitcher_programOverview">Общие сведения о программе</string>
+    <string name="programSwitcher_goBack">Все</string>
+    <string name="learnScreen_partOfProgram">Часть из %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Курс нельзя открыть.</string>
 </resources>

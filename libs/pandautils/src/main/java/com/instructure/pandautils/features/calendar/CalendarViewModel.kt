@@ -66,6 +66,7 @@ class CalendarViewModel @Inject constructor(
     private val calendarPrefs: CalendarPrefs,
     private val calendarStateMapper: CalendarStateMapper,
     private val calendarSharedEvents: CalendarSharedEvents,
+    private val calendarBehavior: CalendarBehavior,
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
@@ -98,6 +99,14 @@ class CalendarViewModel @Inject constructor(
 
     init {
         loadVisibleMonths()
+        initializeCalendarBehavior()
+    }
+    
+    private fun initializeCalendarBehavior() {
+        viewModelScope.launch {
+            val shouldShowAddEventButton = calendarBehavior.shouldShowAddEventButton()
+            _uiState.update { it.copy(showAddEventButton = shouldShowAddEventButton) }
+        }
     }
 
     private suspend fun loadFilters(filtersFromDb: CalendarFilterEntity?) {

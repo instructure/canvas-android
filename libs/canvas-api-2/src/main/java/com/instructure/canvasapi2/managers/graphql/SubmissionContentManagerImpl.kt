@@ -15,11 +15,13 @@
  */
 package com.instructure.canvasapi2.managers.graphql
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.QLClientConfig
 import com.instructure.canvasapi2.SubmissionContentQuery
+import com.instructure.canvasapi2.enqueueQuery
 
-class SubmissionContentManagerImpl : SubmissionContentManager {
+class SubmissionContentManagerImpl(private val apolloClient: ApolloClient) : SubmissionContentManager {
 
     override suspend fun getSubmissionContent(
         userId: Long,
@@ -39,7 +41,7 @@ class SubmissionContentManagerImpl : SubmissionContentManager {
                 nextCursor = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
             )
 
-            data = QLClientConfig.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
+            data = apolloClient.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
             val connection = data.submission?.submissionHistoriesConnection
 
             allEdges.addAll(connection?.edges.orEmpty())
@@ -50,7 +52,7 @@ class SubmissionContentManagerImpl : SubmissionContentManager {
 
         return data.copy(
             submission = data.submission?.copy(
-                submissionHistoriesConnection = data.submission?.submissionHistoriesConnection?.copy(
+                submissionHistoriesConnection = data.submission.submissionHistoriesConnection?.copy(
                     edges = allEdges
                 )
             )

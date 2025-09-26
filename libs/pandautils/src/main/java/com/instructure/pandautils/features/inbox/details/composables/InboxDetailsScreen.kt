@@ -125,7 +125,12 @@ private fun AppBar(
             }
         } else null,
         actions = {
-            AppBarMenu(uiState.conversation, actionHandler)
+            AppBarMenu(
+                conversation = uiState.conversation,
+                showDeleteButton = uiState.showDeleteButton,
+                showReplyAllButton = uiState.showReplyAllButton,
+                actionHandler = actionHandler
+            )
         },
         backgroundColor = Color(color = ThemePrefs.primaryColor),
         contentColor = Color(color = ThemePrefs.primaryTextColor),
@@ -290,7 +295,12 @@ private fun InboxDetailsContentView(
 }
 
 @Composable
-private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetailsAction) -> Unit) {
+private fun AppBarMenu(
+    conversation: Conversation?,
+    showDeleteButton: Boolean,
+    showReplyAllButton: Boolean,
+    actionHandler: (InboxDetailsAction) -> Unit
+) {
     var showMenu by rememberSaveable { mutableStateOf(false) }
     OverflowMenu(
         modifier = Modifier
@@ -312,13 +322,15 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
                     MessageMenuItem(R.drawable.ic_reply, stringResource(id = R.string.reply))
                 }
 
-                DropdownMenuItem(
-                    onClick = {
-                        showMenu = !showMenu
-                        actionHandler(InboxDetailsAction.ReplyAll(message))
+                if (showReplyAllButton) {
+                    DropdownMenuItem(
+                        onClick = {
+                            showMenu = !showMenu
+                            actionHandler(InboxDetailsAction.ReplyAll(message))
+                        }
+                    ) {
+                        MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
                     }
-                ) {
-                    MessageMenuItem(R.drawable.ic_reply_all, stringResource(id = R.string.replyAll))
                 }
             }
 
@@ -402,13 +414,15 @@ private fun AppBarMenu(conversation: Conversation?, actionHandler: (InboxDetails
                 }
             }
 
-            DropdownMenuItem(
-                onClick = {
-                    showMenu = !showMenu
-                    actionHandler(InboxDetailsAction.DeleteConversation(conversation.id))
+            if (showDeleteButton) {
+                DropdownMenuItem(
+                    onClick = {
+                        showMenu = !showMenu
+                        actionHandler(InboxDetailsAction.DeleteConversation(conversation.id))
+                    }
+                ) {
+                    MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
                 }
-            ) {
-                MessageMenuItem(R.drawable.ic_trash, stringResource(id = R.string.delete))
             }
         }
 
@@ -500,6 +514,7 @@ fun InboxDetailsScreenContentPreview() {
             author = author,
             recipients = recipients,
             enabledActions = true,
+            canDelete = true,
         )
     }
 

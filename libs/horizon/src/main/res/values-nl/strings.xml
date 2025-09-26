@@ -67,8 +67,8 @@
     <string name="overview">Overzicht</string>
     <string name="scores">Scores</string>
     <string name="notes">Opmerkingen</string>
-    <string name="assignmentName">Naam van de opdracht</string>
-    <string name="dueDate">Inleverdatum</string>
+    <string name="scoresSortingAssignmentNameAscending">Opdrachtnaam (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Vervaldatum (nieuwste eerst)</string>
     <string name="scoresItemassignmentName">Naam: %1$s</string>
     <string name="scoresItemDueDate">Datum: %1$s</string>
     <string name="noDueDate">Geen inleverdatum</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Geavanceerd</string>
     <string name="accountSupportHeading">Ondersteuning</string>
     <string name="accountGiveFeedbackLabel">Geef feedback</string>
+    <string name="accountReportABug">Een bug melden</string>
     <string name="accountBetaCommunityLabel">Beta-community</string>
     <string name="accountFullNameLabel">Volledige naam</string>
     <string name="a11yNavigateBack">Terug navigeren</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Kan cursusuitnodiging niet accepteren</string>
     <string name="dashboard_emptyMessage">Je bent op dit moment niet ingeschreven voor een cursus</string>
     <string name="learnEmptyMessage">Je bent op dit moment niet ingeschreven voor een cursus</string>
+    <string name="programsProgressBar_percentComplete">%s\%% voltooid</string>
+    <string name="programsProgressBar_notStarted">Niet gestart</string>
+    <string name="programsCourseCard_enrollButton">Inschrijven</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Vereist</string>
+    <string name="programCourseTag_optional">Optioneel</string>
+    <string name="programCourseTag_locked">Vergrendeld</string>
+    <string name="programCourseTag_completed">Voltooid</string>
+    <string name="programCourseTag_enrolled">Ingeschreven</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Voltooi %1$d van %2$d cursus</item>
+        <item quantity="other">Voltooi %1$d van %2$d cursussen</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Vernieuwen programma mislukt.</string>
+    <string name="programSwitcher_programOverview">Programmaoverzicht</string>
+    <string name="programSwitcher_goBack">Alles</string>
+    <string name="learnScreen_partOfProgram">Onderdeel van %s</string>
+    <string name="learnScreen_courseCannotBeOpened">De cursus kan niet worden geopend.</string>
 </resources>

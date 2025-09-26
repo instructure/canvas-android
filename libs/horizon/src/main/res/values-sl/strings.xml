@@ -67,8 +67,8 @@
     <string name="overview">Pregled</string>
     <string name="scores">Točke</string>
     <string name="notes">Opombe</string>
-    <string name="assignmentName">Ime naloge</string>
-    <string name="dueDate">Rok</string>
+    <string name="scoresSortingAssignmentNameAscending">Ime naloge (A–Z)</string>
+    <string name="scoresSortingDueDateDescending">Rok (najprej najnovejši)</string>
     <string name="scoresItemassignmentName">Ime: %1$s</string>
     <string name="scoresItemDueDate">Datum: %1$s</string>
     <string name="noDueDate">Ni roka</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Napredno</string>
     <string name="accountSupportHeading">Podpora</string>
     <string name="accountGiveFeedbackLabel">Pošlji povratne informacije</string>
+    <string name="accountReportABug">Poročaj o hrošču</string>
     <string name="accountBetaCommunityLabel">Beta skupnost</string>
     <string name="accountFullNameLabel">Polno ime</string>
     <string name="a11yNavigateBack">Navigiraj nazaj</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Povabila k predmetu ni bilo mogoče sprejeti</string>
     <string name="dashboard_emptyMessage">Trenutno v predmet niste vpisani.</string>
     <string name="learnEmptyMessage">Trenutno v predmet niste vpisani.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% dokončano</string>
+    <string name="programsProgressBar_notStarted">Ni začeto</string>
+    <string name="programsCourseCard_enrollButton">Vpis</string>
+    <string name="programTag_DateRange">%1$s – %2$s</string>
+    <string name="programCourseTag_required">Zahtevano</string>
+    <string name="programCourseTag_optional">Izbirno</string>
+    <string name="programCourseTag_locked">Zaklenjeno</string>
+    <string name="programCourseTag_completed">Zaključeno</string>
+    <string name="programCourseTag_enrolled">Vpisan</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Zaključen %1$d od %2$d predmeta</item>
+        <item quantity="other">Zaključenih %1$d od %2$d predmetov</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Osveževanje programa ni uspelo.</string>
+    <string name="programSwitcher_programOverview">Pregled programa</string>
+    <string name="programSwitcher_goBack">Vse</string>
+    <string name="learnScreen_partOfProgram">Del od %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Predmeta ni mogoče odpreti.</string>
 </resources>

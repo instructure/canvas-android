@@ -16,19 +16,26 @@
  */
 package com.instructure.pandautils.features.assignments.list.composables
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredSize
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Divider
@@ -42,9 +49,11 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
@@ -52,8 +61,12 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.semantics.testTag
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -65,6 +78,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.CanvasTheme
 import com.instructure.pandautils.compose.composables.CanvasThemedAppBar
+import com.instructure.pandautils.compose.composables.CheckpointItem
 import com.instructure.pandautils.compose.composables.EmptyContent
 import com.instructure.pandautils.compose.composables.ErrorContent
 import com.instructure.pandautils.compose.composables.GroupedListView
@@ -72,6 +86,7 @@ import com.instructure.pandautils.compose.composables.GroupedListViewEvent
 import com.instructure.pandautils.compose.composables.Loading
 import com.instructure.pandautils.compose.composables.OverflowMenu
 import com.instructure.pandautils.compose.composables.SearchBarLive
+import com.instructure.pandautils.compose.composables.SubmissionState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenEvent
 import com.instructure.pandautils.features.assignments.list.AssignmentListScreenOption
@@ -259,7 +274,8 @@ private fun AssignmentListWrapper(
                 AssignmentListContentView(
                     state,
                     contextColor,
-                    listActionHandler
+                    listActionHandler,
+                    screenActionHandler
                 )
             }
 
@@ -328,13 +344,21 @@ private fun AssignmentListScreenContainer(
 private fun AssignmentListContentView(
     state: AssignmentListUiState,
     contextColor: Color,
-    listActionHandler: (GroupedListViewEvent<AssignmentGroupItemState>) -> Unit
+    listActionHandler: (GroupedListViewEvent<AssignmentGroupItemState>) -> Unit,
+    screenActionHandler: (AssignmentListScreenEvent) -> Unit
 ) {
     GroupedListView(
         modifier = Modifier
             .testTag("assignmentList"),
         items = state.listState,
-        itemView = { item, modifier -> AssignmentListItemView(item, contextColor, modifier) },
+        itemView = { item, modifier ->
+            AssignmentListItemView(
+                item,
+                { screenActionHandler(AssignmentListScreenEvent.ToggleCheckpointsExpanded(it)) },
+                contextColor,
+                modifier
+            )
+        },
         actionHandler = listActionHandler,
         headerView = if (state.gradingPeriods.isEmpty()) {
             null
@@ -371,147 +395,226 @@ private fun GradingPeriodHeader(selectedGradingPeriod: GradingPeriod?) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
-private fun AssignmentListItemView(item: AssignmentGroupItemState, contextColor: Color, modifier: Modifier) {
+private fun AssignmentListItemView(
+    item: AssignmentGroupItemState,
+    toggleCheckpointsExpanded: (Long) -> Unit,
+    contextColor: Color,
+    modifier: Modifier
+) {
     val assignment = item.assignment
+    val iconRotation by animateFloatAsState(
+        targetValue = if (item.checkpointsExpanded) 180f else 0f,
+        label = "expandedIconRotation"
+    )
+
     Row(
         modifier = modifier
+            .fillMaxWidth()
             .background(colorResource(R.color.backgroundLightest))
             .padding(vertical = 8.dp)
             .testTag("assignmentListItem")
     ) {
-        Box(
-            contentAlignment = Alignment.Center,
-            modifier = Modifier
-                .padding(horizontal = 20.dp)
-                .size(32.dp)
+        Row(
+            modifier = Modifier.weight(1f)
         ) {
-            Icon(
-                painter = painterResource(assignment.getAssignmentIcon()),
-                tint = contextColor,
-                contentDescription = null,
+            Box(
+                contentAlignment = Alignment.Center,
                 modifier = Modifier
-                    .size(24.dp)
-            )
-            if (item.showPublishStateIcon) {
-                val publishedIcon = if (assignment.published) R.drawable.ic_complete_solid else R.drawable.ic_unpublish
-                val publishColor = if (assignment.published) R.color.textSuccess else R.color.textDark
-                val publishedContentDescriptionRes = if (assignment.published) R.string.published else R.string.unpublished
+                    .padding(horizontal = 20.dp)
+                    .size(32.dp)
+            ) {
                 Icon(
-                    painter = painterResource(publishedIcon),
-                    tint = colorResource(publishColor),
-                    contentDescription = stringResource(publishedContentDescriptionRes),
+                    painter = painterResource(assignment.getAssignmentIcon()),
+                    tint = contextColor,
+                    contentDescription = null,
                     modifier = Modifier
-                        .size(16.dp)
-                        .align(Alignment.BottomEnd)
+                        .size(24.dp)
                 )
-            }
-        }
-        Column {
-            Text(
-                assignment.name.orEmpty(),
-                color = colorResource(id = R.color.textDarkest),
-                fontSize = 16.sp,
-                fontWeight = FontWeight.SemiBold,
-            )
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 1.dp)
-            ) {
-                if (item.showClosedState) {
-                    if (assignment.lockDate?.before(Date()).orDefault()) {
-                        Text(
-                            stringResource(R.string.closed),
-                            color = colorResource(id = R.color.textDark),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
-                        )
-                        AssignmentDivider()
-                    }
+                if (item.showPublishStateIcon) {
+                    val publishedIcon = if (assignment.published) R.drawable.ic_complete_solid else R.drawable.ic_unpublish
+                    val publishColor = if (assignment.published) R.color.textSuccess else R.color.textDark
+                    val publishedContentDescriptionRes = if (assignment.published) R.string.published else R.string.unpublished
+                    Icon(
+                        painter = painterResource(publishedIcon),
+                        tint = colorResource(publishColor),
+                        contentDescription = stringResource(publishedContentDescriptionRes),
+                        modifier = Modifier
+                            .size(16.dp)
+                            .align(Alignment.BottomEnd)
+                    )
                 }
-                if (item.showDueDate) {
-                    val dueDate = assignment.dueDate
-                    Text(
-                        if (dueDate == null) {
-                            stringResource(R.string.noDueDate)
-                        } else {
-                            stringResource(
-                                R.string.dueAssignmentListItem,
-                                dueDate.toFormattedString()
+            }
+            Column(
+                modifier = Modifier.weight(1f)
+            ) {
+                val hasMultipleDueDates = assignment.hasOverrides
+                Text(
+                    assignment.name.orEmpty(),
+                    color = colorResource(id = R.color.textDarkest),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                if (item.checkpoints.isNotEmpty()) {
+                    if (item.showClosedState) {
+                        if (assignment.lockDate?.before(Date()).orDefault()) {
+                            Text(
+                                stringResource(R.string.closed),
+                                color = colorResource(id = R.color.textDark),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
                             )
-                        },
-                        color = colorResource(id = R.color.textDark),
-                        fontSize = 14.sp,
-                        fontWeight = FontWeight.Normal,
-                    )
+                        }
+                    }
+                    if (item.showDueDate) {
+                        item.checkpoints.forEach {
+                            Text(
+                                if (hasMultipleDueDates) stringResource(R.string.multipleDueDates) else it.dueDate,
+                                color = colorResource(id = R.color.textDark),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                                modifier = Modifier.testTag("assignmentDueDate")
+                            )
+                        }
+                    }
+                    if (item.showSubmissionState) {
+                        val submissionStateLabel = assignment.getSubmissionStateLabel(item.customStatuses)
+                        if (submissionStateLabel != SubmissionStateLabel.None) {
+                            SubmissionState(submissionStateLabel, "submissionStateLabel")
+                        }
+                    }
+                } else {
+                    FlowRow(
+                        verticalArrangement = Arrangement.Center,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(vertical = 1.dp)
+                    ) {
+                        if (item.showClosedState) {
+                            if (assignment.lockDate?.before(Date()).orDefault()) {
+                                Text(
+                                    stringResource(R.string.closed),
+                                    color = colorResource(id = R.color.textDark),
+                                    fontSize = 14.sp,
+                                    fontWeight = FontWeight.Normal,
+                                )
+                                AssignmentDivider()
+                            }
+                        }
+                        if (item.showDueDate) {
+                            val dueDate = assignment.dueDate
+                            Text(
+                                when {
+                                    hasMultipleDueDates -> {
+                                        stringResource(R.string.multipleDueDates)
+                                    }
+                                    dueDate == null -> {
+                                        stringResource(R.string.noDueDate)
+                                    }
+                                    else -> {
+                                        stringResource(
+                                            R.string.dueAssignmentListItem,
+                                            dueDate.toFormattedString()
+                                        )
+                                    }
+                                },
+                                color = colorResource(id = R.color.textDark),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Normal,
+                            )
+                        }
+                        if (item.showSubmissionState) {
+                            val submissionStateLabel = assignment.getSubmissionStateLabel(item.customStatuses)
+                            if (submissionStateLabel != SubmissionStateLabel.None) {
+                                AssignmentDivider()
+                                SubmissionState(submissionStateLabel, "submissionStateLabel")
+                            }
+                        }
+                    }
                 }
-                if (item.showSubmissionState) {
-                    val submissionStateLabel = assignment.getSubmissionStateLabel(item.customStatuses)
-                    if (submissionStateLabel != SubmissionStateLabel.None) {
-                        AssignmentDivider()
-                        Icon(
-                            painter = painterResource(submissionStateLabel.iconRes),
-                            tint = colorResource(submissionStateLabel.colorRes),
-                            contentDescription = null,
-                            modifier = Modifier
-                                .size(16.dp)
+
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 1.dp)
+                ) {
+                    if (item.showGrade) {
+                        val gradeText = assignment.getGrade(
+                            submission = assignment.submission,
+                            resources = LocalContext.current.resources,
+                            restrictQuantitativeData = item.course.settings?.restrictQuantitativeData.orDefault(),
+                            gradingScheme = item.course.gradingScheme,
+                            showZeroPossiblePoints = true,
+                            showNotGraded = true
                         )
                         Text(
-                            text = when (submissionStateLabel) {
-                                is SubmissionStateLabel.Predefined -> stringResource(id = submissionStateLabel.labelRes)
-                                is SubmissionStateLabel.Custom -> submissionStateLabel.label
-                            },
-                            color = colorResource(submissionStateLabel.colorRes),
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Normal,
+                            gradeText.text,
+                            color = contextColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
                         )
+                    }
+                    if (item.showNeedsGrading) {
+                        if (assignment.needsGradingCount.toInt() != 0) {
+                            AssignmentNeedsGradingChip(
+                                assignment.needsGradingCount.toInt(),
+                                contextColor
+                            )
+                            AssignmentDivider()
+                        }
+                    }
+                    if (item.showMaxPoints) {
+                        Text(
+                            pluralStringResource(
+                                R.plurals.assignmentListMaxpoints,
+                                assignment.pointsPossible.toInt(),
+                                assignment.pointsPossible.toInt()
+                            ),
+                            color = contextColor,
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.SemiBold,
+                        )
+                    }
+                }
+                AnimatedVisibility(visible = item.checkpointsExpanded) {
+                    Column(modifier = Modifier.padding(top = 8.dp)) {
+                        item.checkpoints.forEach {
+                            CheckpointItem(it, contextColor, item.showGrade)
+                        }
                     }
                 }
             }
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(vertical = 1.dp)
-            ) {
-                if (item.showGrade) {
-                    val gradeText = assignment.getGrade(
-                        submission = assignment.submission,
-                        context = LocalContext.current,
-                        restrictQuantitativeData = item.course.settings?.restrictQuantitativeData.orDefault(),
-                        gradingScheme = item.course.gradingScheme,
-                        showZeroPossiblePoints = true,
-                        showNotGraded = true
+            if (item.checkpoints.isNotEmpty()) {
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .requiredSize(48.dp)
+                        .clip(CircleShape)
+                        .clickable {
+                            toggleCheckpointsExpanded(item.assignment.id)
+                        }
+                        .semantics {
+                            testTag = "expandDiscussionCheckpoint"
+                            role = Role.Button
+                        }
+                ) {
+                    val expandButtonContentDescription = stringResource(
+                        if (item.checkpointsExpanded) {
+                            R.string.content_description_collapse_content_with_param
+                        } else {
+                            R.string.content_description_expand_content_with_param
+                        },
+                        stringResource(R.string.a11y_discussion_checkpoints)
                     )
-                    Text(
-                        gradeText.text,
-                        color = contextColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-                if (item.showNeedsGrading) {
-                    if (assignment.needsGradingCount.toInt() != 0) {
-                        AssignmentNeedsGradingChip(
-                            assignment.needsGradingCount.toInt(),
-                            contextColor
-                        )
-                        AssignmentDivider()
-                    }
-                }
-                if (item.showMaxPoints) {
-                    Text(
-                        pluralStringResource(
-                            R.plurals.assignmentListMaxpoints,
-                            assignment.pointsPossible.toInt(),
-                            assignment.pointsPossible.toInt()
-                        ),
-                        color = contextColor,
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                    Icon(
+                        painter = painterResource(id = R.drawable.ic_arrow_down),
+                        tint = colorResource(id = R.color.textDarkest),
+                        contentDescription = expandButtonContentDescription,
+                        modifier = Modifier
+                            .size(20.dp)
+                            .rotate(iconRotation)
                     )
                 }
             }

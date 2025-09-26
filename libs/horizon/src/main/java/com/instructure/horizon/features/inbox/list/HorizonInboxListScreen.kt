@@ -94,7 +94,6 @@ const val HORIZON_INBOX_LIST_ANNOUNCEMENT_READ = "horizon_inbox_list_announcemen
 @Composable
 fun HorizonInboxListScreen(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
     navController: NavHostController
 ) {
     val snackbarHostState = remember { SnackbarHostState() }
@@ -134,7 +133,6 @@ fun HorizonInboxListScreen(
     ) { padding ->
         InboxStateWrapper(
             state,
-            mainNavController,
             navController,
             Modifier.padding(padding)
         )
@@ -145,7 +143,6 @@ fun HorizonInboxListScreen(
 @Composable
 private fun InboxStateWrapper(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -168,7 +165,7 @@ private fun InboxStateWrapper(
         },
         content = {
             LazyColumn {
-                inboxHeader(state, mainNavController, navController)
+                inboxHeader(state, navController)
 
                 if (state.loadingState.isLoading) {
                     loadingContent()
@@ -199,7 +196,6 @@ private fun LazyListScope.loadingContent(modifier: Modifier = Modifier) {
 
 private fun LazyListScope.inboxHeader(
     state: HorizonInboxListUiState,
-    mainNavController: NavHostController,
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -218,7 +214,7 @@ private fun LazyListScope.inboxHeader(
                     size = IconButtonSize.NORMAL,
                     color = IconButtonColor.Inverse,
                     elevation = HorizonElevation.level4,
-                    onClick = { mainNavController.popBackStack() },
+                    onClick = { navController.popBackStack() },
                 )
 
                 Spacer(modifier = Modifier.weight(1f))
@@ -445,6 +441,6 @@ private fun HorizonInboxListPreview() {
         onRecipientRemoved = {},
         updateRecipientSearchQuery = {}
     )
-    HorizonInboxListScreen(state, rememberNavController(), rememberNavController())
+    HorizonInboxListScreen(state, rememberNavController())
 
 }

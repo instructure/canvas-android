@@ -67,8 +67,8 @@
     <string name="overview">Overview</string>
     <string name="scores">Scores</string>
     <string name="notes">Notes</string>
-    <string name="assignmentName">Assignment name</string>
-    <string name="dueDate">Due date</string>
+    <string name="scoresSortingAssignmentNameAscending">Assignment name (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Due date (newest first)</string>
     <string name="scoresItemassignmentName">Name: %1$s</string>
     <string name="scoresItemDueDate">Date: %1$s</string>
     <string name="noDueDate">No due date</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Advanced</string>
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Give feedback</string>
+    <string name="accountReportABug">Report a bug</string>
     <string name="accountBetaCommunityLabel">Beta community</string>
     <string name="accountFullNameLabel">Full name</string>
     <string name="a11yNavigateBack">Navigate back</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Failed to accept subject invite</string>
     <string name="dashboard_emptyMessage">You aren’t currently enrolled in a subject.</string>
     <string name="learnEmptyMessage">You aren’t currently enrolled in a subject.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% complete</string>
+    <string name="programsProgressBar_notStarted">Not started</string>
+    <string name="programsCourseCard_enrollButton">Enrol</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Required</string>
+    <string name="programCourseTag_optional">Optional</string>
+    <string name="programCourseTag_locked">Locked</string>
+    <string name="programCourseTag_completed">Completed</string>
+    <string name="programCourseTag_enrolled">Enrolled</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Complete %1$d of %2$d subject</item>
+        <item quantity="other">Complete %1$d of %2$d subjects</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Failed to refresh program.</string>
+    <string name="programSwitcher_programOverview">Program overview</string>
+    <string name="programSwitcher_goBack">All</string>
+    <string name="learnScreen_partOfProgram">Part of %s</string>
+    <string name="learnScreen_courseCannotBeOpened">The subject cannot be opened.</string>
 </resources>

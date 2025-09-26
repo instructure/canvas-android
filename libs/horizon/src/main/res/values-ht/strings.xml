@@ -67,8 +67,8 @@
     <string name="overview">Apèsi</string>
     <string name="scores">Nòt</string>
     <string name="notes">Nòt</string>
-    <string name="assignmentName">Non sesyon</string>
-    <string name="dueDate">Delè</string>
+    <string name="scoresSortingAssignmentNameAscending">Non devwa (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Dat limit (pi resan anvan)</string>
     <string name="scoresItemassignmentName">Non: %1$s</string>
     <string name="scoresItemDueDate">Dat: %1$s</string>
     <string name="noDueDate">San delè</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avanse</string>
     <string name="accountSupportHeading">Sipò</string>
     <string name="accountGiveFeedbackLabel">Bay fidbak</string>
+    <string name="accountReportABug">Siyale yon pwoblèm</string>
     <string name="accountBetaCommunityLabel">Kominite bèta</string>
     <string name="accountFullNameLabel">Non Konplè</string>
     <string name="a11yNavigateBack">Navige retounen</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Envitasyon nan kou a pa t aksepte</string>
     <string name="dashboard_emptyMessage">Ou poko enskri nan yon kou.</string>
     <string name="learnEmptyMessage">Ou poko enskri nan yon kou.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% konplete</string>
+    <string name="programsProgressBar_notStarted">Pa kòmanse</string>
+    <string name="programsCourseCard_enrollButton">Enskri</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Obligatwa</string>
+    <string name="programCourseTag_optional">Opsyonèl</string>
+    <string name="programCourseTag_locked">Bloke</string>
+    <string name="programCourseTag_completed">Fini</string>
+    <string name="programCourseTag_enrolled">Enskri</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Konplete %1$d sou %2$d kou</item>
+        <item quantity="other">Konplete %1$d sou %2$d kou</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Echèk aktyalizasyon pwogram.</string>
+    <string name="programSwitcher_programOverview">Apèsi pwogram</string>
+    <string name="programSwitcher_goBack">Tout</string>
+    <string name="learnScreen_partOfProgram">Pati nan %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Kou a paka ouvri.</string>
 </resources>

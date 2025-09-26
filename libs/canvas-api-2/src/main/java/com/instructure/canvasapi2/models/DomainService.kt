@@ -34,4 +34,8 @@ enum class DomainService(
         baseUrl = BuildConfig.REDWOOD_BASE_URL,
         workflow = "redwood",
     ),
+    JOURNEY(
+        baseUrl = BuildConfig.JOURNEY_BASE_URL,
+        workflow = "journey",
+    )
 }

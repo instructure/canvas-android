@@ -67,8 +67,8 @@
     <string name="overview">Vue d’ensemble</string>
     <string name="scores">Scores</string>
     <string name="notes">Remarques</string>
-    <string name="assignmentName">Nom du travail</string>
-    <string name="dueDate">Date d’échéance</string>
+    <string name="scoresSortingAssignmentNameAscending">Nom du travail (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Date d’échéance (la plus récente en premier)</string>
     <string name="scoresItemassignmentName">Nom : %1$s</string>
     <string name="scoresItemDueDate">Date : %1$s</string>
     <string name="noDueDate">Pas de date limite</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Avancé</string>
     <string name="accountSupportHeading">Assistance technique</string>
     <string name="accountGiveFeedbackLabel">Envoyer un avis</string>
+    <string name="accountReportABug">Signaler un bogue</string>
     <string name="accountBetaCommunityLabel">Communauté bêta</string>
     <string name="accountFullNameLabel">Nom complet</string>
     <string name="a11yNavigateBack">Navigation arrière</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Échec d’acceptation de l’invitation d’inscription au cours</string>
     <string name="dashboard_emptyMessage">Vous n’êtes inscrit(e) à un cours actuellement.</string>
     <string name="learnEmptyMessage">Vous n’êtes inscrit(e) à un cours actuellement.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% terminé</string>
+    <string name="programsProgressBar_notStarted">Non commencé</string>
+    <string name="programsCourseCard_enrollButton">S’enrôler</string>
+    <string name="programTag_DateRange">%1$s / %2$s</string>
+    <string name="programCourseTag_required">Requis</string>
+    <string name="programCourseTag_optional">Facultatif</string>
+    <string name="programCourseTag_locked">Verrouillé</string>
+    <string name="programCourseTag_completed">Terminé</string>
+    <string name="programCourseTag_enrolled">Enrôlé(e)</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Achèvement de %1$d cours sur %2$d</item>
+        <item quantity="other">Achèvement de %1$d cours sur %2$d</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Échec d’actualisation du programme.</string>
+    <string name="programSwitcher_programOverview">Présentation du programme</string>
+    <string name="programSwitcher_goBack">Tout</string>
+    <string name="learnScreen_partOfProgram">Une partie de %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Impossible d’ouvrir le cours.</string>
 </resources>

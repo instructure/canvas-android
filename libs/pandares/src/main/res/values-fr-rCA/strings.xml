@@ -908,6 +908,15 @@
         <item quantity="other">%s points</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pts</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pt</item>
+        <item quantity="other">\/ %.0f pts</item>
+    </plurals>
     <string name="timeLimit">Limite de temps</string>
     <string name="newPushNotifications">%1$s Nouvelles notifications</string>
     <string name="like">mention « J’aime »</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Signature</string>
     <string name="inboxSignatureTextfieldHeader">Texte de la signature</string>
     <string name="due_dateTime">Échéance : %1$s, %2$s</string>
+    <string name="submitted_dateTime">Envoyé : %1$s, %2$s</string>
     <string name="noDueDate">Aucune date d’échéance</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s a besoin de classement</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d point</item>
         <item quantity="other">%d points</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pt)</item>
+        <item quantity="other">(%.0f pts)</item>
     </plurals>
     <string name="noAssignments">Pas de travail</string>
     <string name="assignmentGroup">Groupe de travaux</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Choisissons un cours</string>
     <string name="widgetGradesErrorLoadingCourses">Une erreur s’est produite lors du chargement des cours</string>
     <string name="settingsSwitchExperience">Passer à Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Notation et Grille de notation</string>
+    <string name="speedGraderDetailsTabTitle">Détails</string>
+    <string name="a11y_contentDescription_expandPanel">Développer le panneau</string>
+    <string name="a11y_contentDescription_collapsePanel">Réduire le panneau</string>
+    <string name="pointGradeHint">Inscrivez le score ici</string>
+    <string name="percentageGradeHint">Inscrivez le pourcentage ici</string>
+    <string name="completeIncompleteGradeScore">%.0f/%.0f</string>
+    <string name="letterGrade">Notation par lettre</string>
+    <string name="daysLate">Jours en retard</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s/%s pt</item>
+        <item quantity="other">%s/%s points</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Pénalité de retard</string>
+    <string name="gradingStatus_none">Aucun</string>
+    <string name="gradingStatus_late">En retard</string>
+    <string name="gradingStatus_missing">Manquant</string>
+    <string name="gradingStatus_extended">Étendu</string>
+    <string name="gradingStatus_excused">Exempté</string>
+    <string name="status">Statut</string>
+    <string name="speedGraderStudentNotes">Notes pour les élèves</string>
+    <string name="speedGraderStudentNotesLoading">Chargement des notes des élèves</string>
+    <string name="speedGraderStudentNotesErrorTitle">Oops! Une erreur est survenue</string>
+    <string name="speedGraderStudentNotesErrorDescription">Nous avons du mal à afficher les notes des élèves.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Actualiser</string>
+    <string name="not_graded">Non noté</string>
+    <string name="speedGraderSubmissionDetails">Détails sur l’envoi</string>
+    <string name="speedGraderSubmissionDetailsLoading">Chargement des détails de l’envoi</string>
+    <string name="speedGraderWordCount">Décompte de mots</string>
+    <string name="rubricsTitle">Grilles de notation</string>
+    <string name="rubricScore">Score</string>
+    <string name="rubricScoreHint">Inscrivez le score ici</string>
+    <string name="speedGraderCommentsTitle">Commentaires (%s)</string>
+    <string name="anonymousGradingStudentLabel">Élève</string>
+    <string name="anonymousGradingUserLabel">Utilisateur anonyme</string>
+    <string name="rubricNote">Note de la grille de notation</string>
+    <string name="content_description_edit_rubric_comment">Modifier la note de grille de notation</string>
+    <string name="rubricNoteHint">Remarque</string>
+    <string name="a11y_sendRubricNoteContentDescription">Envoyer la note des grilles de notation</string>
+    <string name="select_attachment_type">Sélectionner le type de pièce jointe</string>
+    <string name="choose_files">Choisir des fichiers</string>
+    <string name="a11y_expanded">Développé(e)</string>
+    <string name="a11y_collapsed">Réduit(e)</string>
+    <string name="excuseStudent">Dispenser l’élève</string>
+    <string name="detailsEmptyMessage">Nous n’avons pas d’autres détails concernant l’élève et cette affectation.</string>
+    <string name="daysLateHint">Écrire avec des jours de retard</string>
+    <string name="reply_to_topic">Répondre au sujet</string>
+    <string name="additional_replies">Réponses supplémentaires (%d)</string>
 </resources>

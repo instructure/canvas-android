@@ -30,7 +30,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.notebook.addedit.AddEditNoteUiState
 import com.instructure.horizon.features.notebook.common.model.NotebookType
-import com.instructure.horizon.navigation.MainNavigationRoute
+import com.instructure.horizon.features.notebook.navigation.NotebookRoute
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -44,25 +44,25 @@ class EditNoteViewModel @Inject constructor(
     private val repository: EditNoteRepository,
     savedStateHandle: SavedStateHandle
 ): ViewModel() {
-    private val noteId: String = savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().noteId
+    private val noteId: String = savedStateHandle.toRoute<NotebookRoute.EditNotebook>().noteId
     private val noteType: String =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().noteType
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().noteType
     private val highlightedText: String =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedText
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().highlightedText
     private val userComment: String =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().userComment
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().userComment
     private val highlightedTextStartOffset: Int =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedTextStartOffset
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().highlightedTextStartOffset
     private val highlightedTextEndOffset: Int =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedTextEndOffset
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().highlightedTextEndOffset
     private val highlightedTextStartContainer: String =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedTextStartContainer
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().highlightedTextStartContainer
     private val highlightedTextEndContainer: String =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().highlightedTextEndContainer
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().highlightedTextEndContainer
     private val highlightedTextSelectionStart: Int =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().textSelectionStart
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().textSelectionStart
     private val highlightedTextSelectionEnd: Int =
-        savedStateHandle.toRoute<MainNavigationRoute.EditNotebook>().textSelectionEnd
+        savedStateHandle.toRoute<NotebookRoute.EditNotebook>().textSelectionEnd
 
     private val _uiState = MutableStateFlow(
         AddEditNoteUiState(

@@ -67,8 +67,8 @@
     <string name="overview">Trosolwg</string>
     <string name="scores">Sgorau</string>
     <string name="notes">Nodiadau</string>
-    <string name="assignmentName">Enw’r aseiniad</string>
-    <string name="dueDate">Dyddiad erbyn</string>
+    <string name="scoresSortingAssignmentNameAscending">Enw\'r aseiniad (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Dyddiad erbyn (diweddaraf yn gyntaf)</string>
     <string name="scoresItemassignmentName">Enw: %1$s</string>
     <string name="scoresItemDueDate">Dyddiad: %1$s</string>
     <string name="noDueDate">Dim dyddiad erbyn</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Uwch</string>
     <string name="accountSupportHeading">Cymorth</string>
     <string name="accountGiveFeedbackLabel">Rhoi adborth</string>
+    <string name="accountReportABug">Rhoi gwybod am chwilen</string>
     <string name="accountBetaCommunityLabel">Cymuned Beta</string>
     <string name="accountFullNameLabel">Enw llawn</string>
     <string name="a11yNavigateBack">Mynd yn ôl</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Wedi methu derbyn gwahoddiad i ymuno â’r cwrs</string>
     <string name="dashboard_emptyMessage">Dydych chi ddim wedi ymrestru ar gwrs ar hyn o bryd.</string>
     <string name="learnEmptyMessage">Dydych chi ddim wedi ymrestru ar gwrs ar hyn o bryd.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% wedi cwblhau</string>
+    <string name="programsProgressBar_notStarted">Heb ddechrau</string>
+    <string name="programsCourseCard_enrollButton">Ymrestru</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Gofynnol</string>
+    <string name="programCourseTag_optional">Dewisol</string>
+    <string name="programCourseTag_locked">Wedi cloi</string>
+    <string name="programCourseTag_completed">Wedi cwblhau</string>
+    <string name="programCourseTag_enrolled">Wedi ymrestru</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Wedi cwblhau %1$d o %2$d cwrs</item>
+        <item quantity="other">Wedi cwblhau %1$d o %2$d cwrs</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Wedi methu adnewyddu\'r rhaglen.</string>
+    <string name="programSwitcher_programOverview">Trosolwg o\'r rhaglen</string>
+    <string name="programSwitcher_goBack">Y cyfan</string>
+    <string name="learnScreen_partOfProgram">Rhan o %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Does dim modd agor y cwrs.</string>
 </resources>

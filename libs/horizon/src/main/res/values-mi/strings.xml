@@ -67,8 +67,8 @@
     <string name="overview">Tirohanga whānui</string>
     <string name="scores">Ngā Kaute</string>
     <string name="notes">He Karere Poto</string>
-    <string name="assignmentName">Ingoa o te whakataunga</string>
-    <string name="dueDate">Rā tika</string>
+    <string name="scoresSortingAssignmentNameAscending">Ingoa Taumahi (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Te ra mutunga (hou tuatahi)</string>
     <string name="scoresItemassignmentName">Ingoa: %1$s</string>
     <string name="scoresItemDueDate">Rā: %1$s</string>
     <string name="noDueDate">Kāore he rā tika</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Arā atu</string>
     <string name="accountSupportHeading">Tautoko</string>
     <string name="accountGiveFeedbackLabel">Homai he urupare</string>
+    <string name="accountReportABug">Pūrongo he bug</string>
     <string name="accountBetaCommunityLabel">hapori Beta</string>
     <string name="accountFullNameLabel">Ingoa tonu</string>
     <string name="a11yNavigateBack">Whakatere whakamuri</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">I rahua te whakaae ki te powhiri akoranga</string>
     <string name="dashboard_emptyMessage">I tenei wa kaore koe i whakauru ki tetahi akoranga.</string>
     <string name="learnEmptyMessage">I tenei wa kaore koe i whakauru ki tetahi akoranga.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% oti</string>
+    <string name="programsProgressBar_notStarted">Kaore i timata</string>
+    <string name="programsCourseCard_enrollButton">Whakauru</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">E Hiahiatia Ana</string>
+    <string name="programCourseTag_optional">Kāre Herea</string>
+    <string name="programCourseTag_locked">Kua rakaina</string>
+    <string name="programCourseTag_completed">Kua Oti</string>
+    <string name="programCourseTag_enrolled">Whakaurua</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Oti %1$d o %2$d akoranga</item>
+        <item quantity="other">Oti %1$d o %2$d akoranga</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">I rahua te whakahou i te papatono.</string>
+    <string name="programSwitcher_programOverview">Te tirohanga whānui o te hōtaka</string>
+    <string name="programSwitcher_goBack">Katoa</string>
+    <string name="learnScreen_partOfProgram">Wāhanga o %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Kaore e taea te whakatuwhera i te akoranga.</string>
 </resources>

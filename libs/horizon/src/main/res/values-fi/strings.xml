@@ -67,8 +67,8 @@
     <string name="overview">Yleiskuva</string>
     <string name="scores">Pisteet</string>
     <string name="notes">Huomautukset</string>
-    <string name="assignmentName">Tehtävän nimi</string>
-    <string name="dueDate">Määräpäivä</string>
+    <string name="scoresSortingAssignmentNameAscending">Tehtävän nimi (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Määräpäivä (uusimmasta vanhimpaan)</string>
     <string name="scoresItemassignmentName">Nimi: %1$s</string>
     <string name="scoresItemDueDate">Päivämäärä: %1$s</string>
     <string name="noDueDate">Ei määräpäivää</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Edistyneet</string>
     <string name="accountSupportHeading">Support</string>
     <string name="accountGiveFeedbackLabel">Anna palautetta</string>
+    <string name="accountReportABug">Raportoi ongelma</string>
     <string name="accountBetaCommunityLabel">Beeta-yhteisö</string>
     <string name="accountFullNameLabel">Koko nimi</string>
     <string name="a11yNavigateBack">Siirry takaisin</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Kurssikutsun hyväksyminen epäonnistui</string>
     <string name="dashboard_emptyMessage">Kaikki tekstikentän sisältö poistetaan lähetyksen jälkeen.</string>
     <string name="learnEmptyMessage">Kaikki tekstikentän sisältö poistetaan lähetyksen jälkeen.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% valmis</string>
+    <string name="programsProgressBar_notStarted">Ei aloitettu</string>
+    <string name="programsCourseCard_enrollButton">Ilmoittaudu</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Pakollinen</string>
+    <string name="programCourseTag_optional">Valinnainen</string>
+    <string name="programCourseTag_locked">Lukittu</string>
+    <string name="programCourseTag_completed">Suoritettu</string>
+    <string name="programCourseTag_enrolled">Ilmoittautunut</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Suorita %1$d / %2$d kurssi</item>
+        <item quantity="other">Suorita %1$d / %2$d kursseista</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Ohjelman päivitys epäonnistui.</string>
+    <string name="programSwitcher_programOverview">Ohjelman yleiskatsaus</string>
+    <string name="programSwitcher_goBack">Kaikki</string>
+    <string name="learnScreen_partOfProgram">Osa kohteesta %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Kurssin avaaminen ei onnistunu.</string>
 </resources>

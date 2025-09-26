@@ -895,6 +895,13 @@
         <item quantity="other">%s 分</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="other">分數</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="other">\/ %.0f 分</item>
+    </plurals>
     <string name="timeLimit">時間限制</string>
     <string name="newPushNotifications">%1$s 個新通知</string>
     <string name="like">贊</string>
@@ -1975,12 +1982,16 @@
     <string name="inboxSignatureSwitchLabel">簽名</string>
     <string name="inboxSignatureTextfieldHeader">簽名文字</string>
     <string name="due_dateTime">截止日期：%1$s，%2$s</string>
+    <string name="submitted_dateTime">已提交：%1$s，%2$s</string>
     <string name="noDueDate">無截止日期</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s 需要等級評分</string>
     <string name="assignmentListTitle">作業淸單</string>
     <plurals name="assignmentListMaxpoints">
         <item quantity="other">%d 分</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="other">（%.0f 分）</item>
     </plurals>
     <string name="noAssignments">無作業</string>
     <string name="assignmentGroup">作業小組</string>
@@ -2037,4 +2048,51 @@
     <string name="widgetSingleGradeSelectCourse">讓我們選擇課程</string>
     <string name="widgetGradesErrorLoadingCourses">載入課程時發生錯誤。</string>
     <string name="settingsSwitchExperience">切換到 Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">評分和評分標準</string>
+    <string name="speedGraderDetailsTabTitle">詳細資料</string>
+    <string name="a11y_contentDescription_expandPanel">展開面板</string>
+    <string name="a11y_contentDescription_collapsePanel">收起面板</string>
+    <string name="pointGradeHint">在此寫下分數</string>
+    <string name="percentageGradeHint">在此寫下百分比</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">成績等級</string>
+    <string name="daysLate">（已晚天數）</string>
+    <plurals name="pointTotal">
+        <item quantity="other">%s/%s 分</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">逾期懲罰</string>
+    <string name="gradingStatus_none">無</string>
+    <string name="gradingStatus_late">遲交</string>
+    <string name="gradingStatus_missing">缺少</string>
+    <string name="gradingStatus_extended">延伸</string>
+    <string name="gradingStatus_excused">已免除</string>
+    <string name="status">狀態</string>
+    <string name="speedGraderStudentNotes">學生備註</string>
+    <string name="speedGraderStudentNotesLoading">載入學生備註</string>
+    <string name="speedGraderStudentNotesErrorTitle">抱歉！發生問題</string>
+    <string name="speedGraderStudentNotesErrorDescription">我們在顯示學生備註時遇到問題。</string>
+    <string name="speedGraderStudentNotesErrorButtonText">重新整理</string>
+    <string name="not_graded">未評分</string>
+    <string name="speedGraderSubmissionDetails">提交件的詳細資料</string>
+    <string name="speedGraderSubmissionDetailsLoading">載入提交項目詳細資料</string>
+    <string name="speedGraderWordCount">字數計算</string>
+    <string name="rubricsTitle">評分標準</string>
+    <string name="rubricScore">分數</string>
+    <string name="rubricScoreHint">在此寫下分數</string>
+    <string name="speedGraderCommentsTitle">評論 (%s)</string>
+    <string name="anonymousGradingStudentLabel">學生</string>
+    <string name="anonymousGradingUserLabel">匿名使用者</string>
+    <string name="rubricNote">評分標準說明</string>
+    <string name="content_description_edit_rubric_comment">編輯評分標準說明</string>
+    <string name="rubricNoteHint">注釋</string>
+    <string name="a11y_sendRubricNoteContentDescription">傳送評分標準說明</string>
+    <string name="select_attachment_type">選取附件類型</string>
+    <string name="choose_files">選擇檔案</string>
+    <string name="a11y_expanded">已展開</string>
+    <string name="a11y_collapsed">已收起</string>
+    <string name="excuseStudent">豁免學生</string>
+    <string name="detailsEmptyMessage">我們沒有關於此學生和作業的更多詳細資料</string>
+    <string name="daysLateHint">編寫遲到天數</string>
+    <string name="reply_to_topic">回覆主題</string>
+    <string name="additional_replies">額外回覆 (%d)</string>
 </resources>

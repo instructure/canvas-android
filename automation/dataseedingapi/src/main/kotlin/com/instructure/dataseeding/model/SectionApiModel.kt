@@ -15,23 +15,22 @@
 //
 
 
-
 package com.instructure.dataseeding.model
 
 import com.google.gson.annotations.SerializedName
 
 data class CreateSectionWrapper(
-        @SerializedName("course_section")
-        val courseSection: CreateSection
+    @SerializedName("course_section")
+    val courseSection: CreateSection
 )
 
 data class CreateSection(
-        val name: String
+    val name: String
 )
 
 data class SectionApiModel(
-        val id: Long,
-        val name: String,
-        @SerializedName("course_id")
-        val courseId: Long
+    val id: Long,
+    val name: String,
+    @SerializedName("course_id")
+    val courseId: Long
 )
