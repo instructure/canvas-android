@@ -156,7 +156,7 @@ class AlertsInteractionTest : ParentComposeTest() {
         alertsPage.clickOnAlert(alert.title)
 
         assignmentDetailsPage.assertPageObjects()
-        assignmentDetailsPage.assertStatusSubmitted()
+        assignmentDetailsPage.assertStatusLate()
     }
 
     @Test

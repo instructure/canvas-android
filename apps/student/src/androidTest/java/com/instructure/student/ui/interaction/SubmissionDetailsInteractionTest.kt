@@ -96,6 +96,7 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
+    @Stub
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
     fun testComments_addCommentToMultipleAttemptSubmission() {

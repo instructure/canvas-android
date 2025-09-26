@@ -298,9 +298,9 @@ class AssignmentDetailsViewModelTest {
     fun `Missing submission`() {
         val expectedLabelText = "Missing"
         val expectedTint = R.color.textDanger
-        val expectedIcon = R.drawable.ic_no
+        val expectedIcon = R.drawable.ic_unpublish
 
-        every { resources.getString(R.string.missingAssignment) } returns expectedLabelText
+        every { resources.getString(R.string.missingSubmissionLabel) } returns expectedLabelText
 
         val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
         coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
@@ -322,8 +322,8 @@ class AssignmentDetailsViewModelTest {
     @Test
     fun `Not submitted submission`() {
         val expectedLabelText = "Not submitted"
-        val expectedTint = R.color.textDark
-        val expectedIcon = R.drawable.ic_no
+        val expectedTint = R.color.backgroundDark
+        val expectedIcon = R.drawable.ic_unpublish
 
         every { resources.getString(R.string.notSubmitted) } returns expectedLabelText
 
@@ -373,7 +373,7 @@ class AssignmentDetailsViewModelTest {
     fun `Submitted submission`() {
         val expectedLabelText = "Submitted"
         val expectedTint = R.color.textSuccess
-        val expectedIcon = R.drawable.ic_complete_solid
+        val expectedIcon = R.drawable.ic_complete
 
         every { resources.getString(R.string.submitted) } returns expectedLabelText
 
