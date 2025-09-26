@@ -157,7 +157,11 @@ private fun SpeedGraderContentScreen(
                         arguments = route.bundle,
                         modifier = Modifier
                             .fillMaxSize()
-                            .conditional(content is PdfContent || content is DiscussionContent) {
+                            .conditional(
+                                content is PdfContent ||
+                                        content is DiscussionContent ||
+                                        content is ExternalToolContent
+                            ) {
                                 pointerInput(Unit) {
                                     awaitPointerEventScope {
                                         while (true) {
