@@ -100,7 +100,7 @@ class VideoViewActivity : BaseCanvasActivity() {
 
     private fun buildMediaSource(uri: Uri): MediaSource {
         val mediaItem = MediaItem.fromUri(uri)
-        return when (val type = Util.inferContentType(uri.lastPathSegment ?: "")) {
+        return when (val type = Util.inferContentType(uri)) {
             C.CONTENT_TYPE_SS -> SsMediaSource.Factory(DefaultSsChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
             C.CONTENT_TYPE_DASH -> DashMediaSource.Factory(DefaultDashChunkSource.Factory(mediaDataSourceFactory), buildDataSourceFactory(false)).createMediaSource(mediaItem)
             C.CONTENT_TYPE_HLS -> HlsMediaSource.Factory(DefaultHlsDataSourceFactory(buildDataSourceFactory(false))).createMediaSource(mediaItem)

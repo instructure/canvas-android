@@ -82,7 +82,7 @@ class ViewMediaFragment : BaseCanvasFragment(), ShareableFile {
     private var editableFile: EditableFile? by NullableParcelableArg()
     private var mediaUri: Uri? = null
 
-    private val exoAgent get() = ExoAgent.getAgentForUri(uri)
+    private val exoAgent get() = ExoAgent.getAgentForUri(mediaUri ?: uri)
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.fragment_speed_grader_media, container, false)
