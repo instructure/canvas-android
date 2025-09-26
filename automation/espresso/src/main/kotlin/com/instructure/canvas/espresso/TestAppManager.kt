@@ -14,6 +14,7 @@
  *     limitations under the License.
  */package com.instructure.canvas.espresso
 
+import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
 import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
@@ -27,7 +28,7 @@ open class TestAppManager: AppManager() {
 
     var workerFactory: WorkerFactory? = null
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
+        return workerFactory ?: DefaultWorkerFactory
     }
 
     override fun performLogoutOnAuthError() = Unit

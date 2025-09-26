@@ -29,7 +29,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import androidx.work.impl.OperationImpl
 import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -77,8 +76,8 @@ class OfflineSyncHelperTest {
 
         every { apiPrefs.user } returns User(1L)
 
-        every { workManager.enqueue(any<WorkRequest>()) } returns OperationImpl()
-        every { workManager.enqueueUniquePeriodicWork(any(), any(), any()) } returns OperationImpl()
+        every { workManager.enqueue(any<WorkRequest>()) } returns mockk()
+        every { workManager.enqueueUniquePeriodicWork(any(), any(), any()) } returns mockk()
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
             1L,
@@ -147,7 +146,7 @@ class OfflineSyncHelperTest {
 
     @Test
     fun `Cancel should cancel work with correct id`() {
-        every { workManager.cancelUniqueWork(any()) } returns OperationImpl()
+        every { workManager.cancelUniqueWork(any()) } returns mockk()
 
         offlineSyncHelper.cancelWork()
 

@@ -147,7 +147,7 @@ class ShareExtensionProgressViewModelTest {
 
         every { resources.getString(R.string.submissionProgressSubtitle, "Assignment") } returns "Uploading submission to \"Assignment\""
 
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
@@ -205,7 +205,7 @@ class ShareExtensionProgressViewModelTest {
     fun `Update view data when live data changes`() {
         every { resources.getString(R.string.submissionProgressSubtitle, "Assignment") } returns "Uploading submission to \"Assignment\""
 
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
@@ -277,12 +277,12 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Failed upload maps correctly`() {
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
 
-        val uploadedFiles = listOf(
+        val uploadedFiles: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
 
@@ -336,7 +336,7 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Failed upload retry`() {
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
 

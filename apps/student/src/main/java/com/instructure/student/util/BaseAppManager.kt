@@ -39,7 +39,6 @@ import com.pspdfkit.PSPDFKit
 import com.pspdfkit.exceptions.InvalidPSPDFKitLicenseException
 import com.pspdfkit.exceptions.PSPDFKitInitializationFailedException
 import com.pspdfkit.initialization.InitializationOptions
-import com.zynksoftware.documentscanner.ui.DocumentScanner
 
 abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), AnalyticsEventHandling {
 
@@ -62,8 +61,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
         RemoteConfigUtils.initialize()
 
         initPSPDFKit()
-
-        initDocumentScanning()
 
         if (BuildConfig.DEBUG) {
             FirebaseCrashlytics.getInstance().setCrashlyticsCollectionEnabled(false)
@@ -118,10 +115,6 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager(), Analyti
         } catch (e: InvalidPSPDFKitLicenseException) {
             Logger.e("Invalid or Trial PSPDFKIT License!")
         }
-    }
-
-    private fun initDocumentScanning() {
-        DocumentScanner.init(this)
     }
 
     override fun performLogoutOnAuthError() = Unit
