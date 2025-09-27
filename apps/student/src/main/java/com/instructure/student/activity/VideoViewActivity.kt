@@ -86,7 +86,7 @@ class VideoViewActivity : BaseCanvasActivity() {
 
     private fun fetchMediaUri(uri: Uri) {
         lifecycleScope.launch {
-            val mediaUri = RouteUtils.getRedirectUrl(uri)
+            val mediaUri = RouteUtils.getMediaUri(uri)
             player = ExoPlayer.Builder(this@VideoViewActivity)
                 .setTrackSelector(trackSelector)
                 .setLoadControl(DefaultLoadControl())

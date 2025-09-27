@@ -51,7 +51,7 @@ object RouteUtils {
         block.invoke(fileUrl, context, needsAuth)
     }
 
-    suspend fun getRedirectUrl(uri: Uri): Uri {
+    suspend fun getMediaUri(uri: Uri): Uri {
         var response: Response? = null
         val responseUri = withContext(Dispatchers.IO) {
             try {
@@ -69,25 +69,21 @@ object RouteUtils {
 
                 response = client.newCall(request).execute()
                 response.use {
-                    return@withContext if (response.isRedirect) {
-                        val header = response.header("Location")
-                        if (header != null) {
-                            getRedirectUrl(header.toUri())
+                    var responseUrl = response.request.url.toString().toUri()
+                    if (responseUrl.toString().isEmpty()) {
+                        responseUrl = uri
+                    }
+                    val contentTypeHeader = response.header("content-type")
+                    if (contentTypeHeader != null) {
+                        if (contentTypeHeader.contains("dash") && !responseUrl.toString()
+                                .endsWith(".mpd")
+                        ) {
+                            ("$responseUrl.mpd").toUri()
                         } else {
-                            uri
+                            responseUrl
                         }
                     } else {
-                        val contentTypeHeader = response.header("content-type")
-                        if (contentTypeHeader != null) {
-                            val responseUrl = response.request.url.toString()
-                            if (contentTypeHeader.contains("dash") && !responseUrl.endsWith(".mpd")) {
-                                ("$responseUrl.mpd").toUri()
-                            } else {
-                                uri
-                            }
-                        } else {
-                            uri
-                        }
+                        responseUrl
                     }
                 }
             } catch (e: Exception) {
