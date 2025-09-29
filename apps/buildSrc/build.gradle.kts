@@ -19,7 +19,7 @@ repositories {
     mavenCentral()
 }
 
-val agpVersion= "8.6.1"
+val agpVersion= "8.13.0"
 val kotlinVersion = "2.2.0"
 
 dependencies {

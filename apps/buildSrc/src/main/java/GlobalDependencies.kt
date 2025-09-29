@@ -7,8 +7,8 @@ object Versions {
     const val TARGET_SDK = 35
 
     /* Build/tooling */
-    const val ANDROID_GRADLE_TOOLS = "8.6.1"
-    const val BUILD_TOOLS = "34.0.0"
+    const val ANDROID_GRADLE_TOOLS = "8.13.0"
+    const val BUILD_TOOLS = "35.0.0"
 
     /* Testing */
     const val JUNIT = "4.13.2"
@@ -77,7 +77,6 @@ object Libs {
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.12.0"
-    const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.10.0"
     const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"
     const val ENCRYPTED_SHARED_PREFERENCES = "androidx.security:security-crypto:${Versions.ENCRYPTED_SHARED_PREFERENCES}"
