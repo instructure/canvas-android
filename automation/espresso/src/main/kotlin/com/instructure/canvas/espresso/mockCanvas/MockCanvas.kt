@@ -356,7 +356,6 @@ class MockCanvas {
     // The dispatcher contains all of our matching/capture logic for webview requests
     val webViewServerDispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
-            Log.d("WebView", "dispatch() request: $request")
             var path = request.path
             if(path?.startsWith("//") == true) path = path.substring(1)
 
@@ -1426,7 +1425,8 @@ fun MockCanvas.addPageToCourse(
         title: String = Randomizer.randomPageTitle(),
         body: String = Randomizer.randomPageBody(),
         published: Boolean = false,
-        groupId: Long? = null
+        groupId: Long? = null,
+        frontPage: Boolean = false
 ): Page {
 
     val page = Page(
@@ -1434,7 +1434,8 @@ fun MockCanvas.addPageToCourse(
             url = url,
             title = title,
             body = body,
-            published = published
+            published = published,
+            frontPage = frontPage
     )
 
     var list : MutableList<Page>? = null

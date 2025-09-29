@@ -132,37 +132,36 @@ class CourseInteractionTest : StudentTest() {
     // Home button should open the front page and display the correct header/title
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.INTERACTION)
-    fun testCourse_homeOpensFrontPageAndShowsTitle() {
+    fun testCourse_homeDisplaysFrontPageTitle() {
 
-        // Use getToCourse which creates a front page and marks it as the course home
-        val data = getToCourse(courseCount = 1, favoriteCourseCount = 1)
+        getToCourse(courseCount = 1, favoriteCourseCount = 1) { data, course ->
 
-        val course1 = data.courses.values.first()
+            data.addPageToCourse(
+                courseId = course.id,
+                pageId = 1,
+                url = "front-page",
+                title = "Front Page",
+                body = "<h2 id=\"header1\">Very interesting Page</h2>",
+                published = true,
+                frontPage = true
+            )
 
-        data.addPageToCourse(
-            courseId = course1.id,
-            pageId = 1,
-            title = "Front Page",
-            body = "<h1 id=\"header1\">Front Page</h1>",
-            published = true
-        )
-        course1.homePage = Course.HomePage.HOME_WIKI
-        // Mark the course to use the front page as its home page
-        //data.courses[course1.id]!!.homePage = Course.HomePage.HOME_WIKI
+            data.courses[course.id] = data.courses[course.id]!!.copy(homePage = Course.HomePage.HOME_WIKI)
+        }
 
-        // Press Home in the course browser which should open the Front Page created in getToCourse
         courseBrowserPage.selectHome()
 
-        // Verify that the webview shows our front page header/title
         onWebView(withId(R.id.contentWebView))
             .withElement(findElement(Locator.ID, "header1"))
-            .check(webMatches(getText(), containsString("Front Page")))
+            .check(webMatches(getText(), containsString("Very interesting Page")))
     }
 
     /** Utility method to create mocked data, sign student 0 in, and navigate to course 0. */
     private fun getToCourse(
-            courseCount: Int = 2, // Need to link from one to the other
-            favoriteCourseCount: Int = 1): MockCanvas {
+        courseCount: Int = 2,
+        favoriteCourseCount: Int = 1,
+        configure: (MockCanvas, Course) -> Unit = { _, _ -> }
+    ): MockCanvas {
         val data = MockCanvas.init(
                 studentCount = 1,
                 courseCount = courseCount,
@@ -176,6 +175,8 @@ class CourseInteractionTest : StudentTest() {
         data.courseTabs[course1.id]!! += homeTab
         data.courseTabs[course1.id]!! += pagesTab
         data.courseTabs[course1.id]!! += filesTab
+
+        configure(data, course1)
 
         val student = data.students[0]
         val token = data.tokenFor(student)!!
