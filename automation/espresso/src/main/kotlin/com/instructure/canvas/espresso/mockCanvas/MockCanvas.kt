@@ -356,6 +356,7 @@ class MockCanvas {
     // The dispatcher contains all of our matching/capture logic for webview requests
     val webViewServerDispatcher = object : Dispatcher() {
         override fun dispatch(request: RecordedRequest): MockResponse {
+            Log.d("WebView", "dispatch() request: $request")
             var path = request.path
             if(path?.startsWith("//") == true) path = path.substring(1)
 
