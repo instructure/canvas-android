@@ -25,6 +25,7 @@ data class DashboardUiState(
     val coursesUiState: List<DashboardCourseUiState> = emptyList(),
     val invitesUiState: List<CourseInviteUiState> = emptyList(),
     val loadingState: LoadingState = LoadingState(),
+    val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
 )
 
 data class DashboardCourseUiState(
@@ -58,4 +59,9 @@ data class CourseInviteUiState(
 data class DashboardProgramUiState(
     val id: String,
     val name: String,
+)
+
+data class DashboardUnreadState(
+    val unreadConversations: Int = 0,
+    val unreadNotifications: Int = 0,
 )
