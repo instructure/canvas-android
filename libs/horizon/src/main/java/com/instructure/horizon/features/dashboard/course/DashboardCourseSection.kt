@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.course
 
+import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -47,11 +48,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.selected
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardContent
@@ -132,8 +138,8 @@ private fun DashboardCourseSectionContent(
             pagerstate,
             contentPadding = PaddingValues(horizontal = 16.dp),
             pageSpacing = 4.dp,
+            modifier = Modifier.animateContentSize()
         ) {
-
             var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
             val scaleAnimation by animateFloatAsState(
                 if (it == pagerstate.currentPage) {
@@ -218,6 +224,7 @@ private fun DashboardCourseCardIndicator(pagerState: PagerState) {
         modifier = Modifier.fillMaxWidth()
     ) {
         items(pagerState.pageCount) { itemIndex ->
+            val context = LocalContext.current
             Box(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier
@@ -226,6 +233,14 @@ private fun DashboardCourseCardIndicator(pagerState: PagerState) {
                     .border(1.dp, HorizonColors.Icon.medium(), CircleShape)
                     .clip(CircleShape)
                     .clickable { scrollToIndex = itemIndex }
+                    .semantics {
+                        selected = itemIndex == selectedIndex
+                        contentDescription = context.getString(
+                            R.string.a11y_dashboardPagerIndicatorContentDescription,
+                            itemIndex + 1,
+                            pagerState.pageCount
+                        )
+                    }
             ) {
                 if (itemIndex == selectedIndex) {
                     Box(
