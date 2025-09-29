@@ -71,6 +71,27 @@ fun AccountNotificationsScreen(
 
 @Composable
 private fun AccountNotificationContent(state: AccountNotificationsUiState, modifier: Modifier) {
+
+    LazyColumn(
+        contentPadding = PaddingValues(
+            vertical = 32.dp,
+            horizontal = 32.dp
+        ),
+        verticalArrangement = Arrangement.spacedBy(32.dp),
+        modifier = modifier
+    ) {
+        item {
+            PushNotificationPermissionCard()
+        }
+
+        items(state.notificationItems) { notificationItem ->
+            NotificationGroup(notificationItem)
+        }
+    }
+}
+
+@Composable
+private fun PushNotificationPermissionCard() {
     val context = LocalContext.current
     var hasNotificationPermission by remember {
         mutableStateOf(
@@ -86,30 +107,16 @@ private fun AccountNotificationContent(state: AccountNotificationsUiState, modif
         hasNotificationPermission = result
     }
 
-    LazyColumn(
-        contentPadding = PaddingValues(
-            vertical = 32.dp,
-            horizontal = 32.dp
-        ),
-        verticalArrangement = Arrangement.spacedBy(32.dp),
-        modifier = modifier
-    ) {
-        if (!hasNotificationPermission) {
-            item {
-                NotificationCard(
-                    message = stringResource(R.string.accountNotificationsDisabledNotificationsMessage),
-                    actionButtonLabel = stringResource(R.string.accountNotificationsEnableNotificationButtonLabel),
-                    onActionButtonClick = {
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                            permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
-                        }
-                    }
-                )
+    if (!hasNotificationPermission) {
+        NotificationCard(
+            message = stringResource(R.string.accountNotificationsDisabledNotificationsMessage),
+            actionButtonLabel = stringResource(R.string.accountNotificationsEnableNotificationButtonLabel),
+            onActionButtonClick = {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    permissionRequest.launch(Manifest.permission.POST_NOTIFICATIONS)
+                }
             }
-        }
-        items(state.notificationItems) { notificationItem ->
-            NotificationGroup(notificationItem)
-        }
+        )
     }
 }
 

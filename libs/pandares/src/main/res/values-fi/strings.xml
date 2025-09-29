@@ -908,6 +908,15 @@
         <item quantity="other">%s pistettä</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pt</item>
+        <item quantity="other">pistetä</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pistettä</item>
+        <item quantity="other">\/ %.0f pistettä</item>
+    </plurals>
     <string name="timeLimit">Aikaraja</string>
     <string name="newPushNotifications">%1$s Uudet ilmoitukset</string>
     <string name="like">tykkäys</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Allekirjoitus</string>
     <string name="inboxSignatureTextfieldHeader">Allekirjoitusteksti</string>
     <string name="due_dateTime">Määräpäivä: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Palautettu: %1$s, %2$s</string>
     <string name="noDueDate">Ei määräpäivää</string>
     <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
     <string name="needsGradingCount">%1$s täytyy arvostella</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d piste</item>
         <item quantity="other">%d pistettä</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f piste)</item>
+        <item quantity="other">(%.0f pistettä)</item>
     </plurals>
     <string name="noAssignments">Ei tehtäviä</string>
     <string name="assignmentGroup">Tehtäväryhmä</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Valitaan kurssi</string>
     <string name="widgetGradesErrorLoadingCourses">Kurssien lataamisen yhteydessä tapahtui virhe.</string>
     <string name="settingsSwitchExperience">Vaihda Canvas-uraan</string>
+    <string name="speedGraderGradeTabTitle">Arvosana &amp; Rubriikki</string>
+    <string name="speedGraderDetailsTabTitle">Lisätiedot</string>
+    <string name="a11y_contentDescription_expandPanel">Laajenna paneelia</string>
+    <string name="a11y_contentDescription_collapsePanel">Kutista paneeli</string>
+    <string name="pointGradeHint">Kirjoita pistemäärä tähän</string>
+    <string name="percentageGradeHint">Kirjoita prosenttiosuus tähän</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Kirjainarvosana</string>
+    <string name="daysLate">Päivää myöhässä</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s piste</item>
+        <item quantity="other">%s / %s pistettä</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Rangaistus myöhästymisestä</string>
+    <string name="gradingStatus_none">Ei mitään</string>
+    <string name="gradingStatus_late">Myöhään</string>
+    <string name="gradingStatus_missing">Puuttuu</string>
+    <string name="gradingStatus_extended">Laajennettu</string>
+    <string name="gradingStatus_excused">Vapautettu</string>
+    <string name="status">Tila</string>
+    <string name="speedGraderStudentNotes">Opiskelijan muistiinpanot</string>
+    <string name="speedGraderStudentNotesLoading">Ladataan opiskelijan muistiinpanoja</string>
+    <string name="speedGraderStudentNotesErrorTitle">Hups! Jotakin meni pieleen</string>
+    <string name="speedGraderStudentNotesErrorDescription">Opiskelijasi muistiinpanojen näyttämisessä ilmeni virhe.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Päivitä</string>
+    <string name="not_graded">Ei arvioida</string>
+    <string name="speedGraderSubmissionDetails">Tehtäväpalautuksen tiedot</string>
+    <string name="speedGraderSubmissionDetailsLoading">Tehtävälähetysten tietoja ladataan</string>
+    <string name="speedGraderWordCount">Sanamäärä</string>
+    <string name="rubricsTitle">Arviointitaulukot</string>
+    <string name="rubricScore">Pistemäärä</string>
+    <string name="rubricScoreHint">Kirjoita pistemäärä tähän</string>
+    <string name="speedGraderCommentsTitle">Kommentit (%s)</string>
+    <string name="anonymousGradingStudentLabel">Opiskelija</string>
+    <string name="anonymousGradingUserLabel">Nimetön käyttäjä</string>
+    <string name="rubricNote">Rubriikkihuomautus</string>
+    <string name="content_description_edit_rubric_comment">Muokkaa rubriikkihuomautustasi</string>
+    <string name="rubricNoteHint">Huomautus</string>
+    <string name="a11y_sendRubricNoteContentDescription">Muokkaa rubriikkihuomautustasi</string>
+    <string name="select_attachment_type">Valitse liitoksen tyyppi</string>
+    <string name="choose_files">Valitse tiedostot</string>
+    <string name="a11y_expanded">Laajennettu</string>
+    <string name="a11y_collapsed">Kutistettu</string>
+    <string name="excuseStudent">Anna opiskelijalle anteeksi</string>
+    <string name="detailsEmptyMessage">Meillä ei ole lisätietoja tästä opiskelijasta ja tehtävästä.</string>
+    <string name="daysLateHint">Kirjoita myöhässäolopäivien määrä</string>
+    <string name="reply_to_topic">Vastaa aiheeseen</string>
+    <string name="additional_replies">Ylimääräiset vastaukset (%d)</string>
 </resources>

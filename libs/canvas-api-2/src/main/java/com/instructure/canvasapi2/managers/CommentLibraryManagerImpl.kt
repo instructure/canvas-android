@@ -16,11 +16,13 @@
  */
 package com.instructure.canvasapi2.managers
 
+import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.CommentLibraryQuery
 import com.instructure.canvasapi2.QLClientConfig
+import com.instructure.canvasapi2.enqueueQuery
 
-class CommentLibraryManagerImpl : CommentLibraryManager {
+class CommentLibraryManagerImpl(private val apolloClient: ApolloClient) : CommentLibraryManager {
 
     override suspend fun getCommentLibraryItems(userId: Long): List<String> {
         var hasNextPage = true
@@ -30,7 +32,7 @@ class CommentLibraryManagerImpl : CommentLibraryManager {
         while (hasNextPage) {
             val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
             val query = CommentLibraryQuery(userId.toString(), QLClientConfig.GRAPHQL_PAGE_SIZE, nextCursorParam)
-            val data = QLClientConfig.enqueueQuery(query).data
+            val data = apolloClient.enqueueQuery(query).data
             val user = data?.user?.onUser
             val newItems = user?.commentBankItems?.edges?.mapNotNull {
                 it?.node?.comment

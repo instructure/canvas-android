@@ -1,0 +1,5 @@
+query GetProgramById($programId: String!) {
+    program(programId: $programId) {
+        ...ProgramFields
+    }
+}

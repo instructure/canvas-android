@@ -30,6 +30,7 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.composeTest.hasDrawable
 import com.instructure.pandares.R
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState
 import com.instructure.pandautils.features.grades.AssignmentUiState
 import com.instructure.pandautils.features.grades.GradesScreen
@@ -185,6 +186,84 @@ class GradesScreenTest {
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Assignment 3")
             .assertIsNotDisplayed()
+    }
+
+    @Test
+    fun assertDiscussionCheckpointsContent() {
+        composeTestRule.setContent {
+            GradesScreen(
+                uiState = GradesUiState(
+                    isLoading = false,
+                    items = listOf(
+                        AssignmentGroupUiState(
+                            id = 1,
+                            name = "Group 1",
+                            assignments = listOf(
+                                AssignmentUiState(
+                                    id = 1,
+                                    iconRes = R.drawable.ic_discussion,
+                                    name = "Assignment 1",
+                                    dueDate = "No due date",
+                                    submissionStateLabel = SubmissionStateLabel.Graded,
+                                    displayGrade = DisplayGrade("7/15", ""),
+                                    checkpoints = listOf(
+                                        DiscussionCheckpointUiState(
+                                            name = "Checkpoint 1",
+                                            dueDate = "Due date 1",
+                                            submissionStateLabel = SubmissionStateLabel.Graded,
+                                            displayGrade = DisplayGrade("7/10", ""),
+                                            pointsPossible = 10
+                                        ),
+                                        DiscussionCheckpointUiState(
+                                            name = "Checkpoint 2",
+                                            dueDate = "Due date 2",
+                                            submissionStateLabel = SubmissionStateLabel.Missing,
+                                            displayGrade = DisplayGrade("-/5", ""),
+                                            pointsPossible = 5
+                                        )
+                                    ),
+                                    checkpointsExpanded = true
+                                )
+                            ),
+                            expanded = true
+                        )
+                    ),
+                    gradeText = "87% A"
+                ),
+                actionHandler = {}
+            )
+        }
+
+        composeTestRule.onNodeWithText("Group 1")
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("Assignment 1")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("assignmentDueDate") and hasText("Due date 1"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("assignmentDueDate") and hasText("Due date 2"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("submissionStateLabel") and hasText("Graded"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("7/15")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Checkpoint 1")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate") and hasText("Due date 1"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText("Graded"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("7/10")
+            .assertIsDisplayed()
+
+        composeTestRule.onNodeWithText("Checkpoint 2")
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate") and hasText("Due date 2"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointSubmissionStateLabel") and hasText("Missing"), true)
+            .assertIsDisplayed()
+        composeTestRule.onNodeWithText("-/5")
+            .assertIsDisplayed()
     }
 
     @Test

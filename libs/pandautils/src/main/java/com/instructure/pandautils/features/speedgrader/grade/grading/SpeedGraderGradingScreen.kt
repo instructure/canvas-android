@@ -46,7 +46,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalContext
@@ -56,11 +55,9 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -368,14 +365,8 @@ private fun LateHeader(
     onLateDaysChange: (Float?) -> Unit
 ) {
     var textFieldValue by remember(daysLate) {
-        mutableStateOf(
-            TextFieldValue(
-                text = numberFormatter.format(daysLate),
-                selection = TextRange.Zero
-            )
-        )
+        mutableStateOf(numberFormatter.format(daysLate),)
     }
-    var hasFocusedOnce by remember { mutableStateOf(false) }
 
     Row(
         modifier = Modifier
@@ -410,15 +401,7 @@ private fun LateHeader(
 
         BasicTextFieldWithHintDecoration(
             modifier = Modifier
-                .testTag("speedGraderDaysLateValue")
-                .onFocusChanged { focusState ->
-                    if (focusState.isFocused && !hasFocusedOnce) {
-                        textFieldValue = textFieldValue.copy(
-                            selection = TextRange(0, textFieldValue.text.length)
-                        )
-                        hasFocusedOnce = true
-                    }
-                },
+                .testTag("speedGraderDaysLateValue"),
             hintColor = colorResource(R.color.textDark),
             textColor = LocalCourseColor.current,
             value = textFieldValue,
@@ -428,7 +411,7 @@ private fun LateHeader(
             ),
             onValueChange = {
                 textFieldValue = it
-                onLateDaysChange(it.text.toFloatOrNull())
+                onLateDaysChange(it.toFloatOrNull())
             },
             hint = stringResource(R.string.daysLateHint)
         )
@@ -506,7 +489,9 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
             Spacer(modifier = Modifier.weight(1f))
             BasicTextFieldWithHintDecoration(
-                modifier = Modifier.padding(end = 8.dp).testTag("speedGraderCurrentGradeTextField"),
+                modifier = Modifier
+                    .padding(end = 8.dp)
+                    .testTag("speedGraderCurrentGradeTextField"),
                 value = textFieldScore,
                 onValueChange = {
                     textFieldScore = it
@@ -781,7 +766,6 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
         val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
         if (sliderDrivenScore != newScoreFromSlider) {
             sliderDrivenScore = newScoreFromSlider
-            uiState.onScoreChange(newScoreFromSlider)
             textFieldScore = numberFormatter.format(newScoreFromSlider)
         }
     }
@@ -829,7 +813,9 @@ private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
             )
         }
 
-        if (uiState.pointsPossible != null && uiState.pointsPossible != 0.0 && (uiState.enteredScore ?: 0f) <= 100.0) {
+        if (uiState.pointsPossible != null && uiState.pointsPossible != 0.0 && (uiState.enteredScore
+                ?: 0f) <= 100.0
+        ) {
             Slider(
                 modifier = Modifier
                     .padding(top = 16.dp)
