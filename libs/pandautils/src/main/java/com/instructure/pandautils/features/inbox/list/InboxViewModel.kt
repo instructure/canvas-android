@@ -31,6 +31,7 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.inbox.list.itemviewmodels.InboxEntryItemViewModel
 import com.instructure.pandautils.mvvm.Event
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.pandautils.utils.FeatureFlagProvider
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
@@ -40,7 +41,8 @@ import javax.inject.Inject
 class InboxViewModel @Inject constructor(
     private val inboxRepository: InboxRepository,
     private val resources: Resources,
-    private val inboxEntryItemCreator: InboxEntryItemCreator
+    private val inboxEntryItemCreator: InboxEntryItemCreator,
+    private val featureFlagProvider: FeatureFlagProvider
 ) : ViewModel() {
 
     val state: LiveData<ViewState>
@@ -67,8 +69,15 @@ class InboxViewModel @Inject constructor(
 
     private var canvasContexts: List<CanvasContext> = emptyList()
 
+    private var canDeleteConversations = true
+
     private var lastRequestedPageLink: String? = null
     private var silentRefreshJob: Job? = null
+
+    init {
+        _state.postValue(ViewState.Loading)
+        fetchData()
+    }
 
     val bottomReachedCallback: () -> Unit = {
         viewModelScope.launch {
@@ -93,14 +102,12 @@ class InboxViewModel @Inject constructor(
         _state.postValue(ViewState.Success) // We always need to finish with success state because we already have data and we send only an error event.
     }
 
-    init {
-        _state.postValue(ViewState.Loading)
-        fetchData()
-    }
-
     private fun fetchData(forceNetwork: Boolean = false, refresh: Boolean = false) {
         viewModelScope.launch {
             try {
+                // Check delete permissions
+                canDeleteConversations = !checkRestrictStudentAccessFlag()
+                
                 silentRefreshJob?.cancel()
                 exitSelectionMode()
                 lastRequestedPageLink = null
@@ -175,7 +182,11 @@ class InboxViewModel @Inject constructor(
     }
 
     private fun createMenuItems(selectedItems: List<InboxEntryItemViewModel>, scope: InboxApi.Scope): Set<InboxMenuItem> {
-        val menuItems = mutableSetOf<InboxMenuItem>(InboxMenuItem.DELETE)
+        val menuItems = mutableSetOf<InboxMenuItem>()
+        
+        if (canDeleteConversations) {
+            menuItems.add(InboxMenuItem.DELETE)
+        }
         when {
             scope == InboxApi.Scope.ARCHIVED -> menuItems.add(InboxMenuItem.UNARCHIVE)
             scope != InboxApi.Scope.SENT && scope != InboxApi.Scope.STARRED -> menuItems.add(InboxMenuItem.ARCHIVE)
@@ -582,5 +593,13 @@ class InboxViewModel @Inject constructor(
             }
         }
         return diff
+    }
+
+    private suspend fun checkRestrictStudentAccessFlag(): Boolean {
+        return try {
+            featureFlagProvider.checkRestrictStudentAccessFlag()
+        } catch (e: Exception) {
+            false
+        }
     }
 }

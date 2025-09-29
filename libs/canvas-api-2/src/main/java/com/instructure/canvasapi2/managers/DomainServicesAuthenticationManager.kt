@@ -23,6 +23,7 @@ import com.instructure.canvasapi2.models.DomainService
 import com.instructure.canvasapi2.models.DomainServicesWorkflow
 import com.instructure.canvasapi2.utils.CedarApiPref
 import com.instructure.canvasapi2.utils.DomainServicesApiPref
+import com.instructure.canvasapi2.utils.JourneyApiPref
 import com.instructure.canvasapi2.utils.PineApiPref
 import com.instructure.canvasapi2.utils.RedwoodApiPref
 import java.util.Date
@@ -94,4 +95,13 @@ class RedwoodAuthenticationManager @Inject constructor(
     domainServicesAuthenticationAPI,
     redwoodApiPref,
     DomainService.REDWOOD
+)
+
+class JourneyAuthenticationManager @Inject constructor(
+    domainServicesAuthenticationAPI: DomainServicesAuthenticationAPI,
+    journeyApiPref: JourneyApiPref
+) : DomainServicesAuthenticationManager(
+    domainServicesAuthenticationAPI,
+    journeyApiPref,
+    DomainService.JOURNEY
 )

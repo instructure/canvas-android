@@ -59,8 +59,8 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
     private var loadJob: WeaveJob? = null
     private var canvasContext: CanvasContext? = null
 
-    private val checkedTodos = HashSet<PlannerItem>()
-    private val deletedTodos = HashSet<PlannerItem>()
+    private val checkedTodos = ArrayList<PlannerItem>()
+    private val deletedTodos = ArrayList<PlannerItem>()
 
     private var isEditMode: Boolean = false
     private var isNoNetwork: Boolean =
@@ -170,9 +170,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
             val courses = CourseManager.getCoursesAsync(isRefresh)
             val restParams =
                 RestParams(isForceReadFromNetwork = isRefresh, usePerPageQueryParam = true)
+            val now = LocalDate.now().atStartOfDay()
             val plannerItems = plannerApi.getPlannerItems(
-                startDate = LocalDate.now().toApiString(),
-                endDate = null,
+                startDate = now.minusDays(28).toApiString(),
+                endDate = now.plusDays(28).toApiString(),
                 contextCodes = emptyList(),
                 restParams = restParams
             ).depaginate { nextUrl ->
@@ -242,7 +243,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
     }
 
     private fun isComplete(plannerItem: PlannerItem): Boolean {
-        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC) {
+        return if (plannerItem.plannableType == PlannableType.ASSIGNMENT
+            || plannerItem.plannableType == PlannableType.DISCUSSION_TOPIC
+            || plannerItem.plannableType == PlannableType.SUB_ASSIGNMENT
+        ) {
             plannerItem.submissionState?.submitted == true
         } else {
             false
@@ -260,6 +264,10 @@ open class TodoListRecyclerAdapter : ExpandableRecyclerAdapter<Date, PlannerItem
                 // won't actually delete them from the server
                 if (!APIHelper.hasNetworkConnection()) {
                     Toast.makeText(context, context.getString(R.string.notAvailableOffline), Toast.LENGTH_SHORT).show()
+                    return
+                }
+
+                if (todo.plannableType == PlannableType.CALENDAR_EVENT) {
                     return
                 }
 

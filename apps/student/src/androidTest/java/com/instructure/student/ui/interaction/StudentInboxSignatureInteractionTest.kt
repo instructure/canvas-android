@@ -24,6 +24,7 @@ import com.instructure.canvas.espresso.mockCanvas.MockCanvas
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakePostPolicyManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionDetailsManager
@@ -33,6 +34,7 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
@@ -84,6 +86,10 @@ class StudentInboxSignatureInteractionTest : InboxSignatureInteractionTest() {
     @BindValue
     @JvmField
     val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val postPolicyManager: PostPolicyManager = FakePostPolicyManager()
 
     private val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
 

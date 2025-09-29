@@ -908,6 +908,15 @@
         <item quantity="other">%s točk</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">točka</item>
+        <item quantity="other">točk</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f točka</item>
+        <item quantity="other">\/ %.0f točk</item>
+    </plurals>
     <string name="timeLimit">Časovna omejitev</string>
     <string name="newPushNotifications">%1$s novih obvestil</string>
     <string name="like">všeček</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Podpis</string>
     <string name="inboxSignatureTextfieldHeader">Besedilo podpisa</string>
     <string name="due_dateTime">Rok: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Poslano: %1$s, %2$s</string>
     <string name="noDueDate">Ni roka</string>
     <string name="assignmentPointsPerMaximum">%1$s/%2$s</string>
     <string name="needsGradingCount">%1$s je treba oceniti</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d točka</item>
         <item quantity="other">%d točk</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f točka)</item>
+        <item quantity="other">(%.0f točk)</item>
     </plurals>
     <string name="noAssignments">Ni nalog</string>
     <string name="assignmentGroup">Skupina nalog</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Izberimo predmet</string>
     <string name="widgetGradesErrorLoadingCourses">Med nalaganjem predmetov je prišlo do napake.</string>
     <string name="settingsSwitchExperience">Preklopi na Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Ocena in ocenjevalni vodnik</string>
+    <string name="speedGraderDetailsTabTitle">Podrobnosti</string>
+    <string name="a11y_contentDescription_expandPanel">Razširi ploščo</string>
+    <string name="a11y_contentDescription_collapsePanel">Strni ploščo</string>
+    <string name="pointGradeHint">Tukaj vnesite rezultat</string>
+    <string name="percentageGradeHint">Tukaj vnesite odstotek</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Črkovna ocena</string>
+    <string name="daysLate">Dni zamude</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s točka</item>
+        <item quantity="other">%s / %s točk</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Kazen za zamudo</string>
+    <string name="gradingStatus_none">Brez</string>
+    <string name="gradingStatus_late">Zamuda</string>
+    <string name="gradingStatus_missing">Manjkajoče</string>
+    <string name="gradingStatus_extended">Razširjeno</string>
+    <string name="gradingStatus_excused">Opravičeno</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Študentove opombe</string>
+    <string name="speedGraderStudentNotesLoading">Nalaganje študentovih opomb</string>
+    <string name="speedGraderStudentNotesErrorTitle">Ojoj! Prišlo je do težav</string>
+    <string name="speedGraderStudentNotesErrorDescription">Pri prikazovanju študentovih opomb je prišlo do težave.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Osveži</string>
+    <string name="not_graded">Ni ocenjeno</string>
+    <string name="speedGraderSubmissionDetails">Podrobnosti o oddaji</string>
+    <string name="speedGraderSubmissionDetailsLoading">Nalaganje podrobnosti oddaje</string>
+    <string name="speedGraderWordCount">Štetje besed</string>
+    <string name="rubricsTitle">Ocenjevalni vodniki</string>
+    <string name="rubricScore">Rezultat</string>
+    <string name="rubricScoreHint">Tukaj vnesite rezultat</string>
+    <string name="speedGraderCommentsTitle">Opombe (%s)</string>
+    <string name="anonymousGradingStudentLabel">Študent</string>
+    <string name="anonymousGradingUserLabel">Anonimni uporabnik</string>
+    <string name="rubricNote">Opomba k ocenjevalnemu vodniku</string>
+    <string name="content_description_edit_rubric_comment">Uredi opombo k ocenjevalnemu vodniku</string>
+    <string name="rubricNoteHint">Opomba</string>
+    <string name="a11y_sendRubricNoteContentDescription">Pošlji opombo k ocenjevalnemu vodniku</string>
+    <string name="select_attachment_type">Izberite vrsto priloge</string>
+    <string name="choose_files">Izberi datoteke</string>
+    <string name="a11y_expanded">Razširjeno</string>
+    <string name="a11y_collapsed">Strnjeno</string>
+    <string name="excuseStudent">Opraviči študenta</string>
+    <string name="detailsEmptyMessage">Za tega študenta in nalogo nimamo dodatnih podrobnosti</string>
+    <string name="daysLateHint">Vnesite dni zamude</string>
+    <string name="reply_to_topic">Odgovor na temo</string>
+    <string name="additional_replies">Dodatni odgovori (%d)</string>
 </resources>

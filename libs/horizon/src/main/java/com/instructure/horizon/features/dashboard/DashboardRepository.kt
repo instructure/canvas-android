@@ -20,6 +20,8 @@ import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.DashboardContent
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
+import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -30,7 +32,8 @@ class DashboardRepository @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val apiPrefs: ApiPrefs,
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface
+    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+    private val journeyApiManager: JourneyApiManager,
 ) {
     suspend fun getDashboardContent(forceNetwork: Boolean): DataResult<DashboardContent> {
         return horizonGetCoursesManager.getDashboardContent(apiPrefs.user?.id ?: -1, forceNetwork)
@@ -48,5 +51,9 @@ class DashboardRepository @Inject constructor(
 
     suspend fun acceptInvite(courseId: Long, enrollmentId: Long) {
         return enrollmentApi.acceptInvite(courseId, enrollmentId, RestParams()).dataOrThrow
+    }
+
+    suspend fun getPrograms(forceNetwork: Boolean = false): List<Program> {
+        return journeyApiManager.getPrograms(forceNetwork)
     }
 }

@@ -20,7 +20,6 @@ import android.util.Log
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.dataseeding.api.AssignmentsApi
@@ -47,7 +46,6 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Stub //Need to wait for the comments to be developed in the new SpeedGrader
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.DASHBOARD, TestCategory.E2E)
@@ -71,71 +69,102 @@ class CommentLibraryE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Login with user: '${teacher.name}', login id: '${teacher.loginId}'.")
         tokenLogin(teacher)
 
-        Log.d(STEP_TAG, "Navigate to submission's comments tab.")
+        Log.d(STEP_TAG, "Open the '${course.name}' course.")
         dashboardPage.openCourse(course)
+
+        Log.d(STEP_TAG, "Open the 'Assignments' tab.")
         courseBrowserPage.openAssignmentsTab()
+
+        Log.d(STEP_TAG, "Click on the '${testAssignment.name}' assignment.")
         assignmentListPage.clickAssignment(testAssignment)
+
+        Log.d(STEP_TAG, "Open the 'All Submissions' page.")
         assignmentDetailsPage.clickAllSubmissions()
+
+        Log.d(STEP_TAG, "Click on the '${student.name}' student submission to open it in SpeedGrader.")
         assignmentSubmissionListPage.clickSubmission(student)
-        speedGraderPage.selectCommentsTab()
+
+        Log.d(STEP_TAG, "Expand the SpeedGrader bottom sheet to see the comments section.")
+        speedGraderPage.clickExpandPanelButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Comments' label is displayed with the corresponding number of comments, which is 0 at the moment.")
+        speedGraderPage.assertCommentsLabelDisplayed(0)
+
+        Log.d(STEP_TAG, "Click on the 'Comment Library' icon to open the Comment Library.")
+        speedGraderPage.clickCommentLibraryButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the comment library is opened and there are the 2 previously created comments displayed.")
+        speedGraderPage.assertCommentLibraryItemCount(2)
+
+        Log.d(ASSERTION_TAG, "Assert that the toolbar title is 'Comment Library'.")
+        speedGraderPage.assertCommentLibraryTitle()
 
         val testText = "another"
         Log.d(STEP_TAG, "Type '$testText' word.")
-        speedGraderCommentsPage.typeComment(testText)
+        speedGraderPage.typeComment(testText)
 
-        Log.d(ASSERTION_TAG, "Assert if there is only one matching suggestion visible.")
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(1)
+        Log.d(ASSERTION_TAG, "Assert that there is only 1 comment displayed in the comment library, which matches the filter.")
+        speedGraderPage.assertCommentLibraryItemCount(1)
 
-        Log.d(STEP_TAG, "Close the comment library.")
-        commentLibraryPage.closeCommentLibrary()
+        Log.d(STEP_TAG, "Select the comment which matches the entered (filter) text and send the comment.")
+        speedGraderPage.selectCommentLibraryResultItem()
 
-        Log.d(ASSERTION_TAG, "Assert if the comment library is not visible.")
-        speedGraderPage.assertCommentLibraryNotVisible()
+        Log.d(STEP_TAG, "Send the previously selected '$testText' comment.")
+        speedGraderPage.clickSendCommentButton(commentLibraryOpened = true)
+
+        Log.d(ASSERTION_TAG, "Assert that the 'Comments' label is displayed with the corresponding number of comments, which is 1 at the moment as we just sent a comment from the Comment Library.")
+        speedGraderPage.assertCommentsLabelDisplayed(1)
+
+        Log.d(ASSERTION_TAG, "Assert if the '$testComment2' (whole) comment is successfully sent and displayed in the comments section.")
+        speedGraderPage.assertCommentDisplayed(testComment2)
+
+        Log.d(STEP_TAG, "Click on the 'Comment Library' icon to open the Comment Library.")
+        speedGraderPage.clickCommentLibraryButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the comment library is opened and there are the 2 previously created comments displayed.")
+        speedGraderPage.assertCommentLibraryItemCount(2)
+
+        val nonExistingCommentText = "csakafradi"
+        Log.d(STEP_TAG, "Type a non-existing comment text, '$nonExistingCommentText' into the comment input field.")
+        speedGraderPage.typeComment(nonExistingCommentText)
+
+        Log.d(ASSERTION_TAG, "Assert that there is no comment displayed in the comment library as there's no matching comment with the entered (filter) text.")
+        speedGraderPage.assertCommentLibraryItemCount(0)
 
         Log.d(STEP_TAG, "Clear comment input field.")
-        speedGraderCommentsPage.clearComment()
+        speedGraderPage.clearComment()
 
-        Log.d(ASSERTION_TAG, "Assert if all the suggestions are displayed again.")
-        commentLibraryPage.assertSuggestionsCount(2)
+        Log.d(ASSERTION_TAG, "Assert if all the (2) suggestions are displayed again.")
+        speedGraderPage.assertCommentLibraryItemCount(2)
+
+        Log.d(STEP_TAG, "Close the comment library.")
+        speedGraderPage.clickCloseCommentLibraryButton()
+
+        Log.d(STEP_TAG, "Click on the 'Comment Library' icon to open the Comment Library.")
+        speedGraderPage.clickCommentLibraryButton()
+
+        Log.d(ASSERTION_TAG, "Assert that the comment library is opened and there are the 2 previously created comments displayed.")
+        speedGraderPage.assertCommentLibraryItemCount(2)
 
         val testText2 = "test"
-        Log.d(STEP_TAG, "Close the comment library and type '$testText2' word.")
-        commentLibraryPage.closeCommentLibrary()
-        speedGraderCommentsPage.typeComment(testText2)
+        Log.d(STEP_TAG, "Type '$testText2' word.")
+        speedGraderPage.typeComment(testText2)
 
-        Log.d(ASSERTION_TAG, "Assert if there are two matching suggestion visible.")
-        commentLibraryPage.assertPageObjects()
-        commentLibraryPage.assertSuggestionsCount(2)
-        commentLibraryPage.assertSuggestionVisible(testComment)
-        commentLibraryPage.assertSuggestionVisible(testComment2)
+        Log.d(ASSERTION_TAG, "Assert that there are 2 comments displayed in the comment library, which matches the filter.")
+        speedGraderPage.assertCommentLibraryItemCount(2)
 
-        Log.d(STEP_TAG, "Select a suggestion.")
-        commentLibraryPage.selectSuggestion(testComment2)
+        Log.d(STEP_TAG, "Select the comment which matches the entered (filter) text and send the comment.")
+        speedGraderPage.selectCommentLibraryResultItem(1)
 
-        Log.d(ASSERTION_TAG, "Assert if it's filled into the comment text field and the comment library is closed.")
-        speedGraderCommentsPage.assertCommentFieldHasText(testComment2)
-        speedGraderPage.assertCommentLibraryNotVisible()
+        Log.d(STEP_TAG, "Send the previously selected '$testText2' comment.")
+        speedGraderPage.clickSendCommentButton(commentLibraryOpened = true)
 
-        Log.d(STEP_TAG, "Send the previously selected comment.")
-        speedGraderCommentsPage.sendComment()
+        Log.d(ASSERTION_TAG, "Assert that the 'Comments' label is displayed with the corresponding number of comments, which is 2 at the moment.")
+        speedGraderPage.assertCommentsLabelDisplayed(2)
 
-        Log.d(ASSERTION_TAG, "Assert if it's successfully sent.")
-        speedGraderCommentsPage.assertDisplaysCommentText(testComment2)
-
-        Log.d(STEP_TAG, "Clear the comment.")
-        speedGraderCommentsPage.clearComment()
-
-        Log.d(ASSERTION_TAG, "Assert if all suggestions are displayed and the comment library is closed.")
-        commentLibraryPage.assertSuggestionsCount(2)
-        commentLibraryPage.closeCommentLibrary()
-
-        Log.d(STEP_TAG, "Type some words which does not match with any of the suggestions in the comment library.")
-        speedGraderCommentsPage.typeComment("empty filter")
-
-        Log.d(ASSERTION_TAG, "Assert that suggestions are not visible and empty view is visible.")
-        commentLibraryPage.assertSuggestionListNotVisible()
-        commentLibraryPage.assertEmptyViewVisible()
+        Log.d(ASSERTION_TAG, "Assert assert both the '$testComment' and '$testComment2' (whole) comments are displayed in the comments section.")
+        speedGraderPage.assertCommentDisplayed(testComment)
+        speedGraderPage.assertCommentDisplayed(testComment2)
     }
 
     private fun prepareSettingsAndMakeAssignmentWithSubmission(

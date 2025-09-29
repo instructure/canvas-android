@@ -197,7 +197,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Select 'Not Graded' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterUngraded()
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
 
         Log.d(ASSERTION_TAG, "Assert that there isn't any submission displayed.")
         assignmentSubmissionListPage.assertHasNoSubmission()
@@ -207,7 +207,7 @@ class SpeedGraderE2ETest : TeacherComposeTest() {
 
         Log.d(STEP_TAG, "Select 'Not Submitted' and click on 'OK'.")
         assignmentSubmissionListPage.clickFilterNotSubmitted()
-        assignmentSubmissionListPage.clickFilterDialogOk()
+        assignmentSubmissionListPage.clickFilterDialogDone()
 
         Log.d(ASSERTION_TAG, "Assert that there is one submission displayed.")
         retry(times  = 5, delay = 3000, catchBlock =  { refresh() }) {

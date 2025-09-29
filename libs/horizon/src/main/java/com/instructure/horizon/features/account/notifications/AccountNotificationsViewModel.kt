@@ -104,7 +104,7 @@ class AccountNotificationsViewModel @Inject constructor(
                     val typeLabel = it.channel.type.label()
                     AccountNotificationTypeState(
                         label = typeLabel,
-                        enabled = it.channel.type == AccountNotificationType.EMAIL,
+                        enabled = true,
                         checked = it.frequency == AccountNotificationFrequency.IMMEDIATELY,
                         onClick = { checked ->
                             viewModelScope.tryLaunch {
