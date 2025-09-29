@@ -36,7 +36,7 @@ object Versions {
     const val GLIDE_VERSION = "5.0.5"
     const val RETROFIT = "3.0.0"
     const val OKHTTP = "5.1.0"
-    const val ROOM = "2.7.0"
+    const val ROOM = "2.8.1"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.9"
     const val MEDIA3 = "1.7.1"
