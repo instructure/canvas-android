@@ -37,7 +37,7 @@ object Versions {
     const val RETROFIT = "3.0.0"
     const val OKHTTP = "5.1.0"
     const val ROOM = "2.8.1"
-    const val HAMCREST = "2.2"
+    const val HAMCREST = "3.0"
     const val NAVIGATION = "2.9.5"
     const val MEDIA3 = "1.8.0"
     const val DATASTORE = "1.1.7"
@@ -92,7 +92,7 @@ object Libs {
     /* Google Dependencies */
     const val PLAY_IN_APP_UPDATES = "com.google.android.play:app-update:2.1.0"
     const val FLEXBOX_LAYOUT = "com.google.android.flexbox:flexbox:3.0.0"
-    const val MATERIAL_DESIGN = "com.google.android.material:material:1.12.0"
+    const val MATERIAL_DESIGN = "com.google.android.material:material:1.13.0"
 
     /* Mobius */
     const val MOBIUS_CORE = "com.spotify.mobius:mobius-core:${Versions.MOBIUS}"
@@ -181,7 +181,7 @@ object Libs {
     const val RRULE = "org.scala-saddle:google-rfc-2445:20110304"
 
     // Compose
-    const val COMPOSE_BOM = "androidx.compose:compose-bom:2024.09.02"
+    const val COMPOSE_BOM = "androidx.compose:compose-bom:2025.09.01"
     const val COMPOSE_MATERIAL = "androidx.compose.material:material"
     const val COMPOSE_MATERIAL_ICONS = "androidx.compose.material:material-icons-core"
     const val COMPOSE_PREVIEW = "androidx.compose.ui:ui-tooling-preview"
@@ -189,11 +189,11 @@ object Libs {
     const val COMPOSE_UI = "androidx.compose.ui:ui-android"
     const val COMPOSE_UI_TEST = "androidx.compose.ui:ui-test-junit4"
     const val COMPOSE_UI_TEST_MANIFEST = "androidx.compose.ui:ui-test-manifest"
-    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0-alpha12"
+    const val COMPOSE_MATERIAL_3 = "androidx.compose.material3:material3:1.4.0"
     const val COMPOSE_ADAPTIVE = "androidx.compose.material3.adaptive:adaptive"
     const val COMPOSE_MATERIAL3_WINDOW_SIZE = "androidx.compose.material3:material3-window-size-class"
-    const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.2.0"
-    const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.6"
+    const val COMPOSE_NAVIGATION_HILT = "androidx.hilt:hilt-navigation-compose:1.3.0"
+    const val COMPOSE_FRAGMENT = "androidx.fragment:fragment-compose:1.8.9"
 
     // Glance
     const val GLANCE = "androidx.glance:glance:${Versions.GLANCE}"
