@@ -16,5 +16,15 @@
  */
 package com.instructure.horizon.features.dashboard
 
-class DashboardRepository {
+import com.instructure.canvasapi2.apis.UnreadCountAPI
+import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.UnreadNotificationCount
+import javax.inject.Inject
+
+class DashboardRepository @Inject constructor(
+    private val unreadCountApi: UnreadCountAPI.UnreadCountsInterface,
+) {
+    suspend fun getUnreadCounts(forceNetwork: Boolean): List<UnreadNotificationCount> {
+        return unreadCountApi.getNotificationsCount(RestParams(isForceReadFromNetwork = forceNetwork)).dataOrNull.orEmpty()
+    }
 }
