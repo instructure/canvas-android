@@ -282,6 +282,9 @@ dependencies {
     implementation Libs.ANDROIDX_VECTOR
     implementation Libs.PLAY_IN_APP_UPDATES
 
+    /* Analytics */
+    implementation Libs.PENDO
+
     /* Firebase */
     implementation platform(Libs.FIREBASE_BOM) {
         exclude group: 'com.google.firebase', module: 'firebase-analytics'
@@ -290,6 +293,8 @@ dependencies {
     implementation (Libs.FIREBASE_CRASHLYTICS) {
         transitive = true
     }
+
+    implementation Libs.CAMERA_VIEW
 
     testImplementation Libs.ANDROIDX_CORE_TESTING
 

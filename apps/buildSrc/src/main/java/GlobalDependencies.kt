@@ -30,8 +30,8 @@ object Versions {
     const val MOBIUS = "1.2.1"
     const val HILT = "2.57.2"
     const val HILT_ANDROIDX = "1.3.0"
-    const val LIFECYCLE = "2.8.6"
-    const val FRAGMENT = "1.8.6"
+    const val LIFECYCLE = "2.9.4"
+    const val FRAGMENT = "1.8.9"
     const val WORK_MANAGER = "2.10.5"
     const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.11.0"
@@ -170,7 +170,7 @@ object Libs {
     const val APACHE_COMMONS_TEXT = "org.apache.commons:commons-text:1.12.0"
     const val CAMERA_VIEW = "com.otaliastudios:cameraview:2.7.2"
 
-    const val PENDO = "sdk.pendo.io:pendoIO:3.6+"
+    const val PENDO = "sdk.pendo.io:pendoIO:3.7.+"
 
     const val ROOM = "androidx.room:room-runtime:${Versions.ROOM}"
     const val ROOM_COMPILER = "androidx.room:room-compiler:${Versions.ROOM}"
