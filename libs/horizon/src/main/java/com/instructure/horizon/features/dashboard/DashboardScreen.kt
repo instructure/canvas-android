@@ -52,6 +52,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
@@ -178,6 +179,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         Spacer(modifier = Modifier.weight(1f))
         IconButton(
             iconRes = R.drawable.menu_book_notebook,
+            contentDescription = stringResource(R.string.a11y_dashboardNotebookButtonContentDescription),
             onClick = {
                 mainNavController.navigate(MainNavigationRoute.Notebook.route)
             },
@@ -187,6 +189,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.notifications,
+            contentDescription = stringResource(R.string.a11y_dashboardNotificationsContentDescription),
             onClick = {
                 mainNavController.navigate(MainNavigationRoute.Notification.route)
             },
@@ -196,6 +199,7 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
             iconRes = R.drawable.mail,
+            contentDescription = stringResource(R.string.a11y_dashboardInboxContentDescription),
             onClick = { mainNavController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
             color = IconButtonColor.Inverse

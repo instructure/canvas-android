@@ -351,4 +351,7 @@
     <string name="programDetails_enrollFailed">Failed to enroll in course.</string>
     <string name="learn_failedToLoad">Failed to load programs and courses.</string>
     <string name="learn_failedToRefresh">Failed to refresh programs and courses.</string>
+    <string name="a11y_dashboardNotebookButtonContentDescription">Notebook</string>
+    <string name="a11y_dashboardNotificationsContentDescription">Notifications</string>
+    <string name="a11y_dashboardInboxContentDescription">Inbox</string>
 </resources>

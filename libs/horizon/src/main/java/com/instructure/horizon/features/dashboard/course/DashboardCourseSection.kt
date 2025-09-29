@@ -88,7 +88,7 @@ fun DashboardCourseSection(
 }
 
 @Composable
-private fun DashboardCourseSection(
+fun DashboardCourseSection(
     state: DashboardCourseUiState,
     mainNavController: NavHostController,
     homeNavController: NavHostController

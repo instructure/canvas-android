@@ -89,6 +89,7 @@ dependencies {
     /* Android Test Dependencies */
     androidTestImplementation(project(":espresso"))
     androidTestImplementation(project(":dataseedingapi"))
+    androidTestImplementation(Libs.COMPOSE_UI_TEST)
 
     /* Unit Test Dependencies */
     testImplementation(Libs.JUNIT)
