@@ -17,10 +17,12 @@
 package com.instructure.pandautils.features.speedgrader
 
 import android.content.Context
+import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.pandautils.R
 import com.instructure.pandautils.utils.Const
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -34,7 +36,9 @@ class SpeedGraderViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
     private val repository: SpeedGraderRepository,
     private val assignmentSubmissionRepository: AssignmentSubmissionRepository,
-    private val postPolicyRouter: SpeedGraderPostPolicyRouter
+    private val postPolicyRouter: SpeedGraderPostPolicyRouter,
+    private val speedGraderErrorHolder: SpeedGraderErrorHolder,
+    private val resources: Resources
 ) : ViewModel() {
 
     private val assignmentId: Long = savedStateHandle[Const.ASSIGNMENT_ID]
@@ -63,9 +67,7 @@ class SpeedGraderViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            fetchData()
-        }
+        fetchData()
     }
 
     private fun navigateToPostPolicy(context: Context) {
@@ -78,31 +80,41 @@ class SpeedGraderViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchData() {
-        _uiState.update {
-            it.copy(loading = true)
-        }
-        assignment = assignmentSubmissionRepository.getAssignment(
-            assignmentId = assignmentId,
-            courseId = courseId,
-            forceNetwork = false
-        )
-        val ids = if (submissionIds.isEmpty()) {
-            assignmentSubmissionRepository.getGradeableStudentSubmissions(
-                assignmentId,
-                courseId,
-                false
-            ).map { it.id }
-        } else {
-            submissionIds.toList()
-        }
-        val assignmentDetails = repository.getAssignmentDetails(assignmentId)
-        _uiState.update {
-            it.copy(
-                assignmentName = assignmentDetails.assignment?.title.orEmpty(),
-                courseName = assignmentDetails.assignment?.course?.name.orEmpty(),
-                loading = false,
-                submissionIds = ids
+    private fun fetchData() = viewModelScope.launch {
+        try {
+            _uiState.update {
+                it.copy(loading = true)
+            }
+            assignment = assignmentSubmissionRepository.getAssignment(
+                assignmentId = assignmentId,
+                courseId = courseId,
+                forceNetwork = false
+            )
+            val ids = if (submissionIds.isEmpty()) {
+                assignmentSubmissionRepository.getGradeableStudentSubmissions(
+                    assignmentId,
+                    courseId,
+                    false
+                ).map { it.id }
+            } else {
+                submissionIds.toList()
+            }
+            val assignmentDetails = repository.getAssignmentDetails(assignmentId)
+            _uiState.update {
+                it.copy(
+                    assignmentName = assignmentDetails.assignment?.title.orEmpty(),
+                    courseName = assignmentDetails.assignment?.course?.name.orEmpty(),
+                    loading = false,
+                    submissionIds = ids
+                )
+            }
+        } catch (e: Exception) {
+            _uiState.update {
+                it.copy(loading = false)
+            }
+            speedGraderErrorHolder.postError(
+                message = resources.getString(R.string.generalUnexpectedError),
+                retryAction = ::fetchData
             )
         }
     }
