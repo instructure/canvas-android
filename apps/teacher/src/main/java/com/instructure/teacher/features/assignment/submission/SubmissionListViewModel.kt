@@ -110,7 +110,7 @@ class SubmissionListViewModel @Inject constructor(
             sections = submissionListRepository.getSections(course.id, forceNetwork)
             _uiState.update { it.copy(sections = sections) }
             filterData()
-        } catch (e: Exception) {
+        } catch (_: Exception) {
             _uiState.update { it.copy(error = true, loading = false, refreshing = false) }
         }
     }
@@ -127,7 +127,7 @@ class SubmissionListViewModel @Inject constructor(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE,
                         AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE
                     )
-                } ?: false
+                } == true
 
                 SubmissionListFilter.NOT_GRADED -> submission.submission?.let {
                     (assignment.getState(
@@ -137,7 +137,7 @@ class SubmissionListViewModel @Inject constructor(
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
                         AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
                     ) || !it.isGradeMatchesCurrentSubmission) && submission.submission?.customGradeStatusId == null
-                } ?: false
+                } == true
 
                 SubmissionListFilter.GRADED -> submission.submission?.let {
                     (assignment.getState(
@@ -149,13 +149,11 @@ class SubmissionListViewModel @Inject constructor(
                         AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING,
                         AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED
                     ) && it.isGradeMatchesCurrentSubmission) || submission.submission?.customGradeStatusId != null
-                } ?: false
+                } == true
 
-                SubmissionListFilter.ABOVE_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() }
-                    ?: false
+                SubmissionListFilter.ABOVE_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score >= filterValue.orDefault() } == true
 
-                SubmissionListFilter.BELOW_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score < filterValue.orDefault() }
-                    ?: false
+                SubmissionListFilter.BELOW_VALUE -> submission.submission?.let { !it.excused && it.isGraded && it.score < filterValue.orDefault() } == true
                 // Filtering by ASSIGNMENT_STATE_MISSING here doesn't work because it assumes that the due date has already passed, which isn't necessarily the case when the teacher wants to see
                 // which students haven't submitted yet
                 SubmissionListFilter.MISSING -> submission.submission?.workflowState == "unsubmitted" || submission.submission == null
@@ -165,8 +163,7 @@ class SubmissionListViewModel @Inject constructor(
             .filter {
                 if (selectedSectionIds.isEmpty()) return@filter true
 
-                (it.assignee as? StudentAssignee)?.student?.enrollments?.any { it.courseSectionId in selectedSectionIds }
-                    ?: false
+                (it.assignee as? StudentAssignee)?.student?.enrollments?.any { it.courseSectionId in selectedSectionIds } == true
             }
             .map { getSubmissionUiState(it) }
 
@@ -187,12 +184,11 @@ class SubmissionListViewModel @Inject constructor(
         return SubmissionUiState(
             submissionId = submission.id,
             userName = submission.assignee.name,
-            isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent
-                ?: false,
+            isFakeStudent = (submission.assignee as? StudentAssignee)?.student?.isFakeStudent == true,
             avatarUrl = if (submission.assignee is StudentAssignee) (submission.assignee as StudentAssignee).student.avatarUrl else null,
             tags = getTags(submission.submission),
             grade = getGrade(submission.submission),
-            hidden = submission.submission?.let { it.postedAt == null } ?: false,
+            hidden = submission.submission?.let { it.postedAt == null } == true,
             assigneeId = submission.assigneeId,
             group = submission.assignee is GroupAssignee
         )
@@ -359,7 +355,7 @@ class SubmissionListViewModel @Inject constructor(
                                     true
                                 )
                             }
-                        } catch (e: Exception) {
+                        } catch (_: Exception) {
                             submission.grade ?: "-"
                         }
                     }

@@ -19,15 +19,19 @@ package com.instructure.student.receivers
 
 import android.app.Activity
 import android.content.Context
-
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.HorizonActivity
+import com.instructure.pandautils.receivers.PushExternalReceiver
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.R
 import com.instructure.student.activity.NavigationActivity
-import com.instructure.pandautils.receivers.PushExternalReceiver
 
 class StudentPushExternalReceiver : PushExternalReceiver() {
     override fun getAppColor() = R.color.login_studentAppTheme
 
     override fun getAppName(context: Context): String = context.getString(R.string.student_app_name)
 
-    override fun getStartingActivityClass(): Class<out Activity> = NavigationActivity.startActivityClass
+    override fun getStartingActivityClass(): Class<out Activity> {
+        return if (ApiPrefs.canvasCareerView.orDefault()) HorizonActivity::class.java else NavigationActivity.startActivityClass
+    }
 }

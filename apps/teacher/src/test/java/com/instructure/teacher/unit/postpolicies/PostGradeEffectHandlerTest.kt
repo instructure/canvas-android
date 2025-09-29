@@ -63,13 +63,14 @@ class PostGradeEffectHandlerTest : Assert() {
     private val progressId = "135"
 
     private val speedGraderGradingEventHandler: SpeedGraderGradingEventHandler = mockk(relaxed = true)
+    private val postPolicyManager: PostPolicyManager = mockk(relaxed = true)
 
     @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         view = mockk(relaxed = true)
-        effectHandler = PostGradeEffectHandler(speedGraderGradingEventHandler).apply { view = this@PostGradeEffectHandlerTest.view }
+        effectHandler = PostGradeEffectHandler(speedGraderGradingEventHandler, postPolicyManager).apply { view = this@PostGradeEffectHandlerTest.view }
         consumer = mockk(relaxed = true)
         connection = effectHandler.connect(consumer)
     }
@@ -138,18 +139,17 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = emptyList<String>()
 
-        mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } throws Exception()
+        coEvery { postPolicyManager.hideGradesAsync(assignmentId) } throws Exception()
 
         connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.hideGradesAsync(assignmentId)
+            postPolicyManager.hideGradesAsync(assignmentId)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostFailed)
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test
@@ -158,18 +158,17 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = emptyList<String>()
 
-        mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } returns HideAssignmentGradesMutation.Data(null)
+        coEvery { postPolicyManager.hideGradesAsync(assignmentId) } returns HideAssignmentGradesMutation.Data(null)
 
         connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.hideGradesAsync(assignmentId)
+            postPolicyManager.hideGradesAsync(assignmentId)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostStarted(null))
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test
@@ -178,8 +177,7 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = emptyList<String>()
 
-        mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.hideGradesAsync(assignmentId) } returns HideAssignmentGradesMutation.Data(
+        coEvery { postPolicyManager.hideGradesAsync(assignmentId) } returns HideAssignmentGradesMutation.Data(
             HideAssignmentGradesMutation.HideAssignmentGrades(
                 HideAssignmentGradesMutation.Progress(progressId)
             )
@@ -188,12 +186,12 @@ class PostGradeEffectHandlerTest : Assert() {
         connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.hideGradesAsync(assignmentId)
+            postPolicyManager.hideGradesAsync(assignmentId)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test
@@ -202,9 +200,8 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = listOf("1", "2", "3")
 
-        mockkObject(PostPolicyManager)
         coEvery {
-            PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
+            postPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
         } returns HideAssignmentGradesForSectionsMutation.Data(
             HideAssignmentGradesForSectionsMutation.HideAssignmentGradesForSections(
                 HideAssignmentGradesForSectionsMutation.Progress(progressId)
@@ -214,12 +211,12 @@ class PostGradeEffectHandlerTest : Assert() {
         connection.accept(PostGradeEffect.HideGrades(assignmentId, sections))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
+            postPolicyManager.hideGradesForSectionsAsync(assignmentId, sections)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test
@@ -229,18 +226,17 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = emptyList<String>()
 
-        mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } throws Exception()
+        coEvery { postPolicyManager.postGradesAsync(assignmentId, gradedOnly) } throws Exception()
 
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
+            postPolicyManager.postGradesAsync(assignmentId, gradedOnly)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostFailed)
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test
@@ -250,20 +246,19 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = emptyList<String>()
 
-        mockkObject(PostPolicyManager)
-        coEvery { PostPolicyManager.postGradesAsync(assignmentId, gradedOnly) } returns PostAssignmentGradesMutation.Data(
+        coEvery { postPolicyManager.postGradesAsync(assignmentId, gradedOnly) } returns PostAssignmentGradesMutation.Data(
             PostAssignmentGradesMutation.PostAssignmentGrades(PostAssignmentGradesMutation.Progress(progressId))
         )
 
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.postGradesAsync(assignmentId, gradedOnly)
+            postPolicyManager.postGradesAsync(assignmentId, gradedOnly)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test
@@ -273,9 +268,8 @@ class PostGradeEffectHandlerTest : Assert() {
 
         val sections = listOf("1", "2", "3")
 
-        mockkObject(PostPolicyManager)
         coEvery {
-            PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
+            postPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
         } returns PostAssignmentGradesForSectionsMutation.Data(
             PostAssignmentGradesForSectionsMutation.PostAssignmentGradesForSections(
                 PostAssignmentGradesForSectionsMutation.Progress(progressId)
@@ -285,12 +279,12 @@ class PostGradeEffectHandlerTest : Assert() {
         connection.accept(PostGradeEffect.PostGrades(assignmentId, sections, gradedOnly))
 
         coVerify(timeout = 100) {
-            PostPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
+            postPolicyManager.postGradesForSectionsAsync(assignmentId, gradedOnly, sections)
         }
         verify(timeout = 100) {
             consumer.accept(PostGradeEvent.PostStarted(progressId))
         }
-        confirmVerified(PostPolicyManager, consumer)
+        confirmVerified(postPolicyManager, consumer)
     }
 
     @Test

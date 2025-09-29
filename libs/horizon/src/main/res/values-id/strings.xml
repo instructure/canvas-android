@@ -67,8 +67,8 @@
     <string name="overview">Tinjauan Umum</string>
     <string name="scores">Skor</string>
     <string name="notes">Catatan</string>
-    <string name="assignmentName">Nama tugas</string>
-    <string name="dueDate">Batas Tanggal</string>
+    <string name="scoresSortingAssignmentNameAscending">Nama Tugas (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">Tanggal Batas (terbaru lebih dulu)</string>
     <string name="scoresItemassignmentName">Nama: %1$s</string>
     <string name="scoresItemDueDate">Tanggal: %1$s</string>
     <string name="noDueDate">Tanpa batas waktu</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Tingkat Lanjut</string>
     <string name="accountSupportHeading">Dukung</string>
     <string name="accountGiveFeedbackLabel">Beri umpan balik</string>
+    <string name="accountReportABug">Laporkan masalah</string>
     <string name="accountBetaCommunityLabel">Beta community</string>
     <string name="accountFullNameLabel">Nama lengkap</string>
     <string name="a11yNavigateBack">Navigasikan mundur</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Gagal menerima undangan kursus</string>
     <string name="dashboard_emptyMessage">Anda saat ini tidak terdaftar dalam suatu kursus.</string>
     <string name="learnEmptyMessage">Anda saat ini tidak terdaftar dalam suatu kursus.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% selesai</string>
+    <string name="programsProgressBar_notStarted">Tidak dimulai</string>
+    <string name="programsCourseCard_enrollButton">Daftar</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Dibutuhkan</string>
+    <string name="programCourseTag_optional">Opsional</string>
+    <string name="programCourseTag_locked">Terkunci</string>
+    <string name="programCourseTag_completed">Selesai</string>
+    <string name="programCourseTag_enrolled">Didaftarkan</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Selesaikan %1$d dari %2$d kursus</item>
+        <item quantity="other">Selesaikan %1$d dari %2$d kursus</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Gagal memuat ulang program.</string>
+    <string name="programSwitcher_programOverview">Tinjauan umum program</string>
+    <string name="programSwitcher_goBack">Semua</string>
+    <string name="learnScreen_partOfProgram">Bagian dari %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Kursus tidak dapat dibuka.</string>
 </resources>

@@ -908,6 +908,15 @@
         <item quantity="other">%s pwynt</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">pwynt</item>
+        <item quantity="other">pwynt</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f pwynt</item>
+        <item quantity="other">\/ %.0f pwynt</item>
+    </plurals>
     <string name="timeLimit">Terfyn Amser</string>
     <string name="newPushNotifications">%1$s Hysbysiadau Newydd</string>
     <string name="like">yn hoffi</string>
@@ -2006,6 +2015,7 @@
     <string name="inboxSignatureSwitchLabel">Llofnod</string>
     <string name="inboxSignatureTextfieldHeader">Testun llofnod</string>
     <string name="due_dateTime">Erbyn: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Wedi cyflwyno: %1$s, %2$s</string>
     <string name="noDueDate">Dim Dyddiad Erbyn</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Angen Graddio</string>
@@ -2013,6 +2023,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d pwynt</item>
         <item quantity="other">%d pwynt</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f pwynt)</item>
+        <item quantity="other">(%.0f pwynt)</item>
     </plurals>
     <string name="noAssignments">Dim aseiniadau</string>
     <string name="assignmentGroup">Grŵp o Aseiniadau</string>
@@ -2069,4 +2083,52 @@
     <string name="widgetSingleGradeSelectCourse">Dewch i ni ddewis cwrs</string>
     <string name="widgetGradesErrorLoadingCourses">Gwall wrth lwytho cyrsiau.</string>
     <string name="settingsSwitchExperience">Newid i Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Gradd; a Chyfarwyddyd Sgorio</string>
+    <string name="speedGraderDetailsTabTitle">Manylion</string>
+    <string name="a11y_contentDescription_expandPanel">Ehangu\'r panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Crebachu\'r panel</string>
+    <string name="pointGradeHint">Ysgrifennwch y sgôr yma</string>
+    <string name="percentageGradeHint">Ysgrifennwch y ganran yma</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Gradd Llythyren</string>
+    <string name="daysLate">Diwrnodau yn hwyr</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s pwynt</item>
+        <item quantity="other">%s / %s pwynt</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Cosb am fod yn hwyr</string>
+    <string name="gradingStatus_none">Dim</string>
+    <string name="gradingStatus_late">Yn Hwyr</string>
+    <string name="gradingStatus_missing">Ar goll</string>
+    <string name="gradingStatus_extended">Estynedig</string>
+    <string name="gradingStatus_excused">Wedi esgusodi</string>
+    <string name="status">Statws</string>
+    <string name="speedGraderStudentNotes">Nodiadau Myfyrwyr</string>
+    <string name="speedGraderStudentNotesLoading">Wrthi’n llwytho nodiadau\'r myfyriwr</string>
+    <string name="speedGraderStudentNotesErrorTitle">Wps! Aeth rhywbeth o’i le</string>
+    <string name="speedGraderStudentNotesErrorDescription">Rydyn ni’n cael trafferth dangos nodiadau’r myfyriwr.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Adnewyddu</string>
+    <string name="not_graded">Heb eu graddio</string>
+    <string name="speedGraderSubmissionDetails">Manylion cyflwyniad</string>
+    <string name="speedGraderSubmissionDetailsLoading">Wrthi’n llwytho’r manylion y cyflwyniad</string>
+    <string name="speedGraderWordCount">Cyfrif Geiriau</string>
+    <string name="rubricsTitle">Cyfarwyddiadau Sgorio</string>
+    <string name="rubricScore">Sgôr</string>
+    <string name="rubricScoreHint">Ysgrifennwch y sgôr yma</string>
+    <string name="speedGraderCommentsTitle">Sylwadau (%s)</string>
+    <string name="anonymousGradingStudentLabel">Myfyriwr</string>
+    <string name="anonymousGradingUserLabel">Defnyddiwr Dienw</string>
+    <string name="rubricNote">Nodyn Cyfarwyddyd Sgorio</string>
+    <string name="content_description_edit_rubric_comment">Golygu nodyn cyfarwyddyd sgorio</string>
+    <string name="rubricNoteHint">Nodyn</string>
+    <string name="a11y_sendRubricNoteContentDescription">Anfon nodyn cyfarwyddyd sgorio</string>
+    <string name="select_attachment_type">Dewis math o atodiad</string>
+    <string name="choose_files">Dewis Ffeiliau</string>
+    <string name="a11y_expanded">Wedi ehangu</string>
+    <string name="a11y_collapsed">Wedi crebachu</string>
+    <string name="excuseStudent">Esgusodi Myfyriwr</string>
+    <string name="detailsEmptyMessage">Nid oes gennym ragor o fanylion ar gyfer y Myfyriwr hwn na’r Aseiniad</string>
+    <string name="daysLateHint">Rhowch nifer y \'diwrnodau yn hwyr\'.</string>
+    <string name="reply_to_topic">Ateb pwnc</string>
+    <string name="additional_replies">Ymatebion ychwanegol (%d)</string>
 </resources>
