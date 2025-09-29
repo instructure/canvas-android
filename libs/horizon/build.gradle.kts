@@ -3,7 +3,7 @@ plugins {
     id("org.jetbrains.kotlin.android")
     id("org.jetbrains.kotlin.plugin.compose")
     id("kotlin-android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
     id("dagger.hilt.android.plugin")
     kotlin("plugin.serialization") version "2.1.20"
 }
@@ -64,9 +64,9 @@ dependencies {
 
     implementation(Libs.NAVIGATION_COMPOSE)
     implementation(Libs.HILT)
-    kapt(Libs.HILT_COMPILER)
+    ksp(Libs.HILT_COMPILER)
     implementation(Libs.HILT_ANDROIDX_WORK)
-    kapt(Libs.HILT_ANDROIDX_COMPILER)
+    ksp(Libs.HILT_ANDROIDX_COMPILER)
 
     implementation(Libs.PSPDFKIT)
 

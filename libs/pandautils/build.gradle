@@ -19,6 +19,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
 apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 apply plugin: 'org.jetbrains.kotlin.plugin.compose'
 
@@ -47,6 +48,9 @@ android {
                         new RoomSchemaArgProvider(new File(projectDir, "schemas"))
                 )
             }
+        }
+        ksp {
+            arg("room.schemaLocation", "$projectDir/schemas".toString())
         }
     }
 
@@ -162,7 +166,7 @@ dependencies {
     api (Libs.GLIDE_OKHTTP) {
         exclude group: "com.android.support"
     }
-    kapt Libs.GLIDE_COMPILER
+    ksp Libs.GLIDE_COMPILER
 
     api Libs.ANDROID_SVG
 
@@ -201,9 +205,9 @@ dependencies {
 
     /* DI */
     implementation Libs.HILT
-    kapt Libs.HILT_COMPILER
+    ksp Libs.HILT_COMPILER
     implementation Libs.HILT_ANDROIDX_WORK
-    kapt Libs.HILT_ANDROIDX_COMPILER
+    ksp Libs.HILT_ANDROIDX_COMPILER
 
     /* AAC */
     implementation Libs.VIEW_MODEL
@@ -214,7 +218,7 @@ dependencies {
 
     /* ROOM */
     implementation Libs.ROOM
-    kapt Libs.ROOM_COMPILER
+    ksp Libs.ROOM_COMPILER
     implementation Libs.ROOM_COROUTINES
 
     /* Compose */
@@ -249,7 +253,8 @@ dependencies {
     // More details here: classpath https://github.com/google/ExoPlayer/issues/7905
     implementation 'com.google.guava:guava:29.0-android'
 
-    kaptTest Libs.ANDROIDX_DATABINDING_COMPILER
+    // Data Binding compiler - requires KAPT (KSP not fully supported yet)
+    kapt Libs.ANDROIDX_DATABINDING_COMPILER
 
     androidTestImplementation Libs.KOTLIN_COROUTINES_TEST
     androidTestImplementation (project(':espresso')) {

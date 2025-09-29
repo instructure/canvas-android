@@ -34,6 +34,7 @@ buildscript {
         classpath Plugins.FIREBASE_CRASHLYTICS
         if (project.coverageEnabled) { classpath Plugins.JACOCO_ANDROID }
         classpath Plugins.HILT
+        classpath Plugins.KSP
     }
 }
 

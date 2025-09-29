@@ -18,6 +18,7 @@ object Versions {
     /* Kotlin */
     const val KOTLIN = "2.0.21"
     const val KOTLIN_COROUTINES = "1.9.0"
+    const val KSP = "2.0.21-1.0.27"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.4.2"
@@ -31,7 +32,7 @@ object Versions {
     const val HILT_ANDROIDX = "1.2.0"
     const val LIFECYCLE = "2.8.6"
     const val FRAGMENT = "1.8.6"
-    const val WORK_MANAGER = "2.10.0"
+    const val WORK_MANAGER = "2.10.5"
     const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
@@ -218,4 +219,5 @@ object Plugins {
     const val GOOGLE_SERVICES = "com.google.gms:google-services:${Versions.GOOGLE_SERVICES}"
     const val JACOCO_ANDROID = "com.dicedmelon.gradle:jacoco-android:${Versions.JACOCO_ANDROID}"
     const val HILT = "com.google.dagger:hilt-android-gradle-plugin:${Versions.HILT}"
+    const val KSP = "com.google.devtools.ksp:com.google.devtools.ksp.gradle.plugin:${Versions.KSP}"
 }

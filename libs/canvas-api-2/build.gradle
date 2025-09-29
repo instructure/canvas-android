@@ -19,7 +19,7 @@ apply plugin: 'com.android.library'
 apply plugin: 'com.apollographql.apollo'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
 def pineDebugBaseUrl = "https://pine-api-dev.domain-svcs.nonprod.inseng.io"
@@ -202,10 +202,10 @@ dependencies {
     implementation Libs.FIREBASE_CONFIG
 
     implementation Libs.HILT
-    kapt Libs.HILT_COMPILER
+    ksp Libs.HILT_COMPILER
 
     implementation Libs.ROOM
-    kapt Libs.ROOM_COMPILER
+    ksp Libs.ROOM_COMPILER
 
     implementation Libs.PENDO
 
