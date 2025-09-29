@@ -17,17 +17,19 @@
 package com.instructure.horizon.features.inbox.navigation
 
 import androidx.compose.animation.AnimatedContentTransitionScope
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavBackStackEntry
+import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeScreen
 import com.instructure.horizon.features.inbox.compose.HorizonInboxComposeViewModel
@@ -41,18 +43,15 @@ import com.instructure.horizon.horizonui.animation.mainEnterTransition
 import com.instructure.horizon.horizonui.animation.mainExitTransition
 import com.instructure.horizon.horizonui.animation.popEnterTransition
 import com.instructure.horizon.horizonui.animation.popExitTransition
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.utils.orDefault
 
-@Composable
-fun HorizonInboxNavigation(
-    mainNavController: NavHostController,
-    navController: NavHostController = rememberNavController(),
-    modifier: Modifier = Modifier
+fun NavGraphBuilder.horizonInboxNavigation(
+    navController: NavHostController,
 ) {
-    NavHost(
-        navController = navController,
-        startDestination = HorizonInboxRoute.InboxList.route,
-        modifier = modifier
+    navigation(
+        route = MainNavigationRoute.Inbox.route,
+        startDestination = HorizonInboxRoute.InboxList.route
     ) {
         composable(
             HorizonInboxRoute.InboxList.route,
@@ -63,7 +62,7 @@ fun HorizonInboxNavigation(
         ) {
             val viewModel = hiltViewModel<HorizonInboxListViewModel>()
             val uiState by viewModel.uiState.collectAsState()
-            HorizonInboxListScreen(uiState, mainNavController, navController)
+            HorizonInboxListScreen(uiState, navController)
         }
         composable(
             HorizonInboxRoute.InboxDetails.route,
@@ -103,6 +102,69 @@ fun HorizonInboxNavigation(
             val pickerState by pickerViewModel.uiState.collectAsState()
 
             HorizonInboxComposeScreen(uiState, pickerState, navController)
+        }
+
+        // Conversation Details from deeplink
+        composable(
+            HorizonInboxRoute.InboxDetailsDeepLink.route,
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+            arguments = listOf(
+                navArgument(HorizonInboxRoute.InboxDetails.ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}/conversations/{${HorizonInboxRoute.InboxDetails.ID}}"
+                }
+            )
+        ) { backStackEntry ->
+            LaunchedEffect(Unit) {
+                val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
+                navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.Inbox, null)) {
+                    popUpTo(HorizonInboxRoute.InboxDetailsDeepLink.route) {
+                        inclusive = true
+                    }
+                }
+            }
+        }
+
+        // Announcement Details from deeplink
+        composable(
+            HorizonInboxRoute.CourseAnnouncementDetailsDeepLink.route,
+            enterTransition = { mainEnterTransition },
+            exitTransition = { mainExitTransition },
+            popEnterTransition = { mainEnterTransition },
+            popExitTransition = { mainExitTransition },
+            arguments = listOf(
+                navArgument(HorizonInboxRoute.InboxDetails.ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+                navArgument(HorizonInboxRoute.InboxDetails.COURSE_ID) {
+                    type = androidx.navigation.NavType.LongType
+                },
+            ),
+            deepLinks = listOf(
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}/courses/{${HorizonInboxRoute.InboxDetails.COURSE_ID}}/announcements/{${HorizonInboxRoute.InboxDetails.ID}}"
+                },
+                navDeepLink {
+                    uriPattern = "${ApiPrefs.fullDomain}/courses/{${HorizonInboxRoute.InboxDetails.COURSE_ID}}/discussion_topics/{${HorizonInboxRoute.InboxDetails.ID}}"
+                }
+            )
+        ) { backStackEntry ->
+            LaunchedEffect(Unit) {
+                val courseId = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.COURSE_ID) ?: return@LaunchedEffect
+                val id = backStackEntry.arguments?.getLong(HorizonInboxRoute.InboxDetails.ID) ?: return@LaunchedEffect
+                navController.navigate(HorizonInboxRoute.InboxDetails.route(id, HorizonInboxItemType.CourseNotification, courseId)) {
+                    popUpTo(HorizonInboxRoute.CourseAnnouncementDetailsDeepLink.route) {
+                        inclusive = true
+                    }
+                }
+            }
         }
     }
 }

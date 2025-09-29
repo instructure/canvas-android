@@ -332,7 +332,7 @@ private fun RubricCriterion(
                 Spacer(modifier = Modifier.weight(1f))
                 BasicTextFieldWithHintDecoration(
                     modifier = Modifier.padding(end = 8.dp),
-                    value = enteredPoint?.stringValueWithoutTrailingZeros,
+                    value = enteredPoint?.stringValueWithoutTrailingZeros.orEmpty(),
                     onValueChange = { point ->
                         enteredPoint = point.toDoubleOrNull()
                         onPointChanged(enteredPoint.orDefault(), rubricCriterion.id)

@@ -57,7 +57,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
     private var apiURL: String? by NullableStringArg()
     private var quiz: Quiz? by NullableParcelableArg()
     @get:PageViewUrlParam("quizId")
-    var quizId: Long by LongArg()
+    var quizId: Long by LongArg(key = RouterParams.QUIZ_ID)
     private var isTakingQuiz = false
 
     override fun title(): String = getString(R.string.quizzes)
@@ -210,11 +210,29 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
 
     private suspend fun processQuizDetails(url: String) {
         // Only show the lock if submissions are empty, otherwise let them view their submission
-        if (quiz?.lockInfo != null && awaitApi<QuizSubmissionResponse> { QuizManager.getFirstPageQuizSubmissions(canvasContext, quiz!!.id, true, it) }.quizSubmissions.isEmpty()) {
-            populateWebView(LockInfoHTMLHelper.getLockedInfoHTML(quiz?.lockInfo!!, requireContext(), R.string.lockedQuizDesc))
+        if (quiz?.lockInfo != null && awaitApi<QuizSubmissionResponse> {
+                QuizManager.getFirstPageQuizSubmissions(
+                    canvasContext,
+                    quiz!!.id,
+                    true,
+                    it
+                )
+            }.quizSubmissions.isEmpty()) {
+            populateWebView(
+                LockInfoHTMLHelper.getLockedInfoHTML(
+                    quiz?.lockInfo!!,
+                    requireContext(),
+                    R.string.lockedQuizDesc
+                )
+            )
         } else {
             val authenticatedUrl = tryOrNull {
-                awaitApi<AuthenticatedSession> { OAuthManager.getAuthenticatedSession(url, it) }.sessionUrl
+                awaitApi<AuthenticatedSession> {
+                    OAuthManager.getAuthenticatedSession(
+                        url, it,
+                        ApiPrefs.overrideDomains[canvasContext.id]
+                    )
+                }.sessionUrl
             }
             getCanvasWebView()?.loadUrl(authenticatedUrl ?: url, APIHelper.referrer)
         }
@@ -276,6 +294,7 @@ class BasicQuizViewFragment : InternalWebviewFragment() {
                     Bundle().apply {
                         putString(Const.URL, url)
                         putParcelable(Const.QUIZ, quiz)
+                        putLong(RouterParams.QUIZ_ID, quiz.id)
                     }))
         }
     }

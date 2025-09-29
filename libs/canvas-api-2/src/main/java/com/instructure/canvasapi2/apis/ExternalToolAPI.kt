@@ -21,23 +21,28 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.LTITool
+import com.instructure.canvasapi2.utils.DataResult
 
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Tag
 import retrofit2.http.Url
 
 
-internal object ExternalToolAPI {
+object ExternalToolAPI {
     // This returns a paged response, so either we have to depaginate, or pull down 100, since we're typically looking
     // for the Studio LTI.
-    internal interface ExternalToolInterface {
+    interface ExternalToolInterface {
         @GET("{contextId}/external_tools?include_parents=true")
         fun getExternalToolsForCanvasContext(@Path("contextId") contextId: Long): Call<List<LTITool>>
 
         @GET("external_tools/visible_course_nav_tools")
         fun getExternalToolsForCourses(@Query("context_codes[]", encoded = true) contextCodes: List<String>): Call<List<LTITool>>
+
+        @GET("external_tools/visible_course_nav_tools")
+        suspend fun getExternalToolsForCourses(@Query("context_codes[]", encoded = true) contextCodes: List<String>, @Tag params: RestParams): DataResult<List<LTITool>>
 
         @GET
         fun getLtiFromUrl(@Url url: String): Call<LTITool>

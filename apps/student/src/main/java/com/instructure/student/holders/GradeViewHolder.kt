@@ -79,7 +79,7 @@ class GradeViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                 points.setGone()
             } else {
                 points.setVisible()
-                val (grade, contentDescription) = assignment.getGrade(submission, context, restrictQuantitativeData, gradingScheme)
+                val (grade, contentDescription) = assignment.getGrade(submission, context.resources, restrictQuantitativeData, gradingScheme)
                 points.text = grade
                 points.contentDescription = contentDescription
             }

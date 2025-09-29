@@ -67,8 +67,8 @@
     <string name="overview">Yfirlit</string>
     <string name="scores">Einkunnir</string>
     <string name="notes">Athugasemdir</string>
-    <string name="assignmentName">Titill verkefnis</string>
-    <string name="dueDate">Skiladagur</string>
+    <string name="scoresSortingAssignmentNameAscending">Heiti verkefnis (A-Ö)</string>
+    <string name="scoresSortingDueDateDescending">Skiladagur (nýjast fyrst)</string>
     <string name="scoresItemassignmentName">Nafn: %1$s</string>
     <string name="scoresItemDueDate">Dagsetning: %1$s</string>
     <string name="noDueDate">Enginn skiladagur</string>
@@ -121,6 +121,7 @@
     <string name="accountAdvancedLabel">Ítarlegra</string>
     <string name="accountSupportHeading">Stuðningur</string>
     <string name="accountGiveFeedbackLabel">Veita endurgjöf</string>
+    <string name="accountReportABug">Tilkynna um villu</string>
     <string name="accountBetaCommunityLabel">Beta-samfélagið</string>
     <string name="accountFullNameLabel">Fullt nafn</string>
     <string name="a11yNavigateBack">Fara til baka</string>
@@ -327,4 +328,22 @@
     <string name="dashboard_courseInviteFailed">Boð í námskeið ekki samþykkt</string>
     <string name="dashboard_emptyMessage">Þú ert ekki innritaður/innrituð í námskeið.</string>
     <string name="learnEmptyMessage">Þú ert ekki innritaður/innrituð í námskeið.</string>
+    <string name="programsProgressBar_percentComplete">%s\%% lokið</string>
+    <string name="programsProgressBar_notStarted">Ekki byrjað</string>
+    <string name="programsCourseCard_enrollButton">Innrita</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">Krafist</string>
+    <string name="programCourseTag_optional">Valkvætt</string>
+    <string name="programCourseTag_locked">Læst</string>
+    <string name="programCourseTag_completed">Lokið</string>
+    <string name="programCourseTag_enrolled">Innritaður</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="one">Klára %1$d af %2$d námskeiði</item>
+        <item quantity="other">Klára %1$d af %2$d námskeiðum</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">Ekki tókst að endurglæða braut.</string>
+    <string name="programSwitcher_programOverview">Yfirlit yfir braut</string>
+    <string name="programSwitcher_goBack">Allt</string>
+    <string name="learnScreen_partOfProgram">Hluti af %s</string>
+    <string name="learnScreen_courseCannotBeOpened">Ekki er hægt að opna námskeiðið.</string>
 </resources>
