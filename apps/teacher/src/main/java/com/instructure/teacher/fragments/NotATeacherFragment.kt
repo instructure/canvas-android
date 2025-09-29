@@ -19,6 +19,8 @@ package com.instructure.teacher.fragments
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import com.instructure.loginapi.login.tasks.LogoutTask
 import com.instructure.pandautils.analytics.SCREEN_VIEW_NOT_A_TEACHER
@@ -53,19 +55,11 @@ class NotATeacherFragment : BaseFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         parentLink.setOnClickListener {
-            startActivity(playStoreIntent(PARENT_ID))
-            TeacherLogoutTask(
-                LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
-                alarmScheduler = alarmScheduler
-            ).execute()
+            openApp(PARENT_ID)
         }
 
         studentLink.setOnClickListener {
-            startActivity(playStoreIntent(CANVAS_ID))
-            TeacherLogoutTask(
-                LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
-                alarmScheduler = alarmScheduler
-            ).execute()
+            openApp(CANVAS_ID)
         }
 
         login.setOnClickListener {
@@ -77,4 +71,19 @@ class NotATeacherFragment : BaseFragment() {
     }
 
     private fun playStoreIntent(s: String): Intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(MARKET_URI_PREFIX + s) }
+
+    private fun openApp(packageName: String) {
+        Handler(Looper.getMainLooper()).postDelayed( {
+            val launchIntent = requireContext().packageManager.getLaunchIntentForPackage(packageName)
+            if (launchIntent != null) {
+                startActivity(launchIntent)
+            } else {
+                startActivity(playStoreIntent(packageName))
+            }
+        }, 1000)
+        TeacherLogoutTask(
+            LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
+            alarmScheduler = alarmScheduler
+        ).execute()
+    }
 }
