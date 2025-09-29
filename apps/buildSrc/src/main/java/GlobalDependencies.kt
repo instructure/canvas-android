@@ -21,10 +21,10 @@ object Versions {
     const val KSP = "2.0.21-1.0.27"
 
     /* Google, Play Services */
-    const val GOOGLE_SERVICES = "4.4.2"
+    const val GOOGLE_SERVICES = "4.4.3"
 
     /* Others */
-    const val APOLLO = "4.2.0"
+    const val APOLLO = "4.3.3"
     const val PSPDFKIT = "2024.8.0"
     const val PHOTO_VIEW = "2.3.0"
     const val MOBIUS = "1.2.1"
