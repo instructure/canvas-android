@@ -20,7 +20,7 @@ repositories {
 }
 
 val agpVersion= "8.6.1"
-val kotlinVersion = "2.0.21"
+val kotlinVersion = "2.2.0"
 
 dependencies {
     implementation("com.android.tools.build:gradle:$agpVersion")

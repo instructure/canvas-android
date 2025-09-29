@@ -16,9 +16,9 @@ object Versions {
     const val JACOCO_ANDROID = "0.1.5"
 
     /* Kotlin */
-    const val KOTLIN = "2.0.21"
+    const val KOTLIN = "2.2.0"
     const val KOTLIN_COROUTINES = "1.9.0"
-    const val KSP = "2.0.21-1.0.27"
+    const val KSP = "2.2.0-2.0.2"
 
     /* Google, Play Services */
     const val GOOGLE_SERVICES = "4.4.3"
@@ -34,8 +34,8 @@ object Versions {
     const val FRAGMENT = "1.8.9"
     const val WORK_MANAGER = "2.10.5"
     const val GLIDE_VERSION = "5.0.5"
-    const val RETROFIT = "2.11.0"
-    const val OKHTTP = "4.12.0"
+    const val RETROFIT = "3.0.0"
+    const val OKHTTP = "5.1.0"
     const val ROOM = "2.7.0"
     const val HAMCREST = "2.2"
     const val NAVIGATION = "2.8.9"
