@@ -114,8 +114,9 @@ private fun DashboardCourseSectionContent(
 ) {
     val pagerstate = rememberPagerState { state.courses.size }
 
-    Column {
-
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         state.programs.forEach { programCardState ->
             DashboardCourseItem(
                 programCardState,
@@ -163,7 +164,6 @@ private fun DashboardCourseSectionContent(
                         )
                     }
                     .scale(scaleAnimation)
-                    .align(Alignment.CenterHorizontally)
             )
         }
 
@@ -190,9 +190,14 @@ private fun DashboardCourseItem(
     homeNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    DashboardCourseCardContent(
-        cardState, { handleClickAction(it, mainNavController, homeNavController) }, modifier
-    )
+    Box(
+        contentAlignment = Alignment.Center,
+        modifier = Modifier.fillMaxWidth()
+    ){
+        DashboardCourseCardContent(
+            cardState, { handleClickAction(it, mainNavController, homeNavController) }, modifier
+        )
+    }
 }
 
 @Composable
