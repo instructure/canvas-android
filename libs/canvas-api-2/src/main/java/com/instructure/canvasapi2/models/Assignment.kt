@@ -118,7 +118,9 @@ data class Assignment(
         val isHiddenInGradeBook: Boolean = false,
         @SerializedName("sub_assignment_tag")
         val subAssignmentTag: String? = null,
-        val checkpoints: List<Checkpoint> = emptyList()
+        val checkpoints: List<Checkpoint> = emptyList(),
+        @SerializedName("has_overrides")
+        val hasOverrides: Boolean = false
 ) : CanvasModel<Assignment>() {
     override val comparisonDate get() = dueDate
     override val comparisonString get() = dueAt

@@ -17,17 +17,19 @@ package com.instructure.horizon.features.dashboard
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
+    private val dashboardRepository: DashboardRepository,
     private val themePrefs: ThemePrefs
 ) : ViewModel() {
 
@@ -35,8 +37,11 @@ class DashboardViewModel @Inject constructor(
     val uiState = _uiState.asStateFlow()
 
     init {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             loadLogo()
+            loadUnreadCount()
+        } catch {
+
         }
     }
 
@@ -48,5 +53,19 @@ class DashboardViewModel @Inject constructor(
             block = { _uiState.update { it.copy(logoUrl = themePrefs.mobileLogoUrl) } },
             validate = { themePrefs.mobileLogoUrl.isNotEmpty() }
         )
+    }
+
+    private suspend fun loadUnreadCount() {
+        val unreadCounts = dashboardRepository.getUnreadCounts(true)
+        val unreadConversations = unreadCounts.firstOrNull { it.type == "Conversation" }?.count ?: 0
+        val unreadNotifications = unreadCounts.filter { it.type == "Message" }.sumOf { it.unreadCount }
+        _uiState.update {
+            it.copy(
+                unreadCountState = DashboardUnreadState(
+                    unreadConversations = unreadConversations,
+                    unreadNotifications = unreadNotifications
+                )
+            )
+        }
     }
 }

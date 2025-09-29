@@ -908,6 +908,15 @@
         <item quantity="other">%s mata</item>
     </plurals>
 
+    <plurals name="pointsPts">
+        <item quantity="one">mata</item>
+        <item quantity="other">mata</item>
+    </plurals>
+
+    <plurals name="pointsPossible">
+        <item quantity="one">\/ %.0f mata</item>
+        <item quantity="other">\/ %.0f mata</item>
+    </plurals>
     <string name="timeLimit">Had Masa</string>
     <string name="newPushNotifications">%1$s Pemberitahuan Baharu</string>
     <string name="like">like</string>
@@ -2012,6 +2021,7 @@
     <string name="inboxSignatureSwitchLabel">Tandatangan</string>
     <string name="inboxSignatureTextfieldHeader">Teks tandatangan</string>
     <string name="due_dateTime">Cukup tempoh: %1$s, %2$s</string>
+    <string name="submitted_dateTime">Diserahkan: %1$s, %2$s</string>
     <string name="noDueDate">Tiada Tarikh Siap</string>
     <string name="assignmentPointsPerMaximum">%1$s / %2$s</string>
     <string name="needsGradingCount">%1$s Memerlukan Penggredan</string>
@@ -2019,6 +2029,10 @@
     <plurals name="assignmentListMaxpoints">
         <item quantity="one">%d mata</item>
         <item quantity="other">%d mata</item>
+    </plurals>
+    <plurals name="percentGradeScore">
+        <item quantity="one">(%.0f mata)</item>
+        <item quantity="other">(%.0f mata)</item>
     </plurals>
     <string name="noAssignments">Tiada tugasan</string>
     <string name="assignmentGroup">Kumpulan Tugasan</string>
@@ -2075,4 +2089,52 @@
     <string name="widgetSingleGradeSelectCourse">Mari pilih kursus</string>
     <string name="widgetGradesErrorLoadingCourses">Ralat berlaku semasa memuatkan kursus.</string>
     <string name="settingsSwitchExperience">Tukar kepada Canvas Career</string>
+    <string name="speedGraderGradeTabTitle">Gred &amp; Rubrik</string>
+    <string name="speedGraderDetailsTabTitle">Butiran</string>
+    <string name="a11y_contentDescription_expandPanel">Kembangkan panel</string>
+    <string name="a11y_contentDescription_collapsePanel">Runtuhkan panel</string>
+    <string name="pointGradeHint">Tulis skor di sini</string>
+    <string name="percentageGradeHint">Tulis peratusan di sini</string>
+    <string name="completeIncompleteGradeScore">%.0f / %.0f</string>
+    <string name="letterGrade">Gred Huruf</string>
+    <string name="daysLate">Hari lewat</string>
+    <plurals name="pointTotal">
+        <item quantity="one">%s / %s mata</item>
+        <item quantity="other">%s / %s mata</item>
+    </plurals>
+    <string name="speedGraderLatePenaltyTitle">Denda Lewat</string>
+    <string name="gradingStatus_none">Tiada</string>
+    <string name="gradingStatus_late">Lewat</string>
+    <string name="gradingStatus_missing">Tiada</string>
+    <string name="gradingStatus_extended">Dilanjutkan</string>
+    <string name="gradingStatus_excused">Dimaafkan</string>
+    <string name="status">Status</string>
+    <string name="speedGraderStudentNotes">Nota Pelajar</string>
+    <string name="speedGraderStudentNotesLoading">Memuatkan nota Pelajar</string>
+    <string name="speedGraderStudentNotesErrorTitle">Op! Sesuatu Tidak Kena</string>
+    <string name="speedGraderStudentNotesErrorDescription">Kami menghadapi masalah untuk menunjukkan nota pelajar.</string>
+    <string name="speedGraderStudentNotesErrorButtonText">Segar semula</string>
+    <string name="not_graded">Tidak Bergred</string>
+    <string name="speedGraderSubmissionDetails">Butiran Serahan</string>
+    <string name="speedGraderSubmissionDetailsLoading">Memuatkan butiran Serahan</string>
+    <string name="speedGraderWordCount">Bilangan Perkataan</string>
+    <string name="rubricsTitle">Rubrik</string>
+    <string name="rubricScore">Skor</string>
+    <string name="rubricScoreHint">Tulis skor di sini</string>
+    <string name="speedGraderCommentsTitle">Komen (%s)</string>
+    <string name="anonymousGradingStudentLabel">Pelajar</string>
+    <string name="anonymousGradingUserLabel">Pengguna Tanpa Nama</string>
+    <string name="rubricNote">Nota Rubrik</string>
+    <string name="content_description_edit_rubric_comment">Edit nota rubrik</string>
+    <string name="rubricNoteHint">Nota</string>
+    <string name="a11y_sendRubricNoteContentDescription">Hantar nota rubrik</string>
+    <string name="select_attachment_type">Pilih Jenis Kepilan</string>
+    <string name="choose_files">Pilih Fail</string>
+    <string name="a11y_expanded">Kembangkan</string>
+    <string name="a11y_collapsed">Dikuncupkan</string>
+    <string name="excuseStudent">Maafkan Pelajar</string>
+    <string name="detailsEmptyMessage">Kami tidak mempunyai butiran lanjut untuk Pelajar dan Tugasan ini</string>
+    <string name="daysLateHint">Tulis hari yang lewat</string>
+    <string name="reply_to_topic">Balas kepada topik</string>
+    <string name="additional_replies">Balasan tambahan (%d)</string>
 </resources>

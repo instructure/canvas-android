@@ -66,6 +66,11 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.horizon.horizonui.molecules.Badge
+import com.instructure.horizon.horizonui.molecules.BadgeContent
+import com.instructure.horizon.horizonui.molecules.BadgeType
+import com.instructure.horizon.horizonui.molecules.Button
+import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
@@ -194,7 +199,15 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
                 mainNavController.navigate(MainNavigationRoute.Notification.route)
             },
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.Inverse
+            color = IconButtonColor.Inverse,
+            badge = if (uiState.unreadCountState.unreadNotifications > 0) {
+                {
+                    Badge(
+                        content = BadgeContent.Color,
+                        type = BadgeType.Inverse
+                    )
+                }
+            } else null
         )
         HorizonSpace(SpaceSize.SPACE_8)
         IconButton(
@@ -202,7 +215,15 @@ private fun HomeScreenTopBar(uiState: DashboardUiState, mainNavController: NavCo
             contentDescription = stringResource(R.string.a11y_dashboardInboxContentDescription),
             onClick = { mainNavController.navigate(MainNavigationRoute.Inbox.route) },
             elevation = HorizonElevation.level4,
-            color = IconButtonColor.Inverse
+            color = IconButtonColor.Inverse,
+            badge = if (uiState.unreadCountState.unreadConversations > 0) {
+                {
+                    Badge(
+                        content = BadgeContent.Color,
+                        type = BadgeType.Inverse
+                    )
+                }
+            } else null
         )
     }
 }

@@ -17,4 +17,10 @@ package com.instructure.horizon.features.dashboard
 
 data class DashboardUiState(
     val logoUrl: String = "",
+    val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
+)
+
+data class DashboardUnreadState(
+    val unreadConversations: Int = 0,
+    val unreadNotifications: Int = 0,
 )

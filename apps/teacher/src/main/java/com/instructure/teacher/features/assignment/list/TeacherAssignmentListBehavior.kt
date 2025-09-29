@@ -21,6 +21,7 @@ import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradingPeriod
+import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.assignments.list.AssignmentGroupItemState
 import com.instructure.pandautils.features.assignments.list.AssignmentListBehavior
 import com.instructure.pandautils.features.assignments.list.AssignmentListFragment
@@ -36,12 +37,14 @@ class TeacherAssignmentListBehavior : AssignmentListBehavior {
     override fun getAssignmentGroupItemState(
         course: Course,
         assignment: Assignment,
-        customStatuses: List<CustomGradeStatusesQuery.Node>
+        customStatuses: List<CustomGradeStatusesQuery.Node>,
+        checkpoints: List<DiscussionCheckpointUiState>
     ): AssignmentGroupItemState {
         return AssignmentGroupItemState(
             course,
             assignment,
             customStatuses,
+            checkpoints,
             showPublishStateIcon = true,
             showClosedState = true,
             showDueDate = true,

@@ -327,4 +327,7 @@
     <string name="dashboard_courseInviteFailed">Theip ar ghlacadh le cuireadh an chúrsa</string>
     <string name="dashboard_emptyMessage">Níl tú rollaithe i gcúrsa faoi láthair.</string>
     <string name="learnEmptyMessage">Níl tú rollaithe i gcúrsa faoi láthair.</string>
+    <string name="programsProgressBar_percentComplete">%s críochnaithe</string>
+    <string name="programsProgressBar_notStarted">Níor tosaíodh</string>
+    <string name="programsCourseCard_enrollButton">Rollaigh</string>
 </resources>

@@ -20,15 +20,14 @@ import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.QuizSubmissionResponse
 import com.instructure.canvasapi2.models.postmodels.QuizPostBody
 import com.instructure.canvasapi2.models.postmodels.QuizPostBodyWrapper
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.ExhaustiveListCallback
 import com.instructure.canvasapi2.utils.weave.apiAsync
-import com.instructure.canvasapi2.utils.weave.awaitApi
-import okhttp3.ResponseBody
-import java.util.*
 
 object QuizManager {
 
@@ -88,7 +87,7 @@ object QuizManager {
         callback: StatusCallback<Quiz>
     ) {
         val adapter = RestBuilder(callback)
-        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+        val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork, domain = ApiPrefs.overrideDomains[canvasContext.id])
 
         QuizAPI.getDetailedQuiz(canvasContext, quizId, adapter, params, callback)
     }
