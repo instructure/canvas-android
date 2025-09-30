@@ -23,11 +23,9 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.observe
 import androidx.work.Data
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.AccountNotificationManager
 import com.instructure.canvasapi2.managers.ConferenceManager
@@ -504,7 +502,7 @@ class DashboardNotificationsViewModelTest {
             DashboardFileUploadEntity(workerId3.toString(), 1, title3, subTitle3, null, null, null, null)
         )
 
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId) } returns MutableLiveData(
             WorkInfo(
                 workerId,
                 WorkInfo.State.RUNNING,
@@ -521,7 +519,7 @@ class DashboardNotificationsViewModelTest {
             )
         )
 
-        every { workManager.getWorkInfoById(workerId2) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId2) } returns MutableLiveData(
             WorkInfo(
                 workerId2,
                 WorkInfo.State.SUCCEEDED,
@@ -538,7 +536,7 @@ class DashboardNotificationsViewModelTest {
             )
         )
 
-        every { workManager.getWorkInfoById(workerId3) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId3) } returns MutableLiveData(
             WorkInfo(
                 workerId3,
                 WorkInfo.State.FAILED,
@@ -585,7 +583,7 @@ class DashboardNotificationsViewModelTest {
             DashboardFileUploadEntity(workerId.toString(), 1, title, subTitle, null, null, null, null)
         )
 
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId) } returns MutableLiveData(
             WorkInfo(
                 workerId,
                 WorkInfo.State.RUNNING,
@@ -602,7 +600,7 @@ class DashboardNotificationsViewModelTest {
         assertEquals(1, viewModel.data.value?.uploadItems?.size)
         assertEquals(expectedRunning, viewModel.data.value?.uploadItems?.first()?.data)
 
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId) } returns MutableLiveData(
             WorkInfo(
                 workerId,
                 WorkInfo.State.SUCCEEDED,
@@ -630,7 +628,7 @@ class DashboardNotificationsViewModelTest {
             DashboardFileUploadEntity(workerId.toString(), 1, "", "", null, null, null, null)
         )
 
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId) } returns MutableLiveData(
             WorkInfo(
                 workerId,
                 WorkInfo.State.RUNNING,
@@ -665,7 +663,7 @@ class DashboardNotificationsViewModelTest {
             DashboardFileUploadEntity(workerId.toString(), 1, "", "", 1, 2, 3, null)
         )
 
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId) } returns MutableLiveData(
             WorkInfo(
                 workerId,
                 WorkInfo.State.SUCCEEDED,
@@ -706,7 +704,7 @@ class DashboardNotificationsViewModelTest {
             DashboardFileUploadEntity(workerId.toString(), 1, "", "", null, null, null, 0)
         )
 
-        every { workManager.getWorkInfoById(workerId) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfoByIdLiveData(workerId) } returns MutableLiveData(
             WorkInfo(
                 workerId,
                 WorkInfo.State.SUCCEEDED,
