@@ -146,6 +146,7 @@ class SpeedGraderGradingViewModelTest {
             ),
             gradingStatus = "graded",
             onScoreChange = {},
+            onCompletionChange = {},
             onExcuse = {},
             onStatusChange = {},
             onPercentageChange = {},
@@ -200,6 +201,45 @@ class SpeedGraderGradingViewModelTest {
         coVerify {
             repository.updateSubmissionGrade(
                 "90.0",
+                userId = studentId,
+                assignmentId = assignmentId,
+                courseId = courseId,
+                excused = false
+            )
+        }
+    }
+
+    @Test
+    fun `completion changed`() = runTest {
+        val submission = createMockSubmission(grade = "incomplete")
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals("incomplete", uiState.grade)
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission.copy(
+            submission = submission.submission?.copy(grade = "complete")
+        )
+
+        coEvery {
+            repository.updateSubmissionGrade(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns mockk()
+
+        uiState.onCompletionChange(true)
+
+        testDispatcher.scheduler.advanceTimeBy(600)
+        coVerify {
+            repository.updateSubmissionGrade(
+                "complete",
                 userId = studentId,
                 assignmentId = assignmentId,
                 courseId = courseId,
@@ -370,12 +410,13 @@ class SpeedGraderGradingViewModelTest {
 
     private fun createMockSubmission(
         dueDate: Date = Date(),
-        status: String = "graded"
+        status: String = "graded",
+        grade: String? = "A"
     ): SubmissionGradeQuery.Data {
         return SubmissionGradeQuery.Data(
             submission = SubmissionGradeQuery.Submission(
                 gradingStatus = SubmissionGradingStatus.graded,
-                grade = "A",
+                grade = grade,
                 gradeHidden = false,
                 _id = "123",
                 submissionStatus = "submitted",

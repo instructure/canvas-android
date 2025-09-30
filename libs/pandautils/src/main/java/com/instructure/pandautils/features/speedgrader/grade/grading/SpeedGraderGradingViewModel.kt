@@ -36,6 +36,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.roundToInt
@@ -60,6 +61,7 @@ class SpeedGraderGradingViewModel @Inject constructor(
         MutableStateFlow(
             SpeedGraderGradingUiState(
                 onScoreChange = this::onScoreChanged,
+                onCompletionChange = this::onCompletionChanged,
                 onPercentageChange = this::onPercentageChanged,
                 onExcuse = this::onExcuse,
                 onStatusChange = this::onStatusChange,
@@ -166,17 +168,34 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private fun onScoreChanged(score: Float?) {
         if (_uiState.value.excused.not() && score == _uiState.value.enteredScore) return
-        debounceJob?.cancel()
 
+        val gradeValue = score?.toString() ?: resources.getString(R.string.not_graded)
+        submitDebouncedGradeUpdate(gradeValue) {
+            onScoreChanged(score)
+        }
+    }
+
+    private fun onCompletionChanged(complete: Boolean) {
+        val gradeValue = if (complete) "complete" else "incomplete"
+        if (_uiState.value.excused.not() && gradeValue == _uiState.value.enteredGrade) return
+
+        submitDebouncedGradeUpdate(gradeValue) {
+            onCompletionChanged(complete)
+        }
+    }
+
+    private fun submitDebouncedGradeUpdate(gradeValue: String, retryAction: () -> Unit) {
+        debounceJob?.cancel()
         debounceJob = viewModelScope.launch {
             delay(300)
+
             try {
                 repository.updateSubmissionGrade(
-                    score = score?.toString() ?: resources.getString(R.string.not_graded),
-                    studentId,
-                    assignmentId,
-                    courseId,
-                    false
+                    score = gradeValue,
+                    userId = studentId,
+                    assignmentId = assignmentId,
+                    courseId = courseId,
+                    excused = false
                 )
 
                 AssignmentGradedEvent(assignmentId).postSticky()
@@ -188,12 +207,12 @@ class SpeedGraderGradingViewModel @Inject constructor(
                 }
                 speedGraderErrorHolder.postError(
                     message = resources.getString(R.string.generalUnexpectedError),
-                    retryAction = {
-                        onScoreChanged(score)
-                    }
+                    retryAction = retryAction
                 )
             } finally {
-                loadData(true)
+                if (isActive) {
+                    loadData(true)
+                }
             }
         }
     }
