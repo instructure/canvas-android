@@ -38,7 +38,7 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.student.ui.e2e.offline.utils.OfflineTestUtils
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -46,7 +46,7 @@ import org.junit.After
 import org.junit.Test
 
 @HiltAndroidTest
-class OfflineGradesE2ETest : StudentTest() {
+class OfflineGradesE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

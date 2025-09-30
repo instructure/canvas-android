@@ -53,17 +53,18 @@ class ReminderManager(
         contentName: String,
         contentHtmlUrl: String,
         dueDate: Date,
-        @ColorInt color: Int
+        @ColorInt color: Int,
+        tag: String? = null
     ) {
         showBeforeDueDateReminderDialog(context, dueDate, color).collect { calendar ->
-            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate)
+            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate, tag)
         }
     }
 
     private fun showBeforeDueDateReminderDialog(
         context: Context,
         dueDate: Date,
-        @ColorInt color: Int,
+        @ColorInt color: Int
     ) = callbackFlow<Calendar> {
         val choices = listOf(
             ReminderChoice.Minute(5),
@@ -115,10 +116,11 @@ class ReminderManager(
         contentId: Long,
         contentName: String,
         contentHtmlUrl: String,
-        dueDate: Date?
+        dueDate: Date?,
+        tag: String? = null
     ) {
         showCustomReminderDialog(context).collect { calendar ->
-            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate)
+            createReminder(context, calendar, userId, contentId, contentName, contentHtmlUrl, dueDate, tag)
         }
     }
 
@@ -185,7 +187,8 @@ class ReminderManager(
         contentId: Long,
         contentName: String,
         contentHtmlUrl: String,
-        dueDate: Date?
+        dueDate: Date?,
+        tag: String? = null
     ) {
         val alarmTimeInMillis = calendar.timeInMillis
         if (reminderRepository.isReminderAlreadySetForTime(userId, contentId, calendar.timeInMillis)) {
@@ -220,7 +223,8 @@ class ReminderManager(
             contentHtmlUrl,
             reminderTitle,
             reminderMessage,
-            alarmTimeInMillis
+            alarmTimeInMillis,
+            tag
         )
     }
 }

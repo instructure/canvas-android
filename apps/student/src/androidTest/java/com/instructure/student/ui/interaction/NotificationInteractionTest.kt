@@ -32,7 +32,7 @@ import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,7 +42,7 @@ import java.util.UUID
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
-class NotificationInteractionTest : StudentTest() {
+class NotificationInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField

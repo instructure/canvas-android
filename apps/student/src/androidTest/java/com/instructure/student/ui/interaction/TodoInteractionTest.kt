@@ -39,7 +39,7 @@ import com.instructure.canvasapi2.models.Quiz
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -49,7 +49,7 @@ import org.junit.Test
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
-class TodoInteractionTest : StudentTest() {
+class TodoInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField

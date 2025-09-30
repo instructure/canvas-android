@@ -44,7 +44,7 @@ import com.instructure.pandautils.room.common.Converters
         ModuleBulkProgressEntity::class,
         AssignmentListSelectedFiltersEntity::class,
         FileDownloadProgressEntity::class
-    ], version = 12
+    ], version = 13
 )
 @TypeConverters(Converters::class, AssignmentFilterConverter::class)
 abstract class AppDatabase : RoomDatabase() {

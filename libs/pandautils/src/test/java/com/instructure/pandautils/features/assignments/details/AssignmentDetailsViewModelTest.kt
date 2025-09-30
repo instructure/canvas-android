@@ -30,11 +30,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.Quiz
+import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Analytics
@@ -797,8 +799,71 @@ class AssignmentDetailsViewModelTest {
         val viewModel = getViewModel(realReminderManager)
 
         assertEquals(
-            reminderEntities.map { ReminderViewData(it.id, it.text) },
-            viewModel.data.value?.reminders?.map { it.data }
+            reminderEntities.map { it.id },
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+    }
+
+    @Test
+    fun `Reminders map correctly for discussion checkpoints`() {
+        val reminderEntities = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000, "reply_to_topic"),
+            ReminderEntity(2, 1, 1, "htmlUrl2", "Assignment 2", "2 days", 2000, "reply_to_topic"),
+            ReminderEntity(3, 1, 1, "htmlUrl3", "Assignment 3", "3 days", 3000, "reply_to_entry")
+        )
+        val dateTimePicker: DateTimePicker = mockk(relaxed = true)
+        val reminderRepository: ReminderRepository = mockk(relaxed = true)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
+
+        every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns MutableLiveData(reminderEntities)
+        every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
+
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+
+            )
+        val subSubmission2 = SubAssignmentSubmission(subAssignmentTag = "reply_to_entry")
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
+
+        val viewModel = getViewModel(realReminderManager)
+
+        assertEquals(
+            reminderEntities.filter { it.tag == "reply_to_topic" }.map { it.id },
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+
+        assertEquals(
+            reminderEntities.filter { it.tag == "reply_to_entry" }.map { it.id },
+            viewModel.dueDateReminderViewStates[1].reminders.map { it.id }
         )
     }
 
@@ -822,11 +887,80 @@ class AssignmentDetailsViewModelTest {
 
         val viewModel = getViewModel(realReminderManager)
 
-        assertEquals(0, viewModel.data.value?.reminders?.size)
+        assertEquals(0, viewModel.dueDateReminderViewStates[0].reminders.size)
 
         remindersLiveData.value = listOf(ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000))
 
-        assertEquals(ReminderViewData(1, "1 day"), viewModel.data.value?.reminders?.first()?.data)
+        assertEquals(
+            listOf(1L),
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+    }
+
+    @Test
+    fun `Reminders update correctly for discussion checkpoints`() {
+        val remindersLiveData = MutableLiveData<List<ReminderEntity>>()
+        val dateTimePicker: DateTimePicker = mockk(relaxed = true)
+        val reminderRepository: ReminderRepository = mockk(relaxed = true)
+        val realReminderManager = ReminderManager(dateTimePicker, reminderRepository, analytics)
+        every { reminderRepository.findByAssignmentIdLiveData(any(), any()) } returns remindersLiveData
+        every { resources.getString(eq(R.string.reminderBefore), any()) } answers { call -> "${(call.invocation.args[1] as Array<*>)[0]} Before" }
+
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+
+            )
+        val subSubmission2 = SubAssignmentSubmission(subAssignmentTag = "reply_to_entry")
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
+
+        val viewModel = getViewModel(realReminderManager)
+
+        assertEquals(0, viewModel.dueDateReminderViewStates[0].reminders.size)
+        assertEquals(0, viewModel.dueDateReminderViewStates[1].reminders.size)
+
+        remindersLiveData.value = listOf(
+            ReminderEntity(1, 1, 1, "htmlUrl1", "Assignment 1", "1 day", 1000, "reply_to_topic"),
+            ReminderEntity(2, 1, 1, "htmlUrl1", "Assignment 1", "2 day", 2000, "reply_to_entry")
+        )
+
+        assertEquals(
+            listOf(1L),
+            viewModel.dueDateReminderViewStates[0].reminders.map { it.id }
+        )
+
+        assertEquals(
+            listOf(2L),
+            viewModel.dueDateReminderViewStates[1].reminders.map { it.id }
+        )
     }
 
     @Test
@@ -1007,5 +1141,54 @@ class AssignmentDetailsViewModelTest {
                 0
             )
         }
+    }
+
+    @Test
+    fun `Assignment with checkpoints and subAssignmentSubmissions maps dueDateReminderViewStates correctly`() {
+        val course =
+            Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 1) }.time.toApiString()
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            dueAt = Calendar.getInstance()
+                .apply { add(Calendar.DAY_OF_MONTH, 2) }.time.toApiString()
+        )
+
+        val subSubmission1 = SubAssignmentSubmission(
+            subAssignmentTag = "reply_to_topic",
+
+            )
+        val subSubmission2 = SubAssignmentSubmission(subAssignmentTag = "reply_to_entry")
+
+
+        val assignment = Assignment(
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(subSubmission1, subSubmission2)
+            )
+        )
+        coEvery {
+            assignmentDetailsRepository.getAssignment(
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns assignment
+
+        val viewModel = getViewModel()
+
+        assertEquals(2, viewModel.dueDateReminderViewStates.size)
+        assertEquals("reply_to_topic", viewModel.dueDateReminderViewStates[0].tag)
+        assertEquals("reply_to_entry", viewModel.dueDateReminderViewStates[1].tag)
+
+        assertTrue(viewModel.dueDateReminderViewStates[0].reminders.isEmpty())
+        assertTrue(viewModel.dueDateReminderViewStates[1].reminders.isEmpty())
     }
 }

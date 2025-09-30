@@ -34,7 +34,7 @@ import org.junit.Test
 abstract class GradesInteractionTest : CanvasComposeTest() {
 
     private val gradesPage = GradesPage(composeTestRule)
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     @Test
     fun groupHeaderCollapsesAndExpandsOnClick() {
