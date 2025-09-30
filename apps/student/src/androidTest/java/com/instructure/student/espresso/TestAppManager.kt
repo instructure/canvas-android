@@ -40,7 +40,7 @@ open class TestAppManager : BaseAppManager() {
     fun initWorkManagerForTesting(context: Context) {
         val config = Configuration.Builder()
             .setExecutor(SynchronousExecutor())
-            .setWorkerFactory(workerFactory!!)
+            .setWorkerFactory(workerFactory ?: WorkerFactory.getDefaultWorkerFactory())
             .setMinimumLoggingLevel(Log.DEBUG)
             .build()
         
