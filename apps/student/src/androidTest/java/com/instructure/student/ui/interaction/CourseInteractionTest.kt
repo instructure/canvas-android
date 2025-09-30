@@ -168,8 +168,7 @@ class CourseInteractionTest : StudentTest() {
                 favoriteCourseCount = favoriteCourseCount)
 
         val course1 = data.courses.values.first()
-        // Ensure the Home tab is present in mocked course tabs so the Home button is rendered
-        val homeTab = Tab(position = 0, label = "Home", visibility = "public", tabId = Tab.HOME_ID)
+        val homeTab = Tab(position = 1, label = "Home", visibility = "public", tabId = Tab.HOME_ID)
         val pagesTab = Tab(position = 2, label = "Pages", visibility = "public", tabId = Tab.PAGES_ID)
         val filesTab = Tab(position = 3, label = "Files", visibility = "public", tabId = Tab.FILES_ID)
         data.courseTabs[course1.id]!! += homeTab
