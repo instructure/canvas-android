@@ -131,7 +131,6 @@ private fun DashboardCourseSectionContent(
                 Modifier
                     .padding(horizontal = 16.dp)
             )
-            Spacer(Modifier.height(16.dp))
         }
 
         HorizontalPager(
@@ -173,8 +172,6 @@ private fun DashboardCourseSectionContent(
             )
         }
 
-        Spacer(Modifier.height(8.dp))
-
         DashboardCourseCardIndicator(pagerstate)
 
         Spacer(Modifier.height(16.dp))
@@ -198,10 +195,10 @@ private fun DashboardCourseItem(
 ) {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = modifier.fillMaxWidth()
     ){
         DashboardCourseCardContent(
-            cardState, { handleClickAction(it, mainNavController, homeNavController) }, modifier
+            cardState, { handleClickAction(it, mainNavController, homeNavController) }
         )
     }
 }

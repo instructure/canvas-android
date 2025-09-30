@@ -35,6 +35,7 @@ fun DashboardCourseCard(
 ) {
     Box(modifier = modifier
         .padding(horizontal = 8.dp)
+        .padding(bottom = 16.dp)
         .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4, clip = true)
         .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
         .widthIn(max = 400.dp)
