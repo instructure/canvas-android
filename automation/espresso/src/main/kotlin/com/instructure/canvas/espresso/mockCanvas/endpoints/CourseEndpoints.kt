@@ -116,6 +116,7 @@ object CourseListEndpoint : Endpoint(
 object CourseEndpoint : Endpoint(
         Segment("tabs") to CourseTabsEndpoint,
         Segment("assignments") to AssignmentIndexEndpoint,
+        Segment("front_page") to CourseFrontPageEndpoint,
         Segment("assignment_groups") to AssignmentGroupListEndpoint,
         Segment("external_tools") to ExternalToolsEndpoint,
         Segment("pages") to CoursePagesEndpoint,
@@ -386,6 +387,25 @@ object CoursePagesEndpoint : Endpoint(
                 }
             }
         })
+
+/**
+ * Endpoint that returns the front page for a course
+ */
+object CourseFrontPageEndpoint : Endpoint(
+    response = {
+        GET {
+            val courseId = pathVars.courseId
+            val pages = data.coursePages[courseId]
+            val front = pages?.firstOrNull { it.frontPage }
+            if (front != null) {
+                request.successResponse(front)
+            } else {
+                request.unauthorizedResponse()
+            }
+        }
+    }
+)
+
 
 /**
  * Endpoint that returns a specific page from a course
