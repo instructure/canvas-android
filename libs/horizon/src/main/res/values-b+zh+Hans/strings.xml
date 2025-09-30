@@ -66,8 +66,8 @@
     <string name="overview">总览</string>
     <string name="scores">得分、分数</string>
     <string name="notes">备注</string>
-    <string name="assignmentName">作业名称</string>
-    <string name="dueDate">截止日期</string>
+    <string name="scoresSortingAssignmentNameAscending">作业名称 (A-Z)</string>
+    <string name="scoresSortingDueDateDescending">截止日期（从新到旧）</string>
     <string name="scoresItemassignmentName">名称：%1$s</string>
     <string name="scoresItemDueDate">日期：%1$s</string>
     <string name="noDueDate">没有截止日期</string>
@@ -117,6 +117,7 @@
     <string name="accountAdvancedLabel">高级</string>
     <string name="accountSupportHeading">支持</string>
     <string name="accountGiveFeedbackLabel">提供反馈</string>
+    <string name="accountReportABug">报告错误</string>
     <string name="accountBetaCommunityLabel">测试版社区</string>
     <string name="accountFullNameLabel">全名</string>
     <string name="a11yNavigateBack">向后导航</string>
@@ -322,4 +323,21 @@
     <string name="dashboard_courseInviteFailed">接受课程邀请失败</string>
     <string name="dashboard_emptyMessage">您目前未注册课程。</string>
     <string name="learnEmptyMessage">您目前未注册课程。</string>
+    <string name="programsProgressBar_percentComplete">%s\%% 完成</string>
+    <string name="programsProgressBar_notStarted">未开始</string>
+    <string name="programsCourseCard_enrollButton">注册</string>
+    <string name="programTag_DateRange">%1$s - %2$s</string>
+    <string name="programCourseTag_required">必填</string>
+    <string name="programCourseTag_optional">可选</string>
+    <string name="programCourseTag_locked">已锁定</string>
+    <string name="programCourseTag_completed">已完成</string>
+    <string name="programCourseTag_enrolled">已注册</string>
+    <plurals name="programCourses_courseCompletionCount">
+        <item quantity="other">完成 %1$d/%2$d 门课程</item>
+    </plurals>
+    <string name="programDetails_failedToRefresh">刷新计划失败。</string>
+    <string name="programSwitcher_programOverview">计划概述</string>
+    <string name="programSwitcher_goBack">全部</string>
+    <string name="learnScreen_partOfProgram">%s 的一部分</string>
+    <string name="learnScreen_courseCannotBeOpened">无法打开课程。</string>
 </resources>

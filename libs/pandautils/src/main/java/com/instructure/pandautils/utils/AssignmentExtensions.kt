@@ -17,7 +17,7 @@
 
 package com.instructure.pandautils.utils
 
-import android.content.Context
+import android.content.res.Resources
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Checkpoint
@@ -49,7 +49,7 @@ private fun Assignment.getGrade(
     submissionScore: Double,
     excused: Boolean,
     possiblePoints: Double,
-    context: Context,
+    resources: Resources,
     restrictQuantitativeData: Boolean,
     gradingScheme: List<GradingSchemeRow>,
     showZeroPossiblePoints: Boolean = false,
@@ -59,12 +59,12 @@ private fun Assignment.getGrade(
 
     val notGradedDisplayGrade = if ((showZeroPossiblePoints || possiblePoints > 0) && !restrictQuantitativeData) {
         DisplayGrade(
-            context.getString(
+            resources.getString(
                 R.string.gradeFormatScoreOutOfPointsPossible,
                 NO_GRADE_INDICATOR,
                 pointsPossibleText
             ),
-            context.getString(R.string.outOfPointsFormatted, pointsPossibleText)
+            resources.getString(R.string.outOfPointsFormatted, pointsPossibleText)
         )
     } else {
         DisplayGrade(NO_GRADE_INDICATOR, "")
@@ -78,17 +78,17 @@ private fun Assignment.getGrade(
     // Excused
     if (excused) {
         if (restrictQuantitativeData) {
-            return DisplayGrade(context.getString(R.string.gradeExcused))
+            return DisplayGrade(resources.getString(R.string.gradeExcused))
         } else {
             return DisplayGrade(
-                context.getString(
+                resources.getString(
                     R.string.gradeFormatScoreOutOfPointsPossible,
-                    context.getString(R.string.excused),
+                    resources.getString(R.string.excused),
                     pointsPossibleText
                 ),
-                context.getString(
+                resources.getString(
                     R.string.contentDescriptionScoreOutOfPointsPossible,
-                    context.getString(R.string.gradeExcused),
+                    resources.getString(R.string.gradeExcused),
                     pointsPossibleText
                 )
             )
@@ -96,7 +96,7 @@ private fun Assignment.getGrade(
     }
 
     val grade = submissionGrade ?: return if (showNotGraded) notGradedDisplayGrade else DisplayGrade()
-    val gradeContentDescription = getContentDescriptionForMinusGradeString(grade, context).validOrNull() ?: grade
+    val gradeContentDescription = getContentDescriptionForMinusGradeString(grade, resources).validOrNull() ?: grade
 
     val gradingType = Assignment.getGradingTypeFromAPIString(this.gradingType.orEmpty())
 
@@ -111,13 +111,13 @@ private fun Assignment.getGrade(
             val scoreText = NumberHelper.formatDecimal(submissionScore, 2, true)
             val possiblePointsText = NumberHelper.formatDecimal(possiblePoints, 2, true)
             return DisplayGrade(
-                context.getString(
+                resources.getString(
                     R.string.formattedScoreWithPointsPossibleAndGrade,
                     scoreText,
                     possiblePointsText,
                     grade
                 ),
-                context.getString(
+                resources.getString(
                     R.string.contentDescriptionScoreWithPointsPossibleAndGrade,
                     scoreText,
                     possiblePointsText,
@@ -131,7 +131,7 @@ private fun Assignment.getGrade(
         val letterGrade = convertScoreToLetterGrade(submissionScore, possiblePoints, gradingScheme)
         return DisplayGrade(
             letterGrade,
-            getContentDescriptionForMinusGradeString(letterGrade, context).validOrNull() ?: letterGrade
+            getContentDescriptionForMinusGradeString(letterGrade, resources).validOrNull() ?: letterGrade
         )
     }
 
@@ -140,12 +140,12 @@ private fun Assignment.getGrade(
         if (restrictQuantitativeData) return DisplayGrade()
         val formattedGrade = NumberHelper.formatDecimal(parsedGrade, 2, true)
         return DisplayGrade(
-            context.getString(
+            resources.getString(
                 R.string.gradeFormatScoreOutOfPointsPossible,
                 formattedGrade,
                 pointsPossibleText
             ),
-            context.getString(
+            resources.getString(
                 R.string.contentDescriptionScoreOutOfPointsPossible,
                 formattedGrade,
                 pointsPossibleText
@@ -155,8 +155,8 @@ private fun Assignment.getGrade(
 
     // Complete/incomplete
     return when (grade) {
-        "complete" -> return DisplayGrade(context.getString(R.string.gradeComplete))
-        "incomplete" -> return DisplayGrade(context.getString(R.string.gradeIncomplete))
+        "complete" -> return DisplayGrade(resources.getString(R.string.gradeComplete))
+        "incomplete" -> return DisplayGrade(resources.getString(R.string.gradeIncomplete))
         // Other remaining case is where the grade is displayed as a percentage
         else -> if (restrictQuantitativeData) DisplayGrade() else DisplayGrade(grade, gradeContentDescription)
     }
@@ -164,7 +164,7 @@ private fun Assignment.getGrade(
 
 fun Assignment.getGrade(
     submission: Submission?,
-    context: Context,
+    resources: Resources,
     restrictQuantitativeData: Boolean,
     gradingScheme: List<GradingSchemeRow>,
     showZeroPossiblePoints: Boolean = false,
@@ -175,7 +175,7 @@ fun Assignment.getGrade(
     submissionScore = submission?.score.orDefault(),
     excused = submission?.excused.orDefault(),
     possiblePoints = pointsPossible.orDefault(),
-    context = context,
+    resources = resources,
     restrictQuantitativeData = restrictQuantitativeData,
     gradingScheme = gradingScheme,
     showZeroPossiblePoints = showZeroPossiblePoints,
@@ -185,7 +185,7 @@ fun Assignment.getGrade(
 fun Assignment.getSubAssignmentSubmissionGrade(
     possiblePoints: Double,
     submission: SubAssignmentSubmission?,
-    context: Context,
+    resources: Resources,
     restrictQuantitativeData: Boolean,
     gradingScheme: List<GradingSchemeRow>,
     showZeroPossiblePoints: Boolean = false,
@@ -196,7 +196,7 @@ fun Assignment.getSubAssignmentSubmissionGrade(
     submissionScore = submission?.score.orDefault(),
     excused = submission?.excused.orDefault(),
     possiblePoints = possiblePoints,
-    context = context,
+    resources = resources,
     restrictQuantitativeData = restrictQuantitativeData,
     gradingScheme = gradingScheme,
     showZeroPossiblePoints = showZeroPossiblePoints,
@@ -206,6 +206,7 @@ fun Assignment.getSubAssignmentSubmissionGrade(
 private fun mapSubmissionStateLabel(
     customGradeStatusId: Long?,
     customStatuses: List<CustomGradeStatusesQuery.Node>,
+    excused: Boolean,
     late: Boolean,
     missing: Boolean,
     graded: Boolean,
@@ -217,6 +218,7 @@ private fun mapSubmissionStateLabel(
     }
 
     return when {
+        excused -> SubmissionStateLabel.Excused
         matchedCustomStatus != null -> SubmissionStateLabel.Custom(
             R.drawable.ic_flag,
             R.color.textInfo,
@@ -237,6 +239,7 @@ fun Assignment.getSubmissionStateLabel(
 ) = mapSubmissionStateLabel(
     submission?.customGradeStatusId,
     customStatuses,
+    submission?.excused.orDefault(),
     submission?.late.orDefault(),
     isMissing(),
     isGraded().orDefault(),
@@ -250,6 +253,7 @@ fun Assignment.getSubAssignmentSubmissionStateLabel(
 ) = mapSubmissionStateLabel(
     submission?.customGradeStatusId,
     customStatuses,
+    submission?.excused.orDefault(),
     submission?.late.orDefault(),
     submission?.missing.orDefault(),
     !submission?.grade.isNullOrEmpty(),

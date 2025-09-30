@@ -21,7 +21,7 @@ import androidx.test.espresso.intent.Intents
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.Stub
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -41,8 +41,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    @Stub
+    @TestMetaData(Priority.COMMON, FeatureCategory.LEFT_SIDE_MENU, TestCategory.E2E, SecondaryFeatureCategory.HELP_MENU)
     fun testHelpMenuE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -89,8 +88,7 @@ class HelpMenuE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    @Stub
+    @TestMetaData(Priority.BUG_CASE, FeatureCategory.LEFT_SIDE_MENU, TestCategory.E2E, SecondaryFeatureCategory.HELP_MENU)
     fun testHelpMenuReportProblemE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
