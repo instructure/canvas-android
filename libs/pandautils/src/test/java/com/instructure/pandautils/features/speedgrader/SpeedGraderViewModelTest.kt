@@ -16,12 +16,15 @@
  */
 package com.instructure.pandautils.features.speedgrader
 
+import android.content.res.Resources
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.AssignmentDetailsQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ContextKeeper
+import com.instructure.pandares.R
 import com.instructure.pandautils.utils.Const
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
@@ -46,6 +49,19 @@ class SpeedGraderViewModelTest {
     private lateinit var assignmentSubmissionRepository: AssignmentSubmissionRepository
     private lateinit var speedGraderPostPolicyRouter: SpeedGraderPostPolicyRouter
     private lateinit var savedStateHandle: SavedStateHandle
+    private val resources: Resources = mockk(relaxed = true)
+    private val errorHandler: SpeedGraderErrorHolder = mockk(relaxed = true)
+
+    private fun createViewModel() {
+        viewModel = SpeedGraderViewModel(
+            savedStateHandle,
+            repository,
+            assignmentSubmissionRepository,
+            speedGraderPostPolicyRouter,
+            errorHandler,
+            resources
+        )
+    }
 
     @Before
     fun setUp() = runTest {
@@ -70,6 +86,8 @@ class SpeedGraderViewModelTest {
                 any()
             )
         } returns Assignment()
+
+        coEvery { resources.getString(R.string.generalUnexpectedError) } returns "Error"
     }
 
     @After
@@ -85,12 +103,7 @@ class SpeedGraderViewModelTest {
         val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
         coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
 
-        viewModel = SpeedGraderViewModel(
-            savedStateHandle,
-            repository,
-            assignmentSubmissionRepository,
-            speedGraderPostPolicyRouter
-        )
+        createViewModel()
         testDispatcher.scheduler.advanceUntilIdle()
 
         // Assert
@@ -105,12 +118,7 @@ class SpeedGraderViewModelTest {
         savedStateHandle = SavedStateHandle()
 
         assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(
-                savedStateHandle,
-                repository,
-                assignmentSubmissionRepository,
-                speedGraderPostPolicyRouter
-            )
+            createViewModel()
         }
     }
 
@@ -119,12 +127,7 @@ class SpeedGraderViewModelTest {
         savedStateHandle = SavedStateHandle(mapOf(Const.ASSIGNMENT_ID to 1L))
 
         assertThrows(IllegalStateException::class.java) {
-            SpeedGraderViewModel(
-                savedStateHandle,
-                repository,
-                assignmentSubmissionRepository,
-                speedGraderPostPolicyRouter
-            )
+            createViewModel()
         }
     }
 
@@ -143,12 +146,7 @@ class SpeedGraderViewModelTest {
             )
         )
 
-        viewModel = SpeedGraderViewModel(
-            savedStateHandle,
-            repository,
-            assignmentSubmissionRepository,
-            speedGraderPostPolicyRouter
-        )
+        createViewModel()
 
         // Assert
         val uiState = viewModel.uiState.value
@@ -171,12 +169,7 @@ class SpeedGraderViewModelTest {
             )
         )
 
-        viewModel = SpeedGraderViewModel(
-            savedStateHandle,
-            repository,
-            assignmentSubmissionRepository,
-            speedGraderPostPolicyRouter
-        )
+        createViewModel()
 
         // Assert
         val uiState = viewModel.uiState.value
@@ -185,17 +178,24 @@ class SpeedGraderViewModelTest {
 
     @Test
     fun `Navigating to the post policy screen calls the router`() = runTest {
-        viewModel = SpeedGraderViewModel(
-            savedStateHandle,
-            repository,
-            assignmentSubmissionRepository,
-            speedGraderPostPolicyRouter
-        )
+        createViewModel()
 
         val uiState = viewModel.uiState.first()
 
         uiState.navigateToPostPolicy(mockk())
 
         verify { speedGraderPostPolicyRouter.navigateToPostPolicies(any(), any(), any()) }
+    }
+
+    @Test
+    fun `Error posted when fetching data fails`() = runTest {
+        val exception = Exception("Network error")
+        coEvery { repository.getAssignmentDetails(1L) } throws exception
+
+        createViewModel()
+
+        coVerify {
+            errorHandler.postError("Error", any())
+        }
     }
 }
