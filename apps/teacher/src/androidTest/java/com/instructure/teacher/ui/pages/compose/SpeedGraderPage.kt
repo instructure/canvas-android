@@ -359,7 +359,7 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
             getStringFromResource(
                 R.string.sg_tab_files_w_counter,
                 fileCount
-            ).toUpperCase()
+            ).uppercase()
         )
         filesTab.click()
     }
