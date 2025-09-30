@@ -33,7 +33,6 @@ class PickerSubmissionUploadPage : BasePage(R.id.pickerSubmissionUploadPage) {
     private val deviceIcon by OnViewWithId(R.id.sourceDeviceIcon)
     private val cameraIcon by OnViewWithId(R.id.sourceCameraIcon)
     private val galleryIcon by OnViewWithId(R.id.sourceGalleryIcon)
-    private val scannerIcon by OnViewWithId(R.id.sourceDocumentScanningIcon)
     private val deleteButton by OnViewWithId(R.id.deleteButton)
 
     fun chooseDevice() {
@@ -46,10 +45,6 @@ class PickerSubmissionUploadPage : BasePage(R.id.pickerSubmissionUploadPage) {
 
     fun chooseGallery() {
         galleryIcon.click()
-    }
-
-    fun chooseScanner() {
-        scannerIcon.click()
     }
 
     fun waitForSubmitButtonToAppear() {
