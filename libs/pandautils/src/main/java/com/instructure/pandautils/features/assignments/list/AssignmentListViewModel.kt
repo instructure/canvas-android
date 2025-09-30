@@ -289,7 +289,15 @@ class AssignmentListViewModel @Inject constructor(
             }
         }
 
-        filteredAssignments = filteredAssignments.sortedBy { it.id }.distinct()
+        filteredAssignments = filteredAssignments
+            .sortedWith(
+                compareBy(
+                    { it.dueDateIncludingCheckpoints() == null },
+                    { it.dueDateIncludingCheckpoints() },
+                    { it.id }
+                )
+            )
+            .distinct()
 
         val groups = when(selectedFilters.selectedGroupByOption) {
             AssignmentGroupByOption.DueDate -> {
@@ -326,12 +334,13 @@ class AssignmentListViewModel @Inject constructor(
             }
             AssignmentGroupByOption.AssignmentGroup -> {
                 filteredAssignments.groupBy { it.assignmentGroupId }.map { (key, value) ->
-                    uiState.value.assignmentGroups.firstOrNull { it.id == key }?.name.orEmpty() to value.map {
+                    val group = uiState.value.assignmentGroups.firstOrNull { it.id == key }
+                    group?.position.orDefault() to (group?.name.orEmpty() to value.map {
                         assignmentListBehavior.getAssignmentGroupItemState(
                             course, it, customStatuses, getCheckpoints(it, course)
                         )
-                    }
-                }.toMap()
+                    })
+                }.sortedBy { it.first }.associate { it.second }
             }
             AssignmentGroupByOption.AssignmentType -> {
                 val discussionsGroup = filteredAssignments.filter {
