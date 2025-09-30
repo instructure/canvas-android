@@ -16,5 +16,80 @@
  */
 package com.instructure.horizon.features.dashboard
 
+import com.instructure.canvasapi2.models.UnreadNotificationCount
+import com.instructure.pandautils.utils.ThemePrefs
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.mockk
+import io.mockk.unmockkAll
+import junit.framework.TestCase.assertEquals
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.UnconfinedTestDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.setMain
+import org.junit.After
+import org.junit.Before
+import org.junit.Test
+
+@OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
+    private val repository: DashboardRepository = mockk(relaxed = true)
+    private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val testDispatcher = UnconfinedTestDispatcher()
+
+    private val notificationCounts = listOf(
+        UnreadNotificationCount(
+            type = "Message",
+            count = 5,
+            unreadCount = 10,
+        ),
+        UnreadNotificationCount(
+            type = "Conversation",
+            count = 2,
+            unreadCount = 5,
+        ),
+        UnreadNotificationCount(
+            type = "Announcement",
+            count = 1,
+            unreadCount = 3,
+        ),
+    )
+
+    @Before
+    fun setup() {
+        Dispatchers.setMain(testDispatcher)
+        coEvery { repository.getUnreadCounts(any()) } returns notificationCounts
+        coEvery { themePrefs.mobileLogoUrl } returns ""
+    }
+
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+        unmockkAll()
+    }
+
+    @Test
+    fun `Test ViewModel successfully loads and filters unread counts`() {
+        val viewModel = getViewModel()
+        coVerify { repository.getUnreadCounts(true) }
+
+        val state = viewModel.uiState.value
+        assertEquals(5, state.unreadCountState.unreadConversations)
+        assertEquals(10, state.unreadCountState.unreadNotifications)
+    }
+
+    @Test
+    fun `Test ViewModel loads logo URL from ThemePrefs`() {
+        val logoUrl = "https://example.com/logo.png"
+        coEvery { themePrefs.mobileLogoUrl } returns logoUrl
+
+        val viewModel = getViewModel()
+        val state = viewModel.uiState.value
+        assertEquals(logoUrl, state.logoUrl)
+    }
+
+    private fun getViewModel(): DashboardViewModel {
+        return DashboardViewModel(repository, themePrefs)
+    }
 }
