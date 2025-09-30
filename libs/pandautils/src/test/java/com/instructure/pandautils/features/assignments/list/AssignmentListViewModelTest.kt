@@ -545,7 +545,7 @@ class AssignmentListViewModelTest {
 
         var newFilter = AssignmentListSelectedFilters(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
-        assertEquals(assignmentGroups.map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map { it.assignment } } )
+        assertEquals(assignmentGroups.reversed().map { it.assignments }, viewModel.uiState.value.listState.values.map { it.map { it.assignment } } )
 
         newFilter = newFilter.copy(selectedGroupByOption = AssignmentGroupByOption.DueDate)
         viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
@@ -690,6 +690,101 @@ class AssignmentListViewModelTest {
         viewModel.handleAction(AssignmentListScreenEvent.ToggleCheckpointsExpanded(assignment.id))
 
         Assert.assertTrue(viewModel.uiState.value.listState.values.first().first().checkpointsExpanded)
+    }
+
+    @Test
+    fun `Test assignments are sorted by due date and id`() = runTest {
+        val now = Date()
+        val pastDate = Date(now.time - 100000)
+        val futureDate = Date(now.time + 100000)
+
+        val assignment1 = Assignment(
+            id = 1,
+            name = "Assignment 1",
+            dueAt = null
+        )
+        val assignment2 = Assignment(
+            id = 2,
+            name = "Assignment 2",
+            dueAt = futureDate.toApiString()
+        )
+        val assignment3 = Assignment(
+            id = 3,
+            name = "Assignment 3",
+            dueAt = pastDate.toApiString()
+        )
+        val assignment4 = Assignment(
+            id = 4,
+            name = "Assignment 4",
+            dueAt = futureDate.toApiString()
+        )
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(assignment1, assignment2, assignment3, assignment4)
+            )
+        )
+
+        val groupItem1 = AssignmentGroupItemState(course, assignment1, emptyList())
+        val groupItem2 = AssignmentGroupItemState(course, assignment2, emptyList())
+        val groupItem3 = AssignmentGroupItemState(course, assignment3, emptyList())
+        val groupItem4 = AssignmentGroupItemState(course, assignment4, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, assignment1, any(), any()) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, assignment2, any(), any()) } returns groupItem2
+        every { behavior.getAssignmentGroupItemState(course, assignment3, any(), any()) } returns groupItem3
+        every { behavior.getAssignmentGroupItemState(course, assignment4, any(), any()) } returns groupItem4
+
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(AssignmentListSelectedFilters(selectedGroupByOption = AssignmentGroupByOption.DueDate)))
+
+        val sortedAssignments = viewModel.uiState.value.listState.values.flatten().map { it.assignment }
+        assertEquals(listOf(assignment3, assignment2, assignment4, assignment1), sortedAssignments)
+    }
+
+    @Test
+    fun `Test assignment groups are sorted by position`() = runTest {
+        val assignment1 = Assignment(
+            id = 1,
+            name = "Assignment 1",
+            assignmentGroupId = 1
+        )
+        val assignment2 = Assignment(
+            id = 2,
+            name = "Assignment 2",
+            assignmentGroupId = 2
+        )
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(assignment1),
+                position = 2
+            ),
+            AssignmentGroup(
+                id = 2,
+                name = "Group 2",
+                assignments = listOf(assignment2),
+                position = 1
+            )
+        )
+
+        val groupItem1 = AssignmentGroupItemState(course, assignment1, emptyList())
+        val groupItem2 = AssignmentGroupItemState(course, assignment2, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, assignment1, any(), any()) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, assignment2, any(), any()) } returns groupItem2
+
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(AssignmentListSelectedFilters(selectedGroupByOption = AssignmentGroupByOption.AssignmentGroup)))
+
+        val sortedAssignments = viewModel.uiState.value.listState.values.flatten().map { it.assignment }
+        assertEquals(listOf(assignment2, assignment1), sortedAssignments)
     }
 
     private fun getViewModel(): AssignmentListViewModel {
