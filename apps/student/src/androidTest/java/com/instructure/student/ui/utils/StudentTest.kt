@@ -103,7 +103,6 @@ import com.instructure.student.ui.pages.offline.SyncProgressPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
-import org.junit.Before
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
@@ -179,19 +178,6 @@ abstract class StudentTest : CanvasTest() {
     val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
-
-    @Before
-    fun setupWorkerFactory() {
-     //   hiltRule.inject()
-      //  val application = activityRule.activity.application as? TestAppManager
-    //    application?.workerFactory = workerFactory
-
-
-//        app = ApplicationProvider.getApplicationContext<TestAppManager>()
- //       app.workerFactory = app.hiltWorkerFactory
-
-     //   application?.initWorkManager(app)
-    }
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

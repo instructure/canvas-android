@@ -19,17 +19,14 @@ package com.instructure.student.ui.e2e
 import android.os.SystemClock.sleep
 import android.util.Log
 import android.view.KeyEvent
-import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
-import androidx.work.WorkManager
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.Stub
-import com.instructure.canvas.espresso.TestAppManager
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
@@ -45,6 +42,7 @@ import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
@@ -53,7 +51,6 @@ import com.instructure.student.ui.utils.ViewUtils
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
 import com.instructure.student.ui.utils.uploadTextFile
-import com.instructure.student.ui.utils.waitForWorkManagerJobsToFinish
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Rule
 import org.junit.Test
@@ -885,16 +882,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val newComment = "Comment for second attempt"
         Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
         submissionDetailsPage.addAndSendComment(newComment)
-
-        val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-        val testDriver = app.testDriver!!
-
-        val workInfos = WorkManager.getInstance(app)
-            .getWorkInfosByTag("SubmissionWorker")
-            .get()
-        val workId = workInfos.first().id
-        testDriver.setAllConstraintsMet(workId)
-        waitForWorkManagerJobsToFinish(workerTag = "SubmissionWorker")
+        handleWorkManagerTask("SubmissionWorker")
 
         Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
         submissionDetailsPage.assertCommentDisplayed(newComment, student)
