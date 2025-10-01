@@ -22,10 +22,8 @@ import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
-import com.instructure.canvas.espresso.Stub
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvasapi2.type.AssetString
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -38,9 +36,7 @@ import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.seedDataForK5
 import com.instructure.student.ui.utils.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Rule
 import org.junit.Test
-import org.junit.rules.Timeout
 import java.lang.Thread.sleep
 import java.util.Calendar
 import java.util.Locale
@@ -53,11 +49,10 @@ class ScheduleE2ETest : StudentTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
-    @Rule
-    @JvmField
-    var globalTimeout: Timeout = Timeout.millis(1200000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
+    //@Rule
+    //@JvmField
+    //var globalTimeout: Timeout = Timeout.millis(1200000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
-    @Stub
     @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.CANVAS_FOR_ELEMENTARY, TestCategory.E2E, SecondaryFeatureCategory.SCHEDULE)
@@ -73,7 +68,7 @@ class ScheduleE2ETest : StudentTest() {
         val nonHomeroomCourses = data.coursesList.filter { !it.homeroomCourse }
 
         //Note that all of the calendars are set to UTC timezone
-        val yesterDayCalendar = getCustomDateCalendar(-1)
+        val yesterdayCalendar = getCustomDateCalendar(-1)
         val tomorrowCalendar = getCustomDateCalendar(1)
         val currentDateCalendar = getCustomDateCalendar(0)
         val twoWeeksBeforeCalendar = getCustomDateCalendar(-15)
@@ -102,7 +97,7 @@ class ScheduleE2ETest : StudentTest() {
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
             Log.d(ASSERTION_TAG, "Assert that the previous day of the calendar is titled as 'Yesterday'.")
-            schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday)) }
+            schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterdayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday)) }
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7) {
             Log.d(ASSERTION_TAG, "Assert that the next day of the calendar is titled as 'Tomorrow'.")
@@ -128,7 +123,7 @@ class ScheduleE2ETest : StudentTest() {
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
             Log.d(ASSERTION_TAG, "Assert that the previous day of the calendar is titled as 'Yesterday'.")
-            schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterDayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday)) }
+            schedulePage.assertDayHeaderShownByItemName(concatDayString(yesterdayCalendar), schedulePage.getStringFromResource(R.string.yesterday), schedulePage.getStringFromResource(R.string.yesterday)) }
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 7) {
             Log.d(ASSERTION_TAG, "Assert that the next day of the calendar is titled as 'Tomorrow'.")
