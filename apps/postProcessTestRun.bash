@@ -4,8 +4,8 @@ set -e
 # debug log
 # set -x
 
-# Script post-process our test results and reports the results to Splunk.
-# Only works on Bitrise, as certain secrets (like the Splunk token) will not be defined locally.
+# Script post-process our test results and reports the results to Observe.
+# Only works on Bitrise, as certain secrets (like the Observe token) will not be defined locally.
 
 # Capture our command line arguments
 if [[ $# < 2 ]]
@@ -33,7 +33,7 @@ successCount=0
 # Emits collected successful test data to splunk, and zeroes out the running trackers.
 emitSuccessfulTestData () {
         #echo -e "\nSuccess payload: $successReport\n"
-        curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "$successReport"
+        curl -k "https://103443579803.collect.observeinc.com/" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -d "$successReport"
         successReport="" # Reset the successReport after emitting it
         successCount=0
 }
@@ -52,7 +52,7 @@ do
       
       payload="{\"deviceConfig\" : $suiteName, \"numTests\" : $numTests, \"numFailures\" : $numFailures, \"runTime\" : $runTime, $commonData}"
       echo -e "\nsummary payload: $payload"
-      curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-summary\", \"event\" : $payload}"
+      curl -k "https://103443579803.collect.observeinc.com/" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-summary\", \"event\" : $payload}"
     fi
 
     # For <testcase> lines, create a "test passed" payload.  We won't include it in our "successReport" until we've
@@ -141,6 +141,6 @@ do
      payload="{\"minutes\" : $totalMinutes, \"cost\" : $cost, $commonData}"
      echo -e "\ncost payload: $payload"
      #curl -X POST -H "Content-Type: application/json" -d "$payload" $SUMOLOGIC_ENDPOINT
-     curl -k "https://http-inputs-inst.splunkcloud.com:443/services/collector" -H "Authorization: Splunk $SPLUNK_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-cost\", \"event\" : $payload}"
+     curl -k "https://103443579803.collect.observeinc.com/" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-cost\", \"event\" : $payload}"
     fi
 done < "$costFile"

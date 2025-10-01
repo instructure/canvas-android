@@ -138,24 +138,24 @@ abstract class CanvasTest : InstructureTestingContract {
                 Log.d("TEST RETRY", "testMethod: $testMethod, error=$error, stacktrace=${error.stackTrace.joinToString("\n")} cause=${error.cause}")
             }
 
-            // Grab the Splunk-mobile token from Bitrise
-            val splunkToken = InstrumentationRegistry.getArguments().getString("SPLUNK_MOBILE_TOKEN")
+            // Grab the Observe-mobile token from Bitrise
+            val observeToken = InstrumentationRegistry.getArguments().getString("OBSERVE_MOBILE_TOKEN")
 
             // Only continue if we're on Bitrise
             // (More accurately, if we are on FTL launched from Bitrise.)
-            if(splunkToken != null && !splunkToken.isEmpty()) {
-                 val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+            if(observeToken != null && !observeToken.isEmpty()) {
+                val networkCapabilities = connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
                 val hasActiveNetwork = networkCapabilities?.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) ?: false
 
                 if (hasActiveNetwork) {
-                    reportToSplunk(disposition, testMethod, testClass, error, splunkToken)
+                    reportToObserve(disposition, testMethod, testClass, error, observeToken)
                 } else {
                     turnOnConnectionViaADB()
                     connectivityManager.registerDefaultNetworkCallback(object : ConnectivityManager.NetworkCallback() {
                         override fun onAvailable(network: Network) {
                             super.onAvailable(network)
                             connectivityManager.unregisterNetworkCallback(this)
-                            reportToSplunk(disposition, testMethod, testClass, error, splunkToken)
+                            reportToObserve(disposition, testMethod, testClass, error, observeToken)
                         }
                     })
                 }
@@ -168,12 +168,12 @@ abstract class CanvasTest : InstructureTestingContract {
 
     }
 
-    private fun reportToSplunk(
+    private fun reportToObserve(
         disposition: String,
         testMethod: String,
         testClass: String,
         error: Throwable,
-        splunkToken: String?
+        observeToken: String?
     ) {
         val bitriseWorkflow =
             InstrumentationRegistry.getArguments().getString("BITRISE_TRIGGERED_WORKFLOW_ID")
@@ -186,6 +186,7 @@ abstract class CanvasTest : InstructureTestingContract {
         eventObject.put("workflow", bitriseWorkflow)
         eventObject.put("branch", bitriseBranch)
         eventObject.put("bitriseApp", bitriseApp)
+        eventObject.put("buildNumber", bitriseBuildNumber)
         eventObject.put("status", disposition)
         eventObject.put("testName", testMethod)
         eventObject.put("testClass", testClass)
@@ -211,10 +212,10 @@ abstract class CanvasTest : InstructureTestingContract {
         try {
 
             // Set up our url/connection
-            val url = URL("https://http-inputs-inst.splunkcloud.com:443/services/collector")
+            val url = URL("https://103443579803.collect.observeinc.com/")
             conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
-            conn.setRequestProperty("Authorization", "Splunk $splunkToken")
+            conn.setRequestProperty("Authorization", "Bearer $observeToken")
             conn.setRequestProperty("Content-Type", "application/json; utf-8")
             conn.setRequestProperty("Accept", "application/json")
             conn.setDoInput(true)
@@ -234,7 +235,7 @@ abstract class CanvasTest : InstructureTestingContract {
                 "Response code: ${conn.responseCode}, message: ${conn.responseMessage}"
             )
 
-            // Report the splunk result JSON
+            // Report the Observe result JSON
             inputStream = conn.inputStream
             val content = inputStream.bufferedReader().use(BufferedReader::readText)
             Log.d("CanvasTest", "Response: $content")
