@@ -212,7 +212,7 @@ abstract class CanvasTest : InstructureTestingContract {
         try {
 
             // Set up our url/connection
-            val url = URL("https://103443579803.collect.observeinc.com/")
+            val url = URL("https://103443579803.collect.observeinc.com/v1/http")
             conn = url.openConnection() as HttpURLConnection
             conn.requestMethod = "POST"
             conn.setRequestProperty("Authorization", "Bearer $observeToken")
