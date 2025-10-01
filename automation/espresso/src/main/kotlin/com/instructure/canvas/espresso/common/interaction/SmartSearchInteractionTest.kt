@@ -19,10 +19,10 @@ import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPage
 import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPreferencesPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addPageToCourse
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockcanvas.addPageToCourse
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.SmartSearchContentType

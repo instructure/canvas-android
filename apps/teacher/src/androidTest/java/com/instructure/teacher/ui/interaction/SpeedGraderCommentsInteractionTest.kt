@@ -16,11 +16,11 @@
 package com.instructure.teacher.ui.interaction
 
 import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionsForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionsForAssignment
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.CanvasContextPermission

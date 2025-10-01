@@ -48,7 +48,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.espresso.TestAppManager
 import com.instructure.student.ui.pages.classic.AllCoursesPage
 import com.instructure.student.ui.pages.classic.AnnotationCommentListPage
 import com.instructure.student.ui.pages.classic.AnnouncementListPage

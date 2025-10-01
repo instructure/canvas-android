@@ -31,7 +31,7 @@ import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTouchInput
 import androidx.compose.ui.test.swipeDown
 import com.instructure.canvasapi2.models.Course
-import com.instructure.composeTest.hasSiblingWithText
+import com.instructure.composetest.hasSiblingWithText
 import com.instructure.dataseeding.model.CourseApiModel
 import com.instructure.espresso.assertTextColor
 import com.instructure.pandares.R

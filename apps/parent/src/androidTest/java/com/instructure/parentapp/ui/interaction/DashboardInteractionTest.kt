@@ -25,8 +25,8 @@ import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvas.espresso.waitForMatcherWithSleeps
 import com.instructure.canvasapi2.utils.Pronouns
 import com.instructure.loginapi.login.R

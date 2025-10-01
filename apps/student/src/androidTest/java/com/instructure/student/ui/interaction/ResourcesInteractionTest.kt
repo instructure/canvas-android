@@ -20,11 +20,11 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCourseWithEnrollment
-import com.instructure.canvas.espresso.mockCanvas.addEnrollment
-import com.instructure.canvas.espresso.mockCanvas.addLTITool
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addCourseWithEnrollment
+import com.instructure.canvas.espresso.mockcanvas.addEnrollment
+import com.instructure.canvas.espresso.mockcanvas.addLTITool
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentComposeTest

@@ -23,8 +23,8 @@ import androidx.test.uiautomator.By
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.Until
 import com.google.android.play.core.appupdate.testing.FakeAppUpdateManager
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.di.UpdateModule
 import com.instructure.pandautils.update.UpdateManager

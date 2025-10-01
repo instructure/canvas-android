@@ -22,8 +22,8 @@ import com.instructure.canvas.espresso.annotations.StubLandscape
 import com.instructure.canvas.espresso.annotations.StubTablet
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.GradesPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addGradingPeriod
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addGradingPeriod
 import com.instructure.canvasapi2.models.GradingPeriod
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.espresso.ModuleItemInteractions

@@ -15,12 +15,12 @@
  */
 package com.instructure.teacher.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment

@@ -30,12 +30,12 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.annotations.StubCoverage
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.annotations.Stub
+import com.instructure.canvas.espresso.annotations.StubCoverage
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.pandautils.utils.Const
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.tokenLogin

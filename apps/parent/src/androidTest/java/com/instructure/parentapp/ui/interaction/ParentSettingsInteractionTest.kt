@@ -20,8 +20,8 @@ import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.SettingsInteractionTest
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.classic.DashboardPage

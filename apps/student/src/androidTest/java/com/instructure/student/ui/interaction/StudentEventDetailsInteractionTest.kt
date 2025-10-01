@@ -16,8 +16,8 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.common.interaction.EventDetailsInteractionTest
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
 import com.instructure.student.ui.pages.classic.DashboardPage

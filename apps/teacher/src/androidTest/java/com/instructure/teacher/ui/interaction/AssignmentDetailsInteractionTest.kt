@@ -15,12 +15,12 @@
  */
 package com.instructure.teacher.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
-import com.instructure.canvas.espresso.mockCanvas.utils.Randomizer
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockcanvas.init
+import com.instructure.canvas.espresso.mockcanvas.utils.Randomizer
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Assignment.SubmissionType
 import com.instructure.canvasapi2.models.Assignment.SubmissionType.ONLINE_TEXT_ENTRY

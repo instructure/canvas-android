@@ -17,8 +17,8 @@ package com.instructure.student.ui.interaction
 
 import android.app.Activity
 import com.instructure.canvas.espresso.common.interaction.ToDoDetailsInteractionTest
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.User
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.student.BuildConfig

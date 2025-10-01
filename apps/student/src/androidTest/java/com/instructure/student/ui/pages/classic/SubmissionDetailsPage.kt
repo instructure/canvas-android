@@ -52,7 +52,7 @@ import com.instructure.espresso.page.withParent
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.replaceText
 import com.instructure.student.R
-import com.instructure.student.ui.renderTests.renderPages.SubmissionCommentsRenderPage
+import com.instructure.student.ui.rendertests.renderpages.SubmissionCommentsRenderPage
 import org.hamcrest.Matchers.allOf
 import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.containsString

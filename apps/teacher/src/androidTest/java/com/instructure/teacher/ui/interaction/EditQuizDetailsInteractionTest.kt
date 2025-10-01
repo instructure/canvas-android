@@ -18,10 +18,10 @@ package com.instructure.teacher.ui.interaction
 
 import androidx.test.espresso.matcher.ViewMatchers
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.espresso.randomString

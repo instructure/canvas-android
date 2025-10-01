@@ -21,9 +21,9 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.CalendarInteractionTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.User

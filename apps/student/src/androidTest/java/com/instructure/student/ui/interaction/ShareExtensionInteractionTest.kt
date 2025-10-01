@@ -26,9 +26,9 @@ import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.annotations.StubCoverage
 import com.instructure.canvas.espresso.annotations.StubTablet
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.User
 import com.instructure.student.ui.utils.StudentTest

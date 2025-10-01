@@ -21,11 +21,11 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.common.interaction.InboxDetailsInteractionTest
 import com.instructure.canvas.espresso.common.pages.InboxPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addConversation
-import com.instructure.canvas.espresso.mockCanvas.addConversationWithMultipleMessages
-import com.instructure.canvas.espresso.mockCanvas.addConversations
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addConversation
+import com.instructure.canvas.espresso.mockcanvas.addConversationWithMultipleMessages
+import com.instructure.canvas.espresso.mockcanvas.addConversations
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User
 import com.instructure.parentapp.BuildConfig

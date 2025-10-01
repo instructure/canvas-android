@@ -18,16 +18,16 @@ package com.instructure.student.ui.utils
 
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.instructure.student.SingleFragmentTestActivity
-import com.instructure.student.ui.renderTests.renderPages.ConferenceDetailsRenderPage
-import com.instructure.student.ui.renderTests.renderPages.ConferenceListRenderPage
-import com.instructure.student.ui.renderTests.renderPages.PairObserverRenderPage
-import com.instructure.student.ui.renderTests.renderPages.SubmissionDetailsEmptyContentRenderPage
-import com.instructure.student.ui.renderTests.renderPages.SubmissionDetailsRenderPage
-import com.instructure.student.ui.renderTests.renderPages.SyllabusRenderPage
-import com.instructure.student.ui.renderTests.renderPages.TextSubmissionUploadRenderPage
-import com.instructure.student.ui.renderTests.renderPages.UploadStatusSubmissionViewRenderPage
-import com.instructure.student.ui.renderTests.renderPages.UrlSubmissionUploadRenderPage
-import com.instructure.student.ui.renderTests.renderPages.UrlSubmissionViewRenderPage
+import com.instructure.student.ui.rendertests.renderpages.ConferenceDetailsRenderPage
+import com.instructure.student.ui.rendertests.renderpages.ConferenceListRenderPage
+import com.instructure.student.ui.rendertests.renderpages.PairObserverRenderPage
+import com.instructure.student.ui.rendertests.renderpages.SubmissionDetailsEmptyContentRenderPage
+import com.instructure.student.ui.rendertests.renderpages.SubmissionDetailsRenderPage
+import com.instructure.student.ui.rendertests.renderpages.SyllabusRenderPage
+import com.instructure.student.ui.rendertests.renderpages.TextSubmissionUploadRenderPage
+import com.instructure.student.ui.rendertests.renderpages.UploadStatusSubmissionViewRenderPage
+import com.instructure.student.ui.rendertests.renderpages.UrlSubmissionUploadRenderPage
+import com.instructure.student.ui.rendertests.renderpages.UrlSubmissionViewRenderPage
 import org.junit.runner.RunWith
 
 // Test from which all Student PageRender/SingleFragmentTestActivity tests will derive
