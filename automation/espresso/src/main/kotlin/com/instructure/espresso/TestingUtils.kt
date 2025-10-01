@@ -253,6 +253,9 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     while (System.currentTimeMillis() < endTime) {
         try {
             val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
+            for(work in workInfos) {
+                println("WorkInfo: $work")
+            }
             workInfo = workInfos.find { !it.state.isFinished }
 
             if (workInfo != null) break
