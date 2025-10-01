@@ -245,18 +245,38 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
     return recyclerView ?: throw IllegalStateException("Failed to retrieve RecyclerView")
 }
 
-fun handleWorkManagerTask(workerTag: String) {
+fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val testDriver = app.testDriver!!
+    val endTime = System.currentTimeMillis() + timeoutMillis
+    var workInfo: androidx.work.WorkInfo? = null
 
-    val workInfos = WorkManager.getInstance(app)
-        .getWorkInfosByTag(workerTag)
-        .get()
-    val workInfo = workInfos.find { !it.state.isFinished }
+    while (System.currentTimeMillis() < endTime) {
+        try {
+            val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
+            workInfo = workInfos.find { !it.state.isFinished }
 
-    testDriver.setAllConstraintsMet(workInfo?.id ?: return)
-    waitForWorkManagerJobsToFinish(workerTag = workerTag)
+            if (workInfo != null) break
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        Thread.sleep(500)
+    }
+
+    if (workInfo == null) {
+        Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms.")
+    }
+
+    val testDriver = app.testDriver
+    if (testDriver == null) {
+        Assert.fail("A TestAppManager.testDriver was null, so was not initialized before the timeout.")
+    }
+    else {
+        testDriver.setAllConstraintsMet(workInfo!!.id)
+        waitForWorkManagerJobsToFinish(workerTag = workerTag)
+    }
 }
+
 
 private fun waitForWorkManagerJobsToFinish(timeoutMs: Long = 20000L, workerTag: String) {
     val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
