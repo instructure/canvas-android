@@ -101,7 +101,7 @@ class CourseInteractionTest : StudentTest() {
         val course = data.courses.values.first()
 
         val displayName = "FamousQuote.html"
-        val fileId = data.addFileToCourse(
+        data.addFileToCourse(
                 courseId = course.id,
                 displayName = displayName,
                 fileContent = """
@@ -129,20 +129,53 @@ class CourseInteractionTest : StudentTest() {
                 .check(webMatches(getText(), containsString("Ask not")))
     }
 
+    // Home button should open the front page and display the correct header/title
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COURSE, TestCategory.INTERACTION)
+    fun testCourse_homeDisplaysFrontPageTitle() {
+
+        getToCourse(courseCount = 1, favoriteCourseCount = 1) { data, course ->
+
+            data.addPageToCourse(
+                courseId = course.id,
+                pageId = 1,
+                url = "front-page",
+                title = "Front Page",
+                body = "<h2 id=\"header1\">Very interesting Page</h2>",
+                published = true,
+                frontPage = true
+            )
+
+            data.courses[course.id] = data.courses[course.id]!!.copy(homePage = Course.HomePage.HOME_WIKI)
+        }
+
+        courseBrowserPage.selectHome()
+
+        onWebView(withId(R.id.contentWebView))
+            .withElement(findElement(Locator.ID, "header1"))
+            .check(webMatches(getText(), containsString("Very interesting Page")))
+    }
+
     /** Utility method to create mocked data, sign student 0 in, and navigate to course 0. */
     private fun getToCourse(
-            courseCount: Int = 2, // Need to link from one to the other
-            favoriteCourseCount: Int = 1): MockCanvas {
+        courseCount: Int = 2,
+        favoriteCourseCount: Int = 1,
+        configure: (MockCanvas, Course) -> Unit = { _, _ -> }
+    ): MockCanvas {
         val data = MockCanvas.init(
                 studentCount = 1,
                 courseCount = courseCount,
                 favoriteCourseCount = favoriteCourseCount)
 
         val course1 = data.courses.values.first()
+        val homeTab = Tab(position = 1, label = "Home", visibility = "public", tabId = Tab.HOME_ID)
         val pagesTab = Tab(position = 2, label = "Pages", visibility = "public", tabId = Tab.PAGES_ID)
         val filesTab = Tab(position = 3, label = "Files", visibility = "public", tabId = Tab.FILES_ID)
+        data.courseTabs[course1.id]!! += homeTab
         data.courseTabs[course1.id]!! += pagesTab
         data.courseTabs[course1.id]!! += filesTab
+
+        configure(data, course1)
 
         val student = data.students[0]
         val token = data.tokenFor(student)!!
@@ -155,4 +188,3 @@ class CourseInteractionTest : StudentTest() {
         return data
     }
 }
-

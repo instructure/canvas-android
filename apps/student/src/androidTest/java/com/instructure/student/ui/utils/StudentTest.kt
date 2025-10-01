@@ -48,7 +48,6 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.espresso.TestAppManager
 import com.instructure.student.ui.pages.AllCoursesPage
 import com.instructure.student.ui.pages.AnnotationCommentListPage
 import com.instructure.student.ui.pages.AnnouncementListPage
@@ -104,7 +103,6 @@ import com.instructure.student.ui.pages.offline.SyncProgressPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
-import org.junit.Before
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
@@ -180,12 +178,6 @@ abstract class StudentTest : CanvasTest() {
     val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
-
-    @Before
-    fun setupWorkerFactory() {
-        val application = activityRule.activity.application as? TestAppManager
-        application?.workerFactory = workerFactory
-    }
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {
