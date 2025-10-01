@@ -16,7 +16,9 @@
 package com.instructure.teacher.ui.pages.compose
 
 import androidx.annotation.StringRes
+import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.ExperimentalTestApi
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertTextContains
 import androidx.compose.ui.test.hasAnyAncestor
@@ -24,7 +26,7 @@ import androidx.compose.ui.test.hasAnySibling
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
-import androidx.compose.ui.test.onChildren
+import androidx.compose.ui.test.onAllNodesWithTag
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
@@ -66,7 +68,6 @@ import com.instructure.espresso.swipeToTop
 import com.instructure.teacher.R
 import org.hamcrest.Matchers
 import org.hamcrest.Matchers.allOf
-import org.junit.Assert.assertEquals
 import java.util.Locale
 
 /**
@@ -252,15 +253,17 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
      */
     fun selectCommentLibraryResultItem(index: Int? = null) {
 
-        val textNodes = composeTestRule
-            .onNodeWithTag("commentLibraryListColumn")
-            .onChildren()
-            .fetchSemanticsNodes()
-
-        val targetText = textNodes[index ?: 0]
-            .config[androidx.compose.ui.semantics.SemanticsProperties.Text]
+        val targetText = composeTestRule
+            .onAllNodesWithTag("commentLibraryItem")[index ?: 0]
+            .fetchSemanticsNode()
+            .config[SemanticsProperties.Text]
             .joinToString("") { it.text }
-        composeTestRule.onNode(hasText(targetText, substring = true) and !(hasTestTag("ownCommentText")))
+        composeTestRule.onNode(
+            hasText(
+                targetText,
+                substring = true
+            ) and (hasTestTag("ownCommentText").not())
+        )
             .performScrollTo()
             .performClick()
         composeTestRule.waitForIdle()
@@ -290,12 +293,9 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     @OptIn(ExperimentalTestApi::class)
     fun assertCommentLibraryItemCount(expectedCount: Int) {
         composeTestRule.waitUntilExactlyOneExists(hasTestTagThatContains("commentLibraryListColumn"), timeoutMillis = 5000)
-        val textNodes = composeTestRule
-            .onNodeWithTag("commentLibraryListColumn")
-            .onChildren()
-            .fetchSemanticsNodes()
-
-        assertEquals(expectedCount, textNodes.size)
+        composeTestRule
+            .onAllNodesWithTag("commentLibraryItem")
+            .assertCountEquals(expectedCount)
     }
 
     /**
