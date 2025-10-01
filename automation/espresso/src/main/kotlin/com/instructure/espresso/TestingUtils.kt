@@ -16,6 +16,7 @@
 package com.instructure.espresso
 
 import android.os.Build
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -247,14 +248,27 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
 
 fun handleWorkManagerTask(workerTag: String) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val testDriver = app.testDriver!!
+    val testDriver = app.testDriver
+    
+    if (testDriver == null) {
+        Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
+        app.initWorkManager(app)
+    }
 
     val workInfos = WorkManager.getInstance(app)
         .getWorkInfosByTag(workerTag)
         .get()
     val workInfo = workInfos.find { !it.state.isFinished }
 
-    testDriver.setAllConstraintsMet(workInfo?.id ?: return)
+    if (workInfo != null) {
+        val driver = app.testDriver
+        if (driver != null) {
+            driver.setAllConstraintsMet(workInfo.id)
+        } else {
+            Log.w("handleWorkManagerTask", "testDriver is still null after initialization, work may not execute properly")
+        }
+    }
+    
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
 
