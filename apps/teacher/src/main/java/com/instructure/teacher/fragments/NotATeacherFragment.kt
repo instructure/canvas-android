@@ -73,14 +73,12 @@ class NotATeacherFragment : BaseFragment() {
     private fun playStoreIntent(s: String): Intent = Intent(Intent.ACTION_VIEW).apply { data = Uri.parse(MARKET_URI_PREFIX + s) }
 
     private fun openApp(packageName: String) {
-        Handler(Looper.getMainLooper()).postDelayed( {
-            val launchIntent = requireContext().packageManager.getLaunchIntentForPackage(packageName)
-            if (launchIntent != null) {
-                startActivity(launchIntent)
-            } else {
-                startActivity(playStoreIntent(packageName))
-            }
-        }, 1000)
+        val launchIntent = requireContext().packageManager.getLaunchIntentForPackage(packageName)
+        if (launchIntent != null) {
+            startActivity(launchIntent)
+        } else {
+            startActivity(playStoreIntent(packageName))
+        }
         TeacherLogoutTask(
             LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
             alarmScheduler = alarmScheduler
