@@ -45,6 +45,7 @@ class SubmissionHelper(
         val submissionWork = OneTimeWorkRequest.Builder(SubmissionWorker::class.java)
             .setInputData(data.build())
             .setConstraints(Constraints.Builder().setRequiredNetworkType(NetworkType.CONNECTED).build())
+            .addTag("SubmissionWorker")
             .build()
         workManager.enqueue(submissionWork)
     }

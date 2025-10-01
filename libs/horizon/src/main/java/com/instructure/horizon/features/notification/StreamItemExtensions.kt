@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,17 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.student.espresso
+package com.instructure.horizon.features.notification
 
-import androidx.work.DefaultWorkerFactory
-import androidx.work.WorkerFactory
-import com.instructure.student.util.BaseAppManager
+import com.instructure.canvasapi2.models.StreamItem
 
-open class TestAppManager : BaseAppManager() {
+internal fun StreamItem.isNotificationItemScored(): Boolean {
+    return this.grade != null || this.score != -1.0
+}
 
-    var workerFactory: WorkerFactory? = null
+internal fun StreamItem.isDueDateNotification(): Boolean {
+    return this.notificationCategory == "Due Date"
+}
 
-    override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: DefaultWorkerFactory
-    }
+internal fun StreamItem.isCourseNotification(): Boolean {
+    return this.type == "Announcement"
+}
+
+internal fun StreamItem.isGradingPeriodNotification(): Boolean {
+    return this.notificationCategory == "Grading Policies"
 }

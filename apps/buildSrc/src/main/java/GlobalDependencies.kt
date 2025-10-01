@@ -76,6 +76,7 @@ object Libs {
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.2.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
+    const val ANDROIDX_WORK_TEST = "androidx.work:work-testing:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.12.0"
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.10.0"
     const val DATASTORE = "androidx.datastore:datastore-preferences:${Versions.DATASTORE}"

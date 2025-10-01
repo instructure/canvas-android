@@ -91,6 +91,7 @@ dependencies {
 
     implementation project(':dataseedingapi')
     implementation project(':login-api-2')
+    implementation Libs.ANDROIDX_WORK_TEST
     androidTestImplementation Libs.COMPOSE_UI_TEST
 
     implementation project(':pandautils')

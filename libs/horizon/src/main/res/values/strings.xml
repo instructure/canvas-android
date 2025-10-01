@@ -171,9 +171,10 @@
     <string name="notificationsFailedToRefresh">Failed to refresh notifications</string>
     <string name="notificationsFailedToLoad">Failed to load notifications</string>
     <string name="notificationsScoredItemTitle">%1$s\'s score is now available</string>
-    <string name="notificationsAssignmentScoredCategoryLabel">Assignment scored</string>
-    <string name="notificationsDueDateChangedCategoryLabel">Due date changed</string>
-    <string name="notificationsScoringWeightChangedCategoryLabel">Scoring weight changed</string>
+    <string name="notificationsScoreChangedCategoryLabel">Score changed</string>
+    <string name="notificationsDueDateCategoryLabel">Due date</string>
+    <string name="notificationsScoreCategoryLabel">Score</string>
+    <string name="notificationsAnnouncementCategoryLabel">Announcement</string>
     <string name="notificationsAnnouncementFromCetegoryLabel">Announcement from %1$s</string>
     <string name="notificationsScoreWeightChangedTitle">%1$s\'s score weight was changed</string>
     <string name="notificationsDueOnTitle">%1$s is due on %2$s</string>
@@ -352,5 +353,8 @@
     <string name="programDetails_enrollFailed">Failed to enroll in course.</string>
     <string name="learn_failedToLoad">Failed to load programs and courses.</string>
     <string name="learn_failedToRefresh">Failed to refresh programs and courses.</string>
+    <string name="notificationsDateToday">Today</string>
+    <string name="notificationsDateYesterday">Yesterday</string>
+    <string name="notificationsFailedToOpenMessage">Unable to open Notification</string>
     <string name="tools_noLtiTools">There are no external tools for this course.</string>
 </resources>
