@@ -251,11 +251,12 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     var endTime = System.currentTimeMillis() + timeoutMillis
     var workInfo: androidx.work.WorkInfo? = null
 
-    val testDriver = app.testDriver
+    var testDriver = app.testDriver
     if (testDriver == null) {
         while (System.currentTimeMillis() < endTime && app.testDriver == null) {
             Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
             app.initWorkManager(app)
+            testDriver = app.testDriver
             Thread.sleep(500)
         }
     }
