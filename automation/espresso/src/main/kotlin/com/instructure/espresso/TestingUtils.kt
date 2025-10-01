@@ -248,9 +248,8 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
 
 fun handleWorkManagerTask(workerTag: String) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val testDriver = app.testDriver
-    
-    if (testDriver == null) {
+
+    if (app.testDriver == null) {
         Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
         app.initWorkManager(app)
     }
@@ -261,14 +260,8 @@ fun handleWorkManagerTask(workerTag: String) {
     val workInfo = workInfos.find { !it.state.isFinished }
 
     if (workInfo != null) {
-        val driver = app.testDriver
-        if (driver != null) {
-            driver.setAllConstraintsMet(workInfo.id)
-        } else {
-            Log.w("handleWorkManagerTask", "testDriver is still null after initialization, work may not execute properly")
-        }
+        app.testDriver!!.setAllConstraintsMet(workInfo.id)
     }
-    
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
 
