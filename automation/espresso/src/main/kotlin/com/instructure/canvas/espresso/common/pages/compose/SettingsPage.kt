@@ -37,6 +37,7 @@ import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.onViewWithText
 import com.instructure.espresso.page.withText
 import com.instructure.espresso.retry
+import com.instructure.espresso.retryWithIncreasingDelay
 import com.instructure.pandautils.utils.AppTheme
 
 class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
@@ -71,7 +72,7 @@ class SettingsPage(private val composeTestRule: ComposeTestRule) : BasePage() {
 
     fun clickOnSettingsItem(title: String) {
         val nodeMatcher = hasTestTag("settingsItem").and(hasAnyDescendant(hasText(title)))
-        retry(catchBlock = {
+        retryWithIncreasingDelay(times = 10, catchBlock = {
             val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
             val y = device.displayHeight / 2
             val x = device.displayWidth / 2
