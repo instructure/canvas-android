@@ -28,19 +28,20 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
 open class TestAppManager: AppManager() {
 
+    var testDriver: TestDriver? = null
+
+    var workerFactory: WorkerFactory? = null
+
     @SuppressLint("RestrictedApi")
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
 
         if (workerFactory == null) {
-            workerFactory = WorkerFactory.getDefaultWorkerFactory()
+            workerFactory = getWorkManagerFactory()
         }
     }
 
-    var testDriver: TestDriver? = null
-
-    var workerFactory: WorkerFactory? = null
     @SuppressLint("RestrictedApi")
     override fun getWorkManagerFactory(): WorkerFactory {
         return workerFactory ?: DefaultWorkerFactory
