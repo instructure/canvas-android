@@ -19,6 +19,7 @@ import android.os.Build
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import androidx.test.core.app.ApplicationProvider
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.NoMatchingViewException
@@ -29,6 +30,9 @@ import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.espresso.web.sugar.Web
 import androidx.test.espresso.web.webdriver.DriverAtoms
 import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.work.WorkManager
+import com.instructure.canvas.espresso.TestAppManager
 import com.instructure.espresso.page.plus
 import com.instructure.pandautils.binding.BindableViewHolder
 import org.apache.commons.lang3.StringUtils
@@ -241,3 +245,28 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
     return recyclerView ?: throw IllegalStateException("Failed to retrieve RecyclerView")
 }
 
+fun handleWorkManagerTask(workerTag: String) {
+    val app = ApplicationProvider.getApplicationContext<TestAppManager>()
+    val testDriver = app.testDriver!!
+
+    val workInfos = WorkManager.getInstance(app)
+        .getWorkInfosByTag(workerTag)
+        .get()
+    val workInfo = workInfos.find { !it.state.isFinished }
+
+    testDriver.setAllConstraintsMet(workInfo?.id ?: return)
+    waitForWorkManagerJobsToFinish(workerTag = workerTag)
+}
+
+private fun waitForWorkManagerJobsToFinish(timeoutMs: Long = 20000L, workerTag: String) {
+    val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
+    val workManager = WorkManager.getInstance(context)
+    val start = System.currentTimeMillis()
+    while (true) {
+        val unfinished = workManager.getWorkInfosByTag(workerTag).get()
+            .any { !it.state.isFinished }
+        if (!unfinished) break
+        if (System.currentTimeMillis() - start > timeoutMs) break
+        Thread.sleep(250)
+    }
+}

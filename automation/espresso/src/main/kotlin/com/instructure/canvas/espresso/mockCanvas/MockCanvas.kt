@@ -1426,7 +1426,8 @@ fun MockCanvas.addPageToCourse(
         title: String = Randomizer.randomPageTitle(),
         body: String = Randomizer.randomPageBody(),
         published: Boolean = false,
-        groupId: Long? = null
+        groupId: Long? = null,
+        frontPage: Boolean = false
 ): Page {
 
     val page = Page(
@@ -1434,7 +1435,8 @@ fun MockCanvas.addPageToCourse(
             url = url,
             title = title,
             body = body,
-            published = published
+            published = published,
+            frontPage = frontPage
     )
 
     var list : MutableList<Page>? = null
