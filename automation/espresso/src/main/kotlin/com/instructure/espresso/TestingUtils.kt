@@ -16,6 +16,7 @@
 package com.instructure.espresso
 
 import android.os.Build
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -254,7 +255,7 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
         try {
             val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
             for(work in workInfos) {
-                println("WorkInfo: $work")
+                Log.d("STUDENT_APP_TAG","WorkInfo: $work")
             }
             workInfo = workInfos.find { !it.state.isFinished }
 
