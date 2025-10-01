@@ -251,11 +251,24 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     val endTime = System.currentTimeMillis() + timeoutMillis
     var workInfo: androidx.work.WorkInfo? = null
 
+    val testDriver = app.testDriver
+    if (testDriver == null) {
+        while (System.currentTimeMillis() < endTime && app.testDriver == null) {
+            Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
+            app.initWorkManager(app)
+            Thread.sleep(500)
+        }
+    }
+
+    if (testDriver == null) {
+        Assert.fail("A TestAppManager.testDriver was null, so was not initialized before the timeout.")
+    }
+
     while (System.currentTimeMillis() < endTime) {
         try {
             val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
             for(work in workInfos) {
-                Log.d("STUDENT_APP_TAG","WorkInfo: $work")
+                Log.w("STUDENT_APP_TAG","WorkInfo: $work")
             }
             workInfo = workInfos.find { !it.state.isFinished }
 
@@ -271,14 +284,8 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
         Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms.")
     }
 
-    val testDriver = app.testDriver
-    if (testDriver == null) {
-        Assert.fail("A TestAppManager.testDriver was null, so was not initialized before the timeout.")
-    }
-    else {
-        testDriver.setAllConstraintsMet(workInfo!!.id)
-        waitForWorkManagerJobsToFinish(workerTag = workerTag)
-    }
+    testDriver!!.setAllConstraintsMet(workInfo!!.id)
+    waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
 
 
