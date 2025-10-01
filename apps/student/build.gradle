@@ -233,6 +233,7 @@ dependencies {
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')
     androidTestImplementation project(':dataseedingapi')
+    androidTestImplementation Libs.ANDROIDX_WORK_TEST
 
     /* Unit Test Dependencies */
     testImplementation Libs.JUNIT
