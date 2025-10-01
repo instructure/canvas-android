@@ -17,7 +17,7 @@
 package com.instructure.student.ui.pages
 
 import android.view.View
-import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.hasSibling
@@ -97,18 +97,27 @@ class SchedulePage : BasePage(R.id.schedulePage) {
     }
 
     fun scrollToItem(itemId: Int, itemName: String, target: Matcher<View>? = null) {
-        var i: Int = 0
-        while (true) {
-            scrollToPosition(i)
-            Thread.sleep(300)
+        val matcher = if (target == null) {
+            withParent(itemId) + withText(itemName)
+        } else {
+            target + withText(itemName)
+        }
+
+        var i = 0
+        while (i <= 200) {
             try {
-                if(target == null) onView(withParent(itemId) + withText(itemName)).scrollTo()
-                else onView(target + withText(itemName)).scrollTo()
-                break
-            } catch(e: NoMatchingViewException) {
-                i+=2
+                recyclerView.perform(
+                    RecyclerViewActions.scrollToPosition<BindableViewHolder>(i)
+                )
+                onView(matcher).perform(scrollTo())
+                waitForView(matcher).assertDisplayed()
+                return
+            } catch (_: Exception) {
+                i += 3
             }
         }
+
+        throw AssertionError("Item not found: $itemName")
     }
 
     fun assertCourseHeaderDisplayed(courseName: String) {
