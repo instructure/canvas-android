@@ -248,7 +248,7 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
 
 fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val endTime = System.currentTimeMillis() + timeoutMillis
+    var endTime = System.currentTimeMillis() + timeoutMillis
     var workInfo: androidx.work.WorkInfo? = null
 
     val testDriver = app.testDriver
@@ -264,6 +264,7 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
         Assert.fail("A TestAppManager.testDriver was null, so was not initialized before the timeout.")
     }
 
+    endTime = System.currentTimeMillis() + timeoutMillis
     while (System.currentTimeMillis() < endTime) {
         try {
             val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
@@ -281,7 +282,8 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     }
 
     if (workInfo == null) {
-        Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms.")
+        val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
+        Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms. WorkInfos found: $workInfos")
     }
 
     testDriver!!.setAllConstraintsMet(workInfo!!.id)
