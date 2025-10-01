@@ -22,6 +22,7 @@ import com.instructure.canvas.espresso.mockCanvas.addSubmissionsForAssignment
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeAssignmentDetailsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCommentLibraryManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeInboxSettingsManager
+import com.instructure.canvas.espresso.mockCanvas.fakes.FakePostPolicyManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeStudentContextManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionCommentsManager
 import com.instructure.canvas.espresso.mockCanvas.fakes.FakeSubmissionContentManager
@@ -32,6 +33,7 @@ import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
 import com.instructure.canvasapi2.managers.CommentLibraryManager
 import com.instructure.canvasapi2.managers.InboxSettingsManager
+import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
@@ -63,6 +65,10 @@ class PersonContextInteractionTest : TeacherTest() {
     @BindValue
     @JvmField
     val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val postPolicyManager: PostPolicyManager = FakePostPolicyManager()
 
     @BindValue
     @JvmField

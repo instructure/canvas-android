@@ -15,6 +15,7 @@ import com.instructure.canvasapi2.apis.DiscussionAPI
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.ExperienceAPI
+import com.instructure.canvasapi2.apis.ExternalToolAPI
 import com.instructure.canvasapi2.apis.FeaturesAPI
 import com.instructure.canvasapi2.apis.FileDownloadAPI
 import com.instructure.canvasapi2.apis.FileFolderAPI
@@ -439,6 +440,11 @@ class ApiModule {
     @Provides
     fun provideExperienceAPI(): ExperienceAPI {
         return RestBuilder().build(ExperienceAPI::class.java, RestParams())
+    }
+
+    @Provides
+    fun provideExternalToolApi(): ExternalToolAPI.ExternalToolInterface {
+        return RestBuilder().build(ExternalToolAPI.ExternalToolInterface::class.java, RestParams())
     }
 }
 

@@ -14,13 +14,22 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.inbox
+package com.instructure.horizon.features.notification
 
-import androidx.compose.runtime.Composable
-import androidx.navigation.NavHostController
-import com.instructure.horizon.features.inbox.navigation.HorizonInboxNavigation
+import com.instructure.canvasapi2.models.StreamItem
 
-@Composable
-fun HorizonInboxScreen(mainNavController: NavHostController) {
-    HorizonInboxNavigation(mainNavController)
+internal fun StreamItem.isNotificationItemScored(): Boolean {
+    return this.grade != null || this.score != -1.0
+}
+
+internal fun StreamItem.isDueDateNotification(): Boolean {
+    return this.notificationCategory == "Due Date"
+}
+
+internal fun StreamItem.isCourseNotification(): Boolean {
+    return this.type == "Announcement"
+}
+
+internal fun StreamItem.isGradingPeriodNotification(): Boolean {
+    return this.notificationCategory == "Grading Policies"
 }

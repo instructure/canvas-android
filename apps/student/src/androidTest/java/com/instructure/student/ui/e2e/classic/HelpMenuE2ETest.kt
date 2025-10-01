@@ -42,8 +42,7 @@ class HelpMenuE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.DASHBOARD, TestCategory.E2E)
-    @Stub
+    @TestMetaData(Priority.COMMON, FeatureCategory.LEFT_SIDE_MENU, TestCategory.E2E, SecondaryFeatureCategory.HELP_MENU)
     fun testHelpMenuE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -63,8 +62,8 @@ class HelpMenuE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
         helpPage.assertHelpMenuContent()
 
-        Log.d(STEP_TAG, "Click on 'Report a problem' menu.")
-        helpPage.verifyReportAProblem("Test Subject", "Test Description")
+        Log.d(STEP_TAG, "Click on 'Report a Problem' menu.")
+        helpPage.assertReportProblemDialogDetails("Test Subject", "Test Description")
 
         Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
         helpPage.assertReportProblemDialogDisplayed()
@@ -87,7 +86,7 @@ class HelpMenuE2ETest : StudentTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.DASHBOARD, TestCategory.E2E)
+    @TestMetaData(Priority.BUG_CASE, FeatureCategory.DASHBOARD, TestCategory.E2E, SecondaryFeatureCategory.HELP_MENU)
     fun testHelpMenuReportProblemE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
@@ -107,8 +106,8 @@ class HelpMenuE2ETest : StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that all the corresponding Help menu content are displayed.")
         helpPage.assertHelpMenuContent()
 
-        Log.d(STEP_TAG, "Click on 'Report a problem' menu.")
-        helpPage.verifyReportAProblem("Test Subject", "Test Description")
+        Log.d(STEP_TAG, "Click on 'Report a Problem' menu.")
+        helpPage.assertReportProblemDialogDetails("Test Subject", "Test Description")
 
         Log.d(ASSERTION_TAG, "Assert that it is possible to write into the input fields and the corresponding buttons are displayed as well.")
         helpPage.assertReportProblemDialogDisplayed()

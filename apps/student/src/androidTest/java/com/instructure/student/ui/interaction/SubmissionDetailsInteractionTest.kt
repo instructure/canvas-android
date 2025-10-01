@@ -18,7 +18,6 @@ package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
 import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -46,6 +45,8 @@ import com.instructure.canvasapi2.models.RubricCriterion
 import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
+import com.instructure.espresso.handleWorkManagerTask
+import com.instructure.student.ui.pages.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
@@ -88,11 +89,14 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
-        Espresso.onIdle()
+        handleWorkManagerTask("SubmissionWorker")
+
         assignmentDetailsPage.assertAssignmentSubmitted()
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
+        handleWorkManagerTask("SubmissionWorker")
+
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
     }
 
@@ -110,11 +114,14 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         assignmentListPage.clickAssignment(assignment)
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
+        handleWorkManagerTask("SubmissionWorker")
+
         assignmentDetailsPage.assertAssignmentSubmitted()
         assignmentDetailsPage.assertNoAttemptSpinner()
 
         assignmentDetailsPage.clickSubmit()
         urlSubmissionUploadPage.submitText("https://google.com")
+        handleWorkManagerTask("SubmissionWorker")
 
         assignmentDetailsPage.goToSubmissionDetails()
 
@@ -122,6 +129,8 @@ class SubmissionDetailsInteractionTest : StudentTest() {
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
         submissionDetailsPage.openComments()
         submissionDetailsPage.addAndSendComment("Hey!")
+        handleWorkManagerTask("SubmissionWorker")
+
         submissionDetailsPage.assertCommentDisplayed("Hey!", data.users.values.first())
 
         submissionDetailsPage.selectAttempt("Attempt 2")

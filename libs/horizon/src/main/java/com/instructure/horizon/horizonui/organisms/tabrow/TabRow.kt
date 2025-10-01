@@ -34,6 +34,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -41,6 +42,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
@@ -48,9 +50,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import kotlin.math.max
 
 @Composable
-fun<T> TabRow(
+fun <T> TabRow(
     tabs: List<T>,
     onTabSelected: (Int) -> Unit,
     selectedIndex: Int,
@@ -75,10 +78,14 @@ fun<T> TabRow(
     val currentOffset by animateIntAsState(
         sizes.take(selectedIndex).sumOf { it }
                 + (selectedIndex) * spacingPx
-                + alignmentOffset
-        ,
+                + alignmentOffset,
         label = "IndicatorAnimation"
     )
+
+    LaunchedEffect(selectedIndex) {
+        val scrollOffset = sizes.take(selectedIndex).sumOf { it } + (selectedIndex) * spacingPx + alignmentOffset
+        scrollState.animateScrollTo(scrollOffset)
+    }
 
     val alignment = when (tabAlignment) {
         Alignment.Start -> Alignment.CenterStart
@@ -93,6 +100,7 @@ fun<T> TabRow(
             .onGloballyPositioned {
                 containerWidth = it.size.width
             }
+            .clipToBounds()
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -143,7 +151,6 @@ private fun BoxScope.SelectedTabIndicator(modifier: Modifier = Modifier) {
         modifier = modifier
             .height(1.dp)
             .align(Alignment.BottomStart)
-            .offset(y = 2.dp)
             .background(HorizonColors.Text.surfaceInverseSecondary())
     )
 }

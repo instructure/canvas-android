@@ -430,7 +430,7 @@ private fun ThresholdDialog(
 ) {
     val context = LocalContext.current
     var percentage by remember { mutableStateOf(threshold.orEmpty()) }
-    val enabled = percentage.toIntOrNull().orDefault() in (min + 1)..<max
+    val enabled = !percentage.startsWith("0") && percentage.toIntOrNull().orDefault() in (min + 1)..<max
     Dialog(onDismissRequest = { onDismiss() }) {
         Column(
             Modifier
@@ -453,7 +453,9 @@ private fun ThresholdDialog(
                 modifier = Modifier.testTag("thresholdDialogInput"),
                 value = percentage,
                 onValueChange = {
-                    percentage = it
+                    if (it.length <= 3) {
+                        percentage = it
+                    }
                 },
                 label = {
                     Text(text = stringResource(id = R.string.alertSettingsThresholdLabel))

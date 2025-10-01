@@ -19,20 +19,15 @@ package com.instructure.teacher.ui.pages.classic
 import android.app.Instrumentation
 import android.content.Intent
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.action.ViewActions.typeText
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayingAtLeast
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
-import com.instructure.canvas.espresso.withCustomConstraints
-import com.instructure.canvasapi2.models.Course
 import com.instructure.espresso.OnViewWithStringTextIgnoreCase
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.assertDisplayed
 import com.instructure.espresso.click
-import com.instructure.espresso.matchers.WaitForViewMatcher.waitForView
 import com.instructure.espresso.page.BasePage
 import com.instructure.espresso.page.onView
 import com.instructure.espresso.page.plus
@@ -43,15 +38,10 @@ import com.instructure.teacher.R
 import org.hamcrest.CoreMatchers
 
 /**
- * A page representing the Help menu in the application.
+ * A page representing the Help menu in the Teacher application.
  *
  */
 class HelpPage : BasePage(R.id.helpDialog) {
-
-    /**
-     * The label for asking an instructor.
-     */
-    private val askInstructorLabel by OnViewWithText(R.string.askInstructor)
 
     /**
      * The label for searching guides.
@@ -61,7 +51,7 @@ class HelpPage : BasePage(R.id.helpDialog) {
     /**
      * The label for reporting a problem.
      */
-    private val reportProblemLabel by OnViewWithText(R.string.reportProblem)
+    private val reportProblemLabel by OnViewWithText(R.string.report_problem)
 
     /**
      * The label for submitting a feature idea.
@@ -74,33 +64,19 @@ class HelpPage : BasePage(R.id.helpDialog) {
     private val shareLoveLabel by OnViewWithText(R.string.shareYourLove)
 
     /**
-     * Verifies asking a question to an instructor.
-     *
-     * @param course The course to select in the spinner.
-     * @param question The question to type in the message field.
-     */
-    fun verifyAskAQuestion(course: Course, question: String) {
-        askInstructorLabel.scrollTo().click()
-        waitForView(withText(course.name)).assertDisplayed()
-        onView(withId(R.id.message)).scrollTo().perform(withCustomConstraints(typeText(question), isDisplayingAtLeast(1)))
-        Espresso.closeSoftKeyboard()
-        onView(containsTextCaseInsensitive("Send")).assertDisplayed()
-    }
-
-    /**
      * Clicks on the 'Search the Canvas Guides' help menu.
      */
-    fun clickSearchGuidesLabel() {
+    private fun clickSearchGuidesLabel() {
         searchGuidesLabel.scrollTo().click()
     }
 
     /**
-     * Verifies reporting a problem.
+     * Asserts the details of the 'Report a problem' dialog by filling in the subject and description fields and checking for the 'Send' button.
      *
      * @param subject The subject of the problem.
      * @param description The description of the problem.
      */
-    fun verifyReportAProblem(subject: String, description: String) {
+    fun assertReportProblemDialogDetails(subject: String, description: String) {
         reportProblemLabel.scrollTo().click()
         onView(withId(R.id.subjectEditText)).typeText(subject)
         Espresso.closeSoftKeyboard()
@@ -109,6 +85,9 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(containsTextCaseInsensitive("Send")).scrollTo().assertDisplayed()
     }
 
+    /**
+     * Clicks on the 'Send' button on the 'Report a problem' dialog.
+     */
     fun clickSendReportProblem() {
         onView(containsTextCaseInsensitive("Send")).scrollTo().click()
     }
@@ -200,6 +179,12 @@ class HelpPage : BasePage(R.id.helpDialog) {
         onView(withId(R.id.subtitle) + withText("Tell us about your favorite parts of the app")).assertDisplayed()
     }
 
+    /**
+     * Asserts that clicking on a Help menu item launches an intent with the expected URL.
+     *
+     * @param helpMenuText The text of the Help menu item to click.
+     * @param expectedURL The expected URL that should be opened.
+     */
     fun assertHelpMenuURL(helpMenuText: String, expectedURL: String) {
         val expectedIntent = CoreMatchers.allOf(
             IntentMatchers.hasAction(Intent.ACTION_VIEW),
