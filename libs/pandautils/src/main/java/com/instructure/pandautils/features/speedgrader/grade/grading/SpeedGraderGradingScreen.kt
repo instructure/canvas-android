@@ -526,7 +526,9 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Composable
 private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
-    var grade by remember { mutableStateOf(uiState.enteredGrade ?: "") }
+    var grade by remember(uiState.enteredGrade) {
+        mutableStateOf(uiState.enteredGrade.orEmpty())
+    }
     Column {
         Row(
             modifier = Modifier
