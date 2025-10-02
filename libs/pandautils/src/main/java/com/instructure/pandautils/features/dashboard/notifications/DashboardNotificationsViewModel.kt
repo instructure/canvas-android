@@ -24,7 +24,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
-import androidx.work.await
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.AccountNotificationManager
 import com.instructure.canvasapi2.managers.ConferenceManager
@@ -292,36 +291,44 @@ class DashboardNotificationsViewModel @Inject constructor(
     private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) =
         fileUploadEntities?.mapNotNull { fileUploadEntity ->
             val workerId = UUID.fromString(fileUploadEntity.workerId)
-            workManager.getWorkInfoById(workerId).await()?.let { workInfo ->
+            // Use getWorkInfoByIdLiveData and suspend until value is available
+            val workInfo = kotlinx.coroutines.suspendCancellableCoroutine<WorkInfo?> { cont ->
+                val liveData = workManager.getWorkInfoByIdLiveData(workerId)
+                val observer = object : Observer<WorkInfo?> {
+                    override fun onChanged(value: WorkInfo?) {
+                        liveData.removeObserver(this)
+                        cont.resume(value, null)
+                    }
+                }
+                liveData.observeForever(observer)
+                cont.invokeOnCancellation { liveData.removeObserver(observer) }
+            }
+            workInfo?.let {
                 val icon: Int
                 val background: Int
-                when (workInfo.state) {
+                when (it.state) {
                     WorkInfo.State.FAILED -> {
                         icon = R.drawable.ic_exclamation_mark
                         background = R.color.backgroundDanger
                     }
-
                     WorkInfo.State.SUCCEEDED -> {
                         icon = R.drawable.ic_check_white_24dp
                         background = R.color.backgroundSuccess
                     }
-
                     else -> {
                         icon = R.drawable.ic_upload
                         background = R.color.backgroundInfo
                     }
                 }
-
                 val uploadViewData = UploadViewData(
                     fileUploadEntity.title.orEmpty(), fileUploadEntity.subtitle.orEmpty(),
-                    icon, background, workInfo.state == WorkInfo.State.RUNNING
+                    icon, background, it.state == WorkInfo.State.RUNNING
                 )
-
                 UploadItemViewModel(
                     workerId = workerId,
                     workManager = workManager,
                     data = uploadViewData,
-                    open = { uuid -> openUploadNotification(workInfo.state, uuid, fileUploadEntity) },
+                    open = { uuid -> openUploadNotification(it.state, uuid, fileUploadEntity) },
                     remove = { removeUploadNotification(fileUploadEntity, workerId) }
                 )
             }

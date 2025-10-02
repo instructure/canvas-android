@@ -248,7 +248,7 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
             }
             is FileUploadAction.UploadStartedAction -> {
                 getParent()?.selectedUriStringsCallback(action.selectedUris)
-                getParent()?.workInfoLiveDataCallback(action.id, action.liveData)
+                getParent()?.workInfoLiveDataCallback(action.id,action.liveData)
                 lifecycleScope.launch {
                     fileUploadEventHandler.postEvent(
                         FileUploadEvent.FileSelected(action.selectedUris)

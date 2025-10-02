@@ -35,7 +35,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:background="@drawable/bg_button_full_rounded"
-        android:foreground="?selectableItemBackground"
+        android:foreground="?android:attr/selectableItemBackground"
         android:gravity="center"
         android:minHeight="48dp"
         android:orientation="horizontal"

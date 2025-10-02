@@ -286,12 +286,6 @@
             </intent-filter>
         </activity>
 
-        <activity
-            android:name=".features.documentscanning.DocumentScanningActivity"
-            android:theme="@style/CanvasMaterialTheme_Default"
-            android:exported="true"
-            android:screenOrientation="portrait"/>
-
         <receiver android:name=".receivers.InitializeReceiver"
             android:exported="true">
             <intent-filter>

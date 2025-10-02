@@ -356,7 +356,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         }
     }
 
-    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo>) {
+    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo?>) {
         _uiState.update { state ->
             state.copy(
                 fileSelectorDialogData = null,
@@ -366,7 +366,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         // Subscribe to the worker's LiveData to observe its state
         viewModelScope.launch {
             workInfoLiveData.asFlow().collect { workInfo ->
-                when (workInfo.state) {
+                when (workInfo?.state) {
                     WorkInfo.State.RUNNING -> createPendingFileComment(workInfo)
                     WorkInfo.State.SUCCEEDED -> handleFileUploadSuccess(workInfo)
                     WorkInfo.State.FAILED -> handleFileUploadFailure(workInfo)
@@ -480,7 +480,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             attemptId = selectedAttemptId,
             mediaCommentId = id
         ).collect { result ->
-            when (result.state) {
+            when (result?.state) {
                 WorkInfo.State.SUCCEEDED -> {
                     fetchedComments.add(
                         SpeedGraderComment(

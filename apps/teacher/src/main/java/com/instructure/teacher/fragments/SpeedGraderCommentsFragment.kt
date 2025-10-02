@@ -303,8 +303,9 @@ class SpeedGraderCommentsFragment : BaseListFragment<SubmissionCommentWrapper, S
         presenter.selectedFilePaths = filePaths
     }
 
-    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
         workInfoLiveData.observe(this) {
+            if (it == null) return@observe
             presenter.onFileUploadWorkInfoChanged(it)
         }
     }

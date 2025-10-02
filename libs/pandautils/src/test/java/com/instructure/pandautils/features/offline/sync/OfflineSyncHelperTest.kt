@@ -29,8 +29,6 @@ import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import androidx.work.impl.OperationImpl
-import com.google.common.util.concurrent.Futures
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.sync.settings.SyncFrequency
@@ -45,6 +43,7 @@ import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
@@ -77,8 +76,10 @@ class OfflineSyncHelperTest {
 
         every { apiPrefs.user } returns User(1L)
 
-        every { workManager.enqueue(any<WorkRequest>()) } returns OperationImpl()
-        every { workManager.enqueueUniquePeriodicWork(any(), any(), any()) } returns OperationImpl()
+        every { workManager.enqueue(any<WorkRequest>()) } returns mockk()
+        every { workManager.enqueueUniquePeriodicWork(any(), any(), any()) } returns mockk()
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(emptyList())
+        every { workManager.getWorkInfosByTagFlow(any()) } returns flowOf(emptyList())
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
             1L,
@@ -100,8 +101,8 @@ class OfflineSyncHelperTest {
             SyncFrequency.DAILY,
             true
         )
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(mockk(relaxed = true))
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(listOf(mockk(relaxed = true)))
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             emptyList()
         )
 
@@ -116,7 +117,7 @@ class OfflineSyncHelperTest {
         val courseIds = listOf(1L, 2L, 3L)
 
         coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(1L, true, SyncFrequency.DAILY, true)
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(emptyList())
 
         offlineSyncHelper.syncCourses(courseIds)
 
@@ -134,8 +135,8 @@ class OfflineSyncHelperTest {
             SyncFrequency.DAILY,
             true
         )
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(emptyList())
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             emptyList()
         )
 
@@ -147,7 +148,7 @@ class OfflineSyncHelperTest {
 
     @Test
     fun `Cancel should cancel work with correct id`() {
-        every { workManager.cancelUniqueWork(any()) } returns OperationImpl()
+        every { workManager.cancelUniqueWork(any()) } returns mockk()
 
         offlineSyncHelper.cancelWork()
 
@@ -164,8 +165,8 @@ class OfflineSyncHelperTest {
             SyncFrequency.DAILY,
             true
         )
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(emptyList())
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             emptyList()
         )
 
@@ -260,7 +261,7 @@ class OfflineSyncHelperTest {
         coVerify { workManager.enqueueUniquePeriodicWork(any(), any(), capture(originalCaptor)) }
         val originalRequest = originalCaptor.captured
 
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(
             listOf(
                 WorkInfo(originalRequest.id, WorkInfo.State.ENQUEUED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
@@ -278,8 +279,8 @@ class OfflineSyncHelperTest {
     @Test
     fun `Cancel running one time workers`() = runTest {
         val uuid = UUID.randomUUID()
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(emptyList())
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             listOf(
                 WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
@@ -295,12 +296,12 @@ class OfflineSyncHelperTest {
     @Test
     fun `Cancel running periodic workers`() = runTest {
         val uuid = UUID.randomUUID()
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(
             listOf(
                 WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             emptyList()
         )
 
@@ -320,7 +321,7 @@ class OfflineSyncHelperTest {
     @Test
     fun `scheduleWorkAfterLogin should schedule work when auto sync is enabled and no work is already scheduled`() =
         runTest {
-            every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(emptyList())
+            every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(emptyList())
             coEvery { syncSettingsFacade.getSyncSettings() } returns SyncSettingsEntity(
                 autoSyncEnabled = true,
                 syncFrequency = SyncFrequency.DAILY,
@@ -348,12 +349,12 @@ class OfflineSyncHelperTest {
     @Test
     fun `Restart periodic worker`() = runTest {
         val uuid = UUID.randomUUID()
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(
             listOf(
                 WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
         )
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             emptyList()
         )
 
@@ -372,10 +373,10 @@ class OfflineSyncHelperTest {
     @Test
     fun `Restart one time worker`() = runTest {
         val uuid = UUID.randomUUID()
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(
             emptyList()
         )
-        every { workManager.getWorkInfosByTag(OfflineSyncWorker.ONE_TIME_TAG) } returns Futures.immediateFuture(
+        every { workManager.getWorkInfosByTagFlow(OfflineSyncWorker.ONE_TIME_TAG) } returns flowOf(
             listOf(
                 WorkInfo(uuid, WorkInfo.State.RUNNING, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
             )
@@ -390,7 +391,7 @@ class OfflineSyncHelperTest {
 
     @Test
     fun `scheduleWorkAfterLogin should not schedule work when work is already scheduled`() = runTest {
-        every { workManager.getWorkInfosForUniqueWork(any()) } returns Futures.immediateFuture(mockk(relaxed = true))
+        every { workManager.getWorkInfosForUniqueWorkFlow(any()) } returns flowOf(mockk(relaxed = true))
 
         offlineSyncHelper.scheduleWorkAfterLogin()
 

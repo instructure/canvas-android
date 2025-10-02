@@ -16,6 +16,7 @@
  */
 package com.instructure.teacher.ui.espresso
 
+import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.teacher.utils.BaseAppManager
@@ -25,7 +26,7 @@ open class TestAppManager : BaseAppManager() {
     var workerFactory: WorkerFactory? = null
 
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
+        return workerFactory ?: DefaultWorkerFactory
     }
 
     override fun getScheduler(): AlarmScheduler? = null

@@ -135,8 +135,8 @@ fun TriStateBottomSheet(
                 anchoredDraggableState.updateAnchors(newAnchors)
 
                 val currentTarget = anchoredDraggableState.targetValue
-                if (!newAnchors.hasAnchorFor(currentTarget)) {
-                    if (newAnchors.hasAnchorFor(initialAnchor)) {
+                if (!newAnchors.hasPositionFor(currentTarget)) {
+                    if (newAnchors.hasPositionFor(initialAnchor)) {
                         anchoredDraggableState.snapTo(initialAnchor)
                     } else if (newAnchors.size > 0) {
                         newAnchors.closestAnchor(anchoredDraggableState.offset.takeIf { !it.isNaN() }
@@ -153,7 +153,7 @@ fun TriStateBottomSheet(
 
     LaunchedEffect(anchoredDraggableState.anchors, initialAnchor) {
         val currentAnchors = anchoredDraggableState.anchors
-        if (currentAnchors.hasAnchorFor(initialAnchor) && anchoredDraggableState.currentValue != initialAnchor) {
+        if (currentAnchors.hasPositionFor(initialAnchor) && anchoredDraggableState.currentValue != initialAnchor) {
             if (anchoredDraggableState.targetValue != initialAnchor || !anchoredDraggableState.isAnimationRunning) {
                 anchoredDraggableState.snapTo(initialAnchor)
             }
@@ -168,8 +168,8 @@ fun TriStateBottomSheet(
             if (offset.isNaN() || currentAnchors.size == 0) {
                 getPixelForAnchor(initialAnchor)
             } else {
-                val minAnchorValue = currentAnchors.minAnchor()
-                val maxAnchorValue = currentAnchors.maxAnchor()
+                val minAnchorValue = currentAnchors.minPosition()
+                val maxAnchorValue = currentAnchors.maxPosition()
                 offset.coerceIn(minAnchorValue, maxAnchorValue)
             }
         }
@@ -259,7 +259,7 @@ fun TriStateBottomSheet(
                             coroutineScope.launch {
                                 when (anchoredDraggableState.targetValue) {
                                     AnchorPoints.BOTTOM -> {
-                                        if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.MIDDLE)) {
+                                        if (anchoredDraggableState.anchors.hasPositionFor(AnchorPoints.MIDDLE)) {
                                             anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
                                         } else {
                                             anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)
@@ -271,7 +271,7 @@ fun TriStateBottomSheet(
                                     }
 
                                     AnchorPoints.TOP -> {
-                                        if (anchoredDraggableState.anchors.hasAnchorFor(AnchorPoints.MIDDLE)) {
+                                        if (anchoredDraggableState.anchors.hasPositionFor(AnchorPoints.MIDDLE)) {
                                             anchoredDraggableState.animateTo(AnchorPoints.MIDDLE)
                                         } else {
                                             anchoredDraggableState.animateTo(AnchorPoints.BOTTOM)

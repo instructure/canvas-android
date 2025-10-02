@@ -82,7 +82,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.hideFromAccessibility
 import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.testTag
@@ -291,7 +291,7 @@ private fun GradesScreenContent(
                         modifier = Modifier
                             .height(24.dp)
                             .semantics {
-                                invisibleToUser()
+                                hideFromAccessibility()
                             }
                     )
                 }
@@ -301,19 +301,19 @@ private fun GradesScreenContent(
                 }
             }
 
-            uiState.items.forEach {
+            uiState.items.forEach { item ->
                 stickyHeader {
                     GroupHeader(
-                        name = it.name,
-                        expanded = it.expanded,
+                        name = item.name,
+                        expanded = item.expanded,
                         onClick = {
-                            actionHandler(GradesAction.GroupHeaderClick(it.id))
+                            actionHandler(GradesAction.GroupHeaderClick(item.id))
                         }
                     )
                 }
 
-                if (it.expanded) {
-                    items(it.assignments) { assignment ->
+                if (item.expanded) {
+                    items(item.assignments) { assignment ->
                         AssignmentItem(assignment, actionHandler, userColor)
                     }
                 }
