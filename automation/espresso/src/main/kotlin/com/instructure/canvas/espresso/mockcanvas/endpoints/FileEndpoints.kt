@@ -54,6 +54,15 @@ object FileDownloadEndpoint : Endpoint (
                     request.unauthorizedResponse()
                 }
             }
+            HEAD {
+                val fileId = pathVars.fileId
+                val content = data.fileContents[fileId]
+                if (content != null) {
+                    request.successResponseRaw(content)
+                } else {
+                    request.unauthorizedResponse()
+                }
+            }
 
         }
 

@@ -32,12 +32,17 @@ class HttpResponder(
 ) {
 
     private var getMethod: (() -> Response)? = null
+    private var headMethod: (() -> Response)? = null
     private var postMethod: (() -> Response)? = null
     private var putMethod: (() -> Response)? = null
     private var deleteMethod: (() -> Response)? = null
 
     fun HttpResponder.GET(onHandle: () -> Response) {
         getMethod = onHandle
+    }
+
+    fun HttpResponder.HEAD(onHandle: () -> Response) {
+        headMethod = onHandle
     }
 
     fun HttpResponder.POST(onHandle: () -> Response) {
@@ -56,6 +61,7 @@ class HttpResponder(
         val method = request.method
         return when {
             method == "GET" && getMethod != null -> getMethod!!()
+            method == "HEAD" && headMethod != null -> headMethod!!()
             method == "POST" && postMethod != null -> postMethod!!()
             method == "PUT" && putMethod != null -> putMethod!!()
             method == "DELETE" && deleteMethod != null -> deleteMethod!!()
