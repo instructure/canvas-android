@@ -83,5 +83,8 @@ class NotATeacherFragment : BaseFragment() {
             LogoutTask.Type.LOGOUT_NO_LOGIN_FLOW,
             alarmScheduler = alarmScheduler
         ).execute()
+
+        // Finish the activity so it's removed from the stack
+        requireActivity().finish()
     }
 }
