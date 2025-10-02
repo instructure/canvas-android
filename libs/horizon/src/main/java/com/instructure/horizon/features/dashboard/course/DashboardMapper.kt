@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.course
 
+import android.content.Context
 import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
@@ -27,21 +28,22 @@ import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCar
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
+    context: Context,
     programs: List<Program>,
     nextModuleForCourse: suspend (Long?) -> DashboardCourseCardModuleItemState?
 ): List<DashboardCourseCardState> {
-    val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(programs) }
+    val completed = this.filter { it.isCompleted() }.map { it.mapCompleted(context, programs) }
     val active = this.filter { it.isActive() }.map { it.mapActive(programs, nextModuleForCourse) }
     return (active + completed).sortedByDescending { it.lastAccessed }
 }
 
-internal fun List<Program>.mapToDashboardCourseCardState(): List<DashboardCourseCardState> {
+internal fun List<Program>.mapToDashboardCourseCardState(context: Context,): List<DashboardCourseCardState> {
     return this.map { program ->
         DashboardCourseCardState(
             title = program.name,
-            description = "Welcome! View your program to enroll in your first course.",
+            description = context.getString(R.string.dashboardNotStartedProgramDescription),
             buttonState = DashboardCourseCardButtonState(
-                label = "Program details",
+                label = context.getString(R.string.dashboardNotStartedProgramDetailsLabel),
                 iconRes = R.drawable.arrow_forward,
                 onClickAction = CardClickAction.NavigateToProgram(program.id),
             ),
@@ -57,7 +59,7 @@ private fun GetCoursesQuery.Enrollment.isActive(): Boolean {
     return this.state == EnrollmentWorkflowState.active
 }
 
-private fun GetCoursesQuery.Enrollment.mapCompleted(programs: List<Program>): DashboardCourseCardState {
+private fun GetCoursesQuery.Enrollment.mapCompleted(context: Context, programs: List<Program>): DashboardCourseCardState {
     return DashboardCourseCardState(
         parentPrograms = programs
             .filter { it.sortedRequirements.any { it.courseId == this.course?.id?.toLongOrNull() } }
@@ -70,7 +72,7 @@ private fun GetCoursesQuery.Enrollment.mapCompleted(programs: List<Program>): Da
             },
         imageUrl = null,
         title = this.course?.name.orEmpty(),
-        description = "Congrats! You’ve completed your course. View your progress and scores on the Learn page.",
+        description = context.getString(R.string.dashboardCompletedCourseDetails),
         progress = 1.0,
         moduleItem = null,
         buttonState = null,

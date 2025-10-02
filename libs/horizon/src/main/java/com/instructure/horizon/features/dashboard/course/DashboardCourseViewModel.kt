@@ -89,6 +89,7 @@ class DashboardCourseViewModel @Inject constructor(
 
 
         val courseCardStates = enrollments.mapToDashboardCourseCardState(
+            context,
             programs = programs,
             nextModuleForCourse = { courseId ->
                 fetchNextModuleState(courseId, forceNetwork)
@@ -112,7 +113,7 @@ class DashboardCourseViewModel @Inject constructor(
 
         val programCardStates = programs
             .filter { program -> program.sortedRequirements.none { it.enrollmentStatus == ProgramProgressCourseEnrollmentStatus.ENROLLED } }
-            .mapToDashboardCourseCardState()
+            .mapToDashboardCourseCardState(context)
 
         _uiState.update {
             it.copy(

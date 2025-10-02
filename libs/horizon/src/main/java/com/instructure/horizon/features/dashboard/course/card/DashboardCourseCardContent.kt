@@ -226,7 +226,7 @@ private fun DescriptionText(description: String) {
 private fun CourseProgress(progress: Double) {
     Column(Modifier.fillMaxWidth()){
         Text(
-            text = "${progress.roundToInt()}% complete",
+            text = stringResource(R.string.dashboardCourseCardCompletedLabel, progress.roundToInt()),
             style = HorizonTypography.p1,
             color = HorizonColors.Text.title()
         )

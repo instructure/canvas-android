@@ -361,4 +361,11 @@
     <string name="a11y_dashboardNotificationsContentDescription">Notifications</string>
     <string name="a11y_dashboardInboxContentDescription">Inbox</string>
     <string name="a11y_dashboardPagerIndicatorContentDescription">Course Card %1$d of %2$d</string>
+    <string name="dashboardCourseCardCompletedLabel">%1$d\%% complete</string>
+    <string name="dashboardCourseCardErrorTitle">We weren’t able to load this content.</string>
+    <string name="dashboardCourseCardErrorMessage">Please try again.</string>
+    <string name="dashboardCourseCardRetryLabel">Retry</string>
+    <string name="dashboardNotStartedProgramDescription">Welcome! View your program to enroll in your first course.</string>
+    <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
+    <string name="dashboardCompletedCourseDetails">Congrats! You’ve completed your course. View your progress and scores on the Learn page.</string>
 </resources>

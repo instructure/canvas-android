@@ -71,6 +71,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 import kotlin.math.abs
 
+private const val cardAnimationRange: Float = 0.2f
+
 @Composable
 fun DashboardCourseSection(
     mainNavController: NavHostController,
@@ -144,7 +146,7 @@ private fun DashboardCourseSectionContent(
                 if (it == pagerstate.currentPage) {
                     (1 - abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
                 } else {
-                    (1f - (0.2f * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
+                    (1f - (cardAnimationRange * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
                 },
                 label = "DashboardCourseCardAnimation",
             )
@@ -163,8 +165,7 @@ private fun DashboardCourseSectionContent(
                     }
                     .offset {
                         IntOffset(
-                            (animationDirection * (((cardWidthList[it]
-                                ?: 0f)) / 2 * (1 - scaleAnimation))).toInt(),
+                            (animationDirection * ((cardWidthList[it] ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
                             0
                         )
                     }
@@ -181,8 +182,8 @@ private fun DashboardCourseSectionContent(
 private fun Float.convertScaleRange(): Float {
     val oldMin = -0.5f
     val oldMax = 0.5f
-    val newMin = -0.2f
-    val newMax = 0.2f
+    val newMin = -cardAnimationRange
+    val newMax = cardAnimationRange
     return ((this - oldMin) / (oldMax - oldMin) ) * (newMax - newMin) + newMin
 }
 
