@@ -76,7 +76,6 @@ import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.molecules.ProgressBarNumberStyle
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
-import kotlin.math.roundToInt
 
 @Composable
 fun DashboardCourseCardContent(
@@ -224,15 +223,7 @@ private fun DescriptionText(description: String) {
 
 @Composable
 private fun CourseProgress(progress: Double) {
-    Column(Modifier.fillMaxWidth()){
-        Text(
-            text = stringResource(R.string.dashboardCourseCardCompletedLabel, progress.roundToInt()),
-            style = HorizonTypography.p1,
-            color = HorizonColors.Text.title()
-        )
-        Spacer(Modifier.height(8.dp))
-        ProgressBar(progress = progress, numberStyle = ProgressBarNumberStyle.OFF)
-    }
+    ProgressBar(progress = progress, numberStyle = ProgressBarNumberStyle.OUTSIDE)
 }
 
 @OptIn(ExperimentalLayoutApi::class)
@@ -306,10 +297,10 @@ private fun DashboardCardButton(
 ) {
     LoadingButton(
         label = state.label,
-        height = ButtonHeight.NORMAL,
+        height = ButtonHeight.SMALL,
         width = ButtonWidth.RELATIVE,
-        color = ButtonColor.BlackOutline,
-        iconPosition = if (state.iconRes != null) ButtonIconPosition.End(state.iconRes) else ButtonIconPosition.NoIcon,
+        color = ButtonColor.Black,
+        iconPosition = ButtonIconPosition.NoIcon,
         onClick = { handleOnClickAction(state.onClickAction) },
         contentAlignment = Alignment.Center,
         loading = state.isLoading,
@@ -342,7 +333,6 @@ private fun DashboardCourseCardWithModulePreview() {
         ),
         buttonState = DashboardCourseCardButtonState(
             label = "Go to Course",
-            iconRes = R.drawable.arrow_forward,
             onClickAction = CardClickAction.Action({})
         ),
         onClickAction = CardClickAction.Action({})

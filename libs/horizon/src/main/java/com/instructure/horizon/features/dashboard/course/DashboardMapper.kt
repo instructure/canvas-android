@@ -44,7 +44,6 @@ internal fun List<Program>.mapToDashboardCourseCardState(context: Context,): Lis
             description = context.getString(R.string.dashboardNotStartedProgramDescription),
             buttonState = DashboardCourseCardButtonState(
                 label = context.getString(R.string.dashboardNotStartedProgramDetailsLabel),
-                iconRes = R.drawable.arrow_forward,
                 onClickAction = CardClickAction.NavigateToProgram(program.id),
             ),
         )

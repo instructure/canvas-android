@@ -1,6 +1,5 @@
 package com.instructure.horizon.features.dashboard.course.card
 
-import androidx.annotation.DrawableRes
 import com.instructure.horizon.model.LearningObjectType
 import java.util.Date
 
@@ -32,7 +31,6 @@ data class DashboardCourseCardModuleItemState(
 
 data class DashboardCourseCardButtonState(
     val label: String,
-    @DrawableRes val iconRes: Int? = null,
     val onClickAction: CardClickAction,
     val isLoading: Boolean = false,
     val action: suspend () -> Unit = { },
