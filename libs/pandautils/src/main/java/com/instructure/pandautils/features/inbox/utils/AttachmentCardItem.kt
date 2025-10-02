@@ -22,7 +22,8 @@ data class AttachmentCardItem (
     val attachment: Attachment,
     val status: AttachmentStatus, // TODO: Currently this is not used for proper state handling, but if the upload process will be refactored it can be useful
     val readOnly: Boolean,
-    val uploadProgress: Float? = null // Upload progress from 0.0 to 1.0, null if not uploading
+    val uploadProgress: Float? = null, // Upload progress from 0.0 to 1.0, null if not uploading
+    val workerId: String? = null // WorkManager UUID to track which upload this belongs to
 )
 
 enum class AttachmentStatus {
@@ -35,12 +36,12 @@ enum class AttachmentStatus {
     companion object {
         fun fromWorkInfoState(state: WorkInfo.State): AttachmentStatus {
             return when (state) {
-                WorkInfo.State.SUCCEEDED -> AttachmentStatus.UPLOADED
-                WorkInfo.State.FAILED -> AttachmentStatus.FAILED
-                WorkInfo.State.ENQUEUED -> AttachmentStatus.UPLOADING
-                WorkInfo.State.RUNNING -> AttachmentStatus.UPLOADING
-                WorkInfo.State.BLOCKED -> AttachmentStatus.FAILED
-                WorkInfo.State.CANCELLED -> AttachmentStatus.FAILED
+                WorkInfo.State.SUCCEEDED -> UPLOADED
+                WorkInfo.State.FAILED -> FAILED
+                WorkInfo.State.ENQUEUED -> UPLOADING
+                WorkInfo.State.RUNNING -> UPLOADING
+                WorkInfo.State.BLOCKED -> FAILED
+                WorkInfo.State.CANCELLED -> FAILED
             }
         }
     }

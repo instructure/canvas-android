@@ -668,6 +668,144 @@ class InboxComposeViewModelTest {
     }
 
     @Test
+    fun `Concurrent uploads - one fails, other continues successfully`() {
+        val viewmodel = getViewModel()
+        val attachment1 = Attachment(id = 1, displayName = "test1.pdf")
+        val attachment2 = Attachment(id = 2, displayName = "test2.pdf")
+        val attachmentEntity1 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment1)
+        val attachmentEntity2 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment2)
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        coEvery { attachmentDao.findByParentId(uuid1.toString()) } returns listOf(attachmentEntity1)
+        coEvery { attachmentDao.findByParentId(uuid2.toString()) } returns listOf(attachmentEntity2)
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        // Assign workerIds to placeholders
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[0].status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[1].status)
+
+        // First upload FAILS
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+
+        // Verify: First attachment is FAILED, second is still UPLOADING
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
+
+        // Second upload SUCCEEDS
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Verify: First attachment still FAILED, second is UPLOADED
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.UPLOADED, viewmodel.uiState.value.attachments.first { it.attachment.id == 2L }.status)
+    }
+
+    @Test
+    fun `Concurrent uploads - both fail independently`() {
+        val viewmodel = getViewModel()
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        // Assign workerIds to placeholders
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+
+        // First upload fails
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+
+        // Verify: Only first attachment is FAILED, second is still UPLOADING
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
+
+        // Second upload also fails
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.FAILED, setOf("")))
+
+        // Verify: Both attachments are FAILED
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid1.toString() }.status)
+        assertEquals(AttachmentStatus.FAILED, viewmodel.uiState.value.attachments.first { it.workerId == uuid2.toString() }.status)
+    }
+
+    @Test
+    fun `Concurrent uploads - both succeed independently`() {
+        val viewmodel = getViewModel()
+        val attachment1 = Attachment(id = 1, displayName = "test1.pdf")
+        val attachment2 = Attachment(id = 2, displayName = "test2.pdf")
+        val attachmentEntity1 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment1)
+        val attachmentEntity2 = com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity(attachment2)
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        coEvery { attachmentDao.findByParentId(uuid1.toString()) } returns listOf(attachmentEntity1)
+        coEvery { attachmentDao.findByParentId(uuid2.toString()) } returns listOf(attachmentEntity2)
+
+        // Start both uploads with placeholders
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf"))
+        viewmodel.addUploadingAttachments(listOf("/storage/test2.pdf"))
+
+        // Assign workerIds
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+
+        // First upload succeeds
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Verify: First replaced with real attachment, second still uploading
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADED })
+        assertEquals(1, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADING })
+
+        // Second upload succeeds
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.SUCCEEDED, setOf("")))
+
+        // Verify: Both replaced with real attachments
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(2, viewmodel.uiState.value.attachments.count { it.status == AttachmentStatus.UPLOADED })
+        assertEquals(1L, viewmodel.uiState.value.attachments.first { it.attachment.id == 1L }.attachment.id)
+        assertEquals(2L, viewmodel.uiState.value.attachments.first { it.attachment.id == 2L }.attachment.id)
+    }
+
+    @Test
+    fun `WorkerId assigned to placeholders tracks uploads independently`() {
+        val viewmodel = getViewModel()
+        val uuid1 = UUID.randomUUID()
+        val uuid2 = UUID.randomUUID()
+
+        // Start both uploads
+        viewmodel.addUploadingAttachments(listOf("/storage/test1.pdf", "/storage/test2.pdf"))
+
+        // Assign workerIds
+        viewmodel.updateAttachments(uuid1, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+        viewmodel.updateAttachments(uuid2, WorkInfo(UUID.randomUUID(), WorkInfo.State.RUNNING, setOf("")))
+
+        // Both should have workerIds assigned
+        assertEquals(2, viewmodel.uiState.value.attachments.size)
+        assertEquals(uuid1.toString(), viewmodel.uiState.value.attachments[0].workerId)
+        assertEquals(uuid2.toString(), viewmodel.uiState.value.attachments[1].workerId)
+
+        // Both attachments should be UPLOADING
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[0].status)
+        assertEquals(AttachmentStatus.UPLOADING, viewmodel.uiState.value.attachments[1].status)
+    }
+
+    @Test
     fun `Download attachment on selection`() {
         val fileDownloader: FileDownloader = mockk(relaxed = true)
         val viewModel = getViewModel(fileDownloader)

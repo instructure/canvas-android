@@ -237,25 +237,29 @@ class InboxComposeViewModel @Inject constructor(
                         val totalSize = progress.getLong("PROGRESS_DATA_TOTAL_SIZE", 0L)
                         val progressPercent = if (totalSize > 0) uploadedSize.toFloat() / totalSize.toFloat() else 0f
 
-                        // Update the first UPLOADING attachment with progress
+                        // Find attachment with this workerId, or assign workerId to first placeholder without one
                         _uiState.update { currentState ->
+                            var workerIdAssigned = false
                             currentState.copy(
                                 attachments = currentState.attachments.map { attachment ->
-                                    if (attachment.status == AttachmentStatus.UPLOADING && attachment.uploadProgress == null) {
-                                        // Update first placeholder without progress
-                                        attachment.copy(uploadProgress = progressPercent)
-                                    } else if (attachment.status == AttachmentStatus.UPLOADING) {
-                                        // Update existing uploading attachment progress
-                                        attachment.copy(uploadProgress = progressPercent)
-                                    } else {
-                                        attachment
+                                    when {
+                                        // Update attachment that already has this workerId
+                                        attachment.workerId == workerId.toString() -> {
+                                            attachment.copy(uploadProgress = progressPercent)
+                                        }
+                                        // Assign workerId to first placeholder without one
+                                        !workerIdAssigned && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            workerIdAssigned = true
+                                            attachment.copy(workerId = workerId.toString(), uploadProgress = progressPercent)
+                                        }
+                                        else -> attachment
                                     }
                                 }
                             )
                         }
                     }
                     WorkInfo.State.SUCCEEDED -> {
-                        // Replace ONE placeholder attachment with real uploaded attachments
+                        // Replace placeholder attachment with matching workerId with real uploaded attachments
                         val attachmentEntities = attachmentDao.findByParentId(workerId.toString())
                         attachmentEntities?.let { attachmentList ->
                             // Create real uploaded attachments
@@ -263,14 +267,19 @@ class InboxComposeViewModel @Inject constructor(
                                 AttachmentCardItem(it.toApiModel(), status, false)
                             }
 
-                            // Remove only the first UPLOADING placeholder (representing this upload)
+                            // Remove placeholder with matching workerId, or first UPLOADING placeholder without workerId
                             var placeholderRemoved = false
-                            val filteredAttachments = uiState.value.attachments.filter {
-                                if (it.status == AttachmentStatus.UPLOADING && !placeholderRemoved) {
-                                    placeholderRemoved = true
-                                    false // Remove this one placeholder
-                                } else {
-                                    true // Keep all others
+                            val filteredAttachments = uiState.value.attachments.filter { attachment ->
+                                when {
+                                    attachment.workerId == workerId.toString() -> {
+                                        placeholderRemoved = true
+                                        false // Remove this placeholder
+                                    }
+                                    !placeholderRemoved && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                        placeholderRemoved = true
+                                        false // Remove first unassigned placeholder
+                                    }
+                                    else -> true
                                 }
                             }
 
@@ -279,14 +288,21 @@ class InboxComposeViewModel @Inject constructor(
                         } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
                     }
                     WorkInfo.State.FAILED, WorkInfo.State.CANCELLED, WorkInfo.State.BLOCKED -> {
-                        // Update placeholder attachments to FAILED status
+                        // Update placeholder with matching workerId to FAILED, or first UPLOADING placeholder without workerId
                         _uiState.update { currentState ->
+                            var placeholderUpdated = false
                             currentState.copy(
                                 attachments = currentState.attachments.map { attachment ->
-                                    if (attachment.status == AttachmentStatus.UPLOADING) {
-                                        attachment.copy(status = AttachmentStatus.FAILED)
-                                    } else {
-                                        attachment
+                                    when {
+                                        attachment.workerId == workerId.toString() -> {
+                                            placeholderUpdated = true
+                                            attachment.copy(status = AttachmentStatus.FAILED)
+                                        }
+                                        !placeholderUpdated && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            placeholderUpdated = true
+                                            attachment.copy(status = AttachmentStatus.FAILED, workerId = workerId.toString())
+                                        }
+                                        else -> attachment
                                     }
                                 }
                             )
