@@ -21,7 +21,8 @@ import com.instructure.canvasapi2.models.Attachment
 data class AttachmentCardItem (
     val attachment: Attachment,
     val status: AttachmentStatus, // TODO: Currently this is not used for proper state handling, but if the upload process will be refactored it can be useful
-    val readOnly: Boolean
+    val readOnly: Boolean,
+    val uploadProgress: Float? = null // Upload progress from 0.0 to 1.0, null if not uploading
 )
 
 enum class AttachmentStatus {
