@@ -268,22 +268,23 @@ class InboxComposeViewModel @Inject constructor(
                             }
 
                             // Remove placeholder with matching workerId, or first UPLOADING placeholder without workerId
-                            var placeholderRemoved = false
-                            val filteredAttachments = uiState.value.attachments.filter { attachment ->
-                                when {
-                                    attachment.workerId == workerId.toString() -> {
-                                        placeholderRemoved = true
-                                        false // Remove this placeholder
+                            _uiState.update { currentState ->
+                                var placeholderRemoved = false
+                                val filteredAttachments = currentState.attachments.filter { attachment ->
+                                    when {
+                                        attachment.workerId == workerId.toString() -> {
+                                            placeholderRemoved = true
+                                            false // Remove this placeholder
+                                        }
+                                        !placeholderRemoved && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            placeholderRemoved = true
+                                            false // Remove first unassigned placeholder
+                                        }
+                                        else -> true
                                     }
-                                    !placeholderRemoved && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
-                                        placeholderRemoved = true
-                                        false // Remove first unassigned placeholder
-                                    }
-                                    else -> true
                                 }
+                                currentState.copy(attachments = filteredAttachments + uploadedAttachments)
                             }
-
-                            _uiState.update { it.copy(attachments = filteredAttachments + uploadedAttachments) }
                             attachmentDao.deleteAll(attachmentList)
                         } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
                     }
