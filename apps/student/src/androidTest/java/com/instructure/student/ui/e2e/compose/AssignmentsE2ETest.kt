@@ -52,11 +52,14 @@ import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import com.instructure.student.ui.utils.extensions.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
+import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runners.MethodSorters
 import java.util.Calendar
 
 @HiltAndroidTest
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class AssignmentsE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
@@ -69,6 +72,117 @@ class AssignmentsE2ETest: StudentComposeTest() {
             android.Manifest.permission.RECORD_AUDIO,
             android.Manifest.permission.CAMERA
     )
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
+    fun test01CommentsBelongToSubmissionAttempts() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
+        val pointsTextAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select course: '${course.name}'.")
+        dashboardPage.selectCourse(course)
+
+        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that our assignments are present, along with any grade/date info.")
+        assignmentListPage.assertHasAssignment(pointsTextAssignment)
+
+        Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
+        assignmentListPage.clickAssignment(pointsTextAssignment)
+
+        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there is no submission yet.")
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertStatusNotSubmitted()
+
+        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+        assignmentDetailsPage.goToSubmissionDetails()
+
+        Log.d(ASSERTION_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
+        submissionDetailsPage.assertNoSubmissionEmptyView()
+
+        Log.d(STEP_TAG, "Navigate back to Assignment Details page.")
+        Espresso.pressBack()
+
+        Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
+
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.assertStatusSubmitted()
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
+        val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
+
+        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.assertStatusSubmitted()
+        assignmentDetailsPage.assertSubmissionAndRubricLabel()
+
+        Log.d(ASSERTION_TAG, "Assert that the spinner is displayed and the last/newest attempt is selected.")
+        assignmentDetailsPage.assertAttemptSpinnerDisplayed()
+        assignmentDetailsPage.assertAttemptInformation()
+        assignmentDetailsPage.assertSelectedAttempt(2)
+
+        Log.d(STEP_TAG, "Navigate to submission details Comments Tab.")
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+
+        Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
+        submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
+
+        val newComment = "Comment for second attempt"
+        Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
+        submissionDetailsPage.addAndSendComment(newComment)
+        handleWorkManagerTask("SubmissionWorker")
+
+        Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
+        submissionDetailsPage.assertCommentDisplayed(newComment, student)
+
+        Log.d(STEP_TAG, "Select 'Attempt 1'.")
+        submissionDetailsPage.selectAttempt("Attempt 1")
+
+        Log.d(ASSERTION_TAG, "Assert that the selected attempt is 'Attempt 1'.")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
+
+        Log.d(STEP_TAG, "Open 'Comments' tab.")
+        submissionDetailsPage.openComments()
+
+        Log.d(ASSERTION_TAG, "Assert that '$newComment' is NOT displayed because it belongs to 'Attempt 2'.")
+        submissionDetailsPage.assertCommentNotDisplayed(newComment, student)
+
+        Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
+        submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
+
+        Log.d(STEP_TAG, "Select 'Attempt 2'.")
+        submissionDetailsPage.selectAttempt("Attempt 2")
+
+        Log.d(ASSERTION_TAG, "Assert that the selected attempt is 'Attempt 2'.")
+        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
+
+        Log.d(STEP_TAG, "Open 'Comments' tab.")
+        submissionDetailsPage.openComments()
+
+        Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed because it belongs to 'Attempt 2'.")
+        submissionDetailsPage.assertCommentDisplayed(newComment, student)
+
+        Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
+        submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
+    }
 
     @E2E
     @Test
@@ -805,117 +919,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the selected attempt is 'Attempt 1'.")
         submissionDetailsPage.assertSelectedAttempt("Attempt 1")
-    }
-
-    @E2E
-    @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
-    fun testCommentsBelongToSubmissionAttempts() {
-
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1, students = 1)
-        val student = data.studentsList[0]
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-
-        Log.d(PREPARATION_TAG, "Seeding 'Text Entry' assignment for '${course.name}' course.")
-        val pointsTextAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        tokenLogin(student)
-        dashboardPage.waitForRender()
-
-        Log.d(STEP_TAG, "Select course: '${course.name}'.")
-        dashboardPage.selectCourse(course)
-
-        Log.d(STEP_TAG, "Navigate to course Assignments Page.")
-        courseBrowserPage.selectAssignments()
-
-        Log.d(ASSERTION_TAG, "Assert that our assignments are present, along with any grade/date info.")
-        assignmentListPage.assertHasAssignment(pointsTextAssignment)
-
-        Log.d(STEP_TAG, "Click on assignment '${pointsTextAssignment.name}'.")
-        assignmentListPage.clickAssignment(pointsTextAssignment)
-
-        Log.d(ASSERTION_TAG, "Assert that the corresponding views are displayed on the Assignment Details Page, and there is no submission yet.")
-        assignmentDetailsPage.assertPageObjects()
-        assignmentDetailsPage.assertStatusNotSubmitted()
-
-        Log.d(ASSERTION_TAG, "Assert that 'Submission & Rubric' label is displayed and navigate to Submission Details Page.")
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
-        assignmentDetailsPage.goToSubmissionDetails()
-
-        Log.d(ASSERTION_TAG, "Assert that there is no submission yet for the '${pointsTextAssignment.name}' assignment.")
-        submissionDetailsPage.assertNoSubmissionEmptyView()
-
-        Log.d(STEP_TAG, "Navigate back to Assignment Details page.")
-        Espresso.pressBack()
-
-        Log.d(PREPARATION_TAG, "Submit assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
-        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
-
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
-
-        Log.d(PREPARATION_TAG, "Make another submission for assignment: '${pointsTextAssignment.name}' for student: '${student.name}'.")
-        val secondSubmissionAttempt = SubmissionsApi.seedAssignmentSubmission(course.id, student.token, pointsTextAssignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
-
-        Log.d(ASSERTION_TAG, "Refresh the Assignment Details Page. Assert that the assignment's status is submitted and the 'Submission and Rubric' label is displayed.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertStatusSubmitted()
-        assignmentDetailsPage.assertSubmissionAndRubricLabel()
-
-        Log.d(ASSERTION_TAG, "Assert that the spinner is displayed and the last/newest attempt is selected.")
-        assignmentDetailsPage.assertAttemptSpinnerDisplayed()
-        assignmentDetailsPage.assertAttemptInformation()
-        assignmentDetailsPage.assertSelectedAttempt(2)
-
-        Log.d(STEP_TAG, "Navigate to submission details Comments Tab.")
-        assignmentDetailsPage.goToSubmissionDetails()
-        submissionDetailsPage.openComments()
-
-        Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
-        submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
-
-        val newComment = "Comment for second attempt"
-        Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
-        submissionDetailsPage.addAndSendComment(newComment)
-        handleWorkManagerTask("SubmissionWorker")
-
-        Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
-        submissionDetailsPage.assertCommentDisplayed(newComment, student)
-
-        Log.d(STEP_TAG, "Select 'Attempt 1'.")
-        submissionDetailsPage.selectAttempt("Attempt 1")
-
-        Log.d(ASSERTION_TAG, "Assert that the selected attempt is 'Attempt 1'.")
-        submissionDetailsPage.assertSelectedAttempt("Attempt 1")
-
-        Log.d(STEP_TAG, "Open 'Comments' tab.")
-        submissionDetailsPage.openComments()
-
-        Log.d(ASSERTION_TAG, "Assert that '$newComment' is NOT displayed because it belongs to 'Attempt 2'.")
-        submissionDetailsPage.assertCommentNotDisplayed(newComment, student)
-
-        Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
-        submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
-
-        Log.d(STEP_TAG, "Select 'Attempt 2'.")
-        submissionDetailsPage.selectAttempt("Attempt 2")
-
-        Log.d(ASSERTION_TAG, "Assert that the selected attempt is 'Attempt 2'.")
-        submissionDetailsPage.assertSelectedAttempt("Attempt 2")
-
-        Log.d(STEP_TAG, "Open 'Comments' tab.")
-        submissionDetailsPage.openComments()
-
-        Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed because it belongs to 'Attempt 2'.")
-        submissionDetailsPage.assertCommentDisplayed(newComment, student)
-
-        Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
-        submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
     }
 
     @E2E
