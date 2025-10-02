@@ -192,16 +192,18 @@ abstract class CanvasTest : InstructureTestingContract {
         eventObject.put("testClass", testClass)
         eventObject.put("stackTrace", error.stackTrace.take(15).joinToString(", "))
         eventObject.put("osVersion", Build.VERSION.SDK_INT.toString())
+        eventObject.put("sourcetype", "mobile-android-qa-testresult")
         // Limit our error message to 4096 chars; they can be unreasonably long (e.g., 137K!) when
         // they contain a view hierarchy, and there is typically not much useful info after the
         // first few lines.
         eventObject.put("message", error.toString().take(4096))
 
         val payloadObject = JSONObject()
-        payloadObject.put("sourcetype", "mobile-android-qa-testresult")
+
         payloadObject.put("data", eventObject)
 
         val payload = payloadObject.toString()
+        val payloadBytes = payload.toByteArray(Charsets.UTF_8)
         Log.d("CanvasTest", "payload = $payload")
 
         // Can't run a curl command from FTL, so let's do this the hard way
@@ -217,6 +219,7 @@ abstract class CanvasTest : InstructureTestingContract {
             conn.requestMethod = "POST"
             conn.setRequestProperty("Authorization", "Bearer $observeToken")
             conn.setRequestProperty("Content-Type", "application/json; utf-8")
+            conn.setRequestProperty("Content-Length", payloadBytes.size.toString())
             conn.setRequestProperty("Accept", "application/json")
             conn.setDoInput(true)
             conn.setDoOutput(true)
