@@ -116,7 +116,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
 
-        sleep(3000)
+        //sleep(3000)
 
         Log.d(ASSERTION_TAG, "Assert that the current day of the calendar is titled as 'Today'.")
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
@@ -133,7 +133,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
 
-        sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
+        //sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
 
         if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
             val twoWeeksBeforeDayString = twoWeeksBeforeCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
@@ -149,7 +149,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
 
-        sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
+        //sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
 
         if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
             val twoWeeksAfterDayString = twoWeeksAfterCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
@@ -167,7 +167,7 @@ class ScheduleE2ETest : StudentTest() {
 
             Log.d(STEP_TAG, "Navigate back to Schedule Page.")
             Espresso.pressBack()
-            sleep(3000)
+            //sleep(3000)
 
             Log.d(ASSERTION_TAG, "Assert if the Schedule Page is displayed correctly.")
             schedulePage.assertPageObjects()
@@ -177,7 +177,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
 
-        sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
+        //sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
 
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
 
