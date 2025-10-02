@@ -26,7 +26,8 @@ import com.instructure.canvasapi2.type.SubmissionType
 class FakeSubmissionContentManager : SubmissionContentManager {
     override suspend fun getSubmissionContent(
         userId: Long,
-        assignmentId: Long
+        assignmentId: Long,
+        domain: String?
     ): SubmissionContentQuery.Data {
         val assignment = MockCanvas.data.assignments[assignmentId]
         val submission = MockCanvas.data.submissions[assignmentId]?.get(0)

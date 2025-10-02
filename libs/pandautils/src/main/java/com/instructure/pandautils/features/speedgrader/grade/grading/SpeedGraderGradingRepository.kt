@@ -30,9 +30,10 @@ class SpeedGraderGradingRepository(
     suspend fun getSubmissionGrade(
         assignmentId: Long,
         studentId: Long,
-        forceNetwork: Boolean
+        forceNetwork: Boolean,
+        domain: String? = null
     ): SubmissionGradeQuery.Data {
-        return submissionGradeManager.getSubmissionGrade(assignmentId, studentId, forceNetwork)
+        return submissionGradeManager.getSubmissionGrade(assignmentId, studentId, forceNetwork, domain)
     }
 
     suspend fun updateSubmissionGrade(
@@ -65,7 +66,6 @@ class SpeedGraderGradingRepository(
             restParams = RestParams()
         ).dataOrThrow
     }
-
 
     suspend fun updateSubmissionStatus(
         submissionId: Long,

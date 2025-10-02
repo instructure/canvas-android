@@ -28,7 +28,8 @@ class SubmissionGradeManagerImpl(private val apolloClient: ApolloClient) : Submi
     override suspend fun getSubmissionGrade(
         assignmentId: Long,
         studentId: Long,
-        forceNetwork: Boolean
+        forceNetwork: Boolean,
+        domain: String?
     ): SubmissionGradeQuery.Data {
         var hasNextPage = true
         var nextCursor: String? = null
@@ -36,11 +37,9 @@ class SubmissionGradeManagerImpl(private val apolloClient: ApolloClient) : Submi
         var submission: SubmissionGradeQuery.Data? = null
 
         while (hasNextPage) {
-            val nextCursorParam =
-                if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
-            val query =
-                SubmissionGradeQuery(studentId.toString(), assignmentId.toString(), nextCursorParam)
-            val data = apolloClient.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
+            val nextCursorParam = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
+            val query = SubmissionGradeQuery(studentId.toString(), assignmentId.toString(), nextCursorParam)
+            val data = apolloClient.enqueueQuery(query, forceNetwork = true, domain = domain).dataAssertNoErrors
             if (submission == null) {
                 submission = data
             } else {

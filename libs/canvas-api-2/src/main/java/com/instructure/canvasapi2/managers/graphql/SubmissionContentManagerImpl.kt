@@ -25,7 +25,8 @@ class SubmissionContentManagerImpl(private val apolloClient: ApolloClient) : Sub
 
     override suspend fun getSubmissionContent(
         userId: Long,
-        assignmentId: Long
+        assignmentId: Long,
+        domain: String?
     ): SubmissionContentQuery.Data {
         var hasNextPage = true
         var nextCursor: String? = null
@@ -41,7 +42,7 @@ class SubmissionContentManagerImpl(private val apolloClient: ApolloClient) : Sub
                 nextCursor = if (nextCursor != null) Optional.present(nextCursor) else Optional.absent()
             )
 
-            data = apolloClient.enqueueQuery(query, forceNetwork = true).dataAssertNoErrors
+            data = apolloClient.enqueueQuery(query, forceNetwork = true, domain = domain).dataAssertNoErrors
             val connection = data.submission?.submissionHistoriesConnection
 
             allEdges.addAll(connection?.edges.orEmpty())

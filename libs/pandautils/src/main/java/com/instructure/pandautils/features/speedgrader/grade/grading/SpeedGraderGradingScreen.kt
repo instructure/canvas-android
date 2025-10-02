@@ -526,7 +526,9 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Composable
 private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
-    var grade by remember { mutableStateOf(uiState.enteredGrade ?: "") }
+    var grade by remember(uiState.enteredGrade) {
+        mutableStateOf(uiState.enteredGrade.orEmpty())
+    }
     Column {
         Row(
             modifier = Modifier
@@ -562,7 +564,7 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 grade = "complete"
-                uiState.onScoreChange(uiState.pointsPossible?.toFloat() ?: 0f)
+                uiState.onCompletionChange(true)
             },
             testtag = "speedGraderCompleteRadioButton"
         )
@@ -575,11 +577,10 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
             onClick = {
                 haptic.performHapticFeedback(HapticFeedbackType.LongPress)
                 grade = "incomplete"
-                uiState.onScoreChange(0f)
+                uiState.onCompletionChange(false)
             },
             testtag = "speedGraderIncompleteRadioButton"
         )
-
     }
 }
 
@@ -849,6 +850,7 @@ private fun SpeedGraderGradingContentPreview() {
                 score = 14.0,
                 pointsDeducted = 1.0,
                 onScoreChange = {},
+                onCompletionChange = {},
                 submittedAt = Date(),
                 daysLate = 4f,
                 gradingType = GradingType.points,
@@ -876,6 +878,7 @@ private fun SpeedGraderGradingContentPercentagePreview() {
                 grade = "90%",
                 score = 15.0,
                 onScoreChange = {},
+                onCompletionChange = {},
                 submittedAt = Date(),
                 daysLate = 4f,
                 gradingType = GradingType.percent,
@@ -904,6 +907,7 @@ private fun SpeedGraderGradingContentCompleteIncompletePreview() {
                 submittedAt = Date(),
                 daysLate = 4f,
                 onScoreChange = {},
+                onCompletionChange = {},
                 gradingType = GradingType.pass_fail,
                 onPercentageChange = {},
                 onExcuse = {},
@@ -928,6 +932,7 @@ private fun SpeedGraderGradingContentLetterGraderPreview() {
                 grade = null,
                 score = 15.0,
                 onScoreChange = {},
+                onCompletionChange = {},
                 gradingType = GradingType.letter_grade,
                 onPercentageChange = {},
                 pointsDeducted = 2.0,
@@ -958,6 +963,7 @@ private fun SpeedGraderGradingContentErrorPreview() {
                 error = true,
                 loading = false,
                 onScoreChange = {},
+                onCompletionChange = {},
                 onPercentageChange = {},
                 onExcuse = {},
                 onStatusChange = {},
@@ -978,6 +984,7 @@ private fun SpeedGraderGradingContentLoadingPreview() {
                 error = false,
                 loading = true,
                 onScoreChange = {},
+                onCompletionChange = {},
                 onPercentageChange = {},
                 onExcuse = {},
                 onStatusChange = {},
