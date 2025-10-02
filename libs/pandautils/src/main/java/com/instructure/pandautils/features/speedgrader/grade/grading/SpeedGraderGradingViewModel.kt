@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.models.GradingSchemeRow
 import com.instructure.canvasapi2.type.CourseGradeStatus
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
@@ -44,6 +45,7 @@ import kotlin.math.roundToInt
 @HiltViewModel
 class SpeedGraderGradingViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    apiPrefs: ApiPrefs,
     private val repository: SpeedGraderGradingRepository,
     private val resources: Resources,
     private val gradingEventHandler: SpeedGraderGradingEventHandler,
@@ -76,6 +78,8 @@ class SpeedGraderGradingViewModel @Inject constructor(
 
     private var daysLateDebounceJob: Job? = null
 
+    private val overrideDomain = apiPrefs.overrideDomains[courseId]
+
     init {
         loadData()
         viewModelScope.launch {
@@ -98,9 +102,12 @@ class SpeedGraderGradingViewModel @Inject constructor(
     private fun loadData(forceNetwork: Boolean = false) {
         viewModelScope.launch {
             try {
-                val submission =
-                    repository.getSubmissionGrade(assignmentId, studentId, forceNetwork).submission
-                        ?: throw IllegalStateException("Submission not found")
+                val submission = repository.getSubmissionGrade(
+                    assignmentId,
+                    studentId,
+                    forceNetwork,
+                    overrideDomain
+                ).submission ?: throw IllegalStateException("Submission not found")
                 submissionId = submission._id
                 _uiState.update {
                     it.copy(

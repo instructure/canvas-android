@@ -30,7 +30,8 @@ class FakeSubmissionGradeManager : SubmissionGradeManager {
     override suspend fun getSubmissionGrade(
         assignmentId: Long,
         studentId: Long,
-        forceNetwork: Boolean
+        forceNetwork: Boolean,
+        domain: String?
     ): SubmissionGradeQuery.Data {
         val assignment = MockCanvas.data.assignments[assignmentId]
         val course = MockCanvas.data.courses[assignment?.courseId]
