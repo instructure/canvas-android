@@ -9,6 +9,7 @@ import com.instructure.canvasapi2.type.CourseGradeStatus
 import com.instructure.canvasapi2.type.GradingType
 import com.instructure.canvasapi2.type.LatePolicyStatusType
 import com.instructure.canvasapi2.type.SubmissionGradingStatus
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
@@ -40,6 +41,7 @@ class SpeedGraderGradingViewModelTest {
     private val gradingEventHandler = SpeedGraderGradingEventHandler()
     private val resources: Resources = mockk(relaxed = true)
     private val errorHandler: SpeedGraderErrorHolder = mockk(relaxed = true)
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private val testDispatcher = UnconfinedTestDispatcher()
 
@@ -65,7 +67,7 @@ class SpeedGraderGradingViewModelTest {
     }
 
     private fun createViewModel() {
-        viewModel = SpeedGraderGradingViewModel(savedStateHandle, repository, resources, gradingEventHandler, errorHandler)
+        viewModel = SpeedGraderGradingViewModel(savedStateHandle, apiPrefs, repository, resources, gradingEventHandler, errorHandler)
     }
 
     @After
@@ -146,6 +148,7 @@ class SpeedGraderGradingViewModelTest {
             ),
             gradingStatus = "graded",
             onScoreChange = {},
+            onCompletionChange = {},
             onExcuse = {},
             onStatusChange = {},
             onPercentageChange = {},
@@ -200,6 +203,45 @@ class SpeedGraderGradingViewModelTest {
         coVerify {
             repository.updateSubmissionGrade(
                 "90.0",
+                userId = studentId,
+                assignmentId = assignmentId,
+                courseId = courseId,
+                excused = false
+            )
+        }
+    }
+
+    @Test
+    fun `completion changed`() = runTest {
+        val submission = createMockSubmission(grade = "incomplete")
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission
+        createViewModel()
+
+        val uiState = viewModel.uiState.first()
+
+        assertEquals("incomplete", uiState.grade)
+
+        coEvery { repository.getSubmissionGrade(any(), any(), any()) } returns submission.copy(
+            submission = submission.submission?.copy(grade = "complete")
+        )
+
+        coEvery {
+            repository.updateSubmissionGrade(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns mockk()
+
+        uiState.onCompletionChange(true)
+
+        testDispatcher.scheduler.advanceTimeBy(600)
+        coVerify {
+            repository.updateSubmissionGrade(
+                "complete",
                 userId = studentId,
                 assignmentId = assignmentId,
                 courseId = courseId,
@@ -370,12 +412,13 @@ class SpeedGraderGradingViewModelTest {
 
     private fun createMockSubmission(
         dueDate: Date = Date(),
-        status: String = "graded"
+        status: String = "graded",
+        grade: String? = "A"
     ): SubmissionGradeQuery.Data {
         return SubmissionGradeQuery.Data(
             submission = SubmissionGradeQuery.Submission(
                 gradingStatus = SubmissionGradingStatus.graded,
-                grade = "A",
+                grade = grade,
                 gradeHidden = false,
                 _id = "123",
                 submissionStatus = "submitted",

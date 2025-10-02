@@ -20,7 +20,12 @@ import com.instructure.canvasapi2.UpdateSubmissionStatusMutation
 
 interface SubmissionGradeManager {
 
-    suspend fun getSubmissionGrade(assignmentId: Long, studentId: Long, forceNetwork: Boolean = false): SubmissionGradeQuery.Data
+    suspend fun getSubmissionGrade(
+        assignmentId: Long,
+        studentId: Long,
+        forceNetwork: Boolean,
+        domain: String? = null
+    ): SubmissionGradeQuery.Data
 
     suspend fun updateSubmissionGrade(score: Double, submissionId: Long): UpdateSubmissionGradeMutation.Data
 

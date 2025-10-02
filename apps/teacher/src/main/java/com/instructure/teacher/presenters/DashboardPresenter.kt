@@ -18,6 +18,8 @@ package com.instructure.teacher.presenters
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.apiAsync
 import com.instructure.pandautils.blueprint.SyncPresenter
 import com.instructure.pandautils.utils.ColorApiHelper
@@ -54,6 +56,7 @@ class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java
             .onSuccess { courses ->
                 // Make a call to get which courses are visible on the dashboard as well as their position
                 loadCards(forceNetwork, courses)
+                storeDomainOverrides(courses)
             }
     }
 
@@ -67,6 +70,14 @@ class DashboardPresenter : SyncPresenter<Course, CoursesView>(Course::class.java
                 data.addOrUpdate(validCourses)
                 notifyRefreshFinished()
             }
+    }
+
+    private fun storeDomainOverrides(courses: List<Course>) {
+        courses.forEach { course ->
+            course.tabs?.find { it.tabId == Tab.ASSIGNMENTS_ID }?.domain?.let {
+                ApiPrefs.overrideDomains[course.id] = it
+            }
+        }
     }
 
     private fun createCourseFromDashboardCard(dashboardCard: DashboardCard, courseMap: Map<Long, Course>): Course {
