@@ -26,14 +26,18 @@ suiteName=""
 # Common JSON parameters for all event types
 commonData="\"workflow\" : \"$BITRISE_TRIGGERED_WORKFLOW_ID\", \"app\" : \"$appName\", \"branch\" : \"$BITRISE_GIT_BRANCH\""
 
-# A running collection of info for all passed tests.  JSON object strings are just concatenated together.
+# A running collection of info for all passed tests. We'll use Newline Delimited JSON (NDJSON).
 successReport=""
 successCount=0
 
-# Emits collected successful test data to splunk, and zeroes out the running trackers.
+# Emits collected successful test data to Observe, and zeroes out the running trackers.
 emitSuccessfulTestData () {
+        # Bails if there's nothing to report
+        if [[ -z "$successReport" ]]; then return; fi
+
         #echo -e "\nSuccess payload: $successReport\n"
-        curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -d "$successReport"
+        # Post the data as newline-delimited JSON
+        curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/x-ndjson" --data-binary @- <<< "$successReport"
         successReport="" # Reset the successReport after emitting it
         successCount=0
 }
@@ -42,31 +46,32 @@ emitSuccessfulTestData () {
 while IFS= read -r line
 do
     # For <testsuite> lines, emit a deviceSummary event and remember the suiteName
-    # Sample line: <testsuite name="NexusLowRes-29-en_US-portrait" tests="275" failures="3" errors="0" skipped="0" time="3577.053" timestamp="2020-01-08T15:32:23" hostname="localhost">
+    # Sample line: <testsuite name=\"NexusLowRes-29-en_US-portrait\" tests=\"275\" failures=\"3\" errors=\"0\" skipped=\"0\" time=\"3577.053\" timestamp=\"2020-01-08T15:32:23\" hostname=\"localhost\">
     if [[ $line =~ "testsuite name" ]]
     then
       suiteName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
       numTests=`echo $line | cut -d " " -f 3 | cut -d = -f 2 | tr -d '"'`
       numFailures=`echo $line | cut -d " " -f 4 | cut -d = -f 2 | tr -d '"'`
       runTime=`echo $line | cut -d " " -f 7 | cut -d = -f 2 | tr -d '"'`
-      
-      payload="{\"deviceConfig\" : $suiteName, \"numTests\" : $numTests, \"numFailures\" : $numFailures, \"runTime\" : $runTime, $commonData}"
+
+      # This is the event data
+      eventPayload="{\"deviceConfig\" : $suiteName, \"numTests\" : $numTests, \"numFailures\" : $numFailures, \"runTime\" : $runTime, $commonData}"
+      # Wrap it in the "data" object for Observe
+      payload="{\"data\": $eventPayload}"
       echo -e "\nsummary payload: $payload"
-      curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-summary\", \"event\" : $payload}"
+      curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
     fi
 
-    # For <testcase> lines, create a "test passed" payload.  We won't include it in our "successReport" until we've
-    # verified that the test didn't fail.
-    # Sample line: <testcase name="displaysLoadingState" classname="com.instructure.student.ui.renderTests.SubmissionDetailsRenderTest" time="4.346">
+    # For <testcase> lines, store the test info. We will construct the payload at </testcase>
+    # Sample line: <testcase name=\"displaysLoadingState\" classname=\"com.instructure.student.ui.renderTests.SubmissionDetailsRenderTest\" time=\"4.346\">
     if [[ $line =~ "testcase name" ]]
     then
       # Remove the '<' and '>' from around the line
       line=`echo  $line | tr -d "<>"`
       # Extract various fields from the line
-      testName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
-      className=`echo $line | cut -d " " -f 3 | cut -d = -f 2`
-      runTime=`echo $line | cut -d " " -f 4 | cut -d = -f 2 | tr -d '"'`
-      payload="{\"sourcetype\" : \"mobile-android-qa-testresult\", \"event\" : {\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"passed\", \"testName\": $testName, \"testClass\" : $className, \"deviceConfig\" : $suiteName, \"runTime\" : $runTime, $commonData}}"
+      currentTestName=`echo $line | cut -d " " -f 2 | cut -d = -f 2`
+      currentClassName=`echo $line | cut -d " " -f 3 | cut -d = -f 2`
+      currentRunTime=`echo $line | cut -d " " -f 4 | cut -d = -f 2 | tr -d '"'`
       failureEncountered=false
     fi
 
@@ -76,19 +81,26 @@ do
        failureEncountered=true
     fi
 
-    # If we get to the end of a testcase and no failure has been recorded, then include the test info 
+    # If we get to the end of a testcase and no failure has been recorded, then include the test info
     # in our "successReport".
     if [[ $line =~ "</testcase>" ]]
     then
         if [[ $failureEncountered = false ]]
         then
-            successReport="$successReport $payload"
+            # Construct the event payload for the passed test
+            eventPayload="{\"buildUrl\" : \"$BITRISE_BUILD_URL\", \"status\" : \"passed\", \"testName\": $currentTestName, \"testClass\" : $currentClassName, \"deviceConfig\" : $suiteName, \"runTime\" : $currentRunTime, $commonData}"
+            # Wrap it in the "data" object for Observe
+            payload="{\"data\": $eventPayload}"
+
+            # Append the full JSON object with a newline for NDJSON format
+            successReport="${successReport}${payload}"$'\n'
             ((successCount=successCount+1))
-            # Emit successful test data to Splunk every 100 tests
+
+            # Emit successful test data to Observe every 100 tests
             if [ $successCount -eq 100 ]
             then
               emitSuccessfulTestData
-            fi    
+            fi
         fi
     fi
 done < "$reportFile"
@@ -138,9 +150,13 @@ do
 
      totalMinutes=$((hours * 60 + minutes))
      #echo "totalMinutes: $totalMinutes"
-     payload="{\"minutes\" : $totalMinutes, \"cost\" : $cost, $commonData}"
+
+     # This is the event data
+     eventPayload="{\"minutes\" : $totalMinutes, \"cost\" : $cost, $commonData}"
+     # Wrap it in the "data" object for Observe
+     payload="{\"data\": $eventPayload}"
+
      echo -e "\ncost payload: $payload"
-     #curl -X POST -H "Content-Type: application/json" -d "$payload" $SUMOLOGIC_ENDPOINT
-     curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -d "{\"sourcetype\" : \"mobile-android-qa-cost\", \"event\" : $payload}"
+     curl -k "https://103443579803.collect.observeinc.com/v1/http" -H "Authorization: Bearer $OBSERVE_MOBILE_TOKEN" -H "Content-Type: application/json" -d "$payload"
     fi
 done < "$costFile"
