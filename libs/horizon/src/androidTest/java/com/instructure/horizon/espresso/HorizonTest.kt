@@ -20,6 +20,7 @@ import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvasapi2.models.User
 import com.instructure.horizon.HorizonActivity
 import com.instructure.horizon.pages.HorizonDashboardPage
+import com.instructure.horizon.pages.HorizonNotificationPage
 
 abstract class HorizonTest: CanvasComposeTest() {
     override val activityRule = HorizonActivityTestRule(HorizonActivity::class.java)
@@ -28,6 +29,7 @@ abstract class HorizonTest: CanvasComposeTest() {
     override fun displaysPageObjects() = Unit
 
     val dashboardPage: HorizonDashboardPage = HorizonDashboardPage(composeTestRule)
+    val notificationsPage: HorizonNotificationPage = HorizonNotificationPage(composeTestRule)
 
     fun tokenLogin(domain: String, token: String, user: User) {
         activityRule.runOnUiThread {

@@ -118,4 +118,16 @@ class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
             "Course Card ${index + 1} of ${courseCount}"
         ).performClick()
     }
+
+    fun clickInboxButton() {
+        composeTestRule.onNodeWithContentDescription("Inbox").performClick()
+    }
+
+    fun clickNotificationButton() {
+        composeTestRule.onNodeWithContentDescription("Notifications").performClick()
+    }
+
+    fun clickNotebookButton() {
+        composeTestRule.onNodeWithContentDescription("Notebook").performClick()
+    }
 }

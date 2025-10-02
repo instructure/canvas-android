@@ -19,6 +19,7 @@ package com.instructure.horizon.espresso
 import android.app.Application
 import android.content.Context
 import com.instructure.canvas.espresso.CanvasRunner
+import com.jakewharton.threetenabp.AndroidThreeTen
 import dagger.hilt.android.testing.HiltTestApplication
 
 class HorizonCustomTestRunner: CanvasRunner() {
@@ -27,6 +28,8 @@ class HorizonCustomTestRunner: CanvasRunner() {
         className: String?,
         context: Context?
     ): Application {
-        return super.newApplication(cl, HiltTestApplication::class.java.name, context)
+        val application = super.newApplication(cl, HiltTestApplication::class.java.name, context)
+        AndroidThreeTen.init(application)
+        return application
     }
 }
