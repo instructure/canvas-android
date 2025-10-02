@@ -199,7 +199,7 @@ abstract class CanvasTest : InstructureTestingContract {
 
         val payloadObject = JSONObject()
         payloadObject.put("sourcetype", "mobile-android-qa-testresult")
-        payloadObject.put("event", eventObject)
+        payloadObject.put("data", eventObject)
 
         val payload = payloadObject.toString()
         Log.d("CanvasTest", "payload = $payload")
