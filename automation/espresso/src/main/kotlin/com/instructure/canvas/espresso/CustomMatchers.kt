@@ -16,16 +16,23 @@
  */
 package com.instructure.canvas.espresso
 
+import android.content.Intent
+import android.content.res.Resources
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.drawable.Drawable
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.ImageView
 import android.widget.RadioButton
 import android.widget.TextView
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.UiController
 import androidx.test.espresso.ViewAction
@@ -33,6 +40,7 @@ import androidx.test.espresso.ViewAssertion
 import androidx.test.espresso.ViewInteraction
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.BoundedMatcher
+import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
@@ -42,8 +50,10 @@ import com.google.android.apps.common.testing.accessibility.framework.Accessibil
 import com.google.android.material.checkbox.MaterialCheckBox
 import com.google.android.material.textfield.TextInputLayout
 import com.instructure.espresso.ActivityHelper
+import com.instructure.pandautils.utils.ColorUtils
 import junit.framework.AssertionFailedError
 import org.hamcrest.BaseMatcher
+import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.Description
 import org.hamcrest.Matcher
 import org.hamcrest.TypeSafeMatcher
@@ -352,3 +362,189 @@ fun getText(matcher: Matcher<View>): String {
     return text
 }
 
+object SwipeRefreshLayoutMatchers {
+    fun isRefreshing(isRefreshing: Boolean): Matcher<View> {
+        return object : BoundedMatcher<View, SwipeRefreshLayout>(SwipeRefreshLayout::class.java) {
+
+            override fun describeTo(description: Description) {
+                description.appendText(if (isRefreshing) "is refreshing" else "is not refreshing")
+            }
+
+            override fun matchesSafely(view: SwipeRefreshLayout): Boolean {
+                return view.isRefreshing == isRefreshing
+            }
+        }
+    }
+}
+
+object ViewSizeMatcher {
+    fun hasWidth(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a width of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.width == pixels
+    }
+
+    fun hasHeight(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a height of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.height == pixels
+    }
+
+    fun hasMinWidth(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a minimum width of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.width >= pixels
+    }
+
+    fun hasMinHeight(pixels: Int): Matcher<View> = object : TypeSafeMatcher<View>(View::class.java) {
+        override fun describeTo(description: Description) {
+            description.appendText("has a minimum height of ${pixels}px")
+        }
+
+        override fun matchesSafely(view: View): Boolean = view.height >= pixels
+    }
+}
+
+fun ViewInteraction.assertLineCount(lineCount: Int) {
+    val matcher = object : TypeSafeMatcher<View>() {
+        override fun matchesSafely(item: View): Boolean {
+            return (item as TextView).lineCount == lineCount
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("isTextInLines")
+        }
+    }
+    check(matches(matcher))
+}
+
+
+fun ViewInteraction.getView(): View {
+    lateinit var matchingView: View
+    perform(object : ViewAction {
+        override fun getDescription() = "Get View reference"
+
+        override fun getConstraints(): Matcher<View> {
+            return isAssignableFrom(View::class.java)
+        }
+
+        override fun perform(uiController: UiController?, view: View) {
+            matchingView = view
+        }
+    })
+    return matchingView
+}
+
+fun ViewInteraction.assertCompletelyAbove(other: ViewInteraction) {
+    val view1 = getView()
+    val view2 = other.getView()
+    val location1 = view1.locationOnScreen
+    val location2 = view2.locationOnScreen
+    val isAbove = location1[1] + view1.height <= location2[1]
+    assertThat("completely above", isAbove, `is`(true))
+}
+
+fun ViewInteraction.assertCompletelyBelow(other: ViewInteraction) {
+    val view1 = getView()
+    val view2 = other.getView()
+    val location1 = view1.locationOnScreen
+    val location2 = view2.locationOnScreen
+    val isAbove = location2[1] + view2.height <= location1[1]
+    assertThat("completely below", isAbove, `is`(true))
+}
+
+val View.locationOnScreen get() = IntArray(2).apply { getLocationOnScreen(this) }
+
+
+/**
+ * Asserts that the TextView uses the specified font size in scaled pixels
+ */
+fun ViewInteraction.assertFontSizeSP(expectedSP: Float) {
+    val matcher = object : TypeSafeMatcher<View>(View::class.java) {
+
+        override fun matchesSafely(target: View): Boolean {
+            if (target !is TextView) return false
+            val actualSP = target.textSize / target.getResources().displayMetrics.scaledDensity
+            return actualSP.compareTo(expectedSP) == 0
+        }
+
+        override fun describeTo(description: Description) {
+            description.appendText("with fontSize: ${expectedSP}px")
+        }
+    }
+    check(matches(matcher))
+}
+
+fun ViewInteraction.assertIsRefreshing(isRefreshing: Boolean) {
+    val matcher = object : BoundedMatcher<View, SwipeRefreshLayout>(SwipeRefreshLayout::class.java) {
+
+        override fun describeTo(description: Description) {
+            description.appendText(if (isRefreshing) "is refreshing" else "is not refreshing")
+        }
+
+        override fun matchesSafely(view: SwipeRefreshLayout): Boolean {
+            return view.isRefreshing == isRefreshing
+        }
+    }
+    check(matches(matcher))
+}
+
+class IntentActionMatcher(private val intentType: String, private val dataMatcher: String) : TypeSafeMatcher<Intent>() {
+
+    override fun describeTo(description: Description?) {
+        description?.appendText("Intent Matcher")
+    }
+
+    override fun matchesSafely(item: Intent?): Boolean {
+        return (intentType == item?.action) && (item?.dataString?.contains(dataMatcher) ?: false)
+    }
+}
+
+// Adapted from https://medium.com/@dbottillo/android-ui-test-espresso-matcher-for-imageview-1a28c832626f
+/**
+ * Matches ImageView (or ImageButton) with the drawable associated with [resourceId].  If [resourceId] < 0, will
+ * match against "no drawable" / "drawable is null".
+ *
+ * If the [color] param is non-null, then the drawable associated with [resourceId] will be colored
+ * prior to matching.
+ */
+class ImageViewDrawableMatcher(val resourceId: Int, val color: Int? = null) : TypeSafeMatcher<View>(
+    ImageView::class.java) {
+    override fun describeTo(description: Description) {
+        description.appendText("with drawable from resource id: ")
+        description.appendValue(resourceId)
+    }
+
+    override fun matchesSafely(target: View?): Boolean {
+        if (target !is ImageView) {
+            return false
+        }
+        val imageView = target
+        if (resourceId < 0) {
+            return imageView.drawable == null
+        }
+        val resources: Resources = target.getContext().getResources()
+        val expectedDrawable: Drawable = resources.getDrawable(resourceId) ?: return false
+        if(color != null) {
+            ColorUtils.colorIt(color, expectedDrawable)
+        }
+        val bitmap: Bitmap = getBitmap(imageView.getDrawable())
+        val otherBitmap: Bitmap = getBitmap(expectedDrawable)
+        return bitmap.sameAs(otherBitmap)
+    }
+
+    private fun getBitmap(drawable: Drawable): Bitmap {
+        val bitmap = Bitmap.createBitmap(drawable.intrinsicWidth,
+            drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
+        drawable.draw(canvas)
+        return bitmap
+    }
+}
