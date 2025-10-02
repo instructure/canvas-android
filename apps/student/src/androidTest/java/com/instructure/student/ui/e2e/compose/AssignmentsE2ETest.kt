@@ -924,7 +924,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    fun showOnlyLetterGradeOnDashboardAndAssignmentListPageE2E() {
+    fun testShowOnlyLetterGradeOnDashboardAndAssignmentListPageE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
@@ -1130,7 +1130,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.GRADES, TestCategory.E2E)
-    fun showOnlyLetterGradeOnGradesPageE2E() {
+    fun testShowOnlyLetterGradeOnGradesPageE2E() {
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
         val student = data.studentsList[0]
