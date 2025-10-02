@@ -341,6 +341,8 @@ class MockCanvas {
     /** Sets whether dashboard_cards returns true or false for isK5Subject field. */
     var elementarySubjectPages: Boolean = false
 
+    var isCareerExperience: Boolean = false
+
     /** Returns the current auth token for the specified user. Returns null if no such token exists. */
     fun tokenFor(user: User): String? {
         tokens.forEach { (token, userId) ->

@@ -26,9 +26,17 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import java.util.Date
 
-class HorizonGetCoursesManager(private val apolloClient: ApolloClient) {
+interface HorizonGetCoursesManager {
+    suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean = false): DataResult<List<CourseWithProgress>>
 
-    suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
+    suspend fun getEnrollments(userId: Long, forceNetwork: Boolean = false): DataResult<List<GetCoursesQuery.Enrollment>>
+
+    suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean = false): DataResult<CourseWithModuleItemDurations>
+}
+
+class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): HorizonGetCoursesManager {
+
+    override suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
         return try {
             val query = GetCoursesQuery(userId.toString())
             val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
@@ -55,7 +63,7 @@ class HorizonGetCoursesManager(private val apolloClient: ApolloClient) {
         }
     }
 
-    suspend fun getEnrollments(userId: Long, forceNetwork: Boolean): DataResult<List<GetCoursesQuery.Enrollment>> {
+    override suspend fun getEnrollments(userId: Long, forceNetwork: Boolean): DataResult<List<GetCoursesQuery.Enrollment>> {
         return try {
             val query = GetCoursesQuery(userId.toString())
             val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
@@ -65,7 +73,8 @@ class HorizonGetCoursesManager(private val apolloClient: ApolloClient) {
             DataResult.Fail(Failure.Exception(e))
         }
     }
-    suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean = false): DataResult<CourseWithModuleItemDurations> {
+
+    override suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean): DataResult<CourseWithModuleItemDurations> {
         var hasNextPage = true
         var nextCursor: String? = null
         val moduleItemDurations = mutableListOf<String>()

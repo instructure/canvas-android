@@ -76,6 +76,7 @@ import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.molecules.ProgressBarNumberStyle
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
+import kotlin.math.roundToInt
 
 @Composable
 fun DashboardCourseCardContent(
@@ -225,7 +226,7 @@ private fun DescriptionText(description: String) {
 private fun CourseProgress(progress: Double) {
     Column(Modifier.fillMaxWidth()){
         Text(
-            text = "${progress.toInt()}% complete",
+            text = "${progress.roundToInt()}% complete",
             style = HorizonTypography.p1,
             color = HorizonColors.Text.title()
         )

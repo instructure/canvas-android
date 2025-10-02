@@ -17,7 +17,7 @@ android {
         minSdk = Versions.MIN_SDK
         targetSdk = Versions.TARGET_SDK
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.instructure.horizon.espresso.HorizonCustomTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -56,6 +56,10 @@ android {
 
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
+    }
+
+    hilt {
+        enableAggregatingTask = false
     }
 }
 
@@ -100,4 +104,9 @@ dependencies {
     testImplementation(Libs.KOTLIN_COROUTINES_TEST)
     testImplementation(Libs.THREETEN_BP)
     testImplementation(Libs.ANDROIDX_CORE_TESTING)
+    androidTestImplementation(Libs.HILT_TESTING)
+
+    /* Pandautils dependencies to provide fake implementations for testing */
+    androidTestImplementation(Libs.PLAY_IN_APP_UPDATES)
+    androidTestImplementation(Libs.ROOM)
 }

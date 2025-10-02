@@ -67,6 +67,7 @@ import java.util.Date
  * - `search` -> [SearchEndpoint]
  */
 object ApiEndpoint : Endpoint(
+    Segment("career") to CareerEndpoint,
     Segment("courses") to CourseListEndpoint,
     Segment("users") to UserListEndpoint,
     Segment("accounts") to AccountListEndpoint,

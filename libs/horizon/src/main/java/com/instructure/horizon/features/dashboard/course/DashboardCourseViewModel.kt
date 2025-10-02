@@ -127,7 +127,6 @@ class DashboardCourseViewModel @Inject constructor(
         val modules = repository.getFirstPageModulesWithItems(courseId, forceNetwork = forceNetwork)
         val nextModuleItem = modules.flatMap { module -> module.items }.firstOrNull()
         val nextModule = modules.find { module -> module.id == nextModuleItem?.moduleId }
-
         if (nextModuleItem == null) {
             return null
         }
