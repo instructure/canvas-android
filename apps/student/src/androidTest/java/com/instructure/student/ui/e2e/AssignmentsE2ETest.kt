@@ -18,22 +18,34 @@ package com.instructure.student.ui.e2e
 
 import android.os.SystemClock.sleep
 import android.util.Log
+import android.view.KeyEvent
 import androidx.test.espresso.Espresso
+import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.rule.GrantPermissionRule
 import com.instructure.canvas.espresso.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
+import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.checkToastText
+import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
+import com.instructure.dataseeding.api.AssignmentGroupsApi
 import com.instructure.dataseeding.api.AssignmentsApi
+import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.SubmissionsApi
 import com.instructure.dataseeding.model.FileUploadType
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType
+import com.instructure.dataseeding.util.ago
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.ViewUtils
 import com.instructure.espresso.handleWorkManagerTask
+import com.instructure.espresso.retryWithIncreasingDelay
+import com.instructure.pandautils.utils.toFormattedString
+import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.seedData
 import com.instructure.student.ui.utils.tokenLogin
@@ -43,6 +55,7 @@ import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runners.MethodSorters
+import java.util.Calendar
 
 @HiltAndroidTest
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
@@ -244,7 +257,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
         submissionDetailsPage.assertFileDisplayed(uploadInfo.fileName)
     }
 
- /*   @E2E
+    @E2E
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E, SecondaryFeatureCategory.ASSIGNMENT_REMINDER)
     fun testAssignmentCustomReminderE2E() {
@@ -1207,5 +1220,5 @@ class AssignmentsE2ETest: StudentComposeTest() {
         courseGradesPage.assertAssignmentDisplayed(passFailAssignment.name, "Incomplete")
         courseGradesPage.swipeUp()
         courseGradesPage.assertAssignmentDisplayed(gpaScaleAssignment.name, "3.7/15 (F)")
-    }*/
+    }
 }
