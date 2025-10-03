@@ -288,6 +288,29 @@ object ApiEndpoint : Endpoint(
                 val plannerOverride = getJsonFromRequestBody<PlannerOverride>(request.body)
                 request.successResponse(plannerOverride!!)
             }
+        },
+        Segment("items") to Endpoint {
+            GET {
+                val contextCodes = request.url.queryParameterValues("context_codes[]")
+                val startDate = request.url.queryParameter("start_date").toDate()
+                val endDate = request.url.queryParameter("end_date").toDate()
+                val filter = request.url.queryParameter("filter")
+                val courseIds = contextCodes
+                    .filter { it?.startsWith("course_").orDefault() }
+                    .map { it?.substringAfter("course_")?.toLong() }
+                val userIds = contextCodes
+                    .filter { it?.startsWith("user_").orDefault() }
+                    .map { it?.substringAfter("user_")?.toLong() }
+
+                val plannerItems = data.todos.filter {
+                    courseIds.contains(it.courseId) || userIds.contains(it.userId)
+                }.filter {
+                    if (it.plannableDate == null) return@filter true
+                    if (startDate == null || endDate == null) return@filter true
+                    it.plannableDate.time in startDate.time..endDate.time
+                }
+                request.successResponse(plannerItems)
+            }
         }
     ),
     Segment("features") to Endpoint(

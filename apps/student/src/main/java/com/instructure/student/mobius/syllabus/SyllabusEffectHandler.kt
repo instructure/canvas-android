@@ -61,7 +61,13 @@ class SyllabusEffectHandler(private val repository: SyllabusRepository) : Effect
                 assignments.map { endList.addAll(it) }
                 events.map { endList.addAll(it) }
                 plannerItems.map { items ->
-                    endList.addAll(items.map { it.toScheduleItem() })
+                    // Filter out assignments, quizzes, and calendar events as they're already fetched above
+                    val filteredItems = items.filter {
+                        it.plannableType != com.instructure.canvasapi2.models.PlannableType.ASSIGNMENT &&
+                        it.plannableType != com.instructure.canvasapi2.models.PlannableType.QUIZ &&
+                        it.plannableType != com.instructure.canvasapi2.models.PlannableType.CALENDAR_EVENT
+                    }
+                    endList.addAll(filteredItems.map { it.toScheduleItem() })
                 }
 
                 endList.sort()
