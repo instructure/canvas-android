@@ -16,12 +16,12 @@
  */
 package com.instructure.horizon.interaction.features.dashboard
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addItemToModule
-import com.instructure.canvas.espresso.mockCanvas.addModuleToCourse
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeGetHorizonCourseManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeJourneyApiManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeJourneyApiManager
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addItemToModule
+import com.instructure.canvas.espresso.mockcanvas.addModuleToCourse
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyApiManagerModule
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager

@@ -16,11 +16,11 @@
  */
 package com.instructure.horizon.interaction.features.notification
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAccountNotification
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeGetHorizonCourseManager
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeJourneyApiManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAccountNotification
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeJourneyApiManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyApiManagerModule
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager

@@ -16,9 +16,9 @@
  */
 package com.instructure.canvas.espresso.mockCanvas.endpoints
 
-import com.instructure.canvas.espresso.mockCanvas.Endpoint
-import com.instructure.canvas.espresso.mockCanvas.utils.Segment
-import com.instructure.canvas.espresso.mockCanvas.utils.successResponse
+import com.instructure.canvas.espresso.mockcanvas.Endpoint
+import com.instructure.canvas.espresso.mockcanvas.utils.Segment
+import com.instructure.canvas.espresso.mockcanvas.utils.successResponse
 import com.instructure.loginapi.login.viewmodel.Experience
 
 object CareerEndpoint: Endpoint(

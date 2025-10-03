@@ -14,9 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvas.espresso.mockCanvas.fakes
+package com.instructure.canvas.espresso.mockcanvas.fakes
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
 import com.instructure.canvasapi2.managers.graphql.Program
 import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
