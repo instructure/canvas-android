@@ -27,8 +27,7 @@ jobs:
       - name: Run unit tests and generate coverage for PR
         run: |
           # Run tests in parallel - Gradle will handle parallelization
-          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :parent:testQaDebugUnitTest --parallel
-          ./gradle/gradlew -p libs :pandautils:testDebugUnitTest
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :parent:testQaDebugUnitTest :pandautils:testDebugUnitTest --parallel
 
           # Copy exec files to expected locations for jacoco.gradle
           mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco apps/parent/build/jacoco libs/pandautils/build/jacoco
@@ -39,8 +38,7 @@ jobs:
           cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
 
           # Generate JaCoCo reports in parallel
-          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :parent:jacocoReport --parallel
-          ./gradle/gradlew -p libs :pandautils:jacocoReport
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :parent:jacocoReport :pandautils:jacocoReport --parallel
         continue-on-error: false
 
       - name: Upload PR coverage reports
@@ -78,8 +76,7 @@ jobs:
       - name: Run unit tests and generate coverage for master
         run: |
           # Run tests in parallel - Gradle will handle parallelization
-          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :parent:testQaDebugUnitTest --parallel
-          ./gradle/gradlew -p libs :pandautils:testDebugUnitTest
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :parent:testQaDebugUnitTest :pandautils:testDebugUnitTest --parallel
 
           # Copy exec files to expected locations for jacoco.gradle
           mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco apps/parent/build/jacoco libs/pandautils/build/jacoco
@@ -90,8 +87,7 @@ jobs:
           cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
 
           # Generate JaCoCo reports in parallel
-          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :parent:jacocoReport --parallel
-          ./gradle/gradlew -p libs :pandautils:jacocoReport
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :parent:jacocoReport :pandautils:jacocoReport --parallel
         continue-on-error: true
 
       - name: Upload master coverage reports
