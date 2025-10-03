@@ -26,6 +26,7 @@ import android.widget.EditText
 import androidx.annotation.StringRes
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.PerformException
@@ -37,6 +38,7 @@ import androidx.test.espresso.action.GeneralClickAction
 import androidx.test.espresso.action.Press
 import androidx.test.espresso.action.Tap
 import androidx.test.espresso.action.ViewActions
+import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.RootMatchers.withDecorView
@@ -354,4 +356,29 @@ fun checkToastText(@StringRes stringRes: Int, activity: Activity) {
             //Intentionally empty as we would like to wait for the toast to disappear. Somehow doesNotExist() doesn't work because it passes even if the toast is still there and visible.
         }
     }
+}
+
+fun pressBackButton(times: Int) {
+    for(i in 1..times) {
+        Espresso.pressBack()
+    }
+}
+
+fun waitForViewToDisappear(viewMatcher: Matcher<View>, timeoutInSeconds: Long) {
+    val startTime = System.currentTimeMillis()
+
+    while (System.currentTimeMillis() - startTime < (timeoutInSeconds * 1000)) {
+        try {
+            onView(viewMatcher)
+                .check(ViewAssertions.doesNotExist())
+            return
+        } catch (e: AssertionError) {
+            Thread.sleep(200)
+        }
+    }
+    throw AssertionError("The view has not been displayed within $timeoutInSeconds seconds.")
+}
+
+fun toString(view: View): String {
+    return HumanReadables.getViewHierarchyErrorMessage(view, null, "", null)
 }

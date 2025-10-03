@@ -16,7 +16,6 @@
 package com.instructure.canvasapi2.managers.graphql
 
 import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.di.JourneyApolloClient
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
 import com.instructure.canvasapi2.utils.DataResult
@@ -50,10 +49,16 @@ data class ProgramRequirement(
     val enrollmentStatus: ProgramProgressCourseEnrollmentStatus? = null
 )
 
-class JourneyApiManager @Inject constructor(
-    @JourneyApolloClient private val journeyClient: ApolloClient
-) {
-    suspend fun getPrograms(forceNetwork: Boolean): List<Program> {
+interface JourneyApiManager {
+    suspend fun getPrograms(forceNetwork: Boolean = false): List<Program>
+    suspend fun getProgramById(programId: String, forceNetwork: Boolean = false): Program
+    suspend fun enrollCourse(progressId: String): DataResult<Unit>
+}
+
+class JourneyApiManagerImpl @Inject constructor(
+    private val journeyClient: ApolloClient
+): JourneyApiManager {
+    override suspend fun getPrograms(forceNetwork: Boolean): List<Program> {
         val query = EnrolledProgramsQuery()
         val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork)
         return result.dataAssertNoErrors.enrolledPrograms.map {
@@ -61,7 +66,7 @@ class JourneyApiManager @Inject constructor(
         }
     }
 
-    suspend fun getProgramById(programId: String, forceNetwork: Boolean): Program {
+    override suspend fun getProgramById(programId: String, forceNetwork: Boolean): Program {
         val query = GetProgramByIdQuery(programId)
         val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork)
         return mapEnrolledProgram(result.dataAssertNoErrors.program.programFields)
@@ -126,7 +131,7 @@ class JourneyApiManager @Inject constructor(
         )
     }
 
-    suspend fun enrollCourse(progressId: String): DataResult<Unit> {
+    override suspend fun enrollCourse(progressId: String): DataResult<Unit> {
         val mutation = EnrollCourseMutation(progressId)
         val result = journeyClient.enqueueMutation(mutation)
         return if (result.exception != null) {
