@@ -55,7 +55,7 @@ class HorizonDashboardPage(private val composeTestRule: ComposeTestRule) {
             .onChildren()
             .filterToOne(hasAnyDescendant(hasText("Program details")))
             .assertIsDisplayed()
-            .assertHasClickAction()
+            .performClick()
     }
 
     fun assertCourseCardDisplayed(
