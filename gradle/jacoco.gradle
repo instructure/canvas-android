@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-def coveredProject = subprojects.findAll { project -> project.name == 'student' || project.name == 'teacher' || project.name == 'pandautils'}
+def coveredProject = subprojects.findAll { project -> project.name == 'student' || project.name == 'teacher' || project.name == 'parent' || project.name == 'pandautils'}
 
 apply plugin: 'jacoco'
 

@@ -1,0 +1,258 @@
+name: Unit Test Coverage
+
+on:
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  test-pr:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout PR branch
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Setup open source build
+        run: ./open_source.sh
+
+      - name: Run unit tests and generate coverage for PR
+        run: |
+          # Run tests in parallel - Gradle will handle parallelization
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :pandautils:testDebugUnitTest --parallel
+
+          # Copy exec files to expected locations for jacoco.gradle
+          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco libs/pandautils/build/jacoco
+
+          cp apps/student/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/student/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Student exec not found"
+          cp apps/teacher/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/teacher/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Teacher exec not found"
+          cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
+
+          # Generate JaCoCo reports in parallel
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :pandautils:jacocoReport --parallel
+        continue-on-error: false
+
+      - name: Upload PR coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-coverage
+          path: |
+            apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv
+          retention-days: 1
+
+  test-master:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout master branch
+        uses: actions/checkout@v4
+        with:
+          ref: master
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Setup open source build
+        run: ./open_source.sh
+
+      - name: Run unit tests and generate coverage for master
+        run: |
+          # Run tests in parallel - Gradle will handle parallelization
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :pandautils:testDebugUnitTest --parallel
+
+          # Copy exec files to expected locations for jacoco.gradle
+          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco libs/pandautils/build/jacoco
+
+          cp apps/student/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/student/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Student exec not found"
+          cp apps/teacher/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/teacher/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Teacher exec not found"
+          cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
+
+          # Generate JaCoCo reports in parallel
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :pandautils:jacocoReport --parallel
+        continue-on-error: true
+
+      - name: Upload master coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-coverage
+          path: |
+            apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv
+          retention-days: 1
+
+  coverage-report:
+    runs-on: ubuntu-latest
+    needs: [test-pr, test-master]
+    if: always()
+
+    steps:
+      - name: Download PR coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-coverage
+          path: coverage-reports/pr
+
+      - name: Download master coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: master-coverage
+          path: coverage-reports/master
+        continue-on-error: true
+
+      - name: Reorganize coverage files
+        run: |
+          # Reorganize downloaded artifacts to expected structure
+          mkdir -p coverage-reports/pr coverage-reports/master
+
+          # PR coverage
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/student/*" -exec cp {} coverage-reports/pr/student.csv \; 2>/dev/null || echo "Student PR coverage not found"
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/teacher/*" -exec cp {} coverage-reports/pr/teacher.csv \; 2>/dev/null || echo "Teacher PR coverage not found"
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/pandautils/*" -exec cp {} coverage-reports/pr/pandautils.csv \; 2>/dev/null || echo "Pandautils PR coverage not found"
+
+          # Master coverage
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/student/*" -exec cp {} coverage-reports/master/student.csv \; 2>/dev/null || echo "Student master coverage not found"
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/teacher/*" -exec cp {} coverage-reports/master/teacher.csv \; 2>/dev/null || echo "Teacher master coverage not found"
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/pandautils/*" -exec cp {} coverage-reports/master/pandautils.csv \; 2>/dev/null || echo "Pandautils master coverage not found"
+
+      - name: Calculate coverage delta
+        id: coverage
+        run: |
+          python3 << 'EOF' | tee coverage-report.txt
+          import csv
+          import os
+          from pathlib import Path
+
+          def parse_jacoco_csv(file_path):
+              """Parse JaCoCo CSV and return instruction coverage percentage"""
+              if not Path(file_path).exists():
+                  return None
+
+              total_missed = 0
+              total_covered = 0
+
+              with open(file_path, 'r') as f:
+                  reader = csv.DictReader(f)
+                  for row in reader:
+                      total_missed += int(row['INSTRUCTION_MISSED'])
+                      total_covered += int(row['INSTRUCTION_COVERED'])
+
+              if total_missed + total_covered == 0:
+                  return 0.0
+
+              return (total_covered / (total_missed + total_covered)) * 100
+
+          modules = ['student', 'teacher', 'pandautils']
+          results = []
+
+          print("## 📊 Code Coverage Report\n")
+
+          overall_pr_coverage = []
+          overall_master_coverage = []
+
+          for module in modules:
+              pr_file = f'coverage-reports/pr/{module}.csv'
+              master_file = f'coverage-reports/master/{module}.csv'
+
+              pr_cov = parse_jacoco_csv(pr_file)
+              master_cov = parse_jacoco_csv(master_file)
+
+              if pr_cov is not None and master_cov is not None:
+                  delta = pr_cov - master_cov
+                  emoji = '✅' if delta >= 0 else '⚠️'
+                  sign = '+' if delta >= 0 else ''
+
+                  print(f"### {emoji} {module.capitalize()}")
+                  print(f"- **PR Coverage:** {pr_cov:.2f}%")
+                  print(f"- **Master Coverage:** {master_cov:.2f}%")
+                  print(f"- **Delta:** {sign}{delta:.2f}%\n")
+
+                  overall_pr_coverage.append(pr_cov)
+                  overall_master_coverage.append(master_cov)
+              elif pr_cov is not None:
+                  print(f"### ℹ️ {module.capitalize()}")
+                  print(f"- **PR Coverage:** {pr_cov:.2f}%")
+                  print(f"- **Master Coverage:** N/A\n")
+              else:
+                  print(f"### ⚠️ {module.capitalize()}")
+                  print(f"- Coverage data not available\n")
+
+          if overall_pr_coverage and overall_master_coverage:
+              avg_pr = sum(overall_pr_coverage) / len(overall_pr_coverage)
+              avg_master = sum(overall_master_coverage) / len(overall_master_coverage)
+              overall_delta = avg_pr - avg_master
+
+              print("---")
+              print(f"### 📈 Overall Average")
+              print(f"- **PR Coverage:** {avg_pr:.2f}%")
+              print(f"- **Master Coverage:** {avg_master:.2f}%")
+              sign = '+' if overall_delta >= 0 else ''
+              print(f"- **Delta:** {sign}{overall_delta:.2f}%")
+
+              # Set output for potential failure condition
+              with open(os.environ['GITHUB_OUTPUT'], 'a') as f:
+                  f.write(f"delta={overall_delta}\n")
+
+          EOF
+
+      - name: Comment PR (sticky)
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const fs = require('fs');
+            const output = fs.readFileSync('coverage-report.txt', 'utf8');
+            const marker = '<!-- unit-test-coverage-comment -->';
+            const body = marker + '\n' + output;
+
+            // Find existing coverage comment
+            const { data: comments } = await github.rest.issues.listComments({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.issue.number,
+            });
+
+            const existingComment = comments.find(comment =>
+              comment.body.includes(marker)
+            );
+
+            if (existingComment) {
+              // Update existing comment
+              await github.rest.issues.updateComment({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                comment_id: existingComment.id,
+                body: body
+              });
+            } else {
+              // Create new comment
+              await github.rest.issues.createComment({
+                issue_number: context.issue.number,
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                body: body
+              });
+            }
+
+      # Optional: Fail if coverage decreases by more than 1%
+      # - name: Check coverage threshold
+      #   if: steps.coverage.outputs.delta < -1.0
+      #   run: |
+      #     echo "Coverage decreased by more than 1%"
+      #     exit 1
