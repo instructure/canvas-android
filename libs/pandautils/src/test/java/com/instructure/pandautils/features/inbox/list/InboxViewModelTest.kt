@@ -18,10 +18,6 @@ package com.instructure.pandautils.features.inbox.list/*
 import android.content.Context
 import android.content.res.Resources
 import android.view.View
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
@@ -39,22 +35,20 @@ import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class InboxViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val inboxRepository: InboxRepository = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
@@ -64,15 +58,10 @@ class InboxViewModelTest {
 
     private lateinit var viewModel: InboxViewModel
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         coEvery { inboxRepository.getCanvasContexts() } returns DataResult.Success(emptyList())
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1)))
@@ -97,16 +86,10 @@ class InboxViewModelTest {
         return InboxEntryItemViewModel(viewData, openConversation as (Boolean, Boolean) -> Unit, selectionCallback as (View, Boolean) -> Unit, avatarCallback as (Boolean) -> Unit)
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        
-    }
-
     @Test
     fun `Filters are initally cleared and the Inbox scope is visible`() {
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(InboxViewData(scope = "Inbox", filterText = "All Courses"), viewModel.data.value)
     }
@@ -116,7 +99,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Fail()
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Error("Error"), viewModel.state.value)
     }
@@ -126,7 +109,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(emptyList())
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Empty(R.string.nothingUnread, R.string.nothingUnreadSubtext, R.drawable.ic_panda_inboxzero), viewModel.state.value)
     }
@@ -136,7 +119,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(1, viewModel.itemViewModels.value!!.size)
@@ -151,7 +134,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(1, viewModel.itemViewModels.value!![0].data.id)
@@ -169,7 +152,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Success, viewModel.state.value)
         assertEquals(1, viewModel.itemViewModels.value!![0].data.id)
@@ -183,7 +166,7 @@ class InboxViewModelTest {
     @Test
     fun `Open scope selector sends open event`() {
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.openScopeSelector()
 
@@ -193,7 +176,7 @@ class InboxViewModelTest {
     @Test
     fun `Don't fetch data when the already selected scope is selected`() {
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.scopeChanged(InboxApi.Scope.INBOX)
 
@@ -206,7 +189,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(eq(InboxApi.Scope.SENT), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 2)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.scopeChanged(InboxApi.Scope.SENT)
 
@@ -223,7 +206,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(conversation))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onClick(View(context))
 
         val events = mutableListOf<Event<InboxAction>>()
@@ -240,7 +223,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(conversation))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onAvatarClick(View(context))
 
         val events = mutableListOf<Event<InboxAction>>()
@@ -256,7 +239,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.starSelected()
@@ -274,7 +257,7 @@ class InboxViewModelTest {
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.unstarSelected()
@@ -296,7 +279,7 @@ class InboxViewModelTest {
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], starred = true) }
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
@@ -311,7 +294,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.markAsUnreadSelected()
@@ -333,7 +316,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
@@ -350,7 +333,7 @@ class InboxViewModelTest {
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.markAsReadSelected()
@@ -373,7 +356,7 @@ class InboxViewModelTest {
         every { inboxEntryItemCreator.createInboxEntryItem(any(), any(), any(), any()) } answers { createItem(args[0] as Conversation, args[1], args[2], args[3], unread = true) }
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.UNREAD)
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
@@ -397,7 +380,7 @@ class InboxViewModelTest {
             events.add(it)
         }
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.deleteSelected()
 
@@ -422,7 +405,7 @@ class InboxViewModelTest {
             events.add(it)
         }
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.deleteSelected()
 
@@ -447,7 +430,7 @@ class InboxViewModelTest {
             events.add(it)
         }
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![1].onLongClick(View(context))
         viewModel.archiveSelected()
 
@@ -464,7 +447,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.itemViewModels.value!![1].onLongClick(View(context))
         viewModel.archiveSelected()
@@ -482,7 +465,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
         viewModel.itemViewModels.value!![1].onLongClick(View(context))
         viewModel.unarchiveSelected()
@@ -498,7 +481,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.batchUpdateConversations(any(), any()) } returns DataResult.Fail()
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.starSelected()
@@ -511,7 +494,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
 
@@ -527,7 +510,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.deleteSelected()
@@ -541,7 +524,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         val backPressHandledByViewModel = viewModel.handleBackPressed()
@@ -555,7 +538,7 @@ class InboxViewModelTest {
         coEvery { inboxRepository.getConversations(any(), any(), any(), any()) } returns DataResult.Success(listOf(Conversation(id = 1), Conversation(id = 2)))
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         val backPressHandledByViewModel = viewModel.handleBackPressed()
 
         assertFalse(backPressHandledByViewModel)
@@ -691,7 +674,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.itemViewModels.value!![0].onLongClick(View(context))
         viewModel.itemViewModels.value!![1].onClick(View(context))
         viewModel.confirmDelete()
@@ -707,7 +690,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.archiveConversation(1)
 
         assertEquals(1, viewModel.itemViewModels.value!!.size)
@@ -727,7 +710,7 @@ class InboxViewModelTest {
         viewModel.events.observeForever {
             events.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.archiveConversation(1)
 
         val snackbarEvent = events.find { it.peekContent() is InboxAction.ShowConfirmationSnackbar }?.peekContent() as InboxAction.ShowConfirmationSnackbar
@@ -748,7 +731,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.markConversationAsRead(1)
 
         assertEquals(2, viewModel.itemViewModels.value!!.size)
@@ -767,7 +750,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.UNREAD)
         viewModel.markConversationAsRead(1)
 
@@ -790,7 +773,7 @@ class InboxViewModelTest {
         viewModel.events.observeForever {
             events.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.UNREAD)
         viewModel.markConversationAsRead(1)
 
@@ -812,7 +795,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.markConversationAsUnread(1)
 
         assertEquals(2, viewModel.itemViewModels.value!!.size)
@@ -831,7 +814,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
         viewModel.markConversationAsUnread(1)
 
@@ -854,7 +837,7 @@ class InboxViewModelTest {
         viewModel.events.observeForever {
             events.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
         viewModel.markConversationAsUnread(1)
 
@@ -878,7 +861,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.unstarConversation(1)
 
@@ -901,7 +884,7 @@ class InboxViewModelTest {
         viewModel.events.observeForever {
             events.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.unstarConversation(1)
 
@@ -924,7 +907,7 @@ class InboxViewModelTest {
         )
 
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.ARCHIVED)
         viewModel.unarchiveConversation(1)
 
@@ -946,7 +929,7 @@ class InboxViewModelTest {
         viewModel.events.observeForever {
             events.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.scopeChanged(InboxApi.Scope.STARRED)
         viewModel.unarchiveConversation(1)
 
@@ -963,7 +946,7 @@ class InboxViewModelTest {
     @Test
     fun `Inbox signature is fetched on init`() {
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         coVerify { inboxRepository.getInboxSignature() }
     }

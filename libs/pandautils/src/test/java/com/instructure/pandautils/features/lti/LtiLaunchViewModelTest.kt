@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.lti
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.LTITool
@@ -29,30 +28,25 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class LtiLaunchViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: LtiLaunchRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: LtiLaunchViewModel
 
@@ -69,12 +63,6 @@ class LtiLaunchViewModelTest {
         coEvery { repository.authenticateUrl(capture(urlCaptor)) } answers {
             urlCaptor.captured
         }
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -86,11 +74,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -106,11 +90,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.LoadLtiWebView("url"), events[0])
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -125,11 +105,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.LoadLtiWebView("quiz-lti"), events[0])
     }
@@ -143,11 +119,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.ShowError, events[0])
     }
@@ -160,11 +132,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.ShowError, events[0])
     }
@@ -180,11 +148,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.LoadLtiWebView("lti-tab-url"), events[0])
     }
@@ -198,11 +162,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify { repository.getLtiFromAuthenticationUrl("url", any()) }
         assertEquals(LtiLaunchAction.LoadLtiWebView("url"), events[0])
@@ -214,11 +174,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify(exactly = 0) { repository.getLtiFromAuthenticationUrl(any(), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
@@ -228,11 +184,7 @@ class LtiLaunchViewModelTest {
     fun `Display error if lti tab and lti url is null`() = runTest {
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(LtiLaunchAction.ShowError, events[0])
     }
@@ -252,11 +204,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify {
             repository.getLtiFromAuthenticationUrl(
@@ -282,11 +230,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify {
             repository.getLtiFromAuthenticationUrl(
@@ -313,11 +257,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/courses/1/external_tools/sessionless_launch?url=url"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
@@ -339,11 +279,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/groups/1/external_tools/sessionless_launch?url=url"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
@@ -365,11 +301,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/courses/1/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
@@ -391,11 +323,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/groups/1/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])
@@ -417,11 +345,7 @@ class LtiLaunchViewModelTest {
 
         viewModel = createViewModel()
 
-        val events = mutableListOf<LtiLaunchAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify { repository.getLtiFromAuthenticationUrl(eq("https://domain/api/v1/accounts/self/external_tools/sessionless_launch?id=55"), any()) }
         assertEquals(LtiLaunchAction.LaunchCustomTab("url"), events[0])

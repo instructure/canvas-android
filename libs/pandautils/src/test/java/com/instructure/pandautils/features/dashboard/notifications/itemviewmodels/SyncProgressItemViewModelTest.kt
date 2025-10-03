@@ -23,14 +23,19 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.dashboard.notifications.SyncProgressViewData
 import com.instructure.pandautils.features.offline.sync.AggregateProgressViewData
 import com.instructure.pandautils.features.offline.sync.ProgressState
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import junit.framework.TestCase.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 class SyncProgressItemViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val resources: Resources = mockk(relaxed = true)
 

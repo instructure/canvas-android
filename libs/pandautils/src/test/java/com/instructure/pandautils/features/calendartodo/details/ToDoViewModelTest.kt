@@ -35,25 +35,21 @@ import com.instructure.pandautils.features.reminder.ReminderManager
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.Called
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.LocalDate
 import java.util.Date
@@ -61,7 +57,8 @@ import java.util.Date
 @OptIn(ExperimentalCoroutinesApi::class)
 class ToDoViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
@@ -108,7 +105,6 @@ class ToDoViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<PlannerItem>(PLANNER_ITEM) } returns plannerItem
         every { savedStateHandle.get<PlannerItem>(PLANNABLE_ID) } returns null
@@ -125,12 +121,6 @@ class ToDoViewModelTest {
         every { ApiPrefs.fullDomain } returns "https://canvas.instructure.com"
 
         createViewModel()
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -152,10 +142,7 @@ class ToDoViewModelTest {
     fun `Delete ToDo`() = runTest {
         viewModel.handleAction(ToDoAction.DeleteToDo)
 
-        val events = mutableListOf<ToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify(exactly = 1) {
             toDoRepository.deletePlannerNote(plannerItem.plannable.id)
@@ -186,10 +173,7 @@ class ToDoViewModelTest {
     fun `Open Edit ToDo`() = runTest {
         viewModel.handleAction(ToDoAction.EditToDo)
 
-        val events = mutableListOf<ToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedEvent = ToDoViewModelAction.OpenEditToDo(plannerItem)
         Assert.assertEquals(expectedEvent, events.last())

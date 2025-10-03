@@ -25,29 +25,29 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardCourseViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val context: Context = mockk(relaxed = true)
     private var repository: DashboardCourseRepository = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val courses = listOf<GetCoursesQuery.Course>(
         GetCoursesQuery.Course(
@@ -161,18 +161,11 @@ class DashboardCourseViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
 
         coEvery { repository.getEnrollments(any()) } returns activeEnrollments + invitedEnrollments + completedEnrollments
         coEvery { repository.getPrograms(any()) } returns programs
         coEvery { repository.acceptInvite(any(), any()) } just runs
         coEvery { repository.getFirstPageModulesWithItems(any(), any()) } returns modules
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

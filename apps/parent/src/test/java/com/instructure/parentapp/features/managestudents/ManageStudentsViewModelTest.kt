@@ -18,11 +18,7 @@
 package com.instructure.parentapp.features.managestudents
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.core.content.ContextCompat
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -32,6 +28,9 @@ import com.instructure.pandautils.utils.ColorUtils
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -40,30 +39,21 @@ import io.mockk.mockkObject
 import io.mockk.spyk
 import io.mockk.unmockkObject
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class ManageStudentsViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context: Context = mockk(relaxed = true)
     private val repository: ManageStudentsRepository = mockk(relaxed = true)
@@ -75,8 +65,6 @@ class ManageStudentsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
         mockkObject(ColorUtils)
         every { ColorUtils.correctContrastForText(any(), any()) } answers { firstArg() }
@@ -85,9 +73,7 @@ class ManageStudentsViewModelTest {
         every { colorKeeper.createThemedColor(any()) } answers { ThemedColor(firstArg()) }
     }
 
-    @After
     fun tearDown() {
-        Dispatchers.resetMain()
         unmockkObject(ColorUtils)
     }
 
@@ -132,10 +118,7 @@ class ManageStudentsViewModelTest {
         coEvery { repository.getStudents(any()) } returns listOf(User(id = 1))
         createViewModel()
 
-        val events = mutableListOf<ManageStudentsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(ManageStudentsAction.StudentTapped(1L))
 
@@ -239,10 +222,7 @@ class ManageStudentsViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<ManageStudentsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(ManageStudentsAction.StudentColorChanged(1L, selectedUserColor))
 
@@ -272,10 +252,7 @@ class ManageStudentsViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<ManageStudentsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(ManageStudentsAction.StudentColorChanged(1L, selectedUserColor))
 
@@ -289,10 +266,7 @@ class ManageStudentsViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<ManageStudentsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(ManageStudentsAction.AddStudent)
 

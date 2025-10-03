@@ -18,25 +18,25 @@ package com.instructure.horizon.features.dashboard
 
 import com.instructure.canvasapi2.models.UnreadNotificationCount
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class DashboardViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val repository: DashboardRepository = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val notificationCounts = listOf(
         UnreadNotificationCount(
@@ -58,15 +58,8 @@ class DashboardViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         coEvery { repository.getUnreadCounts(any()) } returns notificationCounts
         coEvery { themePrefs.mobileLogoUrl } returns ""
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

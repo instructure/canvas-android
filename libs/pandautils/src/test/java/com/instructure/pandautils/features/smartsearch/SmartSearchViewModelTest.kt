@@ -15,10 +15,6 @@
  */
 package com.instructure.pandautils.features.smartsearch
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
@@ -31,45 +27,32 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SmartSearchViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val testDispatcher = UnconfinedTestDispatcher()
-
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val repository: SmartSearchRepository = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<String>(QUERY) } returns "query"
         every { savedStateHandle.get<CanvasContext>(Const.CANVAS_CONTEXT) } returns Course(name = "Course")
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -218,7 +201,7 @@ class SmartSearchViewModelTest {
         viewModel.uiState.value.actionHandler(SmartSearchAction.Route(url))
 
         val events = mutableListOf<SmartSearchViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
+        backgroundScope.launch(viewModelTestRule.testDispatcher) {
             viewModel.events.toList(events)
             assertEquals(SmartSearchViewModelAction.Route(url), events.last())
         }

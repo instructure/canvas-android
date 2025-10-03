@@ -19,10 +19,6 @@
 package com.instructure.pandautils.features.offline.sync.progress
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.utils.NumberHelper
@@ -49,14 +45,13 @@ import io.mockk.mockkObject
 import io.mockk.slot
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 import java.util.UUID
 
@@ -64,11 +59,9 @@ import java.util.UUID
 class SyncProgressViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context: Context = mockk(relaxed = true)
     private val workManager: WorkManager = mockk(relaxed = true)
@@ -83,8 +76,6 @@ class SyncProgressViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkObject(NumberHelper)
         val captor = slot<Long>()
@@ -93,7 +84,6 @@ class SyncProgressViewModelTest {
         }
     }
 
-    @After
     fun teardown() {
         unmockkAll()
     }

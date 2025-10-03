@@ -211,6 +211,7 @@ dependencies {
     implementation project(path: ':rceditor')
     implementation project(path: ':annotations')
     implementation project(path: ':interactions')
+    testImplementation project(':test-utils')
 
     /* Kotlin */
     implementation Libs.KOTLIN_STD_LIB

@@ -16,10 +16,6 @@
 package com.instructure.teacher.features.assignment.submission
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
@@ -37,21 +33,17 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -62,15 +54,13 @@ import java.util.Date
 class SubmissionListViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val submissionListRepository: AssignmentSubmissionRepository = mockk(relaxed = true)
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val submissions = listOf(
         GradeableStudentSubmission(
@@ -172,8 +162,6 @@ class SubmissionListViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         ContextKeeper.appContext = mockk(relaxed = true)
 
@@ -206,12 +194,6 @@ class SubmissionListViewModelTest {
         )
 
         setupString()
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -748,24 +730,18 @@ class SubmissionListViewModelTest {
         )
 
         val viewModel = createViewModel()
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.uiState.value.actionHandler(SubmissionListAction.SubmissionClicked(1L))
 
-        val events = mutableListOf<SubmissionListViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-            assertEquals(
-                SubmissionListViewModelAction.RouteToSubmission(
-                    courseId = 1L,
-                    assignmentId = 1L,
-                    selectedIdx = 0,
-                    anonymousGrading = false,
-                    filteredSubmissionIds = longArrayOf(1L),
-                    SubmissionListFilter.ALL,
-                    0.0
-                ), events.last()
-            )
-        }
+        val event = events.last() as SubmissionListViewModelAction.RouteToSubmission
+        assertEquals(1L, event.courseId)
+        assertEquals(1L, event.assignmentId)
+        assertEquals(0, event.selectedIdx)
+        assertEquals(false, event.anonymousGrading)
+        assert(event.filteredSubmissionIds.contentEquals(longArrayOf(1L)))
+        assertEquals(SubmissionListFilter.ALL, event.filter)
+        assertEquals(0.0, event.filterValue)
     }
 
     @Test
@@ -799,13 +775,11 @@ class SubmissionListViewModelTest {
     @Test
     fun `Route to user profile`() = runTest {
         val viewModel = createViewModel()
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
+
         viewModel.uiState.value.actionHandler(SubmissionListAction.AvatarClicked(1L))
 
-        val events = mutableListOf<SubmissionListViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-            assertEquals(SubmissionListViewModelAction.RouteToUser(1L, 1L), events.last())
-        }
+        assertEquals(SubmissionListViewModelAction.RouteToUser(1L, 1L), events.last())
     }
 
     @Test
@@ -849,18 +823,16 @@ class SubmissionListViewModelTest {
     @Test
     fun `Open post policy`() = runTest {
         val viewModel = createViewModel()
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
+
         viewModel.uiState.value.actionHandler(SubmissionListAction.ShowPostPolicy)
 
-        val events = mutableListOf<SubmissionListViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-            assertEquals(
-                SubmissionListViewModelAction.ShowPostPolicy(
-                    course = Course(1L),
-                    assignment = Assignment(1L)
-                ), events.last()
-            )
-        }
+        assertEquals(
+            SubmissionListViewModelAction.ShowPostPolicy(
+                course = Course(1L, name = "Course 1"),
+                assignment = Assignment(1L, name = "Assignment 1", submissionTypesRaw = listOf("online_text_entry"))
+            ), events.last()
+        )
     }
 
     @Test
@@ -880,6 +852,8 @@ class SubmissionListViewModelTest {
             )
         )
 
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
+
         viewModel.uiState.value.actionHandler(SubmissionListAction.SendMessage)
 
         val expectedRecipients =
@@ -887,18 +861,14 @@ class SubmissionListViewModelTest {
                 Recipient.from((it.assignee as StudentAssignee).student)
             }
 
-        val events = mutableListOf<SubmissionListViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-            assertEquals(
-                SubmissionListViewModelAction.SendMessage(
-                    course.contextId,
-                    course.name,
-                    expectedRecipients,
-                    assignment.name.orEmpty()
-                ), events.last()
-            )
-        }
+        assertEquals(
+            SubmissionListViewModelAction.SendMessage(
+                course.contextId,
+                course.name,
+                expectedRecipients,
+                ""
+            ), events.last()
+        )
     }
 
     @Test

@@ -16,7 +16,6 @@
  */
 package com.instructure.pandautils.features.speedgrader.grade.comments
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.SubmissionCommentsQuery
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -35,26 +34,23 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flowOf
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class SpeedGraderCommentsViewModelTest {
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val savedStateHandle = SavedStateHandle(
         mapOf(
@@ -74,13 +70,11 @@ class SpeedGraderCommentsViewModelTest {
     private val apiPrefs = mockk<ApiPrefs>(relaxed = true)
     private val selectedAttemptHolder = mockk<SpeedGraderSelectedAttemptHolder>(relaxed = true)
     private val fileUploadEventHandler = mockk<FileUploadEventHandler>(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     private lateinit var viewModel: SpeedGraderCommentsViewModel
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         every { apiPrefs.domain } returns "domain"
         every { apiPrefs.user } returns mockk(relaxed = true)
         coEvery { selectedAttemptHolder.selectedAttemptIdFlowFor(any()) } returns MutableStateFlow(
@@ -92,11 +86,6 @@ class SpeedGraderCommentsViewModelTest {
             every { comments } returns emptyList()
         }
         coEvery { fileUploadEventHandler.events } returns MutableSharedFlow(replay = 0)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     private fun createViewModel() {

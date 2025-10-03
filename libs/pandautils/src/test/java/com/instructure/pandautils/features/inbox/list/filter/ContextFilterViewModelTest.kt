@@ -16,7 +16,6 @@ package com.instructure.pandautils.features.inbox.list.filter/*
  */
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Group
@@ -26,12 +25,13 @@ import io.mockk.mockk
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 
 class ContextFilterViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val resources = mockk<Resources>(relaxed = true)
 

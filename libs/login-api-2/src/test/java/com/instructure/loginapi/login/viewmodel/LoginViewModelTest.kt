@@ -16,10 +16,6 @@
  */
 package com.instructure.loginapi.login.viewmodel
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.apis.ExperienceAPI
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -36,50 +32,37 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class LoginViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
     private val userManager: UserManager = mockk(relaxed = true)
     private val oauthManager: OAuthManager = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleTestOwner = LifecycleTestOwner()
     private val experienceApi: ExperienceAPI = mockk(relaxed = true)
     private val crashlytics: FirebaseCrashlytics = mockk(relaxed = true)
 
     private lateinit var viewModel: LoginViewModel
 
-    private val testDispatcher = UnconfinedTestDispatcher()
-
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
         coEvery { experienceApi.getExperienceSummary(any()) } returns DataResult.Fail()
-        Dispatchers.setMain(testDispatcher)
 
         every { apiPrefs.user } returns mockk()
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        
     }
 
     @Test
@@ -93,7 +76,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(false, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertEquals(LoginResultAction.Login(Experience.Academic(true)), loginStatus.value!!.getContentIfNotHandled()!!)
@@ -110,7 +93,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(false, false)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
@@ -127,7 +110,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertEquals(LoginResultAction.TokenNotValid, loginStatus.value!!.getContentIfNotHandled()!!)
@@ -147,7 +130,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertEquals(LoginResultAction.Login(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
@@ -169,7 +152,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { apiPrefs.canvasCareerView = true }
@@ -193,7 +176,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { apiPrefs.canvasCareerView = false }
@@ -222,7 +205,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { apiPrefs.canvasCareerView = false }
@@ -246,7 +229,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, CAREER_EXPERIENCE) }
@@ -269,7 +252,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ACADEMIC_EXPERIENCE) }
@@ -290,7 +273,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { crashlytics.setCustomKey(CRASHLYTICS_EXPERIENCE_KEY, ELEMENTARY_EXPERIENCE) }
@@ -311,7 +294,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, true)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertEquals(LoginResultAction.ShouldAcceptPolicy(Experience.Academic(false)), loginStatus.value!!.getContentIfNotHandled()!!)
@@ -333,7 +316,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, false)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { apiPrefs.checkTokenAfterOfflineLogin = true }
@@ -356,7 +339,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, false)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { apiPrefs.checkTokenAfterOfflineLogin = false }
@@ -379,7 +362,7 @@ class LoginViewModelTest {
         // When
         viewModel = createViewModel()
         val loginStatus = viewModel.checkLogin(true, false)
-        loginStatus.observe(lifecycleOwner, {})
+        loginStatus.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify { apiPrefs.checkTokenAfterOfflineLogin = false }

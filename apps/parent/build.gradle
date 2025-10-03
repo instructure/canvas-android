@@ -164,6 +164,7 @@ dependencies {
 
     /* Project Modules */
     implementation project(path: ':login-api-2')
+    testImplementation project(':test-utils')
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

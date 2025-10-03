@@ -18,10 +18,6 @@ package com.instructure.parentapp.features.addstudent
 
 import android.content.Context
 import android.graphics.Color
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.utils.Analytics
 import com.instructure.canvasapi2.utils.AnalyticsEventConstants
@@ -30,20 +26,16 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.features.dashboard.SelectedStudentHolder
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -53,11 +45,9 @@ import org.junit.Test
 class AddStudentViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private lateinit var viewModel: AddStudentViewModel
 
@@ -69,8 +59,6 @@ class AddStudentViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
 
         mockkObject(ColorKeeper)
@@ -79,20 +67,11 @@ class AddStudentViewModelTest {
         viewModel = AddStudentViewModel(selectedStudentHolder, repository, crashlytics, analytics)
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
-    }
-
     @Test
     fun `pairStudent should emit PairStudentSuccess`() = runTest {
         coEvery { repository.pairStudent(any()) } returns DataResult.Success(Unit)
 
-        val events = mutableListOf<AddStudentViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.uiState.value.actionHandler(AddStudentAction.PairStudent("pairingCode"))
 
@@ -109,10 +88,7 @@ class AddStudentViewModelTest {
 
         viewModel.uiState.value.actionHandler(AddStudentAction.PairStudent("pairingCode"))
 
-        val events = mutableListOf<AddStudentViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assert(events.size == 0)
 
@@ -133,10 +109,7 @@ class AddStudentViewModelTest {
     fun `unpairStudent should emit UnpairStudentSuccess`() = runTest {
         coEvery { repository.unpairStudent(any()) } returns DataResult.Success(Unit)
 
-        val events = mutableListOf<AddStudentViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.uiState.value.actionHandler(AddStudentAction.UnpairStudent(1))
 
@@ -149,10 +122,7 @@ class AddStudentViewModelTest {
     fun `unpairStudent should emit UnpairStudentFailed on error`() = runTest {
         coEvery { repository.unpairStudent(any()) } throws Exception("Unpair failed")
 
-        val events = mutableListOf<AddStudentViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.uiState.value.actionHandler(AddStudentAction.UnpairStudent(1))
 

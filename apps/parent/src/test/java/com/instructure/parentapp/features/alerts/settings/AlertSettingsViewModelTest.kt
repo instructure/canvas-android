@@ -16,10 +16,6 @@
  */
 package com.instructure.parentapp.features.alerts.settings
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.models.AlertThreshold
@@ -29,20 +25,16 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -53,11 +45,9 @@ import org.junit.Test
 class AlertSettingsViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private lateinit var viewModel: AlertSettingsViewModel
 
@@ -67,25 +57,16 @@ class AlertSettingsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         every { savedStateHandle.get<User>(any()) } returns User(1L)
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
-    }
-
     @Test
     fun `empty thresholds map correctly`() = runTest {
         coEvery { repository.loadAlertThresholds(any()) } returns emptyList()
         createViewModel()
-
 
         assertEquals(emptyMap<AlertType, AlertThreshold>(), viewModel.uiState.value.thresholds)
     }
@@ -180,10 +161,7 @@ class AlertSettingsViewModelTest {
             repository.loadAlertThresholds(any())
         }
 
-        val events = mutableListOf<AlertSettingsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assert(events.last() is AlertSettingsViewModelAction.ShowSnackbar)
     }
@@ -237,10 +215,7 @@ class AlertSettingsViewModelTest {
             repository.loadAlertThresholds(any())
         }
 
-        val events = mutableListOf<AlertSettingsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assert(events.last() is AlertSettingsViewModelAction.ShowSnackbar)
     }
@@ -251,10 +226,7 @@ class AlertSettingsViewModelTest {
 
         viewModel.uiState.value.actionHandler(AlertSettingsAction.UnpairStudent(1))
 
-        val events = mutableListOf<AlertSettingsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expected = AlertSettingsViewModelAction.UnpairStudent(1L)
         assertEquals(expected, events.last())
@@ -266,10 +238,7 @@ class AlertSettingsViewModelTest {
 
         viewModel.handleAction(AlertSettingsAction.UnpairStudentFailed)
 
-        val events = mutableListOf<AlertSettingsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val event = events.last() as AlertSettingsViewModelAction.ShowSnackbar
         assertEquals(R.string.generalUnexpectedError, event.message)

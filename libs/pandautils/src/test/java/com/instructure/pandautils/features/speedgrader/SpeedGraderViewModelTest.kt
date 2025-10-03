@@ -23,27 +23,27 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.Const
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertThrows
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SpeedGraderViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private lateinit var viewModel: SpeedGraderViewModel
     private lateinit var repository: SpeedGraderRepository
     private lateinit var assignmentSubmissionRepository: AssignmentSubmissionRepository
@@ -66,7 +66,6 @@ class SpeedGraderViewModelTest {
     @Before
     fun setUp() = runTest {
         ContextKeeper.appContext = mockk(relaxed = true)
-        Dispatchers.setMain(testDispatcher)
         repository = mockk(relaxed = true)
         assignmentSubmissionRepository = mockk(relaxed = true)
         speedGraderPostPolicyRouter = mockk(relaxed = true)
@@ -88,11 +87,6 @@ class SpeedGraderViewModelTest {
         } returns Assignment()
 
         coEvery { resources.getString(R.string.generalUnexpectedError) } returns "Error"
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test

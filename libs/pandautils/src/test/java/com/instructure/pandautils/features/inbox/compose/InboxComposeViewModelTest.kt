@@ -41,29 +41,28 @@ import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.util.UUID
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class InboxComposeViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val context: Context = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
     private val inboxComposeRepository: InboxComposeRepository = mockk(relaxed = true)
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
     private val featureFlagProvider: FeatureFlagProvider = mockk(relaxed = true)
@@ -71,7 +70,6 @@ class InboxComposeViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
 
         coEvery { inboxComposeRepository.canSendToAll(any()) } returns DataResult.Success(false)
@@ -83,12 +81,6 @@ class InboxComposeViewModelTest {
         coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
         coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns false
         coEvery { inboxComposeBehavior.shouldHideSendIndividual() } returns false
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -419,10 +411,7 @@ class InboxComposeViewModelTest {
     fun `Send Message action handler`() = runTest {
         val viewmodel = getViewModel()
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodel.events.toList(events)
-        }
+        val events = viewmodel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(mockk(relaxed = true)))
 
@@ -439,10 +428,7 @@ class InboxComposeViewModelTest {
     fun `Close Compose Screen`() = runTest {
         val viewmodel = getViewModel()
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodel.events.toList(events)
-        }
+        val events = viewmodel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodel.handleAction(InboxComposeActionHandler.Close)
 
@@ -483,10 +469,7 @@ class InboxComposeViewModelTest {
     fun `Attachment selector dialog opens`() = runTest {
         val viewmodel = getViewModel()
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodel.events.toList(events)
-        }
+        val events = viewmodel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodel.handleAction(InboxComposeActionHandler.AddAttachmentSelected)
 
@@ -912,10 +895,7 @@ class InboxComposeViewModelTest {
 
         val viewmodel = getViewModel()
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodel.events.toList(events)
-        }
+        val events = viewmodel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(concludedCourse))
         viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
@@ -937,10 +917,7 @@ class InboxComposeViewModelTest {
 
         val viewmodel = getViewModel()
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodel.events.toList(events)
-        }
+        val events = viewmodel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(activeCourse))
         viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
@@ -977,10 +954,7 @@ class InboxComposeViewModelTest {
 
         val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodelWithReply.events.toList(events)
-        }
+        val events = viewmodelWithReply.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodelWithReply.handleAction(ContextPickerActionHandler.ContextClicked(concludedCourse))
         viewmodelWithReply.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
@@ -1013,10 +987,7 @@ class InboxComposeViewModelTest {
 
         val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
 
-        val events = mutableListOf<InboxComposeViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewmodelWithReply.events.toList(events)
-        }
+        val events = viewmodelWithReply.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewmodelWithReply.handleAction(ContextPickerActionHandler.ContextClicked(activeCourse))
         viewmodelWithReply.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))

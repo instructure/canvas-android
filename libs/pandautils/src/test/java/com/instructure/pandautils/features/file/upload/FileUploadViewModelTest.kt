@@ -18,10 +18,6 @@ package com.instructure.pandautils.features.file.upload
 
 import android.content.res.Resources
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.work.WorkManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
@@ -33,27 +29,22 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkStatic
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class FileUploadViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val resources: Resources = mockk(relaxed = true)
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
@@ -62,8 +53,6 @@ class FileUploadViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { fileUploadUtilsHelper.getFileMimeType(any()) } returns "file"
         every { fileUploadUtilsHelper.getFileNameWithDefault(any()) } returns "file"
@@ -71,15 +60,10 @@ class FileUploadViewModelTest {
         setupStrings()
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
     fun `Take Photo action`() {
         val viewModel = createViewModel()
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.onCameraClicked()
 
@@ -89,7 +73,7 @@ class FileUploadViewModelTest {
     @Test
     fun `Pick Photo action`() {
         val viewModel = createViewModel()
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.onGalleryClicked()
 
@@ -99,7 +83,7 @@ class FileUploadViewModelTest {
     @Test
     fun `Pick File action`() {
         val viewModel = createViewModel()
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.onFilesClicked()
 
@@ -113,7 +97,7 @@ class FileUploadViewModelTest {
         val assignment = createAssignment(1L, "Assignment 1", 1L, listOf("pdf", "mp4", "docx"))
         viewModel.setData(assignment, arrayListOf(), FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L, null)
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals("pdf,mp4,docx", viewModel.data.value?.allowedExtensions)
     }
@@ -128,7 +112,7 @@ class FileUploadViewModelTest {
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns createSubmitObject("test.pdf")
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.addFile(uri)
 
@@ -146,8 +130,8 @@ class FileUploadViewModelTest {
 
         every { fileUploadUtilsHelper.getFileSubmitObjectFromInputStream(any(), any(), any()) } returns createSubmitObject("test.doc")
 
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.addFile(uri)
 
@@ -196,8 +180,8 @@ class FileUploadViewModelTest {
 
         viewModel.setData(assignment, arrayListOf(), FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L, null)
 
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.addFile(uri)
         viewModel.uploadFiles()
@@ -288,8 +272,8 @@ class FileUploadViewModelTest {
 
         viewModel.setData(assignment, arrayListOf(), FileUploadType.ASSIGNMENT, course, -1L, -1L, -1, -1L, -1L, null)
 
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.addFile(uri)
 

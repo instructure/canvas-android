@@ -17,10 +17,6 @@
 package com.instructure.student.features.elementary.course
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -32,6 +28,8 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.coEvery
@@ -41,10 +39,7 @@ import io.mockk.mockkObject
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -53,12 +48,9 @@ import org.junit.Test
 class ElementaryCourseViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val tabManager: TabManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -71,8 +63,6 @@ class ElementaryCourseViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 

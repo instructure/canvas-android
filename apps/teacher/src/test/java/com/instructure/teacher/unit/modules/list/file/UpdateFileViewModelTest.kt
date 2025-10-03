@@ -19,10 +19,6 @@
 package com.instructure.teacher.unit.modules.list.file
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.models.FileFolder
@@ -37,6 +33,8 @@ import com.instructure.teacher.features.modules.list.ui.file.FileAvailability
 import com.instructure.teacher.features.modules.list.ui.file.FileVisibility
 import com.instructure.teacher.features.modules.list.ui.file.UpdateFileEvent
 import com.instructure.teacher.features.modules.list.ui.file.UpdateFileViewModel
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
@@ -47,10 +45,7 @@ import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.greenrobot.eventbus.EventBus
 import org.junit.After
 import org.junit.Before
@@ -64,12 +59,9 @@ import java.util.Date
 class UpdateFileViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
@@ -83,8 +75,6 @@ class UpdateFileViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkObject(DateHelper)
         val dateCaptor = slot<Date>()
@@ -97,7 +87,6 @@ class UpdateFileViewModelTest {
         }
     }
 
-    @After
     fun teardown() {
         unmockkAll()
     }

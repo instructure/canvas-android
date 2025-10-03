@@ -229,6 +229,7 @@ dependencies {
     implementation project(path: ':interactions')
     implementation project(path: ':DocumentScanner')
     implementation project(path: ':horizon')
+    testImplementation project(':test-utils')
 
     /* Android Test Dependencies */
     androidTestImplementation project(path: ':espresso')

@@ -24,24 +24,25 @@ import com.instructure.canvasapi2.models.RubricCriterionAssessment
 import com.instructure.canvasapi2.models.RubricSettings
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SpeedGraderRubricViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val dispatcher = UnconfinedTestDispatcher()
 
@@ -57,11 +58,6 @@ class SpeedGraderRubricViewModelTest {
         every { savedStateHandle.get<Long>("assignmentId") } returns 1L
         every { savedStateHandle.get<Long>("submissionId") } returns 1L
         every { savedStateHandle.get<Long>("courseId") } returns 1L
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test(expected = IllegalArgumentException::class)

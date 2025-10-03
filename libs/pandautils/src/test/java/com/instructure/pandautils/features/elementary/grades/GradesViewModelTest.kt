@@ -17,10 +17,6 @@
 package com.instructure.pandautils.features.elementary.grades
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.EnrollmentManager
 import com.instructure.canvasapi2.models.Course
@@ -38,18 +34,15 @@ import io.mockk.clearMocks
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 import com.instructure.pandautils.features.elementary.grades.GradingPeriod as GradingPeriodView
 
@@ -57,12 +50,9 @@ import com.instructure.pandautils.features.elementary.grades.GradingPeriod as Gr
 class GradesViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -74,17 +64,8 @@ class GradesViewModelTest {
     @Before
     fun setUp() {
         every { resources.getString(R.string.currentGradingPeriod) } returns "Current"
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { colorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        
-        unmockkAll()
     }
 
     @Test
@@ -97,7 +78,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -113,7 +94,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Empty)
@@ -134,7 +115,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -170,7 +151,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -196,7 +177,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
         viewModel.refresh()
 
         // Then
@@ -216,7 +197,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         clearMocks(courseManager, enrollmentManager)
 
@@ -239,7 +220,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         clearMocks(courseManager, enrollmentManager)
 
@@ -266,7 +247,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         clearMocks(courseManager, enrollmentManager)
 
@@ -292,7 +273,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
         viewModel.gradingPeriodSelected(GradingPeriodView(11, "Period 11"))
 
         clearMocks(courseManager, enrollmentManager)
@@ -315,7 +296,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val gradeRowViewModel = viewModel.data.value!!.items[0] as GradeRowItemViewModel
         gradeRowViewModel.onRowClicked()
@@ -336,7 +317,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val gradingPeriodsViewModel = viewModel.data.value!!.items[0] as GradingPeriodSelectorItemViewModel
         gradingPeriodsViewModel.onClick()
@@ -362,7 +343,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -387,7 +368,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -411,7 +392,7 @@ class GradesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)

@@ -31,6 +31,7 @@ include ':recyclerview'
 include ':pandares'
 include ':DocumentScanner'
 include ':horizon'
+include ':test-utils'
 
 project(':annotations').projectDir = new File(rootProject.projectDir, '/../libs/annotations')
 project(':canvas-api-2').projectDir = new File(rootProject.projectDir, '/../libs/canvas-api-2')
@@ -45,3 +46,4 @@ project(':recyclerview').projectDir = new File(rootProject.projectDir, '/../libs
 project(':pandares').projectDir = new File(rootProject.projectDir, '/../libs/pandares')
 project(':DocumentScanner').projectDir = new File(rootProject.projectDir, '/../libs/DocumentScanner')
 project(':horizon').projectDir = new File(rootProject.projectDir, '/../libs/horizon')
+project(':test-utils').projectDir = new File(rootProject.projectDir, '/../libs/test-utils')

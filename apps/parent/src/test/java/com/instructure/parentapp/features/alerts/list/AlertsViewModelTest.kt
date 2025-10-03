@@ -17,10 +17,6 @@
 package com.instructure.parentapp.features.alerts.list
 
 import android.graphics.Color
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.Alert
 import com.instructure.canvasapi2.models.AlertThreshold
 import com.instructure.canvasapi2.models.AlertType
@@ -31,21 +27,18 @@ import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.dashboard.AlertCountUpdater
 import com.instructure.parentapp.features.dashboard.TestSelectStudentHolder
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -58,11 +51,9 @@ import java.util.Date
 class AlertsViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val repository: AlertsRepository = mockk(relaxed = true)
     private val alertCountUpdater: AlertCountUpdater = mockk(relaxed = true)
@@ -73,17 +64,9 @@ class AlertsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         mockkStatic(User::studentColor)
 
         coEvery { repository.getAlertThresholdForStudent(any(), any()) } returns emptyList()
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -150,7 +133,6 @@ class AlertsViewModelTest {
         } returns alerts
 
         coEvery { repository.getAlertThresholdForStudent(student.id, any()) } returns thresholds
-
 
         createViewModel()
         selectedStudentFlow.emit(student)
@@ -354,11 +336,7 @@ class AlertsViewModelTest {
         viewModel.handleAction(AlertsAction.DismissAlert(1L))
         assertEquals(emptyList<AlertsItemUiState>(), viewModel.uiState.value.alerts)
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             R.string.alertDismissMessage,
@@ -423,11 +401,7 @@ class AlertsViewModelTest {
 
         viewModel.handleAction(AlertsAction.DismissAlert(1L))
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             R.string.alertDismissErrorMessage,
@@ -490,11 +464,7 @@ class AlertsViewModelTest {
         viewModel.handleAction(AlertsAction.DismissAlert(1L))
         assertEquals(emptyList<AlertsItemUiState>(), viewModel.uiState.value.alerts)
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             R.string.alertDismissMessage,
@@ -564,11 +534,7 @@ class AlertsViewModelTest {
         viewModel.handleAction(AlertsAction.DismissAlert(1L))
         assertEquals(emptyList<AlertsItemUiState>(), viewModel.uiState.value.alerts)
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             R.string.alertDismissMessage,
@@ -639,11 +605,7 @@ class AlertsViewModelTest {
         viewModel.handleAction(AlertsAction.DismissAlert(1L))
         assertEquals(emptyList<AlertsItemUiState>(), viewModel.uiState.value.alerts)
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coEvery { repository.updateAlertWorkflow(any(), any()) } throws Exception()
         (events.last() as AlertsViewModelAction.ShowSnackbar).actionCallback?.invoke()
@@ -710,11 +672,7 @@ class AlertsViewModelTest {
             )
         )
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             AlertsViewModelAction.NavigateToRoute(
@@ -782,11 +740,7 @@ class AlertsViewModelTest {
             )
         )
 
-        val events = mutableListOf<AlertsViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             AlertsViewModelAction.NavigateToGlobalAnnouncement(
@@ -853,10 +807,7 @@ class AlertsViewModelTest {
             )
         )
 
-        val events = mutableListOf<AlertsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             AlertsViewModelAction.NavigateToRoute(
@@ -928,10 +879,7 @@ class AlertsViewModelTest {
             )
         )
 
-        val events = mutableListOf<AlertsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(
             AlertsViewModelAction.NavigateToRoute(

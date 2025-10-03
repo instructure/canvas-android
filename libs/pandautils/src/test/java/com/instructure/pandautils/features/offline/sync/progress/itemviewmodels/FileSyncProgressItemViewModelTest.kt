@@ -18,7 +18,6 @@
 
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.pandautils.features.offline.sync.ProgressState
 import com.instructure.pandautils.features.offline.sync.progress.FileSyncProgressViewData
@@ -28,13 +27,14 @@ import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 import java.util.*
 
 class FileSyncProgressItemViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
 

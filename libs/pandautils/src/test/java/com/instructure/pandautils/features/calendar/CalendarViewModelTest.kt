@@ -31,25 +31,22 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
@@ -58,9 +55,11 @@ import org.threeten.bp.ZoneId
 import java.util.Calendar
 import java.util.Date
 
-
 @ExperimentalCoroutinesApi
 class CalendarViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val context: Context = mockk(relaxed = true)
     private val calendarRepository: CalendarRepository = mockk(relaxed = true)
@@ -90,7 +89,6 @@ class CalendarViewModelTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
         every { context.getString(eq(R.string.calendarDueDate), any(), any()) } answers {
             val args = secondArg<Array<Any>>()
             "Due ${args[0]} ${args[1]}"
@@ -150,11 +148,6 @@ class CalendarViewModelTest {
         coEvery { calendarBehavior.shouldShowAddEventButton() } returns true
 
         every { savedStateHandle.get<Any>(any()) } returns null
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -735,10 +728,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 1)
         assertEquals(expectedAction, events.last())
@@ -755,10 +745,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 123)
         assertEquals(expectedAction, events.last())
@@ -775,10 +762,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenAssignment(Course(1), 123)
         assertEquals(expectedAction, events.last())
@@ -793,10 +777,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenDiscussion(Course(1), 1, 1)
         assertEquals(expectedAction, events.last())
@@ -809,10 +790,7 @@ class CalendarViewModelTest {
         )
         initViewModel()
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
@@ -830,10 +808,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenQuiz(Course(1), "http://quiz.com")
         assertEquals(expectedAction, events.last())
@@ -848,10 +823,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenCalendarEvent(Course(1), 1)
         assertEquals(expectedAction, events.last())
@@ -865,10 +837,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.EventSelected(1))
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenToDo(plannerItem)
         assertEquals(expectedAction, events.last())
@@ -881,10 +850,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.AddToDoTapped)
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenCreateToDo(LocalDate.now(clock).toApiString())
         assertEquals(expectedAction, events.last())
@@ -995,10 +961,7 @@ class CalendarViewModelTest {
 
         viewModel.handleAction(CalendarAction.FilterTapped)
 
-        val events = mutableListOf<CalendarViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedAction = CalendarViewModelAction.OpenFilters
         assertEquals(expectedAction, events.last())

@@ -19,7 +19,6 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
@@ -35,18 +34,18 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 
 class CourseProgressItemViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
@@ -59,11 +58,6 @@ class CourseProgressItemViewModelTest {
         mockkObject(NumberHelper)
         val captor = slot<Long>()
         every { NumberHelper.readableFileSize(any<Context>(), capture(captor)) } answers { "${captor.captured} bytes" }
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test

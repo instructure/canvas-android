@@ -28,22 +28,19 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.SelectContextUiState
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.Clock
 import org.threeten.bp.Instant
@@ -56,7 +53,8 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class CreateUpdateToDoViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val resources: Resources = mockk(relaxed = true)
     private val repository: CreateUpdateToDoRepository = mockk(relaxed = true)
@@ -99,14 +97,8 @@ class CreateUpdateToDoViewModelTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
         every { savedStateHandle.get<Any>(any()) } returns null
         every { apiPrefs.user } returns User(1)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -167,10 +159,7 @@ class CreateUpdateToDoViewModelTest {
         coEvery { repository.createToDo(any(), any(), any(), any()) } returns Unit
 
         createViewModel()
-        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Title"))
         viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock)))
@@ -196,10 +185,7 @@ class CreateUpdateToDoViewModelTest {
         coEvery { repository.getCourses() } returns courses
 
         createViewModel()
-        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
         viewModel.handleAction(CreateUpdateToDoAction.UpdateDate(LocalDate.now(clock).plusDays(1)))
@@ -238,10 +224,7 @@ class CreateUpdateToDoViewModelTest {
         every { savedStateHandle.get<String>(CreateUpdateToDoFragment.INITIAL_DATE) } returns "2024-02-22"
 
         createViewModel()
-        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
 
@@ -260,10 +243,7 @@ class CreateUpdateToDoViewModelTest {
         every { savedStateHandle.get<PlannerItem>(CreateUpdateToDoFragment.PLANNER_ITEM) } returns plannerItem
 
         createViewModel()
-        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CreateUpdateToDoAction.UpdateTitle("Updated Title"))
 
@@ -280,10 +260,7 @@ class CreateUpdateToDoViewModelTest {
         every { savedStateHandle.get<String>(CreateUpdateToDoFragment.INITIAL_DATE) } returns "2024-02-22"
 
         createViewModel()
-        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CreateUpdateToDoAction.CheckUnsavedChanges)
         Assert.assertFalse(viewModel.uiState.value.showUnsavedChangesDialog)
@@ -316,10 +293,7 @@ class CreateUpdateToDoViewModelTest {
     @Test
     fun `Back pressed when there are no unsaved changes`() = runTest {
         createViewModel()
-        val events = mutableListOf<CreateUpdateToDoViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.onBackPressed()
 

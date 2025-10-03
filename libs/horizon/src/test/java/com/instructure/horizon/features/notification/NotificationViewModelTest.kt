@@ -27,27 +27,27 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.navigation.HorizonInboxRoute
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class NotificationViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val context: Context = mockk(relaxed = true)
     private val repository: NotificationRepository = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val course = Course(1L, "Course 1")
     private val globalAnnouncement = AccountNotification(
@@ -96,7 +96,6 @@ class NotificationViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         every { context.getString(R.string.notificationsAnnouncementCategoryLabel) } returns "Announcement"
         every { context.getString(R.string.notificationsDueDateCategoryLabel) } returns "Due date"
         every { context.getString(R.string.notificationsScoreCategoryLabel) } returns "Score"
@@ -105,12 +104,6 @@ class NotificationViewModelTest {
         coEvery { repository.getCourse(course.id) } returns course
         coEvery { repository.getGlobalAnnouncements(any()) } returns listOf(globalAnnouncement)
         coEvery { repository.getNotifications(any()) } returns streamItems
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

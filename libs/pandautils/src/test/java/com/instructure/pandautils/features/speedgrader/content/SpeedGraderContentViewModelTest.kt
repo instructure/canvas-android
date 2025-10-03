@@ -31,19 +31,17 @@ import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemptHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
@@ -52,11 +50,13 @@ import java.util.Date
 @ExperimentalCoroutinesApi
 class SpeedGraderContentViewModelTest {
 
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private lateinit var repository: SpeedGraderContentRepository
     private lateinit var savedStateHandle: SavedStateHandle
     private lateinit var viewModel: SpeedGraderContentViewModel
     private val selectedAttemptHolder = SpeedGraderSelectedAttemptHolder()
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     private val assignmentId = 123L
     private val studentId = 456L
@@ -74,7 +74,6 @@ class SpeedGraderContentViewModelTest {
     @Before
     fun setup() {
         ContextKeeper.appContext = mockk(relaxed = true)
-        Dispatchers.setMain(testDispatcher)
 
         repository = mockk(relaxed = true)
 
@@ -101,11 +100,6 @@ class SpeedGraderContentViewModelTest {
             every { mockUri.toString() } returns input
             mockUri
         }
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     private fun createViewModel() {

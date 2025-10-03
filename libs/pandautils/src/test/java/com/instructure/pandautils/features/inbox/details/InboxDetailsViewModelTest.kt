@@ -29,26 +29,25 @@ import com.instructure.pandautils.features.inbox.utils.InboxMessageUiState
 import com.instructure.pandautils.features.inbox.utils.MessageAction
 import com.instructure.pandautils.utils.FeatureFlagProvider
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class InboxDetailsViewModelTest {
-    private val testDispatcher = UnconfinedTestDispatcher()
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val inboxDetailsRepository: InboxDetailsRepository = mockk(relaxed = true)
@@ -66,7 +65,6 @@ class InboxDetailsViewModelTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
 
         coEvery { inboxDetailsRepository.getConversation(any(), any(), any()) } returns DataResult.Success(conversation)
@@ -82,12 +80,6 @@ class InboxDetailsViewModelTest {
         ) } returns "Re: ${conversation.subject}"
         coEvery { featureFlagProvider.checkRestrictStudentAccessFlag() } returns false
         coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns false
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -135,10 +127,7 @@ class InboxDetailsViewModelTest {
     fun `Test Close fragment action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(InboxDetailsAction.CloseFragment)
 
@@ -221,10 +210,7 @@ class InboxDetailsViewModelTest {
         assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
         coVerify(exactly = 1) { inboxDetailsRepository.deleteConversation(conversation.id) }
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(3, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeleted)), events[0])
@@ -251,10 +237,7 @@ class InboxDetailsViewModelTest {
         assertEquals(ConfirmationDialogState(), viewModel.uiState.value.confirmationDialogState)
         coVerify(exactly = 1) { inboxDetailsRepository.deleteConversation(conversation.id) }
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationDeletedFailed)), events[0])
@@ -314,10 +297,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onPositiveButtonClick.invoke()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)), events[0])
@@ -344,10 +324,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onPositiveButtonClick.invoke()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])
@@ -360,10 +337,7 @@ class InboxDetailsViewModelTest {
     fun `Test Reply action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(InboxDetailsAction.Reply(conversation.messages.last()))
 
@@ -374,10 +348,7 @@ class InboxDetailsViewModelTest {
     fun `Test Reply All action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(InboxDetailsAction.ReplyAll(conversation.messages.last()))
 
@@ -388,10 +359,7 @@ class InboxDetailsViewModelTest {
     fun `Test Forward action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(InboxDetailsAction.Forward(conversation.messages.last()))
 
@@ -421,10 +389,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.UpdateStarred(conversation.id, isStarred))
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)), events[0])
         coVerify(exactly = 1) { inboxDetailsRepository.updateStarred(conversation.id, isStarred) }
@@ -453,10 +418,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.handleAction(InboxDetailsAction.UpdateState(conversation.id, newState))
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.conversationUpdateFailed)), events[0])
         coVerify(exactly = 1) { inboxDetailsRepository.updateState(conversation.id, newState) }
@@ -473,10 +435,7 @@ class InboxDetailsViewModelTest {
 
         viewModel.messageActionHandler(MessageAction.OpenAttachment(attachment))
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.OpenAttachment(attachment), events[0])
@@ -487,10 +446,7 @@ class InboxDetailsViewModelTest {
         val viewModel = getViewModel()
         val url = "testURL"
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.messageActionHandler(MessageAction.UrlSelected(url))
 
@@ -501,10 +457,7 @@ class InboxDetailsViewModelTest {
     fun `Test MessageAction Reply action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.messageActionHandler(MessageAction.Reply(conversation.messages.last()))
 
@@ -515,10 +468,7 @@ class InboxDetailsViewModelTest {
     fun `Test MessageAction Reply All action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.messageActionHandler(MessageAction.ReplyAll(conversation.messages.last()))
 
@@ -529,10 +479,7 @@ class InboxDetailsViewModelTest {
     fun `Test MessageAction Forward action`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.messageActionHandler(MessageAction.Forward(conversation.messages.last()))
 
@@ -593,10 +540,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onPositiveButtonClick.invoke()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(2, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeleted)), events[0])
@@ -623,10 +567,7 @@ class InboxDetailsViewModelTest {
 
         alertDialogState.onPositiveButtonClick.invoke()
 
-        val events = mutableListOf<InboxDetailsFragmentAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(1, events.size)
         assertEquals(InboxDetailsFragmentAction.ShowScreenResult(context.getString(R.string.messageDeletedFailed)), events[0])

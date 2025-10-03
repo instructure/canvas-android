@@ -16,10 +16,6 @@ package com.instructure.pandautils.features.elementary.resources/*
  */
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.ExternalToolManager
 import com.instructure.canvasapi2.managers.OAuthManager
@@ -33,14 +29,12 @@ import com.instructure.pandautils.features.elementary.resources.itemviewmodels.L
 import com.instructure.pandautils.features.elementary.resources.itemviewmodels.ResourcesHeaderViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.*
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -51,12 +45,9 @@ import org.junit.Test
 class ResourcesViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val resources: Resources = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
@@ -69,17 +60,9 @@ class ResourcesViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } returnsArgument 0
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        
     }
 
     @Test
@@ -90,7 +73,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -104,7 +87,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Empty)
@@ -119,7 +102,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Empty)
@@ -134,7 +117,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -155,7 +138,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -176,7 +159,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Empty)
@@ -191,7 +174,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         verify(exactly = 0) { externalToolManager.getExternalToolsForCoursesAsync(any(), any()) }
@@ -206,7 +189,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.data.value!!.actionItems.isEmpty())
@@ -229,7 +212,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -263,7 +246,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val ltiTool = viewModel.data.value!!.actionItems[1] as LtiApplicationItemViewModel
         ltiTool.onClick()
@@ -296,7 +279,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -322,7 +305,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val contactInfo = viewModel.data.value!!.actionItems[1] as ContactInfoItemViewModel
         contactInfo.onClick()
@@ -344,7 +327,7 @@ class ResourcesViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         viewModel.refresh()
 
@@ -357,7 +340,7 @@ class ResourcesViewModelTest {
     fun `OnImportantLinksViewsReady should send event`() {
         // When
         viewModel = createViewModel()
-        viewModel.events.observe(lifecycleOwner, {})
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner, {})
         viewModel.onImportantLinksViewsReady()
 
         // Then

@@ -20,10 +20,6 @@ package com.instructure.parentapp.features.dashboard
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import androidx.navigation.NavController.Companion.KEY_DEEP_LINK_INTENT
 import com.instructure.canvasapi2.models.LaunchDefinition
@@ -40,21 +36,17 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.parentapp.R
 import com.instructure.parentapp.features.alerts.list.AlertsRepository
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -63,16 +55,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class DashboardViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context: Context = mockk(relaxed = true)
     private val repository: DashboardRepository = mockk(relaxed = true)
@@ -94,20 +83,12 @@ class DashboardViewModelTest {
     @Before
     fun setup() {
         every { savedStateHandle.get<Intent>(KEY_DEEP_LINK_INTENT) } returns null
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
         every { context.getString(R.string.a11y_studentSelectorExpand) } returns "expand"
         every { context.getString(R.string.a11y_studentSelectorCollapse) } returns "collapse"
         every { context.getString(R.string.a11y_studentSelectorContentDescription, any(), any()) } answers {
             "Tap to ${secondArg<Array<Any>>()[0]} student selector, selected student is: ${secondArg<Array<Any>>()[1]}"
         }
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -166,11 +147,7 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<DashboardViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         (viewModel.data.value.studentItems.last() as AddStudentItemViewModel).onAddStudentClicked()
 
@@ -316,11 +293,7 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<DashboardViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(DashboardViewModelAction.NavigateDeepLink(uri), events.first())
     }
@@ -391,11 +364,7 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<DashboardViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.openMastery()
 
@@ -415,11 +384,7 @@ class DashboardViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<DashboardViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.openStudio()
 

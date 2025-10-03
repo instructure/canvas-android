@@ -19,7 +19,6 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
@@ -32,17 +31,17 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.slot
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 
 class FilesTabProgressItemViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
@@ -55,11 +54,6 @@ class FilesTabProgressItemViewModelTest {
         mockkObject(NumberHelper)
         val captor = slot<Long>()
         every { NumberHelper.readableFileSize(any<Context>(), capture(captor)) } answers { "${captor.captured} bytes" }
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -134,7 +128,6 @@ class FilesTabProgressItemViewModelTest {
         assertEquals("File 3", filesTabProgressItemViewModel.data.items[2].data.fileName)
         assert(filesTabProgressItemViewModel.data.toggleable)
     }
-
 
     @Test
     fun `Progress updates`() {
@@ -243,7 +236,6 @@ class FilesTabProgressItemViewModelTest {
         assertEquals(ProgressState.COMPLETED, filesTabProgressItemViewModel.data.state)
         assertEquals(100, filesTabProgressItemViewModel.data.progress)
     }
-
 
     private fun createItemViewModel(courseId: Long): FilesTabProgressItemViewModel {
         return FilesTabProgressItemViewModel(

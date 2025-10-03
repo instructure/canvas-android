@@ -24,26 +24,25 @@ import com.instructure.pandautils.features.grades.COURSE_ID_KEY
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SummaryViewModelTest {
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: SummaryRepository = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
@@ -53,16 +52,9 @@ class SummaryViewModelTest {
     @Before
     fun setup() {
         every { savedStateHandle.get<Long>(COURSE_ID_KEY) } returns 1
-        Dispatchers.setMain(testDispatcher)
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         every { parentPrefs.currentStudent } returns User(1)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.discussion.create
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
@@ -28,18 +27,14 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.R
 import com.instructure.pandautils.mvvm.ViewState
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -50,7 +45,7 @@ import java.util.TimeZone
 @ExperimentalCoroutinesApi
 class CreateDiscussionWebViewViewModelTest {
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val locale: String = "en"
     private val timezone: String = "GMT"
@@ -67,7 +62,6 @@ class CreateDiscussionWebViewViewModelTest {
 
         val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
         val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-        val testDispatcher = UnconfinedTestDispatcher()
         val localeObject: Locale = mockk(relaxed = true)
         val timezoneObject: TimeZone = mockk(relaxed = true)
 
@@ -77,14 +71,7 @@ class CreateDiscussionWebViewViewModelTest {
         every { apiPrefs.fullDomain } returns "https://domain.com"
 
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         viewModel = CreateDiscussionWebViewViewModel(apiPrefs, oAuthManager, resources, localeObject, timezoneObject)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

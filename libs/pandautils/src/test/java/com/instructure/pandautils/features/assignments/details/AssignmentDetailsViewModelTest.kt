@@ -22,10 +22,6 @@ import android.content.Context
 import android.content.res.Resources
 import android.util.Log
 import android.webkit.MimeTypeMap
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
@@ -57,17 +53,15 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertFalse
 import junit.framework.TestCase.assertTrue
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 import java.util.Calendar
 import java.util.Date
@@ -76,12 +70,9 @@ import java.util.Date
 class AssignmentDetailsViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context: Context = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
@@ -99,8 +90,6 @@ class AssignmentDetailsViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic(Log::class)
         every { Log.d(any(), any()) } returns 0
@@ -115,11 +104,6 @@ class AssignmentDetailsViewModelTest {
 
         every { apiPrefs.user } returns User(id = 1)
         every { themePrefs.textButtonColor } returns 0
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     private fun getViewModel(manager: ReminderManager = reminderManager) = AssignmentDetailsViewModel(
@@ -847,7 +831,6 @@ class AssignmentDetailsViewModelTest {
 
         assertEquals(AssignmentDetailAction.ShowReminderDialog, viewModel.events.value?.peekContent())
     }
-
 
     @Test
     fun `studio disabled if not allowed in assignment`() {

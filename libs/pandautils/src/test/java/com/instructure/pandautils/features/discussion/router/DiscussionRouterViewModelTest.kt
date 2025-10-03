@@ -1,26 +1,19 @@
 package com.instructure.pandautils.features.discussion.router
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.GroupTopicChild
 import com.instructure.pandautils.R
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -29,12 +22,9 @@ import org.junit.Test
 class DiscussionRouterViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val discussionRouteHelper: DiscussionRouteHelper = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -43,8 +33,6 @@ class DiscussionRouterViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
@@ -55,11 +43,6 @@ class DiscussionRouterViewModelTest {
         setupStrings()
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
     fun `Route to old discussion`() {
         val course = Course()
@@ -67,7 +50,7 @@ class DiscussionRouterViewModelTest {
 
         coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns false
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(course, discussionTopicHeader, 1L, false)
 
@@ -84,7 +67,7 @@ class DiscussionRouterViewModelTest {
 
         coEvery { discussionRouteHelper.shouldShowDiscussionRedesign() } returns true
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(course, discussionTopicHeader, 1L, false)
 
@@ -104,7 +87,7 @@ class DiscussionRouterViewModelTest {
         coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns Pair(group, 2L)
         coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns groupDiscussionTopicHeader
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(group, discussionTopicHeader, 1L, false)
 
@@ -124,7 +107,7 @@ class DiscussionRouterViewModelTest {
         coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns Pair(group, 2L)
         coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns groupDiscussionTopicHeader
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(group, discussionTopicHeader, 1L, false)
 
@@ -141,7 +124,7 @@ class DiscussionRouterViewModelTest {
 
         coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } returns discussionTopicHeader
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(course, null, 1L, false)
 
@@ -158,7 +141,7 @@ class DiscussionRouterViewModelTest {
 
         coEvery { discussionRouteHelper.getDiscussionGroup(discussionTopicHeader) } returns null
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(group, discussionTopicHeader, 1L, false)
 
@@ -174,7 +157,7 @@ class DiscussionRouterViewModelTest {
 
         coEvery { discussionRouteHelper.getDiscussionHeader(any(), any()) } throws Exception()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.route(course, null, 1L, false)
 

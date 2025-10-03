@@ -16,29 +16,21 @@
 package com.instructure.parentapp.features.login.createaccount
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.TermsOfService
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandares.R
 import com.instructure.pandautils.utils.studentColor
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import okhttp3.ResponseBody.Companion.toResponseBody
 import org.junit.After
 import org.junit.Assert.assertEquals
@@ -51,11 +43,9 @@ import org.junit.Test
 class CreateAccountViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
 
@@ -79,8 +69,6 @@ class CreateAccountViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         mockkStatic(User::studentColor)
 
         coEvery { savedStateHandle.get<String>(CreateAccountFragment.ACCOUNT_ID) } returns accountId
@@ -92,12 +80,6 @@ class CreateAccountViewModelTest {
         coEvery { context.getString(R.string.createAccErrorEmailAlreadyInUse) } returns "This email address is already in use."
         coEvery { context.getString(R.string.createAccEnterValidEmail) } returns "Please enter a valid email address"
         coEvery { context.getString(R.string.createAccErrorPairingCode) } returns "This pairing code is expired or already used. Please try again with a new one."
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -424,11 +406,7 @@ class CreateAccountViewModelTest {
     @Test
     fun `Sign in should navigate to sign in`() = runTest {
         createViewModel()
-        val events = mutableListOf<CreateAccountViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
         viewModel.handleAction(CreateAccountAction.SignInTapped)
 
         assert(events.last() is CreateAccountViewModelAction.NavigateToSignIn)
@@ -437,11 +415,7 @@ class CreateAccountViewModelTest {
     @Test
     fun `Privacy should navigate to privacy`() = runTest {
         createViewModel()
-        val events = mutableListOf<CreateAccountViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
         viewModel.handleAction(CreateAccountAction.PrivacyTapped)
 
         assert(events.last() is CreateAccountViewModelAction.NavigateToPrivacyPolicy)
@@ -450,11 +424,7 @@ class CreateAccountViewModelTest {
     @Test
     fun `Not passive terms should navigate to html content`() = runTest {
         createViewModel()
-        val events = mutableListOf<CreateAccountViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
         viewModel.handleAction(CreateAccountAction.TosTapped)
 
         assertEquals(
@@ -468,11 +438,7 @@ class CreateAccountViewModelTest {
         val passiveTerms = TermsOfService(passive = true)
         coEvery { repository.getTermsOfService(any(), any()) } returns passiveTerms
         createViewModel()
-        val events = mutableListOf<CreateAccountViewModelAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
         viewModel.handleAction(CreateAccountAction.TosTapped)
 
         assert(events.last() is CreateAccountViewModelAction.NavigateToTermsOfService)

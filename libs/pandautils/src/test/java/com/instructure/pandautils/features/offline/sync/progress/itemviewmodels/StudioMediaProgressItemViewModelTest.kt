@@ -16,7 +16,6 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
@@ -34,12 +33,13 @@ import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 
 class StudioMediaProgressItemViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val studioMediaProgressDao: StudioMediaProgressDao = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
@@ -55,7 +55,6 @@ class StudioMediaProgressItemViewModelTest {
         }
     }
 
-    @After
     fun teardown() {
         unmockkAll()
     }

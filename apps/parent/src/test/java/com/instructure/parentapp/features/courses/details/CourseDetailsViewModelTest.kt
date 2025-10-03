@@ -18,10 +18,6 @@
 package com.instructure.parentapp.features.courses.details
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
@@ -35,35 +31,28 @@ import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.parentapp.R
 import com.instructure.parentapp.util.ParentPrefs
 import com.instructure.parentapp.util.navigation.Navigation
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class CourseDetailsViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: CourseDetailsRepository = mockk(relaxed = true)
@@ -75,8 +64,6 @@ class CourseDetailsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateUserColor(any()) } returns ThemedColor(1, 1)
         coEvery { savedStateHandle.get<Long>(Navigation.COURSE_ID) } returns 1
@@ -86,12 +73,6 @@ class CourseDetailsViewModelTest {
         every { context.getString(R.string.regardingHiddenMessage, any(), any()) } returns "https://domain.com/courses/1"
         every { context.getString(R.string.regardingHiddenMessage, any(), "") } returns "Regarding: User 1"
         every { context.getString(R.string.courseRefreshFailed) } returns "Failed to refresh course"
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -246,7 +227,6 @@ class CourseDetailsViewModelTest {
         Assert.assertEquals(expectedAfterRefresh, viewModel.uiState.value)
     }
 
-
     @Test
     fun `Error refreshing course`() = runTest {
         coEvery { repository.getCourse(1, any()) } returns Course(id = 1, name = "Course 1")
@@ -279,10 +259,7 @@ class CourseDetailsViewModelTest {
     fun `Navigate to assignment details`() = runTest {
         createViewModel()
 
-        val events = mutableListOf<CourseDetailsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CourseDetailsAction.NavigateToAssignmentDetails(1, 1))
 
@@ -294,10 +271,7 @@ class CourseDetailsViewModelTest {
     fun `Navigate to compose message`() = runTest {
         createViewModel()
 
-        val events = mutableListOf<CourseDetailsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CourseDetailsAction.SendAMessage)
 
@@ -309,10 +283,7 @@ class CourseDetailsViewModelTest {
     fun `Navigate to LTI screen`() = runTest {
         createViewModel()
 
-        val events = mutableListOf<CourseDetailsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(CourseDetailsAction.OnLtiClicked("ltiUrl"))
 

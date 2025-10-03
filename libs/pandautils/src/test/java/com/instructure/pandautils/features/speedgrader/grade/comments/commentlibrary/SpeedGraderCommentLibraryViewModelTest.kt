@@ -21,30 +21,27 @@ import android.net.Uri
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.utils.Normalizer
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SpeedGraderCommentLibraryViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val repository: SpeedGraderCommentLibraryRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
@@ -54,19 +51,12 @@ class SpeedGraderCommentLibraryViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         mockkObject(Normalizer)
         every { Normalizer.normalize(any()) } answers { firstArg() }
         mockkStatic(Uri::class)
         every { Uri.decode(any()) } answers { firstArg<String>() }
         every { apiPrefs.user?.id } returns 123L
         every { savedStateHandle.get<String>(COMMENT_LIBRARY_INITIAL_COMMENT_VALUE_ROUTE_PARAM) } returns null
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

@@ -37,32 +37,28 @@ import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.dueAt
 import com.instructure.pandautils.utils.eventHtmlUrl
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.threeten.bp.LocalDate
 import java.time.LocalDateTime
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class EventViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
@@ -91,7 +87,6 @@ class EventViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
 
         mockkObject(ThemePrefs)
         every { ThemePrefs.primaryColor } returns 1
@@ -105,12 +100,6 @@ class EventViewModelTest {
 
         mockkObject(DateHelper)
         every { DateHelper.getPreferredDateFormat(any()) } returns DateHelper.dayMonthDateFormat
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -305,10 +294,7 @@ class EventViewModelTest {
     fun `Lti button tapped`() = runTest {
         createViewModel()
 
-        val events = mutableListOf<EventViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(EventAction.OnLtiClicked("url"))
 
@@ -322,10 +308,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<EventViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(EventAction.EditEvent)
 
@@ -340,10 +323,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<EventViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ONE))
 
@@ -369,10 +349,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<EventViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(EventAction.DeleteEvent(CalendarEventAPI.ModifyEventScope.ALL))
 
@@ -551,10 +528,7 @@ class EventViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<EventViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(EventAction.OnMessageFabClicked)
 

@@ -16,10 +16,6 @@
 
 package com.instructure.pandautils.features.dashboard.edit
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.GroupManager
@@ -38,16 +34,13 @@ import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDas
 import com.instructure.pandautils.features.dashboard.edit.itemviewmodels.EditDashboardNoteItemViewModel
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.NetworkStateProvider
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -62,31 +55,20 @@ import org.threeten.bp.ZoneId
 class EditDashboardViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val groupManager: GroupManager = mockk(relaxed = true)
     private val repository: EditDashboardRepository = mockk(relaxed = true)
     private val networkStateProvider: NetworkStateProvider = mockk(relaxed = true)
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private lateinit var viewModel: EditDashboardViewModel
-
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setUp() {
         every { networkStateProvider.isOnline() } returns true
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        
     }
 
     @Test
@@ -100,7 +82,7 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -117,7 +99,7 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -134,8 +116,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -160,8 +142,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -191,8 +173,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -225,8 +207,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -258,8 +240,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -287,8 +269,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -316,8 +298,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -350,8 +332,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -386,9 +368,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -423,8 +405,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -459,8 +441,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -494,8 +476,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.queryItems("course")
         val data = viewModel.data.value?.items ?: emptyList()
@@ -524,8 +506,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.queryItems("group")
         val data = viewModel.data.value?.items ?: emptyList()
@@ -554,8 +536,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.queryItems("No match")
         val data = viewModel.data.value?.items ?: emptyList()
@@ -583,8 +565,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -645,9 +627,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -686,9 +668,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -730,9 +712,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -762,9 +744,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -797,9 +779,9 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
 
@@ -828,8 +810,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -855,8 +837,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value?.items ?: emptyList()
         assertEquals(5, data.size)
@@ -885,8 +867,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -911,8 +893,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -937,8 +919,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         val data = viewModel.data.value?.items ?: emptyList()
@@ -962,8 +944,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         val data = viewModel.data.value?.items ?: emptyList()
@@ -986,8 +968,8 @@ class EditDashboardViewModelTest {
 
         //When
         viewModel = EditDashboardViewModel(courseManager, groupManager, repository, networkStateProvider)
-        viewModel.state.observe(lifecycleOwner) {}
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         //Then
         val data = viewModel.data.value?.items ?: emptyList()
@@ -1013,7 +995,7 @@ class EditDashboardViewModelTest {
         viewModel.state.observeForever {
             stateUpdates.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.refresh()
 
         //Then
@@ -1036,7 +1018,7 @@ class EditDashboardViewModelTest {
         viewModel.state.observeForever {
             stateUpdates.add(it)
         }
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.refresh()
 
         //Then

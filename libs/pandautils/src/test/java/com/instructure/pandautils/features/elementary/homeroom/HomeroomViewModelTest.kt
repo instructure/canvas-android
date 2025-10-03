@@ -17,10 +17,6 @@
 package com.instructure.pandautils.features.elementary.homeroom
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.managers.AnnouncementManager
 import com.instructure.canvasapi2.managers.CourseManager
@@ -37,15 +33,12 @@ import com.instructure.pandautils.features.elementary.homeroom.itemviewmodels.Co
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.HtmlContentFormatter
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.*
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
 import org.junit.Rule
@@ -55,12 +48,9 @@ import org.junit.Test
 class HomeroomViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -75,8 +65,6 @@ class HomeroomViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         coEvery { htmlContentFormatter.formatHtmlWithIframes(any()) } returnsArgument 0
 
         ContextKeeper.appContext = mockk(relaxed = true)
@@ -89,11 +77,6 @@ class HomeroomViewModelTest {
         coEvery { courseCardCreator.createCourseCards(any(), any(), any(), any()) } returns listOf(mockk<CourseCardItemViewModel>())
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
     fun `Show error state if fetching courses fails`() {
         // Given
@@ -104,7 +87,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -129,7 +112,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         // Verify that we only get the announcements for the homeroom course.
@@ -165,7 +148,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         verifyAll {
@@ -198,7 +181,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         viewModel.refresh()
 
@@ -223,7 +206,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         val announcementViewModel = viewModel.data.value!!.announcements[0] as AnnouncementItemViewModel
         announcementViewModel.onPreviousAnnouncementsClicked()
@@ -248,7 +231,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         val announcementViewModel = viewModel.data.value!!.announcements[0] as AnnouncementItemViewModel
         announcementViewModel.onLtiButtonPressed("LTI")
@@ -261,7 +244,7 @@ class HomeroomViewModelTest {
     fun `OnAnnouncementViewsReady should send event`() {
         // When
         viewModel = createViewModel()
-        viewModel.events.observe(lifecycleOwner, Observer {})
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
         viewModel.onAnnouncementViewsReady()
 
         // Then
@@ -291,7 +274,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -325,7 +308,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -343,7 +326,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertEquals(ViewState.Empty(R.string.homeroomEmptyTitle, R.string.homeroomEmptyMessage, R.drawable.ic_panda_super), viewModel.state.value)
@@ -364,7 +347,7 @@ class HomeroomViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Capture the dashboard cards list from the first call
         val dashboardCourses = slot<MutableList<Course>>()

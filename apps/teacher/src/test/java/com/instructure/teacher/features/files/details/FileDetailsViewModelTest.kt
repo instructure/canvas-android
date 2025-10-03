@@ -20,10 +20,6 @@ package com.instructure.teacher.features.files.details
 import android.content.res.Resources
 import android.webkit.MimeTypeMap
 import android.webkit.URLUtil
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.FileFolder
@@ -34,15 +30,14 @@ import com.instructure.pandautils.models.EditableFile
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.color
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
@@ -53,13 +48,11 @@ import org.junit.Test
 class FileDetailsViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private lateinit var viewModel: FileDetailsViewModel
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -70,8 +63,6 @@ class FileDetailsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic(URLUtil::class)
         every { URLUtil.isNetworkUrl(any()) } returns true
@@ -82,7 +73,6 @@ class FileDetailsViewModelTest {
         every { savedStateHandle.get<String>(Const.FILE_URL) } returns "https://file.url"
     }
 
-    @After
     fun teardown() {
         unmockkAll()
     }

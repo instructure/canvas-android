@@ -17,7 +17,6 @@
 package com.instructure.pandautils.features.offline.sync.progress.itemviewmodels
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.instructure.canvasapi2.utils.NumberHelper
 import com.instructure.pandautils.features.offline.sync.ProgressState
@@ -31,13 +30,14 @@ import junit.framework.TestCase.assertEquals
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 import java.util.*
 
 class AdditionalFilesProgressItemViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val courseSyncProgressDao: CourseSyncProgressDao = mockk(relaxed = true)
     private val fileSyncProgressDao: FileSyncProgressDao = mockk(relaxed = true)
@@ -50,11 +50,6 @@ class AdditionalFilesProgressItemViewModelTest {
         mockkObject(NumberHelper)
         val captor = slot<Long>()
         every { NumberHelper.readableFileSize(any<Context>(), capture(captor)) } answers { "${captor.captured} bytes" }
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -168,7 +163,6 @@ class AdditionalFilesProgressItemViewModelTest {
 
         assertEquals(ProgressState.IN_PROGRESS, itemViewModel.data.state)
         assertEquals("3000 bytes", itemViewModel.data.totalSize)
-
 
         fileLiveData.postValue(additionalFileSyncData.map {
             it.copy(

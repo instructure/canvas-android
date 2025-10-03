@@ -14,26 +14,26 @@ import com.instructure.pandautils.R
 import com.instructure.pandautils.features.speedgrader.SpeedGraderErrorHolder
 import com.instructure.pandautils.features.speedgrader.grade.GradingEvent
 import com.instructure.pandautils.features.speedgrader.grade.SpeedGraderGradingEventHandler
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNotNull
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.first
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.util.Date
 
 @ExperimentalCoroutinesApi
 class SpeedGraderGradingViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private lateinit var viewModel: SpeedGraderGradingViewModel
     private lateinit var savedStateHandle: SavedStateHandle
@@ -43,15 +43,12 @@ class SpeedGraderGradingViewModelTest {
     private val errorHandler: SpeedGraderErrorHolder = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
-    private val testDispatcher = UnconfinedTestDispatcher()
-
     private val assignmentId = 123L
     private val studentId = 456L
     private val courseId = 789L
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
         savedStateHandle = SavedStateHandle().apply {
             set("assignmentId", assignmentId)
             set("submissionId", studentId)
@@ -68,12 +65,6 @@ class SpeedGraderGradingViewModelTest {
 
     private fun createViewModel() {
         viewModel = SpeedGraderGradingViewModel(savedStateHandle, apiPrefs, repository, resources, gradingEventHandler, errorHandler)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test(expected = IllegalArgumentException::class)
@@ -348,7 +339,6 @@ class SpeedGraderGradingViewModelTest {
             )
         )
 
-
         uiState.onStatusChange(newStatus)
         coVerify {
             repository.updateSubmissionStatus(
@@ -394,7 +384,6 @@ class SpeedGraderGradingViewModelTest {
                 )
             )
         )
-
 
         uiState.onStatusChange(newStatus)
         coVerify {

@@ -1,4 +1,5 @@
-package com.instructure.teacher.features.speedgrader.commentlibrary/*
+package com.instructure.teacher.features.speedgrader.commentlibrary
+/*
  * Copyright (C) 2022 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
@@ -15,10 +16,6 @@ package com.instructure.teacher.features.speedgrader.commentlibrary/*
  *
  */
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.instructure.canvasapi2.managers.CommentLibraryManager
@@ -29,17 +26,15 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.HighlightedTextData
 import com.instructure.pandautils.utils.Normalizer
 import com.instructure.teacher.utils.TeacherPrefs
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -51,12 +46,9 @@ import org.junit.Test
 class CommentLibraryViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val commentLibraryManager: CommentLibraryManager = mockk(relaxed = true)
@@ -68,18 +60,13 @@ class CommentLibraryViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkObject(Normalizer)
 
         every { Normalizer.normalize(any()) } answers { firstArg() }
     }
 
-    @After
     fun tearDown() {
-        Dispatchers.resetMain()
-        
         unmockkObject(Normalizer)
     }
 
@@ -137,7 +124,7 @@ class CommentLibraryViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.data.value!!.isEmpty())
@@ -157,7 +144,7 @@ class CommentLibraryViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         val suggestions = viewModel.data.value!!.suggestions
@@ -190,7 +177,7 @@ class CommentLibraryViewModelTest {
         viewModel = createViewModel()
         viewModel.currentSubmissionId = submissionId
         viewModel.setCommentBySubmission(submissionId, "Gre")
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         val suggestions = viewModel.data.value!!.suggestions
@@ -220,7 +207,7 @@ class CommentLibraryViewModelTest {
         viewModel = createViewModel()
         viewModel.currentSubmissionId = submissionId
         viewModel.setCommentBySubmission(submissionId, "great")
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         val suggestions = viewModel.data.value!!.suggestions
@@ -256,7 +243,7 @@ class CommentLibraryViewModelTest {
         viewModel = createViewModel()
         viewModel.currentSubmissionId = submissionId
         viewModel.setCommentBySubmission(submissionId, "Gre")
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertEquals("Gre", viewModel.getCommentBySubmission(submissionId).value?.comment)
@@ -279,7 +266,7 @@ class CommentLibraryViewModelTest {
         viewModel = createViewModel()
         viewModel.currentSubmissionId = submissionId
         viewModel.setCommentBySubmission(submissionId, "Gre")
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         viewModel.data.value!!.suggestions[0].onClick()
 
@@ -310,7 +297,7 @@ class CommentLibraryViewModelTest {
 
         viewModel.currentSubmissionId = submissionId
         viewModel.setCommentBySubmission(submissionId, "Gre")
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         val expectedItem = HighlightedTextData("Great", 0, 3)
         assertEquals(expectedItem, viewModel.data.value!!.suggestions[0].commentItemData)

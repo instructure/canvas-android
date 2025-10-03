@@ -18,10 +18,6 @@ package com.instructure.pandautils.features.dashboard.notifications
 
 import android.content.Context
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.observe
 import androidx.work.Data
@@ -71,13 +67,12 @@ import io.mockk.verify
 import junit.framework.Assert.assertEquals
 import junit.framework.Assert.assertNotNull
 import junit.framework.Assert.assertNull
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 import org.mockito.Mockito
 import java.util.UUID
@@ -86,12 +81,9 @@ import java.util.UUID
 class DashboardNotificationsViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val resources: Resources = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
@@ -118,8 +110,6 @@ class DashboardNotificationsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
@@ -177,12 +167,9 @@ class DashboardNotificationsViewModelTest {
             studioMediaProgressDao
         )
 
-        viewModel.data.observe(lifecycleOwner, {})
-        viewModel.events.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner, {})
     }
-
-    @After
-    fun tearDown() {}
 
     private fun setupResources() {
         every { resources.getString(R.string.courseInviteTitle) } returns "You have been invited"

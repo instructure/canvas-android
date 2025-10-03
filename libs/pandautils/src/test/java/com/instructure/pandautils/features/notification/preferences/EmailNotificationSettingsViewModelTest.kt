@@ -17,10 +17,6 @@
 package com.instructure.pandautils.features.notification.preferences
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.CommunicationChannelsManager
 import com.instructure.canvasapi2.managers.NotificationPreferencesFrequency
 import com.instructure.canvasapi2.managers.NotificationPreferencesManager
@@ -40,26 +36,21 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class EmailNotificationPreferencesViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val communicationChannelsManager: CommunicationChannelsManager = mockk(relaxed = true)
     private val notificationPreferencesManager: NotificationPreferencesManager = mockk(relaxed = true)
@@ -69,8 +60,6 @@ class EmailNotificationPreferencesViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { apiPrefs.user } returns User(id = 1)
 
@@ -80,11 +69,6 @@ class EmailNotificationPreferencesViewModelTest {
 
         setupStrings()
         notificationPreferenceUtils = NotificationPreferenceUtils(resources)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -104,7 +88,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value
 
@@ -167,7 +151,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Error("An unexpected error occurred."), viewModel.state.value)
     }
@@ -178,7 +162,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Error("An unexpected error occurred."), viewModel.state.value)
     }
@@ -191,7 +175,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Error("An unexpected error occurred."), viewModel.state.value)
     }
@@ -206,7 +190,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Empty(emptyTitle = R.string.no_notifications_to_show, emptyImage = R.drawable.ic_panda_noalerts), viewModel.state.value)
     }
@@ -225,7 +209,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value
 
@@ -261,7 +245,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value
 
@@ -292,8 +276,8 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.data.observe(lifecycleOwner) {}
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val data = viewModel.data.value
 
@@ -318,7 +302,7 @@ class EmailNotificationPreferencesViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Empty(emptyTitle = R.string.no_notifications_to_show, emptyImage = R.drawable.ic_panda_noalerts), viewModel.state.value)
 

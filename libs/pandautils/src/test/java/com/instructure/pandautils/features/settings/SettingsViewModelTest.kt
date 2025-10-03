@@ -16,10 +16,6 @@
 package com.instructure.pandautils.features.settings
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.utils.Analytics
@@ -37,33 +33,26 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import io.mockk.verify
 import junit.framework.TestCase.assertEquals
 import junit.framework.TestCase.assertNull
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SettingsViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val testDispatcher = UnconfinedTestDispatcher()
-
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val settingsBehaviour: SettingsBehaviour = mockk(relaxed = true)
@@ -78,17 +67,9 @@ class SettingsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<Boolean>(OFFLINE_ENABLED) } returns true
         every { savedStateHandle.get<Int>("scrollValue") } returns 0
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -145,7 +126,7 @@ class SettingsViewModelTest {
         verify { analytics.logEvent(AnalyticsEventConstants.DARK_MODE_ON) }
 
         val events = mutableListOf<SettingsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
+        backgroundScope.launch(viewModelTestRule.testDispatcher) {
             viewModel.events.toList(events)
             assertEquals(SettingsViewModelAction.AppThemeClickPosition(0, 0, 0), events.last())
         }
@@ -228,7 +209,7 @@ class SettingsViewModelTest {
         viewModel.uiState.value.items.flatMap { it.value }.forEach { item ->
             viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
             val events = mutableListOf<SettingsViewModelAction>()
-            backgroundScope.launch(testDispatcher) {
+            backgroundScope.launch(viewModelTestRule.testDispatcher) {
                 viewModel.events.toList(events)
                 assertEquals(SettingsViewModelAction.Navigate(item.item), events.last())
             }
@@ -256,7 +237,7 @@ class SettingsViewModelTest {
         viewModel.uiState.value.items.flatMap { it.value }.forEach { item ->
             viewModel.uiState.value.actionHandler(SettingsAction.ItemClicked(item.item))
             val events = mutableListOf<SettingsViewModelAction>()
-            backgroundScope.launch(testDispatcher) {
+            backgroundScope.launch(viewModelTestRule.testDispatcher) {
                 viewModel.events.toList(events)
                 if (item.item.availableOffline) {
                     assertEquals(SettingsViewModelAction.Navigate(item.item), events.last())
@@ -286,7 +267,7 @@ class SettingsViewModelTest {
         }
 
         val events = mutableListOf<SettingsViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
+        backgroundScope.launch(viewModelTestRule.testDispatcher) {
             viewModel.events.toList(events)
             assertEquals(SettingsViewModelAction.RestartApp, events.last())
         }

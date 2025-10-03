@@ -110,6 +110,7 @@ dependencies {
     testImplementation Libs.ANDROIDX_CORE_TESTING
     testImplementation Libs.MOCKK
     testImplementation Libs.KOTLIN_COROUTINES_TEST
+    testImplementation project(':test-utils')
 
     /* AndroidTest Dependencies */
     androidTestImplementation Libs.JUNIT

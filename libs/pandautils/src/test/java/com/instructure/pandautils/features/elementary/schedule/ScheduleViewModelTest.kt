@@ -17,10 +17,6 @@
 package com.instructure.pandautils.features.elementary.schedule
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
@@ -50,20 +46,17 @@ import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.MissingItemsPrefs
 import com.instructure.pandautils.utils.ThemedColor
 import com.instructure.pandautils.utils.date.RealDateTimeProvider
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.awaitAll
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -74,12 +67,9 @@ import java.util.Date
 class ScheduleViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val plannerManager: PlannerManager = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
@@ -96,8 +86,6 @@ class ScheduleViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
@@ -120,12 +108,6 @@ class ScheduleViewModelTest {
         mockkObject(ColorKeeper)
         every { ColorKeeper.getOrGenerateColor(any()) } returns ThemedColor(0)
         every { ColorKeeper.darkTheme } returns false
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -156,7 +138,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -204,7 +186,6 @@ class ScheduleViewModelTest {
         )
     }
 
-
     @Test
     fun `Missing items set up correctly`() {
         val courses = listOf(
@@ -238,7 +219,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -284,7 +265,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -321,7 +302,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -353,7 +334,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -387,7 +368,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -408,7 +389,7 @@ class ScheduleViewModelTest {
     fun `Missing items are not visible if there are none`() {
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -442,7 +423,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -472,7 +453,6 @@ class ScheduleViewModelTest {
         assertEquals(false, todoCourseItemViewModel?.data?.plannerItems?.get(0)?.data?.openable)
     }
 
-
     @Test
     fun `Submitted items are marked as done`() {
         val course = Course(id = 1)
@@ -498,7 +478,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -541,7 +521,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -590,7 +570,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -638,7 +618,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -670,7 +650,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -715,7 +695,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -761,7 +741,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -786,7 +766,7 @@ class ScheduleViewModelTest {
     fun `Day titles set up correctly`() {
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -814,7 +794,7 @@ class ScheduleViewModelTest {
     fun `Empty view`() {
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
 
@@ -876,7 +856,7 @@ class ScheduleViewModelTest {
 
         viewModel = createViewModel()
         viewModel.getDataForDate(Date().toApiString())
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
         val dayGroup = items?.find { it.dayText == "Today" }

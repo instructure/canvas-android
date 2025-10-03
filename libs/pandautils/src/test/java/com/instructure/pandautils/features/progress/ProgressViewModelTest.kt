@@ -22,26 +22,26 @@ import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.apis.ProgressAPI
 import com.instructure.canvasapi2.models.Progress
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
 import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class ProgressViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
@@ -53,7 +53,6 @@ class ProgressViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
 
         every { stateHandle.get<Long>("progressId") } returns 1L
         every { stateHandle.get<String>("title") } returns "Title"
@@ -61,9 +60,7 @@ class ProgressViewModelTest {
         every { stateHandle.get<String>("note") } returns "Note"
     }
 
-    @After
     fun teardown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -152,10 +149,7 @@ class ProgressViewModelTest {
         viewModel = createViewModel()
 
         viewModel.handleAction(ProgressAction.Cancel)
-        val events = mutableListOf<ProgressViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assert(events.last() is ProgressViewModelAction.Close)
 
@@ -165,6 +159,5 @@ class ProgressViewModelTest {
     }
 
     private fun createViewModel() = ProgressViewModel(stateHandle, progressApi, progressPreferences)
-
 
 }

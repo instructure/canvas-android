@@ -17,10 +17,6 @@
 package com.instructure.pandautils.features.shareextension.target
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.AssignmentManager
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.Assignment
@@ -34,27 +30,22 @@ import com.instructure.pandautils.features.file.upload.FileUploadType
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
 import io.mockk.*
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class ShareExtensionTargetViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val assignmentManager: AssignmentManager = mockk(relaxed = true)
@@ -63,8 +54,6 @@ class ShareExtensionTargetViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         val courses = listOf(
                 Course(id = 1L, name = "Course 1"),
@@ -87,10 +76,8 @@ class ShareExtensionTargetViewModelTest {
         setupStrings()
     }
 
-    @After
     fun tearDown() {
         unmockkObject(ColorKeeper)
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -101,7 +88,7 @@ class ShareExtensionTargetViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ShareExtensionTargetAction.ShowToast("An unexpected error occurred."), viewModel.events.value?.getContentIfNotHandled())
     }
@@ -110,7 +97,7 @@ class ShareExtensionTargetViewModelTest {
     fun `Assignments target selected`() {
         val viewModel = createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.assignmentTargetSelected()
 
@@ -121,7 +108,7 @@ class ShareExtensionTargetViewModelTest {
     fun `My files target selected`() {
         val viewModel = createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.filesTargetSelected()
 
@@ -136,7 +123,7 @@ class ShareExtensionTargetViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.assignmentTargetSelected()
         viewModel.onCourseSelected(0)
@@ -160,7 +147,7 @@ class ShareExtensionTargetViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.assignmentTargetSelected()
         viewModel.onCourseSelected(0)
@@ -180,7 +167,7 @@ class ShareExtensionTargetViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.assignmentTargetSelected()
         viewModel.onCourseSelected(1)
@@ -194,7 +181,7 @@ class ShareExtensionTargetViewModelTest {
     fun `My files validate data`() {
         val viewModel = createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.filesTargetSelected()
         viewModel.validateDataAndMoveToFileUpload()
@@ -216,7 +203,7 @@ class ShareExtensionTargetViewModelTest {
         }
         val viewModel = createViewModel()
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         viewModel.assignmentTargetSelected()
         viewModel.onCourseSelected(0)
@@ -225,7 +212,6 @@ class ShareExtensionTargetViewModelTest {
 
         assertEquals(ShareExtensionTargetAction.ShowFileUpload(FileUploadTargetData(course, assignment, FileUploadType.ASSIGNMENT)), viewModel.events.value?.getContentIfNotHandled())
     }
-
 
     private fun createViewModel(): ShareExtensionTargetViewModel {
         return ShareExtensionTargetViewModel(courseManager, assignmentManager, resources, apiPrefs)

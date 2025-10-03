@@ -1,10 +1,6 @@
 package com.instructure.pandautils.features.shareextension.progress
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.MutableLiveData
 import androidx.work.Data
 import androidx.work.WorkInfo
@@ -22,15 +18,13 @@ import com.instructure.pandautils.utils.toJson
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 import java.util.*
 
@@ -38,12 +32,9 @@ import java.util.*
 class ShareExtensionProgressViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val workManager: WorkManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
@@ -57,8 +48,6 @@ class ShareExtensionProgressViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         setupStrings()
 
@@ -70,17 +59,12 @@ class ShareExtensionProgressViewModelTest {
         viewModel = createViewModel()
     }
 
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-    }
-
     @Test
     fun `Show success dialog after uploading`() {
         viewModel.setUUID(uuid)
         mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1))
 
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
         assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
     }
 
@@ -100,7 +84,7 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Cancel clicked`() {
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.setUUID(uuid)
         viewModel.cancelClicked()
 
@@ -109,7 +93,7 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Close clicked`() {
-        viewModel.events.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner) {}
         viewModel.setUUID(uuid)
         viewModel.onCloseClicked()
 
@@ -119,7 +103,7 @@ class ShareExtensionProgressViewModelTest {
     @Test
     fun `Loading until liveData is available`() {
         viewModel.setUUID(uuid)
-        viewModel.state.observe(lifecycleOwner) {}
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         assertEquals(ViewState.Loading, viewModel.state.value)
 
@@ -187,7 +171,7 @@ class ShareExtensionProgressViewModelTest {
         )
 
         viewModel.setUUID(uuid)
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val viewData = viewModel.data.value
 
@@ -244,7 +228,7 @@ class ShareExtensionProgressViewModelTest {
         )
 
         viewModel.setUUID(uuid)
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         progressData
             .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, filesToUpload)
@@ -321,7 +305,7 @@ class ShareExtensionProgressViewModelTest {
         )
 
         viewModel.setUUID(uuid)
-        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner) {}
 
         val viewData = viewModel.data.value
 

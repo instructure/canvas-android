@@ -17,41 +17,34 @@
 
 package com.instructure.pandautils.features.speedgrader
 
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SpeedGraderSharedViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private lateinit var viewModel: SpeedGraderSharedViewModel
 
     private val errorHolder: SpeedGraderErrorHolder = mockk()
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
         every { errorHolder.events } returns MutableSharedFlow()
         viewModel = SpeedGraderSharedViewModel(errorHolder)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test

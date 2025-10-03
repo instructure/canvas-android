@@ -24,25 +24,22 @@ import com.instructure.pandautils.features.speedgrader.SpeedGraderSelectedAttemp
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentViewModel.Companion.ASSIGNMENT_ID_KEY
 import com.instructure.pandautils.features.speedgrader.content.SpeedGraderContentViewModel.Companion.STUDENT_ID_KEY
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.testutils.ViewModelTestRule
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
-
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class SubmissionDetailsViewModelTest {
 
-    private val testDispatcher = UnconfinedTestDispatcher()
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val repository: SubmissionDetailsRepository = mockk(relaxed = true)
@@ -52,15 +49,8 @@ class SubmissionDetailsViewModelTest {
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
         every { savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) } returns 1L
         every { savedStateHandle.get<Long>(STUDENT_ID_KEY) } returns 1L
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     private fun createViewModel(): SubmissionDetailsViewModel {

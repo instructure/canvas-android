@@ -18,10 +18,6 @@
 package com.instructure.pandautils.features.grades
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
@@ -47,34 +43,28 @@ import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import org.junit.Test
 import org.threeten.bp.LocalDateTime
 import org.threeten.bp.ZoneId
 import java.time.OffsetDateTime
 import java.util.Date
 
-
 @ExperimentalCoroutinesApi
 class GradesViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context = mockk<Context>(relaxed = true)
     private val gradesBehaviour = mockk<GradesBehaviour>(relaxed = true)
@@ -86,8 +76,6 @@ class GradesViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { savedStateHandle.get<Long>(COURSE_ID_KEY) } returns 1
         every { gradesBehaviour.canvasContextColor } returns 1
@@ -106,11 +94,6 @@ class GradesViewModelTest {
             val args = secondArg<Array<Any>>()
             "Additional replies (${args[0]})"
         }
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -880,10 +863,7 @@ class GradesViewModelTest {
     fun `Navigate to assignment details`() = runTest {
         createViewModel()
 
-        val events = mutableListOf<GradesViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(GradesAction.AssignmentClick(1L))
 

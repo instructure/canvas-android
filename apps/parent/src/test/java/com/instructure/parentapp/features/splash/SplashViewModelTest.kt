@@ -18,10 +18,6 @@
 package com.instructure.parentapp.features.splash
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasTheme
@@ -31,21 +27,17 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FeatureFlagProvider
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -53,16 +45,13 @@ import org.junit.Rule
 import org.junit.Test
 import sdk.pendo.io.Pendo
 
-
 @ExperimentalCoroutinesApi
 class SplashViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context: Context = mockk(relaxed = true)
     private val repository: SplashRepository = mockk(relaxed = true)
@@ -77,18 +66,10 @@ class SplashViewModelTest {
     fun setup() = runTest {
         every { savedStateHandle.get<Long>(Const.QR_CODE_MASQUERADE_ID) } returns 0L
         coEvery { featureFlagProvider.checkAccountSurveyNotificationsFlag() } returns true
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         ContextKeeper.appContext = context
         mockkStatic(Pendo::class)
         every { Pendo.startSession(any(), any(), any(), any()) } returns Unit
         every { Pendo.endSession() } returns Unit
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -110,10 +91,7 @@ class SplashViewModelTest {
         coVerify { apiPrefs.user = user }
         coVerify { colorKeeper.addToCache(colors) }
 
-        val events = mutableListOf<SplashAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SplashAction.InitialDataLoadingFinished, events.last())
         assertEquals(SplashAction.ApplyTheme(theme), events.first())
@@ -125,10 +103,7 @@ class SplashViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SplashAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SplashAction.InitialDataLoadingFinished, events.last())
     }
@@ -148,10 +123,7 @@ class SplashViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SplashAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SplashAction.NavigateToNotAParentScreen, events.last())
     }
@@ -172,10 +144,7 @@ class SplashViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SplashAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SplashAction.InitialDataLoadingFinished, events.last())
     }
@@ -190,10 +159,7 @@ class SplashViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SplashAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SplashAction.LocaleChanged, events.first())
     }
@@ -205,10 +171,7 @@ class SplashViewModelTest {
         coEvery { repository.getBecomeUserPermission() } returns false
 
         createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
+        viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         verify { apiPrefs.canBecomeUser = true }
     }
@@ -220,10 +183,7 @@ class SplashViewModelTest {
         coEvery { repository.getBecomeUserPermission() } returns true
 
         createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
+        viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         verify { apiPrefs.canBecomeUser = true }
     }
@@ -235,10 +195,7 @@ class SplashViewModelTest {
         every { savedStateHandle.get<Long>(Const.QR_CODE_MASQUERADE_ID) } returns 1L
 
         createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
+        viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify(exactly = 0) { repository.getBecomeUserPermission() }
         verify(exactly = 0) { apiPrefs.canBecomeUser = any() }
@@ -250,10 +207,7 @@ class SplashViewModelTest {
         every { apiPrefs.canBecomeUser } returns true
 
         createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
+        viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         coVerify(exactly = 0) { repository.getBecomeUserPermission() }
         verify(exactly = 0) { apiPrefs.canBecomeUser = any() }
@@ -264,10 +218,7 @@ class SplashViewModelTest {
         coEvery { repository.getSendUsageMetrics() } returns true
 
         createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
+        viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         verify { Pendo.startSession(any(), any(), any(), any()) }
     }
@@ -277,10 +228,7 @@ class SplashViewModelTest {
         coEvery { repository.getSendUsageMetrics() } returns false
 
         createViewModel()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList()
-        }
+        viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         verify { Pendo.endSession() }
     }

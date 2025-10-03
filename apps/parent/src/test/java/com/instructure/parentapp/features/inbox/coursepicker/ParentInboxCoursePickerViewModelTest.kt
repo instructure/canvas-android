@@ -25,39 +25,30 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.utils.ScreenState
 import com.instructure.parentapp.R
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class ParentInboxCoursePickerViewModelTest {
-    private val testDispatcher = UnconfinedTestDispatcher()
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val repository: ParentInboxCoursePickerRepository = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test
@@ -71,10 +62,7 @@ class ParentInboxCoursePickerViewModelTest {
         val expectedHiddenMessage = "Regarding: User 1, https://canvas.instructure.com/courses/$courseId"
         every { context.getString(R.string.regardingHiddenMessage, any(), any()) } returns expectedHiddenMessage
 
-        val events = mutableListOf<ParentInboxCoursePickerBottomSheetAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.actionHandler(ParentInboxCoursePickerAction.StudentContextSelected(studentContextItem))
         val options = (events.last() as ParentInboxCoursePickerBottomSheetAction.NavigateToCompose).options

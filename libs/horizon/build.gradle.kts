@@ -104,6 +104,7 @@ dependencies {
     testImplementation(Libs.KOTLIN_COROUTINES_TEST)
     testImplementation(Libs.THREETEN_BP)
     testImplementation(Libs.ANDROIDX_CORE_TESTING)
+    testImplementation(project(":test-utils"))
     androidTestImplementation(Libs.HILT_TESTING)
 
     /* Pandautils dependencies to provide fake implementations for testing */

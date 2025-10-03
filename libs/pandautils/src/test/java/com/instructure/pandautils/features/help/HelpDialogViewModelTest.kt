@@ -18,10 +18,6 @@
 package com.instructure.pandautils.features.help
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.Observer
 import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.managers.HelpLinksManager
@@ -35,48 +31,35 @@ import com.instructure.pandautils.utils.PackageInfoProvider
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class HelpDialogViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val helpLinksManager: HelpLinksManager = mockk(relaxed = true)
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val helpLinkFilter: HelpLinkFilter = mockk(relaxed = true)
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private lateinit var viewModel: HelpDialogViewModel
 
-    private val testDispatcher = UnconfinedTestDispatcher()
-
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { helpLinkFilter.isLinkAllowed(any(), any()) } returns true
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-
     }
 
     @Test
@@ -88,7 +71,7 @@ class HelpDialogViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Error)
@@ -111,8 +94,8 @@ class HelpDialogViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -138,8 +121,8 @@ class HelpDialogViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -173,8 +156,8 @@ class HelpDialogViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -209,8 +192,8 @@ class HelpDialogViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -249,8 +232,8 @@ class HelpDialogViewModelTest {
 
         // When
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         // Then
         assertTrue(viewModel.state.value is ViewState.Success)
@@ -283,8 +266,8 @@ class HelpDialogViewModelTest {
         }
 
         viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, Observer {})
-        viewModel.data.observe(lifecycleOwner, Observer {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, Observer {})
 
         assertTrue(viewModel.state.value is ViewState.Success)
 

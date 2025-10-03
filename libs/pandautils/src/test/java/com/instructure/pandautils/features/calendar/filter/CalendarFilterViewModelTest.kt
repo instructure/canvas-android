@@ -27,34 +27,30 @@ import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.color
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.TestCoroutineScheduler
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class CalendarFilterViewModelTest {
 
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val calendarRepository: CalendarRepository = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
     private lateinit var viewModel: CalendarFilterViewModel
-
-    private val testDispatcher = UnconfinedTestDispatcher(TestCoroutineScheduler())
 
     @Before
     fun setUp() {
@@ -62,12 +58,6 @@ class CalendarFilterViewModelTest {
         coEvery { calendarRepository.getCalendarFilterLimit() } returns 10
         every { resources.getString(R.string.calendarFilterExplanationLimited, any()) } returns "Limit 10"
         coEvery { resources.getString(R.string.calendarFilterLimitSnackbar, any()) } returns "Filter limit reached"
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -253,10 +243,7 @@ class CalendarFilterViewModelTest {
 
         viewModel.filtersClosed()
 
-        val events = mutableListOf<CalendarFilterViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedEvent = CalendarFilterViewModelAction.FiltersClosed(false)
         assertEquals(expectedEvent, events.last())
@@ -282,10 +269,7 @@ class CalendarFilterViewModelTest {
         viewModel.handleAction(CalendarFilterAction.ToggleFilter("user_5"))
         viewModel.filtersClosed()
 
-        val events = mutableListOf<CalendarFilterViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         val expectedEvent = CalendarFilterViewModelAction.FiltersClosed(true)
         assertEquals(expectedEvent, events.last())

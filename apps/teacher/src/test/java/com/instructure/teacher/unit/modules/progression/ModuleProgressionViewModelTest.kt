@@ -19,10 +19,6 @@ package com.instructure.teacher.unit.modules.progression
 
 import android.content.res.Resources
 import android.net.Uri
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleItemSequence
@@ -38,16 +34,14 @@ import com.instructure.teacher.features.modules.progression.ModuleProgressionAct
 import com.instructure.teacher.features.modules.progression.ModuleProgressionRepository
 import com.instructure.teacher.features.modules.progression.ModuleProgressionViewData
 import com.instructure.teacher.features.modules.progression.ModuleProgressionViewModel
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.*
 import org.junit.Before
@@ -58,13 +52,11 @@ import org.junit.Test
 class ModuleProgressionViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private lateinit var viewModel: ModuleProgressionViewModel
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val resources: Resources = mockk(relaxed = true)
     private val discussionRouteHelperRepository: DiscussionRouteHelperRepository = mockk(relaxed = true)
@@ -75,8 +67,6 @@ class ModuleProgressionViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } returns mockUri
@@ -87,11 +77,6 @@ class ModuleProgressionViewModelTest {
         ContextKeeper.appContext = mockk(relaxed = true)
 
         viewModel = ModuleProgressionViewModel(resources, repository, discussionRouteHelperRepository)
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test

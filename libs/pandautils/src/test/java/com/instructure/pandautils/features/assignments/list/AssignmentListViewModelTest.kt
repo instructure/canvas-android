@@ -43,30 +43,30 @@ import com.instructure.pandautils.features.grades.SubmissionStateLabel
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.DisplayGrade
 import com.instructure.pandautils.utils.ScreenState
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
-import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import java.util.Calendar
 import java.util.Date
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class AssignmentListViewModelTest {
+
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
 
     private val course: Course = mockk(relaxed = true)
     private val assignmentGroups: List<AssignmentGroup> = listOf(
@@ -81,7 +81,6 @@ class AssignmentListViewModelTest {
     )
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
     private val behavior: AssignmentListBehavior = mockk(relaxed = true)
@@ -89,7 +88,6 @@ class AssignmentListViewModelTest {
 
     @Before
     fun setUp() {
-        Dispatchers.setMain(testDispatcher)
 
         ContextKeeper.appContext = mockk(relaxed = true)
 
@@ -115,11 +113,6 @@ class AssignmentListViewModelTest {
             val args = secondArg<Array<Any>>()
             "Additional replies (${args[0]})"
         }
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
     }
 
     @Test
@@ -149,10 +142,7 @@ class AssignmentListViewModelTest {
         coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
         val viewModel = getViewModel()
 
-        val events = mutableListOf<AssignmentListFragmentEvent>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleListEvent(GroupedListViewEvent.ItemClicked(groupItem))
 
@@ -163,10 +153,7 @@ class AssignmentListViewModelTest {
     fun `Test Navigate Back action handler`() = runTest {
         val viewModel = getViewModel()
 
-        val events = mutableListOf<AssignmentListFragmentEvent>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(AssignmentListScreenEvent.NavigateBack)
 

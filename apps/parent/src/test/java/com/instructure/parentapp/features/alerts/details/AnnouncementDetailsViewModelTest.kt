@@ -18,10 +18,6 @@
 package com.instructure.parentapp.features.alerts.details
 
 import android.content.Context
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.models.AccountNotification
 import com.instructure.canvasapi2.models.Attachment
@@ -32,17 +28,14 @@ import com.instructure.canvasapi2.models.User
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.studentColor
 import com.instructure.parentapp.util.ParentPrefs
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -55,11 +48,9 @@ import java.util.Date
 class AnnouncementDetailsViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val context: Context = mockk(relaxed = true)
     private val fileDownloader: FileDownloader = mockk(relaxed = true)
@@ -111,8 +102,6 @@ class AnnouncementDetailsViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         mockkStatic(User::studentColor)
 
         coEvery { savedStateHandle.get<Long>(AnnouncementDetailsFragment.ANNOUNCEMENT_ID) } returns 1
@@ -124,12 +113,6 @@ class AnnouncementDetailsViewModelTest {
         coEvery { parentPrefs.currentStudent } returns student
         coEvery { student.studentColor } returns 1
         coEvery { context.getString(any()) } returns "Global Announcement"
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
-        unmockkAll()
     }
 
     @Test

@@ -20,10 +20,6 @@ package com.instructure.parentapp.login.routevalidator
 import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.models.AccountDomain
 import com.instructure.canvasapi2.models.AuthenticatedSession
@@ -39,6 +35,9 @@ import com.instructure.parentapp.R
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorAction
 import com.instructure.parentapp.features.login.routevalidator.RouteValidatorViewModel
 import com.instructure.parentapp.util.ParentLogoutTask
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.just
@@ -46,33 +45,23 @@ import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.runs
-import io.mockk.unmockkAll
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @ExperimentalCoroutinesApi
 class RouteValidatorViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val context: Context = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
@@ -88,8 +77,6 @@ class RouteValidatorViewModelTest {
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
         mockkStatic(Uri::class)
         every { Uri.parse(any()) } returns mockUri
         ContextKeeper.appContext = context
@@ -99,21 +86,12 @@ class RouteValidatorViewModelTest {
         every { anyConstructed<ParentLogoutTask>().execute() } just runs
     }
 
-    @After
-    fun tearDown() {
-        unmockkAll()
-        Dispatchers.resetMain()
-    }
-
     @Test
     fun `Load route with null url`() = runTest {
         createViewModel()
         viewModel.loadRoute(null)
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         Assert.assertEquals(RouteValidatorAction.Finish, events.last())
     }
@@ -123,10 +101,7 @@ class RouteValidatorViewModelTest {
         createViewModel()
         viewModel.loadRoute("")
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         Assert.assertEquals(RouteValidatorAction.Finish, events.last())
     }
@@ -138,10 +113,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
@@ -157,10 +129,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
@@ -181,10 +150,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
@@ -201,10 +167,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/qrlogin")
 
@@ -218,10 +181,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 
@@ -239,10 +199,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 
@@ -257,10 +214,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 
@@ -277,10 +231,7 @@ class RouteValidatorViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<RouteValidatorAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.loadRoute("https://mobiledev.instructure.com/courses")
 

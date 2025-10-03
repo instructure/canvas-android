@@ -18,10 +18,6 @@
 package com.instructure.pandautils.features.offline.syncsettings
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.pandautils.R
 import com.instructure.pandautils.analytics.OfflineAnalyticsManager
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
@@ -38,20 +34,19 @@ import io.mockk.just
 import io.mockk.mockk
 import io.mockk.runs
 import junit.framework.TestCase.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import org.junit.Test
 
 @ExperimentalCoroutinesApi
 class SyncSettingsViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private lateinit var viewModel: SyncSettingsViewModel
 
@@ -60,14 +55,10 @@ class SyncSettingsViewModelTest {
     private val resources: Resources = mockk(relaxed = true)
     private val offlineAnalyticsManager: OfflineAnalyticsManager = mockk(relaxed = true)
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     @Before
     fun setup() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         setupStrings()
 

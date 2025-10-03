@@ -17,10 +17,6 @@
 package com.instructure.pandautils.features.elementary.importantdates
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
@@ -36,18 +32,15 @@ import com.instructure.pandautils.features.elementary.importantdates.itemviewmod
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.ThemedColor
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkObject
 import io.mockk.mockkStatic
-import io.mockk.unmockkAll
 import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -60,12 +53,9 @@ import java.util.*
 class ImportantDatesViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val courseManager: CourseManager = mockk(relaxed = true)
     private val calendarEventManager: CalendarEventManager = mockk(relaxed = true)
@@ -76,8 +66,6 @@ class ImportantDatesViewModelTest {
 
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         mockkStatic("kotlinx.coroutines.AwaitKt")
 
@@ -93,12 +81,6 @@ class ImportantDatesViewModelTest {
         every { colorKeeper.getOrGenerateColor(any()) } returns ThemedColor(123)
 
         setupString()
-    }
-
-    @After
-    fun tearDown() {
-        unmockkAll()
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -159,7 +141,7 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val items = viewModel.data.value?.itemViewModels
         assertEquals(2, items?.size)
@@ -186,7 +168,6 @@ class ImportantDatesViewModelTest {
         header1.itemViewModels.forEachIndexed { index, itemViewModel ->
             assertEquals(expectedData1[index], itemViewModel.data)
         }
-
 
         val expectedData2 = listOf(
                 ImportantDatesItemViewData(
@@ -241,8 +222,8 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, {})
-        viewModel.events.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         viewModel.data.value?.itemViewModels!![0].itemViewModels[0].open()
 
@@ -272,8 +253,8 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, {})
-        viewModel.events.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
+        viewModel.events.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         viewModel.data.value?.itemViewModels!![0].itemViewModels[0].open()
 
@@ -294,8 +275,8 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, {})
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val expectedState = ViewState.Empty(emptyTitle = R.string.importantDatesEmptyTitle, emptyImage = R.drawable.ic_panda_noannouncements)
 
@@ -314,8 +295,8 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.data.observe(lifecycleOwner, {})
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.data.observe(lifecycleTestOwner.lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val expectedState = ViewState.Empty(emptyTitle = R.string.importantDatesEmptyTitle, emptyImage = R.drawable.ic_panda_noannouncements)
 
@@ -397,7 +378,7 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val expectedState = ViewState.Error("An unexpected error occurred.")
         assertEquals(expectedState, viewModel.state.value)
@@ -414,7 +395,7 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val expectedState = ViewState.Error("An unexpected error occurred.")
         assertEquals(expectedState, viewModel.state.value)
@@ -431,7 +412,7 @@ class ImportantDatesViewModelTest {
         }
 
         val viewModel = createViewModel()
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
 
         val expectedState = ViewState.Error("An unexpected error occurred.")
         assertEquals(expectedState, viewModel.state.value)

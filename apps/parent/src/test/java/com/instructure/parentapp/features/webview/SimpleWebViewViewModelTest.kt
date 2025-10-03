@@ -18,7 +18,6 @@
 package com.instructure.parentapp.features.webview
 
 import android.webkit.CookieManager
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.SavedStateHandle
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.mvvm.ViewState
@@ -26,32 +25,24 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.toJson
 import com.instructure.parentapp.util.navigation.Navigation
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-
 @OptIn(ExperimentalCoroutinesApi::class)
 class SimpleWebViewViewModelTest {
 
     @get:Rule
-    val instantExecutorRule = InstantTaskExecutorRule()
-
-    private val testDispatcher = UnconfinedTestDispatcher()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val savedStateHandle: SavedStateHandle = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
@@ -65,12 +56,6 @@ class SimpleWebViewViewModelTest {
     fun setup() {
         every { savedStateHandle.get<String>(Const.URL) } returns "test-url"
         every { savedStateHandle.get<String>(Navigation.INITIAL_COOKIES) } returns null
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -81,11 +66,7 @@ class SimpleWebViewViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SimpleWebViewAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         verify { cookieManager.setCookie("session-url", "key=value") }
         assertEquals(SimpleWebViewAction.LoadWebView("session-url", false), events.last())
@@ -99,11 +80,7 @@ class SimpleWebViewViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SimpleWebViewAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SimpleWebViewAction.LoadWebView("session-url", true), events.last())
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -116,11 +93,7 @@ class SimpleWebViewViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SimpleWebViewAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SimpleWebViewAction.LaunchCustomTab("session-url"), events.last())
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -132,11 +105,7 @@ class SimpleWebViewViewModelTest {
 
         createViewModel()
 
-        val events = mutableListOf<SimpleWebViewAction>()
-
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         assertEquals(SimpleWebViewAction.ShowError, events.last())
     }

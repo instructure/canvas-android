@@ -18,38 +18,31 @@ package com.instructure.pandautils.features.settings.inboxsignature
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.managers.InboxSignatureSettings
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.collectForTest
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.runTest
-import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 
 @OptIn(ExperimentalCoroutinesApi::class)
 class InboxSignatureViewModelTest {
 
+    @get:Rule
+    val viewModelTestRule = ViewModelTestRule()
+
     private val repository: InboxSignatureRepository = mockk(relaxed = true)
-    private val testDispatcher = UnconfinedTestDispatcher()
 
     @Before
     fun setup() {
-        Dispatchers.setMain(testDispatcher)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -159,10 +152,7 @@ class InboxSignatureViewModelTest {
 
         val viewModel = createViewModel()
 
-        val events = mutableListOf<InboxSignatureViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(InboxSignatureAction.Save)
 
@@ -183,10 +173,7 @@ class InboxSignatureViewModelTest {
 
         val viewModel = createViewModel()
 
-        val events = mutableListOf<InboxSignatureViewModelAction>()
-        backgroundScope.launch(testDispatcher) {
-            viewModel.events.toList(events)
-        }
+        val events = viewModel.events.collectForTest(viewModelTestRule.testDispatcher, backgroundScope)
 
         viewModel.handleAction(InboxSignatureAction.Save)
 

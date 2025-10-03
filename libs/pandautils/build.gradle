@@ -148,6 +148,7 @@ dependencies {
     testImplementation Libs.KOTLIN_COROUTINES_TEST
     testImplementation Libs.ANDROIDX_CORE_TESTING
     testImplementation Libs.THREETEN_BP
+    testImplementation project(':test-utils')
 
     testImplementation project(path: ':pandautils')
 

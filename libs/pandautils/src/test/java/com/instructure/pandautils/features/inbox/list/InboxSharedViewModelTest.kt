@@ -15,15 +15,15 @@ package com.instructure.pandautils.features.inbox.list/*
  *
  */
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Assert.*
 import org.junit.Rule
+import com.instructure.testutils.ViewModelTestRule
 import org.junit.Test
 
 class InboxSharedViewModelTest {
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
     private val viewModel = InboxSharedViewModel()
 

@@ -17,24 +17,17 @@
 package com.instructure.student.mobius.assignmentDetails.submission.annnotation
 
 import android.content.res.Resources
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.LifecycleRegistry
 import com.instructure.canvasapi2.managers.CanvaDocsManager
 import com.instructure.canvasapi2.models.canvadocs.CanvaDocSessionResponseBody
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.student.R
+import com.instructure.testutils.ViewModelTestRule
+import com.instructure.testutils.LifecycleTestOwner
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.test.UnconfinedTestDispatcher
-import kotlinx.coroutines.test.resetMain
-import kotlinx.coroutines.test.setMain
-import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Before
@@ -47,28 +40,18 @@ class AnnotationSubmissionViewModelTest {
     private lateinit var viewModel: AnnotationSubmissionViewModel
 
     @get:Rule
-    var instantExecutorRule = InstantTaskExecutorRule()
+    val viewModelTestRule = ViewModelTestRule()
 
-    private val lifecycleOwner: LifecycleOwner = mockk(relaxed = true)
-    private val lifecycleRegistry = LifecycleRegistry(lifecycleOwner)
+    private val lifecycleTestOwner = LifecycleTestOwner()
 
     private val canvaDocsManager: CanvaDocsManager = mockk(relaxed = true)
     private val resources: Resources = mockk(relaxed = true)
 
-    private val testDispatcher = UnconfinedTestDispatcher()
-
     @Before
     fun setUp() {
-        lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_CREATE)
-        Dispatchers.setMain(testDispatcher)
 
         every { resources.getString(R.string.failedToLoadSubmission) } returns "Error"
         viewModel = AnnotationSubmissionViewModel(canvaDocsManager, resources)
-    }
-
-    @After
-    fun tearDown() {
-        Dispatchers.resetMain()
     }
 
     @Test
@@ -79,7 +62,7 @@ class AnnotationSubmissionViewModelTest {
         }
 
         // When
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
         viewModel.loadAnnotatedPdfUrl(1)
 
         // Then
@@ -96,7 +79,7 @@ class AnnotationSubmissionViewModelTest {
         }
 
         // When
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
         viewModel.loadAnnotatedPdfUrl(1)
 
         // Then
@@ -113,7 +96,7 @@ class AnnotationSubmissionViewModelTest {
         }
 
         // When
-        viewModel.state.observe(lifecycleOwner, {})
+        viewModel.state.observe(lifecycleTestOwner.lifecycleOwner, {})
         viewModel.loadAnnotatedPdfUrl(1)
 
         // Then

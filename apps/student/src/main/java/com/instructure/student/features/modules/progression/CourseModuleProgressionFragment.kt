@@ -340,7 +340,10 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
         markAsReadJob = tryWeave {
             // mark the moduleItem as viewed if we have a valid module id and item id,
             // but not the files, because they need to open or download those to view them
-            if (moduleItem.moduleId != 0L && moduleItem.id != 0L && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()) {
+            // Also skip MUST_MARK_DONE items as they should only be completed when the user explicitly clicks the button
+            if (moduleItem.moduleId != 0L && moduleItem.id != 0L
+                && getCurrentModuleItem(currentPos)!!.type != ModuleItem.Type.File.toString()
+                && moduleItem.completionRequirement?.type != ModuleItem.MUST_MARK_DONE) {
                 repository.markAsRead(canvasContext, moduleItem)
 
                 // Update the module item locally, needed to unlock modules as the user ViewPages through them
