@@ -26,7 +26,6 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.hasActiveEnrollment
-import com.instructure.canvasapi2.utils.isValidTerm
 import com.instructure.pandautils.features.calendar.CalendarRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
@@ -54,6 +53,7 @@ class StudentCalendarRepository(
             startDate,
             endDate,
             emptyList(), // We always request all the events for students and filter locally
+            null,
             restParams
         ).depaginate {
             plannerApi.nextPagePlannerItems(it, restParams)

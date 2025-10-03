@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.apis.FileFolderAPI
 import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
@@ -56,12 +57,14 @@ import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.CustomGradeStatusDao
 import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
 import com.instructure.pandautils.room.offline.entities.CustomGradeStatusEntity
 import com.instructure.pandautils.room.offline.entities.FileFolderEntity
+import com.instructure.pandautils.room.offline.entities.PlannerItemEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
 import com.instructure.pandautils.room.offline.facade.ConferenceFacade
@@ -84,6 +87,7 @@ class CourseSync(
     private val userApi: UserAPI.UsersInterface,
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+    private val plannerApi: PlannerAPI.PlannerInterface,
     private val courseSyncSettingsDao: CourseSyncSettingsDao,
     private val pageFacade: PageFacade,
     private val userFacade: UserFacade,
@@ -114,7 +118,8 @@ class CourseSync(
     private val firebaseCrashlytics: FirebaseCrashlytics,
     private val fileSync: FileSync,
     private val customGradeStatusDao: CustomGradeStatusDao,
-    private val customGradeStatusesManager: CustomGradeStatusesManager
+    private val customGradeStatusesManager: CustomGradeStatusesManager,
+    private val plannerItemDao: PlannerItemDao
 ) {
 
     private val additionalFileIdsToSync = mutableMapOf<Long, Set<Long>>()
@@ -245,7 +250,26 @@ class CourseSync(
             scheduleItems.addAll(assignmentEvents)
 
             scheduleItemFacade.insertScheduleItems(scheduleItems, courseId)
+
+            val plannerItems = fetchPlannerItems(courseId)
+            plannerItemDao.deleteAllByCourseId(courseId)
+            plannerItemDao.insertAll(plannerItems)
         }
+    }
+
+    private suspend fun fetchPlannerItems(courseId: Long): List<PlannerItemEntity> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
+        val plannerItems = plannerApi.getPlannerItems(
+            null,
+            null,
+            listOf("course_$courseId"),
+            "new_activity",
+            restParams
+        ).depaginate {
+            plannerApi.nextPagePlannerItems(it, restParams)
+        }.dataOrThrow
+
+        return plannerItems.map { PlannerItemEntity(it, courseId) }
     }
 
     private suspend fun fetchCalendarEvents(courseId: Long): List<ScheduleItem> {

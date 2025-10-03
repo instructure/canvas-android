@@ -49,6 +49,7 @@ class ToDoWidgetRepository(
             startDate,
             endDate,
             contextCodes,
+            null,
             restParams
         ).depaginate {
             plannerApi.nextPagePlannerItems(it, restParams)
