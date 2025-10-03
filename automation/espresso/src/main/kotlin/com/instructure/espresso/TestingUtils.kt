@@ -291,7 +291,6 @@ fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
 
-
 private fun waitForWorkManagerJobsToFinish(timeoutMs: Long = 20000L, workerTag: String) {
     val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext
     val workManager = WorkManager.getInstance(context)

@@ -19,13 +19,33 @@ package com.instructure.canvasapi2.apis
 import com.instructure.canvasapi2.StatusCallback
 import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.ColumnDatum
+import com.instructure.canvasapi2.models.Course
+import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.CustomColumn
+import com.instructure.canvasapi2.models.DashboardCard
+import com.instructure.canvasapi2.models.Enrollment
+import com.instructure.canvasapi2.models.Favorite
+import com.instructure.canvasapi2.models.GradingPeriodResponse
+import com.instructure.canvasapi2.models.Group
+import com.instructure.canvasapi2.models.RubricSettings
+import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.models.postmodels.UpdateCourseWrapper
 import com.instructure.canvasapi2.utils.APIHelper
 import com.instructure.canvasapi2.utils.DataResult
 import retrofit2.Call
 import retrofit2.Response
-import retrofit2.http.*
+import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.GET
+import retrofit2.http.POST
+import retrofit2.http.PUT
+import retrofit2.http.Path
+import retrofit2.http.Query
+import retrofit2.http.QueryMap
+import retrofit2.http.Tag
+import retrofit2.http.Url
 import java.io.IOException
 
 
