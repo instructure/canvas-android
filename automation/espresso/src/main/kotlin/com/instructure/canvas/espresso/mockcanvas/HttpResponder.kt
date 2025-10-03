@@ -41,10 +41,6 @@ class HttpResponder(
         getMethod = onHandle
     }
 
-    fun HttpResponder.HEAD(onHandle: () -> Response) {
-        headMethod = onHandle
-    }
-
     fun HttpResponder.POST(onHandle: () -> Response) {
         postMethod = onHandle
     }
@@ -55,6 +51,10 @@ class HttpResponder(
 
     fun HttpResponder.DELETE(onHandle: () -> Response) {
         deleteMethod = onHandle
+    }
+
+    fun HttpResponder.HEAD(onHandle: () -> Response) {
+        headMethod = onHandle
     }
 
     fun handle(): Response {
@@ -75,7 +75,8 @@ class HttpResponder(
         postMethod?.let { println("POST   $current\n") }
         putMethod?.let { println("PUT    $current\n") }
         deleteMethod?.let { println("DELETE $current\n") }
-        return getMethod != null || postMethod != null || putMethod != null || deleteMethod != null
+        headMethod?.let { println("HEAD   $current\n") }
+        return getMethod != null || postMethod != null || putMethod != null || deleteMethod != null || headMethod != null
     }
 
 }

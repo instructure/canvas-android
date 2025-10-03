@@ -210,19 +210,110 @@ class InboxComposeViewModel @Inject constructor(
         }
     }
 
-    fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
-        if (workInfo.state == WorkInfo.State.SUCCEEDED) {
-            viewModelScope.launch {
-                uuid?.let { uuid ->
-                    val attachmentEntities = attachmentDao.findByParentId(uuid.toString())
-                    val status = workInfo.state.toAttachmentCardStatus()
-                    attachmentEntities?.let { attachmentList ->
-                        _uiState.update { it.copy(attachments = it.attachments + attachmentList.map { AttachmentCardItem(it.toApiModel(), status, false) }) }
-                        attachmentDao.deleteAll(attachmentList)
-                    } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
-                } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
+    fun addUploadingAttachments(filePaths: List<String>) {
+        // Create placeholder attachments with UPLOADING status from file URIs
+        val placeholderAttachments = filePaths.mapIndexed { index, path ->
+            val fileName = path.substringAfterLast("/")
+            val attachment = com.instructure.canvasapi2.models.Attachment(
+                id = System.currentTimeMillis() + index, // Temporary ID until real one is assigned
+                filename = fileName,
+                displayName = fileName,
+                contentType = ""
+            )
+            AttachmentCardItem(attachment, AttachmentStatus.UPLOADING, false)
+        }
 
-            }
+        _uiState.update { it.copy(attachments = it.attachments + placeholderAttachments) }
+    }
+
+    fun updateAttachments(uuid: UUID?, workInfo: WorkInfo) {
+        viewModelScope.launch {
+            uuid?.let { workerId ->
+                val status = workInfo.state.toAttachmentCardStatus()
+
+                when (workInfo.state) {
+                    WorkInfo.State.ENQUEUED, WorkInfo.State.RUNNING -> {
+                        // Update progress for uploading attachments
+                        val progress = workInfo.progress
+                        val uploadedSize = progress.getLong("PROGRESS_DATA_UPLOADED_SIZE", 0L)
+                        val totalSize = progress.getLong("PROGRESS_DATA_TOTAL_SIZE", 0L)
+                        val progressPercent = if (totalSize > 0) uploadedSize.toFloat() / totalSize.toFloat() else 0f
+
+                        // Find attachment with this workerId, or assign workerId to first placeholder without one
+                        _uiState.update { currentState ->
+                            var workerIdAssigned = false
+                            currentState.copy(
+                                attachments = currentState.attachments.map { attachment ->
+                                    when {
+                                        // Update attachment that already has this workerId
+                                        attachment.workerId == workerId.toString() -> {
+                                            attachment.copy(uploadProgress = progressPercent)
+                                        }
+                                        // Assign workerId to first placeholder without one
+                                        !workerIdAssigned && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            workerIdAssigned = true
+                                            attachment.copy(workerId = workerId.toString(), uploadProgress = progressPercent)
+                                        }
+                                        else -> attachment
+                                    }
+                                }
+                            )
+                        }
+                    }
+                    WorkInfo.State.SUCCEEDED -> {
+                        // Replace placeholder attachment with matching workerId with real uploaded attachments
+                        val attachmentEntities = attachmentDao.findByParentId(workerId.toString())
+                        attachmentEntities?.let { attachmentList ->
+                            // Create real uploaded attachments
+                            val uploadedAttachments = attachmentList.map {
+                                AttachmentCardItem(it.toApiModel(), status, false)
+                            }
+
+                            // Remove placeholder with matching workerId, or first UPLOADING placeholder without workerId
+                            _uiState.update { currentState ->
+                                var placeholderRemoved = false
+                                val filteredAttachments = currentState.attachments.filter { attachment ->
+                                    when {
+                                        attachment.workerId == workerId.toString() -> {
+                                            placeholderRemoved = true
+                                            false // Remove this placeholder
+                                        }
+                                        !placeholderRemoved && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            placeholderRemoved = true
+                                            false // Remove first unassigned placeholder
+                                        }
+                                        else -> true
+                                    }
+                                }
+                                currentState.copy(attachments = filteredAttachments + uploadedAttachments)
+                            }
+                            attachmentDao.deleteAll(attachmentList)
+                        } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
+                    }
+                    WorkInfo.State.FAILED, WorkInfo.State.CANCELLED, WorkInfo.State.BLOCKED -> {
+                        // Update placeholder with matching workerId to FAILED, or first UPLOADING placeholder without workerId
+                        _uiState.update { currentState ->
+                            var placeholderUpdated = false
+                            currentState.copy(
+                                attachments = currentState.attachments.map { attachment ->
+                                    when {
+                                        attachment.workerId == workerId.toString() -> {
+                                            placeholderUpdated = true
+                                            attachment.copy(status = AttachmentStatus.FAILED)
+                                        }
+                                        !placeholderUpdated && attachment.status == AttachmentStatus.UPLOADING && attachment.workerId == null -> {
+                                            placeholderUpdated = true
+                                            attachment.copy(status = AttachmentStatus.FAILED, workerId = workerId.toString())
+                                        }
+                                        else -> attachment
+                                    }
+                                }
+                            )
+                        }
+                        sendScreenResult(context.getString(R.string.errorUploadingFile))
+                    }
+                }
+            } ?: sendScreenResult(context.getString(R.string.errorUploadingFile))
         }
     }
 
