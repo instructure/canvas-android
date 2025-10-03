@@ -5,14 +5,12 @@ on:
     branches: [ master ]
 
 jobs:
-  coverage-delta:
+  test-pr:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout PR branch
         uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
 
       - name: Set up JDK 17
         uses: actions/setup-java@v4
@@ -23,69 +21,119 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v3
 
+      - name: Setup open source build
+        run: ./open_source.sh
+
       - name: Run unit tests and generate coverage for PR
         run: |
-          # Run tests which generate coverage exec files
-          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest
+          # Run tests in parallel - Gradle will handle parallelization
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest --parallel
           cd libs && ../gradle/gradlew :pandautils:testDebugUnitTest && cd ..
 
           # Copy exec files to expected locations for jacoco.gradle
-          mkdir -p apps/student/build/jacoco
-          mkdir -p apps/teacher/build/jacoco
-          mkdir -p libs/pandautils/build/jacoco
+          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco libs/pandautils/build/jacoco
 
           cp apps/student/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/student/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Student exec not found"
           cp apps/teacher/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/teacher/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Teacher exec not found"
           cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
 
-          # Generate JaCoCo reports
-          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport
+          # Generate JaCoCo reports in parallel
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport --parallel
           cd libs && ../gradle/gradlew :pandautils:jacocoReport
         continue-on-error: false
 
-      - name: Save PR coverage reports
-        run: |
-          mkdir -p coverage-reports/pr
-          cp apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv coverage-reports/pr/student.csv 2>/dev/null || echo "Student coverage not found"
-          cp apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv coverage-reports/pr/teacher.csv 2>/dev/null || echo "Teacher coverage not found"
-          cp libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv coverage-reports/pr/pandautils.csv 2>/dev/null || echo "Pandautils coverage not found"
+      - name: Upload PR coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: pr-coverage
+          path: |
+            apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv
+          retention-days: 1
 
+  test-master:
+    runs-on: ubuntu-latest
+
+    steps:
       - name: Checkout master branch
-        run: |
-          git fetch origin master
-          git checkout master
+        uses: actions/checkout@v4
+        with:
+          ref: master
 
-      - name: Clean build directories
-        run: |
-          ./gradle/gradlew -p apps clean
-          cd libs && ../gradle/gradlew clean
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v3
+
+      - name: Setup open source build
+        run: ./open_source.sh
 
       - name: Run unit tests and generate coverage for master
         run: |
-          # Run tests which generate coverage exec files
-          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest
+          # Run tests in parallel - Gradle will handle parallelization
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest --parallel
           cd libs && ../gradle/gradlew :pandautils:testDebugUnitTest && cd ..
 
           # Copy exec files to expected locations for jacoco.gradle
-          mkdir -p apps/student/build/jacoco
-          mkdir -p apps/teacher/build/jacoco
-          mkdir -p libs/pandautils/build/jacoco
+          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco libs/pandautils/build/jacoco
 
           cp apps/student/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/student/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Student exec not found"
           cp apps/teacher/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/teacher/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Teacher exec not found"
           cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
 
-          # Generate JaCoCo reports
-          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport
+          # Generate JaCoCo reports in parallel
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport --parallel
           cd libs && ../gradle/gradlew :pandautils:jacocoReport
         continue-on-error: true
 
-      - name: Save master coverage reports
+      - name: Upload master coverage reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: master-coverage
+          path: |
+            apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv
+          retention-days: 1
+
+  coverage-report:
+    runs-on: ubuntu-latest
+    needs: [test-pr, test-master]
+    if: always()
+
+    steps:
+      - name: Download PR coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: pr-coverage
+          path: coverage-reports/pr
+
+      - name: Download master coverage
+        uses: actions/download-artifact@v4
+        with:
+          name: master-coverage
+          path: coverage-reports/master
+        continue-on-error: true
+
+      - name: Reorganize coverage files
         run: |
-          mkdir -p coverage-reports/master
-          cp apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv coverage-reports/master/student.csv 2>/dev/null || echo "Student coverage not found"
-          cp apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv coverage-reports/master/teacher.csv 2>/dev/null || echo "Teacher coverage not found"
-          cp libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv coverage-reports/master/pandautils.csv 2>/dev/null || echo "Pandautils coverage not found"
+          # Reorganize downloaded artifacts to expected structure
+          mkdir -p coverage-reports/pr coverage-reports/master
+
+          # PR coverage
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/student/*" -exec cp {} coverage-reports/pr/student.csv \; 2>/dev/null || echo "Student PR coverage not found"
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/teacher/*" -exec cp {} coverage-reports/pr/teacher.csv \; 2>/dev/null || echo "Teacher PR coverage not found"
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/pandautils/*" -exec cp {} coverage-reports/pr/pandautils.csv \; 2>/dev/null || echo "Pandautils PR coverage not found"
+
+          # Master coverage
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/student/*" -exec cp {} coverage-reports/master/student.csv \; 2>/dev/null || echo "Student master coverage not found"
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/teacher/*" -exec cp {} coverage-reports/master/teacher.csv \; 2>/dev/null || echo "Teacher master coverage not found"
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/pandautils/*" -exec cp {} coverage-reports/master/pandautils.csv \; 2>/dev/null || echo "Pandautils master coverage not found"
 
       - name: Calculate coverage delta
         id: coverage
