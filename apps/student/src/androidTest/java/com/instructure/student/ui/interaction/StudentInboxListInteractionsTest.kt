@@ -16,17 +16,17 @@
 package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.common.interaction.InboxListInteractionTest
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addCoursePermissions
-import com.instructure.canvas.espresso.mockCanvas.addRecipientsToCourse
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addCoursePermissions
+import com.instructure.canvas.espresso.mockcanvas.addRecipientsToCourse
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.User
 import com.instructure.student.BuildConfig
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.ui.pages.DashboardPage
+import com.instructure.student.ui.pages.classic.DashboardPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 
 @HiltAndroidTest

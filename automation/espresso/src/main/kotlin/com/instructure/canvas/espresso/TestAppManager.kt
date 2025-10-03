@@ -52,7 +52,7 @@ open class TestAppManager: AppManager() {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(getWorkManagerFactory())
+                .setWorkerFactory(this.getWorkManagerFactory())
                 .build()
             WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
             testDriver = WorkManagerTestInitHelper.getTestDriver(context)
