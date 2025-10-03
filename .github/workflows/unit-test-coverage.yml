@@ -27,19 +27,20 @@ jobs:
       - name: Run unit tests and generate coverage for PR
         run: |
           # Run tests in parallel - Gradle will handle parallelization
-          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest --parallel
-          cd libs && ../gradle/gradlew :pandautils:testDebugUnitTest && cd ..
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :parent:testQaDebugUnitTest --parallel
+          ./gradle/gradlew -p libs :pandautils:testDebugUnitTest
 
           # Copy exec files to expected locations for jacoco.gradle
-          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco libs/pandautils/build/jacoco
+          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco apps/parent/build/jacoco libs/pandautils/build/jacoco
 
           cp apps/student/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/student/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Student exec not found"
           cp apps/teacher/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/teacher/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Teacher exec not found"
+          cp apps/parent/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/parent/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Parent exec not found"
           cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
 
           # Generate JaCoCo reports in parallel
-          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport --parallel
-          cd libs && ../gradle/gradlew :pandautils:jacocoReport
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :parent:jacocoReport --parallel
+          ./gradle/gradlew -p libs :pandautils:jacocoReport
         continue-on-error: false
 
       - name: Upload PR coverage reports
@@ -49,6 +50,7 @@ jobs:
           path: |
             apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv
             apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            apps/parent/build/reports/jacoco/jacocoReport/jacocoReport.csv
             libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv
           retention-days: 1
 
@@ -76,19 +78,20 @@ jobs:
       - name: Run unit tests and generate coverage for master
         run: |
           # Run tests in parallel - Gradle will handle parallelization
-          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest --parallel
-          cd libs && ../gradle/gradlew :pandautils:testDebugUnitTest && cd ..
+          ./gradle/gradlew -p apps :student:testQaDebugUnitTest :teacher:testQaDebugUnitTest :parent:testQaDebugUnitTest --parallel
+          ./gradle/gradlew -p libs :pandautils:testDebugUnitTest
 
           # Copy exec files to expected locations for jacoco.gradle
-          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco libs/pandautils/build/jacoco
+          mkdir -p apps/student/build/jacoco apps/teacher/build/jacoco apps/parent/build/jacoco libs/pandautils/build/jacoco
 
           cp apps/student/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/student/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Student exec not found"
           cp apps/teacher/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/teacher/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Teacher exec not found"
+          cp apps/parent/build/outputs/unit_test_code_coverage/qaDebugUnitTest/testQaDebugUnitTest.exec apps/parent/build/jacoco/testQaDebugUnitTest.exec 2>/dev/null || echo "Parent exec not found"
           cp libs/pandautils/build/outputs/unit_test_code_coverage/debugUnitTest/testDebugUnitTest.exec libs/pandautils/build/jacoco/testDebugUnitTest.exec 2>/dev/null || echo "Pandautils exec not found"
 
           # Generate JaCoCo reports in parallel
-          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport --parallel
-          cd libs && ../gradle/gradlew :pandautils:jacocoReport
+          ./gradle/gradlew -p apps :student:jacocoReport :teacher:jacocoReport :parent:jacocoReport --parallel
+          ./gradle/gradlew -p libs :pandautils:jacocoReport
         continue-on-error: true
 
       - name: Upload master coverage reports
@@ -98,6 +101,7 @@ jobs:
           path: |
             apps/student/build/reports/jacoco/jacocoReport/jacocoReport.csv
             apps/teacher/build/reports/jacoco/jacocoReport/jacocoReport.csv
+            apps/parent/build/reports/jacoco/jacocoReport/jacocoReport.csv
             libs/pandautils/build/reports/jacoco/jacocoReport/jacocoReport.csv
           retention-days: 1
 
@@ -128,11 +132,13 @@ jobs:
           # PR coverage
           find coverage-reports/pr -name "jacocoReport.csv" -path "*/student/*" -exec cp {} coverage-reports/pr/student.csv \; 2>/dev/null || echo "Student PR coverage not found"
           find coverage-reports/pr -name "jacocoReport.csv" -path "*/teacher/*" -exec cp {} coverage-reports/pr/teacher.csv \; 2>/dev/null || echo "Teacher PR coverage not found"
+          find coverage-reports/pr -name "jacocoReport.csv" -path "*/parent/*" -exec cp {} coverage-reports/pr/parent.csv \; 2>/dev/null || echo "Parent PR coverage not found"
           find coverage-reports/pr -name "jacocoReport.csv" -path "*/pandautils/*" -exec cp {} coverage-reports/pr/pandautils.csv \; 2>/dev/null || echo "Pandautils PR coverage not found"
 
           # Master coverage
           find coverage-reports/master -name "jacocoReport.csv" -path "*/student/*" -exec cp {} coverage-reports/master/student.csv \; 2>/dev/null || echo "Student master coverage not found"
           find coverage-reports/master -name "jacocoReport.csv" -path "*/teacher/*" -exec cp {} coverage-reports/master/teacher.csv \; 2>/dev/null || echo "Teacher master coverage not found"
+          find coverage-reports/master -name "jacocoReport.csv" -path "*/parent/*" -exec cp {} coverage-reports/master/parent.csv \; 2>/dev/null || echo "Parent master coverage not found"
           find coverage-reports/master -name "jacocoReport.csv" -path "*/pandautils/*" -exec cp {} coverage-reports/master/pandautils.csv \; 2>/dev/null || echo "Pandautils master coverage not found"
 
       - name: Calculate coverage delta
@@ -162,7 +168,7 @@ jobs:
 
               return (total_covered / (total_missed + total_covered)) * 100
 
-          modules = ['student', 'teacher', 'pandautils']
+          modules = ['student', 'teacher', 'parent', 'pandautils']
           results = []
 
           print("## 📊 Code Coverage Report\n")
