@@ -4,6 +4,7 @@ import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 import com.instructure.pandautils.utils.FeatureFlagProvider
@@ -33,9 +34,10 @@ class SyllabusModule {
     fun provideLocalDataSource(
         courseSettingsDao: CourseSettingsDao,
         courseFacade: CourseFacade,
-        scheduleItemFacade: ScheduleItemFacade
+        scheduleItemFacade: ScheduleItemFacade,
+        plannerItemDao: PlannerItemDao
     ): SyllabusLocalDataSource {
-        return SyllabusLocalDataSource(courseSettingsDao, courseFacade, scheduleItemFacade)
+        return SyllabusLocalDataSource(courseSettingsDao, courseFacade, scheduleItemFacade, plannerItemDao)
     }
 
     @Provides

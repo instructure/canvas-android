@@ -25,13 +25,15 @@ import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
 
 class SyllabusLocalDataSource(
     private val courseSettingsDao: CourseSettingsDao,
     private val courseFacade: CourseFacade,
-    private val scheduleItemFacade: ScheduleItemFacade
+    private val scheduleItemFacade: ScheduleItemFacade,
+    private val plannerItemDao: PlannerItemDao
 ) : SyllabusDataSource {
 
     override suspend fun getCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
@@ -67,6 +69,23 @@ class SyllabusLocalDataSource(
         filter: String?,
         forceNetwork: Boolean
     ): DataResult<List<PlannerItem>> {
-        return DataResult.Success(emptyList())
+        return try {
+            val courseIds = contextCodes.mapNotNull { contextCode ->
+                val parts = contextCode.split("_")
+                if (parts.size == 2 && parts[0] == "course") {
+                    parts[1].toLongOrNull()
+                } else null
+            }
+
+            val plannerItems = if (courseIds.isNotEmpty()) {
+                plannerItemDao.findByCourseIds(courseIds).map { it.toApiModel() }
+            } else {
+                emptyList()
+            }
+
+            DataResult.Success(plannerItems)
+        } catch (e: Exception) {
+            DataResult.Fail()
+        }
     }
 }
