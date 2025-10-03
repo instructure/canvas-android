@@ -35,6 +35,7 @@ class HttpResponder(
     private var postMethod: (() -> Response)? = null
     private var putMethod: (() -> Response)? = null
     private var deleteMethod: (() -> Response)? = null
+    private var headMethod: (() -> Response)? = null
 
     fun HttpResponder.GET(onHandle: () -> Response) {
         getMethod = onHandle
@@ -52,6 +53,10 @@ class HttpResponder(
         deleteMethod = onHandle
     }
 
+    fun HttpResponder.HEAD(onHandle: () -> Response) {
+        headMethod = onHandle
+    }
+
     fun handle(): Response {
         val method = request.method
         return when {
@@ -59,6 +64,7 @@ class HttpResponder(
             method == "POST" && postMethod != null -> postMethod!!()
             method == "PUT" && putMethod != null -> putMethod!!()
             method == "DELETE" && deleteMethod != null -> deleteMethod!!()
+            method == "HEAD" && headMethod != null -> headMethod!!()
             else -> throw NoSuchMethodError("Unhandled HTTP method '$method' for request ${request.url}")
         }
     }
@@ -69,7 +75,8 @@ class HttpResponder(
         postMethod?.let { println("POST   $current\n") }
         putMethod?.let { println("PUT    $current\n") }
         deleteMethod?.let { println("DELETE $current\n") }
-        return getMethod != null || postMethod != null || putMethod != null || deleteMethod != null
+        headMethod?.let { println("HEAD   $current\n") }
+        return getMethod != null || postMethod != null || putMethod != null || deleteMethod != null || headMethod != null
     }
 
 }
