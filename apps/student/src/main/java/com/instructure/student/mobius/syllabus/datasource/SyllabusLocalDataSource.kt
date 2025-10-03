@@ -21,6 +21,7 @@ package com.instructure.student.mobius.syllabus.datasource
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
@@ -57,5 +58,15 @@ class SyllabusLocalDataSource(
             DataResult.Fail()
         }
 
+    }
+
+    override suspend fun getPlannerItems(
+        startDate: String?,
+        endDate: String?,
+        contextCodes: List<String>,
+        filter: String?,
+        forceNetwork: Boolean
+    ): DataResult<List<PlannerItem>> {
+        return DataResult.Success(emptyList())
     }
 }

@@ -19,7 +19,9 @@ package com.instructure.teacher.features.syllabus
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.exhaustive
@@ -61,14 +63,16 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
 
                 val assignmentsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
                 val calendarEventsDeferred = CalendarEventManager.getCalendarEventsExhaustiveAsync(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
+                val plannerItemsDeferred = PlannerManager.getPlannerItemsExhaustiveAsync(null, null, contextCodes, "all_ungraded_todo_items", effect.forceNetwork)
 
                 val assignmentsResult = assignmentsDeferred.await()
                 val eventsResult = calendarEventsDeferred.await()
+                val plannerItemsResult = plannerItemsDeferred.await()
 
-                summaryResult = if (assignmentsResult.isFail && eventsResult.isFail) {
+                summaryResult = if (assignmentsResult.isFail && eventsResult.isFail && plannerItemsResult.isFail) {
                     DataResult.Fail((assignmentsResult as? DataResult.Fail)?.failure)
                 } else {
-                    createSuccessResult(assignmentsResult, eventsResult)
+                    createSuccessResult(assignmentsResult, eventsResult, plannerItemsResult)
                 }
             }
 
@@ -79,10 +83,15 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
         }
     }
 
-    private fun createSuccessResult(assignmentsResult: DataResult<List<ScheduleItem>>, eventsResult: DataResult<List<ScheduleItem>>): DataResult.Success<List<ScheduleItem>> {
+    private fun createSuccessResult(
+        assignmentsResult: DataResult<List<ScheduleItem>>,
+        eventsResult: DataResult<List<ScheduleItem>>,
+        plannerItemsResult: DataResult<List<PlannerItem>>
+    ): DataResult.Success<List<ScheduleItem>> {
         val assignments = assignmentsResult.dataOrNull ?: emptyList()
         val events = eventsResult.dataOrNull ?: emptyList()
-        val combinedList = (assignments + events).sorted()
+        val plannerItems = plannerItemsResult.dataOrNull?.map { it.toScheduleItem() } ?: emptyList()
+        val combinedList = (assignments + events + plannerItems).sorted()
 
         return DataResult.Success(combinedList)
     }

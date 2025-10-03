@@ -2,6 +2,7 @@ package com.instructure.student.di
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.facade.CourseFacade
 import com.instructure.pandautils.room.offline.facade.ScheduleItemFacade
@@ -22,9 +23,10 @@ class SyllabusModule {
     @Provides
     fun provideNetworkDataSource(
         courseApi: CourseAPI.CoursesInterface,
-        calendarEventApi: CalendarEventAPI.CalendarEventInterface
+        calendarEventApi: CalendarEventAPI.CalendarEventInterface,
+        plannerApi: PlannerAPI.PlannerInterface
     ): SyllabusNetworkDataSource {
-        return SyllabusNetworkDataSource(courseApi, calendarEventApi)
+        return SyllabusNetworkDataSource(courseApi, calendarEventApi, plannerApi)
     }
 
     @Provides

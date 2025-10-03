@@ -17,8 +17,6 @@
 package com.instructure.student.mobius.syllabus
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
-import com.instructure.canvasapi2.managers.CalendarEventManager
-import com.instructure.canvasapi2.managers.CourseManager
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.exhaustive
@@ -56,14 +54,19 @@ class SyllabusEffectHandler(private val repository: SyllabusRepository) : Effect
 
                 val assignments = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
                 val events = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
+                val plannerItems = repository.getPlannerItems(null, null, contextCodes, "all_ungraded_todo_items", effect.forceNetwork)
+
                 val endList = mutableListOf<ScheduleItem>()
 
                 assignments.map { endList.addAll(it) }
                 events.map { endList.addAll(it) }
+                plannerItems.map { items ->
+                    endList.addAll(items.map { it.toScheduleItem() })
+                }
 
                 endList.sort()
 
-                summaryResult = if (assignments.isFail && events.isFail) {
+                summaryResult = if (assignments.isFail && events.isFail && plannerItems.isFail) {
                     DataResult.Fail((assignments as? DataResult.Fail)?.failure)
                 } else {
                     DataResult.Success(endList)
