@@ -33,7 +33,7 @@ import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.compose.ui.test.performTextReplacement
 import androidx.test.espresso.Espresso
-import com.instructure.composeTest.hasTestTagThatContains
+import com.instructure.composetest.hasTestTagThatContains
 import com.instructure.espresso.OnViewWithId
 import com.instructure.espresso.OnViewWithText
 import com.instructure.espresso.WaitForViewWithId

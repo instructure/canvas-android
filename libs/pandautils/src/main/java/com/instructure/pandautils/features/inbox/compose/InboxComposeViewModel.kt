@@ -22,6 +22,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import com.instructure.canvasapi2.models.CanvasContext
+import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.type.EnrollmentType
 import com.instructure.canvasapi2.utils.DataResult
@@ -47,6 +48,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import java.util.Date
 import java.util.EnumMap
 import java.util.UUID
 import javax.inject.Inject
@@ -623,12 +625,31 @@ class InboxComposeViewModel @Inject constructor(
         return inboxComposeRepository.getRecipients(searchQuery, contextId, forceRefresh)
     }
 
+    private fun canSendMessageInContext(canvasContext: CanvasContext): Boolean {
+        if (canvasContext !is Course) return true
+
+        val fullCourse = uiState.value.selectContextUiState.canvasContexts
+            .filterIsInstance<Course>()
+            .find { it.id == canvasContext.id }
+            ?: canvasContext
+
+        val now = Date()
+        return fullCourse.workflowState != Course.WorkflowState.COMPLETED &&
+                fullCourse.endDate?.before(now) != true &&
+                fullCourse.term?.endDate?.before(now) != true
+    }
+
     private fun createConversation() {
         uiState.value.selectContextUiState.selectedCanvasContext?.let { canvasContext ->
             viewModelScope.launch {
                 _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
                 try {
+                    if (!canSendMessageInContext(canvasContext)) {
+                        sendScreenResult(context.getString(R.string.courseConcludedError))
+                        return@launch
+                    }
+
                     inboxComposeRepository.createConversation(
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,
                         subject = uiState.value.subject.text,
@@ -660,6 +681,11 @@ class InboxComposeViewModel @Inject constructor(
                 _uiState.update { uiState.value.copy(screenState = ScreenState.Loading) }
 
                 try {
+                    if (!canSendMessageInContext(canvasContext)) {
+                        sendScreenResult(context.getString(R.string.courseConcludedError))
+                        return@launch
+                    }
+
                     inboxComposeRepository.addMessage(
                         conversationId = uiState.value.previousMessages?.conversation?.id ?: 0,
                         recipients = uiState.value.recipientPickerUiState.selectedRecipients,

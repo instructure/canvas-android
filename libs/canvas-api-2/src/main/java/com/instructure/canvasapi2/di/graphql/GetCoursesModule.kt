@@ -18,6 +18,7 @@ package com.instructure.canvasapi2.di.graphql
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.DefaultApolloClient
 import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.HorizonGetCoursesManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,6 +30,6 @@ class GetCoursesModule {
 
     @Provides
     fun provideGetCoursesManager(@DefaultApolloClient apolloClient: ApolloClient): HorizonGetCoursesManager {
-        return HorizonGetCoursesManager(apolloClient)
+        return HorizonGetCoursesManagerImpl(apolloClient)
     }
 }

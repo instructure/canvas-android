@@ -34,6 +34,8 @@ import androidx.navigation.NavDeepLinkRequest
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptions
 import androidx.navigation.compose.rememberNavController
+import com.instructure.canvasapi2.models.User
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.horizonui.HorizonTheme
 import com.instructure.horizon.navigation.HorizonNavigation
 import com.instructure.pandautils.base.BaseCanvasActivity
@@ -43,6 +45,7 @@ import com.instructure.pandautils.utils.AppTheme
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.Utils
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.WebViewAuthenticator
 import com.instructure.pandautils.utils.getActivityOrNull
@@ -150,5 +153,22 @@ class HorizonActivity : BaseCanvasActivity() {
             extras!!.putBoolean(Const.LOCAL_NOTIFICATION,false)
         }
         return flag
+    }
+
+    /**
+     * ONLY USE FOR UI TESTING
+     * Skips the traditional login process by directly setting the domain, token, and user info.
+     */
+    fun loginWithToken(token: String, domain: String, user: User) {
+        ApiPrefs.accessToken = token
+        ApiPrefs.domain = domain
+        ApiPrefs.user = user
+        ApiPrefs.canvasCareerView = true
+        ApiPrefs.userAgent = Utils.generateUserAgent(this, Const.STUDENT_USER_AGENT)
+        finish()
+        val intent = Intent(this, HorizonActivity::class.java).apply {
+            intent?.extras?.let { putExtras(it) }
+        }
+        startActivity(intent)
     }
 }

@@ -21,8 +21,8 @@ import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoCreateUpdatePage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addPlannable
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addPlannable
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.User
 import org.junit.Test

@@ -18,15 +18,15 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
-import com.instructure.canvas.espresso.StubLandscape
-import com.instructure.canvas.espresso.StubTablet
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addTodo
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.annotations.StubLandscape
+import com.instructure.canvas.espresso.annotations.StubTablet
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addTodo
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
@@ -34,10 +34,10 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.espresso.page.getStringFromResource
 import com.instructure.pandautils.utils.date.DateTimeProvider
 import com.instructure.student.R
-import com.instructure.student.ui.pages.ElementaryDashboardPage
+import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.di.FakeDateTimeProvider
-import com.instructure.student.ui.utils.tokenLoginElementary
+import com.instructure.student.ui.utils.extensions.tokenLoginElementary
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

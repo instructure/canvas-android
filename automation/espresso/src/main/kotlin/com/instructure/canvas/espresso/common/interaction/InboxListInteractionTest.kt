@@ -22,11 +22,11 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.common.pages.InboxPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addConversation
-import com.instructure.canvas.espresso.mockCanvas.addConversations
-import com.instructure.canvas.espresso.mockCanvas.addConversationsToCourseMap
-import com.instructure.canvas.espresso.mockCanvas.createBasicConversation
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addConversation
+import com.instructure.canvas.espresso.mockcanvas.addConversations
+import com.instructure.canvas.espresso.mockcanvas.addConversationsToCourseMap
+import com.instructure.canvas.espresso.mockcanvas.createBasicConversation
 import com.instructure.canvas.espresso.refresh
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.User

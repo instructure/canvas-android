@@ -1195,6 +1195,138 @@ class InboxComposeViewModelTest {
 
     // endregion
 
+    // region Concluded Course Validation
+
+    @Test
+    fun `Send message fails when course is concluded`() = runTest {
+        val concludedCourse = Course(id = 1, name = "Concluded Course", workflowState = Course.WorkflowState.COMPLETED)
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(concludedCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.courseConcludedError) } returns "This course has concluded. You can no longer send messages."
+
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(concludedCourse))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 0) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult("This course has concluded. You can no longer send messages."), events.last())
+    }
+
+    @Test
+    fun `Send message succeeds when course is active`() = runTest {
+        val activeCourse = Course(id = 1, name = "Active Course", workflowState = Course.WorkflowState.AVAILABLE)
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(activeCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+
+        val viewmodel = getViewModel()
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodel.events.toList(events)
+        }
+
+        viewmodel.handleAction(ContextPickerActionHandler.ContextClicked(activeCourse))
+        viewmodel.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodel.handleAction(InboxComposeActionHandler.SubjectChanged(TextFieldValue("Subject")))
+        viewmodel.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Body")))
+        viewmodel.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 1) { inboxComposeRepository.createConversation(any(), any(), any(), any(), any(), any()) }
+        assertEquals(3, events.size)
+        assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
+    }
+
+    @Test
+    fun `Reply message fails when course is concluded`() = runTest {
+        val concludedCourse = Course(id = 1, name = "Concluded Course", workflowState = Course.WorkflowState.COMPLETED)
+        val conversation = Conversation(id = 2)
+        val messages = listOf(Message(id = 2), Message(id = 3))
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(concludedCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { context.getString(R.string.courseConcludedError) } returns "This course has concluded. You can no longer send messages."
+
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            mode = InboxComposeOptionsMode.REPLY,
+            previousMessages = InboxComposeOptionsPreviousMessages(conversation, messages),
+            defaultValues = InboxComposeOptionsDefaultValues(
+                contextCode = concludedCourse.contextId,
+                contextName = concludedCourse.name
+            )
+        )
+
+        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodelWithReply.events.toList(events)
+        }
+
+        viewmodelWithReply.handleAction(ContextPickerActionHandler.ContextClicked(concludedCourse))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Reply Body")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 0) { inboxComposeRepository.addMessage(any(), any(), any(), any(), any(), any()) }
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult("This course has concluded. You can no longer send messages."), events.last())
+    }
+
+    @Test
+    fun `Reply message succeeds when course is active`() = runTest {
+        val activeCourse = Course(id = 1, name = "Active Course", workflowState = Course.WorkflowState.AVAILABLE)
+        val conversation = Conversation(id = 2)
+        val messages = listOf(Message(id = 2), Message(id = 3))
+
+        coEvery { inboxComposeRepository.getCourses(any()) } returns DataResult.Success(listOf(activeCourse))
+        coEvery { inboxComposeRepository.getGroups(any()) } returns DataResult.Success(emptyList())
+        coEvery { inboxComposeRepository.addMessage(any(), any(), any(), any(), any(), any()) } returns DataResult.Success(mockk())
+
+        val savedStateHandle = mockk<SavedStateHandle>(relaxed = true)
+        coEvery { savedStateHandle.get<InboxComposeOptions>(InboxComposeOptions.COMPOSE_PARAMETERS) } returns InboxComposeOptions(
+            mode = InboxComposeOptionsMode.REPLY,
+            previousMessages = InboxComposeOptionsPreviousMessages(conversation, messages),
+            defaultValues = InboxComposeOptionsDefaultValues(
+                contextCode = activeCourse.contextId,
+                contextName = activeCourse.name
+            )
+        )
+
+        val viewmodelWithReply = InboxComposeViewModel(savedStateHandle, context, mockk(relaxed = true), inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
+
+        val events = mutableListOf<InboxComposeViewModelAction>()
+        backgroundScope.launch(testDispatcher) {
+            viewmodelWithReply.events.toList(events)
+        }
+
+        viewmodelWithReply.handleAction(ContextPickerActionHandler.ContextClicked(activeCourse))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.AddRecipient(Recipient(stringId = "1")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.BodyChanged(TextFieldValue("Reply Body")))
+        viewmodelWithReply.handleAction(InboxComposeActionHandler.SendClicked)
+
+        coVerify(exactly = 1) { inboxComposeRepository.addMessage(any(), any(), any(), any(), any(), any()) }
+        assertEquals(3, events.size)
+        assertEquals(InboxComposeViewModelAction.UpdateParentFragment, events[0])
+        assertEquals(InboxComposeViewModelAction.ShowScreenResult(context.getString(R.string.messageSentSuccessfully)), events[1])
+        assertEquals(InboxComposeViewModelAction.NavigateBack, events[2])
+    }
+
+    // endregion
+
     private fun getViewModel(fileDownloader: FileDownloader = mockk(relaxed = true)): InboxComposeViewModel {
         return InboxComposeViewModel(SavedStateHandle(), context, fileDownloader, inboxComposeRepository, attachmentDao, featureFlagProvider, inboxComposeBehavior)
     }

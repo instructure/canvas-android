@@ -18,7 +18,7 @@ package com.instructure.canvas.espresso.common.interaction
 import com.instructure.canvas.espresso.CanvasComposeTest
 import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import org.junit.Test
 
 abstract class InboxSignatureInteractionTest : CanvasComposeTest() {
