@@ -29,11 +29,11 @@ import com.instructure.canvas.espresso.common.pages.LoginSignInPage
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.DashboardPage
-import com.instructure.parentapp.ui.pages.FrontPagePage
-import com.instructure.parentapp.ui.pages.HelpPage
-import com.instructure.parentapp.ui.pages.LeftSideNavigationDrawerPage
-import com.instructure.parentapp.ui.pages.SyllabusPage
+import com.instructure.parentapp.ui.pages.classic.DashboardPage
+import com.instructure.parentapp.ui.pages.classic.FrontPagePage
+import com.instructure.parentapp.ui.pages.classic.HelpPage
+import com.instructure.parentapp.ui.pages.classic.LeftSideNavigationDrawerPage
+import com.instructure.parentapp.ui.pages.compose.SyllabusPage
 
 
 abstract class ParentTest : CanvasTest() {

@@ -39,7 +39,7 @@ import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.User
-import com.instructure.composeTest.hasTestTagThatContains
+import com.instructure.composetest.hasTestTagThatContains
 import com.instructure.dataseeding.model.CanvasUserApiModel
 import com.instructure.dataseeding.model.SubmissionApiModel
 import com.instructure.espresso.OnViewWithId

@@ -48,63 +48,62 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.espresso.TestAppManager
-import com.instructure.student.ui.pages.AllCoursesPage
-import com.instructure.student.ui.pages.AnnotationCommentListPage
-import com.instructure.student.ui.pages.AnnouncementListPage
-import com.instructure.student.ui.pages.BookmarkPage
-import com.instructure.student.ui.pages.CanvasWebViewPage
-import com.instructure.student.ui.pages.ConferenceDetailsPage
-import com.instructure.student.ui.pages.ConferenceListPage
-import com.instructure.student.ui.pages.CourseBrowserPage
-import com.instructure.student.ui.pages.CourseGradesPage
-import com.instructure.student.ui.pages.DashboardPage
-import com.instructure.student.ui.pages.DiscussionListPage
-import com.instructure.student.ui.pages.ElementaryCoursePage
-import com.instructure.student.ui.pages.ElementaryDashboardPage
-import com.instructure.student.ui.pages.FileChooserPage
-import com.instructure.student.ui.pages.FileListPage
-import com.instructure.student.ui.pages.GoToQuizPage
-import com.instructure.student.ui.pages.GradesPage
-import com.instructure.student.ui.pages.GroupBrowserPage
-import com.instructure.student.ui.pages.HelpPage
-import com.instructure.student.ui.pages.HomeroomPage
-import com.instructure.student.ui.pages.ImportantDatesPage
-import com.instructure.student.ui.pages.LeftSideNavigationDrawerPage
-import com.instructure.student.ui.pages.ModuleProgressionPage
-import com.instructure.student.ui.pages.ModulesPage
-import com.instructure.student.ui.pages.NotificationPage
-import com.instructure.student.ui.pages.PageDetailsPage
-import com.instructure.student.ui.pages.PageListPage
-import com.instructure.student.ui.pages.PairObserverPage
-import com.instructure.student.ui.pages.PandaAvatarPage
-import com.instructure.student.ui.pages.PeopleListPage
-import com.instructure.student.ui.pages.PersonDetailsPage
-import com.instructure.student.ui.pages.PickerSubmissionUploadPage
-import com.instructure.student.ui.pages.ProfileSettingsPage
-import com.instructure.student.ui.pages.PushNotificationsPage
-import com.instructure.student.ui.pages.QRLoginPage
-import com.instructure.student.ui.pages.QuizListPage
-import com.instructure.student.ui.pages.QuizTakingPage
-import com.instructure.student.ui.pages.RemoteConfigSettingsPage
-import com.instructure.student.ui.pages.ResourcesPage
-import com.instructure.student.ui.pages.SchedulePage
-import com.instructure.student.ui.pages.ShareExtensionStatusPage
-import com.instructure.student.ui.pages.ShareExtensionTargetPage
-import com.instructure.student.ui.pages.StudentAssignmentDetailsPage
-import com.instructure.student.ui.pages.SubmissionDetailsPage
-import com.instructure.student.ui.pages.SyllabusPage
-import com.instructure.student.ui.pages.TextSubmissionUploadPage
-import com.instructure.student.ui.pages.TodoPage
-import com.instructure.student.ui.pages.UrlSubmissionUploadPage
-import com.instructure.student.ui.pages.offline.ManageOfflineContentPage
-import com.instructure.student.ui.pages.offline.NativeDiscussionDetailsPage
-import com.instructure.student.ui.pages.offline.OfflineSyncSettingsPage
-import com.instructure.student.ui.pages.offline.SyncProgressPage
+import com.instructure.student.ui.pages.classic.AllCoursesPage
+import com.instructure.student.ui.pages.classic.AnnotationCommentListPage
+import com.instructure.student.ui.pages.classic.AnnouncementListPage
+import com.instructure.student.ui.pages.classic.BookmarkPage
+import com.instructure.student.ui.pages.classic.CanvasWebViewPage
+import com.instructure.student.ui.pages.classic.ConferenceDetailsPage
+import com.instructure.student.ui.pages.classic.ConferenceListPage
+import com.instructure.student.ui.pages.classic.CourseBrowserPage
+import com.instructure.student.ui.pages.classic.CourseGradesPage
+import com.instructure.student.ui.pages.classic.DashboardPage
+import com.instructure.student.ui.pages.classic.DiscussionDetailsPage
+import com.instructure.student.ui.pages.classic.DiscussionListPage
+import com.instructure.student.ui.pages.classic.FileChooserPage
+import com.instructure.student.ui.pages.classic.FileListPage
+import com.instructure.student.ui.pages.classic.GoToQuizPage
+import com.instructure.student.ui.pages.classic.GradesPage
+import com.instructure.student.ui.pages.classic.GroupBrowserPage
+import com.instructure.student.ui.pages.classic.HelpPage
+import com.instructure.student.ui.pages.classic.LeftSideNavigationDrawerPage
+import com.instructure.student.ui.pages.classic.ModuleProgressionPage
+import com.instructure.student.ui.pages.classic.ModulesPage
+import com.instructure.student.ui.pages.classic.NotificationPage
+import com.instructure.student.ui.pages.classic.PageDetailsPage
+import com.instructure.student.ui.pages.classic.PageListPage
+import com.instructure.student.ui.pages.classic.PairObserverPage
+import com.instructure.student.ui.pages.classic.PandaAvatarPage
+import com.instructure.student.ui.pages.classic.PeopleListPage
+import com.instructure.student.ui.pages.classic.PersonDetailsPage
+import com.instructure.student.ui.pages.classic.PickerSubmissionUploadPage
+import com.instructure.student.ui.pages.classic.ProfileSettingsPage
+import com.instructure.student.ui.pages.classic.PushNotificationsPage
+import com.instructure.student.ui.pages.classic.QRLoginPage
+import com.instructure.student.ui.pages.classic.QuizListPage
+import com.instructure.student.ui.pages.classic.QuizTakingPage
+import com.instructure.student.ui.pages.classic.RemoteConfigSettingsPage
+import com.instructure.student.ui.pages.classic.ShareExtensionStatusPage
+import com.instructure.student.ui.pages.classic.ShareExtensionTargetPage
+import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
+import com.instructure.student.ui.pages.classic.SubmissionDetailsPage
+import com.instructure.student.ui.pages.classic.SyllabusPage
+import com.instructure.student.ui.pages.classic.TextSubmissionUploadPage
+import com.instructure.student.ui.pages.classic.TodoPage
+import com.instructure.student.ui.pages.classic.UrlSubmissionUploadPage
+import com.instructure.student.ui.pages.classic.k5.ElementaryCoursePage
+import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
+import com.instructure.student.ui.pages.classic.k5.HomeroomPage
+import com.instructure.student.ui.pages.classic.k5.ImportantDatesPage
+import com.instructure.student.ui.pages.classic.k5.ResourcesPage
+import com.instructure.student.ui.pages.classic.k5.SchedulePage
+import com.instructure.student.ui.pages.classic.offline.ManageOfflineContentPage
+import com.instructure.student.ui.pages.classic.offline.NativeDiscussionDetailsPage
+import com.instructure.student.ui.pages.classic.offline.OfflineSyncSettingsPage
+import com.instructure.student.ui.pages.classic.offline.SyncProgressPage
 import instructure.rceditor.RCETextEditor
 import org.hamcrest.Matcher
 import org.hamcrest.core.AllOf
-import org.junit.Before
 import java.io.File
 
 abstract class StudentTest : CanvasTest() {
@@ -132,7 +131,7 @@ abstract class StudentTest : CanvasTest() {
     val courseGradesPage = CourseGradesPage()
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
-    val discussionDetailsPage = com.instructure.student.ui.pages.DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
+    val discussionDetailsPage = DiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val nativeDiscussionDetailsPage = NativeDiscussionDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val discussionListPage = DiscussionListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
     val allCoursesPage = AllCoursesPage()
@@ -180,12 +179,6 @@ abstract class StudentTest : CanvasTest() {
     val offlineSyncSettingsPage = OfflineSyncSettingsPage()
     val manageOfflineContentPage = ManageOfflineContentPage()
     val syncProgressPage = SyncProgressPage()
-
-    @Before
-    fun setupWorkerFactory() {
-        val application = activityRule.activity.application as? TestAppManager
-        application?.workerFactory = workerFactory
-    }
 
     // A no-op interaction to afford us an easy, harmless way to get a11y checking to trigger.
     fun meaninglessSwipe() {

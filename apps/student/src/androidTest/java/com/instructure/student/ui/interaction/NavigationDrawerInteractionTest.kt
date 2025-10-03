@@ -26,8 +26,8 @@ import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -39,8 +39,8 @@ import com.instructure.pandautils.utils.NetworkStateProvider
 import com.instructure.student.R
 import com.instructure.student.espresso.fakes.FakeNetworkStateProvider
 import com.instructure.student.ui.utils.StudentTest
-import com.instructure.student.ui.utils.tokenLogin
-import com.instructure.student.ui.utils.tokenLoginElementary
+import com.instructure.student.ui.utils.extensions.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLoginElementary
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

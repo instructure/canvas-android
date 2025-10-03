@@ -93,7 +93,7 @@ abstract class BaseViewMediaActivity : BaseCanvasActivity() {
             mediaProgressBar.setVisible()
         }
         lifecycleScope.launch {
-            mediaUri = RouteUtils.getRedirectUrl(mUri)
+            mediaUri = RouteUtils.getMediaUri(mUri)
             attachMediaPlayer()
         }
     }
