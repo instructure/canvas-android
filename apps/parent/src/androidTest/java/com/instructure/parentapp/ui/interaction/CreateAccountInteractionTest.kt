@@ -26,9 +26,9 @@ import androidx.compose.ui.test.performClick
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
 import androidx.test.espresso.intent.matcher.IntentMatchers
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addPairingCode
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addPairingCode
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.parentapp.utils.ParentComposeTest
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.hamcrest.core.AllOf

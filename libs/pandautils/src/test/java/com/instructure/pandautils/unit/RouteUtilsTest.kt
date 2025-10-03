@@ -24,9 +24,17 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.RouteUtils
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
+import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
+import okhttp3.Request
 import okhttp3.Response
 import org.junit.Assert
 import org.junit.Before
@@ -37,15 +45,17 @@ class RouteUtilsTest : Assert() {
     lateinit var route: Route
     lateinit var user: User
 
-    private val notRedirectUri: Uri = mockk(relaxed = true)
-    private val redirectUri: Uri = mockk(relaxed = true)
-    private val redirectedUri: Uri = mockk(relaxed = true)
-    private val notRedirectUrl = "https://domain.com/file"
-    private val redirectUrl = "https://domain.com/file?redirect=1"
-    private val redirectedUrl = "https://domain.com/redirected"
+    private val requestUri: Uri = mockk(relaxed = true)
+    private val responseUri: Uri = mockk(relaxed = true)
+    private val dashUri: Uri = mockk(relaxed = true)
+    private val requestUrl = "https://domain.com/mediaUrl"
+    private val responseUrl = "https://domain.com/file"
+    private val dashUrl = "https://domain.com/file.mpd"
     private val okHttpClient: OkHttpClient = mockk(relaxed = true)
     private val call = mockk<okhttp3.Call>()
     private val response = mockk<Response>()
+    private val request = mockk<Request>()
+    private val httpUrl = mockk<HttpUrl>()
 
     @Before
     fun setup() {
@@ -57,20 +67,25 @@ class RouteUtilsTest : Assert() {
         every { ApiPrefs.fullDomain } returns "https://domain.instructure.com"
 
         mockkStatic(Uri::class)
-        every { notRedirectUri.toString() } returns notRedirectUrl
-        every { redirectUri.toString() } returns redirectUrl
-        every { redirectedUri.toString() } returns redirectedUrl
-        every { Uri.parse(notRedirectUrl) } returns notRedirectUri
-        every { Uri.parse(redirectUrl) } returns redirectUri
-        every { Uri.parse(redirectedUrl) } returns redirectedUri
+        every { requestUri.toString() } returns requestUrl
+        every { responseUri.toString() } returns responseUrl
+        every { dashUri.toString() } returns dashUrl
+
+        every { Uri.parse(requestUrl) } returns requestUri
+        every { Uri.parse(responseUrl) } returns responseUri
+        every { Uri.parse(dashUrl) } returns dashUri
 
         every { okHttpClient.newCall(any()) } returns call
-        every { okHttpClient.newBuilder().followRedirects(false)
+        every { okHttpClient.newBuilder().followRedirects(true)
             .cache(null).build() } returns okHttpClient
-        every { response.isRedirect } returns true
-        every { response.header("Location") } returns redirectedUrl
+        every { httpUrl.toString() } returns responseUrl
+        every { request.url } returns httpUrl
+        every { response.request } returns request
+        every { response.header("content-type") } returns "application/dash+xml"
         every { response.close() } just Runs
         coEvery { call.execute() } returns response
+
+
 
         mockkObject(com.instructure.canvasapi2.CanvasRestAdapter)
         every { com.instructure.canvasapi2.CanvasRestAdapter.okHttpClient } returns okHttpClient
@@ -155,30 +170,32 @@ class RouteUtilsTest : Assert() {
     }
 
     @Test
-    fun `returns original uri if no redirect param`() = runBlocking {
-        val result = RouteUtils.getRedirectUrl(notRedirectUri)
-        assertEquals(notRedirectUri, result)
+    fun `getMediaUri returns proper dash url if content-type is dash`() = runBlocking {
+        val result = RouteUtils.getMediaUri(requestUri)
+        assertEquals(dashUri, result)
     }
 
     @Test
-    fun `returns redirected uri if response is redirect`() = runBlocking {
-        val result = RouteUtils.getRedirectUrl(redirectUri)
-        assertEquals(redirectedUri, result)
+    fun `getMediaUri returns responseUri if if content-type is not dash`() = runBlocking {
+        every { response.header("content-type") } returns "application/mp4"
+
+        val result = RouteUtils.getMediaUri(responseUri)
+        assertEquals(responseUri, result)
     }
 
     @Test
-    fun `returns original uri if response is not redirect`() = runBlocking {
-        every { response.isRedirect } returns false
+    fun `getMediaUri returns responseUri if if content-type is null`() = runBlocking {
+        every { response.header("content-type") } returns null
 
-        val result = RouteUtils.getRedirectUrl(redirectUri)
-        assertEquals(redirectUri, result)
+        val result = RouteUtils.getMediaUri(responseUri)
+        assertEquals(responseUri, result)
     }
 
     @Test
-    fun `returns original uri on exception`() = runBlocking {
+    fun `getMediaUri returns original uri on exception`() = runBlocking {
         coEvery { call.execute() } throws Exception("Network error")
 
-        val result = RouteUtils.getRedirectUrl(redirectUri)
-        assertEquals(redirectUri, result)
+        val result = RouteUtils.getMediaUri(requestUri)
+        assertEquals(requestUri, result)
     }
 }

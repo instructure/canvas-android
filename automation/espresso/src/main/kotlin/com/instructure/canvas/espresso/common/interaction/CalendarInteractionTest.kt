@@ -16,19 +16,18 @@
 package com.instructure.canvas.espresso.common.interaction
 
 import com.instructure.canvas.espresso.CanvasComposeTest
-import com.instructure.canvas.espresso.StubLandscape
-import com.instructure.canvas.espresso.StubTablet
+import com.instructure.canvas.espresso.annotations.StubLandscape
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarScreenPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarToDoDetailsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addCourseCalendarEvent
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToAssignment
-import com.instructure.canvas.espresso.mockCanvas.addDiscussionTopicToCourse
-import com.instructure.canvas.espresso.mockCanvas.addPlannable
-import com.instructure.canvas.espresso.mockCanvas.addQuizToCourse
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addCourseCalendarEvent
+import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToAssignment
+import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToCourse
+import com.instructure.canvas.espresso.mockcanvas.addPlannable
+import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.PlannableType
 import com.instructure.canvasapi2.models.Quiz
