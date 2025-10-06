@@ -105,7 +105,7 @@ class PlannerItemDaoTest {
         plannerItems.forEach { plannerItemDao.insert(it) }
 
         val result = plannerItemDao.findByCourseIds(listOf(1L, 2L))
-        assertEquals(expectedItems.map { it.plannableTitle }.sorted(), result.map { it.plannableTitle }.sorted())
+        assertEquals(expectedItems.map { it.plannableTitle }.sortedBy { it }, result.map { it.plannableTitle }.sortedBy { it })
     }
 
     @Test
