@@ -140,7 +140,7 @@ class PageDetailsViewModelTest {
     fun `Test notes are loaded`() = runTest {
         val viewModel = getViewModel()
 
-        assertEquals(1, viewModel.uiState.value.notes.size)
+        assertEquals(2, viewModel.uiState.value.notes.size)
         assertEquals("comment 1", viewModel.uiState.value.notes.first().userText)
         coVerify { repository.getNotes(courseId, 100L) }
     }
@@ -190,23 +190,23 @@ class PageDetailsViewModelTest {
     @Test
     fun `Test add note creates note and refreshes`() = runTest {
         val viewModel = getViewModel()
-        val userComment = "This is a user comment"
         val highlightedData = NoteHighlightedData(
             selectedText = "highlighted text",
             range = NoteHighlightedDataRange(1, 5, "start", "end"),
             textPosition = NoteHighlightedDataTextPosition(1, 5)
         )
 
-        viewModel.uiState.value.addNote(highlightedData, userComment)
+        viewModel.uiState.value.addNote(highlightedData, "Important")
 
         coVerify { addNoteRepository.addNote(
             courseId = courseId.toString(),
-            objectId = "100",
+            objectId = testPage.id.toString(),
             objectType = "Page",
             highlightedData = highlightedData,
-            userComment = userComment,
-            type = any()
+            userComment = "",
+            type = NotebookType.Important
         ) }
+
         coVerify(atLeast = 2) { repository.getNotes(courseId, 100L) }
     }
 
@@ -216,11 +216,11 @@ class PageDetailsViewModelTest {
         coEvery { repository.getNotes(any(), any()) } returns testNotes andThen updatedNotes
 
         val viewModel = getViewModel()
-        assertEquals(1, viewModel.uiState.value.notes.size)
+        assertEquals(2, viewModel.uiState.value.notes.size)
 
         viewModel.refreshNotes()
 
-        assertEquals(1, viewModel.uiState.value.notes.size)
+        assertEquals(3, viewModel.uiState.value.notes.size)
         assertEquals("New note", viewModel.uiState.value.notes.last().userText)
     }
 
