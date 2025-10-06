@@ -16,16 +16,25 @@
 package com.instructure.canvasapi2.managers.graphql
 
 import com.apollographql.apollo.ApolloClient
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
+import com.instructure.journey.CreateWidgetMutation
 import com.instructure.journey.EnrollCourseMutation
 import com.instructure.journey.EnrolledProgramsQuery
 import com.instructure.journey.GetProgramByIdQuery
+import com.instructure.journey.GetTimeSpentWidgetDataQuery
+import com.instructure.journey.GetWidgetByTypeAndUserQuery
 import com.instructure.journey.fragment.ProgramFields
+import com.instructure.journey.type.CreateWidgetInput
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import com.instructure.journey.type.TimeSpanInput
+import com.instructure.journey.type.TimeSpanType
+import com.instructure.journey.type.WidgetParamsInput
 import java.util.Date
 import javax.inject.Inject
 
@@ -49,14 +58,22 @@ data class ProgramRequirement(
     val enrollmentStatus: ProgramProgressCourseEnrollmentStatus? = null
 )
 
+data class TimeSpentWidgetData(
+    val lastModifiedDate: Date?,
+    val data: List<Any>
+)
+
 interface JourneyApiManager {
     suspend fun getPrograms(forceNetwork: Boolean = false): List<Program>
     suspend fun getProgramById(programId: String, forceNetwork: Boolean = false): Program
     suspend fun enrollCourse(progressId: String): DataResult<Unit>
+    suspend fun getTimeSpentWidgetData(forceNetwork: Boolean): TimeSpentWidgetData
 }
 
 class JourneyApiManagerImpl @Inject constructor(
-    private val journeyClient: ApolloClient
+    private val journeyClient: ApolloClient,
+    private val apiPrefs: ApiPrefs,
+    private val userApi: UserAPI.UsersInterface,
 ): JourneyApiManager {
     override suspend fun getPrograms(forceNetwork: Boolean): List<Program> {
         val query = EnrolledProgramsQuery()
@@ -139,5 +156,51 @@ class JourneyApiManagerImpl @Inject constructor(
         } else {
             DataResult.Success(Unit)
         }
+    }
+
+    override suspend fun getTimeSpentWidgetData(forceNetwork: Boolean): TimeSpentWidgetData {
+        val widgetType = "time_spent_overview"
+        val widgetId = getWidgetByType(widgetType, forceNetwork).widgetByTypeAndUser?.id ?: createWidget(widgetType, widgetType)
+        val timeSpanInput = TimeSpanInput(type = TimeSpanType.PAST_30_DAYS)
+        val dataScope = "learner"
+
+        val query = GetTimeSpentWidgetDataQuery(
+            widgetId = widgetId,
+            timeSpan = timeSpanInput,
+            dataScope = dataScope,
+        )
+
+        val result = journeyClient.enqueueQuery(query, forceNetwork)
+        val widgetData = result.dataAssertNoErrors.widgetDataWithLastModifiedDate
+
+        return TimeSpentWidgetData(
+            lastModifiedDate = widgetData.lastModifiedDate,
+            data = widgetData.data
+        )
+    }
+
+    private suspend fun getWidgetByType(type: String, forceNetwork: Boolean): GetWidgetByTypeAndUserQuery.Data {
+       val accountId = apiPrefs.user?.id.toString()
+        val result = journeyClient.enqueueQuery(GetWidgetByTypeAndUserQuery(
+            accountId,
+            type
+        ), forceNetwork = forceNetwork)
+        return result.dataAssertNoErrors
+    }
+
+    private suspend fun createWidget(
+        name: String,
+        type: String
+    ): String {
+        val mutation = CreateWidgetMutation(
+            CreateWidgetInput(
+                name = name,
+                type = type,
+                queryParams = WidgetParamsInput()
+            ),
+            userAccountId = apiPrefs.user?.id.toString()
+        )
+        val result = journeyClient.enqueueMutation(mutation)
+        return result.dataAssertNoErrors.createWidget.id
     }
 }

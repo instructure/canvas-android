@@ -60,6 +60,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.timespent.DashboardTimeSpentSection
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -160,6 +161,12 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                             refreshStateFlow
                         )
                     }
+                }
+                item {
+                    DashboardTimeSpentSection(
+                        shouldRefresh,
+                        refreshStateFlow
+                    )
                 }
             }
         }

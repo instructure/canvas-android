@@ -17,9 +17,11 @@
 package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
+import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.di.JourneyApolloClient
 import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
 import com.instructure.canvasapi2.managers.graphql.JourneyApiManagerImpl
+import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,7 +32,11 @@ import dagger.hilt.components.SingletonComponent
 class JourneyApiManagerModule {
 
     @Provides
-    fun provideJourneyApiManager(@JourneyApolloClient apolloClient: ApolloClient): JourneyApiManager {
-        return JourneyApiManagerImpl(apolloClient)
+    fun provideJourneyApiManager(
+        @JourneyApolloClient apolloClient: ApolloClient,
+        apiPrefs: ApiPrefs,
+        userApi: UserAPI.UsersInterface
+        ): JourneyApiManager {
+        return JourneyApiManagerImpl(apolloClient, apiPrefs, userApi)
     }
 }
