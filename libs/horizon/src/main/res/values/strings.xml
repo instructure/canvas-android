@@ -372,4 +372,7 @@
     <string name="a11y_collapsed">Collapsed</string>
     <string name="a11y_expandContent">Expand %1$s</string>
     <string name="a11y_collapseContent">Collapse %1$s</string>
+    <string name="a11y_completed">Completed</string>
+    <string name="a11y_not_completed">Not completed</string>
+    <string name="a11y_locked">Locked</string>
 </resources>

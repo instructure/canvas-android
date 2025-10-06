@@ -118,7 +118,7 @@ private fun RowScope.ModuleItemCardIcon(state: ModuleItemCardState, modifier: Mo
             HorizonSpace(SpaceSize.SPACE_8)
             Icon(
                 painterResource(R.drawable.lock),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.a11y_locked),
                 tint = HorizonColors.Surface.institution(),
                 modifier = modifier
             )
@@ -128,7 +128,7 @@ private fun RowScope.ModuleItemCardIcon(state: ModuleItemCardState, modifier: Mo
             HorizonSpace(SpaceSize.SPACE_8)
             Icon(
                 painterResource(R.drawable.check_circle_full),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.a11y_completed),
                 tint = HorizonColors.Surface.institution(),
                 modifier = modifier
             )
@@ -138,7 +138,7 @@ private fun RowScope.ModuleItemCardIcon(state: ModuleItemCardState, modifier: Mo
             HorizonSpace(SpaceSize.SPACE_8)
             Icon(
                 painterResource(R.drawable.circle),
-                contentDescription = null,
+                contentDescription = stringResource(R.string.a11y_not_completed),
                 tint = HorizonColors.LineAndBorder.lineStroke(),
                 modifier = modifier
             )
