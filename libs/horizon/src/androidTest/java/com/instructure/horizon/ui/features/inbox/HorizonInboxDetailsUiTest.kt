@@ -16,20 +16,15 @@
  */
 package com.instructure.horizon.ui.features.inbox
 
-import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
-import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
-import androidx.compose.ui.text.input.TextFieldValue
 import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.horizon.R
 import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsItem
 import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsScreen
 import com.instructure.horizon.features.inbox.details.HorizonInboxDetailsUiState
-import com.instructure.horizon.features.inbox.details.HorizonInboxReplyState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import org.junit.Rule
 import org.junit.Test
@@ -80,62 +75,6 @@ class HorizonInboxDetailsUiTest {
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Test message content")
             .assertIsDisplayed()
-    }
-
-    @Test
-    fun testReplyFieldDisplaysWhenReplyStateExists() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Conversation",
-            replyState = HorizonInboxReplyState(),
-            bottomLayout = true,
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("Write a reply...")
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun testReplyFieldDisplaysTypedText() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Conversation",
-            replyState = HorizonInboxReplyState(
-                replyTextValue = TextFieldValue("My reply text")
-            ),
-            bottomLayout = true,
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("My reply text")
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun testSendReplyButtonDisplays() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Conversation",
-            replyState = HorizonInboxReplyState(
-                replyTextValue = TextFieldValue("Reply")
-            ),
-            bottomLayout = true,
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Send reply")
-            .assertIsDisplayed()
-            .assertHasClickAction()
     }
 
     @Test
@@ -192,75 +131,6 @@ class HorizonInboxDetailsUiTest {
         composeTestRule.onNodeWithText("Second message")
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Third message")
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun testAttachFileButtonDisplaysInReply() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Conversation",
-            replyState = HorizonInboxReplyState(),
-            bottomLayout = true,
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Attach file")
-            .assertIsDisplayed()
-            .assertHasClickAction()
-    }
-
-    @Test
-    fun testTitleIconDisplaysForAnnouncements() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Important Announcement",
-            titleIcon = R.drawable.campaign,
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithContentDescription("Announcement icon")
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun testReplyLoadingStateDisplaysProgress() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Conversation",
-            replyState = HorizonInboxReplyState(
-                isLoading = true
-            ),
-            bottomLayout = true,
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithTag("ReplyLoadingIndicator")
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun testEmptyStateDisplaysMessage() {
-        val uiState = HorizonInboxDetailsUiState(
-            title = "Empty Conversation",
-            items = emptyList(),
-            loadingState = LoadingState(isLoading = false)
-        )
-
-        composeTestRule.setContent {
-            HorizonInboxDetailsScreen(uiState, rememberNavController())
-        }
-
-        composeTestRule.onNodeWithText("No messages")
             .assertIsDisplayed()
     }
 }

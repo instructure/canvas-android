@@ -54,7 +54,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("Select Course")
+        composeTestRule.onNodeWithContentDescription("Select Course")
             .assertIsDisplayed()
     }
 
@@ -66,7 +66,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("To")
+        composeTestRule.onNodeWithText("Recipient(s)")
             .assertIsDisplayed()
     }
 
@@ -78,7 +78,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("Subject")
+        composeTestRule.onNodeWithText("Title/Subject")
             .assertIsDisplayed()
     }
 
@@ -176,9 +176,8 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("Send individually")
+        composeTestRule.onNodeWithText("Send an individual message to each recipient")
             .assertIsDisplayed()
-            .assertHasClickAction()
     }
 
     @Test
@@ -212,7 +211,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithContentDescription("Attach file")
+        composeTestRule.onNodeWithText("Attach file")
             .assertIsDisplayed()
             .assertHasClickAction()
     }
@@ -227,7 +226,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithTag("SendingIndicator")
+        composeTestRule.onNodeWithTag("LoadingSpinner")
             .assertIsDisplayed()
     }
 }

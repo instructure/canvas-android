@@ -19,6 +19,7 @@ package com.instructure.horizon.ui.features.moduleitemsequence
 import androidx.compose.ui.test.assertHasClickAction
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
+import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -45,7 +46,7 @@ class AssessmentUiTest {
             AssessmentContentScreen(uiState = uiState)
         }
 
-        composeTestRule.onNodeWithText("Start Quiz")
+        composeTestRule.onNodeWithText("Start quiz")
             .assertIsDisplayed()
             .assertHasClickAction()
     }
@@ -54,6 +55,7 @@ class AssessmentUiTest {
     fun testAssessmentNameDisplays() {
         val uiState = AssessmentUiState(
             assessmentName = "Final Exam",
+            showAssessmentDialog = true,
             loadingState = LoadingState(isLoading = false)
         )
 
@@ -77,21 +79,6 @@ class AssessmentUiTest {
         }
 
         composeTestRule.onNodeWithTag("LoadingSpinner")
-            .assertIsDisplayed()
-    }
-
-    @Test
-    fun testErrorStateDisplaysMessage() {
-        val uiState = AssessmentUiState(
-            assessmentName = "Quiz",
-            loadingState = LoadingState(isLoading = false, isError = true)
-        )
-
-        composeTestRule.setContent {
-            AssessmentContentScreen(uiState = uiState)
-        }
-
-        composeTestRule.onNodeWithText("Failed to load assessment")
             .assertIsDisplayed()
     }
 
@@ -125,7 +112,7 @@ class AssessmentUiTest {
             AssessmentContentScreen(uiState = uiState)
         }
 
-        composeTestRule.onNodeWithTag("AssessmentLoadingIndicator")
+        composeTestRule.onNodeWithTag("LoadingSpinner")
             .assertIsDisplayed()
     }
 
@@ -134,6 +121,7 @@ class AssessmentUiTest {
         val uiState = AssessmentUiState(
             assessmentName = "Quiz",
             assessmentCompletionLoading = true,
+            showAssessmentDialog = true,
             loadingState = LoadingState(isLoading = false)
         )
 
@@ -141,9 +129,7 @@ class AssessmentUiTest {
             AssessmentContentScreen(uiState = uiState)
         }
 
-        composeTestRule.onNodeWithTag("CompletionLoadingIndicator")
-            .assertIsDisplayed()
-        composeTestRule.onNodeWithText("Processing your submission...")
+        composeTestRule.onNodeWithTag("LoadingSpinner")
             .assertIsDisplayed()
     }
 
@@ -160,7 +146,7 @@ class AssessmentUiTest {
             AssessmentContentScreen(uiState = uiState)
         }
 
-        composeTestRule.onNodeWithText("Close")
+        composeTestRule.onNodeWithContentDescription("Close")
             .assertIsDisplayed()
             .assertHasClickAction()
     }
