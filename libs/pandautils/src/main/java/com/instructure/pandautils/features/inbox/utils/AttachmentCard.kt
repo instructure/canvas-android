@@ -130,7 +130,18 @@ fun AttachmentCard(
             if (!attachmentCardItem.readOnly){
                 when (status) {
                     AttachmentStatus.UPLOADING -> {
-                        Loading()
+                        val progress = attachmentCardItem.uploadProgress
+                        if (progress != null && progress > 0f) {
+                            // Show progress percentage
+                            Text(
+                                text = "${(progress * 100).toInt()}%",
+                                color = colorResource(id = R.color.textDark),
+                                fontSize = 14.sp
+                            )
+                        } else {
+                            // Show indeterminate loading spinner
+                            Loading()
+                        }
                     }
 
                     AttachmentStatus.UPLOADED -> {

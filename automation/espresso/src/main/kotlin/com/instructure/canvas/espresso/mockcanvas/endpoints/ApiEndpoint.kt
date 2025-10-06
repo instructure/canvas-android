@@ -18,6 +18,7 @@ package com.instructure.canvas.espresso.mockcanvas.endpoints
 
 import android.util.Log
 import com.google.gson.Gson
+import com.instructure.canvas.espresso.mockCanvas.endpoints.CareerEndpoint
 import com.instructure.canvas.espresso.mockcanvas.Endpoint
 import com.instructure.canvas.espresso.mockcanvas.addDiscussionTopicToCourse
 import com.instructure.canvas.espresso.mockcanvas.addPlannable
@@ -67,6 +68,7 @@ import java.util.Date
  * - `search` -> [SearchEndpoint]
  */
 object ApiEndpoint : Endpoint(
+    Segment("career") to CareerEndpoint,
     Segment("courses") to CourseListEndpoint,
     Segment("users") to UserListEndpoint,
     Segment("accounts") to AccountListEndpoint,
