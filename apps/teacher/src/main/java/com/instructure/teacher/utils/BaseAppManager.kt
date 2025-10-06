@@ -99,6 +99,9 @@ abstract class BaseAppManager : com.instructure.canvasapi2.AppManager() {
     }
 
     override fun performLogoutOnAuthError() {
+        // Don't trigger another logout if we're already in a logout flow
+        if (LogoutTask.isLoggingOut) return
+
         TeacherLogoutTask(
             LogoutTask.Type.LOGOUT,
             alarmScheduler = getScheduler()

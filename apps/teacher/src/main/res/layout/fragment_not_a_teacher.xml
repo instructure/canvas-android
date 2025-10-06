@@ -37,7 +37,7 @@
         android:layout_marginEnd="24dp"
         android:layout_marginStart="24dp"
         android:gravity="center"
-        android:text="@string/not_a_teacher_tap_to_visit_play_store"
+        android:text="@string/notATeacherDescription"
         android:textColor="@color/textDark"
         android:textSize="16sp"/>
 

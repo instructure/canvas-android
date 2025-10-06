@@ -317,7 +317,7 @@ abstract class BaseRouterActivity : CallbackActivity(), FullScreenInteractions {
     }
 
     private suspend fun shouldOpenInternally(url: String): Boolean {
-        val mediaUrl = RouteUtils.getRedirectUrl(Uri.parse(url)).toString()
+        val mediaUrl = RouteUtils.getMediaUri(Uri.parse(url)).toString()
         return (mediaUrl.endsWith(".mpd") || mediaUrl.endsWith(".m3u8") || mediaUrl.endsWith(".mp4"))
     }
 
