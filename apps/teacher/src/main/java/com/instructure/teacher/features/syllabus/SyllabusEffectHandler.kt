@@ -90,7 +90,12 @@ class SyllabusEffectHandler : EffectHandler<SyllabusView, SyllabusEvent, Syllabu
     ): DataResult.Success<List<ScheduleItem>> {
         val assignments = assignmentsResult.dataOrNull ?: emptyList()
         val events = eventsResult.dataOrNull ?: emptyList()
-        val plannerItems = plannerItemsResult.dataOrNull?.map { it.toScheduleItem() } ?: emptyList()
+        val plannerItems = plannerItemsResult.dataOrNull
+            ?.filter {
+                it.plannableType != com.instructure.canvasapi2.models.PlannableType.ASSIGNMENT &&
+                it.plannableType != com.instructure.canvasapi2.models.PlannableType.CALENDAR_EVENT
+            }
+            ?.map { it.toScheduleItem() } ?: emptyList()
         val combinedList = (assignments + events + plannerItems).sorted()
 
         return DataResult.Success(combinedList)
