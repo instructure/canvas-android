@@ -274,4 +274,69 @@ class SyllabusPresenterTest {
         val expectedState = SyllabusViewState.Loaded(syllabus = syllabusBody, eventsState = EventsViewState.Loaded(baseEventsViewState), canEdit = false)
         assertEquals(expectedState, syllabusViewState)
     }
+
+    @Test
+    fun `Should return correct icons for planner item types`() {
+        // Given
+        val events = DataResult.Success(
+            listOf(
+                ScheduleItem(
+                    itemId = "1",
+                    title = "Quiz",
+                    type = "quiz",
+                    itemType = ScheduleItem.Type.TYPE_SYLLABUS
+                ),
+                ScheduleItem(
+                    itemId = "2",
+                    title = "Discussion",
+                    type = "discussion_topic",
+                    itemType = ScheduleItem.Type.TYPE_SYLLABUS
+                ),
+                ScheduleItem(
+                    itemId = "3",
+                    title = "Announcement",
+                    type = "announcement",
+                    itemType = ScheduleItem.Type.TYPE_SYLLABUS
+                ),
+                ScheduleItem(
+                    itemId = "4",
+                    title = "Wiki Page",
+                    type = "wiki_page",
+                    itemType = ScheduleItem.Type.TYPE_SYLLABUS
+                ),
+                ScheduleItem(
+                    itemId = "5",
+                    title = "Planner Note",
+                    type = "planner_note",
+                    itemType = ScheduleItem.Type.TYPE_SYLLABUS
+                ),
+                ScheduleItem(
+                    itemId = "6",
+                    title = "Calendar Event",
+                    type = "calendar_event",
+                    itemType = ScheduleItem.Type.TYPE_SYLLABUS
+                )
+            )
+        )
+        val eventsViewState = listOf(
+            ScheduleItemViewState("1", "Quiz", "No Due Date", R.drawable.ic_quiz, baseCourse.color),
+            ScheduleItemViewState("2", "Discussion", "No Due Date", R.drawable.ic_discussion, baseCourse.color),
+            ScheduleItemViewState("3", "Announcement", "No Due Date", R.drawable.ic_announcement, baseCourse.color),
+            ScheduleItemViewState("4", "Wiki Page", "No Due Date", com.instructure.pandares.R.drawable.ic_document, baseCourse.color),
+            ScheduleItemViewState("5", "Planner Note", "No Due Date", com.instructure.pandares.R.drawable.ic_info, baseCourse.color),
+            ScheduleItemViewState("6", "Calendar Event", "No Due Date", R.drawable.ic_calendar, baseCourse.color)
+        )
+
+        val model = baseModel.copy(
+            course = DataResult.Success(baseCourse),
+            events = events
+        )
+
+        // When
+        val syllabusViewState = syllabusPresenter.present(model, context)
+
+        // Then
+        val expectedState = SyllabusViewState.Loaded(eventsState = EventsViewState.Loaded(eventsViewState))
+        assertEquals(expectedState, syllabusViewState)
+    }
 }

@@ -88,7 +88,16 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
 
         return event.assignment?.let {
             getAssignmentIcon(it)
-        } ?: com.instructure.student.R.drawable.ic_calendar
+        } ?: getIconForType(event.type)
+    }
+
+    private fun getIconForType(type: String): Int = when (type) {
+        "quiz" -> com.instructure.student.R.drawable.ic_quiz
+        "discussion_topic" -> R.drawable.ic_discussion
+        "announcement" -> R.drawable.ic_announcement
+        "wiki_page" -> R.drawable.ic_document
+        "planner_note" -> R.drawable.ic_info
+        else -> com.instructure.student.R.drawable.ic_calendar
     }
 
     private fun getAssignmentIcon(assignment: Assignment) = when {
