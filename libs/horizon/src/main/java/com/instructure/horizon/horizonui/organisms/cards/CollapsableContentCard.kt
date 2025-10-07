@@ -36,18 +36,14 @@ import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.semantics.Role
-import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.invisibleToUser
-import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
-import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.expandable
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -74,15 +70,12 @@ fun CollapsableContentCard(
             modifier = Modifier
                 .padding(vertical = 16.dp)
         ) {
-
-
             Column(
                 modifier = Modifier
                     .clickable { onExpandChanged(!expanded) }
                     .semantics {
                         invisibleToUser()
                     }
-
             ){
                 Text(
                     title,
@@ -98,19 +91,15 @@ fun CollapsableContentCard(
                     targetValue = if (expanded) 180f else 0f,
                     label = "rotationAnimation"
                 )
-                val expandedStateDesc = stringResource(R.string.a11y_expanded)
-                val collapsedStateDesc = stringResource(R.string.a11y_collapsed)
-                val expandContentDesc = stringResource(R.string.a11y_expandContent, expandableSubtitle)
-                val collapseContentDesc = stringResource(R.string.a11y_collapseContent, expandableSubtitle)
+                val context = LocalContext.current
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
-                        .clearAndSetSemantics {
-                            role = Role.Button
-                            stateDescription = if (expanded) expandedStateDesc else collapsedStateDesc
-                            contentDescription = if (expanded) collapseContentDesc else expandContentDesc
+                        .semantics(mergeDescendants = true) {
+                            expandable(context, expanded)
                         }
+
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.keyboard_arrow_down),

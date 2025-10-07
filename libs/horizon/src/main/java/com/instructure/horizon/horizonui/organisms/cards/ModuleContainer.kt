@@ -49,11 +49,13 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.expandable
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -98,8 +100,13 @@ fun ModuleContainer(state: ModuleHeaderState, modifier: Modifier = Modifier, con
         Column {
             val onClick = state.onClick
             val clickModifier = if (onClick != null) Modifier.clickable { onClick() } else Modifier
+            val context = LocalContext.current
 
-            Column(modifier = clickModifier.padding(16.dp)) {
+            Column(modifier = clickModifier
+                .semantics(mergeDescendants = true) {
+                    expandable(context, state.expanded)
+                }
+                .padding(16.dp)) {
                 ModuleHeader(state = state)
                 if (state.subtitle != null && state.expanded) {
                     HorizonSpace(SpaceSize.SPACE_24)
