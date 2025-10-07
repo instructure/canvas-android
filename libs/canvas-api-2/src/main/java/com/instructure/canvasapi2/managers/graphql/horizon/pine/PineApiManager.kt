@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.managers
+package com.instructure.canvasapi2.managers.graphql.horizon.pine
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.PineApolloClient

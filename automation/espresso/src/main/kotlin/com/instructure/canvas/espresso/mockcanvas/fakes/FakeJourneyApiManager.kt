@@ -17,9 +17,9 @@
 package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.JourneyApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType

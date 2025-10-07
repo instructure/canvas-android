@@ -16,14 +16,14 @@
  */
 package com.instructure.horizon.features.dashboard.timespent
 
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.TimeSpentWidgetData
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
 import javax.inject.Inject
 
 class DashboardTimeSpentRepository @Inject constructor(
-    private val journeyApiManager: JourneyApiManager
+    private val getWidgetsManager: GetWidgetsManager
 ) {
     suspend fun getTimeSpentData(forceNetwork: Boolean): TimeSpentWidgetData {
-        return journeyApiManager.getTimeSpentWidgetData(forceNetwork)
+        return getWidgetsManager.getTimeSpentWidgetData(forceNetwork)
     }
 }

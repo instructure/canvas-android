@@ -1,40 +1,33 @@
 /*
  * Copyright (C) 2025 - present Instructure, Inc.
  *
- *     Licensed under the Apache License, Version 2.0 (the "License");
- *     you may not use this file except in compliance with the License.
- *     You may obtain a copy of the License at
+ *     This program is free software: you can redistribute it and/or modify
+ *     it under the terms of the GNU General Public License as published by
+ *     the Free Software Foundation, version 3 of the License.
  *
- *     http://www.apache.org/licenses/LICENSE-2.0
+ *     This program is distributed in the hope that it will be useful,
+ *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *     GNU General Public License for more details.
  *
- *     Unless required by applicable law or agreed to in writing, software
- *     distributed under the License is distributed on an "AS IS" BASIS,
- *     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- *     See the License for the specific language governing permissions and
- *     limitations under the License.
+ *     You should have received a copy of the GNU General Public License
+ *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ *
  */
-package com.instructure.canvasapi2.managers.graphql
+package com.instructure.canvasapi2.managers.graphql.horizon.journey
 
 import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.apis.UserAPI
+import com.instructure.canvasapi2.di.JourneyApolloClient
 import com.instructure.canvasapi2.enqueueMutation
 import com.instructure.canvasapi2.enqueueQuery
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
-import com.instructure.journey.CreateWidgetMutation
 import com.instructure.journey.EnrollCourseMutation
 import com.instructure.journey.EnrolledProgramsQuery
 import com.instructure.journey.GetProgramByIdQuery
-import com.instructure.journey.GetTimeSpentWidgetDataQuery
-import com.instructure.journey.GetWidgetByTypeAndUserQuery
 import com.instructure.journey.fragment.ProgramFields
-import com.instructure.journey.type.CreateWidgetInput
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
-import com.instructure.journey.type.TimeSpanInput
-import com.instructure.journey.type.TimeSpanType
-import com.instructure.journey.type.WidgetParamsInput
 import java.util.Date
 import javax.inject.Inject
 
@@ -58,23 +51,15 @@ data class ProgramRequirement(
     val enrollmentStatus: ProgramProgressCourseEnrollmentStatus? = null
 )
 
-data class TimeSpentWidgetData(
-    val lastModifiedDate: Date?,
-    val data: List<Any>
-)
-
-interface JourneyApiManager {
+interface GetProgramsManager {
     suspend fun getPrograms(forceNetwork: Boolean = false): List<Program>
     suspend fun getProgramById(programId: String, forceNetwork: Boolean = false): Program
     suspend fun enrollCourse(progressId: String): DataResult<Unit>
-    suspend fun getTimeSpentWidgetData(forceNetwork: Boolean): TimeSpentWidgetData
 }
 
-class JourneyApiManagerImpl @Inject constructor(
-    private val journeyClient: ApolloClient,
-    private val apiPrefs: ApiPrefs,
-    private val userApi: UserAPI.UsersInterface,
-): JourneyApiManager {
+class GetProgramManagerImpl @Inject constructor(
+    @JourneyApolloClient private val journeyClient: ApolloClient,
+): GetProgramsManager {
     override suspend fun getPrograms(forceNetwork: Boolean): List<Program> {
         val query = EnrolledProgramsQuery()
         val result = journeyClient.enqueueQuery(query, forceNetwork = forceNetwork)
@@ -156,51 +141,5 @@ class JourneyApiManagerImpl @Inject constructor(
         } else {
             DataResult.Success(Unit)
         }
-    }
-
-    override suspend fun getTimeSpentWidgetData(forceNetwork: Boolean): TimeSpentWidgetData {
-        val widgetType = "time_spent_overview"
-        val widgetId = getWidgetByType(widgetType, forceNetwork).widgetByTypeAndUser?.id ?: createWidget(widgetType, widgetType)
-        val timeSpanInput = TimeSpanInput(type = TimeSpanType.PAST_30_DAYS)
-        val dataScope = "learner"
-
-        val query = GetTimeSpentWidgetDataQuery(
-            widgetId = widgetId,
-            timeSpan = timeSpanInput,
-            dataScope = dataScope,
-        )
-
-        val result = journeyClient.enqueueQuery(query, forceNetwork)
-        val widgetData = result.dataAssertNoErrors.widgetDataWithLastModifiedDate
-
-        return TimeSpentWidgetData(
-            lastModifiedDate = widgetData.lastModifiedDate,
-            data = widgetData.data
-        )
-    }
-
-    private suspend fun getWidgetByType(type: String, forceNetwork: Boolean): GetWidgetByTypeAndUserQuery.Data {
-       val accountId = apiPrefs.user?.id.toString()
-        val result = journeyClient.enqueueQuery(GetWidgetByTypeAndUserQuery(
-            accountId,
-            type
-        ), forceNetwork = forceNetwork)
-        return result.dataAssertNoErrors
-    }
-
-    private suspend fun createWidget(
-        name: String,
-        type: String
-    ): String {
-        val mutation = CreateWidgetMutation(
-            CreateWidgetInput(
-                name = name,
-                type = type,
-                queryParams = WidgetParamsInput()
-            ),
-            userAccountId = apiPrefs.user?.id.toString()
-        )
-        val result = journeyClient.enqueueMutation(mutation)
-        return result.dataAssertNoErrors.createWidget.id
     }
 }
