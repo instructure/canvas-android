@@ -16,6 +16,7 @@
 package com.instructure.espresso
 
 import android.os.Build
+import android.util.Log
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
@@ -245,18 +246,51 @@ fun getRecyclerViewFromMatcher(matcher: Matcher<View>): RecyclerView {
     return recyclerView ?: throw IllegalStateException("Failed to retrieve RecyclerView")
 }
 
-fun handleWorkManagerTask(workerTag: String) {
+fun handleWorkManagerTask(workerTag: String, timeoutMillis: Long = 20000) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
-    val testDriver = app.testDriver!!
+    var endTime = System.currentTimeMillis() + timeoutMillis
+    var workInfo: androidx.work.WorkInfo? = null
 
-    val workInfos = WorkManager.getInstance(app)
-        .getWorkInfosByTag(workerTag)
-        .get()
-    val workInfo = workInfos.find { !it.state.isFinished }
+    var testDriver = app.testDriver
+    if (testDriver == null) {
+        while (System.currentTimeMillis() < endTime && app.testDriver == null) {
+            Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
+            app.initWorkManager(app)
+            testDriver = app.testDriver
+            Thread.sleep(500)
+        }
+    }
 
-    testDriver.setAllConstraintsMet(workInfo?.id ?: return)
+    if (testDriver == null) {
+        Assert.fail("A TestAppManager.testDriver was null, so was not initialized before the timeout.")
+    }
+
+    endTime = System.currentTimeMillis() + timeoutMillis
+    while (System.currentTimeMillis() < endTime) {
+        try {
+            val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
+            for(work in workInfos) {
+                Log.w("STUDENT_APP_TAG","WorkInfo: $work")
+            }
+            workInfo = workInfos.find { !it.state.isFinished }
+
+            if (workInfo != null) break
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        Thread.sleep(500)
+    }
+
+    if (workInfo == null) {
+        val workInfos = WorkManager.getInstance(app).getWorkInfosByTag(workerTag).get()
+        Assert.fail("Unable to find WorkInfo with tag:'$workerTag' in ${timeoutMillis} ms. WorkInfos found: $workInfos")
+    }
+
+    testDriver!!.setAllConstraintsMet(workInfo!!.id)
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
+
 
 private fun waitForWorkManagerJobsToFinish(timeoutMs: Long = 20000L, workerTag: String) {
     val context = InstrumentationRegistry.getInstrumentation().targetContext.applicationContext

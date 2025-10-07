@@ -87,6 +87,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
+import com.instructure.horizon.features.dashboard.DASHBOARD_REFRESH
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentViewModel
@@ -132,7 +133,6 @@ import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
-const val SHOULD_REFRESH_DASHBOARD = "shouldRefreshDashboard"
 const val SHOULD_REFRESH_LEARN_SCREEN = "shouldRefreshLearnScreen"
 
 @Composable
@@ -294,7 +294,7 @@ private fun ModuleItemSequenceContent(
                     remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
                 LaunchedEffect(uiState.shouldRefreshPreviousScreen) {
                     if (uiState.shouldRefreshPreviousScreen) {
-                        homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+                        homeEntry.savedStateHandle[DASHBOARD_REFRESH] = true
                         homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
                     }
                 }

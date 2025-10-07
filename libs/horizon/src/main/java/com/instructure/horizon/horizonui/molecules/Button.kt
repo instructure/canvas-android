@@ -195,7 +195,7 @@ fun LoadingButton(
                 label = label,
                 height = height,
                 width = width,
-                color = ButtonColor.Institution,
+                color = color,
                 iconPosition = iconPosition,
                 onClick = onClick,
                 enabled = enabled,

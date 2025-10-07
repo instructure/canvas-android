@@ -31,8 +31,8 @@ class SpeedGraderContentRepository(
     private val canvaDocsApi: CanvaDocsAPI.CanvaDocsInterFace
 ) {
 
-    suspend fun getSubmission(assignmentId: Long, studentId: Long): SubmissionContentQuery.Data {
-        return submissionContentManager.getSubmissionContent(studentId, assignmentId)
+    suspend fun getSubmission(assignmentId: Long, studentId: Long, domain: String? = null): SubmissionContentQuery.Data {
+        return submissionContentManager.getSubmissionContent(studentId, assignmentId, domain)
     }
 
     suspend fun getSingleSubmission(courseId: Long, assignmentId: Long, studentId: Long): Submission? {
@@ -41,8 +41,10 @@ class SpeedGraderContentRepository(
 
     suspend fun createCanvaDocSession(
         submissionId: String,
-        attempt: String
+        attempt: String,
+        domain: String? = null
     ): CanvaDocSessionResponseBody {
-        return canvaDocsApi.createCanvaDocSession(CanvaDocSessionRequestBody(submissionId, attempt), RestParams(isForceReadFromNetwork = true)).dataOrThrow
+        val params = RestParams(isForceReadFromNetwork = true, domain = domain)
+        return canvaDocsApi.createCanvaDocSession(CanvaDocSessionRequestBody(submissionId, attempt), params).dataOrThrow
     }
 }

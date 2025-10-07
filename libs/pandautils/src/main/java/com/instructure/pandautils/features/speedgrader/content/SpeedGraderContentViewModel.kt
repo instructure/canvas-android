@@ -31,6 +31,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.QuizSubmission
 import com.instructure.canvasapi2.type.SubmissionState
 import com.instructure.canvasapi2.type.SubmissionStatusTagType
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.validOrNull
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.grades.SubmissionStateLabel
@@ -51,6 +52,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SpeedGraderContentViewModel @Inject constructor(
     savedStateHandle: SavedStateHandle,
+    apiPrefs: ApiPrefs,
     private val repository: SpeedGraderContentRepository,
     private val resources: Resources,
     private val speedGraderSelectedAttemptHolder: SpeedGraderSelectedAttemptHolder,
@@ -62,6 +64,9 @@ class SpeedGraderContentViewModel @Inject constructor(
 
     private val assignmentId: Long = savedStateHandle.get<Long>(ASSIGNMENT_ID_KEY) ?: -1L
     private val studentId: Long = savedStateHandle.get<Long>(STUDENT_ID_KEY) ?: -1L
+    private val courseId: Long = savedStateHandle.get<Long>("courseId") ?: -1L
+
+    private val overrideDomain = apiPrefs.overrideDomains[courseId]
 
     init {
         viewModelScope.launch {
@@ -81,7 +86,7 @@ class SpeedGraderContentViewModel @Inject constructor(
     }
 
     private suspend fun fetchData() {
-        val submission = repository.getSubmission(assignmentId, studentId)
+        val submission = repository.getSubmission(assignmentId, studentId, overrideDomain)
         val submissionFields = submission.submission?.submissionFields
 
         val groupSubmission = submissionFields?.groupId != null && !submissionFields.assignment?.gradeGroupStudentsIndividually.orDefault()
@@ -149,7 +154,7 @@ class SpeedGraderContentViewModel @Inject constructor(
     }
 
     private suspend fun updateSubmissionState() {
-        val submission = repository.getSubmission(assignmentId, studentId)
+        val submission = repository.getSubmission(assignmentId, studentId, overrideDomain)
         val submissionFields = submission.submission?.submissionFields
 
         _uiState.update { state ->
@@ -258,10 +263,14 @@ class SpeedGraderContentViewModel @Inject constructor(
 
                 SubmissionType.STUDENT_ANNOTATION -> {
                     try {
-                        val canvaDocSession = repository.createCanvaDocSession(submission?._id.orEmpty(), submissionFields.attempt.toString())
+                        val canvaDocSession = repository.createCanvaDocSession(
+                            submission?._id.orEmpty(),
+                            submissionFields.attempt.toString(),
+                            overrideDomain
+                        )
                         PdfContent(
                             canvaDocSession.canvadocsSessionUrl.orEmpty(),
-                            submissionFields.assignment?.courseId?.toLong(),
+                            courseId,
                             (submissionFields.groupId ?: submission?.userId)?.toLong()
                         )
                     } catch (e: Exception) {

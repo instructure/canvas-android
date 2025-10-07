@@ -18,7 +18,7 @@ Canvas Android is a multi-app learning management system project with three main
 - `annotations/` - PSPDFKit wrapper for PDF annotation handling
 - `rceditor/` - Rich content editor wrapper
 - `interactions/` - Navigation interactions
-- `horizon/` - Additional utilities
+- `horizon/` - Career experience features
 - `pandares/` - Shared resources
 
 **Testing Libraries (in `../automation/`):**

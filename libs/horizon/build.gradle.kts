@@ -16,7 +16,7 @@ android {
     defaultConfig {
         minSdk = Versions.MIN_SDK
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "com.instructure.horizon.espresso.HorizonCustomTestRunner"
         consumerProguardFiles("consumer-rules.pro")
     }
 
@@ -56,6 +56,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_17.toString()
     }
+
+    hilt {
+        enableAggregatingTask = false
+    }
 }
 
 dependencies {
@@ -84,4 +88,24 @@ dependencies {
     implementation(Libs.FIREBASE_CRASHLYTICS) {
         isTransitive = true
     }
+
+    /* Android Test Dependencies */
+    androidTestImplementation(project(":espresso"))
+    androidTestImplementation(project(":dataseedingapi"))
+    androidTestImplementation(Libs.COMPOSE_UI_TEST)
+
+    /* Unit Test Dependencies */
+    testImplementation(Libs.JUNIT)
+    testImplementation(Libs.ROBOLECTRIC)
+    testImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    testImplementation(Libs.MOCKK)
+    androidTestImplementation(Libs.ANDROIDX_TEST_JUNIT)
+    testImplementation(Libs.KOTLIN_COROUTINES_TEST)
+    testImplementation(Libs.THREETEN_BP)
+    testImplementation(Libs.ANDROIDX_CORE_TESTING)
+    androidTestImplementation(Libs.HILT_TESTING)
+
+    /* Pandautils dependencies to provide fake implementations for testing */
+    androidTestImplementation(Libs.PLAY_IN_APP_UPDATES)
+    androidTestImplementation(Libs.ROOM)
 }
