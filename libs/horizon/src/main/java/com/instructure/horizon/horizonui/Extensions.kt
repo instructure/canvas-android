@@ -33,3 +33,11 @@ fun SemanticsPropertyReceiver.expandable(context: Context, expanded: Boolean) {
     liveRegion = LiveRegionMode.Assertive
     onClick(if (expanded) collapseActionLabel else expandActionLabel) { false }
 }
+
+fun SemanticsPropertyReceiver.selectable(context: Context, selected: Boolean) {
+    val selectedStateDesc = context.getString(R.string.a11y_selected)
+    val unselectedStateDesc = context.getString(R.string.a11y_unselected)
+
+    stateDescription = if (selected) selectedStateDesc else unselectedStateDesc
+    liveRegion = LiveRegionMode.Assertive
+}
