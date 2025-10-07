@@ -327,6 +327,9 @@ type PersonGQL {
   # Leaders for this user from Canvas
   leaders: [CanvasUserGQL!]
 
+  # Number of direct subordinates for this user from Canvas
+  subordinateCount: Float
+
   # User timezone from Canvas
   timeZone: String
 
@@ -763,11 +766,12 @@ type Query {
   enrolledPrograms: [ProgramGQL!]!
   crmConfigJwt: CrmJwtGQL!
   widgetFileUrl(key: String!): String!
-  widgetDataWithLastModifiedDate(
-    widgetId: String!
-    timeSpan: TimeSpanInput!
+  widgetData(
+    widgetType: String!
     dataScope: String!
-    filters: WidgetDataFiltersInput
+    timeSpan: TimeSpanInput!
+    canvasAccountId: String
+    queryParams: WidgetDataFiltersInput
   ): WidgetDataResultGQL!
   widgetsByUser(userAccountId: String!): [WidgetGQL!]!
   widgetByTypeAndUser(userAccountId: String!, type: String!): WidgetGQL
@@ -845,7 +849,14 @@ enum TimeSpanType {
 }
 
 input WidgetDataFiltersInput {
+  courseIds: [Float!]
+  courseId: Float
+  userId: String
   userUuids: [String!]
+  maxLateAssignments: Float
+  maxMissingAssignments: Float
+  minLowScorePercentage: Float
+  delayDaysAfterAction: Float
   year: Float
   month: Float
 }
@@ -892,6 +903,9 @@ input PeopleQueryInputGQL {
 
   # Optional search term to filter users
   searchTerm: String
+
+  # Optional flag to return only users who are leaders, will ignore search term if set to true
+  returnOnlyLeaders: Boolean
 
   # Optional filters to apply to user metadata. Only users with metadata matching ALL filters will be returned.
   metadataFilters: [MetadataFilterInputGQL!]
@@ -984,7 +998,7 @@ type Mutation {
   testAthenaQuery: String!
   runSnapshot: Boolean!
   createWidgetGroup(input: CreateWidgetGroupInput!): WidgetGroupGQL!
-  deleteWidgetGroup(id: String!): Boolean!
+  deleteWidgetGroup(id: String!, userAccountId: String!): Boolean!
   updateWidgetGroup(
     id: String!
     userAccountId: String!
@@ -1252,12 +1266,19 @@ input CreateWidgetGroupInput {
   name: String!
   userAccountId: ID!
   description: String
+  widgets: [CreateWidgetInput!]
 }
 
 input UpdateWidgetGroupInput {
   name: String
   description: String
-  widgetIds: [ID!]
+  updatedWidgets: [UpdatedWidgetInGroupInput!]!
+  newWidgets: [CreateWidgetInput!]
+}
+
+input UpdatedWidgetInGroupInput {
+  id: String!
+  position: Int!
 }
 
 input CreateWidgetActionInput {

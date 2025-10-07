@@ -23,7 +23,7 @@ import javax.inject.Inject
 class DashboardTimeSpentRepository @Inject constructor(
     private val getWidgetsManager: GetWidgetsManager
 ) {
-    suspend fun getTimeSpentData(forceNetwork: Boolean): TimeSpentWidgetData {
-        return getWidgetsManager.getTimeSpentWidgetData(forceNetwork)
+    suspend fun getTimeSpentData(courseId: Long? = null, forceNetwork: Boolean): TimeSpentWidgetData {
+        return getWidgetsManager.getTimeSpentWidgetData(courseId, forceNetwork)
     }
 }
