@@ -24,6 +24,7 @@ import android.util.AttributeSet
 import android.view.MotionEvent
 import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputConnection
+import android.webkit.CookieManager
 import android.webkit.ValueCallback
 import android.webkit.WebView
 import androidx.annotation.RestrictTo
@@ -37,6 +38,8 @@ class RCETextEditor @JvmOverloads constructor(
     init {
         setEditorBackgroundColor(context.getColor(R.color.rce_backgroundColor))
         setEditorFontColor(context.getColor(R.color.rce_defaultTextColor))
+        CookieManager.getInstance().setAcceptCookie(true)
+        CookieManager.getInstance().setAcceptThirdPartyCookies(this, true)
     }
 
     var disallowInterceptTouchEvents: Boolean = true
