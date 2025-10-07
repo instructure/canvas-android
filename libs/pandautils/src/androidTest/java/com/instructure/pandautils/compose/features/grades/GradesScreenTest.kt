@@ -28,7 +28,7 @@ import androidx.compose.ui.test.onNodeWithContentDescription
 import androidx.compose.ui.test.onNodeWithTag
 import androidx.compose.ui.test.onNodeWithText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.instructure.composeTest.hasDrawable
+import com.instructure.composetest.hasDrawable
 import com.instructure.pandares.R
 import com.instructure.pandautils.compose.composables.DiscussionCheckpointUiState
 import com.instructure.pandautils.features.grades.AssignmentGroupUiState

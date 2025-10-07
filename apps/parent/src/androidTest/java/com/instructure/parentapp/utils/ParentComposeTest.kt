@@ -18,8 +18,7 @@
 package com.instructure.parentapp.utils
 
 import androidx.compose.ui.test.junit4.createAndroidComposeRule
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
-import com.instructure.canvas.espresso.common.pages.ReminderPage
+import com.instructure.canvas.espresso.common.pages.AssignmentReminderPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventCreateEditPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarEventDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.CalendarFilterPage
@@ -32,21 +31,20 @@ import com.instructure.canvas.espresso.common.pages.compose.InboxDetailsPage
 import com.instructure.canvas.espresso.common.pages.compose.InboxSignatureSettingsPage
 import com.instructure.canvas.espresso.common.pages.compose.RecipientPickerPage
 import com.instructure.canvas.espresso.common.pages.compose.SettingsPage
-import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.features.login.LoginActivity
-import com.instructure.parentapp.ui.pages.AddStudentBottomPage
-import com.instructure.parentapp.ui.pages.AlertsPage
-import com.instructure.parentapp.ui.pages.AnnouncementDetailsPage
-import com.instructure.parentapp.ui.pages.CourseDetailsPage
-import com.instructure.parentapp.ui.pages.CoursesPage
-import com.instructure.parentapp.ui.pages.CreateAccountPage
-import com.instructure.parentapp.ui.pages.ManageStudentsPage
-import com.instructure.parentapp.ui.pages.PairingCodePage
-import com.instructure.parentapp.ui.pages.ParentInboxCoursePickerPage
-import com.instructure.parentapp.ui.pages.QrPairingPage
-import com.instructure.parentapp.ui.pages.StudentAlertSettingsPage
-import com.instructure.parentapp.ui.pages.SummaryPage
+import com.instructure.parentapp.ui.pages.compose.AddStudentBottomPage
+import com.instructure.parentapp.ui.pages.compose.AlertsPage
+import com.instructure.parentapp.ui.pages.compose.AnnouncementDetailsPage
+import com.instructure.parentapp.ui.pages.compose.CourseDetailsPage
+import com.instructure.parentapp.ui.pages.compose.CoursesPage
+import com.instructure.parentapp.ui.pages.compose.CreateAccountPage
+import com.instructure.parentapp.ui.pages.compose.ManageStudentsPage
 import com.instructure.parentapp.ui.pages.compose.NotAParentPage
+import com.instructure.parentapp.ui.pages.compose.PairingCodePage
+import com.instructure.parentapp.ui.pages.compose.ParentInboxCoursePickerPage
+import com.instructure.parentapp.ui.pages.compose.QrPairingPage
+import com.instructure.parentapp.ui.pages.compose.StudentAlertSettingsPage
+import com.instructure.parentapp.ui.pages.compose.SummaryPage
 import org.junit.Rule
 
 
@@ -80,9 +78,8 @@ abstract class ParentComposeTest : ParentTest() {
     protected val calendarToDoCreateUpdatePage = CalendarToDoCreateUpdatePage(composeTestRule)
     protected val calendarToDoDetailsPage = CalendarToDoDetailsPage(composeTestRule)
     protected val calendarFilterPage = CalendarFilterPage(composeTestRule)
-    protected val reminderPage = ReminderPage(composeTestRule)
+    protected val assignmentReminderPage = AssignmentReminderPage(composeTestRule)
     protected val inboxSignatureSettingsPage = InboxSignatureSettingsPage(composeTestRule)
-    protected val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     override fun displaysPageObjects() = Unit
 }

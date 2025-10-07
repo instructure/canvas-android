@@ -25,12 +25,12 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.checkToastText
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addAssignmentsToGroups
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.addAssignment
+import com.instructure.canvas.espresso.mockcanvas.addAssignmentsToGroups
+import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
@@ -41,8 +41,8 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.pandautils.utils.toFormattedString
 import com.instructure.student.R
 import com.instructure.student.ui.utils.StudentComposeTest
-import com.instructure.student.ui.utils.routeTo
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.routeTo
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
@@ -438,7 +438,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionDisplayed()
+        assignmentReminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -483,7 +483,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionDisplayed()
+        assignmentReminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -498,7 +498,7 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.assertReminderSectionDisplayed()
+        assignmentReminderPage.assertReminderSectionDisplayed()
     }
 
     @Test
@@ -515,12 +515,12 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
-        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -537,17 +537,17 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
 
-        reminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.assertReminderDisplayedWithText(reminderCalendar.time.toFormattedString())
 
-        reminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.removeReminderWithText(reminderCalendar.time.toFormattedString())
 
-        reminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
+        assignmentReminderPage.assertReminderNotDisplayedWithText(reminderCalendar.time.toFormattedString())
     }
 
     @Test
@@ -564,10 +564,10 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
         goToAssignmentList()
 
         assignmentListPage.clickAssignment(assignment)
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderInPast, activityRule.activity)
     }
@@ -587,15 +587,15 @@ class AssignmentDetailsInteractionTest : StudentComposeTest() {
 
         assignmentListPage.clickAssignment(assignment)
 
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
-        reminderPage.clickAddReminder()
-        reminderPage.clickCustomReminderOption()
-        reminderPage.selectDate(reminderCalendar)
-        reminderPage.selectTime(reminderCalendar)
+        assignmentReminderPage.clickAddReminder()
+        assignmentReminderPage.clickCustomReminderOption()
+        assignmentReminderPage.selectDate(reminderCalendar)
+        assignmentReminderPage.selectTime(reminderCalendar)
 
         checkToastText(R.string.reminderAlreadySet, activityRule.activity)
     }

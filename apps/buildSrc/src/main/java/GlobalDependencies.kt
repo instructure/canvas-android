@@ -32,6 +32,7 @@ object Versions {
     const val LIFECYCLE = "2.8.6"
     const val FRAGMENT = "1.8.4"
     const val WORK_MANAGER = "2.9.1"
+    const val WORK_TEST = "2.9.1"
     const val GLIDE_VERSION = "4.16.0"
     const val RETROFIT = "2.11.0"
     const val OKHTTP = "4.12.0"
@@ -76,6 +77,7 @@ object Libs {
     const val ANDROIDX_CORE_TESTING = "androidx.arch.core:core-testing:2.2.0"
     const val ANDROIDX_WORK_MANAGER = "androidx.work:work-runtime:${Versions.WORK_MANAGER}"
     const val ANDROIDX_WORK_MANAGER_KTX = "androidx.work:work-runtime-ktx:${Versions.WORK_MANAGER}"
+    const val ANDROIDX_WORK_TEST = "androidx.work:work-testing:${Versions.WORK_TEST}"
     const val ANDROIDX_WEBKIT = "androidx.webkit:webkit:1.9.0"
     const val ANDROIDX_DATABINDING_COMPILER = "androidx.databinding:databinding-compiler:${Versions.ANDROID_GRADLE_TOOLS}" // This is bundled with the gradle plugin so we use the same version
     const val ANDROIDX_COMPOSE_ACTIVITY = "androidx.activity:activity-compose:1.9.0"

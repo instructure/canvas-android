@@ -8,7 +8,7 @@ import android.view.accessibility.AccessibilityNodeInfo
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.IdlingResource
 import androidx.test.runner.AndroidJUnitRunner
-import com.instructure.canvas.espresso.mockCanvas.MockCanvasInterceptor
+import com.instructure.canvas.espresso.mockcanvas.MockCanvasInterceptor
 import com.instructure.canvasapi2.CanvasRestAdapter
 import com.jakewharton.espresso.OkHttp3IdlingResource
 

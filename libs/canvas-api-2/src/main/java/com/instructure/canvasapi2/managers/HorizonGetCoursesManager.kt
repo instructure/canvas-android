@@ -26,9 +26,17 @@ import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.Failure
 import java.util.Date
 
-class HorizonGetCoursesManager(private val apolloClient: ApolloClient) {
+interface HorizonGetCoursesManager {
+    suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean = false): DataResult<List<CourseWithProgress>>
 
-    suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
+    suspend fun getEnrollments(userId: Long, forceNetwork: Boolean = false): DataResult<List<GetCoursesQuery.Enrollment>>
+
+    suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean = false): DataResult<CourseWithModuleItemDurations>
+}
+
+class HorizonGetCoursesManagerImpl(private val apolloClient: ApolloClient): HorizonGetCoursesManager {
+
+    override suspend fun getCoursesWithProgress(userId: Long, forceNetwork: Boolean): DataResult<List<CourseWithProgress>> {
         return try {
             val query = GetCoursesQuery(userId.toString())
             val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
@@ -55,72 +63,18 @@ class HorizonGetCoursesManager(private val apolloClient: ApolloClient) {
         }
     }
 
-    suspend fun getDashboardContent(userId: Long, forceNetwork: Boolean): DataResult<DashboardContent> {
+    override suspend fun getEnrollments(userId: Long, forceNetwork: Boolean): DataResult<List<GetCoursesQuery.Enrollment>> {
         return try {
             val query = GetCoursesQuery(userId.toString())
             val result = apolloClient.enqueueQuery(query, forceNetwork).dataAssertNoErrors
 
-            val coursesList = result.legacyNode?.onUser?.enrollments
-                ?.filter { it.state == EnrollmentWorkflowState.active }
-                ?.mapNotNull { mapDashboardCourse(it.course) } ?: emptyList()
-            val invites = result.legacyNode?.onUser?.enrollments
-                ?.filter { it.state == EnrollmentWorkflowState.invited }
-                ?.mapNotNull { mapInvites(it.course, it.id) } ?: emptyList()
-            return DataResult.Success(DashboardContent(coursesList, invites))
+            return DataResult.Success(result.legacyNode?.onUser?.enrollments.orEmpty())
         } catch (e: Exception) {
             DataResult.Fail(Failure.Exception(e))
         }
     }
 
-    private fun mapDashboardCourse(course: GetCoursesQuery.Course?): DashboardCourse? {
-        val courseWithProgress = mapCourse(course)
-        val institutionName = course?.account?.name
-        val incompleteModulesConnection =
-            course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.incompleteModulesConnection?.nodes?.firstOrNull()
-        val nextModuleId = incompleteModulesConnection?.module?.id?.toLong()
-        val nextModuleItemId = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.id?.toLong()
-
-        val nextModuleTitle = incompleteModulesConnection?.module?.name
-
-        val nextModuleItemEstimatedDuration =
-            incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.estimatedDuration
-        val nextModuleItemDueDate =
-            incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.dueAt
-        val nextModuleItemType = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.__typename
-        val nextModuleItemTitle = incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.title
-        val isNewQuiz =
-            incompleteModulesConnection?.incompleteItemsConnection?.nodes?.firstOrNull()?.content?.onAssignment?.isNewQuiz ?: false
-
-        return if (courseWithProgress != null) {
-            DashboardCourse(
-                courseWithProgress,
-                institutionName,
-                nextModuleItemId,
-                nextModuleId,
-                nextModuleTitle,
-                nextModuleItemTitle,
-                nextModuleItemType,
-                nextModuleItemDueDate,
-                nextModuleItemEstimatedDuration,
-                isNewQuiz
-            )
-        } else {
-            null
-        }
-    }
-
-    private fun mapInvites(course: GetCoursesQuery.Course?, enrollmentId: String?): CourseInvite? {
-        val courseId = course?.id?.toLong()
-        val courseName = course?.name
-
-        return if (courseId != null && courseName != null) {
-            CourseInvite(courseId, courseName, enrollmentId?.toLong() ?: -1L)
-        } else {
-            null
-        }
-    }
-
-    suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean = false): DataResult<CourseWithModuleItemDurations> {
+    override suspend fun getProgramCourses(courseId: Long, forceNetwork: Boolean): DataResult<CourseWithModuleItemDurations> {
         var hasNextPage = true
         var nextCursor: String? = null
         val moduleItemDurations = mutableListOf<String>()

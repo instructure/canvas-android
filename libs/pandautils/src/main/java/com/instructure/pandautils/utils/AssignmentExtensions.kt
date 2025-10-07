@@ -17,7 +17,6 @@
 
 package com.instructure.pandautils.utils
 
-import android.content.Context
 import android.content.res.Resources
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
 import com.instructure.canvasapi2.models.Assignment
@@ -207,6 +206,7 @@ fun Assignment.getSubAssignmentSubmissionGrade(
 private fun mapSubmissionStateLabel(
     customGradeStatusId: Long?,
     customStatuses: List<CustomGradeStatusesQuery.Node>,
+    excused: Boolean,
     late: Boolean,
     missing: Boolean,
     graded: Boolean,
@@ -218,6 +218,7 @@ private fun mapSubmissionStateLabel(
     }
 
     return when {
+        excused -> SubmissionStateLabel.Excused
         matchedCustomStatus != null -> SubmissionStateLabel.Custom(
             R.drawable.ic_flag,
             R.color.textInfo,
@@ -238,6 +239,7 @@ fun Assignment.getSubmissionStateLabel(
 ) = mapSubmissionStateLabel(
     submission?.customGradeStatusId,
     customStatuses,
+    submission?.excused.orDefault(),
     submission?.late.orDefault(),
     isMissing(),
     isGraded().orDefault(),
@@ -251,6 +253,7 @@ fun Assignment.getSubAssignmentSubmissionStateLabel(
 ) = mapSubmissionStateLabel(
     submission?.customGradeStatusId,
     customStatuses,
+    submission?.excused.orDefault(),
     submission?.late.orDefault(),
     submission?.missing.orDefault(),
     !submission?.grade.isNullOrEmpty(),

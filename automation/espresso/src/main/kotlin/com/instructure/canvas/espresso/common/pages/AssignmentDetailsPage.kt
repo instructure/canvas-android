@@ -179,6 +179,10 @@ open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteracti
         assertStatus(R.string.submitted)
     }
 
+    fun assertStatusLate() {
+        assertStatus(R.string.lateSubmissionLabel)
+    }
+
     fun assertStatusNotSubmitted() {
         assertStatus(R.string.notSubmitted)
     }

@@ -17,9 +17,9 @@ package com.instructure.student.ui.interaction
 
 import com.instructure.canvas.espresso.common.interaction.CalendarInteractionTest
 import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.User
@@ -27,10 +27,10 @@ import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.BuildConfig
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.ui.pages.DashboardPage
-import com.instructure.student.ui.pages.DiscussionDetailsPage
+import com.instructure.student.ui.pages.classic.DashboardPage
+import com.instructure.student.ui.pages.classic.DiscussionDetailsPage
 import com.instructure.student.ui.utils.StudentActivityTestRule
-import com.instructure.student.ui.utils.tokenLogin
+import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules

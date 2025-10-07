@@ -35,6 +35,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DASHBOARD_REFRESH
 import com.instructure.horizon.features.learn.program.components.CourseCardChipState
 import com.instructure.horizon.features.learn.program.components.CourseCardStatus
 import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
@@ -44,7 +45,6 @@ import com.instructure.horizon.features.learn.program.components.ProgramProgress
 import com.instructure.horizon.features.learn.program.components.ProgramProgressState
 import com.instructure.horizon.features.learn.program.components.ProgramsProgressBar
 import com.instructure.horizon.features.learn.program.components.SequentialProgramProgressProperties
-import com.instructure.horizon.features.moduleitemsequence.SHOULD_REFRESH_DASHBOARD
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -70,7 +70,7 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, mainNavController: NavH
         remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
     LaunchedEffect(uiState.shouldRefreshDashboard) {
         if (uiState.shouldRefreshDashboard) {
-            homeEntry.savedStateHandle[SHOULD_REFRESH_DASHBOARD] = true
+            homeEntry.savedStateHandle[DASHBOARD_REFRESH] = true
             uiState.onDashboardRefreshed()
         }
     }

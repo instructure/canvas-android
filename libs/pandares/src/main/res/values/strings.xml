@@ -2155,4 +2155,5 @@
     <string name="additional_replies_due">Additional replies (%d) due</string>
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
     <string name="multipleDueDates">Multiple Due Dates</string>
+    <string name="courseConcludedError">Course concluded. Unable to send messages!</string>
 </resources>

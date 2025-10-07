@@ -38,8 +38,10 @@ import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.canvasapi2.utils.toDate
 import okhttp3.OkHttpClient
 import java.io.File
-import java.util.*
+import java.util.Date
 import java.util.concurrent.TimeUnit
+
+private const val DOMAIN_HEADER_KEY = "Override-Domain"
 
 open class QLClientConfig {
 
@@ -53,6 +55,18 @@ open class QLClientConfig {
         .newBuilder()
         .addInterceptor { chain ->
             chain.proceed(chain.request().newBuilder().addHeader("GraphQL-Metrics", "true").build())
+        }
+        .addInterceptor { chain ->
+            var request = chain.request()
+            val domain = request.header(DOMAIN_HEADER_KEY)
+            if (domain != null) {
+                val newUrl = (domain + GRAPHQL_ENDPOINT)
+                request = request.newBuilder()
+                    .url(newUrl)
+                    .removeHeader(DOMAIN_HEADER_KEY)
+                    .build()
+            }
+            chain.proceed(request)
         }
         .build()
 
@@ -126,16 +140,31 @@ open class QLClientConfig {
 
 suspend fun <T : Query.Data> ApolloClient.enqueueQuery(
     query: Query<T>,
-    forceNetwork: Boolean = false
+    forceNetwork: Boolean = false,
+    domain: String? = null
 ): ApolloResponse<T> {
-    if (forceNetwork) {
-        return this.query(query).httpFetchPolicy(HttpFetchPolicy.NetworkOnly).executeV3()
+    val call = if (forceNetwork) {
+        this.query(query).httpFetchPolicy(HttpFetchPolicy.NetworkOnly)
+    } else {
+        this.query(query)
     }
-    return this.query(query).executeV3()
+
+    if (domain != null) {
+        call.addHttpHeader(DOMAIN_HEADER_KEY, domain)
+    }
+
+    return call.executeV3()
 }
 
-suspend fun <T : Mutation.Data>ApolloClient.enqueueMutation(
-    mutation: Mutation<T>
+suspend fun <T : Mutation.Data> ApolloClient.enqueueMutation(
+    mutation: Mutation<T>,
+    domain: String? = null
 ): ApolloResponse<T> {
-    return this.mutation(mutation).executeV3()
+    val call = this.mutation(mutation)
+
+    if (domain != null) {
+        call.addHttpHeader(DOMAIN_HEADER_KEY, domain)
+    }
+
+    return call.executeV3()
 }
