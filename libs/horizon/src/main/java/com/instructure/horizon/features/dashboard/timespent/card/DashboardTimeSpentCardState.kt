@@ -20,7 +20,7 @@ data class DashboardTimeSpentCardState(
     val hours: Double = 0.0,
     val courses: List<CourseOption> = emptyList(),
     val selectedCourseId: Long? = null,
-    val onCourseSelected: (Long?) -> Unit = {}
+    val onCourseSelected: (String?) -> Unit = {}
 )
 
 data class CourseOption(

@@ -35,7 +35,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 @Composable
-fun DashboardTimeSpentSection(
+fun DashboardTimeSpentWidget(
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>
 ) {

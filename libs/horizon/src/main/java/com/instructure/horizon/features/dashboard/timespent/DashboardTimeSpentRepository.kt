@@ -18,28 +18,12 @@ package com.instructure.horizon.features.dashboard.timespent
 
 import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
 import com.instructure.canvasapi2.managers.graphql.TimeSpentWidgetData
-import com.instructure.journey.type.TimeSpanType
 import javax.inject.Inject
 
-interface DashboardTimeSpentRepository {
-    suspend fun getTimeSpentData(
-        widgetId: String = "time-spent-widget",
-        timeSpanType: TimeSpanType = TimeSpanType.PAST_30_DAYS,
-        dataScope: String = "learner",
-        forceNetwork: Boolean = false
-    ): TimeSpentWidgetData
-}
-
-class DashboardTimeSpentRepositoryImpl @Inject constructor(
+class DashboardTimeSpentRepository @Inject constructor(
     private val journeyApiManager: JourneyApiManager
-) : DashboardTimeSpentRepository {
-
-    override suspend fun getTimeSpentData(
-        widgetId: String,
-        timeSpanType: TimeSpanType,
-        dataScope: String,
-        forceNetwork: Boolean
-    ): TimeSpentWidgetData {
+) {
+    suspend fun getTimeSpentData(forceNetwork: Boolean): TimeSpentWidgetData {
         return journeyApiManager.getTimeSpentWidgetData(forceNetwork)
     }
 }

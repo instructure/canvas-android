@@ -16,15 +16,11 @@
  */
 package com.instructure.horizon.features.dashboard.timespent.card
 
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -32,40 +28,31 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
+import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 
 @Composable
 fun DashboardTimeSpentCardError(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    DashboardTimeSpentCard(modifier.padding(bottom = 8.dp)) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(24.dp)
-        ) {
-            Text(
-                text = stringResource(R.string.dashboardTimeSpentTitle),
-                style = HorizonTypography.labelMediumBold,
-                color = HorizonColors.Text.dataPoint()
-            )
+    DashboardTimeSpentCard(modifier) {
 
-            HorizonSpace(SpaceSize.SPACE_8)
+        Text(
+            text = stringResource(R.string.dashboardTimeSpentErrorMessage),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Text.timestamp()
+        )
 
-            Text(
-                text = stringResource(R.string.dashboardTimeSpentErrorMessage),
-                style = HorizonTypography.p2,
-                color = HorizonColors.Text.timestamp()
-            )
+        HorizonSpace(SpaceSize.SPACE_8)
 
-            HorizonSpace(SpaceSize.SPACE_16)
-
-            Button(
-                label = stringResource(R.string.dashboardTimeSpentRetry),
-                onClick = onRetry,
-                color = ButtonColor.WhiteOutline
-            )
-        }
+        Button(
+            label = stringResource(R.string.dashboardTimeSpentRetry),
+            onClick = onRetry,
+            color = ButtonColor.BlackOutline,
+            height = ButtonHeight.SMALL,
+            iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
+        )
     }
 }
 

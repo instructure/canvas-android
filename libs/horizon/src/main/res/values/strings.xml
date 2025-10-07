@@ -370,7 +370,7 @@
     <string name="dashboardCompletedCourseDetails">Congrats! You\'ve completed your course. View your progress and scores on the Learn page.</string>
     <string name="dashboardTimeSpentTitle">Time</string>
     <string name="dashboardTimeSpentLoadingMessage">This widget will update once data becomes available.</string>
-    <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content. Please try again.</string>
+    <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardTimeSpentRetry">Refresh</string>
     <string name="dashboardTimeSpentHoursIn">hours in</string>
     <string name="dashboardTimeSpentHoursInYourCourse">hours in your course</string>

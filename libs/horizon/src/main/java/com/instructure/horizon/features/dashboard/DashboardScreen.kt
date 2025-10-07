@@ -60,7 +60,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
-import com.instructure.horizon.features.dashboard.timespent.DashboardTimeSpentSection
+import com.instructure.horizon.features.dashboard.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -72,6 +72,7 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 const val DASHBOARD_REFRESH = "refreshDashboard"
@@ -105,6 +106,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     LaunchedEffect(shouldRefresh, externalRefreshState) {
         if (shouldRefresh || externalRefreshState) {
             savedStateHandle[DASHBOARD_REFRESH] = false
+            delay(50)
             shouldRefresh = false
         }
     }
@@ -163,7 +165,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     }
                 }
                 item {
-                    DashboardTimeSpentSection(
+                    DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )

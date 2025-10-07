@@ -18,28 +18,84 @@ package com.instructure.horizon.features.dashboard.timespent.card
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.foundation.HorizonColors
-import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
-import com.instructure.horizon.horizonui.foundation.HorizonElevation
-import com.instructure.horizon.horizonui.foundation.horizonShadow
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
+import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 @Composable
 fun DashboardTimeSpentCard(
     modifier: Modifier = Modifier,
-    content: @Composable () -> Unit
+    content: @Composable ColumnScope.() -> Unit
 ) {
-    Box(modifier = modifier
-        .padding(horizontal = 8.dp)
-        .padding(bottom = 16.dp)
-        .horizonShadow(HorizonElevation.level4, shape = HorizonCornerRadius.level4, clip = true)
-        .background(color = HorizonColors.Surface.cardPrimary(), shape = HorizonCornerRadius.level4)
-        .widthIn(max = 400.dp)
-    ) {
-        content()
+    DashboardCard(modifier) {
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(24.dp)
+        ) {
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.dashboardTimeSpentTitle),
+                    style = HorizonTypography.labelMediumBold,
+                    color = HorizonColors.Text.dataPoint(),
+                    modifier = Modifier.weight(1f)
+                )
+
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier
+                        .clip(CircleShape)
+                        .background(HorizonColors.PrimitivesHoney.honey12())
+                        .padding(6.dp)
+                ) {
+                    Icon(
+                        painter = painterResource(R.drawable.schedule),
+                        contentDescription = null,
+                        tint = HorizonColors.Icon.default(),
+                        modifier = Modifier
+                            .size(16.dp)
+                    )
+                }
+            }
+
+            HorizonSpace(SpaceSize.SPACE_8)
+
+            content()
+        }
+    }
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardPreview() {
+    DashboardTimeSpentCard {
+        Text(
+            text = "Content",
+            style = HorizonTypography.h1,
+            color = HorizonColors.Text.body()
+        )
     }
 }

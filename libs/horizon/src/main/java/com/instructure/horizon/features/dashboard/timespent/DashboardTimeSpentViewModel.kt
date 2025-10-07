@@ -18,12 +18,13 @@ package com.instructure.horizon.features.dashboard.timespent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.instructure.canvasapi2.utils.weave.catch
+import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.timespent.card.CourseOption
 import com.instructure.horizon.features.dashboard.timespent.card.DashboardTimeSpentCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -39,7 +40,7 @@ class DashboardTimeSpentViewModel @Inject constructor(
             onRefresh = ::refresh
         )
     )
-    val uiState: StateFlow<DashboardTimeSpentUiState> = _uiState.asStateFlow()
+    val uiState = _uiState.asStateFlow()
 
     init {
         loadTimeSpentData()
@@ -109,7 +110,8 @@ class DashboardTimeSpentViewModel @Inject constructor(
         }
     }
 
-    private fun onCourseSelected(courseId: Long?) {
+    private fun onCourseSelected(courseName: String?) {
+        val courseId = uiState.value.cardState.courses.firstOrNull { it.name == courseName }?.id
         _uiState.update {
             it.copy(
                 cardState = it.cardState.copy(selectedCourseId = courseId)
@@ -118,12 +120,14 @@ class DashboardTimeSpentViewModel @Inject constructor(
     }
 
     private fun refresh(onComplete: () -> Unit) {
-        viewModelScope.launch {
-            try {
-                loadTimeSpentData(forceNetwork = true)
-            } finally {
-                onComplete()
-            }
+        viewModelScope.tryLaunch {
+            _uiState.update { it.copy(state = DashboardItemState.LOADING) }
+            loadTimeSpentData(forceNetwork = true)
+            _uiState.update { it.copy(state = DashboardItemState.SUCCESS) }
+            onComplete()
+        } catch {
+            _uiState.update { it.copy(state = DashboardItemState.ERROR) }
+            onComplete()
         }
     }
 }
