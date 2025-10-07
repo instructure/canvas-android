@@ -18,13 +18,13 @@ package com.instructure.pandautils.views
 
 import android.content.Context
 import android.content.res.Configuration
-import android.os.Bundle
 import android.os.Parcel
 import android.os.Parcelable
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import androidx.annotation.ColorRes
+import androidx.core.view.isVisible
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.R
 import com.instructure.pandautils.databinding.ViewCanvasWebViewWrapperBinding
@@ -157,11 +157,25 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
 
     override fun onConfigurationChanged(newConfig: Configuration?) {
         super.onConfigurationChanged(newConfig)
+        handleConfigurationChange()
+    }
+
+    fun setHtmlContent(content: String?) {
+        this.html = content
+    }
+
+    fun setThemeSwitched(switched: Boolean) {
+        this.themeSwitched = switched
+    }
+
+    fun handleConfigurationChange(reloadContent: Boolean = true) {
         html?.let { htmlContent ->
             updateButtonVisibility(htmlContent)
-            if (binding.themeSwitchButton.visibility == android.view.View.VISIBLE) {
+            if (binding.themeSwitchButton.isVisible) {
                 changeButtonTheme()
-                changeContentTheme(htmlContent)
+                if (reloadContent) {
+                    changeContentTheme(htmlContent)
+                }
             }
         }
     }
@@ -170,6 +184,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
         val superState = super.onSaveInstanceState()
         return SavedState(superState).apply {
             this.themeSwitched = this@CanvasWebViewWrapper.themeSwitched
+            this.html = this@CanvasWebViewWrapper.html
         }
     }
 
@@ -178,6 +193,7 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
             is SavedState -> {
                 super.onRestoreInstanceState(state.superState)
                 themeSwitched = state.themeSwitched
+                html = state.html
             }
             else -> super.onRestoreInstanceState(state)
         }
@@ -185,16 +201,19 @@ open class CanvasWebViewWrapper @JvmOverloads constructor(
 
     private class SavedState : BaseSavedState {
         var themeSwitched: Boolean = false
+        var html: String? = null
 
         constructor(superState: Parcelable?) : super(superState)
 
         private constructor(parcel: Parcel) : super(parcel) {
             themeSwitched = parcel.readInt() == 1
+            html = parcel.readString()
         }
 
         override fun writeToParcel(out: Parcel, flags: Int) {
             super.writeToParcel(out, flags)
             out.writeInt(if (themeSwitched) 1 else 0)
+            out.writeString(html)
         }
 
         companion object {

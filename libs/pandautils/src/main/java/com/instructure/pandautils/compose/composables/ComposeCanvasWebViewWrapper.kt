@@ -23,6 +23,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalInspectionMode
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.os.bundleOf
@@ -47,6 +48,10 @@ fun ComposeCanvasWebViewWrapper(
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
     val webViewState = rememberSaveable(content) { bundleOf() }
+    val savedHtml = rememberSaveable(content) { content }
+    val savedThemeSwitched = rememberSaveable { bundleOf("themeSwitched" to false) }
+    val configuration = LocalConfiguration.current
+    val configKey = "${configuration.orientation}-${configuration.uiMode}"
 
     if (LocalInspectionMode.current) {
         Text(text = content)
@@ -84,27 +89,33 @@ fun ComposeCanvasWebViewWrapper(
                     applyOnWebView?.let { applyOnWebView -> webView.applyOnWebView() }
                 }
             },
-            update = {
+            update = { view ->
+                configKey // Read configuration to trigger update on change
                 if (webViewState.isEmpty) {
                     if (useInAppFormatting) {
-                        it.loadHtml(content, title)
+                        view.loadHtml(savedHtml, title)
                     } else {
-                        it.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), content, contentType, "UTF-8", null)
+                        view.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), savedHtml, contentType, "UTF-8", null)
                     }
 
                     if (onLtiButtonPressed != null) {
-                        it.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
+                        view.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
                     }
 
-                    if (HtmlContentFormatter.hasGoogleDocsUrl(content)) {
-                        it.webView.addJavascriptInterface(JsGoogleDocsInterface(it.context), Const.GOOGLE_DOCS)
+                    if (HtmlContentFormatter.hasGoogleDocsUrl(savedHtml)) {
+                        view.webView.addJavascriptInterface(JsGoogleDocsInterface(view.context), Const.GOOGLE_DOCS)
                     }
+                    view.handleConfigurationChange()
                 } else {
-                    it.webView.restoreState(webViewState)
+                    view.webView.restoreState(webViewState)
+                    view.setHtmlContent(savedHtml)
+                    view.setThemeSwitched(savedThemeSwitched.getBoolean("themeSwitched", false))
+                    view.handleConfigurationChange(reloadContent = false)
                 }
-                applyOnUpdate?.let { applyOnUpdate -> it.applyOnUpdate() }
+                applyOnUpdate?.let { applyOnUpdate -> view.applyOnUpdate() }
             },
             onRelease = {
+                savedThemeSwitched.putBoolean("themeSwitched", it.themeSwitched)
                 it.webView.saveState(webViewState)
             },
             modifier = modifier.fillMaxSize()
