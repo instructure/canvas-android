@@ -198,4 +198,147 @@ class SpeedGraderViewModelTest {
             errorHandler.postError("Error", any())
         }
     }
+
+    @Test
+    fun `fetchData uses submissionIds when provided`() = runTest {
+        val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
+        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
+        coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
+
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(10L, 20L, 30L),
+                Const.SELECTED_ITEM to 1
+            )
+        )
+
+        createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val uiState = viewModel.uiState.first()
+        assertEquals(listOf(10L, 20L, 30L), uiState.submissionIds)
+        assertEquals(1, uiState.selectedItem)
+        coVerify(exactly = 0) { assignmentSubmissionRepository.getGradeableStudentSubmissions(any<Long>(), any(), any()) }
+    }
+
+    @Test
+    fun `fetchData loads all submissions when submissionIds empty and sets selectedItem to 0 when submissionId not found`() = runTest {
+        val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
+        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
+        coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
+
+        val mockSubmissions = listOf(
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 100L
+                coEvery { submission?.id } returns 1000L
+            },
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 200L
+                coEvery { submission?.id } returns 2000L
+            },
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 300L
+                coEvery { submission?.id } returns 3000L
+            }
+        )
+        coEvery { assignmentSubmissionRepository.getGradeableStudentSubmissions(1L, 1L, false) } returns mockSubmissions
+
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(),
+                Const.SUBMISSION_ID to 9999L
+            )
+        )
+
+        createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val uiState = viewModel.uiState.first()
+        assertEquals(listOf(100L, 200L, 300L), uiState.submissionIds)
+        assertEquals(0, uiState.selectedItem)
+        coVerify(exactly = 1) { assignmentSubmissionRepository.getGradeableStudentSubmissions(1L, 1L, false) }
+    }
+
+    @Test
+    fun `fetchData loads all submissions when submissionIds empty and sets selectedItem based on submissionId`() = runTest {
+        val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
+        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
+        coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
+
+        val mockSubmissions = listOf(
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 100L
+                coEvery { submission?.id } returns 1000L
+            },
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 200L
+                coEvery { submission?.id } returns 2000L
+            },
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 300L
+                coEvery { submission?.id } returns 3000L
+            }
+        )
+        coEvery { assignmentSubmissionRepository.getGradeableStudentSubmissions(1L, 1L, false) } returns mockSubmissions
+
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf(),
+                Const.SUBMISSION_ID to 2000L
+            )
+        )
+
+        createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val uiState = viewModel.uiState.first()
+        assertEquals(listOf(100L, 200L, 300L), uiState.submissionIds)
+        assertEquals(1, uiState.selectedItem)
+        coVerify(exactly = 1) { assignmentSubmissionRepository.getGradeableStudentSubmissions(1L, 1L, false) }
+    }
+
+    @Test
+    fun `fetchData loads all submissions when submissionIds empty without submissionId parameter`() = runTest {
+        val course = AssignmentDetailsQuery.Course(name = "Test Course", _id = "1")
+        val assignment = AssignmentDetailsQuery.Assignment(title = "Test Assignment", course = course)
+        val assignmentDetails = AssignmentDetailsQuery.Data(assignment = assignment)
+        coEvery { repository.getAssignmentDetails(1L) } returns assignmentDetails
+
+        val mockSubmissions = listOf(
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 100L
+                coEvery { submission?.id } returns 1000L
+            },
+            mockk<com.instructure.canvasapi2.models.GradeableStudentSubmission>(relaxed = true).apply {
+                coEvery { id } returns 200L
+                coEvery { submission?.id } returns 2000L
+            }
+        )
+        coEvery { assignmentSubmissionRepository.getGradeableStudentSubmissions(1L, 1L, false) } returns mockSubmissions
+
+        savedStateHandle = SavedStateHandle(
+            mapOf(
+                Const.COURSE_ID to 1L,
+                Const.ASSIGNMENT_ID to 1L,
+                SpeedGraderFragment.FILTERED_SUBMISSION_IDS to longArrayOf()
+            )
+        )
+
+        createViewModel()
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val uiState = viewModel.uiState.first()
+        assertEquals(listOf(100L, 200L), uiState.submissionIds)
+        assertEquals(0, uiState.selectedItem)
+        coVerify(exactly = 1) { assignmentSubmissionRepository.getGradeableStudentSubmissions(1L, 1L, false) }
+    }
 }
