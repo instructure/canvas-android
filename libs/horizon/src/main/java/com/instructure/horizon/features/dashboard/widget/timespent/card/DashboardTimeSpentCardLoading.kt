@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent.card
+package com.instructure.horizon.features.dashboard.widget.timespent.card
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column

@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent
+package com.instructure.horizon.features.dashboard.widget.timespent
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -28,9 +28,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.timespent.card.DashboardTimeSpentCardContent
-import com.instructure.horizon.features.dashboard.timespent.card.DashboardTimeSpentCardError
-import com.instructure.horizon.features.dashboard.timespent.card.DashboardTimeSpentCardLoading
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardError
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 

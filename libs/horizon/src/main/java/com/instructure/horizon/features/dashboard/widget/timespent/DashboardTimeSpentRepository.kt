@@ -14,16 +14,16 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent.card
+package com.instructure.horizon.features.dashboard.widget.timespent
 
-data class DashboardTimeSpentCardState(
-    val hours: Double = 0.0,
-    val courses: List<CourseOption> = emptyList(),
-    val selectedCourseId: Long? = null,
-    val onCourseSelected: (String?) -> Unit = {}
-)
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
+import javax.inject.Inject
 
-data class CourseOption(
-    val id: Long,
-    val name: String
-)
+class DashboardTimeSpentRepository @Inject constructor(
+    private val getWidgetsManager: GetWidgetsManager
+) {
+    suspend fun getTimeSpentData(courseId: Long? = null, forceNetwork: Boolean): TimeSpentWidgetData {
+        return getWidgetsManager.getTimeSpentWidgetData(courseId, forceNetwork)
+    }
+}

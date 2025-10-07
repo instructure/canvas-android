@@ -14,15 +14,15 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent
+package com.instructure.horizon.features.dashboard.widget.timespent
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.timespent.card.CourseOption
-import com.instructure.horizon.features.dashboard.timespent.card.DashboardTimeSpentCardState
+import com.instructure.horizon.features.dashboard.widget.timespent.card.CourseOption
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

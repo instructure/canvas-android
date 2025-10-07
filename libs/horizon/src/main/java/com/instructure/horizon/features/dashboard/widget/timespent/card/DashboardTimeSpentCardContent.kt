@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent.card
+package com.instructure.horizon.features.dashboard.widget.timespent.card
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
@@ -35,6 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -50,7 +51,12 @@ fun DashboardTimeSpentCardContent(
     state: DashboardTimeSpentCardState,
     modifier: Modifier = Modifier,
 ) {
-    DashboardTimeSpentCard(modifier.padding(bottom = 8.dp)) {
+    DashboardWidgetCard(
+        stringResource(R.string.dashboardTimeSpentTitle),
+        R.drawable.schedule,
+        HorizonColors.PrimitivesHoney.honey12(),
+        modifier.padding(bottom = 8.dp)
+    ) {
 
         FlowRow(
             verticalArrangement = Arrangement.Center,

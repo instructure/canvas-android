@@ -14,8 +14,9 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent.card
+package com.instructure.horizon.features.dashboard.widget
 
+import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -31,8 +32,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
@@ -43,7 +44,10 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 
 @Composable
-fun DashboardTimeSpentCard(
+fun DashboardWidgetCard(
+    title: String,
+    @DrawableRes iconRes: Int,
+    widgetColor: Color,
     modifier: Modifier = Modifier,
     content: @Composable ColumnScope.() -> Unit
 ) {
@@ -58,7 +62,7 @@ fun DashboardTimeSpentCard(
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
-                    text = stringResource(R.string.dashboardTimeSpentTitle),
+                    text = title,
                     style = HorizonTypography.labelMediumBold,
                     color = HorizonColors.Text.dataPoint(),
                     modifier = Modifier.weight(1f)
@@ -68,11 +72,11 @@ fun DashboardTimeSpentCard(
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .clip(CircleShape)
-                        .background(HorizonColors.PrimitivesHoney.honey12())
+                        .background(widgetColor)
                         .padding(6.dp)
                 ) {
                     Icon(
-                        painter = painterResource(R.drawable.schedule),
+                        painter = painterResource(iconRes),
                         contentDescription = null,
                         tint = HorizonColors.Icon.default(),
                         modifier = Modifier
@@ -91,7 +95,11 @@ fun DashboardTimeSpentCard(
 @Composable
 @Preview
 private fun DashboardTimeSpentCardPreview() {
-    DashboardTimeSpentCard {
+    DashboardWidgetCard(
+        title = "Time",
+        iconRes = R.drawable.schedule,
+        widgetColor = HorizonColors.PrimitivesBlue.blue12()
+    ) {
         Text(
             text = "Content",
             style = HorizonTypography.h1,

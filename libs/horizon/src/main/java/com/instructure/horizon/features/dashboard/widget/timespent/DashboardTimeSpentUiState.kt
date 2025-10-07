@@ -14,10 +14,10 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.timespent
+package com.instructure.horizon.features.dashboard.widget.timespent
 
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.timespent.card.DashboardTimeSpentCardState
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
 
 data class DashboardTimeSpentUiState(
     val state: DashboardItemState = DashboardItemState.LOADING,
