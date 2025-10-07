@@ -17,13 +17,13 @@
 
 package com.instructure.parentapp.ui.interaction
 
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.init
+import com.instructure.canvas.espresso.mockcanvas.MockCanvas
+import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.parentapp.utils.ParentComposeTest
-import com.instructure.parentapp.utils.tokenLogin
+import com.instructure.parentapp.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
