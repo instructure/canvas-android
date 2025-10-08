@@ -28,7 +28,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -60,6 +61,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -142,34 +144,31 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())
             ) {
-                item {
-                    HomeScreenTopBar(
-                        uiState,
-                        mainNavController,
-                        modifier = Modifier.height(56.dp)
-                    )
-                }
-                item {
-                    Column {
-                        HorizonSpace(SpaceSize.SPACE_24)
-                        DashboardCourseSection(
-                            mainNavController,
-                            homeNavController,
-                            shouldRefresh,
-                            refreshStateFlow
-                        )
-                    }
-                }
-                item {
-                    DashboardTimeSpentWidget(
-                        shouldRefresh,
-                        refreshStateFlow
-                    )
-                }
+                HomeScreenTopBar(
+                    uiState,
+                    mainNavController,
+                    modifier = Modifier.height(56.dp)
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+                DashboardCourseSection(
+                    mainNavController,
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
+                DashboardTimeSpentWidget(
+                    shouldRefresh,
+                    refreshStateFlow
+                )
+                DashboardSkillHighlightsWidget(
+                    shouldRefresh,
+                    refreshStateFlow
+                )
             }
         }
     }

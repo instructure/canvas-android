@@ -20,6 +20,8 @@ import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.JourneyApolloClient
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManagerImpl
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -44,6 +46,13 @@ class JourneyModule {
         @JourneyApolloClient journeyClient: ApolloClient
     ): GetProgramsManager {
         return GetProgramManagerImpl(journeyClient)
+    }
+
+    @Provides
+    fun provideSkillsManager(
+        @JourneyApolloClient journeyClient: ApolloClient
+    ): GetSkillsManager {
+        return GetSkillsManagerImpl(journeyClient)
     }
 
 }
