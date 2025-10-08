@@ -60,7 +60,7 @@ fun DashboardTimeSpentCardError(
         Button(
             label = stringResource(R.string.dashboardTimeSpentRetry),
             onClick = onRetry,
-            color = ButtonColor.BlackOutline,
+            color = ButtonColor.WhiteWithOutline,
             height = ButtonHeight.SMALL,
             iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
         )
