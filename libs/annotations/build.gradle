@@ -96,7 +96,7 @@ repositories {
             username pspdfMavenUser
             password pspdfMavenPass
         }
-        url 'https://customers.pspdfkit.com/maven/'
+        url 'https://my.nutrient.io/maven'
     }
 }
 
@@ -105,7 +105,7 @@ dependencies {
     api project(path: ':pandautils')
     api project(path: ':pandares')
 
-    api Libs.PSPDFKIT
+    api Libs.NUTRIENT
 
     androidTestImplementation Libs.JUNIT
     testImplementation Libs.JUNIT

@@ -51,7 +51,7 @@ allprojects {
                 username pspdfMavenUser
                 password pspdfMavenPass
             }
-            url 'https://customers.pspdfkit.com/maven/'
+            url 'https://my.nutrient.io/maven'
         }
         maven { url "https://maven.google.com/" }
     }

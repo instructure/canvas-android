@@ -71,7 +71,7 @@ dependencies {
     implementation(Libs.HILT_ANDROIDX_WORK)
     ksp(Libs.HILT_ANDROIDX_COMPILER)
 
-    implementation(Libs.PSPDFKIT)
+    implementation(Libs.NUTRIENT)
 
     implementation(Libs.ANDROIDX_ANNOTATION)
     implementation(Libs.ANDROIDX_APPCOMPAT)
