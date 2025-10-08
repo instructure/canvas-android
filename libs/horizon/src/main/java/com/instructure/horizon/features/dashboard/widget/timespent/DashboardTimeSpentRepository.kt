@@ -16,14 +16,23 @@
  */
 package com.instructure.horizon.features.dashboard.widget.timespent
 
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
+import com.instructure.canvasapi2.utils.ApiPrefs
 import javax.inject.Inject
 
 class DashboardTimeSpentRepository @Inject constructor(
-    private val getWidgetsManager: GetWidgetsManager
+    private val getWidgetsManager: GetWidgetsManager,
+    private val getCoursesManager: HorizonGetCoursesManager,
+    private val apiPrefs: ApiPrefs,
 ) {
     suspend fun getTimeSpentData(courseId: Long? = null, forceNetwork: Boolean): TimeSpentWidgetData {
         return getWidgetsManager.getTimeSpentWidgetData(courseId, forceNetwork)
+    }
+
+    suspend fun getCourses(forceNetwork: Boolean): List<CourseWithProgress> {
+        return getCoursesManager.getCoursesWithProgress(apiPrefs.user!!.id, forceNetwork).dataOrThrow
     }
 }

@@ -27,7 +27,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -47,28 +46,31 @@ class DashboardTimeSpentViewModel @Inject constructor(
     }
 
     private fun loadTimeSpentData(forceNetwork: Boolean = false) {
-        viewModelScope.launch {
+        viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            try {
-                val data = repository.getTimeSpentData(forceNetwork = forceNetwork)
+            val data = repository.getTimeSpentData(forceNetwork = forceNetwork)
 
-                val totalHours = parseHoursFromData(data.data)
-                val courses = parseCoursesFromData(data.data)
-
-                _uiState.update {
-                    it.copy(
-                        state = DashboardItemState.SUCCESS,
-                        cardState = DashboardTimeSpentCardState(
-                            hours = totalHours,
-                            courses = courses,
-                            selectedCourseId = null,
-                            onCourseSelected = ::onCourseSelected
-                        )
-                    )
-                }
-            } catch (e: Exception) {
-                _uiState.update { it.copy(state = DashboardItemState.ERROR) }
+            val totalHours = parseHoursFromData(data.data)
+            val courses = repository.getCourses(forceNetwork).map {
+                CourseOption(
+                    id = it.courseId,
+                    name = it.courseName,
+                )
             }
+
+            _uiState.update {
+                it.copy(
+                    state = DashboardItemState.SUCCESS,
+                    cardState = DashboardTimeSpentCardState(
+                        hours = totalHours,
+                        courses = courses,
+                        selectedCourseId = null,
+                        onCourseSelected = ::onCourseSelected
+                    )
+                )
+            }
+        } catch {
+            _uiState.update { it.copy(state = DashboardItemState.ERROR) }
         }
     }
 
@@ -85,28 +87,6 @@ class DashboardTimeSpentViewModel @Inject constructor(
             }
         } catch (e: Exception) {
             0.0
-        }
-    }
-
-    private fun parseCoursesFromData(data: List<Any>): List<CourseOption> {
-        return try {
-            data.mapNotNull { item ->
-                val courseMap = item as? Map<*, *>
-                val courseId = when (val id = courseMap?.get("courseId")) {
-                    is Number -> id.toLong()
-                    is String -> id.toLongOrNull()
-                    else -> null
-                }
-                val courseName = courseMap?.get("courseName") as? String
-
-                if (courseId != null && courseName != null) {
-                    CourseOption(courseId, courseName)
-                } else {
-                    null
-                }
-            }
-        } catch (e: Exception) {
-            emptyList()
         }
     }
 
