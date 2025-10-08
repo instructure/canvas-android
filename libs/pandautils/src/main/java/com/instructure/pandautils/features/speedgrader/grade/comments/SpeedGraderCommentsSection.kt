@@ -208,16 +208,20 @@ fun SpeedGraderCommentsSection(
         if (state.fileSelectorDialogData != null) {
             val fragmentManager = LocalContext.current.getFragmentActivity().supportFragmentManager
 
-            val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
-                state.fileSelectorDialogData.courseId,
-                state.fileSelectorDialogData.assignmentId,
-                state.fileSelectorDialogData.userId,
-                state.fileSelectorDialogData.attempt
-            )
+            // Check if dialog is already showing to prevent duplicates
+            val existingDialog = fragmentManager.findFragmentByTag(FileUploadDialogFragment.TAG)
+            if (existingDialog == null) {
+                val bundle = FileUploadDialogFragment.createTeacherSubmissionCommentBundle(
+                    state.fileSelectorDialogData.courseId,
+                    state.fileSelectorDialogData.assignmentId,
+                    state.fileSelectorDialogData.userId,
+                    state.fileSelectorDialogData.attempt
+                )
 
-            FileUploadDialogFragment.newInstance(bundle).show(
-                fragmentManager, FileUploadDialogFragment.TAG + UUID.randomUUID()
-            )
+                FileUploadDialogFragment.newInstance(bundle).show(
+                    fragmentManager, FileUploadDialogFragment.TAG
+                )
+            }
         }
     }
 }
