@@ -19,9 +19,11 @@ package com.instructure.horizon.features.dashboard.widget.timespent.card
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -71,6 +73,7 @@ fun DashboardTimeSpentCardContent(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.align(Alignment.CenterVertically)
             ) {
                 if (state.courses.size > 1) {
                     Text(
@@ -97,7 +100,8 @@ fun DashboardTimeSpentCardContent(
                     Text(
                         text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
                         style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.title()
+                        color = HorizonColors.Text.title(),
+                        modifier = Modifier.width(IntrinsicSize.Max)
                     )
                 }
             }

@@ -18,13 +18,16 @@ package com.instructure.horizon.features.dashboard.widget
 
 import androidx.annotation.DrawableRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -54,18 +57,20 @@ fun DashboardWidgetCard(
     DashboardCard(modifier) {
         Column(
             modifier = Modifier
-                .fillMaxWidth()
                 .padding(24.dp)
+                .width(IntrinsicSize.Min)
         ) {
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Text(
                     text = title,
                     style = HorizonTypography.labelMediumBold,
                     color = HorizonColors.Text.dataPoint(),
-                    modifier = Modifier.weight(1f)
+                    modifier = Modifier
+                        .padding(end = 8.dp)
                 )
 
                 Box(

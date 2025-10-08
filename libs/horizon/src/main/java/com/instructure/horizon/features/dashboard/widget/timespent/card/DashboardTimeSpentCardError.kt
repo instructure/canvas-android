@@ -16,7 +16,9 @@
  */
 package com.instructure.horizon.features.dashboard.widget.timespent.card
 
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -49,7 +51,8 @@ fun DashboardTimeSpentCardError(
         Text(
             text = stringResource(R.string.dashboardTimeSpentErrorMessage),
             style = HorizonTypography.p2,
-            color = HorizonColors.Text.timestamp()
+            color = HorizonColors.Text.timestamp(),
+            modifier = Modifier.width(IntrinsicSize.Max)
         )
 
         HorizonSpace(SpaceSize.SPACE_8)
