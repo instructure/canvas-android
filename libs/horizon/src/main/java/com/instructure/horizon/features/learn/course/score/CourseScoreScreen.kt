@@ -14,6 +14,8 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
+@file:OptIn(ExperimentalComposeUiApi::class)
+
 package com.instructure.horizon.features.learn.course.score
 
 import androidx.compose.animation.AnimatedContent
@@ -41,11 +43,15 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -352,28 +358,36 @@ private fun GroupWeightsContent(assignmentGroups: List<AssignmentGroupScoreItem>
 
 @Composable
 private fun GroupWeightItem(assignmentGroup: AssignmentGroupScoreItem) {
+    val groupWeightText = stringResource(
+        R.string.weightPercentageValue,
+        assignmentGroup.groupWeight
+    )
+    val mergedContentDescription = "${assignmentGroup.name}, $groupWeightText"
+
     Column(
         modifier = Modifier
             .padding(vertical = 16.dp)
+            .semantics(mergeDescendants = true) {
+                contentDescription = mergedContentDescription
+            }
     ) {
         Column (
             modifier = Modifier.padding(horizontal = 24.dp),
         ) {
             Text(
-                text = assignmentGroup.name.orEmpty(),
+                text = assignmentGroup.name,
                 style = HorizonTypography.p1,
-                color = HorizonColors.Text.body()
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.semantics { invisibleToUser() }
             )
 
             HorizonSpace(SpaceSize.SPACE_8)
 
             Text(
-                text = stringResource(
-                    R.string.weightPercentageValue,
-                    assignmentGroup.groupWeight
-                ),
+                text = groupWeightText,
                 style = HorizonTypography.p1,
-                color = HorizonColors.Text.body()
+                color = HorizonColors.Text.body(),
+                modifier = Modifier.semantics { invisibleToUser() }
             )
         }
     }

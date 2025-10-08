@@ -21,7 +21,6 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         buildStartTime = System.nanoTime()
     }
 
-
     @Override
     void beforeExecute(Task task) {
         startTime = System.nanoTime()
@@ -39,8 +38,8 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         // Compute build time
         def totalBuildTimeMs = TimeUnit.MILLISECONDS.convert(System.nanoTime() - buildStartTime, TimeUnit.NANOSECONDS)
 
-        // Grab the Splunk-mobile token from Bitrise
-        def splunkToken = System.getenv("SPLUNK_MOBILE_TOKEN")
+        // Grab the Observe-mobile token from Bitrise
+        def observeToken = System.getenv("OBSERVE_MOBILE_TOKEN")
 
         // Let's abort early if (1) the build failed, or (2) we're not on bitrise
         if(result.failure != null) {
@@ -48,7 +47,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
             return
         }
 
-        if(splunkToken == null || splunkToken.isEmpty()) {
+        if(observeToken == null || observeToken.isEmpty()) {
             println("Build report logic aborting because we're not on bitrise")
             return
         }
@@ -118,8 +117,7 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
         }
         println("file name=${file.path} length=${file.length()}")
 
-
-        // Construct the JSON payload for our "buildComplete" event
+        // Construct the JSON eventPayload for our "buildComplete" event
         def payloadBuilder = new groovy.json.JsonBuilder()
         payloadBuilder buildTime: totalBuildTimeMs,
             gradleTasks: startTaskNames,
@@ -131,16 +129,20 @@ class TimingsListener implements TaskExecutionListener, BuildListener {
             bitriseBuildNumber: bitriseBuildNumber,
             topTasks: top10
 
-        // Create the event payload.  Change key/value in top 10 tasks to task/ms.
-        def payload = payloadBuilder.toString().replaceAll("\"key\"", "\"task\"").replaceAll("\"value\"", "\"ms\"")
+        // Create the event eventPayload.  Change key/value in top 10 tasks to task/ms.
+        def eventPayload = payloadBuilder.toString().replaceAll("\"key\"", "\"task\"").replaceAll("\"value\"", "\"ms\"")
 
-        println("event payload: $payload")
+        println("event eventPayload: $eventPayload")
+
+        //Wrap it in the "data" object for Observe
+        def payload="{\"data\": $eventPayload}"
 
         // Let's issue our curl command to emit our data
         refProject.exec {
             executable "curl"
-            args "-k", "https://http-inputs-inst.splunkcloud.com:443/services/collector", "-H", "Authorization: Splunk $splunkToken",
-                    "-d", "{\"sourcetype\" : \"mobile-android-build\", \"event\" : $payload}"
+            args "-k", "https://103443579803.collect.observeinc.com/v1/http", "-H", "Authorization: Bearer $observeToken",
+                    "-H", "Content-Type: application/json",
+                    "-d", "$payload"
         }
 
     }
