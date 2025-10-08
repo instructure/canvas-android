@@ -24,7 +24,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -49,10 +48,6 @@ class ScheduleE2ETest : StudentTest() {
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
-
-    //@Rule
-    //@JvmField
-    //var globalTimeout: Timeout = Timeout.millis(1200000) // //TODO: workaround for that sometimes this test is running infinite time because of scrollToElement does not find an element.
 
     @E2E
     @Test
@@ -91,7 +86,6 @@ class ScheduleE2ETest : StudentTest() {
         Log.d(STEP_TAG, "Navigate to K5 Schedule Page.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
 
-        //Depends on how we handle Sunday, need to clarify with calendar team
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name, homeroomAnnouncement.title) }
         Log.d(ASSERTION_TAG, "Assert that the current day of the calendar is titled as 'Today'.")
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
@@ -117,8 +111,6 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.scrollToPosition(0)
         schedulePage.refresh()
 
-        //sleep(3000)
-
         Log.d(ASSERTION_TAG, "Assert that the current day of the calendar is titled as 'Today'.")
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
 
@@ -134,9 +126,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
 
-        //sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
-
-        if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
+        if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
             val twoWeeksBeforeDayString = twoWeeksBeforeCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
             Log.d(ASSERTION_TAG, "Assert that two weeks BEFORE current week," +
                     "the corresponding day header is shown and assert that the '${nonHomeroomCourses[1].name}' course and the '${testTwoWeeksBeforeAssignment.name}' assignment are displayed as well.")
@@ -150,9 +140,7 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
 
-        //sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
-
-        if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
+        if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
             val twoWeeksAfterDayString = twoWeeksAfterCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
             Log.d(ASSERTION_TAG, "Assert that two weeks AFTER current week," +
                     "the corresponding day header is shown and assert that the '${nonHomeroomCourses[0].name}' course and the '${testTwoWeeksAfterAssignment.name}' assignment are displayed as well.")
@@ -168,7 +156,6 @@ class ScheduleE2ETest : StudentTest() {
 
             Log.d(STEP_TAG, "Navigate back to Schedule Page.")
             Espresso.pressBack()
-            //sleep(3000)
 
             Log.d(ASSERTION_TAG, "Assert if the Schedule Page is displayed correctly.")
             schedulePage.assertPageObjects()
@@ -178,15 +165,16 @@ class ScheduleE2ETest : StudentTest() {
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
 
-        //sleep(5000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
+        sleep(3000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
 
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
 
             Log.d(ASSERTION_TAG, "Assert that the '${nonHomeroomCourses[2].name}' course and the '${testMissingAssignment.name}' assignment are displayed.")
             schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
 
             Log.d(STEP_TAG, "Open '${testMissingAssignment.name}' assignment.")
             schedulePage.clickScheduleItem(testMissingAssignment.name)
+            sleep(3000)
 
             Log.d(ASSERTION_TAG, "Assert if we are landing on the '${testMissingAssignment.name}' assignment's details page by checking it's title, which is actually is the assignment's name.")
             assignmentDetailsPage.assertPageObjects()
