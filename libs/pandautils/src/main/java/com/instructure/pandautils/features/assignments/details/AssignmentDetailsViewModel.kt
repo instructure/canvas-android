@@ -116,6 +116,7 @@ class AssignmentDetailsViewModel @Inject constructor(
     private val _course = MutableLiveData(Course(id = courseId))
 
     private val assignmentId = savedStateHandle.get<Long>(Const.ASSIGNMENT_ID).orDefault()
+    private val submissionId = savedStateHandle.get<Long>(Const.SUBMISSION_ID)
 
     var bookmarker = Bookmarker(true, course.value).withParam(RouterParams.ASSIGNMENT_ID, assignmentId.toString())
 
@@ -285,6 +286,25 @@ class AssignmentDetailsViewModel @Inject constructor(
                 }
                 _data.postValue(getViewData(assignmentResult, hasDraft))
                 _state.postValue(ViewState.Success)
+
+                // Check if we need to auto-navigate to submission details from push notification
+                submissionId?.let { subId ->
+                    val submission = assignmentResult.submission
+                    if (submission != null
+                        && submission.id == subId
+                        && submission.submissionType != SubmissionType.NOT_GRADED.apiString
+                        && submission.submissionType != SubmissionType.ON_PAPER.apiString)
+                    {
+                        postAction(
+                            AssignmentDetailAction.NavigateToSubmissionScreen(
+                                isObserver,
+                                submission.attempt,
+                                assignmentResult.htmlUrl,
+                                isAssignmentEnhancementEnabled
+                            )
+                        )
+                    }
+                }
             } catch (ex: Exception) {
                 val errorString = if (ex is IllegalAccessException) {
                     resources.getString(R.string.assignmentNoLongerAvailable)

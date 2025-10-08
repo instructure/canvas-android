@@ -94,6 +94,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
     @get:PageViewUrlParam(name = "courseId")
     val courseId by LongArg(key = Const.COURSE_ID, default = 0)
 
+    val submissionId by LongArg(key = Const.SUBMISSION_ID, default = -1)
+
     private var binding: FragmentAssignmentDetailsBinding? = null
     private val viewModel: AssignmentDetailsViewModel by viewModels()
 
@@ -439,7 +441,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
             if (route.paramsHash.containsKey(RouterParams.SUBMISSION_ID)) {
                 // Indicate that we want to route to the Submission Details page - this will give us a small backstack, allowing the user to hit back and go to Assignment Details instead
                 // of closing the app (in the case of when the app isn't running and the user hits a push notification that takes them to Submission Details)
-                route.arguments.putString(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID])
+                route.arguments.putLong(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID]?.toLong().orDefault())
             }
 
             if (route.paramsHash.containsKey(RouterParams.COURSE_ID)) {

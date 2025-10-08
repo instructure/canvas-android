@@ -114,6 +114,7 @@ class AssignmentDetailsViewModelTest {
 
         every { savedStateHandle.get<Long>(Const.COURSE_ID) } returns 0L
         every { savedStateHandle.get<Long>(Const.ASSIGNMENT_ID) } returns 0L
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns 0L
 
         every { apiPrefs.user } returns User(id = 1)
         every { themePrefs.textButtonColor } returns 0
@@ -1141,6 +1142,118 @@ class AssignmentDetailsViewModelTest {
                 0
             )
         }
+    }
+
+    @Test
+    fun `loadData navigates to submission screen when submissionId is provided and matches`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = submissionId, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        val expected = AssignmentDetailAction.NavigateToSubmissionScreen(
+            isObserver = false,
+            selectedSubmissionAttempt = 2L,
+            assignmentUrl = "https://assignment.url",
+            isAssignmentEnhancementEnabled = true
+        )
+        assertEquals(expected, viewModel.events.value?.peekContent())
+    }
+
+    @Test
+    fun `loadData does not navigate when submissionId is not provided`() {
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = 12345L, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns null
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submissionId does not match`() {
+        val submissionId = 99999L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = 12345L, attempt = 2, submissionType = "online_text_entry")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submission is null`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = null)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submission type is not_graded`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = submissionId, attempt = 2, submissionType = "not_graded")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
+    }
+
+    @Test
+    fun `loadData does not navigate when submission type is on_paper`() {
+        val submissionId = 12345L
+        val course = Course(enrollments = mutableListOf(Enrollment(type = Enrollment.EnrollmentType.Student)))
+        coEvery { assignmentDetailsRepository.getCourseWithGrade(any(), any()) } returns course
+
+        val submission = Submission(id = submissionId, attempt = 2, submissionType = "on_paper")
+        val assignment = Assignment(id = 1L, htmlUrl = "https://assignment.url", submission = submission)
+        coEvery { assignmentDetailsRepository.getAssignment(any(), any(), any(), any()) } returns assignment
+        coEvery { assignmentDetailsRepository.isAssignmentEnhancementEnabled(any(), any()) } returns true
+
+        every { savedStateHandle.get<Long>(Const.SUBMISSION_ID) } returns submissionId
+
+        val viewModel = getViewModel()
+
+        assertFalse(viewModel.events.value?.peekContent() is AssignmentDetailAction.NavigateToSubmissionScreen)
     }
 
     @Test
