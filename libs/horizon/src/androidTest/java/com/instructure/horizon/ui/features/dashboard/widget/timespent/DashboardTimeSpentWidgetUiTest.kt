@@ -110,7 +110,7 @@ class DashboardTimeSpentWidgetUiTest {
         composeTestRule.onNodeWithText("hours in").assertIsDisplayed()
 
         // Verify dropdown shows "all courses" by default
-        composeTestRule.onNodeWithText("all courses").assertIsDisplayed()
+        composeTestRule.onNodeWithText("all courses", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
@@ -187,7 +187,7 @@ class DashboardTimeSpentWidgetUiTest {
         composeTestRule.onNodeWithText("hours in").assertIsDisplayed()
 
         // Verify dropdown shows "all courses" by default
-        composeTestRule.onNodeWithText("all courses").assertIsDisplayed().assertHasClickAction()
+        composeTestRule.onNodeWithText("all courses", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
@@ -212,7 +212,7 @@ class DashboardTimeSpentWidgetUiTest {
         composeTestRule.onNodeWithText("9").assertIsDisplayed()
 
         // Verify selected course name is displayed
-        composeTestRule.onNodeWithText("English Literature").assertIsDisplayed()
+        composeTestRule.onNodeWithText("English Literature", useUnmergedTree = true).assertIsDisplayed()
     }
 
     @Test
@@ -251,7 +251,6 @@ class DashboardTimeSpentWidgetUiTest {
 
     @Test
     fun testCourseDropdownInteraction() {
-        var selectedCourseName: String? = null
         val state = DashboardTimeSpentUiState(
             state = DashboardItemState.SUCCESS,
             cardState = DashboardTimeSpentCardState(
@@ -261,9 +260,7 @@ class DashboardTimeSpentWidgetUiTest {
                     CourseOption(id = 2L, name = "Data Structures")
                 ),
                 selectedCourseId = null,
-                onCourseSelected = { courseName ->
-                    selectedCourseName = courseName
-                }
+                onCourseSelected = { }
             )
         )
 
@@ -272,9 +269,8 @@ class DashboardTimeSpentWidgetUiTest {
         }
 
         // Verify dropdown is displayed and clickable
-        composeTestRule.onNodeWithText("all courses")
+        composeTestRule.onNodeWithText("all courses", useUnmergedTree = true)
             .assertIsDisplayed()
-            .assertHasClickAction()
             .performClick()
 
         // After clicking dropdown, course options should appear

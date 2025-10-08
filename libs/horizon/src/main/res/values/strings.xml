@@ -387,8 +387,6 @@
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
     <string name="dashboardCompletedCourseDetails">Congrats! You’ve completed your course. View your progress and scores on the Learn page.</string>
-    <string name="a11y_inboxComposeSelectCourse">Select Course</string>
-    <string name="a11y_close">Close</string>
     <string name="a11y_expanded">Expanded</string>
     <string name="a11y_collapsed">Collapsed</string>
     <string name="a11y_expand">Expand</string>
