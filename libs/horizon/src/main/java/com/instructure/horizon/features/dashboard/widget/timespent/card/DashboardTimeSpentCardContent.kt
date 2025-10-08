@@ -73,7 +73,9 @@ fun DashboardTimeSpentCardContent(
 
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.align(Alignment.CenterVertically)
+                modifier = Modifier
+                    .align(Alignment.CenterVertically)
+                    .width(IntrinsicSize.Max)
             ) {
                 if (state.courses.size > 1) {
                     Text(
@@ -101,7 +103,6 @@ fun DashboardTimeSpentCardContent(
                         text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
                         style = HorizonTypography.labelMediumBold,
                         color = HorizonColors.Text.title(),
-                        modifier = Modifier.width(IntrinsicSize.Max)
                     )
                 }
             }
