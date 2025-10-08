@@ -20,7 +20,7 @@ import com.instructure.canvasapi2.GetCoursesQuery
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.JourneyApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ModuleItem
@@ -43,7 +43,7 @@ class DashboardCourseRepositoryTest {
     private val moduleApi: ModuleAPI. ModuleInterface = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
     private val enrollmentApi: EnrollmentAPI. EnrollmentInterface = mockk(relaxed = true)
-    private val journeyApiManager: JourneyApiManager = mockk(relaxed = true)
+    private val getProgramsManager: GetProgramsManager = mockk(relaxed = true)
 
     private val userId = 1L
     @Before
@@ -119,11 +119,11 @@ class DashboardCourseRepositoryTest {
                 emptyList()
             ),
         )
-        coEvery { journeyApiManager.getPrograms(any()) } returns programs
+        coEvery { getProgramsManager.getPrograms(any()) } returns programs
         val repository = getRepository()
 
         val result = repository.getPrograms()
-        coVerify { journeyApiManager.getPrograms(any()) }
+        coVerify { getProgramsManager.getPrograms(any()) }
         assertEquals(programs, result)
     }
 
@@ -179,6 +179,6 @@ class DashboardCourseRepositoryTest {
     }
 
     private fun getRepository(): DashboardCourseRepository {
-        return DashboardCourseRepository(horizonGetCoursesManager, moduleApi, apiPrefs, enrollmentApi, journeyApiManager)
+        return DashboardCourseRepository(horizonGetCoursesManager, moduleApi, apiPrefs, enrollmentApi, getProgramsManager)
     }
 }
