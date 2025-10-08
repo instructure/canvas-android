@@ -68,7 +68,6 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
     // Should be able to add a comment on a submission
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    @Stub
     fun testComments_addCommentToSingleAttemptSubmission() {
 
         val data = getToCourse()
@@ -94,7 +93,6 @@ class SubmissionDetailsInteractionTest : StudentComposeTest() {
 
     @Test
     @TestMetaData(Priority.MANDATORY, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    @Stub
     fun testComments_addCommentToMultipleAttemptSubmission() {
         val data = getToCourse()
         val assignment = data.addAssignment(
