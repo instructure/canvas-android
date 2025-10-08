@@ -367,7 +367,6 @@
     <string name="dashboardCourseCardRetryLabel">Retry</string>
     <string name="dashboardNotStartedProgramDescription">Welcome! View your program to enroll in your first course.</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
-    <string name="dashboardCompletedCourseDetails">Congrats! You\'ve completed your course. View your progress and scores on the Learn page.</string>
     <string name="dashboardTimeSpentTitle">Time</string>
     <string name="dashboardTimeSpentLoadingMessage">This widget will update once data becomes available.</string>
     <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
@@ -375,4 +374,15 @@
     <string name="dashboardTimeSpentHoursIn">hours in</string>
     <string name="dashboardTimeSpentHoursInYourCourse">hours in your course</string>
     <string name="dashboardTimeSpentAllCourses">all courses</string>
+    <string name="dashboardCompletedCourseDetails">Congrats! You’ve completed your course. View your progress and scores on the Learn page.</string>
+    <string name="a11y_inboxComposeSelectCourse">Select Course</string>
+    <string name="a11y_close">Close</string>
+    <string name="a11y_expanded">Expanded</string>
+    <string name="a11y_collapsed">Collapsed</string>
+    <string name="a11y_expand">Expand</string>
+    <string name="a11y_collapse">Collapse</string>
+    <string name="a11y_completed">Completed</string>
+    <string name="a11y_not_completed">Not completed</string>
+    <string name="a11y_locked">Locked</string>
+    <string name="a11y_unselected">Unselected</string>
 </resources>

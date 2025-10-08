@@ -200,10 +200,10 @@ class CommentsViewModel @Inject constructor(
 
         viewModelScope.tryLaunch {
             commentsRepository.postComment(courseId, assignmentId, apiPrefs.user?.id.orDefault(), attempt, commentText).dataOrThrow
-            reloadData()
             _uiState.update {
                 it.copy(comment = TextFieldValue(""), postingComment = false)
             }
+            reloadData()
         } catch { _ ->
             _uiState.update { it.copy(postingComment = false, errorMessage = context.getString(R.string.commentsBottomSheet_failedToPostComment)) }
         }

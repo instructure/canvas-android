@@ -32,19 +32,25 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.semantics.invisibleToUser
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
+import com.instructure.horizon.horizonui.expandable
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 
+@OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun CollapsableContentCard(
     title: String,
@@ -65,13 +71,18 @@ fun CollapsableContentCard(
                 .padding(vertical = 16.dp)
         ) {
             Column(
-                modifier = Modifier.clickable { onExpandChanged(!expanded) }
+                modifier = Modifier
+                    .clickable { onExpandChanged(!expanded) }
+                    .semantics {
+                        invisibleToUser()
+                    }
             ){
                 Text(
                     title,
                     style = HorizonTypography.h2,
                     color = HorizonColors.Text.body(),
-                    modifier = Modifier.padding(horizontal = 24.dp)
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
                 )
 
                 HorizonSpace(SpaceSize.SPACE_16)
@@ -80,11 +91,15 @@ fun CollapsableContentCard(
                     targetValue = if (expanded) 180f else 0f,
                     label = "rotationAnimation"
                 )
-
+                val context = LocalContext.current
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 24.dp)
+                        .semantics(mergeDescendants = true) {
+                            expandable(context, expanded)
+                        }
+
                 ) {
                     Icon(
                         painter = painterResource(R.drawable.keyboard_arrow_down),
