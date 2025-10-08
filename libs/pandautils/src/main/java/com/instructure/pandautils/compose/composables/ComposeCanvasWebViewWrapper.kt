@@ -21,6 +21,8 @@ import android.webkit.WebView
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.saveable.Saver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
@@ -48,7 +50,10 @@ fun ComposeCanvasWebViewWrapper(
     embeddedWebViewCallbacks: ComposeEmbeddedWebViewCallbacks? = null,
 ) {
     val webViewState = rememberSaveable(content) { bundleOf() }
-    val savedHtml = rememberSaveable(content) { content }
+    val savedHtml = rememberSaveable(content, stateSaver = Saver(
+        save = { it },
+        restore = { it }
+    )) { mutableStateOf(content) }
     val savedThemeSwitched = rememberSaveable { bundleOf("themeSwitched" to false) }
     val configuration = LocalConfiguration.current
     val configKey = "${configuration.orientation}-${configuration.uiMode}"
@@ -91,24 +96,25 @@ fun ComposeCanvasWebViewWrapper(
             },
             update = { view ->
                 configKey // Read configuration to trigger update on change
+                savedHtml.value = content // Update saved HTML on each update
                 if (webViewState.isEmpty) {
                     if (useInAppFormatting) {
-                        view.loadHtml(savedHtml, title)
+                        view.loadHtml(savedHtml.value, title)
                     } else {
-                        view.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), savedHtml, contentType, "UTF-8", null)
+                        view.loadDataWithBaseUrl(CanvasWebView.getReferrer(true), savedHtml.value, contentType, "UTF-8", null)
                     }
 
                     if (onLtiButtonPressed != null) {
                         view.webView.addJavascriptInterface(JsExternalToolInterface(onLtiButtonPressed), Const.LTI_TOOL)
                     }
 
-                    if (HtmlContentFormatter.hasGoogleDocsUrl(savedHtml)) {
+                    if (HtmlContentFormatter.hasGoogleDocsUrl(savedHtml.value)) {
                         view.webView.addJavascriptInterface(JsGoogleDocsInterface(view.context), Const.GOOGLE_DOCS)
                     }
                     view.handleConfigurationChange()
                 } else {
                     view.webView.restoreState(webViewState)
-                    view.setHtmlContent(savedHtml)
+                    view.setHtmlContent(savedHtml.value)
                     view.setThemeSwitched(savedThemeSwitched.getBoolean("themeSwitched", false))
                     view.handleConfigurationChange(reloadContent = false)
                 }
