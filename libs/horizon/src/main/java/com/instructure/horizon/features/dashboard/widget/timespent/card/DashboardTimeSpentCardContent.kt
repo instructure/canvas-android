@@ -128,6 +128,22 @@ private fun DashboardTimeSpentCardContentPreview() {
 
 @Composable
 @Preview
+private fun DashboardTimeSpentCardSelectedContentPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(
+            hours = 24.5,
+            courses = listOf(
+                CourseOption(1, "Introduction to Computer Science"),
+                CourseOption(2, "Advanced Mathematics"),
+                CourseOption(3, "Physics 101")
+            ),
+            selectedCourseId = 1
+        )
+    )
+}
+
+@Composable
+@Preview
 private fun DashboardTimeSpentCardContentSingleCoursePreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(
