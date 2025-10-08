@@ -38,7 +38,7 @@ import com.instructure.canvas.espresso.common.pages.compose.SmartSearchPreferenc
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.student.R
 import com.instructure.student.activity.LoginActivity
-import com.instructure.student.ui.pages.StudentAssignmentDetailsPage
+import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
 import org.junit.Rule
 
 abstract class StudentComposeTest : StudentTest() {

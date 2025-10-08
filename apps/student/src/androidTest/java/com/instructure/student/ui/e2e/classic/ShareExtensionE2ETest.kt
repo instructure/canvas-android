@@ -24,9 +24,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
-import com.instructure.canvas.espresso.E2E
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
 import com.instructure.dataseeding.model.SubmissionType

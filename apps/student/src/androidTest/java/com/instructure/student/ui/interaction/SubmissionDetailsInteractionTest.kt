@@ -17,8 +17,6 @@
 package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.test.junit4.createEmptyComposeRule
-import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -28,7 +26,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addFileToCourse
@@ -36,13 +33,6 @@ import com.instructure.canvas.espresso.mockcanvas.addRubricToAssignment
 import com.instructure.canvas.espresso.mockcanvas.addSubmissionForAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
 import com.instructure.canvas.espresso.mockcanvas.init
-import com.instructure.canvas.espresso.mockCanvas.MockCanvas
-import com.instructure.canvas.espresso.mockCanvas.addAssignment
-import com.instructure.canvas.espresso.mockCanvas.addFileToCourse
-import com.instructure.canvas.espresso.mockCanvas.addRubricToAssignment
-import com.instructure.canvas.espresso.mockCanvas.addSubmissionForAssignment
-import com.instructure.canvas.espresso.mockCanvas.fakes.FakeCustomGradeStatusesManager
-import com.instructure.canvas.espresso.mockCanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
