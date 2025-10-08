@@ -588,14 +588,16 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
 @Composable
 private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
-    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
-    var textFieldScore by remember(uiState.enteredGrade) { mutableStateOf(grade) }
+    val gradeAsFloat = grade.toFloatOrNull() ?: 0f
 
-    val maxScore by remember(uiState.enteredGrade) {
+    var sliderDrivenScore by remember(gradeAsFloat) { mutableFloatStateOf(gradeAsFloat) }
+    var textFieldScore by remember(gradeAsFloat) {
+        mutableStateOf(if (gradeAsFloat == 0f) "" else numberFormatter.format(gradeAsFloat))
+    }
+
+    val maxScore by remember(gradeAsFloat) {
         mutableFloatStateOf(
-            max(
-                grade.toFloatOrNull() ?: 0f, 100f
-            )
+            max(gradeAsFloat, 100f)
         )
     }
     val sliderState = remember(maxScore) {
@@ -607,19 +609,9 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
+        val currentPercentage = uiState.enteredGrade?.replace("%", "")?.toFloatOrNull()
+        if (scoreAsFloat != currentPercentage) {
             uiState.onPercentageChange(scoreAsFloat)
-        }
-    }
-
-    LaunchedEffect(grade) {
-        val newScore = grade.toFloatOrNull()
-        if (textFieldScore != newScore?.toString()) {
-            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
-        }
-        if (sliderDrivenScore != (newScore ?: 0f)) {
-            sliderDrivenScore = newScore ?: 0f
-            sliderState.value = (newScore ?: 0f).coerceAtLeast(0f)
         }
     }
 
