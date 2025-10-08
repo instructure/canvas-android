@@ -52,7 +52,7 @@ class DashboardSkillHighlightsViewModel @Inject constructor(
 
     private suspend fun loadSkillsData(forceNetwork: Boolean = false) {
         _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-        val skills = repository.getSkills(completedOnly = null, forceNetwork = forceNetwork)
+        val skills = repository.getSkills(completedOnly = true, forceNetwork = forceNetwork)
 
         val topSkills = skills
             .map { skill ->
