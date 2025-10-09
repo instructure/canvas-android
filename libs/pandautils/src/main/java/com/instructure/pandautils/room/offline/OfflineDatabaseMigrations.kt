@@ -122,6 +122,7 @@ val offlineDatabaseMigrations = arrayOf(
     },
     createMigration(5, 6) { database ->
         database.execSQL("ALTER TABLE `SubmissionEntity` ADD COLUMN `hasSubAssignmentSubmissions` INTEGER NOT NULL DEFAULT 0")
+        database.execSQL("ALTER TABLE `DiscussionTopicHeaderEntity` ADD COLUMN `replyRequiredCount` INTEGER")
         database.execSQL(
             "CREATE TABLE IF NOT EXISTS `CheckpointEntity` (" +
                     "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +

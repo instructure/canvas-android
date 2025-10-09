@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "df2b52e76b29af7a124ff05c81b0c1fd",
+    "identityHash": "e0e8981a53e92176b25c0fb1066137d6",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -1294,7 +1294,7 @@
       },
       {
         "tableName": "DiscussionTopicHeaderEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `discussionType` TEXT, `title` TEXT, `message` TEXT, `htmlUrl` TEXT, `postedDate` INTEGER, `delayedPostDate` INTEGER, `lastReplyDate` INTEGER, `requireInitialPost` INTEGER NOT NULL, `discussionSubentryCount` INTEGER NOT NULL, `readState` TEXT, `unreadCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `assignmentId` INTEGER, `locked` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `pinned` INTEGER NOT NULL, `authorId` INTEGER, `podcastUrl` TEXT, `groupCategoryId` TEXT, `announcement` INTEGER NOT NULL, `permissionId` INTEGER, `published` INTEGER NOT NULL, `allowRating` INTEGER NOT NULL, `onlyGradersCanRate` INTEGER NOT NULL, `sortByRating` INTEGER NOT NULL, `subscribed` INTEGER NOT NULL, `lockAt` INTEGER, `userCanSeePosts` INTEGER NOT NULL, `specificSections` TEXT, `anonymousState` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`authorId`) REFERENCES `DiscussionParticipantEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`permissionId`) REFERENCES `DiscussionTopicPermissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `discussionType` TEXT, `title` TEXT, `message` TEXT, `htmlUrl` TEXT, `postedDate` INTEGER, `delayedPostDate` INTEGER, `lastReplyDate` INTEGER, `requireInitialPost` INTEGER NOT NULL, `discussionSubentryCount` INTEGER NOT NULL, `readState` TEXT, `unreadCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `assignmentId` INTEGER, `locked` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `pinned` INTEGER NOT NULL, `authorId` INTEGER, `podcastUrl` TEXT, `groupCategoryId` TEXT, `announcement` INTEGER NOT NULL, `permissionId` INTEGER, `published` INTEGER NOT NULL, `allowRating` INTEGER NOT NULL, `onlyGradersCanRate` INTEGER NOT NULL, `sortByRating` INTEGER NOT NULL, `subscribed` INTEGER NOT NULL, `lockAt` INTEGER, `userCanSeePosts` INTEGER NOT NULL, `specificSections` TEXT, `anonymousState` TEXT, `replyRequiredCount` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`authorId`) REFERENCES `DiscussionParticipantEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`permissionId`) REFERENCES `DiscussionTopicPermissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1492,6 +1492,12 @@
             "fieldPath": "anonymousState",
             "columnName": "anonymousState",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "replyRequiredCount",
+            "columnName": "replyRequiredCount",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -5820,7 +5826,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'df2b52e76b29af7a124ff05c81b0c1fd')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0e8981a53e92176b25c0fb1066137d6')"
     ]
   }
 }
