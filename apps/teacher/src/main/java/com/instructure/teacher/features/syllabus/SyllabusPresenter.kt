@@ -87,7 +87,16 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     }
 
     private fun getIcon(event: ScheduleItem): Int {
-        return if (event.assignment != null) getAssignmentIcon(event.assignment!!) else R.drawable.ic_calendar
+        return if (event.assignment != null) getAssignmentIcon(event.assignment!!) else getIconForType(event.type)
+    }
+
+    private fun getIconForType(type: String): Int = when (type) {
+        "quiz" -> R.drawable.ic_quiz
+        "discussion_topic" -> R.drawable.ic_discussion
+        "announcement" -> R.drawable.ic_announcement
+        "wiki_page" -> R.drawable.ic_document
+        "planner_note" -> R.drawable.ic_info
+        else -> R.drawable.ic_calendar
     }
 
     private fun getAssignmentIcon(assignment: Assignment): Int {

@@ -20,6 +20,7 @@ package com.instructure.student.test.syllabus
 
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.apis.CourseAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
@@ -40,12 +41,13 @@ class SyllabusNetworkDataSourceTest {
 
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
     private val calendarEventApi: CalendarEventAPI.CalendarEventInterface = mockk(relaxed = true)
+    private val plannerApi: PlannerAPI.PlannerInterface = mockk(relaxed = true)
 
     private lateinit var syllabusNetworkDataSource: SyllabusNetworkDataSource
 
     @Before
     fun setup() {
-        syllabusNetworkDataSource = SyllabusNetworkDataSource(courseApi, calendarEventApi)
+        syllabusNetworkDataSource = SyllabusNetworkDataSource(courseApi, calendarEventApi, plannerApi)
     }
 
     @Test

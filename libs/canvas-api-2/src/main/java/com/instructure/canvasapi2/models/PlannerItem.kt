@@ -17,6 +17,7 @@ package com.instructure.canvasapi2.models
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.utils.toApiString
 import kotlinx.parcelize.Parcelize
 import java.util.*
 
@@ -80,6 +81,34 @@ data class PlannerItem (
         get() = plannableDate
     override val comparisonString: String
         get() = "${plannable.title}${plannable.subAssignmentTag}"
+
+    fun toScheduleItem(): ScheduleItem {
+        val contextCode = when {
+            courseId != null -> "course_$courseId"
+            groupId != null -> "group_$groupId"
+            userId != null -> "user_$userId"
+            else -> null
+        }
+
+        return ScheduleItem(
+            itemId = plannable.id.toString(),
+            title = plannable.title,
+            description = plannable.details,
+            startAt = plannable.todoDate ?: plannableDate.toApiString(),
+            endAt = plannable.endAt?.toApiString(),
+            isAllDay = plannable.allDay ?: false,
+            allDayAt = if (plannable.allDay == true) plannable.todoDate else null,
+            htmlUrl = htmlUrl,
+            contextCode = contextCode,
+            contextName = contextName,
+            type = when (plannableType) {
+                PlannableType.DISCUSSION_TOPIC -> "discussion_topic"
+                PlannableType.WIKI_PAGE -> "wiki_page"
+                else -> plannableType.name.lowercase()
+            },
+            itemType = ScheduleItem.Type.TYPE_SYLLABUS
+        )
+    }
 
 }
 

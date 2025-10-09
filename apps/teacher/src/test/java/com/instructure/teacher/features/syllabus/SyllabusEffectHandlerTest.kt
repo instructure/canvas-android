@@ -19,7 +19,10 @@ package com.instructure.teacher.features.syllabus
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.managers.CalendarEventManager
 import com.instructure.canvasapi2.managers.CourseManager
+import com.instructure.canvasapi2.managers.PlannerManager
 import com.instructure.canvasapi2.models.*
+import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.teacher.features.syllabus.ui.SyllabusView
@@ -29,6 +32,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.asCoroutineDispatcher
 import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 import java.util.*
@@ -54,6 +58,13 @@ class SyllabusEffectHandlerTest {
     fun setup() {
         Dispatchers.setMain(Executors.newSingleThreadExecutor().asCoroutineDispatcher())
         course = Course(id = COURSE_ID)
+        mockkObject(ApiPrefs)
+        every { ApiPrefs.fullDomain } returns "https://test.instructure.com"
+    }
+
+    @After
+    fun tearDown() {
+        unmockkAll()
     }
 
     @Test
@@ -95,6 +106,11 @@ class SyllabusEffectHandlerTest {
 
         mockkObject(CalendarEventManager)
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), any(), any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Fail()
+        }
+
+        mockkObject(PlannerManager)
+        every { PlannerManager.getPlannerItemsExhaustiveAsync(any(), any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Fail()
         }
 
@@ -147,6 +163,11 @@ class SyllabusEffectHandlerTest {
             coEvery { await() } returns DataResult.Success(calendarEvents)
         }
 
+        mockkObject(PlannerManager)
+        every { PlannerManager.getPlannerItemsExhaustiveAsync(any(), any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
         // When
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
@@ -189,6 +210,11 @@ class SyllabusEffectHandlerTest {
             coEvery { await() } returns DataResult.Fail()
         }
 
+        mockkObject(PlannerManager)
+        every { PlannerManager.getPlannerItemsExhaustiveAsync(any(), any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
+        }
+
         // When
         effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
 
@@ -223,6 +249,11 @@ class SyllabusEffectHandlerTest {
         }
         every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.CALENDAR, any(), any(), any(), any()) } returns mockk {
             coEvery { await() } returns DataResult.Success(calendarEvents)
+        }
+
+        mockkObject(PlannerManager)
+        every { PlannerManager.getPlannerItemsExhaustiveAsync(any(), any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(emptyList())
         }
 
         // When
@@ -270,6 +301,153 @@ class SyllabusEffectHandlerTest {
         verify(timeout = 100) {
             eventConsumer.accept(expectedEvent)
         }
+
+        confirmVerified(eventConsumer)
+    }
+
+    @Test
+    fun `LoadData should filter out assignment and calendar event type planner items to avoid duplicates`() {
+        // Given
+        val now = Date().time
+        val assignment = ScheduleItem(
+            itemId = "123",
+            itemType = ScheduleItem.Type.TYPE_ASSIGNMENT,
+            startAt = Date(now + 1000).toApiString()
+        )
+        val calendarEvent = ScheduleItem(
+            itemId = "789",
+            itemType = ScheduleItem.Type.TYPE_CALENDAR,
+            startAt = Date(now + 2000).toApiString()
+        )
+        val plannerAssignment = PlannerItem(
+            courseId = COURSE_ID,
+            groupId = null,
+            userId = null,
+            contextType = "Course",
+            contextName = "Test Course",
+            plannableType = PlannableType.ASSIGNMENT,
+            plannable = Plannable(
+                id = 123,
+                title = "Assignment",
+                courseId = COURSE_ID,
+                groupId = null,
+                userId = null,
+                pointsPossible = null,
+                dueAt = null,
+                assignmentId = null,
+                todoDate = null,
+                startAt = null,
+                endAt = null,
+                details = null,
+                allDay = null
+            ),
+            plannableDate = Date(),
+            htmlUrl = null,
+            submissionState = null,
+            newActivity = false
+        )
+        val plannerCalendarEvent = PlannerItem(
+            courseId = COURSE_ID,
+            groupId = null,
+            userId = null,
+            contextType = "Course",
+            contextName = "Test Course",
+            plannableType = PlannableType.CALENDAR_EVENT,
+            plannable = Plannable(
+                id = 789,
+                title = "Calendar Event",
+                courseId = COURSE_ID,
+                groupId = null,
+                userId = null,
+                pointsPossible = null,
+                dueAt = null,
+                assignmentId = null,
+                todoDate = null,
+                startAt = null,
+                endAt = null,
+                details = null,
+                allDay = null
+            ),
+            plannableDate = Date(),
+            htmlUrl = null,
+            submissionState = null,
+            newActivity = false
+        )
+        val plannerQuiz = PlannerItem(
+            courseId = COURSE_ID,
+            groupId = null,
+            userId = null,
+            contextType = "Course",
+            contextName = "Test Course",
+            plannableType = PlannableType.QUIZ,
+            plannable = Plannable(
+                id = 456,
+                title = "Quiz",
+                courseId = COURSE_ID,
+                groupId = null,
+                userId = null,
+                pointsPossible = null,
+                dueAt = null,
+                assignmentId = null,
+                todoDate = Date(now + 3000).toApiString(),
+                startAt = null,
+                endAt = null,
+                details = null,
+                allDay = null
+            ),
+            plannableDate = Date(now + 3000),
+            htmlUrl = null,
+            submissionState = null,
+            newActivity = false
+        )
+
+        mockkObject(CourseManager)
+        every { CourseManager.getCourseWithSyllabusAsync(COURSE_ID, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(course)
+        }
+        every { CourseManager.getCourseSettingsAsync(COURSE_ID, false) } returns mockk {
+            coEvery { await() } returns DataResult.Success(CourseSettings(courseSummary = true))
+        }
+        every { CourseManager.getPermissionsAsync(any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(permissions)
+        }
+
+        mockkObject(CalendarEventManager)
+        every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.ASSIGNMENT, any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(assignment))
+        }
+        every { CalendarEventManager.getCalendarEventsExhaustiveAsync(any(), CalendarEventAPI.CalendarEventType.CALENDAR, any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(calendarEvent))
+        }
+
+        mockkObject(PlannerManager)
+        every { PlannerManager.getPlannerItemsExhaustiveAsync(any(), any(), any(), any(), any()) } returns mockk {
+            coEvery { await() } returns DataResult.Success(listOf(plannerAssignment, plannerCalendarEvent, plannerQuiz))
+        }
+
+        // When
+        effectHandler.accept(SyllabusEffect.LoadData(COURSE_ID, false))
+
+        // Then
+        // Capture what was actually called
+        val slot = slot<SyllabusEvent.DataLoaded>()
+        verify(timeout = 100) {
+            eventConsumer.accept(capture(slot))
+        }
+
+        // Verify the captured event
+        val event = slot.captured
+        assert(event.course is DataResult.Success)
+        assert(event.events is DataResult.Success)
+        assert(event.permissionsResult is DataResult.Success)
+        assert(event.summaryAllowed == true)
+
+        // Verify we have exactly 3 items: assignment, calendar event, and quiz (no planner duplicates)
+        val items = event.events.dataOrNull!!
+        assert(items.size == 3) { "Expected 3 items, got ${items.size}" }
+        assert(items.count { it.itemType == ScheduleItem.Type.TYPE_ASSIGNMENT } == 1) { "Expected 1 assignment" }
+        assert(items.count { it.itemType == ScheduleItem.Type.TYPE_CALENDAR } == 1) { "Expected 1 calendar event" }
+        assert(items.count { it.itemType == ScheduleItem.Type.TYPE_SYLLABUS } == 1) { "Expected 1 quiz/syllabus item" }
 
         confirmVerified(eventConsumer)
     }

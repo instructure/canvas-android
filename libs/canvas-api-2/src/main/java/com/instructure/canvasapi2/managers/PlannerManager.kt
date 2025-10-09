@@ -22,11 +22,50 @@ import com.instructure.canvasapi2.builders.RestBuilder
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.PlannerOverride
+import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.weave.apiAsync
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.async
 
 class PlannerManager(private val plannerApi: PlannerAPI) {
 
-    fun getPlannerItemsAsync(forceNetwork: Boolean, startDate: String? = null, endDate: String? = null) = apiAsync<List<PlannerItem>> { getPlannerItems(forceNetwork, it, startDate, endDate) }
+    fun getPlannerItemsAsync(
+        forceNetwork: Boolean,
+        startDate: String? = null,
+        endDate: String? = null,
+        contextCodes: List<String> = emptyList(),
+        filter: String? = null
+    ): Deferred<DataResult<List<PlannerItem>>> {
+        return if (contextCodes.isEmpty() && filter == null) {
+            apiAsync<List<PlannerItem>> { getPlannerItems(forceNetwork, it, startDate, endDate) }
+        } else {
+            GlobalScope.async {
+                val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+                val api = RestBuilder().build(PlannerAPI.PlannerInterface::class.java, restParams)
+                api.getPlannerItems(startDate, endDate, contextCodes, filter, restParams)
+                    .depaginate { api.nextPagePlannerItems(it, restParams) }
+            }
+        }
+    }
+
+    companion object {
+        fun getPlannerItemsExhaustiveAsync(
+            startDate: String?,
+            endDate: String?,
+            contextCodes: List<String>,
+            filter: String?,
+            forceNetwork: Boolean
+        ): Deferred<DataResult<List<PlannerItem>>> {
+            return GlobalScope.async {
+                val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
+                val api = RestBuilder().build(PlannerAPI.PlannerInterface::class.java, restParams)
+                api.getPlannerItems(startDate, endDate, contextCodes, filter, restParams)
+                    .depaginate { api.nextPagePlannerItems(it, restParams) }
+            }
+        }
+    }
 
     fun getPlannerItems(
             forceNetwork: Boolean,
