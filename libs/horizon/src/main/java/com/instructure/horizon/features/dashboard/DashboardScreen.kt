@@ -166,6 +166,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     refreshStateFlow
                 )
                 DashboardSkillHighlightsWidget(
+                    homeNavController,
                     shouldRefresh,
                     refreshStateFlow
                 )

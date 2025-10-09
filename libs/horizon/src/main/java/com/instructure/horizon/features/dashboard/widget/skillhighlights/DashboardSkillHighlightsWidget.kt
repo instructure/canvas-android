@@ -24,6 +24,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardContent
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardError
@@ -33,6 +34,7 @@ import kotlinx.coroutines.flow.update
 
 @Composable
 fun DashboardSkillHighlightsWidget(
+    homeNavController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>
 ) {
@@ -48,12 +50,13 @@ fun DashboardSkillHighlightsWidget(
         }
     }
 
-    DashboardSkillHighlightsSection(state)
+    DashboardSkillHighlightsSection(state, homeNavController)
 }
 
 @Composable
 fun DashboardSkillHighlightsSection(
-    state: DashboardSkillHighlightsUiState
+    state: DashboardSkillHighlightsUiState,
+    homeNavController: NavHostController,
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
@@ -68,6 +71,7 @@ fun DashboardSkillHighlightsSection(
         DashboardItemState.SUCCESS -> {
             DashboardSkillHighlightsCardContent(
                 state.cardState,
+                homeNavController,
                 Modifier.padding(horizontal = 16.dp)
             )
         }

@@ -17,6 +17,7 @@
 package com.instructure.horizon.features.dashboard.widget.skillhighlights.card
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -31,9 +32,13 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.home.HomeNavigationRoute
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -47,6 +52,7 @@ import com.instructure.horizon.horizonui.molecules.PillType
 @Composable
 fun DashboardSkillHighlightsCardContent(
     state: DashboardSkillHighlightsCardState,
+    homeNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     DashboardWidgetCard(
@@ -81,8 +87,9 @@ fun DashboardSkillHighlightsCardContent(
             ) {
                 state.skills.forEach { skill ->
                     SkillCard(
-                        skill = skill,
-                        opacity = skill.proficiencyLevel.opacity(),
+                        skill,
+                        skill.proficiencyLevel.opacity(),
+                        homeNavController
                     )
                 }
             }
@@ -94,15 +101,24 @@ fun DashboardSkillHighlightsCardContent(
 private fun SkillCard(
     skill: SkillHighlight,
     opacity: Float,
-    modifier: Modifier = Modifier
+    homeNavController: NavHostController,
 ) {
     Column(
         verticalArrangement = Arrangement.spacedBy(8.dp),
-        modifier = modifier
+        modifier = Modifier
             .clip(RoundedCornerShape(16.dp))
             .background(HorizonColors.PrimitivesGreen.green12().copy(alpha = opacity))
-            .padding(24.dp)
             .fillMaxWidth()
+            .clickable {
+                homeNavController.navigate(HomeNavigationRoute.Skillspace.route) {
+                    popUpTo(homeNavController.graph.findStartDestination().id) {
+                        saveState = true
+                    }
+                    launchSingleTop = true
+                    restoreState = true
+                }
+            }
+            .padding(24.dp)
     ) {
         Text(
             text = skill.name,
@@ -141,7 +157,8 @@ private fun DashboardSkillHighlightsCardContentPreview() {
                 SkillHighlight("Dolor sit skill name", SkillHighlightProficiencyLevel.BEGINNER),
                 SkillHighlight("Adipiscing elit skill name", SkillHighlightProficiencyLevel.PROFICIENT)
             )
-        )
+        ),
+        rememberNavController()
     )
 }
 
@@ -150,6 +167,7 @@ private fun DashboardSkillHighlightsCardContentPreview() {
 private fun DashboardSkillHighlightsCardContentNoDataPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardSkillHighlightsCardContent(
-        state = DashboardSkillHighlightsCardState(skills = emptyList())
+        state = DashboardSkillHighlightsCardState(skills = emptyList()),
+        rememberNavController()
     )
 }
