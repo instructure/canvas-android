@@ -356,7 +356,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         }
     }
 
-    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo?>, filePaths: List<String>) {
+    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo>, filePaths: List<String>) {
         _uiState.update { state ->
             state.copy(
                 fileSelectorDialogData = null,
