@@ -14,32 +14,31 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.widget.timespent
+package com.instructure.horizon.features.dashboard.widget.skilloverview
 
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavHostController
 import com.instructure.horizon.features.dashboard.DashboardItemState
-import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
-import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardError
-import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardLoading
+import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
+import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardError
+import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
 @Composable
-fun DashboardTimeSpentWidget(
+fun DashboardSkillOverviewWidget(
+    homeNavController: NavHostController,
     shouldRefresh: Boolean,
     refreshState: MutableStateFlow<List<Boolean>>
 ) {
-    val viewModel = hiltViewModel<DashboardTimeSpentViewModel>()
+    val viewModel = hiltViewModel<DashboardSkillOverviewViewModel>()
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(shouldRefresh) {
@@ -51,28 +50,28 @@ fun DashboardTimeSpentWidget(
         }
     }
 
-    DashboardTimeSpentSection(state)
+    DashboardSkillOverviewSection(state, homeNavController)
 }
 
 @Composable
-fun DashboardTimeSpentSection(
-    state: DashboardTimeSpentUiState
+fun DashboardSkillOverviewSection(
+    state: DashboardSkillOverviewUiState,
+    homeNavController: NavHostController,
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardLoading()
+            DashboardSkillOverviewCardLoading()
         }
         DashboardItemState.ERROR -> {
-            DashboardTimeSpentCardError(
+            DashboardSkillOverviewCardError(
                 { state.onRefresh {} }
             )
         }
         DashboardItemState.SUCCESS -> {
-            Box(
-                contentAlignment = Alignment.Center
-            ) {
-                DashboardTimeSpentCardContent(state.cardState)
-            }
+            DashboardSkillOverviewCardContent(
+                state.cardState,
+                homeNavController
+            )
         }
     }
 }

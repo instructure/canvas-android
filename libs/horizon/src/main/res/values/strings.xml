@@ -384,6 +384,11 @@
     <string name="dashboardSkillProficienyLevelProficient">Proficient</string>
     <string name="dashboardSkillProficienyLevelAdvanced">Advanced</string>
     <string name="dashboardSkillProficienyLevelExpert">Expert</string>
+    <string name="dashboardSkillOverviewTitle">Skills</string>
+    <string name="dashboardSkillOverviewEarnedLabel">earned</string>
+    <string name="dashboardSkillOverviewNoDataMessage">This widget will update once data becomes available.</string>
+    <string name="dashboardSkillOverviewErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
+    <string name="dashboardSkillOverviewRetry">Refresh</string>
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
     <string name="dashboardCompletedCourseDetails">Congrats! You’ve completed your course. View your progress and scores on the Learn page.</string>
