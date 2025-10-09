@@ -114,8 +114,34 @@ abstract class CanvasTest : InstructureTestingContract {
         }
 
         val application = originalActivity.application as? TestAppManager
+        Log.d("WorkManagerDebug", "==================== TEST SETUP ====================")
+        Log.d("WorkManagerDebug", "Application instance: ${application.hashCode()}")
+        Log.d("WorkManagerDebug", "Old workerFactory: ${application?.workerFactory.hashCode()}")
+        Log.d("WorkManagerDebug", "New workerFactory from Hilt: ${this.workerFactory.hashCode()}")
+
+        // CHECK: Does WorkManager exist BEFORE we do anything?
+        try {
+            val wmBefore = androidx.work.WorkManager.getInstance(application!!)
+            Log.d("WorkManagerDebug", "WorkManager EXISTS at @Before start: ${wmBefore.hashCode()}")
+        } catch (e: Exception) {
+            Log.d("WorkManagerDebug", "WorkManager does NOT exist at @Before start: ${e.message}")
+        }
+
         application?.workerFactory = this.workerFactory
+
+        Log.d("WorkManagerDebug", "After assignment, application.workerFactory: ${application?.workerFactory.hashCode()}")
         application?.initWorkManager(application)
+        Log.d("WorkManagerDebug", "TestDriver after init: ${application?.testDriver}")
+
+        // CHECK: What's WorkManager after init?
+        try {
+            val wmAfter = androidx.work.WorkManager.getInstance(application!!)
+            Log.d("WorkManagerDebug", "WorkManager after @Before init: ${wmAfter.hashCode()}")
+        } catch (e: Exception) {
+            Log.d("WorkManagerDebug", "WorkManager does NOT exist after init: ${e.message}")
+        }
+
+        Log.d("WorkManagerDebug", "===================================================")
     }
 
     @Before

@@ -45,19 +45,67 @@ open class TestAppManager: AppManager() {
         return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
     }
 
+    // CRITICAL: Prevent automatic WorkManager initialization via Configuration.Provider
+    // We want manual control in tests
+    override val workManagerConfiguration: Configuration
+        get() {
+            Log.w("TestAppManager", "workManagerConfiguration getter called - WorkManager trying to auto-initialize!")
+            throw IllegalStateException("WorkManager should be manually initialized in tests, not auto-initialized")
+        }
+
     override fun performLogoutOnAuthError() = Unit
 
     fun initWorkManager(context: Context) {
+        val factoryBeforeInit = this.workerFactory
+        Log.d("WorkManagerDebug", "initWorkManager called")
+        Log.d("WorkManagerDebug", "  this (TestAppManager): ${this.hashCode()}")
+        Log.d("WorkManagerDebug", "  this.workerFactory: ${factoryBeforeInit.hashCode()}")
+
+        // Check if WorkManager already exists - if so, just reuse it
+        var workManagerExists = false
         try {
-            val config = Configuration.Builder()
-                .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(SynchronousExecutor())
-                .setWorkerFactory(this.getWorkManagerFactory())
-                .build()
-            WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+            val existing = androidx.work.WorkManager.getInstance(context)
+            Log.d("WorkManagerDebug", "  WorkManager ALREADY EXISTS: ${existing.hashCode()}")
+            workManagerExists = true
             testDriver = WorkManagerTestInitHelper.getTestDriver(context)
+            Log.d("WorkManagerDebug", "  Reusing existing WorkManager and testDriver")
         } catch (e: IllegalStateException) {
-            Log.w("TestAppManager", "WorkManager.initialize() failed, likely already initialized: ${e.message}")
+            Log.d("WorkManagerDebug", "  WorkManager does not exist yet, will initialize")
+        }
+
+        // Only initialize if WorkManager doesn't exist yet
+        if (!workManagerExists) {
+            try {
+                val factory = this.getWorkManagerFactory()
+                Log.d("WorkManagerDebug", "  getWorkManagerFactory() returned: ${factory.hashCode()}")
+
+                val config = Configuration.Builder()
+                    .setMinimumLoggingLevel(Log.DEBUG)
+                    .setExecutor(SynchronousExecutor())
+                    .setWorkerFactory(factory)
+                    .build()
+
+                Log.d("WorkManagerDebug", "  Calling initializeTestWorkManager...")
+                WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+                Log.d("WorkManagerDebug", "  initializeTestWorkManager succeeded (first time)")
+
+                testDriver = WorkManagerTestInitHelper.getTestDriver(context)
+                Log.d("WorkManagerDebug", "  testDriver: $testDriver")
+            } catch (e: IllegalStateException) {
+                Log.w("WorkManagerDebug", "WorkManager initialization failed: ${e.message}")
+                testDriver = WorkManagerTestInitHelper.getTestDriver(context)
+            }
+        }
+
+        // Cancel and prune all existing work to ensure clean state for this test
+        try {
+            val workManager = androidx.work.WorkManager.getInstance(context)
+            Log.d("WorkManagerDebug", "  WorkManager instance for cleanup: ${workManager.hashCode()}")
+            workManager.cancelAllWork().result.get() // Wait for cancellation
+            workManager.pruneWork().result.get() // Wait for pruning
+            Log.d("WorkManagerDebug", "  Cancelled and pruned all existing work")
+        } catch (e: Exception) {
+            Log.w("WorkManagerDebug", "  Error cancelling/pruning work: ${e.message}")
         }
     }
 }
