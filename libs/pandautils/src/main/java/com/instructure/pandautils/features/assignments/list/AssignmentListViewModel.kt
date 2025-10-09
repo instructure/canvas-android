@@ -49,6 +49,7 @@ import com.instructure.pandautils.utils.orderedCheckpoints
 import com.instructure.pandautils.utils.toFormattedString
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.async
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -79,6 +80,8 @@ class AssignmentListViewModel @Inject constructor(
 
     private var customStatuses = listOf<CustomGradeStatusesQuery.Node>()
 
+    private var loadJob: Job? = null
+
     init {
         getAssignments(false)
     }
@@ -88,8 +91,9 @@ class AssignmentListViewModel @Inject constructor(
     }
 
     private fun getAssignments(forceRefresh: Boolean = false) {
+        loadJob?.cancel()
         if (courseId != null) {
-            viewModelScope.tryLaunch {
+            loadJob = viewModelScope.tryLaunch {
                 val course = repository.getCourse(courseId, forceRefresh)
                 customStatuses = repository.getCustomGradeStatuses(courseId, forceRefresh)
                 bookmarker = Bookmarker(true, course)

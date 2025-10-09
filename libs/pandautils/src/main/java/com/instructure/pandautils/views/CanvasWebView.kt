@@ -359,6 +359,21 @@ class CanvasWebView @JvmOverloads constructor(
     inner class CanvasWebViewClient : WebViewClient() {
         override fun shouldInterceptRequest(view: WebView, request: WebResourceRequest): WebResourceResponse? {
             val url = request.url.toString()
+
+            if (isCanvadocsDownload(url)) {
+                val fileName = request.url.lastPathSegment
+                if (fileName != null) {
+                    val extension = fileName.substringAfterLast('.', "")
+                    val mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension).orEmpty()
+                    view.post {
+                        canvasWebViewClientCallback?.openMediaFromWebView(mimeType, url, fileName)
+                        view.stopLoading()
+                        view.goBack()
+                    }
+                    return WebResourceResponse(null, null, null)
+                }
+            }
+
             if (isStudioDownload(url) && mediaDownloadCallback != null) {
                 val extensionSegment = request.url.lastPathSegment
                 val extension = extensionSegment?.substringAfterLast('.', "") ?: ""
@@ -818,6 +833,10 @@ class CanvasWebView @JvmOverloads constructor(
 
         fun isStudioDownload(url: String): Boolean {
             return url.contains("instructuremedia.com/fetch/") && url.contains("disposition=download")
+        }
+
+        private fun isCanvadocsDownload(url: String): Boolean {
+            return url.contains("canvadocs") && url.contains("/download/") && url.contains("single_use_token=")
         }
 
         fun containsLTI(html: String, encoding: String?): Boolean {

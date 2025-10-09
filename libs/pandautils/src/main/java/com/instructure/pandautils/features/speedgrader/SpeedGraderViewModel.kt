@@ -52,6 +52,8 @@ class SpeedGraderViewModel @Inject constructor(
 
     private val selectedItem: Int = savedStateHandle[Const.SELECTED_ITEM] ?: 0
 
+    private val submissionId: Long? = savedStateHandle[Const.SUBMISSION_ID]
+
     private var assignment: Assignment? = null
 
     private val _uiState = MutableStateFlow(
@@ -90,14 +92,20 @@ class SpeedGraderViewModel @Inject constructor(
                 courseId = courseId,
                 forceNetwork = false
             )
-            val ids = if (submissionIds.isEmpty()) {
-                assignmentSubmissionRepository.getGradeableStudentSubmissions(
+            val ids: List<Long>
+            val selectedItem: Int
+            if (submissionIds.isEmpty()) {
+                val submissions = assignmentSubmissionRepository.getGradeableStudentSubmissions(
                     assignmentId,
                     courseId,
                     false
-                ).map { it.id }
+                )
+                val submissionIndex = submissions.indexOfFirst { it.submission?.id == submissionId }
+                selectedItem = if (submissionIndex == -1) 0 else submissionIndex
+                ids = submissions.map { it.id }
             } else {
-                submissionIds.toList()
+                ids = submissionIds.toList()
+                selectedItem = _uiState.value.selectedItem
             }
             val assignmentDetails = repository.getAssignmentDetails(assignmentId)
             _uiState.update {
@@ -105,7 +113,8 @@ class SpeedGraderViewModel @Inject constructor(
                     assignmentName = assignmentDetails.assignment?.title.orEmpty(),
                     courseName = assignmentDetails.assignment?.course?.name.orEmpty(),
                     loading = false,
-                    submissionIds = ids
+                    submissionIds = ids,
+                    selectedItem = selectedItem
                 )
             }
         } catch (e: Exception) {

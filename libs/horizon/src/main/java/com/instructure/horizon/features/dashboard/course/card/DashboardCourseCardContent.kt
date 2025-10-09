@@ -41,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.LinkAnnotation
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextLinkStyles
@@ -198,7 +199,11 @@ private fun ProgramsText(
         if (parts.size > 1) append(parts[1])
     }
 
-    Text(style = HorizonTypography.p1, text = fullText)
+    Text(
+        modifier = Modifier.semantics(mergeDescendants = true) {},
+        style = HorizonTypography.p1,
+        text = fullText
+    )
 }
 
 @Composable
