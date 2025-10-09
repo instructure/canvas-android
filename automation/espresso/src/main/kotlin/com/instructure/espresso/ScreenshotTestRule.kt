@@ -26,13 +26,13 @@ import com.instructure.espresso.matchers.WaitForViewMatcher
 import org.junit.rules.TestRule
 import org.junit.runner.Description
 import org.junit.runners.model.Statement
-import java.util.concurrent.atomic.*
+import java.util.concurrent.atomic.AtomicBoolean
 
 class ScreenshotTestRule : TestRule {
 
     // Run all test methods tryCount times. Take screenshots on failure.
     // A method rule would allow targeting specific (method.getAnnotation(Retry.class))
-    private val tryCount = 5
+    private val tryCount = 1
 
     override fun apply(base: Statement, description: Description): Statement {
         return object : Statement() {

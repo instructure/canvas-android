@@ -345,6 +345,8 @@ class LoginE2ETest : StudentTest() {
     }
 
     @Test
+    @E2E
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testFindSchoolPageObjects() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")
@@ -355,6 +357,8 @@ class LoginE2ETest : StudentTest() {
     }
 
     @Test
+    @E2E
+    @TestMetaData(Priority.COMMON, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginLandingPageObjects() {
 
         Log.d(ASSERTION_TAG, "Assert that the Login Landing Page has been displayed.")
@@ -362,6 +366,8 @@ class LoginE2ETest : StudentTest() {
     }
 
     @Test
+    @E2E
+    @TestMetaData(Priority.COMMON, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testLoginSignInPageObjects() {
 
         Log.d(STEP_TAG, "Click 'Find My School' button.")

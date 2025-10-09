@@ -71,19 +71,35 @@ open class TestAppManager: AppManager() {
     }
 
     // Provide configuration for automatic WorkManager initialization
-    // E2E tests are auto-detected and block this to manually initialize instead
+    // We hijack the auto-init by proactively initializing with TestDriver support
     override val workManagerConfiguration: Configuration
         get() {
-            if (detectE2ETest()) {
-                Log.d("TestAppManager", "E2E test detected - blocking auto-initialization")
-                throw IllegalStateException("WorkManager should be manually initialized in E2E tests")
-            }
-            Log.d("TestAppManager", "Interaction test - providing auto-init config")
-            return Configuration.Builder()
+            Log.d("TestAppManager", "workManagerConfiguration called - initializing with TestDriver support")
+
+            val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
                 .setExecutor(SynchronousExecutor())
                 .setWorkerFactory(getWorkManagerFactory())
                 .build()
+
+            try {
+                // Proactively initialize WorkManager with TestDriver support
+                //HA NEM JÓ AKKOR valahogy itt ezt kivinni ezen kívül hogy tuti egyszer legyen hívva!
+                WorkManagerTestInitHelper.initializeTestWorkManager(applicationContext, config)
+                testDriver = WorkManagerTestInitHelper.getTestDriver(applicationContext)
+                Log.d("TestAppManager", "Successfully initialized WorkManager with TestDriver: $testDriver")
+            } catch (e: IllegalStateException) {
+                Log.w("TestAppManager", "WorkManager already initialized: ${e.message}")
+                // Try to get TestDriver anyway in case it was test-initialized before
+                try {
+                    testDriver = WorkManagerTestInitHelper.getTestDriver(applicationContext)
+                    Log.d("TestAppManager", "Retrieved existing TestDriver: $testDriver")
+                } catch (e2: Exception) {
+                    Log.w("TestAppManager", "Could not get TestDriver: ${e2.message}")
+                }
+            }
+
+            return config
         }
 
     override fun performLogoutOnAuthError() = Unit
@@ -95,6 +111,7 @@ open class TestAppManager: AppManager() {
             Log.d("WorkManagerDebug", "  WorkManager ALREADY EXISTS: ${existing.hashCode()}")
             workManagerExists = true
             testDriver = WorkManagerTestInitHelper.getTestDriver(context)
+
             Log.d("WorkManagerDebug", "  Reusing existing WorkManager and testDriver")
         } catch (e: IllegalStateException) {
             Log.d("WorkManagerDebug", "  WorkManager does not exist yet, will initialize")
@@ -106,14 +123,14 @@ open class TestAppManager: AppManager() {
                 val factory = this.getWorkManagerFactory()
                 Log.d("WorkManagerDebug", "  getWorkManagerFactory() returned: ${factory.hashCode()}")
 
-                val config = Configuration.Builder()
+               /* val config = Configuration.Builder()
                     .setMinimumLoggingLevel(Log.DEBUG)
                     .setExecutor(SynchronousExecutor())
                     .setWorkerFactory(factory)
                     .build()
-
+                */
                 Log.d("WorkManagerDebug", "  Calling initializeTestWorkManager...")
-                WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+                WorkManagerTestInitHelper.initializeTestWorkManager(context, workManagerConfiguration)
                 Log.d("WorkManagerDebug", "  initializeTestWorkManager succeeded (first time)")
 
                 testDriver = WorkManagerTestInitHelper.getTestDriver(context)
