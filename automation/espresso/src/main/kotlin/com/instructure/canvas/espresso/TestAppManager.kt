@@ -17,6 +17,7 @@
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
+import androidx.test.platform.app.InstrumentationRegistry
 import androidx.work.Configuration
 import androidx.work.WorkerFactory
 import androidx.work.testing.SynchronousExecutor
@@ -26,6 +27,30 @@ import com.instructure.canvasapi2.AppManager
 import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
 open class TestAppManager: AppManager() {
+
+    companion object {
+
+        @JvmStatic
+        fun detectE2ETest(): Boolean {
+            return try {
+                // Check instrumentation arguments for test class/package info
+                val arguments = InstrumentationRegistry.getArguments()
+                val testClass = arguments.getString("class")
+                val testPackage = arguments.getString("package")
+
+                Log.d("TestAppManager", "Detecting E2E test - class: $testClass, package: $testPackage")
+
+                // Check if running specific E2E test class or package
+                val isE2EClass = testClass?.contains(".e2e.") == true || testClass?.contains("E2ETest") == true
+                val isE2EPackage = testPackage?.contains(".e2e") == true
+
+                isE2EClass || isE2EPackage
+            } catch (e: Exception) {
+                Log.w("TestAppManager", "Failed to detect E2E test: ${e.message}")
+                false
+            }
+        }
+    }
 
     @SuppressLint("RestrictedApi")
     override fun onCreate() {
@@ -45,23 +70,25 @@ open class TestAppManager: AppManager() {
         return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
     }
 
-    // CRITICAL: Prevent automatic WorkManager initialization via Configuration.Provider
-    // We want manual control in tests
+    // Provide configuration for automatic WorkManager initialization
+    // E2E tests are auto-detected and block this to manually initialize instead
     override val workManagerConfiguration: Configuration
         get() {
-            Log.w("TestAppManager", "workManagerConfiguration getter called - WorkManager trying to auto-initialize!")
-            throw IllegalStateException("WorkManager should be manually initialized in tests, not auto-initialized")
+            if (detectE2ETest()) {
+                Log.d("TestAppManager", "E2E test detected - blocking auto-initialization")
+                throw IllegalStateException("WorkManager should be manually initialized in E2E tests")
+            }
+            Log.d("TestAppManager", "Interaction test - providing auto-init config")
+            return Configuration.Builder()
+                .setMinimumLoggingLevel(Log.DEBUG)
+                .setExecutor(SynchronousExecutor())
+                .setWorkerFactory(getWorkManagerFactory())
+                .build()
         }
 
     override fun performLogoutOnAuthError() = Unit
 
     fun initWorkManager(context: Context) {
-        val factoryBeforeInit = this.workerFactory
-        Log.d("WorkManagerDebug", "initWorkManager called")
-        Log.d("WorkManagerDebug", "  this (TestAppManager): ${this.hashCode()}")
-        Log.d("WorkManagerDebug", "  this.workerFactory: ${factoryBeforeInit.hashCode()}")
-
-        // Check if WorkManager already exists - if so, just reuse it
         var workManagerExists = false
         try {
             val existing = androidx.work.WorkManager.getInstance(context)
@@ -97,7 +124,6 @@ open class TestAppManager: AppManager() {
             }
         }
 
-        // Cancel and prune all existing work to ensure clean state for this test
         try {
             val workManager = androidx.work.WorkManager.getInstance(context)
             Log.d("WorkManagerDebug", "  WorkManager instance for cleanup: ${workManager.hashCode()}")

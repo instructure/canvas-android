@@ -250,62 +250,16 @@ fun handleWorkManagerTask(workerTag: String) {
     val app = ApplicationProvider.getApplicationContext<TestAppManager>()
     val testDriver = app.testDriver
 
-    Log.d("WorkManagerDebug", "==================== handleWorkManagerTask ====================")
-    Log.d("WorkManagerDebug", "Application context: ${app.hashCode()}")
-    Log.d("WorkManagerDebug", "app.workerFactory: ${app.workerFactory.hashCode()}")
-    Log.d("WorkManagerDebug", "app.testDriver: $testDriver")
-
-    // Check if WorkManager is initialized BEFORE we do anything
-    var workManagerBefore: WorkManager? = null
-    try {
-        workManagerBefore = WorkManager.getInstance(app)
-        Log.d("WorkManagerDebug", "WorkManager EXISTS before any action: ${workManagerBefore.hashCode()}")
-    } catch (e: Exception) {
-        Log.d("WorkManagerDebug", "WorkManager does NOT exist before action: ${e.message}")
-    }
-
     if (testDriver == null) {
         Log.w("handleWorkManagerTask", "testDriver is null, attempting to initialize WorkManager")
         app.initWorkManager(app)
     }
 
-    // Get WorkManager AFTER potential initialization
     val workManager = WorkManager.getInstance(app)
-    Log.d("WorkManagerDebug", "WorkManager instance AFTER init check: ${workManager.hashCode()}")
-
-    if (workManagerBefore != null) {
-        if (workManagerBefore.hashCode() == workManager.hashCode()) {
-            Log.d("WorkManagerDebug", "✓ Same WorkManager instance (singleton working correctly)")
-            Log.d("WorkManagerDebug", "✓ Same WorkManager instance (singleton working correctly)")
-        } else {
-            Log.e("WorkManagerDebug", "✗ DIFFERENT WorkManager instances! Before: ${workManagerBefore.hashCode()}, After: ${workManager.hashCode()}")
-        }
-    }
-
-    val workInfos = workManager
-        .getWorkInfosByTag(workerTag)
-        .get()
-
-    Log.d("WorkManagerDebug", "Found ${workInfos.size} work items with tag '$workerTag'")
-    workInfos.forEachIndexed { index, info ->
-        Log.d("WorkManagerDebug", "  WorkInfo[$index]: id=${info.id}, state=${info.state}, tags=${info.tags}")
-    }
-
+    val workInfos = workManager.getWorkInfosByTag(workerTag).get()
     val workInfo = workInfos.find { !it.state.isFinished }
+    if (workInfo != null) app.testDriver!!.setAllConstraintsMet(workInfo.id)
 
-    if (workInfo != null) {
-        Log.d("WorkManagerDebug", "Found unfinished work: id=${workInfo.id}")
-        val driver = app.testDriver
-        if (driver != null) {
-            driver.setAllConstraintsMet(workInfo.id)
-        } else {
-            Log.w("handleWorkManagerTask", "testDriver is still null after initialization, work may not execute properly")
-        }
-    } else {
-        Log.w("WorkManagerDebug", "No unfinished work found with tag '$workerTag'")
-    }
-
-    Log.d("WorkManagerDebug", "===============================================================")
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
 
