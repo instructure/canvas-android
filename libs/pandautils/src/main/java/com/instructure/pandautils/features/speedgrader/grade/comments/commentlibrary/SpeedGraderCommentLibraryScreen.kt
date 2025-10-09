@@ -164,6 +164,7 @@ private fun SpeedGraderCommentLibraryContent(
                                 uiState.onCommentValueChanged(item)
                             }
                             .padding(vertical = 14.dp)
+                            .testTag("commentLibraryItem")
                     )
                     if (index != uiState.items.lastIndex) {
                         CanvasDivider()

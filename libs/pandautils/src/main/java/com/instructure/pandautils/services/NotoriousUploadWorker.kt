@@ -284,7 +284,7 @@ class NotoriousUploadWorker @AssistedInject constructor(
             pageId: String?,
             attemptId: Long?,
             mediaCommentId: Long?
-        ): Flow<WorkInfo> {
+        ): Flow<WorkInfo?> {
             val data = workDataOf(
                 Const.MEDIA_FILE_PATH to mediaFilePath,
                 Const.ASSIGNMENT to assignment?.toJson(),

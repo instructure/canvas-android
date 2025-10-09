@@ -111,9 +111,11 @@ class InboxComposeFragment : BaseCanvasFragment(), FragmentInteractions, FileUpl
         viewModel.addUploadingAttachments(filePaths)
     }
 
-    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
         workInfoLiveData.observe(viewLifecycleOwner) { workInfo ->
-            viewModel.updateAttachments(uuid, workInfo)
+            workInfo?.let {
+                viewModel.updateAttachments(uuid, workInfo)
+            }
         }
     }
 

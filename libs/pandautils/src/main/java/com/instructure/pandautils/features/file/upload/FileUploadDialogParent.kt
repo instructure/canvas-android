@@ -28,5 +28,5 @@ interface FileUploadDialogParent {
 
     fun selectedUriStringsCallback(filePaths: List<String>) = Unit
 
-    fun workInfoLiveDataCallback(uuid: UUID? = null, workInfoLiveData: LiveData<WorkInfo>) = Unit
+    fun workInfoLiveDataCallback(uuid: UUID? = null, workInfoLiveData: LiveData<WorkInfo?>) = Unit
 }

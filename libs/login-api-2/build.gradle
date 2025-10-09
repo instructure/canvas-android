@@ -20,7 +20,7 @@ import java.security.MessageDigest
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-parcelize'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
 static String isTesting() {
@@ -134,7 +134,7 @@ dependencies {
 
     implementation Libs.ANDROIDX_FRAGMENT_KTX
     implementation Libs.HILT
-    kapt Libs.HILT_COMPILER
+    ksp Libs.HILT_COMPILER
 }
 
 task copySnickerDoodles(type: Copy) {

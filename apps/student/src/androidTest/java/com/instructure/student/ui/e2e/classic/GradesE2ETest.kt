@@ -81,7 +81,8 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertItemDisplayed(quizMatcher)
         courseGradesPage.assertGradeNotDisplayed(quizMatcher)
 
-        val dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
+        var dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
+        dueDateInCanvasFormat = dueDateInCanvasFormat.replace(" 0", " ")
         Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment's due date is tomorrow ('$dueDateInCanvasFormat').")
         courseGradesPage.assertAssignmentDueDate(assignment.name, dueDateInCanvasFormat)
 

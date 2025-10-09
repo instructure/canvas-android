@@ -345,9 +345,9 @@ class FileListFragment : BaseSyncFragment<
         })
     }
 
-    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
-            if (it.state == WorkInfo.State.SUCCEEDED) {
+            if (it?.state == WorkInfo.State.SUCCEEDED) {
                 presenter.refresh(true)
             }
         }

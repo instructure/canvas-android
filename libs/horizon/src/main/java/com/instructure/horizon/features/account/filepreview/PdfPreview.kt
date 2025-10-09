@@ -25,10 +25,8 @@ import com.pspdfkit.configuration.activity.UserInterfaceViewMode
 import com.pspdfkit.configuration.page.PageScrollDirection
 import com.pspdfkit.configuration.page.PageScrollMode
 import com.pspdfkit.jetpack.compose.interactors.rememberDocumentState
-import com.pspdfkit.jetpack.compose.utilities.ExperimentalPSPDFKitApi
 import com.pspdfkit.jetpack.compose.views.DocumentView
 
-@OptIn(ExperimentalPSPDFKitApi::class)
 @Composable
 fun PdfPreview(
     documentUri: Uri,

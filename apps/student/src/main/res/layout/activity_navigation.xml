@@ -61,6 +61,7 @@
             android:id="@+id/bottomBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:minHeight="48dp"
             android:background="@color/backgroundLightestElevated"
             app:elevation="0dp"
             app:itemIconTint="@color/textDarkest"
