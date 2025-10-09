@@ -456,7 +456,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     }
 
     LaunchedEffect(selectedGrade) {
-        if (selectedGrade != uiState.enteredGrade) {
+        if (selectedGrade != uiState.enteredGrade && uiState.letterGrades.any { it.name == selectedGrade }) {
             uiState.onPercentageChange(
                 uiState.letterGrades
                     .find { it.name == selectedGrade }
