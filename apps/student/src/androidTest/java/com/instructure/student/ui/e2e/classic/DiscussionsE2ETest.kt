@@ -51,6 +51,10 @@ class DiscussionsE2ETest: StudentTest() {
         val teacher = data.teachersList[0]
         val course = data.coursesList[0]
 
+
+        // This will be the GraphQL way of creating a discussion with checkpoints when available
+        //val disc = DiscussionTopicsApi.createDiscussionTopicWithCheckpoints(course.id, teacher.token, "Test Discussion with Checkpoints", "Test Assignment with Checkpoints")
+
         Log.d(PREPARATION_TAG, "Seed a discussion topic for '${course.name}' course.")
         val topic1 = DiscussionTopicsApi.createDiscussion(course.id, teacher.token)
 
