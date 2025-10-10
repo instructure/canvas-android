@@ -24,8 +24,16 @@ import android.net.Uri
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import androidx.hilt.work.HiltWorker
-import androidx.work.*
-import com.instructure.canvasapi2.managers.*
+import androidx.work.CoroutineWorker
+import androidx.work.Data
+import androidx.work.ForegroundInfo
+import androidx.work.WorkerParameters
+import androidx.work.workDataOf
+import com.instructure.canvasapi2.managers.AssignmentManager
+import com.instructure.canvasapi2.managers.FileUploadConfig
+import com.instructure.canvasapi2.managers.FileUploadManager
+import com.instructure.canvasapi2.managers.GroupManager
+import com.instructure.canvasapi2.managers.SubmissionManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Submission
@@ -37,15 +45,24 @@ import com.instructure.canvasapi2.utils.ProgressRequestUpdateListener
 import com.instructure.canvasapi2.utils.weave.awaitApi
 import com.instructure.pandautils.R
 import com.instructure.pandautils.features.file.upload.FileUploadUtilsHelper
-import com.instructure.pandautils.room.appdatabase.daos.*
-import com.instructure.pandautils.room.appdatabase.entities.*
+import com.instructure.pandautils.room.appdatabase.daos.AttachmentDao
+import com.instructure.pandautils.room.appdatabase.daos.AuthorDao
+import com.instructure.pandautils.room.appdatabase.daos.DashboardFileUploadDao
+import com.instructure.pandautils.room.appdatabase.daos.FileUploadInputDao
+import com.instructure.pandautils.room.appdatabase.daos.MediaCommentDao
+import com.instructure.pandautils.room.appdatabase.daos.SubmissionCommentDao
+import com.instructure.pandautils.room.appdatabase.entities.AttachmentEntity
+import com.instructure.pandautils.room.appdatabase.entities.AuthorEntity
+import com.instructure.pandautils.room.appdatabase.entities.DashboardFileUploadEntity
+import com.instructure.pandautils.room.appdatabase.entities.FileUploadInputEntity
+import com.instructure.pandautils.room.appdatabase.entities.MediaCommentEntity
+import com.instructure.pandautils.room.appdatabase.entities.SubmissionCommentEntity
 import com.instructure.pandautils.utils.FileUploadUtils
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.pandautils.utils.toJson
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedInject
-import java.lang.IllegalStateException
-import java.util.*
+import java.util.Locale
 
 @HiltWorker
 class FileUploadWorker @AssistedInject constructor(
@@ -438,6 +455,7 @@ class FileUploadWorker @AssistedInject constructor(
         const val FILE_SUBMIT_ACTION = "fileSubmitAction"
         const val FILE_PATHS = "filePaths"
         const val CHANNEL_ID = "uploadChannel"
+        const val WORKER_TAG = "FileUploadWorker"
 
         const val ACTION_ASSIGNMENT_SUBMISSION = "ACTION_ASSIGNMENT_SUBMISSION"
         const val ACTION_MESSAGE_ATTACHMENTS = "ACTION_MESSAGE_ATTACHMENTS"

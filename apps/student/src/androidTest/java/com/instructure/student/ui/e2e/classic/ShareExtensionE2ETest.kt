@@ -31,6 +31,8 @@ import com.instructure.dataseeding.model.SubmissionType
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
+import com.instructure.espresso.handleWorkManagerTask
+import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker
 import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -102,6 +104,7 @@ class ShareExtensionE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click on 'Turn In' button to upload both of the files.")
         fileChooserPage.clickTurnIn()
+        handleWorkManagerTask(FileUploadWorker.WORKER_TAG)
 
         Log.d(ASSERTION_TAG, "Assert that the submission upload was successful.")
         shareExtensionStatusPage.assertPageObjects(30)
@@ -175,6 +178,7 @@ class ShareExtensionE2ETest: StudentComposeTest() {
 
         Log.d(STEP_TAG, "Click on 'Upload' button to upload the file.")
         fileChooserPage.clickUpload()
+        handleWorkManagerTask(FileUploadWorker.WORKER_TAG)
 
         Log.d(ASSERTION_TAG, "Assert that the file upload (into my 'Files') was successful.")
         shareExtensionStatusPage.assertPageObjects()
