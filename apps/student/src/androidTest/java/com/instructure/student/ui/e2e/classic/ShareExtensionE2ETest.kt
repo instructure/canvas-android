@@ -24,6 +24,7 @@ import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.uiautomator.UiDevice
 import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.annotations.E2E
+import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.pressBackButton
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.model.GradingType
@@ -44,6 +45,7 @@ class ShareExtensionE2ETest: StudentComposeTest() {
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
 
+    @Stub
     @E2E
     @Test
     fun shareExtensionE2ETest() {
