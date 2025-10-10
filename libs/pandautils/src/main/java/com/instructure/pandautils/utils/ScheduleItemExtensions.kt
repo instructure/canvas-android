@@ -26,10 +26,16 @@ import java.util.Date
 
 val ScheduleItem.iconRes: Int
     get() {
+        val isClassicQuiz = this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault()
+        val isNewQuiz = this.assignment?.getSubmissionTypes()?.contains(SubmissionType.EXTERNAL_TOOL).orDefault() &&
+            this.assignment?.externalToolAttributes?.url?.contains("quiz-lti").orDefault()
+
         return when {
             this.type == "event" -> R.drawable.ic_calendar
+            isClassicQuiz && this.assignment?.isLocked.orDefault() -> R.drawable.ic_lock  // For classic quizzes, use isLocked instead of lockedForUser (classic quizzes always return lockedForUser=true from API)
+            isClassicQuiz -> R.drawable.ic_quiz
             this.assignment?.lockedForUser.orDefault() -> R.drawable.ic_lock
-            this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault() -> R.drawable.ic_quiz
+            isNewQuiz -> R.drawable.ic_quiz
             this.assignment?.getSubmissionTypes()?.contains(SubmissionType.DISCUSSION_TOPIC).orDefault() -> R.drawable.ic_discussion
             else -> R.drawable.ic_assignment
         }
@@ -37,10 +43,16 @@ val ScheduleItem.iconRes: Int
 
 val ScheduleItem.contentDescriptionRes: Int
     get() {
+        val isClassicQuiz = this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault()
+        val isNewQuiz = this.assignment?.getSubmissionTypes()?.contains(SubmissionType.EXTERNAL_TOOL).orDefault() &&
+            this.assignment?.externalToolAttributes?.url?.contains("quiz-lti").orDefault()
+
         return when {
             this.type == "event" -> R.string.a11y_summaryEventContentDescription
+            isClassicQuiz && this.assignment?.isLocked.orDefault() -> R.string.a11y_summaryLockedContentDescription // For classic quizzes, use isLocked instead of lockedForUser (classic quizzes always return lockedForUser=true from API)
+            isClassicQuiz -> R.string.a11y_summaryQuizContentDescription
             this.assignment?.lockedForUser.orDefault() -> R.string.a11y_summaryLockedContentDescription
-            this.assignment?.getSubmissionTypes()?.contains(SubmissionType.ONLINE_QUIZ).orDefault() -> R.string.a11y_summaryQuizContentDescription
+            isNewQuiz -> R.string.a11y_summaryQuizContentDescription
             this.assignment?.getSubmissionTypes()?.contains(SubmissionType.DISCUSSION_TOPIC).orDefault() -> R.string.a11y_summaryDiscussionContentDescription
             else -> R.string.a11y_summaryAssignmentContentDescription
         }

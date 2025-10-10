@@ -93,6 +93,8 @@ class SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     private fun getAssignmentIcon(assignment: Assignment): Int {
         return when {
             assignment.getSubmissionTypes().contains(Assignment.SubmissionType.ONLINE_QUIZ) -> R.drawable.ic_quiz
+            assignment.getSubmissionTypes().contains(Assignment.SubmissionType.EXTERNAL_TOOL) &&
+                assignment.externalToolAttributes?.url?.contains("quiz-lti") == true -> R.drawable.ic_quiz
             assignment.getSubmissionTypes().contains(Assignment.SubmissionType.DISCUSSION_TOPIC) -> R.drawable.ic_discussion
             else -> R.drawable.ic_assignment
         }
