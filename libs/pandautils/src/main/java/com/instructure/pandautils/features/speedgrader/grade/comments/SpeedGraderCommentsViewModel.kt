@@ -632,7 +632,6 @@ class SpeedGraderCommentsViewModel @Inject constructor(
     private fun restartWorker(filePaths: List<String>) {
         viewModelScope.launch {
             val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                .addTag(FileUploadWorker.WORKER_TAG)
                 .build()
 
             val inputData = FileUploadInputEntity(

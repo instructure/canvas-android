@@ -8,11 +8,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.Data
-import androidx.work.OneTimeWorkRequestBuilder
-import androidx.work.WorkInfo
-import androidx.work.WorkManager
-import androidx.work.hasKeyWithValueOfType
+import androidx.work.*
 import com.instructure.canvasapi2.models.postmodels.FileSubmitObject
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
@@ -30,7 +26,7 @@ import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.UUID
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -224,9 +220,7 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
     fun onRetryClick() {
         viewModelScope.launch {
             fileUploadInputDao.findByWorkerId(workerId.toString())?.let {
-                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>()
-                    .addTag(FileUploadWorker.WORKER_TAG)
-                    .build()
+                val worker = OneTimeWorkRequestBuilder<FileUploadWorker>().build()
                 fileUploadInputDao.insert(it.copy(workerId = worker.id.toString()))
                 fileUploadInputDao.delete(it)
                 dashboardFileUploadDao.deleteByWorkerId(it.workerId)
