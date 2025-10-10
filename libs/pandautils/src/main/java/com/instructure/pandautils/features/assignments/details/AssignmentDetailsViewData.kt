@@ -70,7 +70,8 @@ sealed class AssignmentDetailAction {
         val isObserver: Boolean,
         val selectedSubmissionAttempt: Long?,
         val assignmentUrl: String?,
-        val isAssignmentEnhancementEnabled: Boolean
+        val isAssignmentEnhancementEnabled: Boolean,
+        val isQuiz: Boolean
     ) : AssignmentDetailAction()
     data class NavigateToQuizScreen(val quiz: Quiz) : AssignmentDetailAction()
     data class NavigateToDiscussionScreen(val discussionTopicHeaderId: Long, val course: Course) : AssignmentDetailAction()

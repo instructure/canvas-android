@@ -290,4 +290,38 @@ class AssignmentTest {
     }
     //endregion
 
+    //region isQuiz
+    @Test
+    fun isQuiz_TestOnlineQuiz() {
+        val assignment = Assignment(submissionTypesRaw = listOf("online_quiz"))
+        assertEquals(true, assignment.isQuiz())
+    }
+
+    @Test
+    fun isQuiz_TestQuizLtiAssignment() {
+        val externalToolAttributes = ExternalToolAttributes(url = "https://example.com/quiz-lti/launch")
+        val assignment = Assignment(
+            submissionTypesRaw = listOf("external_tool"),
+            externalToolAttributes = externalToolAttributes
+        )
+        assertEquals(true, assignment.isQuiz())
+    }
+
+    @Test
+    fun isQuiz_TestRegularExternalTool() {
+        val externalToolAttributes = ExternalToolAttributes(url = "https://example.com/tool/launch")
+        val assignment = Assignment(
+            submissionTypesRaw = listOf("external_tool"),
+            externalToolAttributes = externalToolAttributes
+        )
+        assertEquals(false, assignment.isQuiz())
+    }
+
+    @Test
+    fun isQuiz_TestNonQuizSubmissionType() {
+        val assignment = Assignment(submissionTypesRaw = listOf("online_upload"))
+        assertEquals(false, assignment.isQuiz())
+    }
+    //endregion
+
 }

@@ -253,6 +253,10 @@ data class Assignment(
         } ?: LtiType.EXTERNAL_TOOL
     }
 
+    fun isQuiz(): Boolean {
+        return getSubmissionTypes().contains(SubmissionType.ONLINE_QUIZ) || ltiToolType() == LtiType.NEW_QUIZZES_LTI
+    }
+
     companion object {
 
         const val PASS_FAIL_TYPE = "pass_fail"

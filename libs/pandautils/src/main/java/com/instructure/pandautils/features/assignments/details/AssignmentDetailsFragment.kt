@@ -215,7 +215,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                     action.assignmentUrl,
                     action.isAssignmentEnhancementEnabled,
                     action.isObserver,
-                    action.selectedSubmissionAttempt
+                    action.selectedSubmissionAttempt,
+                    action.isQuiz
                 )
             }
             is AssignmentDetailAction.NavigateToQuizScreen -> {
