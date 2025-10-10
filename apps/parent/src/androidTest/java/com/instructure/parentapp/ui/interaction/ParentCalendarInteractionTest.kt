@@ -51,7 +51,7 @@ class ParentCalendarInteractionTest : CalendarInteractionTest() {
     override val activityRule = ParentActivityTestRule(LoginActivity::class.java)
 
     private val dashboardPage = DashboardPage()
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     override fun goToCalendar(data: MockCanvas) {
         val parent = data.parents.first()

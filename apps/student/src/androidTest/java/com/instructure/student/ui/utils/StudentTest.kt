@@ -85,7 +85,6 @@ import com.instructure.student.ui.pages.classic.QuizTakingPage
 import com.instructure.student.ui.pages.classic.RemoteConfigSettingsPage
 import com.instructure.student.ui.pages.classic.ShareExtensionStatusPage
 import com.instructure.student.ui.pages.classic.ShareExtensionTargetPage
-import com.instructure.student.ui.pages.classic.StudentAssignmentDetailsPage
 import com.instructure.student.ui.pages.classic.SubmissionDetailsPage
 import com.instructure.student.ui.pages.classic.SyllabusPage
 import com.instructure.student.ui.pages.classic.TextSubmissionUploadPage
@@ -120,7 +119,6 @@ abstract class StudentTest : CanvasTest() {
      */
     val annotationCommentListPage = AnnotationCommentListPage()
     val announcementListPage = AnnouncementListPage(Searchable(R.id.search, R.id.search_src_text, R.id.search_close_btn))
-    val assignmentDetailsPage = StudentAssignmentDetailsPage(ModuleItemInteractions(R.id.moduleName, R.id.next_item, R.id.prev_item))
     val bookmarkPage = BookmarkPage()
     val canvasWebViewPage = CanvasWebViewPage()
     val courseBrowserPage = CourseBrowserPage()

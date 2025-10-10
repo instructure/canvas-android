@@ -134,7 +134,8 @@ data class AssignmentEntity(
         lockInfo: LockInfo? = null,
         discussionTopicHeader: DiscussionTopicHeader? = null,
         scoreStatistics: AssignmentScoreStatistics? = null,
-        plannerOverride: PlannerOverride? = null
+        plannerOverride: PlannerOverride? = null,
+        checkpoints: List<Checkpoint> = emptyList()
     ) = Assignment(
         id = id,
         name = name,
@@ -186,6 +187,7 @@ data class AssignmentEntity(
         inClosedGradingPeriod = inClosedGradingPeriod,
         annotatableAttachmentId = annotatableAttachmentId,
         anonymousSubmissions = anonymousSubmissions,
-        omitFromFinalGrade = omitFromFinalGrade
+        omitFromFinalGrade = omitFromFinalGrade,
+        checkpoints = checkpoints
     )
 }

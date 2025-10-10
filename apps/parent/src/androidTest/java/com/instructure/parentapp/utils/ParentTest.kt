@@ -19,14 +19,12 @@ package com.instructure.parentapp.utils
 
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.common.pages.AboutPage
-import com.instructure.canvas.espresso.common.pages.AssignmentDetailsPage
 import com.instructure.canvas.espresso.common.pages.CanvasNetworkSignInPage
 import com.instructure.canvas.espresso.common.pages.InboxPage
 import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
 import com.instructure.canvas.espresso.common.pages.LoginLandingPage
 import com.instructure.canvas.espresso.common.pages.LoginSignInPage
-import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.classic.DashboardPage
@@ -46,7 +44,6 @@ abstract class ParentTest : CanvasTest() {
     val dashboardPage = DashboardPage()
     val leftSideNavigationDrawerPage = LeftSideNavigationDrawerPage()
     val helpPage = HelpPage()
-    val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
     val syllabusPage = SyllabusPage()
     val frontPagePage = FrontPagePage()
 

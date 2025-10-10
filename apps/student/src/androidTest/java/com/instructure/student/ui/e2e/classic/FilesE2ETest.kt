@@ -18,7 +18,6 @@ package com.instructure.student.ui.e2e.classic
 
 import android.os.Environment
 import android.util.Log
-import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.platform.app.InstrumentationRegistry
@@ -44,27 +43,21 @@ import com.instructure.dataseeding.util.Randomizer
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import com.instructure.student.ui.utils.extensions.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.Rule
 import org.junit.Test
 import java.io.File
 import java.io.FileWriter
 
 @HiltAndroidTest
-class FilesE2ETest: StudentTest() {
+class FilesE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
     override fun enableAndConfigureAccessibilityChecks() = Unit
-
-    @get:Rule
-    val composeTestRule = createEmptyComposeRule()
-
-    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     @E2E
     @Test

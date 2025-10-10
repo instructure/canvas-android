@@ -21,6 +21,7 @@ import androidx.room.withTransaction
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.AssignmentScoreStatistics
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.LockInfo
 import com.instructure.canvasapi2.models.PlannableType
@@ -33,6 +34,7 @@ import com.instructure.pandautils.room.offline.daos.AssignmentDao
 import com.instructure.pandautils.room.offline.daos.AssignmentGroupDao
 import com.instructure.pandautils.room.offline.daos.AssignmentRubricCriterionDao
 import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
 import com.instructure.pandautils.room.offline.daos.RubricCriterionDao
 import com.instructure.pandautils.room.offline.daos.RubricCriterionRatingDao
@@ -41,6 +43,7 @@ import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentGroupEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentRubricCriterionEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentScoreStatisticsEntity
+import com.instructure.pandautils.room.offline.entities.CheckpointEntity
 import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
 import com.instructure.pandautils.room.offline.entities.RubricCriterionEntity
 import com.instructure.pandautils.room.offline.entities.RubricSettingsEntity
@@ -73,6 +76,7 @@ class AssignmentFacadeTest {
     private val lockInfoFacade: LockInfoFacade = mockk(relaxed = true)
     private val rubricCriterionRatingDao: RubricCriterionRatingDao = mockk(relaxed = true)
     private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao = mockk(relaxed = true)
+    private val checkpointDao: CheckpointDao = mockk(relaxed = true)
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private val facade = AssignmentFacade(
@@ -87,6 +91,7 @@ class AssignmentFacadeTest {
         lockInfoFacade,
         rubricCriterionRatingDao,
         assignmentRubricCriterionDao,
+        checkpointDao,
         offlineDatabase
     )
 
@@ -118,6 +123,7 @@ class AssignmentFacadeTest {
         val scoreStatistics = AssignmentScoreStatistics(0.0, 0.0, 0.0)
         val rubricCriterions = listOf(RubricCriterion())
         val lockInfo = LockInfo()
+        val checkpoints = listOf(Checkpoint(name = "Checkpoint 1", tag = "checkpoint_1"))
         val assignments = listOf(
             Assignment(
                 rubricSettings = rubricSettings,
@@ -128,6 +134,7 @@ class AssignmentFacadeTest {
                 rubric = rubricCriterions,
                 lockInfo = lockInfo,
                 courseId = 1,
+                checkpoints = checkpoints
             )
         )
         val assignmentGroups = listOf(AssignmentGroup(assignments = assignments))
@@ -141,6 +148,7 @@ class AssignmentFacadeTest {
         coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
         coEvery { rubricCriterionDao.insert(any()) } just Runs
         coEvery { lockInfoFacade.insertLockInfoForAssignment(any(), any()) } just Runs
+        coEvery { checkpointDao.insertAll(any()) } just Runs
 
         facade.insertAssignmentGroups(assignmentGroups, 1L)
 
@@ -157,6 +165,7 @@ class AssignmentFacadeTest {
                     coVerify { assignmentRubricCriterionDao.insert(AssignmentRubricCriterionEntity(assignment.id, it.id.orEmpty())) }
                 }
                 coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
+                coVerify { checkpointDao.insertAll(checkpoints.map { CheckpointEntity(it, assignment.id) }) }
                 coVerify {
                     assignmentDao.insertOrUpdate(
                         AssignmentEntity(
@@ -181,6 +190,7 @@ class AssignmentFacadeTest {
         val scoreStatistics = AssignmentScoreStatistics(0.0, 0.0, 0.0)
         val rubricCriterions = listOf(RubricCriterion())
         val lockInfo = LockInfo()
+        val checkpoints = listOf(Checkpoint(name = "Checkpoint 1", tag = "checkpoint_1"))
         val assignment = Assignment(
             rubricSettings = rubricSettings,
             submission = submission,
@@ -190,6 +200,7 @@ class AssignmentFacadeTest {
             rubric = rubricCriterions,
             lockInfo = lockInfo,
             courseId = 1,
+            checkpoints = checkpoints
         )
 
         coEvery { assignmentDao.insert(any()) } just Runs
@@ -200,6 +211,7 @@ class AssignmentFacadeTest {
         coEvery { assignmentScoreStatisticsDao.insert(any()) } just Runs
         coEvery { rubricCriterionDao.insert(any()) } just Runs
         coEvery { lockInfoFacade.insertLockInfoForAssignment(any(), any()) } just Runs
+        coEvery { checkpointDao.insertAll(any()) } just Runs
 
         facade.insertAssignment(assignment)
 
@@ -219,6 +231,7 @@ class AssignmentFacadeTest {
             coVerify { rubricCriterionDao.insert(RubricCriterionEntity(it, assignment.id)) }
         }
         coVerify { lockInfoFacade.insertLockInfoForAssignment(lockInfo, assignment.id) }
+        coVerify { checkpointDao.insertAll(checkpoints.map { CheckpointEntity(it, assignment.id) }) }
         coVerify {
             assignmentDao.insertOrUpdate(
                 AssignmentEntity(

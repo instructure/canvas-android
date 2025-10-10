@@ -35,7 +35,7 @@ abstract class SmartSearchInteractionTest : CanvasComposeTest() {
 
     private val smartSearchPage = SmartSearchPage(composeTestRule)
     private val smartSearchPreferencesPage = SmartSearchPreferencesPage(composeTestRule)
-    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions())
+    private val assignmentDetailsPage = AssignmentDetailsPage(ModuleItemInteractions(), composeTestRule)
 
     @Test
     fun assertQuery() {

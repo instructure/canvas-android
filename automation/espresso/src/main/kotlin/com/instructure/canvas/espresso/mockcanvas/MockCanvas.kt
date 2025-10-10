@@ -40,6 +40,7 @@ import com.instructure.canvasapi2.models.CanvasColor
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.CanvasTheme
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
@@ -1106,29 +1107,40 @@ fun MockCanvas.addAssignment(
     withDescription: Boolean = false,
     gradingType: String = "percent",
     discussionTopicHeader: DiscussionTopicHeader? = null,
-    htmlUrl: String? = ""
+    htmlUrl: String? = "",
+    submission: Submission? = null,
+    checkpoints: List<Checkpoint> = emptyList()
 ) : Assignment {
     val assignmentId = newItemId()
     val submissionTypeListRawStrings = submissionTypeList.map { it.apiString }
     var assignment = Assignment(
-            id = assignmentId,
-            assignmentGroupId = assignmentGroupId,
-            courseId = courseId,
-            name = name,
-            submissionTypesRaw = submissionTypeListRawStrings,
-            lockInfo = lockInfo,
-            lockedForUser = lockInfo != null,
-            userSubmitted = userSubmitted,
-            dueAt = dueAt,
-            pointsPossible = pointsPossible.toDouble(),
-            description = description,
-            lockAt = lockAt,
-            unlockAt = unlockAt,
-            published = true,
-            allDates = listOf(AssignmentDueDate(id = newItemId(), dueAt = dueAt, lockAt = lockAt, unlockAt = unlockAt)),
-            gradingType = gradingType,
-            discussionTopicHeader = discussionTopicHeader,
-            htmlUrl = htmlUrl
+        id = assignmentId,
+        assignmentGroupId = assignmentGroupId,
+        courseId = courseId,
+        name = name,
+        submissionTypesRaw = submissionTypeListRawStrings,
+        lockInfo = lockInfo,
+        lockedForUser = lockInfo != null,
+        userSubmitted = userSubmitted,
+        dueAt = dueAt,
+        pointsPossible = pointsPossible.toDouble(),
+        description = description,
+        lockAt = lockAt,
+        unlockAt = unlockAt,
+        published = true,
+        allDates = listOf(
+            AssignmentDueDate(
+                id = newItemId(),
+                dueAt = dueAt,
+                lockAt = lockAt,
+                unlockAt = unlockAt
+            )
+        ),
+        gradingType = gradingType,
+        discussionTopicHeader = discussionTopicHeader,
+        htmlUrl = htmlUrl,
+        submission = submission,
+        checkpoints = checkpoints
     )
 
     if (isQuizzesNext) {

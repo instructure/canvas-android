@@ -37,6 +37,7 @@ class AssignmentFacade(
     private val lockInfoFacade: LockInfoFacade,
     private val rubricCriterionRatingDao: RubricCriterionRatingDao,
     private val assignmentRubricCriterionDao: AssignmentRubricCriterionDao,
+    private val checkpointDao: CheckpointDao,
     private val offlineDatabase: OfflineDatabase
 ) {
 
@@ -94,6 +95,10 @@ class AssignmentFacade(
         assignment.lockInfo?.let {
             lockInfoFacade.insertLockInfoForAssignment(it, assignment.id)
         }
+
+        checkpointDao.insertAll(assignment.checkpoints.map {
+            CheckpointEntity(it, assignment.id)
+        })
     }
 
     private suspend fun insertPlannerOverride(plannerOverride: PlannerOverride?): Long? {
@@ -132,6 +137,7 @@ class AssignmentFacade(
         val rubricCriterionEntities = assignmentRubricCriterionDao.findByAssignmentId(assignmentEntity.id).mapNotNull {
             rubricCriterionDao.findById(it.rubricId)
         }
+        val checkpointEntities = checkpointDao.findByAssignmentId(assignmentEntity.id)
 
         return assignmentEntity.toApiModel(
             rubric = rubricCriterionEntities.map { rubricCriterionEntity ->
@@ -143,7 +149,8 @@ class AssignmentFacade(
             lockInfo = lockInfo,
             discussionTopicHeader = discussionTopicHeader,
             scoreStatistics = scoreStatisticsEntity?.toApiModel(),
-            plannerOverride = plannerOverrideEntity?.toApiModel()
+            plannerOverride = plannerOverrideEntity?.toApiModel(),
+            checkpoints = checkpointEntities.map { it.toApiModel() }
         ).apply {
             /*
              * the assignment model has a submission that contains the assignment, but the inner assignment model cannot

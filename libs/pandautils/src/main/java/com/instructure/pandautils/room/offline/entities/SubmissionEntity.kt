@@ -24,6 +24,7 @@ import com.instructure.canvasapi2.models.Attachment
 import com.instructure.canvasapi2.models.Group
 import com.instructure.canvasapi2.models.MediaComment
 import com.instructure.canvasapi2.models.RubricCriterionAssessment
+import com.instructure.canvasapi2.models.SubAssignmentSubmission
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.canvasapi2.models.User
@@ -83,7 +84,8 @@ data class SubmissionEntity(
     val enteredGrade: String?,
     val postedAt: Date?,
     val gradingPeriodId: Long?,
-    val customGradeStatusId: Long?
+    val customGradeStatusId: Long?,
+    val hasSubAssignmentSubmissions: Boolean
 ) {
     constructor(submission: Submission, groupId: Long?, mediaCommentId: String?) : this(
         id = submission.id,
@@ -114,7 +116,8 @@ data class SubmissionEntity(
         enteredGrade = submission.enteredGrade,
         postedAt = submission.postedAt,
         gradingPeriodId = submission.gradingPeriodId,
-        customGradeStatusId = submission.customGradeStatusId
+        customGradeStatusId = submission.customGradeStatusId,
+        hasSubAssignmentSubmissions = submission.hasSubAssignmentSubmissions
     )
 
     fun toApiModel(
@@ -125,7 +128,8 @@ data class SubmissionEntity(
         mediaComment: MediaComment? = null,
         assignment: Assignment? = null,
         user: User? = null,
-        group: Group? = null
+        group: Group? = null,
+        subAssignmentSubmissions: ArrayList<SubAssignmentSubmission> = arrayListOf()
     ) = Submission(
         id = id,
         grade = grade,
@@ -163,6 +167,8 @@ data class SubmissionEntity(
         enteredGrade = enteredGrade,
         postedAt = postedAt,
         gradingPeriodId = gradingPeriodId,
-        customGradeStatusId = customGradeStatusId
+        customGradeStatusId = customGradeStatusId,
+        hasSubAssignmentSubmissions = hasSubAssignmentSubmissions,
+        subAssignmentSubmissions = subAssignmentSubmissions
     )
 }

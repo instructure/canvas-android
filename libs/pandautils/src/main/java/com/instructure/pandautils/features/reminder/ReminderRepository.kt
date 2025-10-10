@@ -32,7 +32,8 @@ class ReminderRepository(
         contentHtmlUrl: String,
         title: String,
         alarmText: String,
-        alarmTimeInMillis: Long
+        alarmTimeInMillis: Long,
+        tag: String? = null
     ) {
         val reminder = ReminderEntity(
             userId = userId,
@@ -40,7 +41,8 @@ class ReminderRepository(
             name = title,
             htmlUrl = contentHtmlUrl,
             text = Date(alarmTimeInMillis).toFormattedString(),
-            time = alarmTimeInMillis
+            time = alarmTimeInMillis,
+            tag = tag
         )
         val reminderId = reminderDao.insert(reminder)
 

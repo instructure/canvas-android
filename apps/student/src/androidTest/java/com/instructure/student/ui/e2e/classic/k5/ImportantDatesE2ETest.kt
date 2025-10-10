@@ -31,7 +31,7 @@ import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedDataForK5
 import com.instructure.student.ui.utils.extensions.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -41,7 +41,7 @@ import java.util.Date
 import java.util.Locale
 
 @HiltAndroidTest
-class ImportantDatesE2ETest : StudentTest() {
+class ImportantDatesE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
