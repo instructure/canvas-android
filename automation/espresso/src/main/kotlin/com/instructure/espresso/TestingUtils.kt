@@ -256,9 +256,26 @@ fun handleWorkManagerTask(workerTag: String) {
     }
 
     val workManager = WorkManager.getInstance(app)
-    val workInfos = workManager.getWorkInfosByTag(workerTag).get()
-    val workInfo = workInfos.find { !it.state.isFinished }
-    if (workInfo != null) app.testDriver!!.setAllConstraintsMet(workInfo.id)
+
+    val startTime = System.currentTimeMillis()
+    val enqueueTimeoutMs = 7000L
+    var workInfo: androidx.work.WorkInfo? = null
+
+    while (workInfo == null && System.currentTimeMillis() - startTime < enqueueTimeoutMs) {
+        val workInfos = workManager.getWorkInfosByTag(workerTag).get()
+        workInfo = workInfos.find { !it.state.isFinished }
+        if (workInfo == null) {
+            Log.d("handleWorkManagerTask", "Work not found yet for tag '$workerTag', waiting...")
+            Thread.sleep(250)
+        }
+    }
+
+    if (workInfo != null) {
+        Log.d("handleWorkManagerTask", "Found work with tag '$workerTag', setting constraints")
+        app.testDriver!!.setAllConstraintsMet(workInfo.id)
+    } else {
+        Log.w("handleWorkManagerTask", "No work found for tag '$workerTag' after ${enqueueTimeoutMs}ms")
+    }
 
     waitForWorkManagerJobsToFinish(workerTag = workerTag)
 }
