@@ -496,7 +496,8 @@ class AssignmentDetailsViewModelTest {
             isObserver = false,
             selectedSubmissionAttempt = null,
             assignmentUrl = "https://assignment.url",
-            isAssignmentEnhancementEnabled = true
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
         )
         assertEquals(expected, viewModel.events.value?.peekContent())
     }
@@ -1029,7 +1030,8 @@ class AssignmentDetailsViewModelTest {
             isObserver = false,
             selectedSubmissionAttempt = 2L,
             assignmentUrl = "https://assignment.url",
-            isAssignmentEnhancementEnabled = true
+            isAssignmentEnhancementEnabled = true,
+            isQuiz = false
         )
         assertEquals(expected, viewModel.events.value?.peekContent())
     }
