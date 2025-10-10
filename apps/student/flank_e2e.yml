@@ -21,6 +21,6 @@ gcloud:
     orientation: portrait
 
 flank:
-  testShards: 10
+  testShards: 1
   testRuns: 1
 

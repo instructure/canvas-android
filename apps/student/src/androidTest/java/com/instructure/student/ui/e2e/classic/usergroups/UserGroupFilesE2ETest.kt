@@ -19,12 +19,12 @@ package com.instructure.student.ui.e2e.classic.usergroups
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
-import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.api.GroupsApi
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.seedData

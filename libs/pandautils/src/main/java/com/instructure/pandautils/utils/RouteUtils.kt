@@ -17,7 +17,9 @@
 package com.instructure.pandautils.utils
 
 import android.net.Uri
+import androidx.core.net.toUri
 import com.instructure.canvasapi2.CanvasRestAdapter
+import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
@@ -25,8 +27,6 @@ import com.instructure.interactions.router.RouterParams
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import okhttp3.Request
-import androidx.core.net.toUri
-import com.instructure.canvasapi2.builders.RestParams
 import okhttp3.Response
 
 object RouteUtils {
