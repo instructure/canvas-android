@@ -119,7 +119,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForPointGradedWithoutRubric() {
-        goToSpeedGraderGradePage(gradingType = GradingType.points)
+        goToSpeedGraderGradePage(gradingType = GradingType.points, score = 10.0, grade = "10")
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
@@ -156,14 +156,14 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
         speedGraderGradePage.assertFinalGradePointsValueDisplayed("12 / 20 pts")
         speedGraderGradePage.assertLatePenaltyValueDisplayed("0 pts")
-        speedGraderGradePage.assertFinalGradeIsDisplayed("12.0")
+        speedGraderGradePage.assertFinalGradeIsDisplayed("60%")
 
         speedGraderGradePage.assertNoRubricCriterionDisplayed()
     }
 
     @Test
     fun correctViewsForPassFailAssignment() {
-        goToSpeedGraderGradePage(gradingType = GradingType.pass_fail)
+        goToSpeedGraderGradePage(gradingType = GradingType.pass_fail, score = 10.0)
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredPassFailScore("10 / 20")
@@ -196,7 +196,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForGpaScaleAssignment() {
-        goToSpeedGraderGradePage(GradingType.gpa_scale)
+        goToSpeedGraderGradePage(GradingType.gpa_scale, score = 10.0)
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
         speedGraderGradePage.assertPointsPossible("20")
@@ -217,7 +217,7 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
 
     @Test
     fun correctViewsForLetterGradeAssignment() {
-        goToSpeedGraderGradePage(gradingType = GradingType.letter_grade)
+        goToSpeedGraderGradePage(gradingType = GradingType.letter_grade, score = 10.0)
 
         speedGraderGradePage.assertSpeedGraderLabelDisplayed()
         speedGraderGradePage.assertCurrentEnteredScore("10")
@@ -320,6 +320,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
         gradingType: GradingType = GradingType.points,
         hasRubric: Boolean = false,
         pointsPossible: Int = 20,
+        score: Double = 12.0,
+        grade: String = "60%",
         submission: Submission? = null
     ) {
         val data = MockCanvas.init(teacherCount = 1, courseCount = 1, favoriteCourseCount = 1, studentCount = 1)
@@ -366,8 +368,8 @@ class SpeedGraderGradeInteractionTest : TeacherComposeTest() {
             userId = student.id,
             type = "online_text_entry",
             body = "This is a test submission",
-            score = 10.0,
-            grade = "60"
+            score = score,
+            grade = grade
         )
 
         val token = data.tokenFor(teacher)!!
