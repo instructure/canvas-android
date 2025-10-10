@@ -56,12 +56,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalViewConfiguration
 import androidx.compose.ui.platform.testTag
+import kotlin.math.abs
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -152,6 +155,7 @@ private fun SpeedGraderContentScreen(
             uiState.content?.let { content ->
                 key(content) {
                     val route = router.getRouteForContent(content)
+                    val viewConfiguration = LocalViewConfiguration.current
                     AndroidFragment(
                         clazz = route.clazz,
                         arguments = route.bundle,
@@ -163,22 +167,40 @@ private fun SpeedGraderContentScreen(
                                         content is ExternalToolContent
                             ) {
                                 pointerInput(Unit) {
+                                    val touchSlop = viewConfiguration.touchSlop
+
                                     awaitPointerEventScope {
                                         while (true) {
-                                            val event = awaitPointerEvent()
-                                            if (
-                                                event.changes.any { pointerInputChange ->
-                                                    pointerInputChange.pressed
-                                                }
-                                            ) {
-                                                toggleViewPager(false)
-                                                do {
-                                                    val moveEvent = awaitPointerEvent()
-                                                } while (
-                                                    moveEvent.changes.any { pointerInputChange ->
-                                                        pointerInputChange.pressed
+                                            val down = awaitPointerEvent()
+                                            if (down.changes.none { it.pressed }) continue
+
+                                            var directionLocked = false
+                                            var isPagerDisabled = false
+                                            var totalDelta = Offset.Zero
+
+                                            do {
+                                                val event = awaitPointerEvent()
+                                                val change = event.changes.firstOrNull() ?: break
+
+                                                val currentPosition = change.position
+                                                val previousPosition = change.previousPosition
+                                                totalDelta += (currentPosition - previousPosition)
+
+                                                if (!directionLocked && totalDelta.getDistance() > touchSlop) {
+                                                    val absX = abs(totalDelta.x)
+                                                    val absY = abs(totalDelta.y)
+
+                                                    if (absY > absX * 1.4f) {
+                                                        toggleViewPager(false)
+                                                        isPagerDisabled = true
                                                     }
-                                                )
+
+                                                    directionLocked = true
+                                                }
+
+                                            } while (event.changes.any { pointer -> pointer.pressed })
+
+                                            if (isPagerDisabled) {
                                                 toggleViewPager(true)
                                             }
                                         }
