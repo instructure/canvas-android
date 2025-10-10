@@ -67,6 +67,7 @@ import androidx.annotation.ColorRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.content.FileProvider
+import androidx.core.net.toUri
 import androidx.core.view.NestedScrollingChild
 import androidx.core.view.NestedScrollingChildHelper
 import androidx.core.view.ViewCompat
@@ -131,6 +132,8 @@ class CanvasWebView @JvmOverloads constructor(
 
     interface MediaDownloadCallback {
         fun downloadMedia(mime: String?, url: String?, filename: String?)
+        // Specific to internal file links that are linked directly
+        fun downloadInternalMedia(mime: String?, url: String?, filename: String?) = Unit
     }
 
     var canvasWebViewClientCallback: CanvasWebViewClientCallback? = null
@@ -186,7 +189,11 @@ class CanvasWebView @JvmOverloads constructor(
         } else {
             initSettings()
             setDownloadListener { url, _, contentDisposition, mimetype, _ ->
-                if (contentDisposition != null) {
+                // Check if this download was triggered by an internal file link
+                if (isInternalFileLink(url)) {
+                    val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
+                    mediaDownloadCallback?.downloadInternalMedia(mimetype, url, fileName)
+                } else if (contentDisposition != null) {
                     val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
                     canvasWebViewClientCallback?.openMediaFromWebView(mimetype, url, fileName)
                 }
@@ -849,6 +856,15 @@ class CanvasWebView @JvmOverloads constructor(
             } catch (e: UnsupportedEncodingException) { /* do nothing */
             }
             return false
+        }
+
+        fun isInternalFileLink(url: String): Boolean {
+            return try {
+                val uri = url.toUri()
+                uri.host?.contains("instructure-uploads") == true
+            } catch (e: Exception) {
+                false
+            }
         }
     }
 }
