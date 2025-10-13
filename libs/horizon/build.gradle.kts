@@ -6,6 +6,7 @@ plugins {
     id("kotlin-kapt")
     id("dagger.hilt.android.plugin")
     kotlin("plugin.serialization") version "2.1.20"
+    id("jacoco")
 }
 
 android {
@@ -109,4 +110,65 @@ dependencies {
     /* Pandautils dependencies to provide fake implementations for testing */
     androidTestImplementation(Libs.PLAY_IN_APP_UPDATES)
     androidTestImplementation(Libs.ROOM)
+}
+
+tasks.register<JacocoReport>("jacocoTestReport") {
+    dependsOn("testDebugUnitTest")
+
+    reports {
+        xml.required.set(true)
+        html.required.set(true)
+        csv.required.set(false)
+    }
+
+    val fileFilter = listOf(
+        "**/R.class",
+        "**/R$*.class",
+        "**/BuildConfig.*",
+        "**/Manifest*.*",
+        "**/*Test*.*",
+        "android/**/*.*",
+        "**/*\$ViewInjector*.*",
+        "**/*\$ViewBinder*.*",
+        "**/Lambda$*.class",
+        "**/Lambda.class",
+        "**/*Lambda.class",
+        "**/*Lambda*.class",
+        "**/*_MembersInjector.class",
+        "**/Dagger*Component*.*",
+        "**/*Module_*Factory.class",
+        "**/di/module/*",
+        "**/*_Factory*.*",
+        "**/*Module*.*",
+        "**/*Dagger*.*",
+        "**/*Hilt*.*",
+        "**/hilt_aggregated_deps/**",
+        "**/*_HiltModules*.*",
+        "**/*_ComponentTreeDeps*.*",
+        "**/*_Impl*.*",
+        "**/*Screen*.*",
+        "**/*Ui*.*",
+        "**/*Navigation*.*",
+        "**/*Activity*.*",
+        "**/*Fragment*.*",
+        "**/*Composable*.*",
+        "**/*Preview*.*",
+        "**/horizonui/**",
+        "**/model/**",
+        "**/navigation/**"
+    )
+
+    val debugTree = fileTree("${layout.buildDirectory.get().asFile}/tmp/kotlin-classes/debug") {
+        exclude(fileFilter)
+        include("**/features/**/*ViewModel*.class")
+        include("**/features/**/*Repository*.class")
+    }
+
+    val mainSrc = "${project.projectDir}/src/main/java"
+
+    sourceDirectories.setFrom(files(mainSrc))
+    classDirectories.setFrom(files(debugTree))
+    executionData.setFrom(fileTree(layout.buildDirectory.get().asFile) {
+        include("jacoco/testDebugUnitTest.exec")
+    })
 }

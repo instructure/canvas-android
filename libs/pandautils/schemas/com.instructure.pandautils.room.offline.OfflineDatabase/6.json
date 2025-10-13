@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 6,
-    "identityHash": "618ce920f8e4d10c461f03cfed1fe01c",
+    "identityHash": "e0e8981a53e92176b25c0fb1066137d6",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -1294,7 +1294,7 @@
       },
       {
         "tableName": "DiscussionTopicHeaderEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `discussionType` TEXT, `title` TEXT, `message` TEXT, `htmlUrl` TEXT, `postedDate` INTEGER, `delayedPostDate` INTEGER, `lastReplyDate` INTEGER, `requireInitialPost` INTEGER NOT NULL, `discussionSubentryCount` INTEGER NOT NULL, `readState` TEXT, `unreadCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `assignmentId` INTEGER, `locked` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `pinned` INTEGER NOT NULL, `authorId` INTEGER, `podcastUrl` TEXT, `groupCategoryId` TEXT, `announcement` INTEGER NOT NULL, `permissionId` INTEGER, `published` INTEGER NOT NULL, `allowRating` INTEGER NOT NULL, `onlyGradersCanRate` INTEGER NOT NULL, `sortByRating` INTEGER NOT NULL, `subscribed` INTEGER NOT NULL, `lockAt` INTEGER, `userCanSeePosts` INTEGER NOT NULL, `specificSections` TEXT, `anonymousState` TEXT, PRIMARY KEY(`id`), FOREIGN KEY(`authorId`) REFERENCES `DiscussionParticipantEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`permissionId`) REFERENCES `DiscussionTopicPermissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER NOT NULL, `discussionType` TEXT, `title` TEXT, `message` TEXT, `htmlUrl` TEXT, `postedDate` INTEGER, `delayedPostDate` INTEGER, `lastReplyDate` INTEGER, `requireInitialPost` INTEGER NOT NULL, `discussionSubentryCount` INTEGER NOT NULL, `readState` TEXT, `unreadCount` INTEGER NOT NULL, `position` INTEGER NOT NULL, `assignmentId` INTEGER, `locked` INTEGER NOT NULL, `lockedForUser` INTEGER NOT NULL, `lockExplanation` TEXT, `pinned` INTEGER NOT NULL, `authorId` INTEGER, `podcastUrl` TEXT, `groupCategoryId` TEXT, `announcement` INTEGER NOT NULL, `permissionId` INTEGER, `published` INTEGER NOT NULL, `allowRating` INTEGER NOT NULL, `onlyGradersCanRate` INTEGER NOT NULL, `sortByRating` INTEGER NOT NULL, `subscribed` INTEGER NOT NULL, `lockAt` INTEGER, `userCanSeePosts` INTEGER NOT NULL, `specificSections` TEXT, `anonymousState` TEXT, `replyRequiredCount` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`authorId`) REFERENCES `DiscussionParticipantEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`permissionId`) REFERENCES `DiscussionTopicPermissionEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL , FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -1492,6 +1492,12 @@
             "fieldPath": "anonymousState",
             "columnName": "anonymousState",
             "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "replyRequiredCount",
+            "columnName": "replyRequiredCount",
+            "affinity": "INTEGER",
             "notNull": false
           }
         ],
@@ -2995,176 +3001,6 @@
         ]
       },
       {
-        "tableName": "PlannerItemEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `courseId` INTEGER, `groupId` INTEGER, `userId` INTEGER, `contextType` TEXT, `contextName` TEXT, `plannableType` TEXT NOT NULL, `plannableId` INTEGER NOT NULL, `plannableTitle` TEXT, `plannableDetails` TEXT, `plannableTodoDate` TEXT, `plannableEndAt` INTEGER, `plannableAllDay` INTEGER, `plannableCourseId` INTEGER, `plannableGroupId` INTEGER, `plannableUserId` INTEGER, `plannableDate` INTEGER NOT NULL, `htmlUrl` TEXT, `submissionStateSubmitted` INTEGER, `submissionStateExcused` INTEGER, `submissionStateGraded` INTEGER, `newActivity` INTEGER, `plannerOverrideId` INTEGER, `plannerOverrideMarkedComplete` INTEGER, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
-        "fields": [
-          {
-            "fieldPath": "id",
-            "columnName": "id",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "courseId",
-            "columnName": "courseId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "groupId",
-            "columnName": "groupId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "userId",
-            "columnName": "userId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "contextType",
-            "columnName": "contextType",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "contextName",
-            "columnName": "contextName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableType",
-            "columnName": "plannableType",
-            "affinity": "TEXT",
-            "notNull": true
-          },
-          {
-            "fieldPath": "plannableId",
-            "columnName": "plannableId",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "plannableTitle",
-            "columnName": "plannableTitle",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableDetails",
-            "columnName": "plannableDetails",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableTodoDate",
-            "columnName": "plannableTodoDate",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableEndAt",
-            "columnName": "plannableEndAt",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableAllDay",
-            "columnName": "plannableAllDay",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableCourseId",
-            "columnName": "plannableCourseId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableGroupId",
-            "columnName": "plannableGroupId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableUserId",
-            "columnName": "plannableUserId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannableDate",
-            "columnName": "plannableDate",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "htmlUrl",
-            "columnName": "htmlUrl",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "submissionStateSubmitted",
-            "columnName": "submissionStateSubmitted",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "submissionStateExcused",
-            "columnName": "submissionStateExcused",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "submissionStateGraded",
-            "columnName": "submissionStateGraded",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "newActivity",
-            "columnName": "newActivity",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannerOverrideId",
-            "columnName": "plannerOverrideId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "plannerOverrideMarkedComplete",
-            "columnName": "plannerOverrideMarkedComplete",
-            "affinity": "INTEGER",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "autoGenerate": false,
-          "columnNames": [
-            "id"
-          ]
-        },
-        "indices": [],
-        "foreignKeys": [
-          {
-            "table": "CourseEntity",
-            "onDelete": "CASCADE",
-            "onUpdate": "NO ACTION",
-            "columns": [
-              "courseId"
-            ],
-            "referencedColumns": [
-              "id"
-            ]
-          }
-        ]
-      },
-      {
         "tableName": "PlannerOverrideEntity",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `plannableType` TEXT NOT NULL, `plannableId` INTEGER NOT NULL, `dismissed` INTEGER NOT NULL, `markedComplete` INTEGER NOT NULL)",
         "fields": [
@@ -3909,7 +3745,7 @@
       },
       {
         "tableName": "SubmissionEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `attempt` INTEGER NOT NULL, `submittedAt` INTEGER, `commentCreated` INTEGER, `mediaContentType` TEXT, `mediaCommentUrl` TEXT, `mediaCommentDisplay` TEXT, `body` TEXT, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, `workflowState` TEXT, `submissionType` TEXT, `previewUrl` TEXT, `url` TEXT, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `mediaCommentId` TEXT, `assignmentId` INTEGER NOT NULL, `userId` INTEGER, `graderId` INTEGER, `groupId` INTEGER, `pointsDeducted` REAL, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `postedAt` INTEGER, `gradingPeriodId` INTEGER, `customGradeStatusId` INTEGER, PRIMARY KEY(`id`, `attempt`), FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `attempt` INTEGER NOT NULL, `submittedAt` INTEGER, `commentCreated` INTEGER, `mediaContentType` TEXT, `mediaCommentUrl` TEXT, `mediaCommentDisplay` TEXT, `body` TEXT, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, `workflowState` TEXT, `submissionType` TEXT, `previewUrl` TEXT, `url` TEXT, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `mediaCommentId` TEXT, `assignmentId` INTEGER NOT NULL, `userId` INTEGER, `graderId` INTEGER, `groupId` INTEGER, `pointsDeducted` REAL, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `postedAt` INTEGER, `gradingPeriodId` INTEGER, `customGradeStatusId` INTEGER, `hasSubAssignmentSubmissions` INTEGER NOT NULL, PRIMARY KEY(`id`, `attempt`), FOREIGN KEY(`groupId`) REFERENCES `GroupEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`userId`) REFERENCES `UserEntity`(`id`) ON UPDATE NO ACTION ON DELETE SET NULL )",
         "fields": [
           {
             "fieldPath": "id",
@@ -4084,6 +3920,12 @@
             "columnName": "customGradeStatusId",
             "affinity": "INTEGER",
             "notNull": false
+          },
+          {
+            "fieldPath": "hasSubAssignmentSubmissions",
+            "columnName": "hasSubAssignmentSubmissions",
+            "affinity": "INTEGER",
+            "notNull": true
           }
         ],
         "primaryKey": {
@@ -5781,12 +5623,210 @@
             ]
           }
         ]
+      },
+      {
+        "tableName": "CheckpointEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `assignmentId` INTEGER NOT NULL, `name` TEXT, `tag` TEXT, `pointsPossible` REAL, `dueAt` TEXT, `onlyVisibleToOverrides` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "assignmentId",
+            "columnName": "assignmentId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "tag",
+            "columnName": "tag",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "pointsPossible",
+            "columnName": "pointsPossible",
+            "affinity": "REAL",
+            "notNull": false
+          },
+          {
+            "fieldPath": "dueAt",
+            "columnName": "dueAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "onlyVisibleToOverrides",
+            "columnName": "onlyVisibleToOverrides",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lockAt",
+            "columnName": "lockAt",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "unlockAt",
+            "columnName": "unlockAt",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "AssignmentEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "assignmentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "SubAssignmentSubmissionEntity",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `submissionId` INTEGER NOT NULL, `submissionAttempt` INTEGER NOT NULL, `grade` TEXT, `score` REAL NOT NULL, `late` INTEGER NOT NULL, `excused` INTEGER NOT NULL, `missing` INTEGER NOT NULL, `latePolicyStatus` TEXT, `customGradeStatusId` INTEGER, `subAssignmentTag` TEXT, `enteredScore` REAL NOT NULL, `enteredGrade` TEXT, `userId` INTEGER NOT NULL, `isGradeMatchesCurrentSubmission` INTEGER NOT NULL, FOREIGN KEY(`submissionId`, `submissionAttempt`) REFERENCES `SubmissionEntity`(`id`, `attempt`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "submissionId",
+            "columnName": "submissionId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "submissionAttempt",
+            "columnName": "submissionAttempt",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "grade",
+            "columnName": "grade",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "score",
+            "columnName": "score",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "late",
+            "columnName": "late",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "excused",
+            "columnName": "excused",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "missing",
+            "columnName": "missing",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latePolicyStatus",
+            "columnName": "latePolicyStatus",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "customGradeStatusId",
+            "columnName": "customGradeStatusId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "subAssignmentTag",
+            "columnName": "subAssignmentTag",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "enteredScore",
+            "columnName": "enteredScore",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "enteredGrade",
+            "columnName": "enteredGrade",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "userId",
+            "columnName": "userId",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isGradeMatchesCurrentSubmission",
+            "columnName": "isGradeMatchesCurrentSubmission",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "autoGenerate": true,
+          "columnNames": [
+            "id"
+          ]
+        },
+        "indices": [],
+        "foreignKeys": [
+          {
+            "table": "SubmissionEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "submissionId",
+              "submissionAttempt"
+            ],
+            "referencedColumns": [
+              "id",
+              "attempt"
+            ]
+          }
+        ]
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '618ce920f8e4d10c461f03cfed1fe01c')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0e8981a53e92176b25c0fb1066137d6')"
     ]
   }
 }

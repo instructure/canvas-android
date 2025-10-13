@@ -29,6 +29,8 @@ import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
 import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
 import com.instructure.pandautils.room.offline.daos.AttachmentDao
 import com.instructure.pandautils.room.offline.daos.AuthorDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
+import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.daos.CourseDao
@@ -94,7 +96,9 @@ import com.instructure.pandautils.room.offline.entities.AssignmentScoreStatistic
 import com.instructure.pandautils.room.offline.entities.AssignmentSetEntity
 import com.instructure.pandautils.room.offline.entities.AttachmentEntity
 import com.instructure.pandautils.room.offline.entities.AuthorEntity
+import com.instructure.pandautils.room.offline.entities.CheckpointEntity
 import com.instructure.pandautils.room.offline.entities.ConferenceEntity
+import com.instructure.pandautils.room.offline.entities.SubAssignmentSubmissionEntity
 import com.instructure.pandautils.room.offline.entities.ConferenceRecordingEntity
 import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
@@ -229,8 +233,10 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         CourseSyncProgressEntity::class,
         FileSyncProgressEntity::class,
         StudioMediaProgressEntity::class,
-        CustomGradeStatusEntity::class
-    ], version = 6
+        CustomGradeStatusEntity::class,
+        CheckpointEntity::class,
+        SubAssignmentSubmissionEntity::class
+    ], version = 7
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -362,4 +368,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun studioMediaProgressDao(): StudioMediaProgressDao
 
     abstract fun customGradeStatusDao(): CustomGradeStatusDao
+
+    abstract fun checkpointDao(): CheckpointDao
+
+    abstract fun subAssignmentSubmissionDao(): SubAssignmentSubmissionDao
 }

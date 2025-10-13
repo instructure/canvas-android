@@ -39,12 +39,16 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_LIST
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.features.assignments.list.composables.AssignmentListScreen
+import com.instructure.pandautils.utils.AssignmentGradedEvent
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.withArgs
 import dagger.hilt.android.AndroidEntryPoint
+import org.greenrobot.eventbus.EventBus
+import org.greenrobot.eventbus.Subscribe
+import org.greenrobot.eventbus.ThreadMode
 import javax.inject.Inject
 
 @ScreenView(SCREEN_VIEW_ASSIGNMENT_LIST)
@@ -57,6 +61,16 @@ class AssignmentListFragment: BaseCanvasFragment(), Bookmarkable {
     lateinit var assignmentListRouter: AssignmentListRouter
 
     override val bookmark: Bookmarker by lazy { viewModel.bookmarker }
+
+    override fun onStart() {
+        super.onStart()
+        EventBus.getDefault().register(this)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        EventBus.getDefault().unregister(this)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -98,6 +112,14 @@ class AssignmentListFragment: BaseCanvasFragment(), Bookmarkable {
 
     private fun title(): String {
         return getString(R.string.assignmentListTitle)
+    }
+
+    @Suppress("unused")
+    @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
+    fun onAssignmentGraded(event: AssignmentGradedEvent) {
+        event.once(javaClass.simpleName) {
+            viewModel.handleAction(AssignmentListScreenEvent.Refresh)
+        }
     }
 
     companion object {

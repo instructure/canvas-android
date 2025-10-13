@@ -33,7 +33,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.learn.course.lti.CourseToolsScreen
@@ -45,6 +49,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.ProgressBar
 import com.instructure.horizon.horizonui.organisms.tabrow.TabRow
+import com.instructure.horizon.horizonui.selectable
 import kotlinx.coroutines.launch
 
 @Composable
@@ -143,12 +148,17 @@ private fun Tab(tab: CourseDetailsTab, isSelected: Boolean, modifier: Modifier =
         modifier = modifier
             .padding(bottom = 2.dp)
     ) {
+        val context = LocalContext.current
         Text(
             stringResource(tab.titleRes),
             style = HorizonTypography.p1,
             color = color,
             modifier = Modifier
                 .padding(top = 20.dp)
+                .semantics {
+                    role = Role.Tab
+                    selectable(context, isSelected)
+                }
         )
     }
 }

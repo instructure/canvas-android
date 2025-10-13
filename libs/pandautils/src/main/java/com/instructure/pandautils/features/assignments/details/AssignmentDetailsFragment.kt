@@ -53,6 +53,7 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_ASSIGNMENT_DETAILS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentAssignmentDetailsBinding
+import com.instructure.pandautils.features.assignments.details.composables.DueDateReminderLayout
 import com.instructure.pandautils.features.reminder.composables.ReminderView
 import com.instructure.pandautils.features.shareextension.ShareFileSubmissionTarget
 import com.instructure.pandautils.navigation.WebViewRouter
@@ -92,6 +93,8 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
 
     @get:PageViewUrlParam(name = "courseId")
     val courseId by LongArg(key = Const.COURSE_ID, default = 0)
+
+    val submissionId by LongArg(key = Const.SUBMISSION_ID, default = -1)
 
     private var binding: FragmentAssignmentDetailsBinding? = null
     private val viewModel: AssignmentDetailsViewModel by viewModels()
@@ -144,16 +147,22 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         viewModel.course.value?.let {
             viewModel.updateReminderColor(assignmentDetailsBehaviour.getThemeColor(it))
         }
-        binding?.reminderComposeView?.setContent {
-            val state by viewModel.reminderViewState.collectAsState()
-            ReminderView(
-                viewState = state,
-                onAddClick = { checkAlarmPermission() },
+
+        binding?.dueComposeView?.setContent {
+            val states = viewModel.dueDateReminderViewStates
+            DueDateReminderLayout(
+                states,
+                onAddClick = { tag -> checkAlarmPermission(tag) },
                 onRemoveClick = { reminderId ->
-                    viewModel.showDeleteReminderConfirmationDialog(requireContext(), reminderId, assignmentDetailsBehaviour.dialogColor)
+                    viewModel.showDeleteReminderConfirmationDialog(
+                        requireContext(),
+                        reminderId,
+                        assignmentDetailsBehaviour.dialogColor
+                    )
                 }
             )
         }
+
         return binding?.root
     }
 
@@ -365,14 +374,14 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
         }
     }
 
-    private fun checkAlarmPermission() {
+    private fun checkAlarmPermission(tag: String? = null) {
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU && requireActivity().checkSelfPermission(Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
             viewModel.checkingNotificationPermission = true
             notificationsPermissionContract.launch(Manifest.permission.POST_NOTIFICATIONS)
         } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             if (alarmManager.canScheduleExactAlarms()) {
-                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
+                viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor, tag)
             } else {
                 viewModel.checkingReminderPermission = true
                 startActivity(
@@ -383,7 +392,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
                 )
             }
         } else {
-            viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor)
+            viewModel.showCreateReminderDialog(requireActivity(), assignmentDetailsBehaviour.dialogColor, tag)
         }
     }
 
@@ -432,7 +441,7 @@ class AssignmentDetailsFragment : BaseCanvasFragment(), FragmentInteractions, Bo
             if (route.paramsHash.containsKey(RouterParams.SUBMISSION_ID)) {
                 // Indicate that we want to route to the Submission Details page - this will give us a small backstack, allowing the user to hit back and go to Assignment Details instead
                 // of closing the app (in the case of when the app isn't running and the user hits a push notification that takes them to Submission Details)
-                route.arguments.putString(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID])
+                route.arguments.putLong(Const.SUBMISSION_ID, route.paramsHash[RouterParams.SUBMISSION_ID]?.toLong().orDefault())
             }
 
             if (route.paramsHash.containsKey(RouterParams.COURSE_ID)) {
