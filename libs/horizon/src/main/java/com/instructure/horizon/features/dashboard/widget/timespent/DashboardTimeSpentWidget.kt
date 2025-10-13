@@ -60,20 +60,17 @@ fun DashboardTimeSpentSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardLoading(Modifier.padding(horizontal = 16.dp))
+            DashboardTimeSpentCardLoading()
         }
         DashboardItemState.ERROR -> {
             DashboardTimeSpentCardError(
-                { state.onRefresh {} },
-                Modifier.padding(horizontal = 16.dp)
+                { state.onRefresh {} }
             )
         }
         DashboardItemState.SUCCESS -> {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 DashboardTimeSpentCardContent(state.cardState)
             }

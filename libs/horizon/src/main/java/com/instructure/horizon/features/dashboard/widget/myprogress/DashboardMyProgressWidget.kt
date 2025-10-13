@@ -60,20 +60,17 @@ fun DashboardMyProgressSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardMyProgressCardLoading(Modifier.padding(horizontal = 16.dp))
+            DashboardMyProgressCardLoading()
         }
         DashboardItemState.ERROR -> {
             DashboardMyProgressCardError(
-                { state.onRefresh {} },
-                Modifier.padding(horizontal = 16.dp)
+                { state.onRefresh {} }
             )
         }
         DashboardItemState.SUCCESS -> {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
+                modifier = Modifier.fillMaxWidth()
             ) {
                 DashboardMyProgressCardContent(state.cardState)
             }
