@@ -63,6 +63,7 @@ import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import org.threeten.bp.OffsetDateTime
 import java.util.Locale
@@ -291,18 +292,7 @@ class DashboardNotificationsViewModel @Inject constructor(
     private suspend fun getUploads(fileUploadEntities: List<DashboardFileUploadEntity>?) =
         fileUploadEntities?.mapNotNull { fileUploadEntity ->
             val workerId = UUID.fromString(fileUploadEntity.workerId)
-            // Use getWorkInfoByIdLiveData and suspend until value is available
-            val workInfo = kotlinx.coroutines.suspendCancellableCoroutine<WorkInfo?> { cont ->
-                val liveData = workManager.getWorkInfoByIdLiveData(workerId)
-                val observer = object : Observer<WorkInfo?> {
-                    override fun onChanged(value: WorkInfo?) {
-                        liveData.removeObserver(this)
-                        cont.resume(value, null)
-                    }
-                }
-                liveData.observeForever(observer)
-                cont.invokeOnCancellation { liveData.removeObserver(observer) }
-            }
+            val workInfo = workManager.getWorkInfoByIdFlow(workerId).first()
             workInfo?.let {
                 val icon: Int
                 val background: Int
