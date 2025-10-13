@@ -30,6 +30,8 @@ import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
 import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
 import com.instructure.pandautils.room.offline.daos.AttachmentDao
 import com.instructure.pandautils.room.offline.daos.AuthorDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
+import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.daos.CourseDao
@@ -318,6 +320,7 @@ class OfflineModule {
         lockInfoFacade: LockInfoFacade,
         rubricCriterionRatingDao: RubricCriterionRatingDao,
         assignmentRubricCriterionDao: AssignmentRubricCriterionDao,
+        checkpointDao: CheckpointDao,
         offlineDatabase: OfflineDatabase
     ): AssignmentFacade {
         return AssignmentFacade(
@@ -332,6 +335,7 @@ class OfflineModule {
             lockInfoFacade,
             rubricCriterionRatingDao,
             assignmentRubricCriterionDao,
+            checkpointDao,
             offlineDatabase
         )
     }
@@ -345,11 +349,13 @@ class OfflineModule {
         submissionCommentDao: SubmissionCommentDao,
         attachmentDao: AttachmentDao,
         authorDao: AuthorDao,
-        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
+        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao,
+        subAssignmentSubmissionDao: SubAssignmentSubmissionDao
     ): SubmissionFacade {
         return SubmissionFacade(
             submissionDao, groupDao, mediaCommentDao, userDao,
-            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao,
+            subAssignmentSubmissionDao
         )
     }
 
@@ -642,5 +648,15 @@ class OfflineModule {
     @Provides
     fun provideCustomGradeStatusDao(database: OfflineDatabase): CustomGradeStatusDao {
         return database.customGradeStatusDao()
+    }
+
+    @Provides
+    fun provideCheckpointDao(database: OfflineDatabase): CheckpointDao {
+        return database.checkpointDao()
+    }
+
+    @Provides
+    fun provideSubAssignmentSubmissionDao(database: OfflineDatabase): SubAssignmentSubmissionDao {
+        return database.subAssignmentSubmissionDao()
     }
 }
