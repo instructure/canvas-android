@@ -18,7 +18,6 @@ package com.instructure.teacher.features.syllabus.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.utils.pageview.PageView
 import com.instructure.canvasapi2.utils.pageview.PageViewUrlParam
@@ -26,19 +25,26 @@ import com.instructure.pandautils.analytics.SCREEN_VIEW_SYLLABUS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.ParcelableArg
-import com.instructure.pandautils.utils.withArgs
 import com.instructure.teacher.databinding.FragmentSyllabusBinding
-import com.instructure.teacher.features.syllabus.*
+import com.instructure.teacher.features.syllabus.SyllabusEffect
+import com.instructure.teacher.features.syllabus.SyllabusEffectHandler
+import com.instructure.teacher.features.syllabus.SyllabusEvent
+import com.instructure.teacher.features.syllabus.SyllabusModel
+import com.instructure.teacher.features.syllabus.SyllabusPresenter
+import com.instructure.teacher.features.syllabus.SyllabusRepository
+import com.instructure.teacher.features.syllabus.SyllabusUpdate
 import com.instructure.teacher.mobius.common.ui.MobiusFragment
 
 @PageView("{canvasContext}/assignments/syllabus")
 @ScreenView(SCREEN_VIEW_SYLLABUS)
-class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState, FragmentSyllabusBinding>() {
+abstract class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEffect, SyllabusView, SyllabusViewState, FragmentSyllabusBinding>() {
 
     @get:PageViewUrlParam("canvasContext")
     val canvasContext by ParcelableArg<Course>(key = Const.CANVAS_CONTEXT)
 
-    override fun makeEffectHandler() = SyllabusEffectHandler()
+    protected abstract fun getRepository(): SyllabusRepository
+
+    override fun makeEffectHandler() = SyllabusEffectHandler(getRepository())
 
     override fun makeUpdate() = SyllabusUpdate()
 
@@ -56,17 +62,5 @@ class SyllabusFragment : MobiusFragment<SyllabusModel, SyllabusEvent, SyllabusEf
     override fun onStop() {
         view.unregisterEventBus()
         super.onStop()
-    }
-
-    companion object {
-        fun newInstance(canvasContext: CanvasContext?) = if (isValidRoute(canvasContext)) createFragmentWithCanvasContext(canvasContext) else null
-
-        private fun isValidRoute(canvasContext: CanvasContext?) = canvasContext is Course
-
-        private fun createFragmentWithCanvasContext(canvasContext: CanvasContext?): SyllabusFragment {
-            return SyllabusFragment().withArgs {
-                putParcelable(Const.CANVAS_CONTEXT, canvasContext)
-            }
-        }
     }
 }
