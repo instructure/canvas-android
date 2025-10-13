@@ -32,8 +32,14 @@ data class TimeSpentWidgetData(
     val data: List<Any>
 )
 
+data class LearningStatusWidgetData(
+    val lastModifiedDate: Date?,
+    val data: List<Any>
+)
+
 interface GetWidgetsManager {
     suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): TimeSpentWidgetData
+    suspend fun getLearningStatusWidgetData(courseId: Long?, forceNetwork: Boolean): LearningStatusWidgetData
 }
 
 class GetWidgetsManagerImpl @Inject constructor(
@@ -62,6 +68,33 @@ class GetWidgetsManagerImpl @Inject constructor(
         val widgetData = result.dataAssertNoErrors.widgetData
 
         return TimeSpentWidgetData(
+            lastModifiedDate = widgetData.lastModifiedDate,
+            data = widgetData.data
+        )
+    }
+
+    override suspend fun getLearningStatusWidgetData(
+        courseId: Long?,
+        forceNetwork: Boolean,
+    ): LearningStatusWidgetData {
+        val widgetType = "learning_status_details"
+        val timeSpanInput = TimeSpanInput(type = TimeSpanType.PAST_7_DAYS)
+        val dataScope = "learner"
+
+        val query = GetWidgetDataQuery(
+            widgetType = widgetType,
+            timeSpan = timeSpanInput,
+            dataScope = dataScope,
+            queryParams = Optional.present(WidgetDataFiltersInput(
+                userId = Optional.presentIfNotNull(apiPrefs.user?.id?.toString()),
+                courseId = Optional.presentIfNotNull(courseId?.toDouble())
+            ))
+        )
+
+        val result = journeyClient.enqueueQuery(query, forceNetwork)
+        val widgetData = result.dataAssertNoErrors.widgetData
+
+        return LearningStatusWidgetData(
             lastModifiedDate = widgetData.lastModifiedDate,
             data = widgetData.data
         )

@@ -19,6 +19,7 @@ package com.instructure.canvas.espresso.mockcanvas.fakes
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.LearningStatusWidgetData
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
@@ -81,6 +82,16 @@ class FakeGetWidgetsManager : GetWidgetsManager {
         return TimeSpentWidgetData(
             lastModifiedDate = Date(),
             data = listOf(mapOf("hours" to 10.0))
+        )
+    }
+
+    override suspend fun getLearningStatusWidgetData(
+        courseId: Long?,
+        forceNetwork: Boolean
+    ): LearningStatusWidgetData {
+        return LearningStatusWidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(mapOf("module_count_completed" to 5))
         )
     }
 }
