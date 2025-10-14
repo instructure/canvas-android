@@ -256,7 +256,8 @@ class FileUploadDialogFragment : BaseCanvasDialogFragment() {
                     fileUploadEventHandler.postEvent(
                         FileUploadEvent.UploadStarted(
                             action.id,
-                            action.liveData
+                            action.liveData,
+                            action.selectedUris
                         )
                     )
                 }

@@ -45,6 +45,7 @@ object Versions {
     const val ENCRYPTED_SHARED_PREFERENCES = "1.1.0"
     const val JAVA_JWT = "4.5.0"
     const val GLANCE = "1.1.1"
+    const val LIVEDATA = "1.9.0"
 }
 
 object Libs {
@@ -130,7 +131,6 @@ object Libs {
     const val LIFECYCLE_COMPILER = "androidx.lifecycle:lifecycle-compiler:${Versions.LIFECYCLE}"
     const val COMPOSE_VIEW_MODEL = "androidx.lifecycle:lifecycle-viewmodel-compose:${Versions.LIFECYCLE}"
     const val COMPOSE_NAVIGATION = "androidx.navigation:navigation-compose:2.8.9"
-
     /* Media and content handling */
     const val NUTRIENT = "io.nutrient:nutrient:${Versions.NUTRIENT}"
     const val MEDIA3 = "androidx.media3:media3-exoplayer:${Versions.MEDIA3}"

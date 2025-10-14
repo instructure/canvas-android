@@ -9,6 +9,8 @@ data class ReminderViewState(
     val reminders: List<ReminderItem> = emptyList(),
     val dueDate: Date? = null,
     val themeColor: Color? = null,
+    val dueLabel: String? = null,
+    val tag: String? = null
 ) {
     fun getThemeColor(context: Context): Color {
         return themeColor ?: Color(context.getColor(R.color.textDarkest))
