@@ -190,7 +190,7 @@ class CanvasWebView @JvmOverloads constructor(
             initSettings()
             setDownloadListener { url, _, contentDisposition, mimetype, _ ->
                 // Check if this download was triggered by an internal file link
-                if (isInternalFileLink(url)) {
+                if (isInternalFileDownloadLink(url)) {
                     val fileName = parseFileNameFromContentDisposition(contentDisposition, url)
                     mediaDownloadCallback?.downloadInternalMedia(mimetype, url, fileName)
                 } else if (contentDisposition != null) {
@@ -858,7 +858,7 @@ class CanvasWebView @JvmOverloads constructor(
             return false
         }
 
-        fun isInternalFileLink(url: String): Boolean {
+        fun isInternalFileDownloadLink(url: String): Boolean {
             return try {
                 val uri = url.toUri()
                 uri.host?.contains("instructure-uploads") == true
