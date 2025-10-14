@@ -55,7 +55,7 @@ class StudentCalendarRepositoryTest {
 
     @Test(expected = IllegalStateException::class)
     fun `Throw exception when request fails`() = runTest {
-        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Fail()
+        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any(), any()) } returns DataResult.Fail()
 
         calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
     }
@@ -73,7 +73,7 @@ class StudentCalendarRepositoryTest {
             createPlannerItem(2, 6, PlannableType.CALENDAR_EVENT)
         )
 
-        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(plannerItems)
+        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any(), any()) } returns DataResult.Success(plannerItems)
 
         val result = calendarRepository.getPlannerItems("2023-1-1", "2023-1-2", emptyList(), true)
 
@@ -92,7 +92,7 @@ class StudentCalendarRepositoryTest {
             createPlannerItem(2, 6, PlannableType.CALENDAR_EVENT)
         )
 
-        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any()) } returns DataResult.Success(
+        coEvery { plannerApi.getPlannerItems(any(), any(), any(), any(), any()) } returns DataResult.Success(
             plannerItems1,
             linkHeaders = LinkHeaders(nextUrl = "next")
         )

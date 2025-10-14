@@ -33,6 +33,7 @@ import com.instructure.canvasapi2.apis.GroupAPI
 import com.instructure.canvasapi2.apis.LaunchDefinitionsAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.PageAPI
+import com.instructure.canvasapi2.apis.PlannerAPI
 import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.UserAPI
@@ -53,6 +54,7 @@ import com.instructure.pandautils.room.offline.daos.FileSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.FileSyncSettingsDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
 import com.instructure.pandautils.room.offline.facade.AssignmentFacade
@@ -148,7 +150,9 @@ class OfflineSyncModule {
         firebaseCrashlytics: FirebaseCrashlytics,
         fileSync: FileSync,
         customGradeStatusDao: CustomGradeStatusDao,
-        customGradeStatusesManager: CustomGradeStatusesManager
+        customGradeStatusesManager: CustomGradeStatusesManager,
+        plannerApi: PlannerAPI.PlannerInterface,
+        plannerItemDao: PlannerItemDao
     ): CourseSync {
         return CourseSync(
             courseApi,
@@ -156,6 +160,7 @@ class OfflineSyncModule {
             userApi,
             assignmentApi,
             calendarEventApi,
+            plannerApi,
             courseSyncSettingsDao,
             pageFacade,
             userFacade,
@@ -186,7 +191,8 @@ class OfflineSyncModule {
             firebaseCrashlytics,
             fileSync,
             customGradeStatusDao,
-            customGradeStatusesManager
+            customGradeStatusesManager,
+            plannerItemDao
         )
     }
 

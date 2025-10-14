@@ -69,6 +69,7 @@ import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleNameDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.daos.RemoteFileDao
@@ -200,6 +201,11 @@ class OfflineModule {
     @Provides
     fun provideGroupDao(appDatabase: OfflineDatabase): GroupDao {
         return appDatabase.groupDao()
+    }
+
+    @Provides
+    fun providePlannerItemDao(appDatabase: OfflineDatabase): PlannerItemDao {
+        return appDatabase.plannerItemDao()
     }
 
     @Provides

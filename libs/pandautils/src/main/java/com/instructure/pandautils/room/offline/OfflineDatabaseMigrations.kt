@@ -155,5 +155,35 @@ val offlineDatabaseMigrations = arrayOf(
                     "`isGradeMatchesCurrentSubmission` INTEGER NOT NULL," +
                     "FOREIGN KEY(`submissionId`, `submissionAttempt`) REFERENCES `SubmissionEntity`(`id`, `attempt`) ON UPDATE NO ACTION ON DELETE CASCADE)"
         )
+    },
+    createMigration(6, 7) { database ->
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `PlannerItemEntity` (" +
+                    "`id` INTEGER PRIMARY KEY NOT NULL," +
+                    "`courseId` INTEGER," +
+                    "`groupId` INTEGER," +
+                    "`userId` INTEGER," +
+                    "`contextType` TEXT," +
+                    "`contextName` TEXT," +
+                    "`plannableType` TEXT NOT NULL," +
+                    "`plannableId` INTEGER NOT NULL," +
+                    "`plannableTitle` TEXT," +
+                    "`plannableDetails` TEXT," +
+                    "`plannableTodoDate` TEXT," +
+                    "`plannableEndAt` INTEGER," +
+                    "`plannableAllDay` INTEGER," +
+                    "`plannableCourseId` INTEGER," +
+                    "`plannableGroupId` INTEGER," +
+                    "`plannableUserId` INTEGER," +
+                    "`plannableDate` INTEGER NOT NULL," +
+                    "`htmlUrl` TEXT," +
+                    "`submissionStateSubmitted` INTEGER," +
+                    "`submissionStateExcused` INTEGER," +
+                    "`submissionStateGraded` INTEGER," +
+                    "`newActivity` INTEGER," +
+                    "`plannerOverrideId` INTEGER," +
+                    "`plannerOverrideMarkedComplete` INTEGER," +
+                    "FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON DELETE CASCADE)"
+        )
     }
 )
