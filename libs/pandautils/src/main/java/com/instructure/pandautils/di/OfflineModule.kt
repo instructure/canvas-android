@@ -31,7 +31,6 @@ import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
 import com.instructure.pandautils.room.offline.daos.AttachmentDao
 import com.instructure.pandautils.room.offline.daos.AuthorDao
 import com.instructure.pandautils.room.offline.daos.CheckpointDao
-import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.daos.CourseDao
@@ -80,6 +79,7 @@ import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverri
 import com.instructure.pandautils.room.offline.daos.ScheduleItemDao
 import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
+import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
@@ -368,6 +368,8 @@ class OfflineModule {
         localFileDao: LocalFileDao,
         discussionTopicRemoteFileDao: DiscussionTopicRemoteFileDao,
         offlineDatabase: OfflineDatabase,
+        assignmentDao: AssignmentDao,
+        checkpointDao: CheckpointDao
     ): DiscussionTopicHeaderFacade {
         return DiscussionTopicHeaderFacade(
             discussionTopicHeaderDao,
@@ -376,7 +378,9 @@ class OfflineModule {
             remoteFileDao,
             localFileDao,
             discussionTopicRemoteFileDao,
-            offlineDatabase
+            offlineDatabase,
+            assignmentDao,
+            checkpointDao
         )
     }
 
