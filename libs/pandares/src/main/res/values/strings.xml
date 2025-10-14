@@ -2156,4 +2156,6 @@
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
     <string name="multipleDueDates">Multiple Due Dates</string>
     <string name="courseConcludedError">Course concluded. Unable to send messages!</string>
+    <string name="openInDetailView">Open in Detail View</string>
+    <string name="immersiveView">Immersive view</string>
 </resources>

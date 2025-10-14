@@ -75,6 +75,13 @@ class HtmlContentFormatter(
                             val newIframe = iframeWithGoogleDocsButton(srcUrl, iframe, context.getString(R.string.openLtiInExternalApp))
                             newHTML = newHTML.replace(iframe, newIframe)
                         }
+
+                        if (hasStudioMediaUrl(srcUrl)) {
+                            val videoTitle = extractVideoTitle(iframe)
+                            val immersiveUrl = convertToImmersiveViewUrl(srcUrl, videoTitle)
+                            val newIframe = iframeWithStudioButton(immersiveUrl, iframe, context)
+                            newHTML = newHTML.replace(iframe, newIframe)
+                        }
                     }
                 }
 
@@ -134,6 +141,45 @@ class HtmlContentFormatter(
         return iframe + htmlButton
     }
 
+    private fun convertToImmersiveViewUrl(srcUrl: String, title: String?): String {
+        // Convert: https://studio-sandbox.cd.instructure.com/media_attachments_iframe/27752
+        // To: https://studio-sandbox.cd.instructure.com/media_attachments/27752/immersive_view?embedded=true&title=...
+        val baseUrl = srcUrl.replace("media_attachments_iframe", "media_attachments")
+            .plus("/immersive_view?embedded=true")
+        return if (title != null) {
+            val encodedTitle = URLEncoder.encode(title, "UTF-8")
+            "$baseUrl&title=$encodedTitle"
+        } else {
+            baseUrl
+        }
+    }
+
+    private fun iframeWithStudioButton(immersiveUrl: String, iframe: String, context: Context): String {
+        val buttonText = context.getString(R.string.openInDetailView)
+        val htmlButton = "</br><p><div class=\"lti_button\" onClick=\"location.href='$immersiveUrl'\">$buttonText</div></p>"
+        return iframe + htmlButton
+    }
+
+    private fun extractVideoTitle(iframe: String): String? {
+        // Try to find title attribute: title="Video player for filename.mp4"
+        val titlePattern = Pattern.compile("title=\"([^\"]+)\"")
+        val titleMatcher = titlePattern.matcher(iframe)
+        if (titleMatcher.find()) {
+            val fullTitle = titleMatcher.group(1) ?: return null
+            // Extract just the filename part after "Video player for "
+            return fullTitle.replace("Video player for ", "").replace(".mp4", "")
+        }
+
+        // Fallback: try aria-label
+        val ariaPattern = Pattern.compile("aria-label=\"([^\"]+)\"")
+        val ariaMatcher = ariaPattern.matcher(iframe)
+        if (ariaMatcher.find()) {
+            return ariaMatcher.group(1)
+        }
+
+        return null
+    }
+
     fun createAuthenticatedLtiUrl(html: String, authenticatedSessionUrl: String?): String {
         if (authenticatedSessionUrl == null) return html
         // Now we need to swap out part of the old url for this new authenticated url
@@ -155,6 +201,7 @@ class HtmlContentFormatter(
         fun hasGoogleDocsUrl(text: String?) = text?.contains("docs.google.com").orDefault()
         fun hasKalturaUrl(text: String?) = text?.contains("kaltura.com").orDefault()
         fun hasExternalTools(text: String?) = text?.contains("external_tools").orDefault()
+        fun hasStudioMediaUrl(text: String?) = text?.contains("media_attachments_iframe").orDefault()
     }
 }
 

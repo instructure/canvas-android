@@ -401,6 +401,13 @@ object RouteMatcher : BaseRouteMatcher() {
             )
         )
 
+        // Studio Media Immersive View
+        routes.add(
+            Route(
+                "/media_attachments/:${RouterParams.ATTACHMENT_ID}/immersive_view",
+                InternalWebviewFragment::class.java
+            )
+        )
 
         // Submissions
         // :sliding_tab_type can be /rubric or /submissions (used to navigate to the nested fragment)
@@ -537,6 +544,31 @@ object RouteMatcher : BaseRouteMatcher() {
             if (route?.uri != null) {
                 // No route, no problem
                 handleWebViewUrl(activity, route.uri.toString())
+            }
+        } else if (route.primaryClass == InternalWebviewFragment::class.java && route.uri?.toString()?.contains("media_attachments") == true) {
+            // Handle studio media immersive view - pass the full URL and title to InternalWebviewFragment
+            val uri = route.uri!!
+            var urlString = uri.toString()
+
+            // Convert media_attachments_iframe to media_attachments (for iframe button)
+            urlString = urlString.replace("media_attachments_iframe", "media_attachments")
+
+            // Ensure embedded=true parameter is always present
+            if (!urlString.contains("embedded=true")) {
+                val separator = if (urlString.contains("?")) "&" else "?"
+                urlString = "$urlString${separator}embedded=true"
+            }
+
+            route.arguments.putString(Const.INTERNAL_URL, urlString)
+
+            // Extract title from URL query parameter if present, otherwise use fallback
+            val title = uri.getQueryParameter("title") ?: activity.getString(R.string.immersiveView)
+            route.arguments.putString(Const.ACTION_BAR_TITLE, title)
+
+            if (activity.resources.getBoolean(R.bool.isDeviceTablet)) {
+                handleTabletRoute(activity, route)
+            } else {
+                handleFullscreenRoute(activity, route)
             }
         } else if (route.routeContext == RouteContext.FILE
             || route.primaryClass?.isAssignableFrom(FileListFragment::class.java) == true
