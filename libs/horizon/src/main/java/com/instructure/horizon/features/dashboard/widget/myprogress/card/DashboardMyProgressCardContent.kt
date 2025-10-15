@@ -23,6 +23,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -33,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 
@@ -41,19 +43,25 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 fun DashboardMyProgressCardContent(
     state: DashboardMyProgressCardState,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardMyProgressTitle),
         R.drawable.trending_up,
         HorizonColors.PrimitivesSky.sky12,
-        modifier.padding(bottom = 8.dp)
+        isLoading = isLoading,
+        modifier = modifier
+            .widthIn(max = 300.dp)
+            .padding(bottom = 8.dp)
     ) {
         if(state.moduleCountCompleted == 0) {
             Text(
                 text = stringResource(R.string.dashboardMyProgressEmptyMessage),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.timestamp(),
-                modifier = Modifier.width(IntrinsicSize.Max)
+                modifier = Modifier
+                    .width(IntrinsicSize.Max)
+                    .shimmerEffect(isLoading)
             )
         } else {
             Row(
@@ -64,14 +72,17 @@ fun DashboardMyProgressCardContent(
                 Text(
                     text = state.moduleCountCompleted.toString(),
                     style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
-                    color = HorizonColors.Text.body()
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier.shimmerEffect(isLoading)
                 )
 
                 Text(
                     text = stringResource(R.string.dashboardMyProgressCompleted),
                     style = HorizonTypography.labelMediumBold,
                     color = HorizonColors.Text.title(),
-                    modifier = Modifier.align(Alignment.CenterVertically)
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .shimmerEffect(isLoading)
                 )
             }
         }
@@ -95,5 +106,16 @@ private fun DashboardMyProgressCardContentZeroPreview() {
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 0
         )
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardMyProgressLoadingPreview() {
+    DashboardMyProgressCardContent(
+        state = DashboardMyProgressCardState(
+            moduleCountCompleted = 0
+        ),
+        isLoading = true
     )
 }

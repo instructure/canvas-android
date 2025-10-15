@@ -17,13 +17,13 @@
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.LearningStatusWidgetData
+import com.instructure.journey.GetWidgetDataQuery
 import javax.inject.Inject
 
 class DashboardMyProgressRepository @Inject constructor(
     private val getWidgetsManager: GetWidgetsManager
 ) {
-    suspend fun getLearningStatusData(courseId: Long? = null, forceNetwork: Boolean): LearningStatusWidgetData {
+    suspend fun getLearningStatusData(courseId: Long? = null, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData {
         return getWidgetsManager.getLearningStatusWidgetData(courseId, forceNetwork)
     }
 }

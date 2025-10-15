@@ -18,19 +18,16 @@ package com.instructure.horizon.features.dashboard.widget.myprogress
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardContent
 import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardError
-import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -60,7 +57,15 @@ fun DashboardMyProgressSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardMyProgressCardLoading()
+            Box(
+                contentAlignment = Alignment.Center,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                DashboardMyProgressCardContent(
+                    state.cardState,
+                    isLoading = true
+                )
+            }
         }
         DashboardItemState.ERROR -> {
             DashboardMyProgressCardError(
@@ -70,9 +75,12 @@ fun DashboardMyProgressSection(
         DashboardItemState.SUCCESS -> {
             Box(
                 contentAlignment = Alignment.Center,
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth(),
             ) {
-                DashboardMyProgressCardContent(state.cardState)
+                DashboardMyProgressCardContent(
+                    state.cardState,
+                    isLoading = false
+                )
             }
         }
     }
