@@ -129,11 +129,14 @@ class DashboardTimeSpentWidgetUiTest {
             DashboardTimeSpentSection(state)
         }
 
-        // Verify zero hours is displayed
-        composeTestRule.onNodeWithText("0").assertIsDisplayed()
+        // Verify zero hours is not displayed
+        composeTestRule.onNodeWithText("0").assertDoesNotExist()
 
-        // Verify single course text
-        composeTestRule.onNodeWithText("hours in your course").assertIsDisplayed()
+        // Verify single course text is not displayed
+        composeTestRule.onNodeWithText("hours in your course").assertDoesNotExist()
+
+        // Verify empty state message is displayed
+        composeTestRule.onNodeWithText("This widget will update once data becomes available.").assertIsDisplayed()
     }
 
     @Test

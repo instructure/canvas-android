@@ -60,50 +60,59 @@ fun DashboardTimeSpentCardContent(
         modifier.padding(bottom = 8.dp)
     ) {
 
-        FlowRow(
-            verticalArrangement = Arrangement.Center,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        if (state.hours == 0.0) {
             Text(
-                text = state.hours.roundToInt().toString(),
-                style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
-                color = HorizonColors.Text.body()
+                text = stringResource(R.string.dashboardTimeSpentEmptyMessage),
+                style = HorizonTypography.p2,
+                color = HorizonColors.Text.timestamp(),
+                modifier = Modifier.width(IntrinsicSize.Max)
             )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier
-                    .align(Alignment.CenterVertically)
-                    .width(IntrinsicSize.Max)
+        } else {
+            FlowRow(
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (state.courses.size > 1) {
-                    Text(
-                        text = stringResource(R.string.dashboardTimeSpentHoursIn),
-                        style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.title()
-                    )
+                Text(
+                    text = state.hours.roundToInt().toString(),
+                    style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
+                    color = HorizonColors.Text.body()
+                )
 
-                    HorizonSpace(SpaceSize.SPACE_8)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .width(IntrinsicSize.Max)
+                ) {
+                    if (state.courses.size > 1) {
+                        Text(
+                            text = stringResource(R.string.dashboardTimeSpentHoursIn),
+                            style = HorizonTypography.labelMediumBold,
+                            color = HorizonColors.Text.title()
+                        )
 
-                    var isMenuOpen by remember { mutableStateOf(false) }
-                    val courseSelectState = SingleSelectState(
-                        isMenuOpen = isMenuOpen,
-                        onMenuOpenChanged = { isMenuOpen = it },
-                        size = SingleSelectInputSize.Medium,
-                        options = listOf(stringResource(R.string.dashboardTimeSpentAllCourses)) + state.courses.map { it.name },
-                        selectedOption = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
-                            ?: stringResource(R.string.dashboardTimeSpentAllCourses),
-                        onOptionSelected = { state.onCourseSelected(it) }
-                    )
+                        HorizonSpace(SpaceSize.SPACE_8)
 
-                    SingleSelect(courseSelectState)
-                } else {
-                    Text(
-                        text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
-                        style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.title(),
-                    )
+                        var isMenuOpen by remember { mutableStateOf(false) }
+                        val courseSelectState = SingleSelectState(
+                            isMenuOpen = isMenuOpen,
+                            onMenuOpenChanged = { isMenuOpen = it },
+                            size = SingleSelectInputSize.Medium,
+                            options = listOf(stringResource(R.string.dashboardTimeSpentAllCourses)) + state.courses.map { it.name },
+                            selectedOption = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
+                                ?: stringResource(R.string.dashboardTimeSpentAllCourses),
+                            onOptionSelected = { state.onCourseSelected(it) }
+                        )
+
+                        SingleSelect(courseSelectState)
+                    } else {
+                        Text(
+                            text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
+                            style = HorizonTypography.labelMediumBold,
+                            color = HorizonColors.Text.title(),
+                        )
+                    }
                 }
             }
         }
@@ -148,6 +157,20 @@ private fun DashboardTimeSpentCardContentSingleCoursePreview() {
     DashboardTimeSpentCardContent(
         state = DashboardTimeSpentCardState(
             hours = 12.0,
+            courses = listOf(
+                CourseOption(1, "Introduction to Computer Science")
+            ),
+            selectedCourseId = null
+        )
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardEmptyContentPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(
+            hours = 0.0,
             courses = listOf(
                 CourseOption(1, "Introduction to Computer Science")
             ),
