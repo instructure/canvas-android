@@ -135,18 +135,16 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Details
         val details = moduleItem.moduleDetails
         if (details != null) {
-            val hasDate: Boolean
-            val hasPoints: Boolean
             if (details.dueDate != null) {
                 date.text = DateHelper.createPrefixedDateTimeString(
                     context,
                     R.string.toDoDue,
                     details.dueDate
                 )
-                hasDate = true
+                date.setVisible()
             } else {
                 date.text = ""
-                hasDate = false
+                date.setGone()
             }
             val pointsPossible = details.pointsPossible
             if (pointsPossible.isValid() && !restrictQuantitativeData) {
@@ -154,17 +152,10 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
                     R.string.totalPoints,
                     NumberHelper.formatDecimal(pointsPossible.toDouble(), 2, true)
                 )
-                hasPoints = true
+                points.setVisible()
             } else {
                 points.text = ""
-                hasPoints = false
-            }
-            if (!hasDate && !hasPoints) {
-                date.setGone()
                 points.setGone()
-            } else {
-                if (hasDate) date.setVisible() else date.setInvisible()
-                if (hasPoints) points.setVisible() else points.setInvisible()
             }
         } else {
             points.text = ""
