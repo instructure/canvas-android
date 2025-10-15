@@ -33,15 +33,28 @@ data class SubmissionListUiState(
     val headerTitle: String,
     val anonymousGrading: Boolean,
     val searchQuery: String = "",
-    val filter: SubmissionListFilter = SubmissionListFilter.ALL,
-    val filterValue: Double? = null,
+    val selectedFilters: Set<SubmissionListFilter> = setOf(SubmissionListFilter.ALL),
+    val filterValueAbove: Double? = null,
+    val filterValueBelow: Double? = null,
+    val assignmentMaxPoints: Double? = null,
     val sections: List<Section> = emptyList(),
     val selectedSections: List<Long> = emptyList(),
+    val differentiationTags: List<DifferentiationTag> = emptyList(),
+    val selectedDifferentiationTagIds: Set<String> = emptySet(),
+    val includeStudentsWithoutTags: Boolean = false,
+    val sortOrder: SubmissionSortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+    val customGradeStatuses: List<CustomGradeStatus> = emptyList(),
+    val selectedCustomStatusIds: Set<String> = emptySet(),
     val submissions: List<SubmissionUiState> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
     val error: Boolean = false,
     val actionHandler: (SubmissionListAction) -> Unit
+)
+
+data class CustomGradeStatus(
+    val id: String,
+    val name: String
 )
 
 data class SubmissionUiState(
@@ -88,9 +101,14 @@ sealed class SubmissionListAction {
     data class SubmissionClicked(val submissionId: Long) : SubmissionListAction()
     data class Search(val query: String) : SubmissionListAction()
     data class SetFilters(
-        val filter: SubmissionListFilter,
-        val filterValue: Double?,
-        val selectedSections: List<Long>
+        val selectedFilters: Set<SubmissionListFilter>,
+        val filterValueAbove: Double?,
+        val filterValueBelow: Double?,
+        val selectedSections: List<Long>,
+        val selectedDifferentiationTagIds: Set<String>,
+        val includeStudentsWithoutTags: Boolean,
+        val sortOrder: SubmissionSortOrder,
+        val selectedCustomStatusIds: Set<String>
     ) : SubmissionListAction()
 
     data object ShowPostPolicy : SubmissionListAction()
@@ -105,8 +123,9 @@ sealed class SubmissionListViewModelAction {
         val selectedIdx: Int,
         val anonymousGrading: Boolean? = null,
         val filteredSubmissionIds: LongArray = longArrayOf(),
-        val filter: SubmissionListFilter? = null,
-        val filterValue: Double = 0.0
+        val selectedFilters: Set<SubmissionListFilter> = setOf(SubmissionListFilter.ALL),
+        val filterValueAbove: Double? = null,
+        val filterValueBelow: Double? = null
     ) : SubmissionListViewModelAction()
 
     data class ShowPostPolicy(val course: Course, val assignment: Assignment) :

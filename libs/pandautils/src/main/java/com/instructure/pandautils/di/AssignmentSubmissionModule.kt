@@ -20,7 +20,11 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManagerImpl
 import com.instructure.pandautils.features.speedgrader.AssignmentSubmissionRepository
+import com.apollographql.apollo.ApolloClient
+import com.instructure.canvasapi2.di.DefaultApolloClient
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -29,14 +33,21 @@ import dagger.hilt.components.SingletonComponent
 @Module
 @InstallIn(SingletonComponent::class)
 class AssignmentSubmissionModule {
+
+    @Provides
+    fun provideDifferentiationTagsManager(@DefaultApolloClient apolloClient: ApolloClient): DifferentiationTagsManager {
+        return DifferentiationTagsManagerImpl(apolloClient)
+    }
+
     @Provides
     fun provideAssignmentSubmissionListRepository(
         assignmentApi: AssignmentAPI.AssignmentInterface,
         enrollmentApi: EnrollmentAPI.EnrollmentInterface,
         courseApi: CourseAPI.CoursesInterface,
         sectionApi: SectionAPI.SectionsInterface,
-        customGradeStatusesManager: CustomGradeStatusesManager
+        customGradeStatusesManager: CustomGradeStatusesManager,
+        differentiationTagsManager: DifferentiationTagsManager
     ): AssignmentSubmissionRepository {
-        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi, customGradeStatusesManager)
+        return AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi, customGradeStatusesManager, differentiationTagsManager)
     }
 }

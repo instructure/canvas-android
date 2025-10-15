@@ -18,25 +18,30 @@ package com.instructure.teacher.features.assignment.submission
 
 import android.content.res.Configuration
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
-import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -46,34 +51,54 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Section
 import com.instructure.canvasapi2.utils.NumberHelper
+import com.instructure.pandautils.compose.composables.BasicTextFieldWithHintDecoration
 import com.instructure.pandautils.compose.composables.CanvasAppBar
 import com.instructure.pandautils.compose.composables.CanvasDivider
 import com.instructure.pandautils.compose.composables.CheckboxText
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 import com.instructure.pandautils.compose.composables.RadioButtonText
 import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
 
 @Composable
 fun SubmissionListFilters(
-    filter: SubmissionListFilter,
-    filterValue: Double?,
+    selectedFilters: Set<SubmissionListFilter>,
+    filterValueAbove: Double?,
+    filterValueBelow: Double?,
+    assignmentMaxPoints: Double?,
     courseColor: Color,
     assignmentName: String,
+    anonymousGrading: Boolean,
     sections: List<CanvasContext>,
     initialSelectedSections: List<Long>,
+    differentiationTags: List<DifferentiationTag>,
+    selectedDifferentiationTagIds: Set<String>,
+    includeStudentsWithoutTags: Boolean,
+    sortOrder: SubmissionSortOrder,
+    customGradeStatuses: List<CustomGradeStatus>,
+    selectedCustomStatusIds: Set<String>,
     actionHandler: (SubmissionListAction) -> Unit,
     dismiss: () -> Unit
 ) {
 
     FullScreenDialog(onDismissRequest = { dismiss() }) {
         SubmissionFilterScreenContent(
-            filter = filter,
-            filterValue = filterValue,
+            selectedFilters = selectedFilters,
+            filterValueAbove = filterValueAbove,
+            filterValueBelow = filterValueBelow,
+            assignmentMaxPoints = assignmentMaxPoints,
             courseColor = courseColor,
             assignmentName = assignmentName,
+            anonymousGrading = anonymousGrading,
             sections = sections,
             initialSelectedSections = initialSelectedSections,
+            differentiationTags = differentiationTags,
+            selectedDifferentiationTagIds = selectedDifferentiationTagIds,
+            includeStudentsWithoutTags = includeStudentsWithoutTags,
+            sortOrder = sortOrder,
+            customGradeStatuses = customGradeStatuses,
+            initialSelectedCustomStatusIds = selectedCustomStatusIds,
             actionHandler = actionHandler,
             dismiss = dismiss
         )
@@ -82,27 +107,40 @@ fun SubmissionListFilters(
 
 @Composable
 private fun SubmissionFilterScreenContent(
-    filter: SubmissionListFilter,
-    filterValue: Double?,
+    selectedFilters: Set<SubmissionListFilter>,
+    filterValueAbove: Double?,
+    filterValueBelow: Double?,
+    assignmentMaxPoints: Double?,
     courseColor: Color,
     assignmentName: String,
+    anonymousGrading: Boolean,
     sections: List<CanvasContext>,
     initialSelectedSections: List<Long>,
+    differentiationTags: List<DifferentiationTag>,
+    selectedDifferentiationTagIds: Set<String>,
+    includeStudentsWithoutTags: Boolean,
+    sortOrder: SubmissionSortOrder,
+    customGradeStatuses: List<CustomGradeStatus>,
+    initialSelectedCustomStatusIds: Set<String>,
     actionHandler: (SubmissionListAction) -> Unit,
     dismiss: () -> Unit
 ) {
-    var selectedFilter by remember { mutableStateOf(filter) }
-    var selectedFilterValue by remember {
-        mutableStateOf(filterValue?.let {
-            NumberHelper.formatDecimal(
-                it,
-                2,
-                true
-            )
+    var filters by remember { mutableStateOf(selectedFilters) }
+    var valueAbove by remember {
+        mutableStateOf(filterValueAbove?.let {
+            NumberHelper.formatDecimal(it, 2, true)
+        }.orEmpty())
+    }
+    var valueBelow by remember {
+        mutableStateOf(filterValueBelow?.let {
+            NumberHelper.formatDecimal(it, 2, true)
         }.orEmpty())
     }
     var selectedSections by remember { mutableStateOf(initialSelectedSections.toSet()) }
-    var error by remember { mutableStateOf(false) }
+    var selectedTags by remember { mutableStateOf(selectedDifferentiationTagIds) }
+    var includeWithoutTags by remember { mutableStateOf(includeStudentsWithoutTags) }
+    var selectedSortOrder by remember { mutableStateOf(sortOrder) }
+    var selectedCustomStatuses by remember { mutableStateOf(initialSelectedCustomStatusIds) }
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
@@ -120,22 +158,19 @@ private fun SubmissionFilterScreenContent(
                     TextButton(
                         modifier = Modifier.testTag("appBarDoneButton"),
                         onClick = {
-                            if (selectedFilter in listOf(
-                                    SubmissionListFilter.BELOW_VALUE,
-                                    SubmissionListFilter.ABOVE_VALUE
-                                ) && selectedFilterValue.isEmpty()
-                            ) {
-                                error = true
-                            } else {
-                                actionHandler(
-                                    SubmissionListAction.SetFilters(
-                                        selectedFilter,
-                                        selectedFilterValue.toDoubleOrNull(),
-                                        selectedSections.toList()
-                                    )
+                            actionHandler(
+                                SubmissionListAction.SetFilters(
+                                    selectedFilters = filters,
+                                    filterValueAbove = valueAbove.toDoubleOrNull(),
+                                    filterValueBelow = valueBelow.toDoubleOrNull(),
+                                    selectedSections = selectedSections.toList(),
+                                    selectedDifferentiationTagIds = selectedTags,
+                                    includeStudentsWithoutTags = includeWithoutTags,
+                                    sortOrder = selectedSortOrder,
+                                    selectedCustomStatusIds = selectedCustomStatuses
                                 )
-                                dismiss()
-                            }
+                            )
+                            dismiss()
                         }) {
                         Text(
                             text = stringResource(R.string.done),
@@ -148,120 +183,143 @@ private fun SubmissionFilterScreenContent(
         }) { padding ->
         Column(
             modifier = Modifier
-                .padding(padding)
                 .verticalScroll(rememberScrollState())
         ) {
-            Header(text = stringResource(R.string.submissionFilter))
-            FilterItem(
-                text = stringResource(R.string.all_submissions),
-                selected = selectedFilter == SubmissionListFilter.ALL,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilter = SubmissionListFilter.ALL
-                }
-            )
-            FilterItem(
-                text = stringResource(R.string.submitted_late),
-                selected = selectedFilter == SubmissionListFilter.LATE,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilter = SubmissionListFilter.LATE
-                }
-            )
-            FilterItem(
-                text = stringResource(R.string.needsGrading),
-                selected = selectedFilter == SubmissionListFilter.NOT_GRADED,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilter = SubmissionListFilter.NOT_GRADED
-                }
-            )
-            FilterItem(
-                text = stringResource(R.string.not_submitted),
-                selected = selectedFilter == SubmissionListFilter.MISSING,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilter = SubmissionListFilter.MISSING
-                }
-            )
-            FilterItem(
-                text = stringResource(R.string.graded),
-                selected = selectedFilter == SubmissionListFilter.GRADED,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilter = SubmissionListFilter.GRADED
-                }
-            )
-            FilterItem(
-                text = stringResource(R.string.scored_less_than),
-                selected = selectedFilter == SubmissionListFilter.BELOW_VALUE,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilterValue = ""
-                    selectedFilter = SubmissionListFilter.BELOW_VALUE
-                }
-            )
-            if (selectedFilter == SubmissionListFilter.BELOW_VALUE) {
-                OutlinedTextField(
+            Header(text = stringResource(R.string.statuses))
+            SubmissionListFilter.entries.filter {
+                listOf(
+                    SubmissionListFilter.ALL,
+                    SubmissionListFilter.ABOVE_VALUE,
+                    SubmissionListFilter.BELOW_VALUE
+                ).contains(it).not()
+            }.forEach { filter ->
+                CheckboxText(
+                    text = when (filter) {
+                        SubmissionListFilter.LATE -> stringResource(R.string.late)
+                        SubmissionListFilter.MISSING -> stringResource(R.string.missingTag)
+                        SubmissionListFilter.NOT_GRADED -> stringResource(R.string.needsGrading)
+                        SubmissionListFilter.GRADED -> stringResource(R.string.graded)
+                        SubmissionListFilter.SUBMITTED -> stringResource(R.string.submitted)
+                        else -> ""
+                    },
+                    testTag = "statusLateCheckBox",
+                    selected = filters.contains(filter),
+                    color = courseColor,
+                    onCheckedChanged = {
+                        filters = if (filters.contains(filter)) {
+                            filters - filter
+                        } else {
+                            (filters - SubmissionListFilter.ALL) + filter
+                        }.let { it.ifEmpty { setOf(SubmissionListFilter.ALL) } }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp),
-                    value = selectedFilterValue,
-                    onValueChange = {
-                        error = false
-                        selectedFilterValue = it
-                    },
-                    label = { Text(stringResource(R.string.score)) },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = colorResource(R.color.textDarkest),
-                        focusedBorderColor = colorResource(R.color.textDarkest),
-                        unfocusedBorderColor = colorResource(R.color.textDark),
-                        focusedLabelColor = colorResource(R.color.textDarkest),
-                        unfocusedLabelColor = colorResource(R.color.textDark),
-                        cursorColor = colorResource(R.color.textDarkest),
-                    ),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    isError = error
+                        .defaultMinSize(minHeight = 56.dp)
+                        .padding(horizontal = 4.dp)
                 )
             }
-            FilterItem(
-                text = stringResource(R.string.scored_more_than),
-                selected = selectedFilter == SubmissionListFilter.ABOVE_VALUE,
-                courseColor = courseColor,
-                onClick = {
-                    selectedFilterValue = ""
-                    selectedFilter = SubmissionListFilter.ABOVE_VALUE
-                }
-            )
-            if (selectedFilter == SubmissionListFilter.ABOVE_VALUE) {
-                OutlinedTextField(
+
+            // Custom grade statuses
+            customGradeStatuses.forEach { status ->
+                CheckboxText(
+                    text = status.name,
+                    testTag = "customStatusCheckBox",
+                    selected = selectedCustomStatuses.contains(status.id),
+                    color = courseColor,
+                    onCheckedChanged = {
+                        selectedCustomStatuses = if (selectedCustomStatuses.contains(status.id)) {
+                            selectedCustomStatuses - status.id
+                        } else {
+                            selectedCustomStatuses + status.id
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 24.dp, vertical = 8.dp),
-                    value = selectedFilterValue,
-                    onValueChange = {
-                        error = false
-                        selectedFilterValue = it
-                    },
-                    label = { Text(stringResource(R.string.score)) },
-                    colors = TextFieldDefaults.outlinedTextFieldColors(
-                        textColor = colorResource(R.color.textDarkest),
-                        focusedBorderColor = colorResource(R.color.textDarkest),
-                        unfocusedBorderColor = colorResource(R.color.textDark),
-                        focusedLabelColor = colorResource(R.color.textDarkest),
-                        unfocusedLabelColor = colorResource(R.color.textDark)
-                    ),
-                    keyboardOptions = KeyboardOptions.Default.copy(
-                        keyboardType = KeyboardType.Number
-                    ),
-                    isError = error
+                        .defaultMinSize(minHeight = 56.dp)
+                        .padding(horizontal = 4.dp)
                 )
             }
+
+            Header(text = stringResource(R.string.precise_filtering))
+            Row(
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 56.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.scored_more_than),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 21.sp,
+                    color = colorResource(R.color.textDarkest)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                BasicTextFieldWithHintDecoration(
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .testTag("scoreMoreThanField"),
+                    value = valueAbove,
+                    onValueChange = { valueAbove = it },
+                    hint = stringResource(R.string.write_score_here),
+                    textColor = courseColor,
+                    hintColor = colorResource(R.color.textDark),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.pointsPossible,
+                        assignmentMaxPoints?.toInt().orDefault(),
+                        assignmentMaxPoints.orDefault()
+                    ),
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.textDark)
+                )
+            }
+            Row(
+                modifier = Modifier
+                    .defaultMinSize(minHeight = 56.dp)
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    text = stringResource(R.string.scored_less_than),
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.SemiBold,
+                    lineHeight = 21.sp,
+                    color = colorResource(R.color.textDarkest)
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                BasicTextFieldWithHintDecoration(
+                    modifier = Modifier
+                        .padding(end = 4.dp)
+                        .testTag("scoreLessThanField"),
+                    value = valueBelow,
+                    onValueChange = { valueBelow = it },
+                    hint = stringResource(R.string.write_score_here),
+                    textColor = courseColor,
+                    hintColor = colorResource(R.color.textDark),
+                    keyboardOptions = KeyboardOptions.Default.copy(
+                        keyboardType = KeyboardType.Number
+                    )
+                )
+                Text(
+                    text = pluralStringResource(
+                        R.plurals.pointsPossible,
+                        assignmentMaxPoints?.toInt().orDefault(),
+                        assignmentMaxPoints.orDefault()
+                    ),
+                    fontSize = 16.sp,
+                    color = colorResource(R.color.textDark)
+                )
+            }
+
             if (sections.isNotEmpty()) {
                 Header(text = stringResource(R.string.filterBySection))
-
                 sections.forEach { section ->
                     CheckboxText(
                         text = section.name.orEmpty(),
@@ -275,9 +333,73 @@ private fun SubmissionFilterScreenContent(
                                 selectedSections + section.id
                             }
                         },
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 56.dp)
+                            .padding(horizontal = 4.dp)
                     )
                 }
+            }
+
+            if (differentiationTags.isNotEmpty()) {
+                Header(text = stringResource(R.string.differentiation_tags))
+                CheckboxText(
+                    text = stringResource(R.string.students_without_differentiation_tags),
+                    testTag = "includeWithoutTagsCheckBox",
+                    selected = includeWithoutTags,
+                    color = courseColor,
+                    onCheckedChanged = { includeWithoutTags = it },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .defaultMinSize(minHeight = 56.dp)
+                        .padding(horizontal = 4.dp)
+                )
+                differentiationTags.forEach { tag ->
+                    CheckboxText(
+                        text = tag.name,
+                        subtitle = tag.groupSetName,
+                        testTag = "differentiationTagCheckBox",
+                        selected = selectedTags.contains(tag.id),
+                        color = courseColor,
+                        onCheckedChanged = {
+                            selectedTags = if (selectedTags.contains(tag.id)) {
+                                selectedTags - tag.id
+                            } else {
+                                selectedTags + tag.id
+                            }
+                        },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .defaultMinSize(minHeight = 56.dp)
+                            .padding(horizontal = 4.dp)
+                    )
+                }
+            }
+
+            Header(text = stringResource(R.string.sort_by))
+            SubmissionSortOrder.entries.filter {
+                if (anonymousGrading) {
+                    it != SubmissionSortOrder.STUDENT_NAME && it != SubmissionSortOrder.STUDENT_SORTABLE_NAME
+                } else {
+                    true
+                }
+            }.forEach { order ->
+                RadioButtonText(
+                    modifier = Modifier
+                        .defaultMinSize(minHeight = 56.dp)
+                        .padding(horizontal = 4.dp)
+                        .fillMaxWidth()
+                        .testTag("${order.name}SortButton"),
+                    text = when (order) {
+                        SubmissionSortOrder.STUDENT_NAME -> stringResource(R.string.student_name)
+                        SubmissionSortOrder.SUBMISSION_DATE -> stringResource(R.string.submission_date)
+                        SubmissionSortOrder.STUDENT_SORTABLE_NAME -> stringResource(R.string.student_sortable_name)
+                        SubmissionSortOrder.SUBMISSION_STATUS -> stringResource(R.string.submission_status)
+                    },
+                    selected = selectedSortOrder == order,
+                    color = courseColor,
+                    onClick = { selectedSortOrder = order }
+                )
             }
         }
     }
@@ -296,52 +418,26 @@ private fun Header(text: String) {
     CanvasDivider()
 }
 
-@Composable
-private fun FilterItem(
-    text: String,
-    selected: Boolean,
-    courseColor: Color,
-    onClick: () -> Unit
-) {
-    RadioButtonText(
-        modifier = Modifier
-            .padding(vertical = 8.dp, horizontal = 16.dp)
-            .fillMaxWidth()
-            .testTag("filterItem"),
-        text = text,
-        selected = selected,
-        color = courseColor,
-        onClick = {
-            onClick()
-        }
-    )
-}
-
 @Preview
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
 @Composable
 private fun SubmissionFilterScreenPreview() {
     SubmissionFilterScreenContent(
-        filter = SubmissionListFilter.ALL,
-        filterValue = null,
+        selectedFilters = setOf(SubmissionListFilter.ALL),
+        filterValueAbove = null,
+        filterValueBelow = null,
+        assignmentMaxPoints = 100.0,
         courseColor = Color.Black,
         assignmentName = "Assignment Name",
+        anonymousGrading = false,
         sections = listOf(Section(id = 1, name = "Section 1"), Section(id = 2, name = "Section 2")),
         initialSelectedSections = listOf(1L),
-        actionHandler = {},
-        dismiss = {}
-    )
-}
-
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true)
-@Composable
-private fun SubmissionFilterScreenDarkPreview() {
-    SubmissionFilterScreenContent(
-        filter = SubmissionListFilter.ABOVE_VALUE,
-        filterValue = 12.0,
-        courseColor = Color.Blue,
-        assignmentName = "Assignment Name",
-        sections = listOf(Section(id = 1, name = "Section 1"), Section(id = 2, name = "Section 2")),
-        initialSelectedSections = listOf(2L),
+        differentiationTags = emptyList(),
+        selectedDifferentiationTagIds = emptySet(),
+        includeStudentsWithoutTags = false,
+        sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+        customGradeStatuses = emptyList(),
+        initialSelectedCustomStatusIds = emptySet(),
         actionHandler = {},
         dismiss = {}
     )

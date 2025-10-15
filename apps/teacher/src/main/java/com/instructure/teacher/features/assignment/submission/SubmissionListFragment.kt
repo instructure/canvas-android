@@ -105,8 +105,9 @@ class SubmissionListFragment : BaseCanvasFragment() {
                     action.selectedIdx,
                     action.anonymousGrading,
                     action.filteredSubmissionIds,
-                    action.filter,
-                    action.filterValue
+                    action.selectedFilters,
+                    action.filterValueAbove,
+                    action.filterValueBelow
                 )
                 RouteMatcher.route(requireActivity(), Route(bundle, RouteContext.SPEED_GRADER))
             }

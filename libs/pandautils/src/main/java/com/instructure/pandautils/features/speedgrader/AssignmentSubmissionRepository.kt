@@ -17,12 +17,14 @@
 package com.instructure.pandautils.features.speedgrader
 
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
+import com.instructure.canvasapi2.DifferentiationTagsQuery
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
 import com.instructure.canvasapi2.models.Group
@@ -40,7 +42,8 @@ class AssignmentSubmissionRepository(
     private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
     private val courseApi: CourseAPI.CoursesInterface,
     private val sectionApi: SectionAPI.SectionsInterface,
-    private val customGradeStatusesManager: CustomGradeStatusesManager
+    private val customGradeStatusesManager: CustomGradeStatusesManager,
+    private val differentiationTagsManager: DifferentiationTagsManager
 ) {
 
     suspend fun getGradeableStudentSubmissions(
@@ -189,6 +192,37 @@ class AssignmentSubmissionRepository(
             ?.customGradeStatusesConnection
             ?.nodes
             ?.filterNotNull()
+            .orEmpty()
+    }
+
+    suspend fun getDifferentiationTags(
+        courseId: Long,
+        forceNetwork: Boolean
+    ): List<Pair<DifferentiationTagsQuery.Group, String?>> {
+        return differentiationTagsManager
+            .getDifferentiationTags(courseId, forceNetwork)
+            ?.course
+            ?.groupSets
+            ?.filter { it.nonCollaborative == true }
+            ?.flatMap { groupSet ->
+                val groups = groupSet.groups
+                    ?.filter { group -> group.nonCollaborative == true }
+                    .orEmpty()
+
+                if (groups.isEmpty()) {
+                    listOf(Pair(
+                        DifferentiationTagsQuery.Group(
+                            _id = groupSet._id,
+                            name = groupSet.name,
+                            nonCollaborative = false,
+                            membersConnection = null
+                        ),
+                        null
+                    ))
+                } else {
+                    groups.map { group -> Pair(group, groupSet.name) }
+                }
+            }
             .orEmpty()
     }
 }
