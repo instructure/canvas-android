@@ -28,7 +28,6 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardContent
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardError
-import com.instructure.horizon.features.dashboard.widget.skillhighlights.card.DashboardSkillHighlightsCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -60,7 +59,12 @@ fun DashboardSkillHighlightsSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardSkillHighlightsCardLoading(Modifier.padding(horizontal = 16.dp))
+            DashboardSkillHighlightsCardContent(
+                state.cardState,
+                homeNavController,
+                Modifier.padding(horizontal = 16.dp),
+                true
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardSkillHighlightsCardError(
@@ -72,7 +76,8 @@ fun DashboardSkillHighlightsSection(
             DashboardSkillHighlightsCardContent(
                 state.cardState,
                 homeNavController,
-                Modifier.padding(horizontal = 16.dp)
+                Modifier.padding(horizontal = 16.dp),
+                false
             )
         }
     }
