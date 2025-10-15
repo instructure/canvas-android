@@ -22,13 +22,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -142,33 +145,34 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())
             ) {
-                item {
-                    HomeScreenTopBar(
-                        uiState,
-                        mainNavController,
-                        modifier = Modifier.height(56.dp)
-                    )
-                }
-                item {
-                    Column {
-                        HorizonSpace(SpaceSize.SPACE_24)
-                        DashboardCourseSection(
-                            mainNavController,
-                            homeNavController,
-                            shouldRefresh,
-                            refreshStateFlow
-                        )
-                    }
-                }
-                item {
+                HomeScreenTopBar(
+                    uiState,
+                    mainNavController,
+                    modifier = Modifier.height(56.dp)
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+                DashboardCourseSection(
+                    mainNavController,
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(start = 16.dp)
+                ) {
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         }
