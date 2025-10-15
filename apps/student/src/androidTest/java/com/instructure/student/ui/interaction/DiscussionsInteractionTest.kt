@@ -33,16 +33,19 @@ import com.instructure.canvas.espresso.mockcanvas.addReplyToDiscussion
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionEntry
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Assert.assertNotNull
 import org.junit.Test
+import java.util.Calendar
 
 // Note: Tests course discussions, not group discussions.
 @HiltAndroidTest
@@ -721,6 +724,90 @@ class DiscussionsInteractionTest : StudentTest() {
         return data
     }
 
+    // Tests that checkpoint due dates are displayed in the discussion list
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    fun testDiscussionList_displayCheckpointDates() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course = data.courses.values.first()
+        val teacher = data.users.values.first()
+
+        val calendar1 = Calendar.getInstance().apply { set(2023, 0, 29, 13, 30, 0) }
+        val expectedDate1 = "Due Jan 29, 2023 1:30 PM"
+        val checkpoint1DueDate = calendar1.time.toApiString()
+
+        val calendar2 = Calendar.getInstance().apply { set(2023, 0, 31, 15, 30, 0) }
+        val expectedDate2 = "Due Jan 31, 2023 3:30 PM"
+        val checkpoint2DueDate = calendar2.time.toApiString()
+
+        val checkpoints = listOf(
+            Checkpoint(
+                name = "Reply to Topic",
+                tag = "reply_to_topic",
+                dueAt = checkpoint1DueDate,
+                pointsPossible = 10.0
+            ),
+            Checkpoint(
+                name = "Reply to Entry",
+                tag = "reply_to_entry",
+                dueAt = checkpoint2DueDate,
+                pointsPossible = 10.0
+            )
+        )
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC),
+            name = "Discussion with Checkpoints",
+            pointsPossible = 20,
+            checkpoints = checkpoints
+        )
+
+        data.addDiscussionTopicToCourse(
+            course = course,
+            user = teacher,
+            topicTitle = "Discussion with Checkpoints",
+            topicDescription = "Test checkpoints display",
+            assignment = assignment
+        )
+
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertTopicDisplayed("Discussion with Checkpoints")
+        discussionListPage.assertCheckpointDueDates("Discussion with Checkpoints", "$expectedDate1\n$expectedDate2")
+    }
+
+    // Tests that points possible are displayed in the discussion list
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.DISCUSSIONS, TestCategory.INTERACTION)
+    fun testDiscussionList_displayPointsPossible() {
+        val data = getToCourse(studentCount = 1, courseCount = 1, enableDiscussionTopicCreation = true)
+        val course = data.courses.values.first()
+        val teacher = data.users.values.first()
+
+        val assignment = data.addAssignment(
+            courseId = course.id,
+            submissionTypeList = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC),
+            name = "Discussion with Points",
+            pointsPossible = 15
+        )
+
+        data.addDiscussionTopicToCourse(
+            course = course,
+            user = teacher,
+            topicTitle = "Discussion with Points",
+            topicDescription = "Test points display",
+            assignment = assignment
+        )
+
+        courseBrowserPage.selectDiscussions()
+        discussionListPage.pullToUpdate()
+        discussionListPage.assertTopicDisplayed("Discussion with Points")
+
+        // Verify points are displayed in readUnreadCounts (alongside reply counts)
+        discussionListPage.assertPointsDisplayed("Discussion with Points", 15)
+    }
+
     companion object {
         // Creates an HTML attachment/file which can then be attached to a topic header or reply.
         fun createHtmlAttachment(data: MockCanvas, html: String): RemoteFile {
@@ -743,7 +830,5 @@ class DiscussionsInteractionTest : StudentTest() {
 
             return attachment
         }
-
     }
-
 }
