@@ -105,6 +105,16 @@ class SyllabusEffectHandlerTest : Assert() {
             )
         } returns DataResult.Fail()
 
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Fail()
+
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
         verify(timeout = 100) {
@@ -170,6 +180,16 @@ class SyllabusEffectHandlerTest : Assert() {
             )
         } returns DataResult.Success(calendarEvents)
 
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
         verify(timeout = 100) {
@@ -217,6 +237,16 @@ class SyllabusEffectHandlerTest : Assert() {
             )
         } returns DataResult.Fail()
 
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
+
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 
         verify(timeout = 100) {
@@ -263,6 +293,16 @@ class SyllabusEffectHandlerTest : Assert() {
                 any()
             )
         } returns DataResult.Success(calendarEvents)
+
+        coEvery {
+            syllabusRepository.getPlannerItems(
+                any(),
+                any(),
+                any(),
+                any(),
+                any()
+            )
+        } returns DataResult.Success(emptyList())
 
         connection.accept(SyllabusEffect.LoadData(courseId, false))
 

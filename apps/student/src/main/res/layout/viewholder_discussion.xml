@@ -64,13 +64,24 @@
             tools:text="Beginning of the Biological Existence of Mankind in the Jungles of South Asia Hodor Hodor" />
 
         <TextView
+            android:id="@+id/checkpointDueDates"
+            style="@style/TextFont.Regular"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/textDark"
+            android:layout_below="@+id/discussionTitle"
+            android:layout_alignParentStart="true"
+            android:layout_toStartOf="@+id/discussionOverflow"
+            tools:text="Due Jul 6, 2025 12:00 | Jul 8, 2025 12:00" />
+
+        <TextView
             android:id="@+id/dueDate"
             style="@style/TextFont.Regular"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toDoDue"
             android:textColor="@color/textDark"
-            android:layout_below="@+id/discussionTitle"
+            android:layout_below="@+id/checkpointDueDates"
             android:layout_alignParentStart="true"
             android:layout_toStartOf="@+id/discussionOverflow"
             tools:text="Last Post Apr 1" />

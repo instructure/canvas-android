@@ -22,7 +22,7 @@ import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.teacher.features.syllabus.SyllabusModel
-import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
+import com.instructure.teacher.features.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.teacher.ui.rendertests.renderpages.SyllabusRenderPage
 import com.instructure.teacher.ui.utils.TeacherRenderTest
 import com.spotify.mobius.runners.WorkRunner
@@ -147,7 +147,7 @@ class SyllabusRenderTest : TeacherRenderTest() {
             override fun post(runnable: Runnable) = Unit
         }
         val canvasContext = model.course?.dataOrNull ?: Course(id = model.courseId)
-        val fragment = SyllabusFragment.newInstance(canvasContext)!!.apply {
+        val fragment = SyllabusRepositoryFragment.newInstance(canvasContext)!!.apply {
             overrideInitModel = model
             loopMod = { it.effectRunner { emptyEffectRunner } }
         }

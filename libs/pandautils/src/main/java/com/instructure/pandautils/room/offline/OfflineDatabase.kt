@@ -29,6 +29,8 @@ import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
 import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
 import com.instructure.pandautils.room.offline.daos.AttachmentDao
 import com.instructure.pandautils.room.offline.daos.AuthorDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
+import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.daos.CourseDao
@@ -66,6 +68,7 @@ import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleNameDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.daos.RemoteFileDao
@@ -93,7 +96,9 @@ import com.instructure.pandautils.room.offline.entities.AssignmentScoreStatistic
 import com.instructure.pandautils.room.offline.entities.AssignmentSetEntity
 import com.instructure.pandautils.room.offline.entities.AttachmentEntity
 import com.instructure.pandautils.room.offline.entities.AuthorEntity
+import com.instructure.pandautils.room.offline.entities.CheckpointEntity
 import com.instructure.pandautils.room.offline.entities.ConferenceEntity
+import com.instructure.pandautils.room.offline.entities.SubAssignmentSubmissionEntity
 import com.instructure.pandautils.room.offline.entities.ConferenceRecordingEntity
 import com.instructure.pandautils.room.offline.entities.CourseEntity
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
@@ -135,6 +140,7 @@ import com.instructure.pandautils.room.offline.entities.ModuleNameEntity
 import com.instructure.pandautils.room.offline.entities.ModuleObjectEntity
 import com.instructure.pandautils.room.offline.entities.NeedsGradingCountEntity
 import com.instructure.pandautils.room.offline.entities.PageEntity
+import com.instructure.pandautils.room.offline.entities.PlannerItemEntity
 import com.instructure.pandautils.room.offline.entities.PlannerOverrideEntity
 import com.instructure.pandautils.room.offline.entities.QuizEntity
 import com.instructure.pandautils.room.offline.entities.RemoteFileEntity
@@ -193,6 +199,7 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         ModuleObjectEntity::class,
         NeedsGradingCountEntity::class,
         PageEntity::class,
+        PlannerItemEntity::class,
         PlannerOverrideEntity::class,
         RemoteFileEntity::class,
         RubricCriterionAssessmentEntity::class,
@@ -226,8 +233,10 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         CourseSyncProgressEntity::class,
         FileSyncProgressEntity::class,
         StudioMediaProgressEntity::class,
-        CustomGradeStatusEntity::class
-    ], version = 5
+        CustomGradeStatusEntity::class,
+        CheckpointEntity::class,
+        SubAssignmentSubmissionEntity::class
+    ], version = 7
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {
@@ -265,6 +274,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun submissionDao(): SubmissionDao
 
     abstract fun groupDao(): GroupDao
+
+    abstract fun plannerItemDao(): PlannerItemDao
 
     abstract fun plannerOverrideDao(): PlannerOverrideDao
 
@@ -357,4 +368,8 @@ abstract class OfflineDatabase : RoomDatabase() {
     abstract fun studioMediaProgressDao(): StudioMediaProgressDao
 
     abstract fun customGradeStatusDao(): CustomGradeStatusDao
+
+    abstract fun checkpointDao(): CheckpointDao
+
+    abstract fun subAssignmentSubmissionDao(): SubAssignmentSubmissionDao
 }
