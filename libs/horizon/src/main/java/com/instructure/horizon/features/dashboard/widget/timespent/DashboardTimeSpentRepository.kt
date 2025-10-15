@@ -19,8 +19,8 @@ package com.instructure.horizon.features.dashboard.widget.timespent
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
 import com.instructure.canvasapi2.utils.ApiPrefs
+import com.instructure.horizon.util.deserializeDynamicList
 import javax.inject.Inject
 
 class DashboardTimeSpentRepository @Inject constructor(
@@ -29,7 +29,12 @@ class DashboardTimeSpentRepository @Inject constructor(
     private val apiPrefs: ApiPrefs,
 ) {
     suspend fun getTimeSpentData(courseId: Long? = null, forceNetwork: Boolean): TimeSpentWidgetData {
-        return getWidgetsManager.getTimeSpentWidgetData(courseId, forceNetwork)
+        val widgetData = getWidgetsManager.getTimeSpentWidgetData(courseId, forceNetwork)
+        return TimeSpentWidgetData(
+            lastModifiedDate = widgetData.lastModifiedDate,
+            data = widgetData.data
+                .deserializeDynamicList()
+        )
     }
 
     suspend fun getCourses(forceNetwork: Boolean): List<CourseWithProgress> {
