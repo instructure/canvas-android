@@ -17,7 +17,6 @@
 package com.instructure.horizon.features.dashboard.widget.timespent
 
 import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -56,17 +55,20 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `init loads time spent data successfully`() = runTest {
-        val timeSpentData = TimeSpentWidgetData(
-            lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 12.5))
-        )
         val courses = listOf(
             CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0),
             CourseWithProgress(courseId = 2L, courseName = "Course 2", progress = 0.0)
         )
+        val timeSpentData = TimeSpentWidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                TimeSpentDataEntry(courseId = 1L, courseName = "Course 1", minutesPerDay = 300),
+                TimeSpentDataEntry(courseId = 2L, courseName = "Course 2", minutesPerDay = 450)
+            )
+        )
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -80,7 +82,7 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `init handles error gracefully`() = runTest {
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } throws Exception("Network error")
+        coEvery { repository.getCourses(forceNetwork = false) } throws Exception("Network error")
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -89,15 +91,19 @@ class DashboardTimeSpentViewModelTest {
     }
 
     @Test
-    fun `parseHoursFromData handles hours field`() = runTest {
+    fun `calculates hours from minutesPerDay correctly`() = runTest {
+        val courses = listOf(
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
+        )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 8.0))
+            data = listOf(
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 480)
+            )
         )
-        val courses = emptyList<CourseWithProgress>()
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -106,49 +112,15 @@ class DashboardTimeSpentViewModelTest {
     }
 
     @Test
-    fun `parseHoursFromData handles totalHours field`() = runTest {
-        val timeSpentData = TimeSpentWidgetData(
-            lastModifiedDate = Date(),
-            data = listOf(mapOf("totalHours" to 15.5))
-        )
+    fun `handles empty data`() = runTest {
         val courses = emptyList<CourseWithProgress>()
-
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-
-        viewModel = DashboardTimeSpentViewModel(repository)
-
-        val state = viewModel.uiState.value
-        assertEquals(15.5, state.cardState.hours)
-    }
-
-    @Test
-    fun `parseHoursFromData handles string hours`() = runTest {
-        val timeSpentData = TimeSpentWidgetData(
-            lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to "10.25"))
-        )
-        val courses = emptyList<CourseWithProgress>()
-
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
-        coEvery { repository.getCourses(forceNetwork = false) } returns courses
-
-        viewModel = DashboardTimeSpentViewModel(repository)
-
-        val state = viewModel.uiState.value
-        assertEquals(10.25, state.cardState.hours)
-    }
-
-    @Test
-    fun `parseHoursFromData handles empty data`() = runTest {
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
             data = emptyList()
         )
-        val courses = emptyList<CourseWithProgress>()
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -157,15 +129,42 @@ class DashboardTimeSpentViewModelTest {
     }
 
     @Test
-    fun `parseHoursFromData handles invalid data gracefully`() = runTest {
+    fun `filters time spent data by available courses`() = runTest {
+        val courses = listOf(
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
+        )
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("invalid" to "data"))
+            data = listOf(
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 120),
+                TimeSpentDataEntry(courseId = 2L, minutesPerDay = 180),
+                TimeSpentDataEntry(courseId = 999L, minutesPerDay = 300)
+            )
         )
-        val courses = emptyList<CourseWithProgress>()
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+
+        viewModel = DashboardTimeSpentViewModel(repository)
+
+        val state = viewModel.uiState.value
+        assertEquals(2.0, state.cardState.hours)
+    }
+
+    @Test
+    fun `handles null minutesPerDay gracefully`() = runTest {
+        val courses = listOf(
+            CourseWithProgress(courseId = 1L, courseName = "Course 1", progress = 0.0)
+        )
+        val timeSpentData = TimeSpentWidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = null)
+            )
+        )
+
+        coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -175,17 +174,20 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `onCourseSelected updates selected course id`() = runTest {
-        val timeSpentData = TimeSpentWidgetData(
-            lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.0))
-        )
         val courses = listOf(
             CourseWithProgress(courseId = 1L, courseName = "Math 101", progress = 0.0),
             CourseWithProgress(courseId = 2L, courseName = "Science 201", progress = 0.0)
         )
+        val timeSpentData = TimeSpentWidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 120),
+                TimeSpentDataEntry(courseId = 2L, minutesPerDay = 180)
+            )
+        )
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -200,16 +202,18 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `onCourseSelected with null clears selection`() = runTest {
-        val timeSpentData = TimeSpentWidgetData(
-            lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.0))
-        )
         val courses = listOf(
             CourseWithProgress(courseId = 1L, courseName = "Math 101", progress = 0.0)
         )
+        val timeSpentData = TimeSpentWidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                TimeSpentDataEntry(courseId = 1L, minutesPerDay = 120)
+            )
+        )
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -227,14 +231,14 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `refresh calls repository with forceNetwork true`() = runTest {
+        val courses = emptyList<CourseWithProgress>()
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.0))
+            data = emptyList()
         )
-        val courses = emptyList<CourseWithProgress>()
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = any()) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = any()) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = any()) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -249,15 +253,15 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `refresh handles error and completes`() = runTest {
+        val courses = emptyList<CourseWithProgress>()
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.0))
+            data = emptyList()
         )
-        val courses = emptyList<CourseWithProgress>()
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = false) } returns courses
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = true) } throws Exception("Network error")
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = false) } returns timeSpentData
+        coEvery { repository.getCourses(forceNetwork = true) } throws Exception("Network error")
 
         viewModel = DashboardTimeSpentViewModel(repository)
 
@@ -273,14 +277,14 @@ class DashboardTimeSpentViewModelTest {
 
     @Test
     fun `refresh updates state to loading then success`() = runTest {
+        val courses = emptyList<CourseWithProgress>()
         val timeSpentData = TimeSpentWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.0))
+            data = emptyList()
         )
-        val courses = emptyList<CourseWithProgress>()
 
-        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = any()) } returns timeSpentData
         coEvery { repository.getCourses(forceNetwork = any()) } returns courses
+        coEvery { repository.getTimeSpentData(courseId = null, forceNetwork = any()) } returns timeSpentData
 
         viewModel = DashboardTimeSpentViewModel(repository)
 

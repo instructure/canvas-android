@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -38,6 +39,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -52,58 +54,79 @@ import kotlin.math.roundToInt
 fun DashboardTimeSpentCardContent(
     state: DashboardTimeSpentCardState,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardTimeSpentTitle),
         R.drawable.schedule,
         HorizonColors.PrimitivesHoney.honey12(),
-        modifier.padding(bottom = 8.dp)
+        modifier
+            .widthIn(max = 300.dp)
+            .padding(bottom = 8.dp),
+        isLoading
     ) {
 
-        FlowRow(
-            verticalArrangement = Arrangement.Center,
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = Modifier.fillMaxWidth()
-        ) {
+        if (state.hours == 0.0) {
             Text(
-                text = state.hours.roundToInt().toString(),
-                style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
-                color = HorizonColors.Text.body()
-            )
-
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
+                text = stringResource(R.string.dashboardTimeSpentEmptyMessage),
+                style = HorizonTypography.p2,
+                color = HorizonColors.Text.timestamp(),
                 modifier = Modifier
-                    .align(Alignment.CenterVertically)
                     .width(IntrinsicSize.Max)
+                    .shimmerEffect(isLoading)
+            )
+        } else {
+            FlowRow(
+                verticalArrangement = Arrangement.Center,
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                modifier = Modifier.fillMaxWidth()
             ) {
-                if (state.courses.size > 1) {
-                    Text(
-                        text = stringResource(R.string.dashboardTimeSpentHoursIn),
-                        style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.title()
-                    )
+                Text(
+                    text = state.hours.roundToInt().toString(),
+                    style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier.shimmerEffect(isLoading)
+                )
 
-                    HorizonSpace(SpaceSize.SPACE_8)
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .align(Alignment.CenterVertically)
+                        .width(IntrinsicSize.Max)
+                ) {
+                    if (state.courses.size > 1) {
+                        Text(
+                            text = stringResource(R.string.dashboardTimeSpentHoursIn),
+                            style = HorizonTypography.labelMediumBold,
+                            color = HorizonColors.Text.title(),
+                            modifier = Modifier.shimmerEffect(isLoading)
+                        )
 
-                    var isMenuOpen by remember { mutableStateOf(false) }
-                    val courseSelectState = SingleSelectState(
-                        isMenuOpen = isMenuOpen,
-                        onMenuOpenChanged = { isMenuOpen = it },
-                        size = SingleSelectInputSize.Medium,
-                        options = listOf(stringResource(R.string.dashboardTimeSpentAllCourses)) + state.courses.map { it.name },
-                        selectedOption = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
-                            ?: stringResource(R.string.dashboardTimeSpentAllCourses),
-                        onOptionSelected = { state.onCourseSelected(it) }
-                    )
+                        HorizonSpace(SpaceSize.SPACE_8)
 
-                    SingleSelect(courseSelectState)
-                } else {
-                    Text(
-                        text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
-                        style = HorizonTypography.labelMediumBold,
-                        color = HorizonColors.Text.title(),
-                    )
+                        var isMenuOpen by remember { mutableStateOf(false) }
+                        val courseSelectState = SingleSelectState(
+                            isMenuOpen = isMenuOpen,
+                            onMenuOpenChanged = { isMenuOpen = it },
+                            size = SingleSelectInputSize.Medium,
+                            options = listOf(stringResource(R.string.dashboardTimeSpentAllCourses)) + state.courses.map { it.name },
+                            selectedOption = state.courses.firstOrNull { it.id == state.selectedCourseId }?.name
+                                ?: stringResource(R.string.dashboardTimeSpentAllCourses),
+                            onOptionSelected = { state.onCourseSelected(it) }
+                        )
+
+                        SingleSelect(
+                            courseSelectState,
+                            modifier = Modifier.shimmerEffect(isLoading)
+                        )
+                    } else {
+                        Text(
+                            text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
+                            style = HorizonTypography.labelMediumBold,
+                            color = HorizonColors.Text.title(),
+                            modifier = Modifier.shimmerEffect(isLoading)
+                        )
+                    }
                 }
             }
         }
@@ -122,7 +145,8 @@ private fun DashboardTimeSpentCardContentPreview() {
                 CourseOption(3, "Physics 101")
             ),
             selectedCourseId = null
-        )
+        ),
+        isLoading = false
     )
 }
 
@@ -138,7 +162,8 @@ private fun DashboardTimeSpentCardSelectedContentPreview() {
                 CourseOption(3, "Physics 101")
             ),
             selectedCourseId = 1
-        )
+        ),
+        isLoading = false
     )
 }
 
@@ -152,6 +177,31 @@ private fun DashboardTimeSpentCardContentSingleCoursePreview() {
                 CourseOption(1, "Introduction to Computer Science")
             ),
             selectedCourseId = null
-        )
+        ),
+        isLoading = false
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardEmptyContentPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(
+            hours = 0.0,
+            courses = listOf(
+                CourseOption(1, "Introduction to Computer Science")
+            ),
+            selectedCourseId = null
+        ),
+        isLoading = false
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardLoadingPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(),
+        isLoading = true
     )
 }

@@ -22,8 +22,8 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsMan
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.LearningStatusWidgetData
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.TimeSpentWidgetData
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.journey.GetWidgetDataQuery
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import java.util.Date
@@ -78,10 +78,18 @@ class FakeGetProgramsManager : GetProgramsManager {
 }
 
 class FakeGetWidgetsManager : GetWidgetsManager {
-    override suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): TimeSpentWidgetData {
-        return TimeSpentWidgetData(
+    override suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData {
+        return GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("hours" to 10.0))
+            data = listOf(
+                mapOf(
+                    "date" to "2025-10-08",
+                    "user_id" to 1.0,
+                    "course_id" to 101.0,
+                    "course_name" to "Test Course",
+                    "minutes_per_day" to 600.0
+                )
+            )
         )
     }
 

@@ -14,16 +14,28 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.widget.timespent.card
+package com.instructure.horizon.util
 
-data class DashboardTimeSpentCardState(
-    val hours: Double = -1.0,
-    val courses: List<CourseOption> = emptyList(),
-    val selectedCourseId: Long? = null,
-    val onCourseSelected: (String?) -> Unit = {}
-)
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
-data class CourseOption(
-    val id: Long,
-    val name: String
-)
+val gson = Gson()
+
+/**
+ * Deserializes the dynamic list of maps into a list of a specific data class using Gson.
+ */
+inline fun <reified T : Any> List<Any>.deserializeDynamicList(): List<T> {
+    val targetType = object : TypeToken<T>() {}.type
+
+    return this.mapNotNull { rawItem ->
+        if (rawItem is Map<*, *>) {
+            try {
+                return@mapNotNull gson.fromJson<T>(gson.toJsonTree(rawItem), targetType)
+            } catch (e: Exception) {
+                null
+            }
+        } else {
+            null
+        }
+    }
+}

@@ -368,7 +368,7 @@
     <string name="dashboardNotStartedProgramDescription">Welcome! View your program to enroll in your first course.</string>
     <string name="dashboardNotStartedProgramDetailsLabel">Program details</string>
     <string name="dashboardTimeSpentTitle">Time</string>
-    <string name="dashboardTimeSpentLoadingMessage">This widget will update once data becomes available.</string>
+    <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
     <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardTimeSpentRetry">Refresh</string>
     <string name="dashboardTimeSpentHoursIn">hours in</string>

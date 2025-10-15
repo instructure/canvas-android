@@ -18,19 +18,16 @@ package com.instructure.horizon.features.dashboard.widget.timespent
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardError
-import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -60,7 +57,7 @@ fun DashboardTimeSpentSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardLoading()
+            DashboardTimeSpentCardContent(state.cardState, isLoading = true)
         }
         DashboardItemState.ERROR -> {
             DashboardTimeSpentCardError(
@@ -72,7 +69,7 @@ fun DashboardTimeSpentSection(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                DashboardTimeSpentCardContent(state.cardState)
+                DashboardTimeSpentCardContent(state.cardState, isLoading = false)
             }
         }
     }
