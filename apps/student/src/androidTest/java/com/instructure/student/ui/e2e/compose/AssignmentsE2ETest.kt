@@ -28,7 +28,6 @@ import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
-import com.instructure.canvas.espresso.annotations.Stub
 import com.instructure.canvas.espresso.checkToastText
 import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.pressBackButton
@@ -52,14 +51,11 @@ import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import com.instructure.student.ui.utils.extensions.uploadTextFile
 import dagger.hilt.android.testing.HiltAndroidTest
-import org.junit.FixMethodOrder
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runners.MethodSorters
 import java.util.Calendar
 
 @HiltAndroidTest
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 class AssignmentsE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
@@ -76,7 +72,7 @@ class AssignmentsE2ETest: StudentComposeTest() {
     @E2E
     @Test
     @TestMetaData(Priority.IMPORTANT, FeatureCategory.SUBMISSIONS, TestCategory.E2E)
-    fun test01CommentsBelongToSubmissionAttempts() {
+    fun testCommentsBelongToSubmissionAttempts() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -182,6 +178,80 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that '${secondSubmissionAttempt[0].body}' text submission has been displayed as a comment.")
         submissionDetailsPage.assertTextSubmissionDisplayedAsComment()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
+    fun testPercentageFileAssignmentWithCommentE2E() {
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(teachers = 1, courses = 1, students = 1)
+        val student = data.studentsList[0]
+        val teacher = data.teachersList[0]
+        val course = data.coursesList[0]
+
+        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
+        val percentageFileAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.PERCENT, pointsPossible = 25.0, allowedExtensions = listOf("txt", "pdf", "jpg"), submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD))
+
+        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
+        tokenLogin(student)
+        dashboardPage.waitForRender()
+
+        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to it's Assignments Page.")
+        dashboardPage.selectCourse(course)
+        courseBrowserPage.selectAssignments()
+
+        Log.d(ASSERTION_TAG, "Assert that '${percentageFileAssignment.name}' assignment is displayed.")
+        assignmentListPage.assertHasAssignment(percentageFileAssignment)
+
+        Log.d(STEP_TAG, "Click on '${percentageFileAssignment.name}' assignment.")
+        assignmentListPage.clickAssignment(percentageFileAssignment)
+
+        Log.d(PREPARATION_TAG, "Seed a text file.")
+        val uploadInfo = uploadTextFile(
+            courseId = course.id,
+            assignmentId = percentageFileAssignment.id,
+            token = student.token,
+            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
+        )
+
+        Log.d(PREPARATION_TAG, "Submit '${percentageFileAssignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.submitCourseAssignment(course.id, student.token, percentageFileAssignment.id, SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(uploadInfo.id))
+
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been submitted.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.assertAssignmentSubmitted()
+
+        Log.d(PREPARATION_TAG, "Grade '${percentageFileAssignment.name}' assignment with 22 percentage.")
+        SubmissionsApi.gradeSubmission(teacher.token, course.id, percentageFileAssignment.id, student.id, postedGrade = "22")
+
+        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been graded with 22 percentage.")
+        assignmentDetailsPage.refresh()
+        assignmentDetailsPage.assertAssignmentGraded("22")
+
+        Log.d(STEP_TAG, "Navigate to submission details Comments Tab.")
+        assignmentDetailsPage.goToSubmissionDetails()
+        submissionDetailsPage.openComments()
+
+        sleep(3000) // wait for comments to load
+
+        Log.d(ASSERTION_TAG, "Assert that '${uploadInfo.fileName}' file has been displayed as a comment.")
+        submissionDetailsPage.assertCommentDisplayed(uploadInfo.fileName, student)
+
+        val newComment = "My comment!!"
+        Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
+        submissionDetailsPage.addAndSendComment(newComment)
+        handleWorkManagerTask("SubmissionWorker")
+
+        Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
+        submissionDetailsPage.assertCommentDisplayed(newComment, student)
+
+        Log.d(STEP_TAG, "Open the 'Files' tab of the submission.")
+        submissionDetailsPage.openFiles()
+
+        Log.d(ASSERTION_TAG, "Assert that '${uploadInfo.fileName}' file has been displayed.")
+        submissionDetailsPage.assertFileDisplayed(uploadInfo.fileName)
     }
 
     @E2E
@@ -532,9 +602,8 @@ class AssignmentsE2ETest: StudentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.ASSIGNMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
-    fun testPercentageFileAssignmentWithCommentE2E() {
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
+    fun testMediaCommentsE2E() {
 
         Log.d(PREPARATION_TAG, "Seeding data.")
         val data = seedData(teachers = 1, courses = 1, students = 1)
@@ -543,7 +612,10 @@ class AssignmentsE2ETest: StudentComposeTest() {
         val course = data.coursesList[0]
 
         Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
-        val percentageFileAssignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.PERCENT, pointsPossible = 25.0, allowedExtensions = listOf("txt", "pdf", "jpg"), submissionTypes = listOf(SubmissionType.ONLINE_UPLOAD))
+        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
+
+        Log.d(PREPARATION_TAG, "Submit '${assignment.name}' assignment for '${student.name}' student.")
+        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
 
         Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
         tokenLogin(student)
@@ -553,55 +625,26 @@ class AssignmentsE2ETest: StudentComposeTest() {
         dashboardPage.selectCourse(course)
         courseBrowserPage.selectAssignments()
 
-        Log.d(ASSERTION_TAG, "Assert that '${percentageFileAssignment.name}' assignment is displayed.")
-        assignmentListPage.assertHasAssignment(percentageFileAssignment)
-
-        Log.d(STEP_TAG, "Click on '${percentageFileAssignment.name}' assignment.")
-        assignmentListPage.clickAssignment(percentageFileAssignment)
-
-        Log.d(PREPARATION_TAG, "Seed a text file.")
-        val uploadInfo = uploadTextFile(
-            courseId = course.id,
-            assignmentId = percentageFileAssignment.id,
-            token = student.token,
-            fileUploadType = FileUploadType.ASSIGNMENT_SUBMISSION
-        )
-
-        Log.d(PREPARATION_TAG, "Submit '${percentageFileAssignment.name}' assignment for '${student.name}' student.")
-        SubmissionsApi.submitCourseAssignment(course.id, student.token, percentageFileAssignment.id, SubmissionType.ONLINE_UPLOAD, fileIds = mutableListOf(uploadInfo.id))
-
-        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been submitted.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertAssignmentSubmitted()
-
-        Log.d(PREPARATION_TAG, "Grade '${percentageFileAssignment.name}' assignment with 22 percentage.")
-        SubmissionsApi.gradeSubmission(teacher.token, course.id, percentageFileAssignment.id, student.id, postedGrade = "22")
-
-        Log.d(ASSERTION_TAG, "Refresh the page. Assert that the '${percentageFileAssignment.name}' assignment has been graded with 22 percentage.")
-        assignmentDetailsPage.refresh()
-        assignmentDetailsPage.assertAssignmentGraded("22")
+        Log.d(STEP_TAG, "Click on '${assignment.name}' assignment.")
+        assignmentListPage.clickAssignment(assignment)
 
         Log.d(STEP_TAG, "Navigate to submission details Comments Tab.")
         assignmentDetailsPage.goToSubmissionDetails()
         submissionDetailsPage.openComments()
 
-        sleep(3000) // wait for comments to load
+        Log.d(STEP_TAG, "Send a video comment.")
+        submissionDetailsPage.addAndSendVideoComment()
+        handleWorkManagerTask("SubmissionWorker")
 
-        Log.d(ASSERTION_TAG, "Assert that '${uploadInfo.fileName}' file has been displayed as a comment.")
-        submissionDetailsPage.assertCommentDisplayed(uploadInfo.fileName, student)
+        Log.d(ASSERTION_TAG, "Assert that the video comment has been displayed.")
+        submissionDetailsPage.assertVideoCommentDisplayed()
 
-        val newComment = "My comment!!"
-        Log.d(STEP_TAG, "Add a new comment ('$newComment') and send it.")
-        submissionDetailsPage.addAndSendComment(newComment)
+        Log.d(STEP_TAG, "Send an audio comment.")
+        submissionDetailsPage.addAndSendAudioComment()
+        handleWorkManagerTask("SubmissionWorker")
 
-        Log.d(ASSERTION_TAG, "Assert that '$newComment' is displayed.")
-        submissionDetailsPage.assertCommentDisplayed(newComment, student)
-
-        Log.d(STEP_TAG, "Open the 'Files' tab of the submission.")
-        submissionDetailsPage.openFiles()
-
-        Log.d(ASSERTION_TAG, "Assert that '${uploadInfo.fileName}' file has been displayed.")
-        submissionDetailsPage.assertFileDisplayed(uploadInfo.fileName)
+        Log.d(ASSERTION_TAG, "Assert that the audio comment has been displayed.")
+        submissionDetailsPage.assertAudioCommentDisplayed()
     }
 
     @E2E
@@ -751,55 +794,6 @@ class AssignmentsE2ETest: StudentComposeTest() {
         assignmentListPage.assertAssignmentNotDisplayed(upcomingAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(otherTypeAssignment.name)
         assignmentListPage.assertAssignmentNotDisplayed(gradedAssignment.name)
-    }
-
-    @E2E
-    @Test
-    @TestMetaData(Priority.MANDATORY, FeatureCategory.COMMENTS, TestCategory.E2E)
-    @Stub("Failing on CI, needs to be fixed in ticket MBL-18749")
-    fun testMediaCommentsE2E() {
-
-        Log.d(PREPARATION_TAG, "Seeding data.")
-        val data = seedData(teachers = 1, courses = 1, students = 1)
-        val student = data.studentsList[0]
-        val teacher = data.teachersList[0]
-        val course = data.coursesList[0]
-
-        Log.d(PREPARATION_TAG, "Seeding assignment for '${course.name}' course.")
-        val assignment = AssignmentsApi.createAssignment(course.id, teacher.token, gradingType = GradingType.POINTS, pointsPossible = 15.0, dueAt = 1.days.fromNow.iso8601, submissionTypes = listOf(SubmissionType.ONLINE_TEXT_ENTRY))
-
-        Log.d(PREPARATION_TAG, "Submit '${assignment.name}' assignment for '${student.name}' student.")
-        SubmissionsApi.seedAssignmentSubmission(course.id, student.token, assignment.id, submissionSeedsList = listOf(SubmissionsApi.SubmissionSeedInfo(amount = 1, submissionType = SubmissionType.ONLINE_TEXT_ENTRY)))
-
-        Log.d(STEP_TAG, "Login with user: '${student.name}', login id: '${student.loginId}'.")
-        tokenLogin(student)
-        dashboardPage.waitForRender()
-
-        Log.d(STEP_TAG, "Select '${course.name}' course and navigate to it's Assignments Page.")
-        dashboardPage.selectCourse(course)
-        courseBrowserPage.selectAssignments()
-
-        Log.d(STEP_TAG, "Click on '${assignment.name}' assignment.")
-        assignmentListPage.clickAssignment(assignment)
-
-        Log.d(STEP_TAG, "Navigate to submission details Comments Tab.")
-        assignmentDetailsPage.goToSubmissionDetails()
-        submissionDetailsPage.openComments()
-
-        Log.d(STEP_TAG, "Send a video comment.")
-        submissionDetailsPage.addAndSendVideoComment()
-
-        sleep(5000) // wait for video comment submission to propagate
-
-        Log.d(ASSERTION_TAG, "Assert that the video comment has been displayed.")
-        submissionDetailsPage.assertVideoCommentDisplayed()
-
-        Log.d(STEP_TAG, "Send an audio comment.")
-        submissionDetailsPage.addAndSendAudioComment()
-        sleep(5000) // Wait for audio comment submission to propagate
-
-        Log.d(ASSERTION_TAG, "Assert that the audio comment has been displayed.")
-        submissionDetailsPage.assertAudioCommentDisplayed()
     }
 
     @E2E

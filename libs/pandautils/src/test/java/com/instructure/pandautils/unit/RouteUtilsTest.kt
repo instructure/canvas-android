@@ -24,7 +24,13 @@ import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.interactions.router.Route
 import com.instructure.interactions.router.RouterParams
 import com.instructure.pandautils.utils.RouteUtils
-import io.mockk.*
+import io.mockk.Runs
+import io.mockk.coEvery
+import io.mockk.every
+import io.mockk.just
+import io.mockk.mockk
+import io.mockk.mockkObject
+import io.mockk.mockkStatic
 import kotlinx.coroutines.runBlocking
 import okhttp3.HttpUrl
 import okhttp3.OkHttpClient
