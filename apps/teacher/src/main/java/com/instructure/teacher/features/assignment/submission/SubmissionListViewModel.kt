@@ -151,7 +151,7 @@ class SubmissionListViewModel @Inject constructor(
             }
             filterData()
         } catch (e: Exception) {
-            Log.e("SubmissionListViewModel", "Error loading data", e)
+            e.printStackTrace()
             _uiState.update { it.copy(error = true, loading = false, refreshing = false) }
         }
     }
@@ -502,7 +502,7 @@ class SubmissionListViewModel @Inject constructor(
                                 NumberHelper.formatDecimal(gradeValue, 2, true)
                             }
                         } catch (e: Exception) {
-                            Log.w("SubmissionListViewModel", "Error parsing grade: ${submission.grade}", e)
+                            e.printStackTrace()
                             submission.grade ?: "-"
                         }
                     }
