@@ -35,6 +35,7 @@ import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionCommentsMa
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionContentManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionDetailsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionGradeManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeSubmissionRubricManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.GraphQlApiModule
@@ -44,10 +45,12 @@ import com.instructure.canvasapi2.managers.PostPolicyManager
 import com.instructure.canvasapi2.managers.StudentContextManager
 import com.instructure.canvasapi2.managers.SubmissionRubricManager
 import com.instructure.canvasapi2.managers.graphql.AssignmentDetailsManager
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionCommentsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionContentManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionDetailsManager
 import com.instructure.canvasapi2.managers.graphql.SubmissionGradeManager
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.teacher.ui.utils.TeacherComposeTest
@@ -57,7 +60,7 @@ import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
-@UninstallModules(GraphQlApiModule::class)
+@UninstallModules(GraphQlApiModule::class, DifferentiationTagsModule::class)
 @HiltAndroidTest
 class CommentLibraryInteractionTest : TeacherComposeTest() {
 
@@ -66,6 +69,10 @@ class CommentLibraryInteractionTest : TeacherComposeTest() {
     @BindValue
     @JvmField
     val commentLibraryManager: CommentLibraryManager = FakeCommentLibraryManager()
+
+    @BindValue
+    @JvmField
+    val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
 
     @BindValue
     @JvmField

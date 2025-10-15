@@ -129,10 +129,11 @@ class SubmissionListViewModel @Inject constructor(
                 forceNetwork
             )
             differentiationTags = rawDifferentiationTags.map { (group, groupSetName) ->
+                val groupName = group.name.orEmpty()
                 DifferentiationTag(
                     id = group._id,
-                    name = group.name.orEmpty(),
-                    groupSetName = groupSetName,
+                    name = groupName,
+                    groupSetName = if (groupSetName != groupName) groupSetName else null,
                     userIds = group.membersConnection?.nodes?.mapNotNull { it?.user?._id }.orEmpty()
                 )
             }

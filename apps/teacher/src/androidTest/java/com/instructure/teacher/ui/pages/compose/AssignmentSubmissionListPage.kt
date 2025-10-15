@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui.pages.compose
 
 
+import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasAnyChild
@@ -178,7 +179,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      *
      */
     fun clickFilterSubmittedLate() {
-        composeTestRule.onNodeWithText("Submitted Late", useUnmergedTree = true)
+        composeTestRule.onNode(
+            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Late"))),
+            useUnmergedTree = true
+        )
             .performScrollTo()
             .performClick()
     }
@@ -189,8 +193,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clickFilterUngraded() {
         composeTestRule.onNode(
-            hasTestTag("filterItem")
-                .and(hasAnyChild(hasText("Needs Grading"))),
+            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Needs Grading"))),
             useUnmergedTree = true
         )
             .performScrollTo()
@@ -203,10 +206,9 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun assertSubmissionFilterOption(filterName: String) {
         composeTestRule.onNode(
-            hasTestTag("filterItem")
-                .and(hasAnyChild(hasText(filterName))),
+            hasAnySibling(hasText(filterName)),
             useUnmergedTree = true
-        ).assertIsDisplayed()
+        ).performScrollTo().assertIsDisplayed()
     }
 
     /**
@@ -327,11 +329,30 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
+     * Click on the 'Submitted' filter option.
+     *
+     */
+    fun clickFilterSubmitted() {
+        composeTestRule.onNode(
+            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Submitted"))),
+            useUnmergedTree = true
+        )
+            .performScrollTo()
+            .performClick()
+    }
+
+    /**
      * Click on the 'Not Submitted' filter option.
      *
      */
     fun clickFilterNotSubmitted() {
-        composeTestRule.onNodeWithText("Not Submitted", useUnmergedTree = true)
+        // Note: In the actual filter screen, "Not Submitted" status doesn't exist
+        // The statuses are: Late, Missing, Needs Grading, Graded, Submitted
+        // This method may need to be updated based on the actual filter available
+        composeTestRule.onNode(
+            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Not Submitted"))),
+            useUnmergedTree = true
+        )
             .performScrollTo()
             .performClick()
     }
@@ -364,5 +385,102 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         composeTestRule.onNodeWithTag("submissionList").performTouchInput {
             swipeDown()
         }
+    }
+
+    /**
+     * Click on a sort order option.
+     *
+     * @param sortOrderName The name of the sort order option to click (e.g., "Submission Date", "Student Name").
+     */
+    fun clickSortOrder(sortOrderName: String) {
+        composeTestRule.onNodeWithText(sortOrderName, useUnmergedTree = true)
+            .performScrollTo()
+            .performClick()
+    }
+
+    /**
+     * Assert that submissions are displayed in the expected order.
+     *
+     * @param studentNames List of student names in the expected display order.
+     */
+    fun assertSubmissionsInOrder(studentNames: List<String>) {
+        val submissionNodes = composeTestRule.onAllNodes(
+            hasTestTag("submissionListItem"),
+            useUnmergedTree = true
+        )
+
+        studentNames.forEachIndexed { index, name ->
+            submissionNodes[index]
+                .assert(hasAnyDescendant(hasText(name)))
+        }
+    }
+
+    /**
+     * Click on a custom grade status filter option.
+     *
+     * @param statusName The name of the custom status to filter by.
+     */
+    fun clickFilterCustomStatus(statusName: String) {
+        composeTestRule.onNode(
+            hasTestTag("customStatusCheckBox").and(hasAnySibling(hasText(statusName))),
+            useUnmergedTree = true
+        )
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Assert that a custom status tag is displayed on a submission.
+     *
+     * @param statusName The name of the custom status tag to verify.
+     */
+    fun assertCustomStatusTag(statusName: String) {
+        composeTestRule.onNodeWithText(statusName, useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
+    }
+
+    /**
+     * Click on a differentiation tag filter option.
+     *
+     * @param tagName The name of the differentiation tag to filter by.
+     */
+    fun clickFilterDifferentiationTag(tagName: String) {
+        // Click on the text element with the tag name that has a checkbox sibling
+        // Use [0] to get the first match since there may be multiple text nodes in the tree
+        composeTestRule.onAllNodes(
+            hasText(tagName).and(
+                hasAnySibling(hasTestTag("differentiationTagCheckBox"))
+            ),
+            useUnmergedTree = true
+        )[0]
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Click on the "Include students without differentiation tags" checkbox.
+     */
+    fun clickIncludeStudentsWithoutTags() {
+        composeTestRule.onNode(
+            hasTestTag("includeWithoutTagsCheckBox"),
+            useUnmergedTree = true
+        )
+            .performScrollTo()
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
+    /**
+     * Assert that a differentiation tag is displayed on a submission.
+     *
+     * @param tagName The name of the differentiation tag to verify.
+     */
+    fun assertDifferentiationTag(tagName: String) {
+        composeTestRule.onNodeWithText(tagName, useUnmergedTree = true)
+            .performScrollTo()
+            .assertIsDisplayed()
     }
 }

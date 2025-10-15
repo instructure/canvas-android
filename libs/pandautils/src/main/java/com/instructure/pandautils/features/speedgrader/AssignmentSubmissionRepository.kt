@@ -39,7 +39,7 @@ import java.util.Locale
 
 class AssignmentSubmissionRepository(
     private val assignmentApi: AssignmentAPI.AssignmentInterface,
-    private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
+private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
     private val courseApi: CourseAPI.CoursesInterface,
     private val sectionApi: SectionAPI.SectionsInterface,
     private val customGradeStatusesManager: CustomGradeStatusesManager,
