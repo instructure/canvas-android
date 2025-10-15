@@ -24,7 +24,6 @@ import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsMana
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManagerImpl
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManagerImpl
-import com.instructure.canvasapi2.utils.ApiPrefs
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -36,9 +35,8 @@ class JourneyModule {
     @Provides
     fun provideWidgetsManager(
         @JourneyApolloClient journeyClient: ApolloClient,
-        apiPrefs: ApiPrefs
     ): GetWidgetsManager {
-        return GetWidgetsManagerImpl(journeyClient, apiPrefs)
+        return GetWidgetsManagerImpl(journeyClient)
     }
 
     @Provides

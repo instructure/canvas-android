@@ -48,15 +48,17 @@ class DashboardTimeSpentViewModel @Inject constructor(
     private fun loadTimeSpentData(forceNetwork: Boolean = false) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            val data = repository.getTimeSpentData(forceNetwork = forceNetwork)
-
-            val totalHours = parseHoursFromData(data.data)
             val courses = repository.getCourses(forceNetwork).map {
                 CourseOption(
                     id = it.courseId,
                     name = it.courseName,
                 )
             }
+
+            val data = repository.getTimeSpentData(uiState.value.cardState.selectedCourseId, forceNetwork)
+            val totalHours = data.data
+                .filter { courses.any { course -> course.id == it.courseId } }
+                .sumOf { it.minutesPerDay?.toDouble() ?: 0.0 } / 60
 
             _uiState.update {
                 it.copy(
@@ -71,22 +73,6 @@ class DashboardTimeSpentViewModel @Inject constructor(
             }
         } catch {
             _uiState.update { it.copy(state = DashboardItemState.ERROR) }
-        }
-    }
-
-    private fun parseHoursFromData(data: List<Any>): Double {
-        if (data.isEmpty()) return 0.0
-
-        return try {
-            val dataMap = data.firstOrNull() as? Map<*, *>
-            val hours = dataMap?.get("hours") ?: dataMap?.get("totalHours")
-            when (hours) {
-                is Number -> hours.toDouble()
-                is String -> hours.toDoubleOrNull() ?: 0.0
-                else -> 0.0
-            }
-        } catch (e: Exception) {
-            0.0
         }
     }
 

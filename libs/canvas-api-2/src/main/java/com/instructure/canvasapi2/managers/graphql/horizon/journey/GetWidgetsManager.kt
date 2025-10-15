@@ -19,51 +19,43 @@ package com.instructure.canvasapi2.managers.graphql.horizon.journey
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.enqueueQuery
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.journey.GetWidgetDataQuery
 import com.instructure.journey.type.TimeSpanInput
 import com.instructure.journey.type.TimeSpanType
 import com.instructure.journey.type.WidgetDataFiltersInput
-import java.util.Date
 import javax.inject.Inject
 
-data class TimeSpentWidgetData(
-    val lastModifiedDate: Date?,
-    val data: List<Any>
-)
-
 interface GetWidgetsManager {
-    suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): TimeSpentWidgetData
+    suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData
 }
 
 class GetWidgetsManagerImpl @Inject constructor(
     private val journeyClient: ApolloClient,
-    private val apiPrefs: ApiPrefs
 ) : GetWidgetsManager {
     override suspend fun getTimeSpentWidgetData(
         courseId: Long?,
         forceNetwork: Boolean,
-    ): TimeSpentWidgetData {
+    ): GetWidgetDataQuery.WidgetData {
         val widgetType = "time_spent_details"
         val timeSpanInput = TimeSpanInput(type = TimeSpanType.PAST_7_DAYS)
         val dataScope = "learner"
+        val queryParams = if (courseId != null) {
+            Optional.present(
+                WidgetDataFiltersInput(courseId = Optional.present(courseId.toDouble()))
+            )
+        } else {
+            Optional.absent()
+        }
 
         val query = GetWidgetDataQuery(
             widgetType = widgetType,
             timeSpan = timeSpanInput,
             dataScope = dataScope,
-            queryParams = Optional.present(WidgetDataFiltersInput(
-                userId = Optional.presentIfNotNull(apiPrefs.user?.id?.toString()),
-                courseId = Optional.presentIfNotNull(courseId?.toDouble())
-            ))
+            queryParams = queryParams
         )
 
         val result = journeyClient.enqueueQuery(query, forceNetwork)
-        val widgetData = result.dataAssertNoErrors.widgetData
 
-        return TimeSpentWidgetData(
-            lastModifiedDate = widgetData.lastModifiedDate,
-            data = widgetData.data
-        )
+        return result.dataAssertNoErrors.widgetData
     }
 }
