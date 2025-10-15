@@ -41,6 +41,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -52,6 +53,7 @@ fun DashboardWidgetCard(
     @DrawableRes iconRes: Int,
     widgetColor: Color,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
     content: @Composable ColumnScope.() -> Unit
 ) {
     DashboardCard(modifier) {
@@ -71,6 +73,7 @@ fun DashboardWidgetCard(
                     color = HorizonColors.Text.dataPoint(),
                     modifier = Modifier
                         .padding(end = 8.dp)
+                        .shimmerEffect(isLoading)
                 )
 
                 Box(
@@ -79,6 +82,7 @@ fun DashboardWidgetCard(
                         .clip(CircleShape)
                         .background(widgetColor)
                         .padding(6.dp)
+                        .shimmerEffect(isLoading, backgroundColor = widgetColor.copy(alpha = 0.8f), shimmerColor = widgetColor.copy(alpha = 0.5f))
                 ) {
                     Icon(
                         painter = painterResource(iconRes),

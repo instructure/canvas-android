@@ -51,7 +51,6 @@ class GetWidgetsManagerImpl @Inject constructor(
             widgetType = widgetType,
             timeSpan = timeSpanInput,
             dataScope = dataScope,
-            canvasAccountId = Optional.present("1"),
             queryParams = queryParams
         )
 

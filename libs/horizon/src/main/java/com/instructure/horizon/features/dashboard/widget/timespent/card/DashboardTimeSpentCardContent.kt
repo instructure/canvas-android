@@ -38,6 +38,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -52,12 +53,14 @@ import kotlin.math.roundToInt
 fun DashboardTimeSpentCardContent(
     state: DashboardTimeSpentCardState,
     modifier: Modifier = Modifier,
+    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardTimeSpentTitle),
         R.drawable.schedule,
         HorizonColors.PrimitivesHoney.honey12(),
-        modifier.padding(bottom = 8.dp)
+        modifier.padding(bottom = 8.dp),
+        isLoading
     ) {
 
         if (state.hours == 0.0) {
@@ -65,7 +68,9 @@ fun DashboardTimeSpentCardContent(
                 text = stringResource(R.string.dashboardTimeSpentEmptyMessage),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.timestamp(),
-                modifier = Modifier.width(IntrinsicSize.Max)
+                modifier = Modifier
+                    .width(IntrinsicSize.Max)
+                    .shimmerEffect(isLoading)
             )
         } else {
             FlowRow(
@@ -76,7 +81,8 @@ fun DashboardTimeSpentCardContent(
                 Text(
                     text = state.hours.roundToInt().toString(),
                     style = HorizonTypography.h1.copy(fontSize = 38.sp, letterSpacing = 0.sp),
-                    color = HorizonColors.Text.body()
+                    color = HorizonColors.Text.body(),
+                    modifier = Modifier.shimmerEffect(isLoading)
                 )
 
                 Row(
@@ -89,7 +95,8 @@ fun DashboardTimeSpentCardContent(
                         Text(
                             text = stringResource(R.string.dashboardTimeSpentHoursIn),
                             style = HorizonTypography.labelMediumBold,
-                            color = HorizonColors.Text.title()
+                            color = HorizonColors.Text.title(),
+                            modifier = Modifier.shimmerEffect(isLoading)
                         )
 
                         HorizonSpace(SpaceSize.SPACE_8)
@@ -105,12 +112,16 @@ fun DashboardTimeSpentCardContent(
                             onOptionSelected = { state.onCourseSelected(it) }
                         )
 
-                        SingleSelect(courseSelectState)
+                        SingleSelect(
+                            courseSelectState,
+                            modifier = Modifier.shimmerEffect(isLoading)
+                        )
                     } else {
                         Text(
                             text = stringResource(R.string.dashboardTimeSpentHoursInYourCourse),
                             style = HorizonTypography.labelMediumBold,
                             color = HorizonColors.Text.title(),
+                            modifier = Modifier.shimmerEffect(isLoading)
                         )
                     }
                 }
@@ -131,7 +142,8 @@ private fun DashboardTimeSpentCardContentPreview() {
                 CourseOption(3, "Physics 101")
             ),
             selectedCourseId = null
-        )
+        ),
+        isLoading = false
     )
 }
 
@@ -147,7 +159,8 @@ private fun DashboardTimeSpentCardSelectedContentPreview() {
                 CourseOption(3, "Physics 101")
             ),
             selectedCourseId = 1
-        )
+        ),
+        isLoading = false
     )
 }
 
@@ -161,7 +174,8 @@ private fun DashboardTimeSpentCardContentSingleCoursePreview() {
                 CourseOption(1, "Introduction to Computer Science")
             ),
             selectedCourseId = null
-        )
+        ),
+        isLoading = false
     )
 }
 
@@ -175,6 +189,16 @@ private fun DashboardTimeSpentCardEmptyContentPreview() {
                 CourseOption(1, "Introduction to Computer Science")
             ),
             selectedCourseId = null
-        )
+        ),
+        isLoading = false
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardTimeSpentCardLoadingPreview() {
+    DashboardTimeSpentCardContent(
+        state = DashboardTimeSpentCardState(),
+        isLoading = true
     )
 }
