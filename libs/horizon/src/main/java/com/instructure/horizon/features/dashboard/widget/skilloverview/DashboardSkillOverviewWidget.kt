@@ -16,19 +16,15 @@
  */
 package com.instructure.horizon.features.dashboard.widget.skilloverview
 
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardError
-import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -60,7 +56,11 @@ fun DashboardSkillOverviewSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardSkillOverviewCardLoading()
+            DashboardSkillOverviewCardContent(
+                state.cardState,
+                homeNavController,
+                isLoading = true
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardSkillOverviewCardError(
@@ -70,7 +70,8 @@ fun DashboardSkillOverviewSection(
         DashboardItemState.SUCCESS -> {
             DashboardSkillOverviewCardContent(
                 state.cardState,
-                homeNavController
+                homeNavController,
+                isLoading = true
             )
         }
     }
