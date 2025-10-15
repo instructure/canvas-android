@@ -182,3 +182,14 @@ private fun DashboardSkillHighlightsCardContentNoDataPreview() {
         rememberNavController()
     )
 }
+
+@Composable
+@Preview
+private fun DashboardSkillHighlightsLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    DashboardSkillHighlightsCardContent(
+        state = DashboardSkillHighlightsCardState(skills = emptyList()),
+        rememberNavController(),
+        isLoading = true
+    )
+}
