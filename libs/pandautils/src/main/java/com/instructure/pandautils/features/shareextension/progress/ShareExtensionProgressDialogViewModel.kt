@@ -5,7 +5,6 @@ import android.net.Uri
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.*
@@ -24,7 +23,9 @@ import com.instructure.pandautils.utils.fromJson
 import com.instructure.pandautils.utils.humanReadableByteCount
 import com.instructure.pandautils.utils.orDefault
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.flow.collectLatest
 import java.io.File
 import java.util.*
 import javax.inject.Inject
@@ -56,31 +57,35 @@ class ShareExtensionProgressDialogViewModel @Inject constructor(
 
     private var workerId: UUID? = null
     private var fileUploadType = FileUploadType.USER
-
-    private val observer = Observer<WorkInfo> {
-        when (it.state) {
-            WorkInfo.State.SUCCEEDED -> {
-                _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog(fileUploadType))))
-            }
-            WorkInfo.State.RUNNING -> {
-                viewModelScope.launch { updateViewData(it.progress, false) }
-            }
-            WorkInfo.State.FAILED -> {
-                viewModelScope.launch { updateViewData(it.outputData, true) }
-            }
-            else -> {}
-        }
-    }
+    private var job: Job? = null
 
     fun setUUID(uuid: UUID) {
         this.workerId = uuid
         _state.postValue(ViewState.Loading)
-        workManager.getWorkInfoByIdLiveData(uuid).observeForever(observer)
+        job?.cancel()
+        job = viewModelScope.launch {
+            workManager.getWorkInfoByIdFlow(uuid).collectLatest { it ->
+                it?.let {
+                    when (it.state) {
+                        WorkInfo.State.SUCCEEDED -> {
+                            _events.postValue(Event((ShareExtensionProgressAction.ShowSuccessDialog(fileUploadType))))
+                        }
+                        WorkInfo.State.RUNNING -> {
+                            updateViewData(it.progress, false)
+                        }
+                        WorkInfo.State.FAILED -> {
+                            updateViewData(it.outputData, true)
+                        }
+                        else -> {}
+                    }
+                }
+            }
+        }
     }
 
     override fun onCleared() {
         super.onCleared()
-        workerId?.let { workManager.getWorkInfoByIdLiveData(it).removeObserver(observer) }
+        job?.cancel()
     }
 
     private suspend fun updateViewData(progress: Data, failed: Boolean) {

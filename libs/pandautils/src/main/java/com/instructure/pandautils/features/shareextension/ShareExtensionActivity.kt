@@ -170,7 +170,7 @@ abstract class ShareExtensionActivity : BaseCanvasActivity(), FileUploadDialogPa
         }
     }
 
-    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
         uuid?.let {
             shareExtensionViewModel.workerCallback(it)
         }

@@ -19,8 +19,6 @@ package com.instructure.pandautils.features.dashboard.notifications.itemviewmode
 
 import androidx.databinding.BaseObservable
 import androidx.databinding.Bindable
-import androidx.lifecycle.Observer
-import androidx.work.WorkInfo
 import androidx.work.WorkManager
 import com.instructure.pandautils.BR
 import com.instructure.pandautils.R
@@ -28,7 +26,12 @@ import com.instructure.pandautils.features.dashboard.notifications.UploadViewDat
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_FULL_SIZE
 import com.instructure.pandautils.features.file.upload.worker.FileUploadWorker.Companion.PROGRESS_DATA_UPLOADED_SIZE
 import com.instructure.pandautils.mvvm.ItemViewModel
-import java.util.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
+import java.util.UUID
 
 class UploadItemViewModel(
     val workerId: UUID,
@@ -39,23 +42,25 @@ class UploadItemViewModel(
     val remove: () -> Unit,
     @get:Bindable var loading: Boolean = false
 ) : ItemViewModel, BaseObservable() {
-
     override val layoutId = R.layout.item_dashboard_upload
-
-    private val observer = Observer<WorkInfo> {
-        val uploadedSize = it.progress.getLong(PROGRESS_DATA_UPLOADED_SIZE, 0L)
-        val fullSize = it.progress.getLong(PROGRESS_DATA_FULL_SIZE, 1L)
-
-        progress = ((uploadedSize.toDouble() / fullSize.toDouble()) * 100.0).toInt()
-        notifyPropertyChanged(BR.progress)
-    }
+    private var job: Job? = null
 
     init {
-        workManager.getWorkInfoByIdLiveData(workerId).observeForever(observer)
+        job = CoroutineScope(Dispatchers.Main).launch {
+            workManager.getWorkInfoByIdFlow(workerId).collectLatest { workInfo ->
+                workInfo?.let {
+                    val uploadedSize = it.progress.getLong(PROGRESS_DATA_UPLOADED_SIZE, 0L)
+                    val fullSize = it.progress.getLong(PROGRESS_DATA_FULL_SIZE, 1L)
+
+                    progress = ((uploadedSize.toDouble() / fullSize.toDouble()) * 100.0).toInt()
+                    notifyPropertyChanged(BR.progress)
+                }
+            }
+        }
     }
 
     fun clear() {
-        workManager.getWorkInfoByIdLiveData(workerId).removeObserver(observer)
+        job?.cancel()
     }
 
     fun open() = open.invoke(workerId)
