@@ -37,7 +37,7 @@ allprojects {
 
 apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-kapt'
+apply plugin: 'com.google.devtools.ksp'
 apply plugin: 'dagger.hilt.android.plugin'
 
 android {
@@ -175,9 +175,9 @@ dependencies {
 
     /* DI */
     implementation Libs.HILT
-    kapt Libs.HILT_COMPILER
+    ksp Libs.HILT_COMPILER
     implementation Libs.HILT_TESTING
-    kapt Libs.HILT_TESTING_COMPILER
+    ksp Libs.HILT_TESTING_COMPILER
     implementation Libs.HILT_ANDROIDX_WORK
 
     implementation Libs.COMPOSE_UI_TEST_MANIFEST
