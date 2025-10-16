@@ -30,14 +30,14 @@ import com.instructure.dataseeding.api.DiscussionTopicsApi
 import com.instructure.dataseeding.api.EnrollmentsApi
 import com.instructure.dataseeding.model.EnrollmentTypes.STUDENT_ENROLLMENT
 import com.instructure.espresso.getDateInCanvasFormat
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class DiscussionsE2ETest: StudentTest() {
+class DiscussionsE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -195,17 +195,16 @@ class DiscussionsE2ETest: StudentTest() {
         Log.d(ASSERTION_TAG, "Assert that the 'Discussions' Tab is displayed on the CourseBrowser Page.")
         courseBrowserPage.assertTabDisplayed("Discussions")
 
-        Log.d(STEP_TAG, "Navigate to Discussions List Page.")
-        courseBrowserPage.selectDiscussions()
+        Log.d(STEP_TAG, "Navigate to Assignment List Page.")
+        courseBrowserPage.selectAssignments()
 
-        Log.d(ASSERTION_TAG, "Assert that '${discussionWithCheckpointsTitle}' discussion is displayed.")
-        discussionListPage.assertTopicDisplayed(discussionWithCheckpointsTitle)
+        Log.d(ASSERTION_TAG, "Assert that the '$discussionWithCheckpointsTitle' discussion is present along with 2 date info (For the 2 checkpoints).")
+        assignmentListPage.assertHasAssignmentWithCheckpoints(discussionWithCheckpointsTitle, expectedGrade = "-/15")
 
-        Log.d(STEP_TAG, "Select '${discussionWithCheckpointsTitle}' discussion.")
-        discussionListPage.selectTopic(discussionWithCheckpointsTitle)
+        Log.d(STEP_TAG, "Click on the expand icon for the '$discussionWithCheckpointsTitle' discussion (to see the checkpoints' details).")
+        assignmentListPage.clickDiscussionCheckpointExpandCollapseIcon(discussionWithCheckpointsTitle)
 
-        Log.d(ASSERTION_TAG, "Assert if the details page is displayed and there is no reply for the discussion yet.")
-        discussionDetailsPage.assertToolbarDiscussionTitle(discussionWithCheckpointsTitle)
-
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
+        assignmentListPage.assertDiscussionCheckpointDetails(2, "No due date", gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
     }
 }

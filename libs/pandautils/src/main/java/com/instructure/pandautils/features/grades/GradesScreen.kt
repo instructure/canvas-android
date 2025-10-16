@@ -548,7 +548,7 @@ fun AssignmentItem(
                         actionHandler(GradesAction.ToggleCheckpointsExpanded(uiState.id))
                     }
                     .semantics {
-                        testTag = "expandDiscussionCheckpoint"
+                        testTag = "expandDiscussionCheckpoints"
                         role = Role.Button
                     }
             ) {
