@@ -193,7 +193,7 @@ class BookmarksE2ETest : StudentComposeTest() {
         courseBrowserPage.selectAssignments()
         assignmentListPage.clickAssignment(assignment)
 
-        val bookmarkName = "Home Screen Bookmark"
+        val bookmarkName = "HomeScreen Bookmark"
         Log.d(STEP_TAG, "Add a new bookmark with name: '$bookmarkName'")
         assignmentDetailsPage.addBookmark(bookmarkName)
 
