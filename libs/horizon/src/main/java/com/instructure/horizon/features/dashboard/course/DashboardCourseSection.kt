@@ -16,9 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.course
 
-import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -41,7 +39,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -137,18 +134,13 @@ private fun DashboardCourseSectionContent(
             )
         }
 
-        var pagerHeight by remember { mutableIntStateOf(0) }
 
         HorizontalPager(
             pagerstate,
+            beyondViewportPageCount = pagerstate.pageCount,
             contentPadding = PaddingValues(horizontal = 16.dp),
             pageSpacing = 4.dp,
-            verticalAlignment = Alignment.Top,
-            modifier = Modifier
-                .animateContentSize()
-                .onGloballyPositioned { coordinates ->
-                    pagerHeight = coordinates.size.height
-                }
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
             val scaleAnimation by animateFloatAsState(
@@ -158,10 +150,6 @@ private fun DashboardCourseSectionContent(
                     (1f - (cardAnimationRange * 2)) + (abs(pagerstate.currentPageOffsetFraction.convertScaleRange()))
                 },
                 label = "DashboardCourseCardAnimation",
-            )
-            var pagerItemHeight by remember { mutableIntStateOf(0) }
-            val verticalOffsetAnimation by animateIntAsState(
-                (pagerHeight - pagerItemHeight) / 2
             )
             val animationDirection = when {
                 it < pagerstate.currentPage -> 1
@@ -174,20 +162,22 @@ private fun DashboardCourseSectionContent(
                 homeNavController,
                 Modifier
                     .onGloballyPositioned { coordinates ->
-                        pagerItemHeight = coordinates.size.height
                         cardWidthList = cardWidthList + (it to coordinates.size.width.toFloat())
                     }
                     .offset {
                         IntOffset(
-                            (animationDirection * ((cardWidthList[it] ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
-                            verticalOffsetAnimation
+                            (animationDirection * ((cardWidthList[it]
+                                ?: 0f) / 2 * (1 - scaleAnimation))).toInt(),
+                            0
                         )
                     }
                     .scale(scaleAnimation)
             )
         }
 
-        DashboardCourseCardIndicator(pagerstate)
+        if (pagerstate.pageCount >= 4) {
+            DashboardCourseCardIndicator(pagerstate)
+        }
 
         Spacer(Modifier.height(16.dp))
     }
