@@ -17,6 +17,8 @@
 package com.instructure.student.ui.pages.classic.k5
 
 import android.view.View
+import androidx.test.espresso.NoMatchingViewException
+import androidx.test.espresso.PerformException
 import androidx.test.espresso.action.ViewActions.scrollTo
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.contrib.RecyclerViewActions
@@ -112,7 +114,9 @@ class SchedulePage : BasePage(R.id.schedulePage) {
                 onView(matcher).perform(scrollTo())
                 waitForView(matcher).assertDisplayed()
                 return
-            } catch (_: Exception) {
+            } catch (e: NoMatchingViewException) {
+                i += 3
+            } catch (e: PerformException) {
                 i += 3
             }
         }

@@ -86,6 +86,7 @@ class ScheduleE2ETest : StudentComposeTest() {
         Log.d(STEP_TAG, "Navigate to K5 Schedule Page.")
         elementaryDashboardPage.selectTab(ElementaryDashboardPage.ElementaryTabType.SCHEDULE)
 
+        //Depends on how we handle Sunday, need to clarify with calendar team
         if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {  schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(homeroomCourse.name, homeroomAnnouncement.title) }
         Log.d(ASSERTION_TAG, "Assert that the current day of the calendar is titled as 'Today'.")
         schedulePage.assertDayHeaderShownByItemName(concatDayString(currentDateCalendar), schedulePage.getStringFromResource(R.string.today), schedulePage.getStringFromResource(R.string.today))
@@ -126,7 +127,7 @@ class ScheduleE2ETest : StudentComposeTest() {
         schedulePage.previousWeekButtonClick()
         schedulePage.swipeRight()
 
-        if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
+        if(twoWeeksBeforeCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
             val twoWeeksBeforeDayString = twoWeeksBeforeCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
             Log.d(ASSERTION_TAG, "Assert that two weeks BEFORE current week," +
                     "the corresponding day header is shown and assert that the '${nonHomeroomCourses[1].name}' course and the '${testTwoWeeksBeforeAssignment.name}' assignment are displayed as well.")
@@ -140,7 +141,7 @@ class ScheduleE2ETest : StudentComposeTest() {
         schedulePage.nextWeekButtonClick()
         schedulePage.swipeLeft()
 
-        if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
+        if(twoWeeksAfterCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
             val twoWeeksAfterDayString = twoWeeksAfterCalendar.getDisplayName(Calendar.DAY_OF_WEEK, Calendar.LONG, Locale.US)
             Log.d(ASSERTION_TAG, "Assert that two weeks AFTER current week," +
                     "the corresponding day header is shown and assert that the '${nonHomeroomCourses[0].name}' course and the '${testTwoWeeksAfterAssignment.name}' assignment are displayed as well.")
@@ -167,14 +168,14 @@ class ScheduleE2ETest : StudentComposeTest() {
 
         sleep(3000) //This is mandatory here because after swiping back to "current week", the test would fail if we wouldn't wait enough for the page to be loaded.
 
-        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) {
+        if(currentDateCalendar.get(Calendar.DAY_OF_WEEK) != 1) { //Depends on how we handle Sunday, need to clarify with calendar team
 
             Log.d(ASSERTION_TAG, "Assert that the '${nonHomeroomCourses[2].name}' course and the '${testMissingAssignment.name}' assignment are displayed.")
             schedulePage.assertIfCourseHeaderAndScheduleItemDisplayed(nonHomeroomCourses[2].name, testMissingAssignment.name)
 
             Log.d(STEP_TAG, "Open '${testMissingAssignment.name}' assignment.")
             schedulePage.clickScheduleItem(testMissingAssignment.name)
-            sleep(3000)
+            sleep(3000) //We have to wait here because the assignment load slowly sometimes.
 
             Log.d(ASSERTION_TAG, "Assert if we are landing on the '${testMissingAssignment.name}' assignment's details page by checking it's title, which is actually is the assignment's name.")
             assignmentDetailsPage.assertPageObjects()
