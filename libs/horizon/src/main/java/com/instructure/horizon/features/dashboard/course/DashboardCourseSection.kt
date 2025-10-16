@@ -48,7 +48,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.scale
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.hideFromAccessibility
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.IntOffset
@@ -141,6 +144,9 @@ private fun DashboardCourseSectionContent(
             contentPadding = PaddingValues(horizontal = 16.dp),
             pageSpacing = 4.dp,
             verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.semantics {
+                role = Role.Carousel
+            }
         ) {
             var cardWidthList by remember { mutableStateOf(emptyMap<Int, Float>()) }
             val scaleAnimation by animateFloatAsState(
@@ -223,7 +229,11 @@ private fun DashboardCourseCardIndicator(pagerState: PagerState) {
 
     LazyRow(
         horizontalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxWidth()
+        modifier = Modifier
+            .fillMaxWidth()
+            .semantics {
+                hideFromAccessibility()
+            }
     ) {
         items(pagerState.pageCount) { itemIndex ->
             val context = LocalContext.current
