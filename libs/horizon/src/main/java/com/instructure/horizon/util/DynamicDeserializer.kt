@@ -39,3 +39,16 @@ inline fun <reified T : Any> List<Any>.deserializeDynamicList(): List<T> {
         }
     }
 }
+
+/**
+ * Deserializes a dynamic object into a specific data class using Gson.
+ */
+inline fun <reified T : Any> Any.deserializeDynamicObject(): T? {
+    val targetType = object : TypeToken<T>() {}.type
+
+    return try {
+        gson.fromJson<T>(gson.toJsonTree(this), targetType)
+    } catch (e: Exception) {
+        null
+    }
+}

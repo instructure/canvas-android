@@ -16,14 +16,64 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
+import com.google.gson.annotations.SerializedName
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
-import com.instructure.journey.GetWidgetDataQuery
+import com.instructure.horizon.util.deserializeDynamicObject
+import java.util.Date
 import javax.inject.Inject
+
+data class MyProgressWidgetDataResponse(
+    val data:MyProgressWidgetDataResponseData
+)
+
+data class MyProgressWidgetDataResponseData(
+    val widgetData: MyProgressWidgetData
+)
+
+data class MyProgressWidgetData(
+    val data: List<MyProgressWidgetDataEntry>,
+    val lastModifiedDate: Date?,
+)
+
+data class MyProgressWidgetDataEntry(
+    @SerializedName("course_id")
+    val courseId: Long?,
+
+    @SerializedName("course_name")
+    val courseName: String?,
+
+    @SerializedName("user_id")
+    val userId: Long?,
+
+    @SerializedName("user_uuid")
+    val userUUID: String?,
+
+    @SerializedName("user_name")
+    val userName: String?,
+
+    @SerializedName("user_avatar_image_url")
+    val userAvatarUrl: String?,
+
+    @SerializedName("user_email")
+    val userEmail: String?,
+
+    @SerializedName("module_count_completed")
+    val moduleCountCompleted: Int?,
+
+    @SerializedName("module_count_started")
+    val moduleCountStarted: Int?,
+
+    @SerializedName("module_count_locked")
+    val moduleCountLocked: Int?,
+
+    @SerializedName("module_count_total")
+    val moduleCountTotal: Int?,
+)
 
 class DashboardMyProgressRepository @Inject constructor(
     private val getWidgetsManager: GetWidgetsManager
 ) {
-    suspend fun getLearningStatusData(courseId: Long? = null, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData {
-        return getWidgetsManager.getLearningStatusWidgetData(courseId, forceNetwork)
+    suspend fun getLearningStatusData(courseId: Long? = null, forceNetwork: Boolean): MyProgressWidgetData? {
+        return getWidgetsManager.getLearningStatusWidgetData(courseId, forceNetwork).deserializeDynamicObject<MyProgressWidgetData>()
     }
 }

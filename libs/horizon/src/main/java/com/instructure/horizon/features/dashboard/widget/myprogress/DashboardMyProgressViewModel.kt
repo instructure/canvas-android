@@ -47,9 +47,8 @@ class DashboardMyProgressViewModel @Inject constructor(
     private fun loadMyProgressData(forceNetwork: Boolean = false) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
-            val data = repository.getLearningStatusData(forceNetwork = forceNetwork)
-
-            val moduleCountCompleted = parseModuleCountCompletedFromData(data.data)
+            val data = repository.getLearningStatusData(forceNetwork = forceNetwork)?.data.orEmpty()
+            val moduleCountCompleted = data.sumOf { it.moduleCountCompleted ?: 0}
 
             _uiState.update {
                 it.copy(
@@ -61,22 +60,6 @@ class DashboardMyProgressViewModel @Inject constructor(
             }
         } catch {
             _uiState.update { it.copy(state = DashboardItemState.ERROR) }
-        }
-    }
-
-    private fun parseModuleCountCompletedFromData(data: List<Any>): Int {
-        if (data.isEmpty()) return 0
-
-        return try {
-            val dataMap = data.firstOrNull() as? Map<*, *>
-            val count = dataMap?.get("module_count_completed")
-            when (count) {
-                is Number -> count.toInt()
-                is String -> count.toIntOrNull() ?: 0
-                else -> 0
-            }
-        } catch (e: Exception) {
-            0
         }
     }
 

@@ -17,7 +17,7 @@
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.LearningStatusWidgetData
+import com.instructure.journey.GetWidgetDataQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -47,47 +47,56 @@ class DashboardMyProgressRepositoryTest {
 
     @Test
     fun `getLearningStatusData returns data successfully`() = runTest {
-        val expectedData = LearningStatusWidgetData(
+        val widgetData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 5))
+            data = listOf(
+                mapOf("module_count_completed" to 5)
+            )
         )
 
-        coEvery { getWidgetsManager.getLearningStatusWidgetData(null, false) } returns expectedData
+        coEvery { getWidgetsManager.getLearningStatusWidgetData(null, false) } returns widgetData
 
         val result = repository.getLearningStatusData(null, false)
 
-        assertEquals(expectedData, result)
+        assertEquals(1, result?.data?.size)
+        assertEquals(5, result?.data?.get(0)?.moduleCountCompleted)
         coVerify { getWidgetsManager.getLearningStatusWidgetData(null, false) }
     }
 
     @Test
     fun `getLearningStatusData with courseId passes courseId to manager`() = runTest {
         val courseId = 123L
-        val expectedData = LearningStatusWidgetData(
+        val widgetData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 10))
+            data = listOf(
+                mapOf("module_count_completed" to 10)
+            )
         )
 
-        coEvery { getWidgetsManager.getLearningStatusWidgetData(courseId, false) } returns expectedData
+        coEvery { getWidgetsManager.getLearningStatusWidgetData(courseId, false) } returns widgetData
 
         val result = repository.getLearningStatusData(courseId, false)
 
-        assertEquals(expectedData, result)
+        assertEquals(1, result?.data?.size)
+        assertEquals(10, result?.data?.get(0)?.moduleCountCompleted)
         coVerify { getWidgetsManager.getLearningStatusWidgetData(courseId, false) }
     }
 
     @Test
     fun `getLearningStatusData with forceNetwork true uses network`() = runTest {
-        val expectedData = LearningStatusWidgetData(
+        val widgetData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 3))
+            data = listOf(
+                mapOf("module_count_completed" to 3)
+            )
         )
 
-        coEvery { getWidgetsManager.getLearningStatusWidgetData(null, true) } returns expectedData
+        coEvery { getWidgetsManager.getLearningStatusWidgetData(null, true) } returns widgetData
 
         val result = repository.getLearningStatusData(null, true)
 
-        assertEquals(expectedData, result)
+        assertEquals(1, result?.data?.size)
+        assertEquals(3, result?.data?.get(0)?.moduleCountCompleted)
         coVerify { getWidgetsManager.getLearningStatusWidgetData(null, true) }
     }
 
@@ -100,16 +109,15 @@ class DashboardMyProgressRepositoryTest {
 
     @Test
     fun `getLearningStatusData handles empty data list`() = runTest {
-        val expectedData = LearningStatusWidgetData(
+        val widgetData = GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
             data = emptyList()
         )
 
-        coEvery { getWidgetsManager.getLearningStatusWidgetData(null, false) } returns expectedData
+        coEvery { getWidgetsManager.getLearningStatusWidgetData(null, false) } returns widgetData
 
         val result = repository.getLearningStatusData(null, false)
 
-        assertEquals(expectedData, result)
-        assertEquals(emptyList<Any>(), result.data)
+        assertEquals(emptyList<Any>(), result?.data)
     }
 }

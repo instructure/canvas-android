@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.LearningStatusWidgetData
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -55,12 +54,26 @@ class DashboardMyProgressViewModelTest {
 
     @Test
     fun `init loads learning status data successfully`() = runTest {
-        val learningStatusData = LearningStatusWidgetData(
+        val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 5))
+            data = listOf(
+                MyProgressWidgetDataEntry(
+                    courseId = 1L,
+                    courseName = "Course 1",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 5,
+                    moduleCountStarted = 2,
+                    moduleCountLocked = 1,
+                    moduleCountTotal = 8
+                )
+            )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns learningStatusData
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
 
         viewModel = DashboardMyProgressViewModel(repository)
 
@@ -80,13 +93,40 @@ class DashboardMyProgressViewModelTest {
     }
 
     @Test
-    fun `parseModuleCountCompletedFromData handles module_count_completed field`() = runTest {
-        val learningStatusData = LearningStatusWidgetData(
+    fun `init handles module_count_completed from multiple entries`() = runTest {
+        val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 12))
+            data = listOf(
+                MyProgressWidgetDataEntry(
+                    courseId = 1L,
+                    courseName = "Course 1",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 5,
+                    moduleCountStarted = 2,
+                    moduleCountLocked = 1,
+                    moduleCountTotal = 8
+                ),
+                MyProgressWidgetDataEntry(
+                    courseId = 2L,
+                    courseName = "Course 2",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 7,
+                    moduleCountStarted = 3,
+                    moduleCountLocked = 0,
+                    moduleCountTotal = 10
+                )
+            )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns learningStatusData
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
 
         viewModel = DashboardMyProgressViewModel(repository)
 
@@ -95,13 +135,23 @@ class DashboardMyProgressViewModelTest {
     }
 
     @Test
-    fun `parseModuleCountCompletedFromData handles empty data`() = runTest {
-        val learningStatusData = LearningStatusWidgetData(
+    fun `init handles empty data`() = runTest {
+        val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
             data = emptyList()
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns learningStatusData
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
+
+        viewModel = DashboardMyProgressViewModel(repository)
+
+        val state = viewModel.uiState.value
+        assertEquals(0, state.cardState.moduleCountCompleted)
+    }
+
+    @Test
+    fun `init handles null data`() = runTest {
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns null
 
         viewModel = DashboardMyProgressViewModel(repository)
 
@@ -111,12 +161,26 @@ class DashboardMyProgressViewModelTest {
 
     @Test
     fun `refresh calls repository with forceNetwork true`() = runTest {
-        val learningStatusData = LearningStatusWidgetData(
+        val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 10))
+            data = listOf(
+                MyProgressWidgetDataEntry(
+                    courseId = 1L,
+                    courseName = "Course 1",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 10,
+                    moduleCountStarted = 2,
+                    moduleCountLocked = 1,
+                    moduleCountTotal = 13
+                )
+            )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns learningStatusData
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns myProgressData
 
         viewModel = DashboardMyProgressViewModel(repository)
 
@@ -125,18 +189,32 @@ class DashboardMyProgressViewModelTest {
             refreshCompleted = true
         }
 
-        coVerify { repository.getLearningStatusData(forceNetwork = true) }
+        coVerify { repository.getLearningStatusData(courseId = null, forceNetwork = true) }
         assertEquals(true, refreshCompleted)
     }
 
     @Test
     fun `refresh handles error and completes`() = runTest {
-        val learningStatusData = LearningStatusWidgetData(
+        val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 10))
+            data = listOf(
+                MyProgressWidgetDataEntry(
+                    courseId = 1L,
+                    courseName = "Course 1",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 10,
+                    moduleCountStarted = 2,
+                    moduleCountLocked = 1,
+                    moduleCountTotal = 13
+                )
+            )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns learningStatusData
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = false) } returns myProgressData
         coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = true) } throws Exception("Network error")
 
         viewModel = DashboardMyProgressViewModel(repository)
@@ -153,12 +231,26 @@ class DashboardMyProgressViewModelTest {
 
     @Test
     fun `refresh updates state to loading then success`() = runTest {
-        val learningStatusData = LearningStatusWidgetData(
+        val myProgressData = MyProgressWidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 10))
+            data = listOf(
+                MyProgressWidgetDataEntry(
+                    courseId = 1L,
+                    courseName = "Course 1",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 10,
+                    moduleCountStarted = 2,
+                    moduleCountLocked = 1,
+                    moduleCountTotal = 13
+                )
+            )
         )
 
-        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns learningStatusData
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns myProgressData
 
         viewModel = DashboardMyProgressViewModel(repository)
 

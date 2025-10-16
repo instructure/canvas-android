@@ -19,7 +19,6 @@ package com.instructure.canvas.espresso.mockcanvas.fakes
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
-import com.instructure.canvasapi2.managers.graphql.horizon.journey.LearningStatusWidgetData
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.canvasapi2.utils.DataResult
@@ -96,10 +95,12 @@ class FakeGetWidgetsManager : GetWidgetsManager {
     override suspend fun getLearningStatusWidgetData(
         courseId: Long?,
         forceNetwork: Boolean
-    ): LearningStatusWidgetData {
-        return LearningStatusWidgetData(
+    ): GetWidgetDataQuery.WidgetData {
+        return GetWidgetDataQuery.WidgetData(
             lastModifiedDate = Date(),
-            data = listOf(mapOf("module_count_completed" to 5))
+            data = listOf(
+                mapOf("module_count_completed" to 5)
+            )
         )
     }
 }
