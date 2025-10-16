@@ -71,7 +71,7 @@ fun DashboardSkillOverviewSection(
             DashboardSkillOverviewCardContent(
                 state.cardState,
                 homeNavController,
-                isLoading = true
+                isLoading = false
             )
         }
     }
