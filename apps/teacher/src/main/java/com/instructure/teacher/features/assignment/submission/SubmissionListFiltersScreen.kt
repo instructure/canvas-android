@@ -22,9 +22,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -202,7 +200,7 @@ private fun SubmissionFilterScreenContent(
                         SubmissionListFilter.SUBMITTED -> stringResource(R.string.submitted)
                         else -> ""
                     },
-                    testTag = "statusLateCheckBox",
+                    testTag = "statusCheckBox",
                     selected = filters.contains(filter),
                     color = courseColor,
                     onCheckedChanged = {
@@ -245,7 +243,8 @@ private fun SubmissionFilterScreenContent(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 56.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .testTag("preciseFilterAboveRow"),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(
@@ -283,7 +282,8 @@ private fun SubmissionFilterScreenContent(
                 modifier = Modifier
                     .defaultMinSize(minHeight = 56.dp)
                     .fillMaxWidth()
-                    .padding(horizontal = 16.dp, vertical = 12.dp),
+                    .padding(horizontal = 16.dp, vertical = 12.dp)
+                    .testTag("preciseFilterBelowRow"),
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 Text(

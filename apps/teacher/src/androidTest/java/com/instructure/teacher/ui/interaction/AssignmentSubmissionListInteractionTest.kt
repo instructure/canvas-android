@@ -75,7 +75,6 @@ class AssignmentSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmittedLate()
         assignmentSubmissionListPage.clickFilterDialogDone()
-        assignmentSubmissionListPage.assertFilterLabelText("Submitted Late")
         assignmentSubmissionListPage.assertHasSubmission()
     }
 
@@ -85,7 +84,6 @@ class AssignmentSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogDone()
-        assignmentSubmissionListPage.assertFilterLabelText("Haven't Been Graded")
         assignmentSubmissionListPage.assertHasSubmission()
     }
 
@@ -147,9 +145,9 @@ class AssignmentSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
 
         // Verify custom status options are available (from FakeCustomGradeStatusesManager)
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Custom Status 1")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Custom Status 2")
-        assignmentSubmissionListPage.assertSubmissionFilterOption("Custom Status 3")
+        assignmentSubmissionListPage.assertCustomStatusFilterOption("Custom Status 1")
+        assignmentSubmissionListPage.assertCustomStatusFilterOption("Custom Status 2")
+        assignmentSubmissionListPage.assertCustomStatusFilterOption("Custom Status 3")
 
         // Select a custom status filter
         assignmentSubmissionListPage.clickFilterCustomStatus("Custom Status 1")

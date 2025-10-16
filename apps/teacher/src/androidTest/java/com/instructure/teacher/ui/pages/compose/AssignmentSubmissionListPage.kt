@@ -16,6 +16,7 @@
 package com.instructure.teacher.ui.pages.compose
 
 
+import androidx.compose.ui.test.ExperimentalTestApi
 import androidx.compose.ui.test.assert
 import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
@@ -64,7 +65,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * @param canvasUser The Canvas user whose submission is to be verified (based on the user's name).
      */
     fun assertHasStudentSubmission(canvasUser: CanvasUserApiModel) {
-        composeTestRule.onNode(hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name), useUnmergedTree = true)
+        composeTestRule.onNode(
+            hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name),
+            useUnmergedTree = true
+        )
             .performScrollTo()
             .assertIsDisplayed()
     }
@@ -75,7 +79,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * @param canvasUser The Canvas user whose submission is to be verified (based on the user's name).
      */
     fun assertStudentSubmissionNotDisplayed(canvasUser: CanvasUserApiModel) {
-        composeTestRule.onNode(hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name), useUnmergedTree = true)
+        composeTestRule.onNode(
+            hasTestTag("submissionListItemStudentName") and hasText(canvasUser.name),
+            useUnmergedTree = true
+        )
             .assertDoesNotExist()
     }
 
@@ -99,35 +106,19 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     }
 
     /**
-     * Assert filter label all submissions
-     *
-     */
-    fun assertFilterLabelAllSubmissions() {
-        composeTestRule.onNodeWithText("All Submissions").assertIsDisplayed()
-    }
-
-    /**
-     * Assert filter label 'Haven't Submitted Yet' (aka. 'Not Submitted')
-     *
-     */
-    fun assertFilterLabelNotSubmittedSubmissions() {
-        composeTestRule.onNodeWithText("Haven't Submitted Yet").assertIsDisplayed()
-    }
-
-    /**
      * Assert that the scoreText is displayed besides the proper student.
      *
      */
     fun assertStudentScoreText(studentName: String, scoreText: String) {
 
         composeTestRule.onNode(
-            hasTestTag("scoreText") and hasText(scoreText) and(
-                hasParent(
-                    hasTestTag("submissionListItem").and(
-                        hasAnyDescendant(hasText(studentName) and hasTestTag("submissionListItemStudentName"))
+            hasTestTag("scoreText") and hasText(scoreText) and (
+                    hasParent(
+                        hasTestTag("submissionListItem").and(
+                            hasAnyDescendant(hasText(studentName) and hasTestTag("submissionListItemStudentName"))
+                        )
                     )
-                )
-            ), useUnmergedTree = true
+                    ), useUnmergedTree = true
         ).assertIsDisplayed()
     }
 
@@ -153,7 +144,9 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      *
      * @param student
      */
+    @OptIn(ExperimentalTestApi::class)
     fun clickSubmission(student: CanvasUserApiModel) {
+        composeTestRule.waitUntilExactlyOneExists(hasText(student.name), timeoutMillis = 5000)
         composeTestRule.onNodeWithText(student.name, useUnmergedTree = true)
             .performScrollTo()
             .performClick()
@@ -180,7 +173,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clickFilterSubmittedLate() {
         composeTestRule.onNode(
-            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Late"))),
+            hasTestTag("statusCheckBox").and(hasAnySibling(hasText("Late"))),
             useUnmergedTree = true
         )
             .performScrollTo()
@@ -193,10 +186,9 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clickFilterUngraded() {
         composeTestRule.onNode(
-            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Needs Grading"))),
+            hasTestTag("statusCheckBox") and hasAnySibling(hasText("Needs Grading")),
             useUnmergedTree = true
-        )
-            .performScrollTo()
+        ).performScrollTo()
             .performClick()
     }
 
@@ -206,20 +198,22 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun assertSubmissionFilterOption(filterName: String) {
         composeTestRule.onNode(
-            hasAnySibling(hasText(filterName)),
+            hasTestTag("statusCheckBox") and hasAnySibling(hasText(filterName)),
             useUnmergedTree = true
         ).performScrollTo().assertIsDisplayed()
     }
 
-    /**
-     * Assert filter label text
-     *
-     * @param text
-     */
-    fun assertFilterLabelText(text: String) {
-        composeTestRule.onNodeWithText(text).assertIsDisplayed()
+    fun assertCustomStatusFilterOption(filterName: String) {
+        composeTestRule.onNode(
+            hasTestTag("customStatusCheckBox") and hasAnySibling(hasText(filterName)),
+            useUnmergedTree = true
+        ).performScrollTo().assertIsDisplayed()
     }
 
+    fun assertPreciseFilterOption(filterName: String) {
+        composeTestRule.onNode(hasText(filterName), useUnmergedTree = true).performScrollTo()
+            .assertIsDisplayed()
+    }
 
     /**
      * Assert has submission
@@ -293,7 +287,8 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
     Clicks on the "Done" button in the filter dialog.
      */
     fun clickFilterDialogDone() {
-        composeTestRule.onNode(hasTestTag("appBarDoneButton"), useUnmergedTree = true).performClick()
+        composeTestRule.onNode(hasTestTag("appBarDoneButton"), useUnmergedTree = true)
+            .performClick()
         composeTestRule.waitForIdle()
     }
 
@@ -303,7 +298,10 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      * @param name The name of the section to filter by.
      */
     fun filterBySection(name: String) {
-        composeTestRule.onNode(hasTestTag("sectionCheckBox") and hasAnySibling(hasText(name)), useUnmergedTree = true)
+        composeTestRule.onNode(
+            hasTestTag("sectionCheckBox") and hasAnySibling(hasText(name)),
+            useUnmergedTree = true
+        )
             .performScrollTo()
             .performClick()
         composeTestRule.waitForIdle()
@@ -319,7 +317,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
             hasTestTag("hiddenIcon").and(
                 hasParent(
                     hasTestTag("submissionListItem").and(
-                        hasAnyChild(hasText(studentName))
+                        hasAnyDescendant(hasText(studentName) and hasTestTag("submissionListItemStudentName"))
                     )
                 )
             ), useUnmergedTree = true
@@ -334,7 +332,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
      */
     fun clickFilterSubmitted() {
         composeTestRule.onNode(
-            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Submitted"))),
+            hasTestTag("statusCheckBox").and(hasAnySibling(hasText("Submitted"))),
             useUnmergedTree = true
         )
             .performScrollTo()
@@ -350,7 +348,7 @@ class AssignmentSubmissionListPage(private val composeTestRule: ComposeTestRule)
         // The statuses are: Late, Missing, Needs Grading, Graded, Submitted
         // This method may need to be updated based on the actual filter available
         composeTestRule.onNode(
-            hasTestTag("statusLateCheckBox").and(hasAnySibling(hasText("Not Submitted"))),
+            hasTestTag("statusCheckBox").and(hasAnySibling(hasText("Missing"))),
             useUnmergedTree = true
         )
             .performScrollTo()

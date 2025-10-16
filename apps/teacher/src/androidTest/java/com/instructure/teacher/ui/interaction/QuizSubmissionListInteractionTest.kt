@@ -77,7 +77,6 @@ class QuizSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmittedLate()
         assignmentSubmissionListPage.clickFilterDialogDone()
-        assignmentSubmissionListPage.assertFilterLabelText("Submitted Late")
         assignmentSubmissionListPage.assertHasSubmission()
     }
 
@@ -88,7 +87,6 @@ class QuizSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogDone()
-        assignmentSubmissionListPage.assertFilterLabelText("Haven't Been Graded")
         assignmentSubmissionListPage.assertHasSubmission()
     }
 

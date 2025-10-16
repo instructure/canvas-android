@@ -17,7 +17,6 @@
 package com.instructure.teacher.features.assignment.submission
 
 import android.content.res.Configuration
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -215,10 +214,6 @@ private fun SubmissionListContent(
                         })
                 }
             }
-            item {
-                Header(uiState.headerTitle)
-                CanvasDivider()
-            }
             items(uiState.submissions, key = { it.submissionId }) { submission ->
                 SubmissionListItem(submission,
                     courseColor,
@@ -240,23 +235,6 @@ private fun SubmissionListContent(
                 .align(Alignment.TopCenter)
                 .testTag("pullRefreshIndicator"),
             contentColor = uiState.courseColor
-        )
-    }
-}
-
-@Composable
-private fun Header(title: String) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(colorResource(R.color.backgroundLight))
-    ) {
-        Text(
-            text = title,
-            fontSize = 16.sp,
-            color = colorResource(id = R.color.textDarkest),
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(top = 12.dp, start = 16.dp, end = 16.dp, bottom = 14.dp)
         )
     }
 }

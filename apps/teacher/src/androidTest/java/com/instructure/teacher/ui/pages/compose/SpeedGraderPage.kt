@@ -95,9 +95,11 @@ class SpeedGraderPage(private val composeTestRule: ComposeTestRule) : BasePage()
     /**
      * Clicks the expand panel button in the Compose UI.
      */
+    @OptIn(ExperimentalTestApi::class)
     fun clickExpandPanelButton() {
         composeTestRule
-            .onNodeWithTag("expandPanelButton", useUnmergedTree = true)
+            .waitUntilExactlyOneExists(hasTestTag("expandPanelButton"), timeoutMillis = 10000)
+        composeTestRule.onNodeWithTag("expandPanelButton", useUnmergedTree = true)
             .performClick()
         composeTestRule.waitForIdle()
     }
