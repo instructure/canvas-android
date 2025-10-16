@@ -25,7 +25,6 @@ import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.pressBackButton
-import com.instructure.canvas.espresso.refresh
 import com.instructure.dataseeding.api.AssignmentsApi
 import com.instructure.dataseeding.api.CoursesApi
 import com.instructure.dataseeding.api.PagesApi
@@ -91,21 +90,17 @@ class BookmarksE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert if the '$bookmarkName' bookmark is navigating to the Assignment Details page.")
         assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
-        Log.d(STEP_TAG, "Navigate back to the Dashboard page.")
+        Log.d(STEP_TAG, "Navigate back to the Bookmark List page.")
         Espresso.pressBack()
 
-        Log.d(STEP_TAG, "Click on the bookmark page's overflow menu.")
-        leftSideNavigationDrawerPage.clickBookmarksMenu()
-
-        Log.d(ASSERTION_TAG, "Assert if the bookmark is displayed.")
+        Log.d(ASSERTION_TAG, "Assert if the '${bookmarkName}' bookmark is displayed.")
         bookmarkPage.assertBookmarkDisplayed(bookmarkName)
 
         val newName = "Assignment Details BM Modified"
         Log.d(STEP_TAG, "Change bookmark's name from '$bookmarkName' to '$newName'.")
         bookmarkPage.changeBookmarkName(bookmarkName, newName)
 
-        Log.d(ASSERTION_TAG, "Refresh bookmark page and assert if the bookmark's name has been changed.")
-        refresh()
+        Log.d(ASSERTION_TAG, "Assert if the '${bookmarkName}' bookmark's name has been changed to '$newName'.")
         bookmarkPage.assertBookmarkDisplayed(newName)
 
         Log.d(STEP_TAG, "Click on the previously renamed bookmark.")
@@ -114,11 +109,8 @@ class BookmarksE2ETest : StudentComposeTest() {
         Log.d(ASSERTION_TAG, "Assert if it's still navigating to the corresponding assignment's details page.")
         assignmentDetailsPage.assertAssignmentTitle(assignment.name)
 
-        Log.d(STEP_TAG, "Navigate back to the bookmark page.")
+        Log.d(STEP_TAG, "Navigate back to the Bookmark List page.")
         Espresso.pressBack()
-
-        Log.d(STEP_TAG, "Click on the bookmark page's overflow menu.")
-        leftSideNavigationDrawerPage.clickBookmarksMenu()
 
         Log.d(STEP_TAG, "Delete bookmark: '$newName'.")
         bookmarkPage.deleteBookmark(newName)
