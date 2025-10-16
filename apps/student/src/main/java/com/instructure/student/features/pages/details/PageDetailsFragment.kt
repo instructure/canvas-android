@@ -45,6 +45,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -78,6 +79,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
+
+    @Inject
+    lateinit var fileDownloader: FileDownloader
 
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
@@ -350,6 +354,10 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     override fun handleBackPressed() = false
+
+    override fun downloadInternalMedia(mime: String?, url: String?, filename: String?) {
+        fileDownloader.downloadFileToDevice(url, filename, mime)
+    }
 
     companion object {
         const val PAGE_NAME = "pageDetailsName"

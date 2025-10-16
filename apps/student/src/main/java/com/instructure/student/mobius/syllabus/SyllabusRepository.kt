@@ -21,6 +21,7 @@ package com.instructure.student.mobius.syllabus
 import com.instructure.canvasapi2.apis.CalendarEventAPI
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
+import com.instructure.canvasapi2.models.PlannerItem
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.pandautils.repository.Repository
@@ -54,5 +55,15 @@ class SyllabusRepository(
         forceNetwork: Boolean
     ): DataResult<List<ScheduleItem>> {
         return dataSource().getCalendarEvents(allEvents, type, startDate, endDate, canvasContexts, forceNetwork)
+    }
+
+    suspend fun getPlannerItems(
+        startDate: String?,
+        endDate: String?,
+        contextCodes: List<String>,
+        filter: String?,
+        forceNetwork: Boolean
+    ): DataResult<List<PlannerItem>> {
+        return dataSource().getPlannerItems(startDate, endDate, contextCodes, filter, forceNetwork)
     }
 }

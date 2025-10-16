@@ -25,7 +25,8 @@ import com.instructure.canvasapi2.models.Attachment
 
 class FileDownloader(
     private val context: Context,
-    private val cookieManager: CookieManager
+    private val cookieManager: CookieManager,
+    private val downloadNotificationHelper: DownloadNotificationHelper
 ) {
     fun downloadFileToDevice(attachment: Attachment) {
         downloadFileToDevice(attachment.url, attachment.filename, attachment.contentType)
@@ -49,7 +50,7 @@ class FileDownloader(
 
         val request = DownloadManager.Request(downloadURI)
         request
-            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+            .setNotificationVisibility(DownloadManager.Request.VISIBILITY_HIDDEN)
             .setTitle(filename)
             .setMimeType(contentType)
 
@@ -63,6 +64,8 @@ class FileDownloader(
             request.addRequestHeader("Cookie", cookie)
         }
 
-        downloadManager.enqueue(request)
+        val downloadId = downloadManager.enqueue(request)
+
+        downloadNotificationHelper.monitorDownload(downloadId, filename)
     }
 }

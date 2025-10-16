@@ -25,6 +25,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.relocation.BringIntoViewRequester
+import androidx.compose.foundation.relocation.bringIntoViewRequester
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,7 +35,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.colorResource
@@ -44,8 +52,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.LocalCourseColor
+import kotlinx.coroutines.delay
 
 
+@OptIn(androidx.compose.foundation.ExperimentalFoundationApi::class)
 @Composable
 fun SpeedGraderCommentInput(
     commentText: String,
@@ -57,10 +67,21 @@ fun SpeedGraderCommentInput(
     isOnCommentLibrary: Boolean = false,
     testTag: String = "speedGraderCommentInputField"
 ) {
+    val bringIntoViewRequester = remember { BringIntoViewRequester() }
+    var isFocused by remember { mutableStateOf(false) }
+
+    LaunchedEffect(isFocused, commentText) {
+        if (isFocused) {
+            delay(300) // Wait for keyboard animation
+            bringIntoViewRequester.bringIntoView()
+        }
+    }
+
     Column(
         modifier = modifier
             .fillMaxWidth()
             .wrapContentHeight()
+            .bringIntoViewRequester(bringIntoViewRequester)
             .padding(start = 16.dp, end = 16.dp, top = 8.dp, bottom = 16.dp)
             .border(
                 width = 1.dp,
@@ -73,6 +94,9 @@ fun SpeedGraderCommentInput(
                 .fillMaxWidth()
                 .wrapContentHeight()
                 .background(Color.Transparent)
+                .onFocusChanged { focusState ->
+                    isFocused = focusState.isFocused
+                }
                 .testTag(testTag),
             label = { Text(text = stringResource(R.string.speedGraderCommentHint)) },
             value = commentText,

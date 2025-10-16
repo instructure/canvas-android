@@ -119,5 +119,71 @@ val offlineDatabaseMigrations = arrayOf(
                     "PRIMARY KEY(`id`, `courseId`)," +
                     "FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)"
         )
+    },
+    createMigration(5, 6) { database ->
+        database.execSQL("ALTER TABLE `SubmissionEntity` ADD COLUMN `hasSubAssignmentSubmissions` INTEGER NOT NULL DEFAULT 0")
+        database.execSQL("ALTER TABLE `DiscussionTopicHeaderEntity` ADD COLUMN `replyRequiredCount` INTEGER")
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `CheckpointEntity` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "`assignmentId` INTEGER NOT NULL," +
+                    "`name` TEXT," +
+                    "`tag` TEXT," +
+                    "`pointsPossible` REAL," +
+                    "`dueAt` TEXT," +
+                    "`onlyVisibleToOverrides` INTEGER NOT NULL," +
+                    "`lockAt` TEXT," +
+                    "`unlockAt` TEXT," +
+                    "FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)"
+        )
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `SubAssignmentSubmissionEntity` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "`submissionId` INTEGER NOT NULL," +
+                    "`submissionAttempt` INTEGER NOT NULL," +
+                    "`grade` TEXT," +
+                    "`score` REAL NOT NULL," +
+                    "`late` INTEGER NOT NULL," +
+                    "`excused` INTEGER NOT NULL," +
+                    "`missing` INTEGER NOT NULL," +
+                    "`latePolicyStatus` TEXT," +
+                    "`customGradeStatusId` INTEGER," +
+                    "`subAssignmentTag` TEXT," +
+                    "`enteredScore` REAL NOT NULL," +
+                    "`enteredGrade` TEXT," +
+                    "`userId` INTEGER NOT NULL," +
+                    "`isGradeMatchesCurrentSubmission` INTEGER NOT NULL," +
+                    "FOREIGN KEY(`submissionId`, `submissionAttempt`) REFERENCES `SubmissionEntity`(`id`, `attempt`) ON UPDATE NO ACTION ON DELETE CASCADE)"
+        )
+    },
+    createMigration(6, 7) { database ->
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `PlannerItemEntity` (" +
+                    "`id` INTEGER PRIMARY KEY NOT NULL," +
+                    "`courseId` INTEGER," +
+                    "`groupId` INTEGER," +
+                    "`userId` INTEGER," +
+                    "`contextType` TEXT," +
+                    "`contextName` TEXT," +
+                    "`plannableType` TEXT NOT NULL," +
+                    "`plannableId` INTEGER NOT NULL," +
+                    "`plannableTitle` TEXT," +
+                    "`plannableDetails` TEXT," +
+                    "`plannableTodoDate` TEXT," +
+                    "`plannableEndAt` INTEGER," +
+                    "`plannableAllDay` INTEGER," +
+                    "`plannableCourseId` INTEGER," +
+                    "`plannableGroupId` INTEGER," +
+                    "`plannableUserId` INTEGER," +
+                    "`plannableDate` INTEGER NOT NULL," +
+                    "`htmlUrl` TEXT," +
+                    "`submissionStateSubmitted` INTEGER," +
+                    "`submissionStateExcused` INTEGER," +
+                    "`submissionStateGraded` INTEGER," +
+                    "`newActivity` INTEGER," +
+                    "`plannerOverrideId` INTEGER," +
+                    "`plannerOverrideMarkedComplete` INTEGER," +
+                    "FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON DELETE CASCADE)"
+        )
     }
 )

@@ -18,23 +18,30 @@
 package com.instructure.pandautils.room.offline.facade
 
 import androidx.room.withTransaction
+import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.DiscussionParticipant
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
 import com.instructure.canvasapi2.models.DiscussionTopicPermission
 import com.instructure.canvasapi2.models.RemoteFile
 import com.instructure.pandautils.room.offline.OfflineDatabase
+import com.instructure.pandautils.room.offline.daos.AssignmentDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.DiscussionParticipantDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicHeaderDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicPermissionDao
 import com.instructure.pandautils.room.offline.daos.DiscussionTopicRemoteFileDao
 import com.instructure.pandautils.room.offline.daos.LocalFileDao
 import com.instructure.pandautils.room.offline.daos.RemoteFileDao
+import com.instructure.pandautils.room.offline.entities.AssignmentEntity
+import com.instructure.pandautils.room.offline.entities.CheckpointEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionParticipantEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicHeaderEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicPermissionEntity
 import com.instructure.pandautils.room.offline.entities.DiscussionTopicRemoteFileEntity
 import com.instructure.pandautils.room.offline.entities.LocalFileEntity
 import com.instructure.pandautils.room.offline.entities.RemoteFileEntity
+import com.instructure.pandautils.utils.orDefault
 import io.mockk.MockKAnnotations
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -58,8 +65,20 @@ class DiscussionTopicHeaderFacadeTest {
     private val localFileDao: LocalFileDao = mockk(relaxed = true)
     private val discussionTopicRemoteFileDao: DiscussionTopicRemoteFileDao = mockk(relaxed = true)
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
+    private val assignmentDao: AssignmentDao = mockk(relaxed = true)
+    private val checkpointDao: CheckpointDao = mockk(relaxed = true)
 
-    private val facade = DiscussionTopicHeaderFacade(discussionTopicHeaderDao, discussionParticipantDao, discussionTopicPermissionDao, remoteFileDao, localFileDao, discussionTopicRemoteFileDao, offlineDatabase)
+    private val facade = DiscussionTopicHeaderFacade(
+        discussionTopicHeaderDao,
+        discussionParticipantDao,
+        discussionTopicPermissionDao,
+        remoteFileDao,
+        localFileDao,
+        discussionTopicRemoteFileDao,
+        offlineDatabase,
+        assignmentDao,
+        checkpointDao
+    )
 
     @Before
     fun setup() {
@@ -73,6 +92,8 @@ class DiscussionTopicHeaderFacadeTest {
         coEvery { offlineDatabase.withTransaction(capture(transactionLambda)) } coAnswers {
             transactionLambda.captured.invoke()
         }
+
+        coEvery { assignmentDao.findById(0) } returns null
     }
 
     @After
@@ -184,5 +205,138 @@ class DiscussionTopicHeaderFacadeTest {
         Assert.assertEquals(discussionParticipant, result[1].author)
         Assert.assertEquals(discussionTopicHeader, result[0])
         Assert.assertEquals(discussionTopicHeader2, result[1])
+    }
+
+    @Test
+    fun `getDiscussionTopicHeaderById should return discussion with assignment when assignmentId is set`() = runTest {
+        val discussionTopicHeaderId = 1L
+        val assignmentId = 10L
+        val discussionParticipant = DiscussionParticipant(id = 1L, displayName = "displayName")
+        val discussionPermission = DiscussionTopicPermission()
+        val assignment = Assignment(id = assignmentId, name = "Test Assignment", pointsPossible = 15.0)
+        val discussionTopicHeader = DiscussionTopicHeader(
+            id = discussionTopicHeaderId,
+            author = discussionParticipant,
+            permissions = discussionPermission,
+            title = "Title",
+            assignmentId = assignmentId,
+            assignment = assignment
+        )
+
+        coEvery { discussionParticipantDao.findById(1L) } returns DiscussionParticipantEntity(discussionParticipant)
+        coEvery { discussionTopicHeaderDao.findById(discussionTopicHeaderId) } returns DiscussionTopicHeaderEntity(
+            discussionTopicHeader,
+            1
+        )
+        coEvery { discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderId) } returns DiscussionTopicPermissionEntity(
+            discussionPermission,
+            discussionTopicHeaderId
+        )
+        coEvery { discussionTopicRemoteFileDao.findByDiscussionId(discussionTopicHeaderId) } returns emptyList()
+        coEvery { assignmentDao.findById(assignmentId) } returns AssignmentEntity(assignment, null, null, 1L, null)
+        coEvery { checkpointDao.findByAssignmentId(assignmentId) } returns emptyList()
+
+        val result = facade.getDiscussionTopicHeaderById(discussionTopicHeaderId)!!
+
+        Assert.assertEquals(discussionParticipant, result.author)
+        Assert.assertNotNull(result.assignment)
+        Assert.assertEquals(assignmentId, result.assignment?.id)
+        Assert.assertEquals(15.0, result.assignment?.pointsPossible.orDefault(), 0.01)
+
+        coVerify { assignmentDao.findById(assignmentId) }
+        coVerify { checkpointDao.findByAssignmentId(assignmentId) }
+    }
+
+    @Test
+    fun `getDiscussionTopicHeaderById should return discussion with assignment and checkpoints`() = runTest {
+        val discussionTopicHeaderId = 1L
+        val assignmentId = 10L
+        val discussionParticipant = DiscussionParticipant(id = 1L, displayName = "displayName")
+        val discussionPermission = DiscussionTopicPermission()
+        val checkpoint1 = Checkpoint(
+            tag = "reply_to_topic",
+            name = "Reply to Topic",
+            pointsPossible = 5.0,
+            dueAt = "2023-01-29T23:59:00Z"
+        )
+        val checkpoint2 = Checkpoint(
+            tag = "reply_to_entry",
+            name = "Reply to Entry",
+            pointsPossible = 5.0,
+            dueAt = "2023-01-31T23:59:00Z"
+        )
+        val assignment = Assignment(
+            id = assignmentId,
+            name = "Test Assignment",
+            pointsPossible = 10.0,
+            checkpoints = listOf(checkpoint1, checkpoint2)
+        )
+        val discussionTopicHeader = DiscussionTopicHeader(
+            id = discussionTopicHeaderId,
+            author = discussionParticipant,
+            permissions = discussionPermission,
+            title = "Title",
+            assignmentId = assignmentId,
+            assignment = assignment
+        )
+
+        coEvery { discussionParticipantDao.findById(1L) } returns DiscussionParticipantEntity(discussionParticipant)
+        coEvery { discussionTopicHeaderDao.findById(discussionTopicHeaderId) } returns DiscussionTopicHeaderEntity(
+            discussionTopicHeader,
+            1
+        )
+        coEvery { discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderId) } returns DiscussionTopicPermissionEntity(
+            discussionPermission,
+            discussionTopicHeaderId
+        )
+        coEvery { discussionTopicRemoteFileDao.findByDiscussionId(discussionTopicHeaderId) } returns emptyList()
+        coEvery { assignmentDao.findById(assignmentId) } returns AssignmentEntity(assignment, null, null, 1L, null)
+        coEvery { checkpointDao.findByAssignmentId(assignmentId) } returns listOf(
+            CheckpointEntity(checkpoint1, assignmentId),
+            CheckpointEntity(checkpoint2, assignmentId)
+        )
+
+        val result = facade.getDiscussionTopicHeaderById(discussionTopicHeaderId)!!
+
+        Assert.assertEquals(discussionParticipant, result.author)
+        Assert.assertNotNull(result.assignment)
+        Assert.assertEquals(assignmentId, result.assignment?.id)
+        Assert.assertEquals(10.0, result.assignment?.pointsPossible.orDefault(), 0.01)
+        Assert.assertEquals(2, result.assignment?.checkpoints?.size)
+        Assert.assertEquals("Reply to Topic", result.assignment?.checkpoints?.get(0)?.name)
+        Assert.assertEquals("Reply to Entry", result.assignment?.checkpoints?.get(1)?.name)
+
+        coVerify { assignmentDao.findById(assignmentId) }
+        coVerify { checkpointDao.findByAssignmentId(assignmentId) }
+    }
+
+    @Test
+    fun `getDiscussionTopicHeaderById should return discussion without assignment when assignmentId is 0`() = runTest {
+        val discussionTopicHeaderId = 1L
+        val discussionParticipant = DiscussionParticipant(id = 1L, displayName = "displayName")
+        val discussionPermission = DiscussionTopicPermission()
+        val discussionTopicHeader = DiscussionTopicHeader(
+            id = discussionTopicHeaderId,
+            author = discussionParticipant,
+            permissions = discussionPermission,
+            title = "Title",
+            assignmentId = 0
+        )
+
+        coEvery { discussionParticipantDao.findById(1L) } returns DiscussionParticipantEntity(discussionParticipant)
+        coEvery { discussionTopicHeaderDao.findById(discussionTopicHeaderId) } returns DiscussionTopicHeaderEntity(
+            discussionTopicHeader,
+            1
+        )
+        coEvery { discussionTopicPermissionDao.findByDiscussionTopicHeaderId(discussionTopicHeaderId) } returns DiscussionTopicPermissionEntity(
+            discussionPermission,
+            discussionTopicHeaderId
+        )
+        coEvery { discussionTopicRemoteFileDao.findByDiscussionId(discussionTopicHeaderId) } returns emptyList()
+
+        val result = facade.getDiscussionTopicHeaderById(discussionTopicHeaderId)!!
+
+        Assert.assertEquals(discussionParticipant, result.author)
+        Assert.assertNull(result.assignment)
     }
 }

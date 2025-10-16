@@ -32,7 +32,7 @@ import com.instructure.espresso.page.getStringFromResource
 import com.instructure.espresso.page.withAncestor
 import com.instructure.student.R
 import com.instructure.student.ui.pages.classic.k5.ElementaryDashboardPage
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedDataForK5
 import com.instructure.student.ui.utils.extensions.tokenLoginElementary
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -43,7 +43,7 @@ import java.util.Locale
 import java.util.TimeZone
 
 @HiltAndroidTest
-class ScheduleE2ETest : StudentTest() {
+class ScheduleE2ETest : StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 

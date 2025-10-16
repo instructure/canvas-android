@@ -30,6 +30,7 @@ import com.instructure.pandautils.room.offline.daos.AssignmentScoreStatisticsDao
 import com.instructure.pandautils.room.offline.daos.AssignmentSetDao
 import com.instructure.pandautils.room.offline.daos.AttachmentDao
 import com.instructure.pandautils.room.offline.daos.AuthorDao
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.ConferenceDao
 import com.instructure.pandautils.room.offline.daos.ConferenceRecodingDao
 import com.instructure.pandautils.room.offline.daos.CourseDao
@@ -67,6 +68,7 @@ import com.instructure.pandautils.room.offline.daos.ModuleItemDao
 import com.instructure.pandautils.room.offline.daos.ModuleNameDao
 import com.instructure.pandautils.room.offline.daos.ModuleObjectDao
 import com.instructure.pandautils.room.offline.daos.PageDao
+import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.PlannerOverrideDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
 import com.instructure.pandautils.room.offline.daos.RemoteFileDao
@@ -78,6 +80,7 @@ import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverri
 import com.instructure.pandautils.room.offline.daos.ScheduleItemDao
 import com.instructure.pandautils.room.offline.daos.SectionDao
 import com.instructure.pandautils.room.offline.daos.StudioMediaProgressDao
+import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.SyncSettingsDao
@@ -201,6 +204,11 @@ class OfflineModule {
     }
 
     @Provides
+    fun providePlannerItemDao(appDatabase: OfflineDatabase): PlannerItemDao {
+        return appDatabase.plannerItemDao()
+    }
+
+    @Provides
     fun providePlannerOverrideDao(appDatabase: OfflineDatabase): PlannerOverrideDao {
         return appDatabase.plannerOverrideDao()
     }
@@ -318,6 +326,7 @@ class OfflineModule {
         lockInfoFacade: LockInfoFacade,
         rubricCriterionRatingDao: RubricCriterionRatingDao,
         assignmentRubricCriterionDao: AssignmentRubricCriterionDao,
+        checkpointDao: CheckpointDao,
         offlineDatabase: OfflineDatabase
     ): AssignmentFacade {
         return AssignmentFacade(
@@ -332,6 +341,7 @@ class OfflineModule {
             lockInfoFacade,
             rubricCriterionRatingDao,
             assignmentRubricCriterionDao,
+            checkpointDao,
             offlineDatabase
         )
     }
@@ -345,11 +355,13 @@ class OfflineModule {
         submissionCommentDao: SubmissionCommentDao,
         attachmentDao: AttachmentDao,
         authorDao: AuthorDao,
-        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao
+        rubricCriterionAssessmentDao: RubricCriterionAssessmentDao,
+        subAssignmentSubmissionDao: SubAssignmentSubmissionDao
     ): SubmissionFacade {
         return SubmissionFacade(
             submissionDao, groupDao, mediaCommentDao, userDao,
-            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+            submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao,
+            subAssignmentSubmissionDao
         )
     }
 
@@ -362,6 +374,8 @@ class OfflineModule {
         localFileDao: LocalFileDao,
         discussionTopicRemoteFileDao: DiscussionTopicRemoteFileDao,
         offlineDatabase: OfflineDatabase,
+        assignmentDao: AssignmentDao,
+        checkpointDao: CheckpointDao
     ): DiscussionTopicHeaderFacade {
         return DiscussionTopicHeaderFacade(
             discussionTopicHeaderDao,
@@ -370,7 +384,9 @@ class OfflineModule {
             remoteFileDao,
             localFileDao,
             discussionTopicRemoteFileDao,
-            offlineDatabase
+            offlineDatabase,
+            assignmentDao,
+            checkpointDao
         )
     }
 
@@ -642,5 +658,15 @@ class OfflineModule {
     @Provides
     fun provideCustomGradeStatusDao(database: OfflineDatabase): CustomGradeStatusDao {
         return database.customGradeStatusDao()
+    }
+
+    @Provides
+    fun provideCheckpointDao(database: OfflineDatabase): CheckpointDao {
+        return database.checkpointDao()
+    }
+
+    @Provides
+    fun provideSubAssignmentSubmissionDao(database: OfflineDatabase): SubAssignmentSubmissionDao {
+        return database.subAssignmentSubmissionDao()
     }
 }
