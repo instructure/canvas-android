@@ -77,6 +77,6 @@ class ModuleListRepository(
     }
 
     suspend fun getModuleItemCheckpoints(courseId: String, forceNetwork: Boolean): List<ModuleItemWithCheckpoints> {
-        return networkDataSource.getModuleItemCheckpoints(courseId, forceNetwork)
+        return dataSource().getModuleItemCheckpoints(courseId, forceNetwork)
     }
 }

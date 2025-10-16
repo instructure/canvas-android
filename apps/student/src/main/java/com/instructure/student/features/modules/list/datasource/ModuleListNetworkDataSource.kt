@@ -73,7 +73,7 @@ class ModuleListNetworkDataSource(
         return courseApi.getCourseSettings(courseId, restParams).dataOrNull
     }
 
-    suspend fun getModuleItemCheckpoints(courseId: String, forceNetwork: Boolean): List<ModuleItemWithCheckpoints> {
+    override suspend fun getModuleItemCheckpoints(courseId: String, forceNetwork: Boolean): List<ModuleItemWithCheckpoints> {
         return moduleManager.getModuleItemCheckpoints(courseId, forceNetwork)
     }
 }
