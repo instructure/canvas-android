@@ -244,10 +244,12 @@ class CourseSync(
         fetchTab(courseId, Tab.SYLLABUS_ID) {
             val calendarEvents = fetchCalendarEvents(courseId)
             val assignmentEvents = fetchCalendarAssignments(courseId)
+            val subAssignmentEvents = fetchCalendarSubAssignments(courseId)
             val scheduleItems = mutableListOf<ScheduleItem>()
 
             scheduleItems.addAll(calendarEvents)
             scheduleItems.addAll(assignmentEvents)
+            scheduleItems.addAll(subAssignmentEvents)
 
             scheduleItemFacade.insertScheduleItems(scheduleItems, courseId)
 
@@ -295,6 +297,24 @@ class CourseSync(
         val calendarAssignments = calendarEventApi.getCalendarEvents(
             true,
             CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
+            null,
+            null,
+            listOf("course_$courseId"),
+            restParams
+        ).depaginate {
+            calendarEventApi.next(it, restParams)
+        }.dataOrThrow
+
+        calendarAssignments.forEach { it.description = parseHtmlContent(it.description, courseId) }
+
+        return calendarAssignments
+    }
+
+    private suspend fun fetchCalendarSubAssignments(courseId: Long): List<ScheduleItem> {
+        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
+        val calendarAssignments = calendarEventApi.getCalendarEvents(
+            true,
+            CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT.apiName,
             null,
             null,
             listOf("course_$courseId"),
