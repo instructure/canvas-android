@@ -28,7 +28,7 @@ class SyllabusEffectHandler(private val repository: SyllabusRepository) : Effect
     override fun accept(effect: SyllabusEffect) {
         when (effect) {
             is SyllabusEffect.LoadData -> loadData(effect)
-            is SyllabusEffect.ShowAssignmentView -> view?.showAssignmentView(effect.assignment, effect.course)
+            is SyllabusEffect.ShowAssignmentView -> view?.showAssignmentView(effect.assignmentId, effect.course)
             is SyllabusEffect.ShowScheduleItemView -> view?.showScheduleItemView(effect.scheduleItem, effect.course)
         }.exhaustive
     }

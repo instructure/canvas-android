@@ -572,10 +572,10 @@ class SyllabusEffectHandlerTest : Assert() {
     @Test
     fun `ShowAssignmentView results in view calling showAssignmentView`() {
         val assignment = Assignment()
-        connection.accept(SyllabusEffect.ShowAssignmentView(assignment, course))
+        connection.accept(SyllabusEffect.ShowAssignmentView(assignment.id, course))
 
         verify(timeout = 100) {
-            view.showAssignmentView(assignment, course)
+            view.showAssignmentView(assignment.id, course)
         }
 
         confirmVerified(view)
