@@ -53,17 +53,20 @@ class SyllabusEffectHandler(private val repository: SyllabusRepository) : Effect
                 val contextCodes = listOf(course.dataOrThrow.contextId)
 
                 val assignments = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
+                val subAssignments = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT, null, null, contextCodes, effect.forceNetwork)
                 val events = repository.getCalendarEvents(true, CalendarEventAPI.CalendarEventType.CALENDAR, null, null, contextCodes, effect.forceNetwork)
                 val plannerItems = repository.getPlannerItems(null, null, contextCodes, "all_ungraded_todo_items", effect.forceNetwork)
 
                 val endList = mutableListOf<ScheduleItem>()
 
                 assignments.map { endList.addAll(it) }
+                subAssignments.map { endList.addAll(it) }
                 events.map { endList.addAll(it) }
                 plannerItems.map { items ->
                     // Filter out assignments, quizzes, and calendar events as they're already fetched above
                     val filteredItems = items.filter {
                         it.plannableType != com.instructure.canvasapi2.models.PlannableType.ASSIGNMENT &&
+                        it.plannableType != com.instructure.canvasapi2.models.PlannableType.SUB_ASSIGNMENT &&
                         it.plannableType != com.instructure.canvasapi2.models.PlannableType.QUIZ &&
                         it.plannableType != com.instructure.canvasapi2.models.PlannableType.CALENDAR_EVENT
                     }
@@ -72,7 +75,7 @@ class SyllabusEffectHandler(private val repository: SyllabusRepository) : Effect
 
                 endList.sort()
 
-                summaryResult = if (assignments.isFail && events.isFail && plannerItems.isFail) {
+                summaryResult = if (assignments.isFail && subAssignments.isFail && events.isFail && plannerItems.isFail) {
                     DataResult.Fail((assignments as? DataResult.Fail)?.failure)
                 } else {
                     DataResult.Success(endList)
