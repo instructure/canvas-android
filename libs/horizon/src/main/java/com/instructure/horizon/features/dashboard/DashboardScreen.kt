@@ -63,6 +63,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.announcement.DashboardAnnouncementBannerWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
@@ -158,6 +159,11 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     modifier = Modifier.height(56.dp)
                 )
                 HorizonSpace(SpaceSize.SPACE_24)
+                DashboardAnnouncementBannerWidget(
+                    mainNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
                 DashboardCourseSection(
                     mainNavController,
                     homeNavController,

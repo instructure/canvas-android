@@ -400,4 +400,7 @@
     <string name="a11y_not_completed">Not completed</string>
     <string name="a11y_locked">Locked</string>
     <string name="a11y_unselected">Unselected</string>
+    <string name="dashboardAnnouncementBannerFrom">From %1$s</string>
+    <string name="dashboardAnnouncementBannerGoToAnnouncement">Go to announcement</string>
+    <string name="dashboardAnnouncementBannerErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
 </resources>

@@ -49,8 +49,8 @@ import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun DashboardWidgetCard(
-    title: String,
-    @DrawableRes iconRes: Int,
+    title: String = "",
+    @DrawableRes iconRes: Int? = null,
     widgetColor: Color,
     modifier: Modifier = Modifier,
     useMinWidth: Boolean = true,
@@ -70,32 +70,39 @@ fun DashboardWidgetCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Text(
-                    text = title,
-                    style = HorizonTypography.labelMediumBold,
-                    color = HorizonColors.Text.dataPoint(),
-                    modifier = Modifier
-                        .padding(end = 8.dp)
-                )
 
-                Box(
-                    contentAlignment = Alignment.Center,
-                    modifier = Modifier
-                        .clip(CircleShape)
-                        .background(widgetColor)
-                        .padding(6.dp)
-                ) {
-                    Icon(
-                        painter = painterResource(iconRes),
-                        contentDescription = null,
-                        tint = HorizonColors.Icon.default(),
+                if (title.isNotEmpty()) {
+                    Text(
+                        text = title,
+                        style = HorizonTypography.labelMediumBold,
+                        color = HorizonColors.Text.dataPoint(),
                         modifier = Modifier
-                            .size(16.dp)
+                            .padding(end = 8.dp)
                     )
+                }
+
+                iconRes?.let{
+                    Box(
+                        contentAlignment = Alignment.Center,
+                        modifier = Modifier
+                            .clip(CircleShape)
+                            .background(widgetColor)
+                            .padding(6.dp)
+                    ) {
+                        Icon(
+                            painter = painterResource(iconRes),
+                            contentDescription = null,
+                            tint = HorizonColors.Icon.default(),
+                            modifier = Modifier
+                                .size(16.dp)
+                        )
+                    }
                 }
             }
 
-            HorizonSpace(SpaceSize.SPACE_8)
+            if (title.isNotEmpty() || iconRes != null) {
+                HorizonSpace(SpaceSize.SPACE_8)
+            }
 
             content()
         }
@@ -108,6 +115,20 @@ private fun DashboardTimeSpentCardPreview() {
     DashboardWidgetCard(
         title = "Time",
         iconRes = R.drawable.schedule,
+        widgetColor = HorizonColors.PrimitivesBlue.blue12()
+    ) {
+        Text(
+            text = "Content",
+            style = HorizonTypography.h1,
+            color = HorizonColors.Text.body()
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun DashboardNoTitleCardPreview() {
+    DashboardWidgetCard(
         widgetColor = HorizonColors.PrimitivesBlue.blue12()
     ) {
         Text(

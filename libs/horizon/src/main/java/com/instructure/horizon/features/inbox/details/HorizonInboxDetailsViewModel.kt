@@ -136,6 +136,19 @@ class HorizonInboxDetailsViewModel @Inject constructor(
             }
             HorizonInboxItemType.AccountNotification -> {
                 val accountNotification = repository.getAccountAnnouncement(id, forceRefresh)
+
+                if (!accountNotification.closed) {
+                    viewModelScope.async {
+                        val result = repository.deleteAccountAnnouncement(id)
+                        if (result.isSuccess) {
+                            _uiState.update { it.copy(announcementMarkedAsRead = true) }
+                        }
+
+                        // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread
+                        repository.getAccountAnnouncement(id, true)
+                    }
+                }
+
                 uiState.value.copy(
                     title = accountNotification.subject,
                     titleIcon = R.drawable.campaign,

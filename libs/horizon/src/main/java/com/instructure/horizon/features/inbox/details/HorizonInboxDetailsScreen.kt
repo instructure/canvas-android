@@ -59,6 +59,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DASHBOARD_REFRESH
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPicker
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentPickerViewModel
 import com.instructure.horizon.features.inbox.list.HORIZON_INBOX_LIST_ANNOUNCEMENT_READ
@@ -85,6 +86,7 @@ import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextArea
 import com.instructure.horizon.horizonui.organisms.inputs.textarea.TextAreaState
 import com.instructure.horizon.horizonui.platform.LoadingState
 import com.instructure.horizon.horizonui.platform.LoadingStateWrapper
+import com.instructure.horizon.navigation.MainNavigationRoute
 import com.instructure.pandautils.compose.composables.ComposeCanvasWebViewWrapper
 import com.instructure.pandautils.compose.composables.ComposeEmbeddedWebViewCallbacks
 import com.instructure.pandautils.room.appdatabase.entities.FileDownloadProgressState
@@ -110,9 +112,13 @@ fun HorizonInboxDetailsScreen(
         }
     }
 
+    val homeEntry =
+        remember(navController.currentBackStackEntry) { navController.getBackStackEntry(MainNavigationRoute.Home.route) }
+
     LaunchedEffect(state.announcementMarkedAsRead) {
         if (state.announcementMarkedAsRead) {
             listEntry?.savedStateHandle?.set(HORIZON_REFRESH_INBOX_LIST, HORIZON_INBOX_LIST_ANNOUNCEMENT_READ)
+            homeEntry.savedStateHandle[DASHBOARD_REFRESH] = true
         }
     }
 
