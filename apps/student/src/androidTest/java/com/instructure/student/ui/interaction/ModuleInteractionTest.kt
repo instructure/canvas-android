@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
@@ -56,6 +57,7 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
@@ -713,11 +715,19 @@ class ModuleInteractionTest : StudentComposeTest() {
         // Navigate to the modules page - this will trigger the initial load with checkpoints
         courseBrowserPage.selectModules()
 
-        val expectedDateText1 = "Due: Jun 16, 2025 6:00 PM"
-        val expectedDateText2 = "Due: Jun 22, 2025 6:00 PM"
+        val expectedDateText1 = DateHelper.createPrefixedDateTimeString(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            R.string.toDoDue,
+            checkpointDate1
+        )
+        val expectedDateText2 = DateHelper.createPrefixedDateTimeString(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            R.string.toDoDue,
+            checkpointDate2
+        )
 
         // Assert that checkpoint dates are displayed
-        modulesPage.assertCheckpointDatesDisplayed(discussionTitle, listOf(expectedDateText1, expectedDateText2))
+        modulesPage.assertCheckpointDatesDisplayed(discussionTitle, listOf(expectedDateText1!!, expectedDateText2!!))
     }
 
     // Mock a specified number of students and courses, add some assorted assignments, discussions, etc...
