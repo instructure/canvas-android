@@ -17,18 +17,13 @@
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
 import com.google.gson.annotations.SerializedName
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.horizon.util.deserializeDynamicObject
 import java.util.Date
 import javax.inject.Inject
-
-data class MyProgressWidgetDataResponse(
-    val data:MyProgressWidgetDataResponseData
-)
-
-data class MyProgressWidgetDataResponseData(
-    val widgetData: MyProgressWidgetData
-)
 
 data class MyProgressWidgetData(
     val data: List<MyProgressWidgetDataEntry>,
@@ -71,9 +66,15 @@ data class MyProgressWidgetDataEntry(
 )
 
 class DashboardMyProgressRepository @Inject constructor(
-    private val getWidgetsManager: GetWidgetsManager
+    private val apiPrefs: ApiPrefs,
+    private val getWidgetsManager: GetWidgetsManager,
+    private val getCoursesManager: HorizonGetCoursesManager,
 ) {
     suspend fun getLearningStatusData(courseId: Long? = null, forceNetwork: Boolean): MyProgressWidgetData? {
         return getWidgetsManager.getLearningStatusWidgetData(courseId, forceNetwork).deserializeDynamicObject<MyProgressWidgetData>()
+    }
+
+    suspend fun getCourses(forceNetwork: Boolean): List<CourseWithProgress> {
+        return getCoursesManager.getCoursesWithProgress(apiPrefs.user?.id ?: 0, forceNetwork).dataOrThrow
     }
 }
