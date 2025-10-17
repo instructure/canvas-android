@@ -1,0 +1,9 @@
+query GetSkills($completedOnly: Boolean) {
+    skills(completedOnly: $completedOnly) {
+        id
+        name
+        proficiencyLevel
+        createdAt
+        updatedAt
+    }
+}

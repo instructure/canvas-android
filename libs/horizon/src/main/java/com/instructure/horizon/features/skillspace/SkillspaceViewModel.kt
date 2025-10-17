@@ -18,7 +18,6 @@ package com.instructure.horizon.features.skillspace
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -30,7 +29,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SkillspaceViewModel @Inject constructor(
-    private val apiPrefs: ApiPrefs
+    private val repository: SkillspaceRepository,
 ): ViewModel() {
     private val _uiState = MutableStateFlow(SkillspaceUiState(
         loadingState = LoadingState(onRefresh = ::refreshData)
@@ -61,12 +60,14 @@ class SkillspaceViewModel @Inject constructor(
         }
     }
 
-    private fun fetchUrl() {
-        val baseUrl = apiPrefs.fullDomain.toHorizonUrl()
-        val skillspaceUrl = "$baseUrl/skillspace"
-        val embeddedUrl = "$skillspaceUrl?embedded=true"
+    private suspend fun fetchUrl() {
+        repository.getAuthenticatedSession()?.sessionUrl?.let { url ->
+            _uiState.update { it.copy(webviewUrl = url) }
+        }
+        repository.getEmbeddedSkillspaceUrl().let { url ->
+            _uiState.update { it.copy(webviewUrl = url) }
+        }
 
-        _uiState.update { it.copy(webviewUrl = embeddedUrl) }
     }
 
     private fun refreshData() {
@@ -87,11 +88,5 @@ class SkillspaceViewModel @Inject constructor(
                 )
             }
         }
-    }
-
-    private fun String.toHorizonUrl(): String {
-        return this
-            .replace("horizon.cd.instructure.com", "dev.cd.canvashorizon.com")
-            .replace("instructure.com", "canvasforcareer.com")
     }
 }

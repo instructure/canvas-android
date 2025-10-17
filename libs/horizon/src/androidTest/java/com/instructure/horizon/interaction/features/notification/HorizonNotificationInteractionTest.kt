@@ -20,12 +20,14 @@ import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAccountNotification
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetSkillsManager
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetWidgetsManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
 import com.instructure.canvasapi2.di.graphql.JourneyModule
 import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.horizon.espresso.HorizonTest
 import dagger.hilt.android.testing.BindValue
@@ -39,6 +41,7 @@ class HorizonNotificationInteractionTest: HorizonTest() {
     private val fakeGetHorizonCourseManager = FakeGetHorizonCourseManager()
     private val fakeGetProgramsManager = FakeGetProgramsManager()
     private val fakeGetWidgetsManager = FakeGetWidgetsManager()
+    private val fakeGetSkillsManager = FakeGetSkillsManager()
 
     @BindValue
     @JvmField
@@ -47,6 +50,10 @@ class HorizonNotificationInteractionTest: HorizonTest() {
     @BindValue
     @JvmField
     val getWidgetsManager: GetWidgetsManager = fakeGetWidgetsManager
+
+    @BindValue
+    @JvmField
+    val getSkillsManager: GetSkillsManager = fakeGetSkillsManager
 
     @BindValue
     @JvmField
