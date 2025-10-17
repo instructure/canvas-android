@@ -166,7 +166,7 @@ dependencies {
     api (Libs.GLIDE_OKHTTP) {
         exclude group: "com.android.support"
     }
-    ksp Libs.GLIDE_COMPILER
+    kapt Libs.GLIDE_COMPILER
 
     api Libs.ANDROID_SVG
 
