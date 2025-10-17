@@ -16,6 +16,11 @@
 package com.instructure.student.ui.pages.classic
 
 import androidx.appcompat.widget.AppCompatButton
+import androidx.compose.ui.test.assertIsDisplayed
+import androidx.compose.ui.test.hasAnyAncestor
+import androidx.compose.ui.test.hasAnyDescendant
+import androidx.compose.ui.test.hasTestTag
+import androidx.compose.ui.test.hasText
 import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
@@ -59,6 +64,12 @@ class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteraction
         }
 
         onView(viewMatcher).click()
+    }
+
+    fun assertDiscussionCheckpointDetailsOnDetailsPage(checkpointText: String, dueAt: String)
+    {
+        composeTestRule.onNode(hasTestTag("dueDateHeaderText-$checkpointText"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasText(dueAt) and hasAnyAncestor(hasTestTag("dueDateColumn-$checkpointText") and hasAnyDescendant(hasTestTag("dueDateHeaderText-$checkpointText")))).assertIsDisplayed()
     }
 
     //OfflineMethod

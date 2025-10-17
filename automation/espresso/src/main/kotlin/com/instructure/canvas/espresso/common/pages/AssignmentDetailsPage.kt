@@ -72,7 +72,7 @@ import org.hamcrest.Matchers.anyOf
 import org.hamcrest.Matchers.anything
 import org.hamcrest.Matchers.not
 
-open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, private val composeTestRule: ComposeTestRule) : BasePage(R.id.assignmentDetailsPage) {
+open class AssignmentDetailsPage(val moduleItemInteractions: ModuleItemInteractions, val composeTestRule: ComposeTestRule) : BasePage(R.id.assignmentDetailsPage) {
     val toolbar by OnViewWithId(R.id.toolbar)
     val points by OnViewWithId(R.id.points)
     val submissionTypes by OnViewWithId(R.id.submissionTypesTextView)

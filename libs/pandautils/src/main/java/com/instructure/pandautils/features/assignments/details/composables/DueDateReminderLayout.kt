@@ -61,22 +61,25 @@ private fun DueDateBlock(
     reminderViewState: ReminderViewState,
     position: Int
 ) {
-    Text(
-        modifier = Modifier
-            .padding(top = 24.dp, start = 16.dp, end = 16.dp)
-            .semantics { heading() }
-            .testTag("dueDateHeaderText-$position"),
-        text = reminderViewState.dueLabel ?: stringResource(id = R.string.dueLabel),
-        color = colorResource(id = R.color.textDark),
-        fontSize = 14.sp
-    )
-    Spacer(modifier = Modifier.height(2.dp))
-    Text(
-        modifier = Modifier
-            .padding(bottom = 14.dp, start = 16.dp, end = 16.dp)
-            .testTag("dueDateText-$position"),
-        text = reminderViewState.dueDate?.toFormattedString() ?: stringResource(R.string.toDoNoDueDate),
-        color = colorResource(id = R.color.textDarkest),
-        fontSize = 16.sp
-    )
+    Column(modifier = Modifier.testTag("dueDateColumn-${reminderViewState.dueLabel}")) {
+        Text(
+            modifier = Modifier
+                .padding(top = 24.dp, start = 16.dp, end = 16.dp)
+                .semantics { heading() }
+                .testTag("dueDateHeaderText-${reminderViewState.dueLabel}"),
+            text = reminderViewState.dueLabel ?: stringResource(id = R.string.dueLabel),
+            color = colorResource(id = R.color.textDark),
+            fontSize = 14.sp
+        )
+        Spacer(modifier = Modifier.height(2.dp))
+        Text(
+            modifier = Modifier
+                .padding(bottom = 14.dp, start = 16.dp, end = 16.dp)
+                .testTag("dueDateText-$position"),
+            text = reminderViewState.dueDate?.toFormattedString()
+                ?: stringResource(R.string.toDoNoDueDate),
+            color = colorResource(id = R.color.textDarkest),
+            fontSize = 16.sp
+        )
+    }
 }

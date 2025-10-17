@@ -206,5 +206,17 @@ class DiscussionsE2ETest: StudentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the checkpoints' details are displayed correctly (titles, due dates, points possible, grades).")
         assignmentListPage.assertDiscussionCheckpointDetails(2, "No due date", gradeReplyToTopic = "-/10", gradeAdditionalReplies = "-/5")
+
+        Log.d(STEP_TAG, "Select '${discussionWithCheckpointsTitle}' discussion.")
+        assignmentListPage.clickAssignment(discussionWithCheckpointsTitle)
+
+        Log.d(ASSERTION_TAG, "Assert that the Assignment Details Page is displayed properly with the correct toolbar title and subtitle.")
+        assignmentDetailsPage.assertPageObjects()
+        assignmentDetailsPage.assertDisplayToolbarTitle()
+        assignmentDetailsPage.assertDisplayToolbarSubtitle(courseName)
+
+        Log.d(ASSERTION_TAG, "Assert that the checkpoints are displayed properly on the Assignment Details Page.")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Reply to topic due","No Due Date")
+        assignmentDetailsPage.assertDiscussionCheckpointDetailsOnDetailsPage("Additional replies (2) due","No Due Date")
     }
 }
