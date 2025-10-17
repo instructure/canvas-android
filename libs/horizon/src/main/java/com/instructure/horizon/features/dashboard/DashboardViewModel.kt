@@ -22,6 +22,7 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -52,7 +53,8 @@ class DashboardViewModel @Inject constructor(
                     is DashboardEvent.RefreshRequested -> {
                         _uiState.update { it.copy(externalShouldRefresh = true) }
                         refresh()
-                        _uiState.update { it.copy(externalShouldRefresh = true) }
+                        delay(50) // Give some time for the refresh to start
+                        _uiState.update { it.copy(externalShouldRefresh = false) }
                     }
                     is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
                 }
