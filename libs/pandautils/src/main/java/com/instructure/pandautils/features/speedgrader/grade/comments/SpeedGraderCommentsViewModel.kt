@@ -356,7 +356,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         }
     }
 
-    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo>, filePaths: List<String>) {
+    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo?>, filePaths: List<String>) {
         _uiState.update { state ->
             state.copy(
                 fileSelectorDialogData = null,
@@ -480,7 +480,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             attemptId = selectedAttemptId,
             mediaCommentId = id
         ).collect { result ->
-            when (result.state) {
+            when (result?.state) {
                 WorkInfo.State.SUCCEEDED -> {
                     fetchedComments.add(
                         SpeedGraderComment(
