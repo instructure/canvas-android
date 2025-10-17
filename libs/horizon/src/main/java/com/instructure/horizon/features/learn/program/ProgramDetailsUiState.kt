@@ -28,8 +28,6 @@ data class ProgramDetailsUiState(
     val programProgressState: ProgramProgressState = ProgramProgressState(courses = emptyList()),
     val navigateToCourseId: Long? = null,
     val onNavigateToCourse: () -> Unit = {},
-    val shouldRefreshDashboard: Boolean = false,
-    val onDashboardRefreshed: () -> Unit = {},
 )
 
 data class ProgramDetailTag(

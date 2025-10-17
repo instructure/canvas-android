@@ -22,18 +22,21 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardViewModel @Inject constructor(
     private val dashboardRepository: DashboardRepository,
-    private val themePrefs: ThemePrefs
+    private val themePrefs: ThemePrefs,
+    private val dashboardEventHandler: DashboardEventHandler
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState())
+    private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -42,6 +45,20 @@ class DashboardViewModel @Inject constructor(
             loadLogo()
         } catch {
 
+        }
+
+        viewModelScope.launch {
+            dashboardEventHandler.events.collect { event ->
+                when (event) {
+                    is DashboardEvent.RefreshRequested -> {
+                        _uiState.update { it.copy(externalShouldRefresh = true) }
+                        refresh()
+                        delay(50) // Give some time for the refresh to start
+                        _uiState.update { it.copy(externalShouldRefresh = false) }
+                    }
+                    is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
+                }
+            }
         }
     }
 
@@ -66,6 +83,26 @@ class DashboardViewModel @Inject constructor(
                     unreadNotifications = unreadNotifications
                 )
             )
+        }
+    }
+
+    fun refresh() {
+        viewModelScope.tryLaunch {
+            loadUnreadCount()
+        } catch {
+
+        }
+    }
+
+    private fun showSnackbar(message: String) {
+        _uiState.update {
+            it.copy(snackbarMessage = message)
+        }
+    }
+
+    private fun dismissSnackbar() {
+        _uiState.update {
+            it.copy(snackbarMessage = null)
         }
     }
 }

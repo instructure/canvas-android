@@ -23,6 +23,8 @@ import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.learn.LearnEvent
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.horizonui.organisms.cards.ModuleHeaderStateMapper
 import com.instructure.horizon.horizonui.organisms.cards.ModuleItemCardStateMapper
 import com.instructure.horizon.horizonui.platform.LoadingState
@@ -32,6 +34,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -40,6 +43,7 @@ class CourseProgressViewModel @Inject constructor(
     private val repository: CourseProgressRepository,
     private val moduleHeaderStateMapper: ModuleHeaderStateMapper,
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
+    private val learnEventHandler: LearnEventHandler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         CourseProgressUiState(
@@ -50,6 +54,16 @@ class CourseProgressViewModel @Inject constructor(
         )
     )
     val uiState = _uiState.asStateFlow()
+
+    init {
+        viewModelScope.launch {
+            learnEventHandler.events.collect { event ->
+                when (event) {
+                    is LearnEvent.RefreshRequested -> refresh()
+                }
+            }
+        }
+    }
 
     fun loadState(courseId: Long) {
         _uiState.update {

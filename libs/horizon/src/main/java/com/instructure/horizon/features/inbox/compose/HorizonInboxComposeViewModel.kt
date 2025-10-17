@@ -25,6 +25,8 @@ import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.inbox.InboxEvent
+import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -36,13 +38,15 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
 @HiltViewModel
 class HorizonInboxComposeViewModel @Inject constructor(
     private val repository: HorizonInboxComposeRepository,
-    @ApplicationContext private val context: Context
+    @ApplicationContext private val context: Context,
+    private val inboxEventHandler: InboxEventHandler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(
         HorizonInboxComposeUiState(
@@ -150,6 +154,14 @@ class HorizonInboxComposeViewModel @Inject constructor(
                 isBulkMessage = uiState.value.isSendIndividually || uiState.value.selectedRecipients.size >= 100
             )
             repository.invalidateConversationListCachedResponse()
+
+            viewModelScope.launch {
+                inboxEventHandler.postEvent(
+                    InboxEvent.ConversationCreated(
+                        context.getString(R.string.inboxListConversationCreatedMessage)
+                    )
+                )
+            }
 
             _uiState.update { it.copy(isSendLoading = false) }
             onFinished()

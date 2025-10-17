@@ -87,7 +87,6 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.AiAssistantScreen
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
-import com.instructure.horizon.features.dashboard.DASHBOARD_REFRESH
 import com.instructure.horizon.features.moduleitemsequence.content.LockedContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentContentScreen
 import com.instructure.horizon.features.moduleitemsequence.content.assessment.AssessmentViewModel
@@ -132,8 +131,6 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.orDefault
 import kotlinx.coroutines.launch
 import kotlin.math.abs
-
-const val SHOULD_REFRESH_LEARN_SCREEN = "shouldRefreshLearnScreen"
 
 @Composable
 fun ModuleItemSequenceScreen(mainNavController: NavHostController, uiState: ModuleItemSequenceUiState) {
@@ -290,15 +287,6 @@ private fun ModuleItemSequenceContent(
                 .padding(top = moduleHeaderHeight)
         ) {
             if (uiState.currentPosition != -1) {
-                val homeEntry =
-                    remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
-                LaunchedEffect(uiState.shouldRefreshPreviousScreen) {
-                    if (uiState.shouldRefreshPreviousScreen) {
-                        homeEntry.savedStateHandle[DASHBOARD_REFRESH] = true
-                        homeEntry.savedStateHandle[SHOULD_REFRESH_LEARN_SCREEN] = true
-                    }
-                }
-
                 val pagerState = rememberPagerState(initialPage = uiState.currentPosition, pageCount = { uiState.items.size })
                 var previousPosition by rememberSaveable { mutableStateOf(uiState.currentPosition) }
                 LaunchedEffect(key1 = uiState.currentPosition) {

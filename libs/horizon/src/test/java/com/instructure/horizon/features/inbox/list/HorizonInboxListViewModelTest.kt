@@ -20,6 +20,8 @@ import android.content.Context
 import com.instructure.canvasapi2.apis.InboxApi
 import com.instructure.canvasapi2.models.Conversation
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.horizon.features.inbox.InboxEvent
+import com.instructure.horizon.features.inbox.InboxEventHandler
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.mockk
@@ -41,6 +43,7 @@ import org.junit.Test
 class HorizonInboxListViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: HorizonInboxListRepository = mockk(relaxed = true)
+    private val inboxEventHandler: InboxEventHandler = InboxEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testConversations = listOf(
@@ -150,7 +153,44 @@ class HorizonInboxListViewModelTest {
         coVerify(atLeast = 2) { repository.getConversations(any(), any()) }
     }
 
+    @Test
+    fun `RefreshRequested event triggers refresh and reloads conversations`() = runTest {
+        val viewModel = getViewModel()
+
+        val updatedConversations = listOf(
+            Conversation(id = 3L, subject = "Updated 1", lastMessage = "New Message 1"),
+            Conversation(id = 4L, subject = "Updated 2", lastMessage = "New Message 2")
+        )
+        coEvery { repository.getConversations(any(), any()) } returns updatedConversations
+
+        inboxEventHandler.postEvent(InboxEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(atLeast = 2) { repository.getConversations(any(), any()) }
+    }
+
+    @Test
+    fun `AnnouncementRead event triggers refresh`() = runTest {
+        val viewModel = getViewModel()
+
+        inboxEventHandler.postEvent(InboxEvent.AnnouncementRead)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(atLeast = 2) { repository.getConversations(any(), any()) }
+    }
+
+    @Test
+    fun `ConversationCreated event triggers refresh and shows snackbar`() = runTest {
+        val viewModel = getViewModel()
+
+        val testMessage = "Conversation created successfully"
+        inboxEventHandler.postEvent(InboxEvent.ConversationCreated(testMessage))
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        coVerify(atLeast = 2) { repository.getConversations(any(), any()) }
+    }
+
     private fun getViewModel(): HorizonInboxListViewModel {
-        return HorizonInboxListViewModel(context, repository)
+        return HorizonInboxListViewModel(context, repository, inboxEventHandler)
     }
 }

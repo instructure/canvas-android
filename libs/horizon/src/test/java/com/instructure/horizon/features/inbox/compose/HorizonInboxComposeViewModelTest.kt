@@ -20,6 +20,7 @@ import android.content.Context
 import androidx.compose.ui.text.input.TextFieldValue
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
+import com.instructure.horizon.features.inbox.InboxEventHandler
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachment
 import com.instructure.horizon.features.inbox.attachment.HorizonInboxAttachmentState
 import io.mockk.coEvery
@@ -46,6 +47,7 @@ import org.junit.Test
 class HorizonInboxComposeViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: HorizonInboxComposeRepository = mockk(relaxed = true)
+    private val inboxEventHandler: InboxEventHandler = InboxEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testCourses = listOf(
@@ -277,6 +279,6 @@ class HorizonInboxComposeViewModelTest {
     }
 
     private fun getViewModel(): HorizonInboxComposeViewModel {
-        return HorizonInboxComposeViewModel(repository, context)
+        return HorizonInboxComposeViewModel(repository, context, inboxEventHandler)
     }
 }

@@ -35,7 +35,6 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.DASHBOARD_REFRESH
 import com.instructure.horizon.features.learn.program.components.CourseCardChipState
 import com.instructure.horizon.features.learn.program.components.CourseCardStatus
 import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
@@ -63,15 +62,6 @@ fun ProgramDetailsScreen(uiState: ProgramDetailsUiState, mainNavController: NavH
         uiState.navigateToCourseId?.let { courseId ->
             onCourseSelected(courseId)
             uiState.onNavigateToCourse()
-        }
-    }
-
-    val homeEntry =
-        remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry(MainNavigationRoute.Home.route) }
-    LaunchedEffect(uiState.shouldRefreshDashboard) {
-        if (uiState.shouldRefreshDashboard) {
-            homeEntry.savedStateHandle[DASHBOARD_REFRESH] = true
-            uiState.onDashboardRefreshed()
         }
     }
 
