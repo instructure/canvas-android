@@ -22,9 +22,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R

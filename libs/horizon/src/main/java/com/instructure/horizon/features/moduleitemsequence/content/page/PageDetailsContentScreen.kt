@@ -30,9 +30,9 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.NoteHighlightedDataRange
-import com.instructure.canvasapi2.managers.NoteHighlightedDataTextPosition
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataRange
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedDataTextPosition
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.notebook.common.webview.ComposeNotesHighlightingCanvasWebView
 import com.instructure.horizon.features.notebook.common.webview.NotesCallback

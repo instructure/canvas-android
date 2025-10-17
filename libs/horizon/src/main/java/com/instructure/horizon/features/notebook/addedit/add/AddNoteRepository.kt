@@ -16,8 +16,8 @@
  */
 package com.instructure.horizon.features.notebook.addedit.add
 
-import com.instructure.canvasapi2.managers.NoteHighlightedData
-import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import javax.inject.Inject
 

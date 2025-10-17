@@ -16,32 +16,40 @@
  */
 package com.instructure.horizon.interaction.features.dashboard
 
-import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
-import com.instructure.canvas.espresso.mockcanvas.fakes.FakeJourneyApiManager
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addItemToModule
 import com.instructure.canvas.espresso.mockcanvas.addModuleToCourse
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetWidgetsManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
-import com.instructure.canvasapi2.di.graphql.JourneyApiManagerModule
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
+import com.instructure.canvasapi2.di.graphql.JourneyModule
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.canvasapi2.models.Page
 import com.instructure.horizon.espresso.HorizonTest
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(GetCoursesModule::class, JourneyApiManagerModule::class)
+@UninstallModules(GetCoursesModule::class, JourneyModule::class)
 class HorizonDashboardInteractionTest: HorizonTest() {
     private val fakeGetHorizonCourseManager = FakeGetHorizonCourseManager()
-    private val fakeJourneyApiManager = FakeJourneyApiManager()
+    private val fakeGetProgramsManager = FakeGetProgramsManager()
+    private val fakeGetWidgetsManager = FakeGetWidgetsManager()
 
     @BindValue
     @JvmField
-    val journeyApiManager: JourneyApiManager = fakeJourneyApiManager
+    val getProgramsManager: GetProgramsManager = fakeGetProgramsManager
+
+    @BindValue
+    @JvmField
+    val getWidgetsManager: GetWidgetsManager = fakeGetWidgetsManager
 
     @BindValue
     @JvmField
@@ -64,10 +72,11 @@ class HorizonDashboardInteractionTest: HorizonTest() {
         val token = data.tokenFor(student)!!
         tokenLogin(data.domain, token, student)
 
-        dashboardPage.assertNotStartedProgramDisplayed(fakeJourneyApiManager.getPrograms()[1].name)
+        val programs = runBlocking { fakeGetProgramsManager.getPrograms(false) }
+        dashboardPage.assertNotStartedProgramDisplayed(programs[1].name)
         dashboardPage.assertCourseCardDisplayed(
             course1.name,
-            listOf(fakeJourneyApiManager.getPrograms()[0].name),
+            listOf(programs[0].name),
             fakeGetHorizonCourseManager.getCourses().first().progress,
             moduleItem1.title
         )

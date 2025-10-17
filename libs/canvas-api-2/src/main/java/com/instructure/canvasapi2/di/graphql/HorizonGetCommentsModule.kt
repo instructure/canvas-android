@@ -17,7 +17,7 @@ package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.DefaultApolloClient
-import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

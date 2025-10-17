@@ -16,11 +16,11 @@
  */
 package com.instructure.horizon.features.learn
 
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
@@ -35,7 +35,7 @@ import org.junit.Test
 
 class LearnRepositoryTest {
     private val horizonGetCoursesManager: HorizonGetCoursesManager = mockk(relaxed = true)
-    private val journeyApiManager: JourneyApiManager = mockk(relaxed = true)
+    private val getProgramsManager: GetProgramsManager = mockk(relaxed = true)
     private val apiPrefs: ApiPrefs = mockk(relaxed = true)
 
     private val userId = 1L
@@ -48,8 +48,18 @@ class LearnRepositoryTest {
     @Test
     fun `Test successful courses with progress retrieval`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseSyllabus = "", progress = 50.0),
-            CourseWithProgress(courseId = 2L, courseName = "Course 2", courseSyllabus = "", progress = 75.0)
+            CourseWithProgress(
+                courseId = 1L,
+                courseName = "Course 1",
+                courseSyllabus = "",
+                progress = 50.0
+            ),
+            CourseWithProgress(
+                courseId = 2L,
+                courseName = "Course 2",
+                courseSyllabus = "",
+                progress = 75.0
+            )
         )
         coEvery { horizonGetCoursesManager.getCoursesWithProgress(userId, false) } returns DataResult.Success(courses)
 
@@ -88,7 +98,7 @@ class LearnRepositoryTest {
                 variant = ProgramVariantType.NON_LINEAR,
             )
         )
-        coEvery { journeyApiManager.getPrograms(false) } returns programs
+        coEvery { getProgramsManager.getPrograms(false) } returns programs
 
         val result = getRepository().getPrograms(false)
 
@@ -121,6 +131,6 @@ class LearnRepositoryTest {
     }
 
     private fun getRepository(): LearnRepository {
-        return LearnRepository(horizonGetCoursesManager, journeyApiManager, apiPrefs)
+        return LearnRepository(horizonGetCoursesManager, getProgramsManager, apiPrefs)
     }
 }

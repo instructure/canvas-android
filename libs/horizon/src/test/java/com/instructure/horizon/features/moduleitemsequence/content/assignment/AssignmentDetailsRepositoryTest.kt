@@ -18,7 +18,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment
 
 import com.instructure.canvasapi2.apis.AssignmentAPI
 import com.instructure.canvasapi2.apis.OAuthAPI
-import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.User

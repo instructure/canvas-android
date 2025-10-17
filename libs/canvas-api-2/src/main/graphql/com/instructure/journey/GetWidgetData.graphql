@@ -1,0 +1,18 @@
+query GetWidgetData(
+    $widgetType: String!
+    $dataScope: String!
+    $timeSpan: TimeSpanInput!
+    $canvasAccountId: String
+    $queryParams: WidgetDataFiltersInput
+) {
+    widgetData(
+        widgetType: $widgetType
+        dataScope: $dataScope
+        timeSpan: $timeSpan
+        canvasAccountId: $canvasAccountId
+        queryParams: $queryParams
+    ) {
+        data
+        lastModifiedDate
+    }
+}

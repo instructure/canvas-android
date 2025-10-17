@@ -18,7 +18,7 @@ package com.instructure.horizon.features.moduleitemsequence.content.page
 
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.apis.PageAPI
-import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.canvasapi2.models.AuthenticatedSession
 import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.utils.DataResult

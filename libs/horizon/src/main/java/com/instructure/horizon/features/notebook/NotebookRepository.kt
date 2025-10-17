@@ -17,7 +17,7 @@
 package com.instructure.horizon.features.notebook
 
 import com.apollographql.apollo.api.Optional
-import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.horizon.features.notebook.common.model.NotebookType
 import com.instructure.redwood.QueryNotesQuery
 import com.instructure.redwood.type.LearningObjectFilter

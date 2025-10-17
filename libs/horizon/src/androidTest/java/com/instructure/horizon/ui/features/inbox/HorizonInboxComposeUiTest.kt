@@ -117,7 +117,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("Math 101")
+        composeTestRule.onNodeWithText("Math 101", useUnmergedTree = true)
             .assertIsDisplayed()
     }
 
@@ -193,7 +193,7 @@ class HorizonInboxComposeUiTest {
             HorizonInboxComposeScreen(uiState, pickerState, rememberNavController())
         }
 
-        composeTestRule.onNodeWithText("Please select a course")
+        composeTestRule.onNodeWithText("Please select a course", useUnmergedTree = true)
             .assertIsDisplayed()
         composeTestRule.onNodeWithText("Please select at least one recipient")
             .assertIsDisplayed()

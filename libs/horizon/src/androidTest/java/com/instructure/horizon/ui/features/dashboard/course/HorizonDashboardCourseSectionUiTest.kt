@@ -101,8 +101,8 @@ class HorizonDashboardCourseSectionUiTest {
         composeTestRule.onNodeWithText("Program details").assertExists().assertHasClickAction()
 
         composeTestRule.onNodeWithText("Course 1").performScrollTo().assertExists()
-        composeTestRule.onNodeWithText("Program 11", true).assertExists().assertHasClickAction()
-        composeTestRule.onNodeWithText("Program 12", true).assertExists().assertHasClickAction()
+        composeTestRule.onNodeWithText("Program 11", true).assertExists()
+        composeTestRule.onNodeWithText("Program 12", true).assertExists()
         composeTestRule.onNodeWithText("Module Item 1").assertExists().assertHasClickAction()
         composeTestRule.onNodeWithText("5 min").assertExists().assertHasClickAction()
         composeTestRule.onNodeWithText("Page").assertExists().assertHasClickAction()

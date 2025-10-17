@@ -15,7 +15,7 @@
  */
 package com.instructure.horizon.features.moduleitemsequence.content.page
 
-import com.instructure.canvasapi2.managers.NoteHighlightedData
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.NoteHighlightedData
 import com.instructure.horizon.features.notebook.common.model.Note
 import com.instructure.horizon.horizonui.platform.LoadingState
 

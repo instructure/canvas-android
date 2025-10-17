@@ -21,8 +21,8 @@ import android.text.format.DateFormat
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.work.WorkManager
 import androidx.work.WorkRequest
-import com.instructure.canvasapi2.managers.Comment
-import com.instructure.canvasapi2.managers.CommentsData
+import com.instructure.canvasapi2.managers.graphql.horizon.Comment
+import com.instructure.canvasapi2.managers.graphql.horizon.CommentsData
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult

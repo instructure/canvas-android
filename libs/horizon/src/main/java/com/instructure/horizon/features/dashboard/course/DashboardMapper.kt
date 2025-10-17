@@ -18,7 +18,7 @@ package com.instructure.horizon.features.dashboard.course
 
 import android.content.Context
 import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.canvasapi2.managers.graphql.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction

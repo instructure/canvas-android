@@ -11,6 +11,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Button
@@ -24,7 +25,7 @@ fun DashboardCourseCardError(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DashboardCourseCard(modifier) {
+    DashboardCard(modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

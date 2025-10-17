@@ -1,0 +1,16 @@
+query GetWidgetByTypeAndUser(
+    $userAccountId: String!
+    $type: String!
+) {
+    widgetByTypeAndUser(
+        userAccountId: $userAccountId
+        type: $type
+    ) {
+        id
+        name
+        type
+        position
+        createdAt
+        updatedAt
+    }
+}

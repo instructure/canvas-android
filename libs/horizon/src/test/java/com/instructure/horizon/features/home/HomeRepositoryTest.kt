@@ -18,8 +18,8 @@ package com.instructure.horizon.features.home
 
 import com.instructure.canvasapi2.apis.ThemeAPI
 import com.instructure.canvasapi2.apis.UserAPI
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -87,8 +87,18 @@ class HomeRepositoryTest {
     @Test
     fun `Test successful courses retrieval`() = runTest {
         val courses = listOf(
-            CourseWithProgress(courseId = 1L, courseName = "Course 1", courseSyllabus = "", progress = 50.0),
-            CourseWithProgress(courseId = 2L, courseName = "Course 2", courseSyllabus = "", progress = 75.0)
+            CourseWithProgress(
+                courseId = 1L,
+                courseName = "Course 1",
+                courseSyllabus = "",
+                progress = 50.0
+            ),
+            CourseWithProgress(
+                courseId = 2L,
+                courseName = "Course 2",
+                courseSyllabus = "",
+                progress = 75.0
+            )
         )
         coEvery { getCoursesManager.getCoursesWithProgress(userId, false) } returns DataResult.Success(courses)
 
