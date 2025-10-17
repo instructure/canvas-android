@@ -215,6 +215,209 @@ class CheckpointDaoTest {
         assertEquals("2025-10-10T00:00:00Z", entity.unlockAt)
     }
 
+    @Test
+    fun testFindByCourseIdWithModuleItem() = runTest {
+        setupCourseAndModule(1L, 100L)
+
+        val checkpoint1 = CheckpointEntity(
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        val checkpoint2 = CheckpointEntity(
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_entry",
+            pointsPossible = 5.0,
+            dueAt = "2025-10-20T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        checkpointDao.insertAll(listOf(checkpoint1, checkpoint2))
+
+        val result = checkpointDao.findByCourseIdWithModuleItem(1L)
+
+        assertEquals(2, result.size)
+        assertTrue(result.all { it.courseId == 1L })
+        assertTrue(result.all { it.moduleItemId == 100L })
+    }
+
+    @Test
+    fun testFindByCourseIdWithModuleItemFiltersNullModuleItemIds() = runTest {
+        setupAssignment(1L, 1L)
+
+        val checkpointWithAssignment = CheckpointEntity(
+            assignmentId = 1L,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = null,
+            courseId = 1L
+        )
+
+        checkpointDao.insert(checkpointWithAssignment)
+
+        val result = checkpointDao.findByCourseIdWithModuleItem(1L)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun testFindByCourseIdWithModuleItemFiltersOtherCourses() = runTest {
+        setupCourseAndModule(1L, 100L)
+        setupCourseAndModule(2L, 200L)
+
+        val checkpoint1 = CheckpointEntity(
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 5.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        val checkpoint2 = CheckpointEntity(
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 10.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 200L,
+            courseId = 2L
+        )
+
+        checkpointDao.insertAll(listOf(checkpoint1, checkpoint2))
+
+        val result = checkpointDao.findByCourseIdWithModuleItem(1L)
+
+        assertEquals(1, result.size)
+        assertEquals(1L, result[0].courseId)
+        assertEquals(100L, result[0].moduleItemId)
+    }
+
+    @Test
+    fun testToModuleItemCheckpoint() {
+        val checkpointEntity = CheckpointEntity(
+            id = 1,
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 10.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        val moduleItemCheckpoint = checkpointEntity.toModuleItemCheckpoint()
+
+        assertEquals("reply_to_topic", moduleItemCheckpoint.tag)
+        assertEquals(10.0, moduleItemCheckpoint.pointsPossible, 0.01)
+        assertTrue(moduleItemCheckpoint.dueAt != null)
+    }
+
+    @Test
+    fun testToModuleItemCheckpointWithNullDueAt() {
+        val checkpointEntity = CheckpointEntity(
+            id = 1,
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 10.0,
+            dueAt = null,
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        val moduleItemCheckpoint = checkpointEntity.toModuleItemCheckpoint()
+
+        assertEquals("reply_to_topic", moduleItemCheckpoint.tag)
+        assertEquals(10.0, moduleItemCheckpoint.pointsPossible, 0.01)
+        assertEquals(null, moduleItemCheckpoint.dueAt)
+    }
+
+    @Test
+    fun testInsertCheckpointWithModuleItemId() = runTest {
+        setupCourseAndModule(1L, 100L)
+
+        val checkpoint = CheckpointEntity(
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 10.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        checkpointDao.insert(checkpoint)
+
+        val result = checkpointDao.findByCourseIdWithModuleItem(1L)
+
+        assertEquals(1, result.size)
+        assertEquals(100L, result[0].moduleItemId)
+        assertEquals(null, result[0].assignmentId)
+    }
+
+    @Test
+    fun testCascadeDeleteWithModuleItem() = runTest {
+        setupCourseAndModule(1L, 100L)
+
+        val checkpoint = CheckpointEntity(
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 10.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+
+        checkpointDao.insert(checkpoint)
+
+        val moduleItemDao = db.moduleItemDao()
+        val moduleItem = moduleItemDao.findById(100L)!!
+        moduleItemDao.delete(moduleItem)
+
+        val result = checkpointDao.findByCourseIdWithModuleItem(1L)
+
+        assertTrue(result.isEmpty())
+    }
+
     private suspend fun setupAssignment(assignmentId: Long, courseId: Long) {
         val courseEntity = CourseEntity(Course(id = courseId))
         courseDao.insert(courseEntity)
@@ -227,5 +430,24 @@ class CheckpointDaoTest {
             null, null, null, null
         )
         assignmentDao.insert(assignmentEntity)
+    }
+
+    private suspend fun setupCourseAndModule(courseId: Long, moduleItemId: Long) {
+        val courseEntity = CourseEntity(Course(id = courseId))
+        courseDao.insert(courseEntity)
+
+        val moduleObjectDao = db.moduleObjectDao()
+        val moduleObjectEntity = com.instructure.pandautils.room.offline.entities.ModuleObjectEntity(
+            com.instructure.canvasapi2.models.ModuleObject(id = courseId, name = "Test Module"),
+            courseId
+        )
+        moduleObjectDao.insert(moduleObjectEntity)
+
+        val moduleItemDao = db.moduleItemDao()
+        val moduleItemEntity = com.instructure.pandautils.room.offline.entities.ModuleItemEntity(
+            com.instructure.canvasapi2.models.ModuleItem(id = moduleItemId),
+            moduleId = courseId
+        )
+        moduleItemDao.insert(moduleItemEntity)
     }
 }

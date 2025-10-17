@@ -38,6 +38,7 @@ import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.StudioApi
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
 import com.instructure.pandautils.features.offline.sync.AggregateProgressObserver
@@ -45,6 +46,7 @@ import com.instructure.pandautils.features.offline.sync.CourseSync
 import com.instructure.pandautils.features.offline.sync.FileSync
 import com.instructure.pandautils.features.offline.sync.HtmlParser
 import com.instructure.pandautils.features.offline.sync.StudioSync
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -152,7 +154,9 @@ class OfflineSyncModule {
         customGradeStatusDao: CustomGradeStatusDao,
         customGradeStatusesManager: CustomGradeStatusesManager,
         plannerApi: PlannerAPI.PlannerInterface,
-        plannerItemDao: PlannerItemDao
+        plannerItemDao: PlannerItemDao,
+        checkpointDao: CheckpointDao,
+        moduleManager: ModuleManager
     ): CourseSync {
         return CourseSync(
             courseApi,
@@ -192,7 +196,9 @@ class OfflineSyncModule {
             fileSync,
             customGradeStatusDao,
             customGradeStatusesManager,
-            plannerItemDao
+            plannerItemDao,
+            checkpointDao,
+            moduleManager
         )
     }
 

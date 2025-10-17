@@ -27,6 +27,8 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.crashlytics.FirebaseCrashlytics
+import com.instructure.canvasapi2.managers.graphql.ModuleItemCheckpoint
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
@@ -63,16 +65,32 @@ open class ModuleListRecyclerAdapter(
     private val repository: ModuleListRepository,
     private val lifecycleScope: CoroutineScope,
     private val adapterToFragmentCallback: ModuleAdapterToFragmentCallback?
-) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(context, ModuleObject::class.java, ModuleItem::class.java) {
+) : ExpandableRecyclerAdapter<ModuleObject, ModuleItem, RecyclerView.ViewHolder>(
+    context,
+    ModuleObject::class.java,
+    ModuleItem::class.java
+) {
 
     private var initialDataJob: Job? = null
     private var moduleObjectJob: Job? = null
 
     private val moduleFromNetworkOrDb = HashMap<Long, Boolean>()
     private var courseSettings: CourseSettings? = null
+    private var moduleItemCheckpointsMap: Map<String, List<ModuleItemCheckpoint>> = emptyMap()
 
     /* For testing purposes only */
-    protected constructor(context: Context, repository: ModuleListRepository, lifecycleScope: CoroutineScope) : this(CanvasContext.defaultCanvasContext(), context, false, repository, lifecycleScope, null) // Callback not needed for testing, cast to null
+    protected constructor(
+        context: Context,
+        repository: ModuleListRepository,
+        lifecycleScope: CoroutineScope
+    ) : this(
+        CanvasContext.defaultCanvasContext(),
+        context,
+        false,
+        repository,
+        lifecycleScope,
+        null
+    ) // Callback not needed for testing, cast to null
 
     init {
         viewHolderHeaderClicked = object : ViewHolderHeaderClicked<ModuleObject> {
@@ -113,9 +131,12 @@ open class ModuleListRecyclerAdapter(
             val courseColor = courseContext.color
             val groupItemCount = getGroupItemCount(moduleObject)
             val itemPosition = storedIndexOfItem(moduleObject, moduleItem)
+            val checkpoints = moduleItemCheckpointsMap[moduleItem.id.toString()]
 
-            (holder as ModuleViewHolder).bind(moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
-                    itemPosition == 0, itemPosition == groupItemCount - 1, courseSettings?.restrictQuantitativeData.orDefault())
+            (holder as ModuleViewHolder).bind(
+                moduleObject, moduleItem, context, adapterToFragmentCallback, courseColor,
+                itemPosition == 0, itemPosition == groupItemCount - 1, courseSettings?.restrictQuantitativeData.orDefault(), checkpoints
+            )
         }
     }
 
@@ -149,6 +170,16 @@ open class ModuleListRecyclerAdapter(
         initialDataJob?.cancel()
         collapseAll()
         super.refresh()
+    }
+
+    private suspend fun fetchModuleItemCheckpoints() {
+        try {
+            val checkpoints = repository.getModuleItemCheckpoints(courseContext.id.toString(), true)
+            moduleItemCheckpointsMap = checkpoints.associate { it.moduleItemId to it.checkpoints }
+        } catch (e: Exception) {
+            FirebaseCrashlytics.getInstance().recordException(e)
+            moduleItemCheckpointsMap = emptyMap()
+        }
     }
 
     // region Expandable Callbacks
@@ -198,7 +229,10 @@ open class ModuleListRecyclerAdapter(
         dialog.setContentView(R.layout.progress_dialog)
         val currentColor = courseContext.color
 
-        (dialog.findViewById<View>(R.id.progressBar) as ProgressBar).indeterminateDrawable.setColorFilter(currentColor, PorterDuff.Mode.SRC_ATOP)
+        (dialog.findViewById<View>(R.id.progressBar) as ProgressBar).indeterminateDrawable.setColorFilter(
+            currentColor,
+            PorterDuff.Mode.SRC_ATOP
+        )
         return dialog
     }
 
@@ -266,7 +300,8 @@ open class ModuleListRecyclerAdapter(
             if (failedResult.response != null
                 && errorCode == 504
                 && APIHelper.isCachedResponse(failedResult.response!!)
-                && !Utils.isNetworkAvailable(context)) {
+                && !Utils.isNetworkAvailable(context)
+            ) {
                 expandGroup(moduleObject, isNotifyGroupChange)
             }
         }
@@ -324,7 +359,7 @@ open class ModuleListRecyclerAdapter(
                     }
                 }
             }
-            if(!shouldExhaustPagination || result.linkHeaders.nextUrl == null) {
+            if (!shouldExhaustPagination || result.linkHeaders.nextUrl == null) {
                 // If we should exhaust pagination wait until we are done exhausting pagination
                 adapterToFragmentCallback?.onRefreshFinished()
             }
@@ -338,6 +373,7 @@ open class ModuleListRecyclerAdapter(
         initialDataJob = lifecycleScope.tryLaunch {
             val tabs = repository.getTabs(courseContext, isRefresh)
             courseSettings = repository.loadCourseSettings(courseContext.id, isRefresh)
+            fetchModuleItemCheckpoints()
 
             // We only want to show modules if its a course nav option OR set to as the homepage
             if (tabs.find { it.tabId == "modules" } != null || (courseContext as Course).homePage?.apiString == "modules") {
@@ -376,9 +412,10 @@ open class ModuleListRecyclerAdapter(
         }
 
         if (moduleObject.state != null &&
-                moduleObject.state == ModuleObject.State.Locked.apiString &&
-                getGroupItemCount(moduleObject) > 0 &&
-                getItem(moduleObject, 0)?.type == ModuleObject.State.UnlockRequirements.apiString) {
+            moduleObject.state == ModuleObject.State.Locked.apiString &&
+            getGroupItemCount(moduleObject) > 0 &&
+            getItem(moduleObject, 0)?.type == ModuleObject.State.UnlockRequirements.apiString
+        ) {
 
             val reqs = StringBuilder()
             val ids = moduleObject.prerequisiteIds
