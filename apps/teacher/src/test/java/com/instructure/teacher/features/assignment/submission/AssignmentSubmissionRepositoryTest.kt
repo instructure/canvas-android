@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.EnrollmentAPI
 import com.instructure.canvasapi2.apis.SectionAPI
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Enrollment
 import com.instructure.canvasapi2.models.GradeableStudent
@@ -49,12 +50,13 @@ class AssignmentSubmissionRepositoryTest {
     private val assignmentApi: AssignmentAPI.AssignmentInterface = mockk(relaxed = true)
     private val sectionApi: SectionAPI.SectionsInterface = mockk(relaxed = true)
     private val customGradeStatusesManager: CustomGradeStatusesManager = mockk(relaxed = true)
+    private val differentiationTagsManager: DifferentiationTagsManager = mockk(relaxed = true)
 
     private lateinit var repository: AssignmentSubmissionRepository
 
     @Before
     fun setup() {
-        repository = AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi, customGradeStatusesManager)
+        repository = AssignmentSubmissionRepository(assignmentApi, enrollmentApi, courseApi, sectionApi, customGradeStatusesManager, differentiationTagsManager)
 
         coEvery {
             sectionApi.getFirstPageSectionsList(any(), any())

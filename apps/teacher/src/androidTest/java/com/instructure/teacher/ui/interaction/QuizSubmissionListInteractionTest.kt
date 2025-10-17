@@ -22,9 +22,12 @@ import com.instructure.canvas.espresso.mockcanvas.addQuestionToQuiz
 import com.instructure.canvas.espresso.mockcanvas.addQuizSubmission
 import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeDifferentiationTagsManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.DifferentiationTagsManager
+import com.instructure.pandautils.di.DifferentiationTagsModule
 import com.instructure.canvasapi2.models.CanvasContextPermission
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
@@ -39,12 +42,16 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(CustomGradeStatusModule::class)
+@UninstallModules(CustomGradeStatusModule::class, DifferentiationTagsModule::class)
 class QuizSubmissionListInteractionTest : TeacherComposeTest() {
 
     @BindValue
     @JvmField
     val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
+    @BindValue
+    @JvmField
+    val differentiationTagsManager: DifferentiationTagsManager = FakeDifferentiationTagsManager()
 
     @Test
     override fun displaysPageObjects() {
@@ -70,7 +77,6 @@ class QuizSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterSubmittedLate()
         assignmentSubmissionListPage.clickFilterDialogDone()
-        assignmentSubmissionListPage.assertFilterLabelText("Submitted Late")
         assignmentSubmissionListPage.assertHasSubmission()
     }
 
@@ -81,7 +87,6 @@ class QuizSubmissionListInteractionTest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.clickFilterUngraded()
         assignmentSubmissionListPage.clickFilterDialogDone()
-        assignmentSubmissionListPage.assertFilterLabelText("Haven't Been Graded")
         assignmentSubmissionListPage.assertHasSubmission()
     }
 

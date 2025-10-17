@@ -56,8 +56,9 @@ class SpeedGraderPresenter(
     private var discussion: DiscussionTopicHeader?,
     private val repository: AssignmentSubmissionRepository,
     private val filteredSubmissionIds: LongArray,
-    private val filter: SubmissionListFilter,
-    private val filterValue: Double
+    private val selectedFilters: Set<SubmissionListFilter>,
+    private val filterValueAbove: Double?,
+    private val filterValueBelow: Double?
 ) : Presenter<SpeedGraderView> {
 
     private var submissions: List<GradeableStudentSubmission> = emptyList()
@@ -123,19 +124,57 @@ class SpeedGraderPresenter(
             course = data.first
             assignment = data.second
             val allSubmissions = repository.getGradeableStudentSubmissions(assignment, courseId, false)
-            submissions = allSubmissions.filter {
-                when (filter) {
-                    SubmissionListFilter.ALL -> true
-                    SubmissionListFilter.LATE -> it.submission?.let { assignment.getState(it, true) in listOf(
-                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE) } ?: false
-                    SubmissionListFilter.NOT_GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
-                        AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED, AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE) || !it.isGradeMatchesCurrentSubmission } ?: false
-                    SubmissionListFilter.GRADED -> it.submission?.let { assignment.getState(it, true) in listOf(
-                        AssignmentUtils2.ASSIGNMENT_STATE_GRADED, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE, AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING, AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED)  && it.isGradeMatchesCurrentSubmission} ?: false
-                    SubmissionListFilter.ABOVE_VALUE -> it.submission?.let { it.isGraded && it.score >= filterValue } ?: false
-                    SubmissionListFilter.BELOW_VALUE -> it.submission?.let { it.isGraded && it.score < filterValue } ?: false
-                    SubmissionListFilter.MISSING -> it.submission?.workflowState == "unsubmitted" || it.submission == null
+            submissions = allSubmissions.filter { gradeableSubmission ->
+                val submission = gradeableSubmission.submission
+
+                // Status filters (OR logic)
+                val statusMatch = if (selectedFilters.contains(SubmissionListFilter.ALL)) {
+                    true
+                } else {
+                    selectedFilters.any { filter ->
+                        when (filter) {
+                            SubmissionListFilter.LATE -> submission?.let {
+                                assignment.getState(it, true) in listOf(
+                                    AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE,
+                                    AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE
+                                )
+                            } ?: false
+                            SubmissionListFilter.NOT_GRADED -> submission?.let {
+                                assignment.getState(it, true) in listOf(
+                                    AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
+                                    AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
+                                ) || !it.isGradeMatchesCurrentSubmission
+                            } ?: false
+                            SubmissionListFilter.GRADED -> submission?.let {
+                                assignment.getState(it, true) in listOf(
+                                    AssignmentUtils2.ASSIGNMENT_STATE_GRADED,
+                                    AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE,
+                                    AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING,
+                                    AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED
+                                ) && it.isGradeMatchesCurrentSubmission
+                            } ?: false
+                            SubmissionListFilter.MISSING -> submission?.workflowState == "unsubmitted" || submission == null
+                            SubmissionListFilter.SUBMITTED -> submission?.let {
+                                it.workflowState != "unsubmitted" && assignment.getState(it, true) in listOf(
+                                    AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED,
+                                    AssignmentUtils2.ASSIGNMENT_STATE_SUBMITTED_LATE
+                                )
+                            } ?: false
+                            else -> true
+                        }
+                    }
                 }
+
+                // Score filters (AND logic)
+                val aboveMatch = filterValueAbove?.let { threshold ->
+                    submission?.let { it.isGraded && it.score >= threshold } ?: false
+                } ?: true
+
+                val belowMatch = filterValueBelow?.let { threshold ->
+                    submission?.let { it.isGraded && it.score < threshold } ?: false
+                } ?: true
+
+                statusMatch && aboveMatch && belowMatch
             }
 
             if (submissionId > 0 && submissions.isEmpty()) {

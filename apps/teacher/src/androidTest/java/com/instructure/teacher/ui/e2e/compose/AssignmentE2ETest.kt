@@ -133,9 +133,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.filterBySection(course.name)
         assignmentSubmissionListPage.clickFilterDialogDone()
 
-        Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is displayed as we set some filter. Assert that the filter label text is the 'All Submissions' text plus the '${course.name}' course name.")
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
-
         Log.d(STEP_TAG, "Open '${student.name}' student's submission.")
         assignmentSubmissionListPage.clickSubmission(student)
 
@@ -153,9 +150,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.clickFilterButton()
         assignmentSubmissionListPage.filterBySection(course.name)
         assignmentSubmissionListPage.clickFilterDialogDone()
-
-        Log.d(ASSERTION_TAG, "Assert that the 'Clear filter' button is NOT displayed as we just cleared the filter. Assert that the filter label text 'All Submission'.")
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
 
         Log.d(STEP_TAG, "Navigate back to Assignment List Page, open the '${assignment[0].name}' assignment and publish it. Click on Save.")
         Espresso.pressBack()
@@ -627,9 +621,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.filterBySection(secondSection.name)
         assignmentSubmissionListPage.clickFilterDialogDone()
 
-        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions") // I'm not sure if this is right to show this?! Shouldn't we someone display that there is a filter applied for a particular section?
-
         Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student2.name}' student since we applied a filter to the '${secondSection.name}' section which the '${student2.name}' student is in, and the submission of the '${student.name}' student is filtered out because it's not in the '${secondSection.name}' section.")
         assignmentSubmissionListPage.assertHasSubmission(1)
         assignmentSubmissionListPage.assertHasStudentSubmission(student2)
@@ -643,9 +634,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         assignmentSubmissionListPage.filterBySection(firstSection.name)
         assignmentSubmissionListPage.clickFilterDialogDone()
 
-        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions") // I'm not sure if this is right to show this?! Shouldn't we someone display that there is a filter applied for a particular section?
-
         Log.d(ASSERTION_TAG, "Assert that there is 1 submission displayed, and it is for '${student.name}' student since we applied a filter to the '${firstSection.name}' section which the '${student.name}' student is in, and the submission of the '${student2.name}' student is filtered out because it's not in the '${firstSection.name}' section.")
         assignmentSubmissionListPage.assertHasSubmission(1)
         assignmentSubmissionListPage.assertHasStudentSubmission(student)
@@ -657,9 +645,6 @@ class AssignmentE2ETest : TeacherComposeTest() {
         Log.d(STEP_TAG, "Disable filter for '${firstSection.name}' section and click the 'Done' button.")
         assignmentSubmissionListPage.filterBySection(firstSection.name)
         assignmentSubmissionListPage.clickFilterDialogDone()
-
-        Log.d(ASSERTION_TAG, "Assert that the filter label text is the 'All Submissions'.")
-        assignmentSubmissionListPage.assertFilterLabelText("All Submissions")
 
         Log.d(ASSERTION_TAG, "Assert that there are 2 submissions displayed, and they are for '${student.name}' and '${student2.name}' students since we does not apply any section filter yet.")
         assignmentSubmissionListPage.assertHasSubmission(2)

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2024 - present Instructure, Inc.
+ * Copyright (C) 2025 - present Instructure, Inc.
  *
  *     This program is free software: you can redistribute it and/or modify
  *     it under the terms of the GNU General Public License as published by
@@ -14,15 +14,18 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.pandautils.features.speedgrader
+package com.instructure.teacher.features.assignment.submission
 
-enum class SubmissionListFilter {
-    ALL,
-    LATE,
-    MISSING,
-    NOT_GRADED,
-    GRADED,
-    BELOW_VALUE,
-    ABOVE_VALUE,
-    SUBMITTED
+data class DifferentiationTag(
+    val id: String,
+    val name: String,
+    val groupSetName: String?,
+    val userIds: List<String>
+)
+
+enum class SubmissionSortOrder {
+    STUDENT_SORTABLE_NAME,
+    STUDENT_NAME,
+    SUBMISSION_DATE,
+    SUBMISSION_STATUS
 }

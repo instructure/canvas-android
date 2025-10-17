@@ -79,8 +79,9 @@ class SpeedGraderFragment : BaseCanvasFragment() {
     }
 
     companion object {
-        const val FILTER = "filter"
-        const val FILTER_VALUE = "filter_value"
+        const val SELECTED_FILTERS = "selected_filters"
+        const val FILTER_VALUE_ABOVE = "filter_value_above"
+        const val FILTER_VALUE_BELOW = "filter_value_below"
         const val FILTERED_SUBMISSION_IDS = "filtered_submission_ids"
         const val DISCUSSION_ENTRY_ID = "discussion_entry_id"
 
@@ -118,16 +119,18 @@ class SpeedGraderFragment : BaseCanvasFragment() {
             selectedIdx: Int = 0,
             anonymousGrading: Boolean? = null,
             filteredSubmissionIds: LongArray = longArrayOf(),
-            filter: SubmissionListFilter? = null,
-            filterValue: Double = 0.0
+            selectedFilters: Set<SubmissionListFilter> = setOf(SubmissionListFilter.ALL),
+            filterValueAbove: Double? = null,
+            filterValueBelow: Double? = null
         ): Bundle {
             return Bundle().apply {
                 putLong(Const.COURSE_ID, courseId)
                 putLong(Const.ASSIGNMENT_ID, assignmentId)
                 putInt(Const.SELECTED_ITEM, selectedIdx)
                 putBoolean(Const.ANONYMOUS_GRADING, anonymousGrading ?: false)
-                putSerializable(FILTER, filter)
-                putDouble(FILTER_VALUE, filterValue)
+                putSerializable(SELECTED_FILTERS, HashSet(selectedFilters))
+                filterValueAbove?.let { putDouble(FILTER_VALUE_ABOVE, it) }
+                filterValueBelow?.let { putDouble(FILTER_VALUE_BELOW, it) }
                 putLongArray(FILTERED_SUBMISSION_IDS, filteredSubmissionIds)
             }
         }
