@@ -343,7 +343,12 @@ object MediaUploadUtils {
             .create().apply {
                 setOnShowListener {
                     val dialog = it as? AlertDialog
-                    dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColor)
+                    val buttonColorStateList = ViewStyler.makeColorStateList(
+                        buttonColor,
+                        buttonColor,
+                        ThemePrefs.increaseAlpha(buttonColor, 0x61)
+                    )
+                    dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.setTextColor(buttonColorStateList)
                     dialog?.getButton(AlertDialog.BUTTON_NEGATIVE)?.setTextColor(buttonColor)
                     dialog?.getButton(AlertDialog.BUTTON_POSITIVE)?.isEnabled = false
                 }
