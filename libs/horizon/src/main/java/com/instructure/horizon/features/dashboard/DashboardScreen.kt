@@ -64,6 +64,7 @@ import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
+import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -170,6 +171,12 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         .padding(start = 16.dp)
                 ) {
                     DashboardTimeSpentWidget(
+                        shouldRefresh,
+                        refreshStateFlow
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    DashboardSkillOverviewWidget(
+                        homeNavController,
                         shouldRefresh,
                         refreshStateFlow
                     )

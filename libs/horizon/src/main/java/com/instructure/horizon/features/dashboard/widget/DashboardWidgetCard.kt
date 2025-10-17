@@ -56,9 +56,10 @@ fun DashboardWidgetCard(
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
     useMinWidth: Boolean = true,
+    onClick: (() -> Unit)? = null,
     content: @Composable ColumnScope.() -> Unit
 ) {
-    DashboardCard(modifier) {
+    DashboardCard(modifier, onClick) {
         Column(
             modifier = Modifier
                 .padding(24.dp)
