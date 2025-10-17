@@ -17,6 +17,7 @@
 package com.instructure.parentapp.ui.e2e.compose
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -407,6 +408,52 @@ class LoginE2ETest : ParentComposeTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the Canvas Network Page has been displayed.")
         canvasNetworkSignInPage.assertPageObjects()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testWrongDomainE2E() {
+
+        val wrongDomain = "invalid-domain"
+        val validDomain = "mobileqa.beta"
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, courses = 1, parents = 1)
+        val parent = data.parentsList[0]
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG, "Enter non-existent domain: $wrongDomain.instructure.com.")
+        loginFindSchoolPage.enterDomain(wrongDomain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(ASSERTION_TAG, "Assert that the error page is displayed with 'You typed: $wrongDomain.instructure.com' message and the Canvas dinosaur error image.")
+        wrongDomainPage.assertPageObjects()
+        wrongDomainPage.assertYouTypedMessageDisplayed(wrongDomain)
+        wrongDomainPage.assertErrorPageImageDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back from the error page.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Enter valid domain: $validDomain.instructure.com.")
+        loginFindSchoolPage.enterDomain(validDomain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
+        loginSignInPage.loginAs(parent)
+
+        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully after recovering from wrong domain error.")
+        dashboardPage.waitForRender()
+        dashboardPage.assertPageObjects()
+
+        Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
+        leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
     }
 
 }
