@@ -23,9 +23,12 @@ import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardButtonState
+import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardChipState
+import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardImageState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardParentProgramState
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardState
+import com.instructure.horizon.horizonui.molecules.StatusChipColor
 
 internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardState(
     context: Context,
@@ -40,8 +43,14 @@ internal suspend fun List<GetCoursesQuery.Enrollment>.mapToDashboardCourseCardSt
 internal fun List<Program>.mapToDashboardCourseCardState(context: Context,): List<DashboardCourseCardState> {
     return this.map { program ->
         DashboardCourseCardState(
-            title = program.name,
-            description = context.getString(R.string.dashboardNotStartedProgramDescription),
+            chipState = DashboardCourseCardChipState(
+                label = context.getString(R.string.dashboardCourseCardProgramChipLabel),
+                color = StatusChipColor.Grey
+            ),
+            description = context.getString(
+                R.string.dashboardCourseCardProgramDetailsMessage,
+                program.name
+            ),
             buttonState = DashboardCourseCardButtonState(
                 label = context.getString(R.string.dashboardNotStartedProgramDetailsLabel),
                 onClickAction = CardClickAction.NavigateToProgram(program.id),
@@ -69,7 +78,7 @@ private fun GetCoursesQuery.Enrollment.mapCompleted(context: Context, programs: 
                     onClickAction = CardClickAction.NavigateToProgram(program.id)
                 )
             },
-        imageUrl = null,
+        imageState = null,
         title = this.course?.name.orEmpty(),
         description = context.getString(R.string.dashboardCompletedCourseDetails),
         progress = 1.0,
@@ -93,7 +102,10 @@ private suspend fun GetCoursesQuery.Enrollment.mapActive(
                     onClickAction = CardClickAction.NavigateToProgram(program.id)
                 )
             },
-        imageUrl = this.course?.image_download_url,
+        imageState = DashboardCourseCardImageState(
+            imageUrl = this.course?.image_download_url,
+            showPlaceholder = true
+        ),
         title = this.course?.name.orEmpty(),
         description = null,
         progress = this.course?.usersConnection?.nodes?.firstOrNull()?.courseProgression?.requirements?.completionPercentage ?: 0.0,
