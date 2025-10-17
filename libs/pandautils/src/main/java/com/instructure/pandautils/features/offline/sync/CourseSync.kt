@@ -243,8 +243,8 @@ class CourseSync(
     private suspend fun fetchSyllabus(courseId: Long) {
         fetchTab(courseId, Tab.SYLLABUS_ID) {
             val calendarEvents = fetchCalendarEvents(courseId)
-            val assignmentEvents = fetchCalendarAssignments(courseId)
-            val subAssignmentEvents = fetchCalendarSubAssignments(courseId)
+            val assignmentEvents = fetchCalendarAssignments(courseId, CalendarEventAPI.CalendarEventType.ASSIGNMENT)
+            val subAssignmentEvents = fetchCalendarAssignments(courseId, CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT)
             val scheduleItems = mutableListOf<ScheduleItem>()
 
             scheduleItems.addAll(calendarEvents)
@@ -292,29 +292,11 @@ class CourseSync(
         return calendarEvents
     }
 
-    private suspend fun fetchCalendarAssignments(courseId: Long): List<ScheduleItem> {
+    private suspend fun fetchCalendarAssignments(courseId: Long, type: CalendarEventAPI.CalendarEventType): List<ScheduleItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val calendarAssignments = calendarEventApi.getCalendarEvents(
             true,
-            CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
-            null,
-            null,
-            listOf("course_$courseId"),
-            restParams
-        ).depaginate {
-            calendarEventApi.next(it, restParams)
-        }.dataOrThrow
-
-        calendarAssignments.forEach { it.description = parseHtmlContent(it.description, courseId) }
-
-        return calendarAssignments
-    }
-
-    private suspend fun fetchCalendarSubAssignments(courseId: Long): List<ScheduleItem> {
-        val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
-        val calendarAssignments = calendarEventApi.getCalendarEvents(
-            true,
-            CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT.apiName,
+            type.apiName,
             null,
             null,
             listOf("course_$courseId"),
