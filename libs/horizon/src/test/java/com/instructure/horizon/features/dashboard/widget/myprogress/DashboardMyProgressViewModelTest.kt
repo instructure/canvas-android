@@ -16,6 +16,7 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import io.mockk.coEvery
 import io.mockk.coVerify
@@ -43,6 +44,18 @@ class DashboardMyProgressViewModelTest {
 
     @Before
     fun setup() {
+        coEvery { repository.getCourses(any()) } returns listOf(
+            CourseWithProgress(
+                courseId = 1L,
+                courseName = "Course 1",
+                progress = 1.0
+            ),
+            CourseWithProgress(
+                courseId = 2L,
+                courseName = "Course 2",
+                progress = 1.0
+            )
+        )
         Dispatchers.setMain(testDispatcher)
     }
 
@@ -258,5 +271,46 @@ class DashboardMyProgressViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
+    }
+
+    @Test
+    fun `filter widget data for courses that the user is enrolled in`() = runTest {
+        val myProgressData = MyProgressWidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                MyProgressWidgetDataEntry(
+                    courseId = 1L,
+                    courseName = "Course 1",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 5,
+                    moduleCountStarted = 3,
+                    moduleCountLocked = 2,
+                    moduleCountTotal = 10
+                ),
+                MyProgressWidgetDataEntry(
+                    courseId = 3L,
+                    courseName = "Course 3",
+                    userId = 1L,
+                    userUUID = "uuid-1",
+                    userName = "User 1",
+                    userAvatarUrl = null,
+                    userEmail = "user1@example.com",
+                    moduleCountCompleted = 3,
+                    moduleCountStarted = 4,
+                    moduleCountLocked = 5,
+                    moduleCountTotal = 7
+                )
+            )
+        )
+        coEvery { repository.getLearningStatusData(courseId = null, forceNetwork = any()) } returns myProgressData
+        viewModel = DashboardMyProgressViewModel(repository)
+
+        val state = viewModel.uiState.value
+        assertEquals(DashboardItemState.SUCCESS, state.state)
+        assertEquals(5, state.cardState.moduleCountCompleted)
     }
 }

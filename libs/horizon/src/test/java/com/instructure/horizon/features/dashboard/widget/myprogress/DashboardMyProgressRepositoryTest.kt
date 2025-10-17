@@ -16,10 +16,13 @@
  */
 package com.instructure.horizon.features.dashboard.widget.myprogress
 
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.journey.GetWidgetDataQuery
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
@@ -30,14 +33,17 @@ import org.junit.Test
 import java.util.Date
 
 class DashboardMyProgressRepositoryTest {
-
+    private val apiPrefs: ApiPrefs = mockk(relaxed = true)
+    private val getCoursesManager: HorizonGetCoursesManager = mockk(relaxed = true)
     private val getWidgetsManager: GetWidgetsManager = mockk(relaxed = true)
 
     private lateinit var repository: DashboardMyProgressRepository
 
+    private val userId = 1L
     @Before
     fun setup() {
-        repository = DashboardMyProgressRepository(getWidgetsManager)
+        every { apiPrefs.user?.id } returns userId
+        repository = DashboardMyProgressRepository(apiPrefs, getWidgetsManager, getCoursesManager)
     }
 
     @After
