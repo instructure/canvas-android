@@ -52,6 +52,7 @@ data class ScheduleItemEntity(
     val isHidden: Boolean,
     val importantDates: Boolean,
     val assignmentId: Long?,
+    val subAssignmentId: Long?,
     val type: String,
     val itemType: String?,
     val courseId: Long
@@ -73,12 +74,13 @@ data class ScheduleItemEntity(
         scheduleItem.isHidden,
         scheduleItem.importantDates,
         scheduleItem.assignment?.id,
+        scheduleItem.subAssignment?.id,
         scheduleItem.type,
         scheduleItem.itemType?.name,
         courseId
     )
 
-    fun toApiModel(assignmentOverrides: List<AssignmentOverride>?, assignment: Assignment?): ScheduleItem {
+    fun toApiModel(assignmentOverrides: List<AssignmentOverride>?, assignment: Assignment?, subAssignment: Assignment?): ScheduleItem {
         return ScheduleItem(
             itemId = id,
             title = title,
@@ -96,7 +98,8 @@ data class ScheduleItemEntity(
             assignmentOverrides = assignmentOverrides,
             importantDates = importantDates,
             itemType = itemType?.let { ScheduleItem.Type.valueOf(it) } ?: ScheduleItem.Type.TYPE_CALENDAR,
-            assignment = assignment
+            assignment = assignment,
+            subAssignment = subAssignment
         )
     }
 }

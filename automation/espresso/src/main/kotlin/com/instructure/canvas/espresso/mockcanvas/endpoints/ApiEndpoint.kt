@@ -193,7 +193,7 @@ object ApiEndpoint : Endpoint(
                             "assignment" -> data
                                 .assignments
                                 .values
-                                .filter { a -> a.courseId in courseIds }
+                                .filter { a -> a.courseId in courseIds && a.checkpoints.isEmpty() }
                                 .map { a ->
                                     ScheduleItem(
                                         itemId = a.id.toString(),
@@ -204,6 +204,27 @@ object ApiEndpoint : Endpoint(
                                         contextCode = "course_${a.courseId}",
                                         contextName = data.courses[a.courseId]?.name
                                     )
+                                }
+
+                            "sub_assignment" -> data
+                                .assignments
+                                .values
+                                .filter { a -> a.courseId in courseIds && a.checkpoints.isNotEmpty() }
+                                .flatMap { a ->
+                                    a.checkpoints.map { checkpoint ->
+                                        ScheduleItem(
+                                            itemId = checkpoint.tag ?: "",
+                                            title = a.name,
+                                            description = a.description,
+                                            startAt = checkpoint.dueAt,
+                                            assignment = a.copy(
+                                                dueAt = checkpoint.dueAt,
+                                                pointsPossible = checkpoint.pointsPossible ?: a.pointsPossible
+                                            ),
+                                            contextCode = "course_${a.courseId}",
+                                            contextName = data.courses[a.courseId]?.name
+                                        )
+                                    }
                                 }
 
                             // default handler assumes "event" event type

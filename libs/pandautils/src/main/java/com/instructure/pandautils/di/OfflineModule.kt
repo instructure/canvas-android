@@ -452,12 +452,12 @@ class OfflineModule {
     @Provides
     fun provideScheduleItemFacade(
         scheduleItemDao: ScheduleItemDao,
-        assignmentDao: AssignmentDao,
         assignmentOverrideDao: AssignmentOverrideDao,
         scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao,
+        assignmentFacade: AssignmentFacade,
         offlineDatabase: OfflineDatabase
     ): ScheduleItemFacade {
-        return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentDao, offlineDatabase)
+        return ScheduleItemFacade(scheduleItemDao, assignmentOverrideDao, scheduleItemAssignmentOverrideDao, assignmentFacade, offlineDatabase)
     }
 
     @Provides

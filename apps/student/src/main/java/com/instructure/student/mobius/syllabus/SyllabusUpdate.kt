@@ -39,9 +39,13 @@ class SyllabusUpdate : UpdateInit<SyllabusModel, SyllabusEvent, SyllabusEffect>(
             }
             is SyllabusEvent.SyllabusItemClicked -> {
                 val item = model.events!!.dataOrThrow.find { it.itemId == event.itemId }!!
+                val assignment  = item.assignment ?: item.subAssignment
                 Next.dispatch(setOf(
                     when {
-                        item.assignment != null -> SyllabusEffect.ShowAssignmentView(item.assignment!!, model.course!!.dataOrThrow)
+                        assignment != null -> {
+                            val assignmentId = assignment.discussionTopicHeader?.assignmentId?.takeIf { it != 0L } ?: assignment.id
+                            SyllabusEffect.ShowAssignmentView(assignmentId, model.course!!.dataOrThrow)
+                        }
                         else -> SyllabusEffect.ShowScheduleItemView(item, model.course!!.dataOrThrow)
                     }
                 ))

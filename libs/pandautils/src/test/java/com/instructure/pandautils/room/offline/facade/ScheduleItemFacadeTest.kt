@@ -24,11 +24,9 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.AssignmentOverride
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.pandautils.room.offline.OfflineDatabase
-import com.instructure.pandautils.room.offline.daos.AssignmentDao
 import com.instructure.pandautils.room.offline.daos.AssignmentOverrideDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemAssignmentOverrideDao
 import com.instructure.pandautils.room.offline.daos.ScheduleItemDao
-import com.instructure.pandautils.room.offline.entities.AssignmentEntity
 import com.instructure.pandautils.room.offline.entities.AssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemAssignmentOverrideEntity
 import com.instructure.pandautils.room.offline.entities.ScheduleItemEntity
@@ -49,7 +47,7 @@ class ScheduleItemFacadeTest {
     private val scheduleItemDao: ScheduleItemDao = mockk(relaxed = true)
     private val assignmentOverrideDao: AssignmentOverrideDao = mockk(relaxed = true)
     private val scheduleItemAssignmentOverrideDao: ScheduleItemAssignmentOverrideDao = mockk(relaxed = true)
-    private val assignmentDao: AssignmentDao = mockk(relaxed = true)
+    private val assignmentFacade: AssignmentFacade = mockk(relaxed = true)
     private val offlineDatabase: OfflineDatabase = mockk(relaxed = true)
 
     private lateinit var scheduleItemFacade: ScheduleItemFacade
@@ -60,7 +58,7 @@ class ScheduleItemFacadeTest {
             scheduleItemDao,
             assignmentOverrideDao,
             scheduleItemAssignmentOverrideDao,
-            assignmentDao,
+            assignmentFacade,
             offlineDatabase
         )
 
@@ -113,7 +111,7 @@ class ScheduleItemFacadeTest {
             ScheduleItemEntity(scheduleItem, 1L)
         )
 
-        coEvery { assignmentDao.findById(any()) } returns AssignmentEntity(assignment, null, null, null, null)
+        coEvery { assignmentFacade.getAssignmentById(any()) } returns assignment
         coEvery { scheduleItemAssignmentOverrideDao.findByScheduleItemId(any()) } returns listOf(ScheduleItemAssignmentOverrideEntity(1L, "event_1"))
         coEvery { assignmentOverrideDao.findByIds(any()) } returns listOf(AssignmentOverrideEntity(assignmentOverrides.first()))
 
@@ -123,7 +121,7 @@ class ScheduleItemFacadeTest {
 
         coVerify {
             scheduleItemDao.findByItemType(listOf("course_1"), CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName)
-            assignmentDao.findById(1L)
+            assignmentFacade.getAssignmentById(1L)
             scheduleItemAssignmentOverrideDao.findByScheduleItemId("event_1")
             assignmentOverrideDao.findByIds(listOf(1L))
         }

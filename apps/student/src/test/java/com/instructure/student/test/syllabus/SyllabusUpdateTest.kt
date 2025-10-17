@@ -19,6 +19,7 @@ import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.ScheduleItem
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.utils.orDefault
 import com.instructure.student.mobius.syllabus.SyllabusEffect
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.mobius.syllabus.SyllabusModel
@@ -148,7 +149,7 @@ class SyllabusUpdateTest : Assert() {
             .whenEvent(SyllabusEvent.SyllabusItemClicked("0"))
             .then(
                 assertThatNext(
-                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.ShowAssignmentView(events.data[0].assignment!!, course))
+                    matchesEffects<SyllabusModel, SyllabusEffect>(SyllabusEffect.ShowAssignmentView(events.data[0].assignment?.id.orDefault(), course))
                 )
             )
     }

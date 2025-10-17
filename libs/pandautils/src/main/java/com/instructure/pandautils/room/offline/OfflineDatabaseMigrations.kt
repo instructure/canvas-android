@@ -185,5 +185,8 @@ val offlineDatabaseMigrations = arrayOf(
                     "`plannerOverrideMarkedComplete` INTEGER," +
                     "FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON DELETE CASCADE)"
         )
+    },
+    createMigration(7, 8) { database ->
+        database.execSQL("ALTER TABLE `ScheduleItemEntity` ADD COLUMN `subAssignmentId` INTEGER")
     }
 )
