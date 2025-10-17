@@ -24,4 +24,5 @@ object RouterParams {
     const val PREVIEW = "preview"
     const val EXTERNAL_ID = "external_id"
     const val RECENT_ACTIVITY = "view"
+    const val ATTACHMENT_ID = "attachment_id"
 }
