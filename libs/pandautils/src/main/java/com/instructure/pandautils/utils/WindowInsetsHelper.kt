@@ -21,9 +21,11 @@ import android.content.res.Configuration
 import android.view.View
 import android.view.Window
 import androidx.annotation.ColorInt
+import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.core.view.updatePadding
 
 object WindowInsetsHelper {
 
@@ -82,5 +84,55 @@ object WindowInsetsHelper {
     fun showSystemBars(window: Window) {
         val insetsController = WindowInsetsControllerCompat(window, window.decorView)
         insetsController.show(WindowInsetsCompat.Type.systemBars())
+    }
+}
+
+fun View.applyTopSystemBarInsets() {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(top = systemBars.top)
+        insets
+    }
+}
+
+fun View.applyBottomSystemBarInsets() {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(bottom = systemBars.bottom)
+        insets
+    }
+}
+
+fun View.applyHorizontalSystemBarInsets() {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(left = systemBars.left, right = systemBars.right)
+        insets
+    }
+}
+
+fun View.applySystemBarInsets(
+    top: Boolean = false,
+    bottom: Boolean = false,
+    left: Boolean = false,
+    right: Boolean = false,
+    consumed: Boolean = false
+) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, insets ->
+        val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+        view.updatePadding(
+            top = if (top) systemBars.top else view.paddingTop,
+            bottom = if (bottom) systemBars.bottom else view.paddingBottom,
+            left = if (left) systemBars.left else view.paddingLeft,
+            right = if (right) systemBars.right else view.paddingRight
+        )
+        if (consumed) WindowInsetsCompat.CONSUMED else insets
+    }
+}
+
+fun View.doOnApplyWindowInsets(block: (view: View, insets: Insets) -> WindowInsetsCompat) {
+    ViewCompat.setOnApplyWindowInsetsListener(this) { view, windowInsets ->
+        val systemBars = windowInsets.getInsets(WindowInsetsCompat.Type.systemBars())
+        block(view, systemBars)
     }
 }

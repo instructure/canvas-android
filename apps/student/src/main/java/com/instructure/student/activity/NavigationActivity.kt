@@ -43,9 +43,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.MenuItemCompat
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import androidx.core.view.updatePadding
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.lifecycleScope
@@ -366,12 +364,8 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
         canvasLoadingBinding = LoadingCanvasViewBinding.bind(binding.root)
         setContentView(binding.root)
 
-        ViewCompat.setOnApplyWindowInsetsListener(binding.root) { view, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            binding.bottomBar.updatePadding(bottom = systemBars.bottom)
-            binding.bottomBarDivider.updatePadding(bottom = systemBars.bottom)
-            insets
-        }
+        binding.bottomBar.applyBottomSystemBarInsets()
+        binding.bottomBarDivider.applyBottomSystemBarInsets()
 
         val masqueradingUserId: Long = intent.getLongExtra(Const.QR_CODE_MASQUERADE_ID, 0L)
         if (masqueradingUserId != 0L) {
