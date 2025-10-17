@@ -16,6 +16,7 @@
  */
 package com.instructure.canvas.espresso.common.pages.compose
 
+import androidx.compose.ui.test.assertCountEquals
 import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.assertIsNotDisplayed
 import androidx.compose.ui.test.hasAnyDescendant
@@ -71,6 +72,16 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         composeTestRule.waitForIdle()
     }
 
+    fun clickAssignment(assignmentName: String) {
+        composeTestRule.waitForIdle()
+        composeTestRule.onNodeWithTag("assignmentList")
+            .performScrollToNode(hasText(assignmentName))
+
+        composeTestRule.onNodeWithText(assignmentName)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
+
     fun clickQuiz(quiz: QuizApiModel) {
         composeTestRule.onNodeWithTag("assignmentList")
             .performScrollToNode(hasText(quiz.title))
@@ -101,6 +112,10 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
         assertHasAssignmentCommon(assignment.name, assignment.dueAt, needsGradingLabel)
     }
 
+    fun assertHasAssignmentWithCheckpoints(assignmentName: String, dueAtString: String = "No due date", expectedGrade: String? = null) {
+        assertHasAssignmentCommon(assignmentName, dueAtString, expectedGrade, true)
+    }
+
     fun assertAssignmentNotDisplayed(assignmentName: String) {
         onView(withText(assignmentName) + withId(R.id.title) + hasSibling(withId(R.id.description))).check(
             doesNotExist()
@@ -127,24 +142,59 @@ class AssignmentListPage(private val composeTestRule: ComposeTestRule) {
             .performClick()
     }
 
-    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedLabel: String? = null) {
+    fun clickDiscussionCheckpointExpandCollapseIcon(discussionTitle: String) {
+        composeTestRule.onNode(hasTestTag("expandDiscussionCheckpoints") and hasParent(hasAnyDescendant(hasText(discussionTitle))), useUnmergedTree = true)
+            .performClick()
+        composeTestRule.waitForIdle()
+    }
 
-        // Check that either the assignment due date is present, or "No Due Date" is displayed
-        if(assignmentDueAt != null) {
-            composeTestRule.onNode(
-                hasText(assignmentName).and(
-                    hasParent(hasAnyDescendant(hasText("Due ${assignmentDueAt.toDate()!!.toFormattedString()}")))
-                )
-            )
-            .assertIsDisplayed()
+    fun assertDiscussionCheckpointDetails(additionalRepliesCount: Int, dueAtReplyToTopic: String, gradeReplyToTopic: String, dueAtAdditionalReplies: String = dueAtReplyToTopic, gradeAdditionalReplies: String = gradeReplyToTopic) {
+        //'Reply to topic' checkpoint
+        composeTestRule.onNode(hasTestTag("checkpointName") and hasText("Reply to topic"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Reply to topic") and hasText(dueAtReplyToTopic), true).assertIsDisplayed()
+        composeTestRule.onNode( hasTestTag("checkpointGradeText") and hasText(gradeReplyToTopic), useUnmergedTree = true).assertIsDisplayed()
+
+        //'Additional replies' checkpoint
+        composeTestRule.onNode(hasTestTag("checkpointName") and hasText("Additional replies ($additionalRepliesCount)"), useUnmergedTree = true).assertIsDisplayed()
+        composeTestRule.onNode(hasTestTag("checkpointDueDate_Additional replies ($additionalRepliesCount)") and hasText(dueAtAdditionalReplies), true).assertIsDisplayed()
+        composeTestRule.onNode( hasTestTag("checkpointGradeText") and hasText(gradeAdditionalReplies), useUnmergedTree = true).assertIsDisplayed()
+    }
+
+    private fun assertHasAssignmentCommon(assignmentName: String, assignmentDueAt: String?, expectedLabel: String? = null, hasCheckPoints : Boolean = false) {
+
+       // Check if the assignment is a discussion with checkpoints, if yes, we are expecting 2 due dates for the 2 checkpoints.
+       if(hasCheckPoints) {
+            composeTestRule.onAllNodes(
+                hasText("No due date").and(
+                    hasParent(hasAnyDescendant(hasText(assignmentName)))
+                ),
+            true).assertCountEquals(2)
         }
         else {
-            composeTestRule.onNode(
-                hasText(assignmentName).and(
-                    hasParent(hasAnyDescendant(hasText("No due date")))
+           // Check that either the assignment due date is present, or "No Due Date" is displayed
+           if (assignmentDueAt != null) {
+                composeTestRule.onNode(
+                    hasText(assignmentName).and(
+                        hasParent(
+                            hasAnyDescendant(
+                                hasText(
+                                    "Due ${
+                                        assignmentDueAt.toDate()!!.toFormattedString()
+                                    }"
+                                )
+                            )
+                        )
+                    )
                 )
-            )
-            .assertIsDisplayed()
+                    .assertIsDisplayed()
+            } else {
+                composeTestRule.onNode(
+                    hasText(assignmentName).and(
+                        hasParent(hasAnyDescendant(hasText("No due date")))
+                    )
+                )
+                    .assertIsDisplayed()
+            }
         }
 
         retryWithIncreasingDelay(times = 10, maxDelay = 4000, catchBlock = { refresh() }) {
