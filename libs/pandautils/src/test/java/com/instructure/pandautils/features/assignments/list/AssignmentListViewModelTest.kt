@@ -787,6 +787,347 @@ class AssignmentListViewModelTest {
         assertEquals(listOf(assignment2, assignment1), sortedAssignments)
     }
 
+    @Test
+    fun `Test Grading Period filter with DCP checkpoints in different periods`() = runTest {
+        val checkpoint1 = Checkpoint(
+            name = "Reply to topic",
+            tag = Const.REPLY_TO_TOPIC,
+            pointsPossible = 10.0,
+            dueAt = "2025-09-15T12:00:00Z"
+        )
+        val checkpoint2 = Checkpoint(
+            name = "Reply to entry",
+            tag = Const.REPLY_TO_ENTRY,
+            pointsPossible = 5.0,
+            dueAt = "2025-11-20T12:00:00Z"
+        )
+
+        val dcpAssignment = Assignment(
+            id = 1,
+            name = "DCP Assignment",
+            dueAt = null, // Parent has no due date
+            checkpoints = listOf(checkpoint1, checkpoint2),
+            submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString)
+        )
+        val regularAssignment = Assignment(
+            id = 2,
+            name = "Regular Assignment",
+            dueAt = "2025-09-20T12:00:00Z"
+        )
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(dcpAssignment, regularAssignment)
+            )
+        )
+
+        val gradingPeriodFall = GradingPeriod(
+            id = 1,
+            title = "Fall",
+            startDate = "2025-09-01T00:00:00Z",
+            endDate = "2025-10-31T23:59:59Z"
+        )
+        val gradingPeriodWinter = GradingPeriod(
+            id = 2,
+            title = "Winter",
+            startDate = "2025-11-01T00:00:00Z",
+            endDate = "2025-12-31T23:59:59Z"
+        )
+        val gradingPeriods = listOf(gradingPeriodFall, gradingPeriodWinter)
+
+        val groupItem1 = AssignmentGroupItemState(course, dcpAssignment, emptyList())
+        val groupItem2 = AssignmentGroupItemState(course, regularAssignment, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, dcpAssignment, emptyList(), any()) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, regularAssignment, emptyList(), emptyList()) } returns groupItem2
+
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+        coEvery { repository.getGradingPeriodsForCourse(any(), any()) } returns gradingPeriods
+        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 1, any()) } returns
+            listOf(AssignmentGroup(id = 1, assignments = listOf(regularAssignment)))
+        coEvery { repository.getAssignmentGroupsWithAssignmentsForGradingPeriod(any(), 2, any()) } returns
+            listOf(AssignmentGroup(id = 2, assignments = emptyList()))
+
+        val viewModel = getViewModel()
+
+        // Filter by Fall period - should include both DCP (checkpoint1 in Fall) and regular assignment
+        var newFilter = AssignmentListSelectedFilters(selectedGradingPeriodFilter = gradingPeriodFall)
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment, regularAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+
+        // Filter by Winter period - should include only DCP (checkpoint2 in Winter)
+        newFilter = newFilter.copy(selectedGradingPeriodFilter = gradingPeriodWinter)
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+    }
+
+    @Test
+    fun `Test DCP assignment with checkpoints displays when any checkpoint is not graded`() = runTest {
+        val dcpAssignment = Assignment(
+            id = 1,
+            name = "DCP Assignment",
+            submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+            checkpoints = listOf(
+                Checkpoint(
+                    name = "Reply to topic",
+                    tag = Const.REPLY_TO_TOPIC,
+                    pointsPossible = 10.0
+                ),
+                Checkpoint(
+                    name = "Reply to entry",
+                    tag = Const.REPLY_TO_ENTRY,
+                    pointsPossible = 5.0
+                )
+            ),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(
+                    SubAssignmentSubmission(
+                        grade = "A",
+                        subAssignmentTag = Const.REPLY_TO_TOPIC
+                    ),
+                    SubAssignmentSubmission(
+                        grade = null, // Not graded
+                        subAssignmentTag = Const.REPLY_TO_ENTRY
+                    )
+                )
+            )
+        )
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(dcpAssignment)
+            )
+        )
+
+        val groupItem = AssignmentGroupItemState(course, dcpAssignment, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, dcpAssignment, emptyList(), any()) } returns groupItem
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        // Filter by Graded - should include DCP because one checkpoint is graded
+        var newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+
+        // Filter by ToBeGraded - should include DCP because one checkpoint is not graded
+        newFilter = newFilter.copy(selectedAssignmentFilters = listOf(AssignmentFilter.ToBeGraded))
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+    }
+
+    @Test
+    fun `Test DCP assignment displays in NotYetSubmitted filter when any checkpoint is unsubmitted`() = runTest {
+        val dcpAssignment = Assignment(
+            id = 1,
+            name = "DCP Assignment",
+            submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+            checkpoints = listOf(
+                Checkpoint(
+                    name = "Reply to topic",
+                    tag = Const.REPLY_TO_TOPIC,
+                    pointsPossible = 10.0
+                ),
+                Checkpoint(
+                    name = "Reply to entry",
+                    tag = Const.REPLY_TO_ENTRY,
+                    pointsPossible = 5.0
+                )
+            ),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(
+                    SubAssignmentSubmission(
+                        grade = null,
+                        customGradeStatusId = null,
+                        subAssignmentTag = Const.REPLY_TO_TOPIC
+                    ),
+                    SubAssignmentSubmission(
+                        grade = "A",
+                        customGradeStatusId = null,
+                        subAssignmentTag = Const.REPLY_TO_ENTRY
+                    )
+                )
+            )
+        )
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(dcpAssignment)
+            )
+        )
+
+        val groupItem = AssignmentGroupItemState(course, dcpAssignment, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, dcpAssignment, emptyList(), any()) } returns groupItem
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        // Filter by NotYetSubmitted - should include DCP because one checkpoint is unsubmitted
+        val newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(AssignmentFilter.NotYetSubmitted))
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+    }
+
+    @Test
+    fun `Test DCP assignment with custom grade status on checkpoint appears in Graded filter`() = runTest {
+        val dcpAssignment = Assignment(
+            id = 1,
+            name = "DCP Assignment",
+            submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+            checkpoints = listOf(
+                Checkpoint(
+                    name = "Reply to topic",
+                    tag = Const.REPLY_TO_TOPIC,
+                    pointsPossible = 10.0
+                )
+            ),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(
+                    SubAssignmentSubmission(
+                        grade = null,
+                        customGradeStatusId = 123, // Custom status instead of grade
+                        subAssignmentTag = Const.REPLY_TO_TOPIC
+                    )
+                )
+            )
+        )
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(dcpAssignment)
+            )
+        )
+
+        val groupItem = AssignmentGroupItemState(course, dcpAssignment, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, dcpAssignment, emptyList(), any()) } returns groupItem
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        // Filter by Graded - should include DCP with custom grade status
+        val newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(AssignmentFilter.Graded))
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+    }
+
+    @Test
+    fun `Test DCP assignment without submission shows as NotYetSubmitted`() = runTest {
+        val dcpAssignment = Assignment(
+            id = 1,
+            name = "DCP Assignment",
+            submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+            checkpoints = listOf(
+                Checkpoint(
+                    name = "Reply to topic",
+                    tag = Const.REPLY_TO_TOPIC,
+                    pointsPossible = 10.0
+                )
+            ),
+            submission = null // No submission at all
+        )
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(dcpAssignment)
+            )
+        )
+
+        val groupItem = AssignmentGroupItemState(course, dcpAssignment, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, dcpAssignment, emptyList(), any()) } returns groupItem
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        // Filter by NotYetSubmitted - should include DCP with no submission
+        val newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(AssignmentFilter.NotYetSubmitted))
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(dcpAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+    }
+
+    @Test
+    fun `Test DCP assignment excluded from Other filter when checkpoint matches standard filters`() = runTest {
+        val dcpAssignment = Assignment(
+            id = 1,
+            name = "DCP Assignment",
+            submissionTypesRaw = listOf(Assignment.SubmissionType.DISCUSSION_TOPIC.apiString),
+            checkpoints = listOf(
+                Checkpoint(
+                    name = "Reply to topic",
+                    tag = Const.REPLY_TO_TOPIC,
+                    pointsPossible = 10.0
+                )
+            ),
+            submission = Submission(
+                subAssignmentSubmissions = arrayListOf(
+                    SubAssignmentSubmission(
+                        grade = "A",
+                        subAssignmentTag = Const.REPLY_TO_TOPIC
+                    )
+                )
+            )
+        )
+
+        val regularAssignment = Assignment(
+            id = 2,
+            name = "Regular Assignment",
+            submissionTypesRaw = listOf(Assignment.SubmissionType.NONE.apiString)
+        )
+
+        val assignmentGroups = listOf(
+            AssignmentGroup(
+                id = 1,
+                name = "Group 1",
+                assignments = listOf(dcpAssignment, regularAssignment)
+            )
+        )
+
+        val groupItem1 = AssignmentGroupItemState(course, dcpAssignment, emptyList())
+        val groupItem2 = AssignmentGroupItemState(course, regularAssignment, emptyList())
+        every { behavior.getAssignmentGroupItemState(course, dcpAssignment, emptyList(), any()) } returns groupItem1
+        every { behavior.getAssignmentGroupItemState(course, regularAssignment, emptyList(), any()) } returns groupItem2
+        coEvery { repository.getAssignments(any(), any()) } returns assignmentGroups
+
+        val viewModel = getViewModel()
+
+        // Filter by Other - DCP should be excluded because it has graded checkpoint
+        val newFilter = AssignmentListSelectedFilters(selectedAssignmentFilters = listOf(AssignmentFilter.Other))
+        viewModel.handleAction(AssignmentListScreenEvent.UpdateFilterState(newFilter))
+        assertEquals(
+            listOf(regularAssignment),
+            viewModel.uiState.value.listState.values.first().map { it.assignment }
+        )
+    }
+
     private fun getViewModel(): AssignmentListViewModel {
         return AssignmentListViewModel(savedStateHandle, apiPrefs, resources, repository, behavior)
     }
