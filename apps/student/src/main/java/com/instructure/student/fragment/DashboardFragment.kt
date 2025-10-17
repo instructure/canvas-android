@@ -29,6 +29,9 @@ import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.updatePadding
 import androidx.lifecycle.lifecycleScope
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
@@ -158,6 +161,12 @@ class DashboardFragment : ParentFragment() {
         recyclerBinding = CourseGridRecyclerRefreshLayoutBinding.bind(binding.root)
 
         applyTheme()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.dashboardPage) { view, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            binding.toolbar.updatePadding(top = systemBars.top)
+            WindowInsetsCompat.CONSUMED
+        }
 
         networkStateProvider.isOnlineLiveData.observe(this) { online ->
             recyclerAdapter?.refresh()

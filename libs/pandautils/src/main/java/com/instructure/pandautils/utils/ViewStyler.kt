@@ -185,26 +185,15 @@ object ViewStyler {
     }
 
     fun setStatusBarDark(activity: Activity, @ColorInt color: Int) {
-        activity.window.statusBarColor = ThemePrefs.darker(color)
-        var flags = activity.window.decorView.systemUiVisibility
-        flags = flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        activity.window.decorView.systemUiVisibility = flags
+        WindowInsetsHelper.setStatusBarDark(activity, color)
     }
 
     fun setStatusBarLight(activity: Activity) {
-        activity.window.statusBarColor = ContextCompat.getColor(activity, R.color.dimLighterGray)
-        activity.window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
+        WindowInsetsHelper.setStatusBarLight(activity)
     }
 
     fun setStatusBarColor(activity: Activity, @ColorInt color: Int, lightIcons: Boolean = false) {
-        activity.window.statusBarColor = color
-        var flags = activity.window.decorView.systemUiVisibility
-        flags = if (lightIcons) {
-            flags and View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR.inv()
-        } else {
-            View.SYSTEM_UI_FLAG_LIGHT_STATUS_BAR
-        }
-        activity.window.decorView.systemUiVisibility = flags
+        WindowInsetsHelper.setStatusBarColor(activity, color, lightIcons)
     }
 
     fun colorImageView(imageView: ImageView, color: Int) {
