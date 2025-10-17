@@ -24,6 +24,9 @@ import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.test.uiautomator.UiDevice
+import androidx.test.uiautomator.UiSelector
 import com.instructure.canvas.espresso.CanvasTest
 import com.instructure.canvas.espresso.containsTextCaseInsensitive
 import com.instructure.canvas.espresso.scrollRecyclerView
@@ -84,5 +87,12 @@ class BookmarkPage : BasePage() {
         clickOnMoreMenu(bookmarkName)
         onView(allOf(withId(R.id.title), withText("Delete"), isDisplayed())).click()
         waitForView(anyOf(withText(android.R.string.ok), withText(R.string.ok))).click()
+    }
+
+    fun addToHomeScreen(bookmarkName: String) {
+        clickOnMoreMenu(bookmarkName)
+        onView(allOf(withId(R.id.title), containsTextCaseInsensitive("Add to Home"), isDisplayed())).click()
+        val device = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        device.findObject(UiSelector().textContains("Add automatically")).click()
     }
 }
