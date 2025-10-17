@@ -109,11 +109,17 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
     NotificationPermissionRequest()
 
-    LaunchedEffect(shouldRefresh, externalRefreshState) {
-        if (shouldRefresh || externalRefreshState) {
-            savedStateHandle[DASHBOARD_REFRESH] = false
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
             delay(50)
             shouldRefresh = false
+        }
+    }
+
+    LaunchedEffect(externalRefreshState) {
+        if (externalRefreshState) {
+            savedStateHandle[DASHBOARD_REFRESH] = false
+            shouldRefresh = true
         }
     }
 

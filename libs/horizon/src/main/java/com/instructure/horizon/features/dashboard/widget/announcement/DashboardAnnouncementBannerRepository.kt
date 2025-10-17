@@ -20,6 +20,7 @@ import com.instructure.canvasapi2.apis.AccountNotificationAPI
 import com.instructure.canvasapi2.apis.AnnouncementAPI
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.models.DiscussionTopicHeader.ReadState
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.depaginate
 import com.instructure.canvasapi2.utils.toApiString
@@ -60,7 +61,7 @@ class DashboardAnnouncementBannerRepository @Inject constructor(
         )
             .depaginate { announcementApi.getNextPageAnnouncementsList(it, params) }
             .dataOrThrow
-            //.filter { !it.read }
+            .filter { it.status == ReadState.UNREAD }
             .map { announcement ->
                 val course = courses.first { it.contextId == announcement.contextCode }
                 AnnouncementBannerItem(

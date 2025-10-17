@@ -22,8 +22,6 @@ import io.mockk.coVerify
 import io.mockk.mockk
 import io.mockk.unmockkAll
 import junit.framework.TestCase.assertEquals
-import junit.framework.TestCase.assertNotNull
-import junit.framework.TestCase.assertNull
 import junit.framework.TestCase.assertTrue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -71,13 +69,13 @@ class DashboardAnnouncementBannerViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
-        assertNotNull(state.cardState.announcement)
-        assertEquals("Test Announcement", state.cardState.announcement?.title)
+        assertEquals(1, state.cardState.announcements.size)
+        assertEquals("Test Announcement", state.cardState.announcements[0].title)
         coVerify { repository.getUnreadAnnouncements(false) }
     }
 
     @Test
-    fun `Test shows only first announcement`() = runTest {
+    fun `Test shows all announcements`() = runTest {
         val announcements = listOf(
             AnnouncementBannerItem(
                 title = "First Announcement",
@@ -100,11 +98,13 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals("First Announcement", state.cardState.announcement?.title)
+        assertEquals(2, state.cardState.announcements.size)
+        assertEquals("First Announcement", state.cardState.announcements[0].title)
+        assertEquals("Second Announcement", state.cardState.announcements[1].title)
     }
 
     @Test
-    fun `Test no announcements returns null`() = runTest {
+    fun `Test no announcements returns empty list`() = runTest {
         coEvery { repository.getUnreadAnnouncements(false) } returns emptyList()
 
         val viewModel = getViewModel()
@@ -112,7 +112,7 @@ class DashboardAnnouncementBannerViewModelTest {
 
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
-        assertNull(state.cardState.announcement)
+        assertTrue(state.cardState.announcements.isEmpty())
     }
 
     @Test
@@ -219,8 +219,9 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(AnnouncementType.COURSE, state.cardState.announcement?.type)
-        assertEquals("Introduction to Kotlin", state.cardState.announcement?.source)
+        assertEquals(1, state.cardState.announcements.size)
+        assertEquals(AnnouncementType.COURSE, state.cardState.announcements[0].type)
+        assertEquals("Introduction to Kotlin", state.cardState.announcements[0].source)
     }
 
     @Test
@@ -228,7 +229,7 @@ class DashboardAnnouncementBannerViewModelTest {
         val announcements = listOf(
             AnnouncementBannerItem(
                 title = "Global Announcement",
-                source = "Canvas Career",
+                source = null,
                 date = Date(),
                 type = AnnouncementType.GLOBAL,
                 route = "horizon/inbox/account_notification/123"
@@ -240,8 +241,9 @@ class DashboardAnnouncementBannerViewModelTest {
         advanceUntilIdle()
 
         val state = viewModel.uiState.value
-        assertEquals(AnnouncementType.GLOBAL, state.cardState.announcement?.type)
-        assertEquals("Canvas Career", state.cardState.announcement?.source)
+        assertEquals(1, state.cardState.announcements.size)
+        assertEquals(AnnouncementType.GLOBAL, state.cardState.announcements[0].type)
+        assertEquals(null, state.cardState.announcements[0].source)
     }
 
     private fun getViewModel(): DashboardAnnouncementBannerViewModel {

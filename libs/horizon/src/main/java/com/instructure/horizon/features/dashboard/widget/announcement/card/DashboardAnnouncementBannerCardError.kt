@@ -31,6 +31,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
 
 @Composable
 fun DashboardAnnouncementBannerCardError(
@@ -53,6 +54,7 @@ fun DashboardAnnouncementBannerCardError(
             )
             Button(
                 label = stringResource(R.string.retry),
+                height = ButtonHeight.SMALL,
                 onClick = onRetry,
                 color = ButtonColor.BlackOutline
             )
