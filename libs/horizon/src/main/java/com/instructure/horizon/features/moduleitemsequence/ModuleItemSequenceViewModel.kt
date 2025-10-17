@@ -29,6 +29,10 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
+import com.instructure.horizon.features.learn.LearnEvent
+import com.instructure.horizon.features.learn.LearnEventHandler
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
 import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageItem
@@ -55,6 +59,8 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private val moduleItemCardStateMapper: ModuleItemCardStateMapper,
     private val aiAssistContextProvider: AiAssistContextProvider,
     savedStateHandle: SavedStateHandle,
+    private val dashboardEventHandler: DashboardEventHandler,
+    private val learnEventHandler: LearnEventHandler
 ) : ViewModel() {
     private val courseId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().courseId
     private val moduleItemId = savedStateHandle.toRoute<MainNavigationRoute.ModuleItemSequence>().moduleItemId
@@ -577,6 +583,9 @@ class ModuleItemSequenceViewModel @Inject constructor(
 
     private fun courseProgressChanged() {
         courseProgressChanged = true
-        _uiState.update { it.copy(shouldRefreshPreviousScreen = true) }
+        viewModelScope.launch {
+            dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+            learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        }
     }
 }

@@ -73,22 +73,11 @@ import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
 import kotlinx.coroutines.flow.MutableStateFlow
 
-const val DASHBOARD_REFRESH = "refreshDashboard"
-const val DASHBOARD_SNACKBAR = "dashboardSnackbar"
-
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
-    val savedStateHandle = parentEntry.savedStateHandle
-
-    val externalRefreshFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_REFRESH, false) }
-    val externalRefreshState by externalRefreshFlow.collectAsState()
     var shouldRefresh by rememberSaveable { mutableStateOf(false) }
-
-    val snackbarFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_SNACKBAR, "") }
-    val snackbar by snackbarFlow.collectAsState()
 
     /*
     Using a list of booleans to represent each refreshing component.
@@ -101,19 +90,18 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
     NotificationPermissionRequest()
 
-    LaunchedEffect(shouldRefresh, externalRefreshState) {
-        if (shouldRefresh || externalRefreshState) {
-            savedStateHandle[DASHBOARD_REFRESH] = false
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
             shouldRefresh = false
         }
     }
 
-    LaunchedEffect(snackbar) {
-        if (snackbar.isNotEmpty()) {
+    LaunchedEffect(uiState.snackbarMessage) {
+        if (uiState.snackbarMessage != null) {
             snackbarHostState.showSnackbar(
-                message = snackbar,
+                message = uiState.snackbarMessage,
             )
-            savedStateHandle[DASHBOARD_SNACKBAR] = ""
+            uiState.onSnackbarDismiss()
         }
     }
 

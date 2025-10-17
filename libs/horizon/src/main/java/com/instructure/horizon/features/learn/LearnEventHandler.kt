@@ -13,16 +13,24 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.dashboard
+package com.instructure.horizon.features.learn
 
-data class DashboardUiState(
-    val logoUrl: String = "",
-    val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
-    val snackbarMessage: String? = null,
-    val onSnackbarDismiss: () -> Unit = {},
-)
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class DashboardUnreadState(
-    val unreadConversations: Int = 0,
-    val unreadNotifications: Int = 0,
-)
+sealed interface LearnEvent {
+    data object RefreshRequested : LearnEvent
+}
+
+@Singleton
+class LearnEventHandler @Inject constructor() {
+
+    private val _events = MutableSharedFlow<LearnEvent>(replay = 0)
+    val events = _events.asSharedFlow()
+
+    suspend fun postEvent(event: LearnEvent) {
+        _events.emit(event)
+    }
+}

@@ -27,6 +27,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runTest
 import kotlinx.coroutines.test.setMain
 import org.junit.After
 import org.junit.Before
@@ -36,6 +37,7 @@ import org.junit.Test
 class DashboardViewModelTest {
     private val repository: DashboardRepository = mockk(relaxed = true)
     private val themePrefs: ThemePrefs = mockk(relaxed = true)
+    private val dashboardEventHandler: DashboardEventHandler = DashboardEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val notificationCounts = listOf(
@@ -89,7 +91,65 @@ class DashboardViewModelTest {
         assertEquals(logoUrl, state.logoUrl)
     }
 
+    @Test
+    fun `Refresh event triggers refresh and updates unread counts`() = runTest {
+        val viewModel = getViewModel()
+
+        val updatedCounts = listOf(
+            UnreadNotificationCount(
+                type = "Message",
+                count = 8,
+                unreadCount = 15,
+            ),
+            UnreadNotificationCount(
+                type = "Conversation",
+                count = 3,
+                unreadCount = 8,
+            ),
+        )
+        coEvery { repository.getUnreadCounts(any()) } returns updatedCounts
+
+        dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+        testScheduler.advanceUntilIdle()
+
+        coVerify(atLeast = 2) { repository.getUnreadCounts(true) }
+        val state = viewModel.uiState.value
+        assertEquals(8, state.unreadCountState.unreadConversations)
+        assertEquals(15, state.unreadCountState.unreadNotifications)
+    }
+
+    @Test
+    fun `ShowSnackbar event updates snackbar message in UI state`() = runTest {
+        val viewModel = getViewModel()
+
+        val testMessage = "Test snackbar message"
+        dashboardEventHandler.postEvent(DashboardEvent.ShowSnackbar(testMessage))
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(testMessage, state.snackbarMessage)
+    }
+
+    @Test
+    fun `Multiple refresh events update state correctly`() = runTest {
+        val viewModel = getViewModel()
+
+        dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+        testScheduler.advanceUntilIdle()
+
+        val secondCounts = listOf(
+            UnreadNotificationCount(type = "Conversation", count = 10, unreadCount = 20)
+        )
+        coEvery { repository.getUnreadCounts(any()) } returns secondCounts
+
+        dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+        testScheduler.advanceUntilIdle()
+
+        val state = viewModel.uiState.value
+        assertEquals(20, state.unreadCountState.unreadConversations)
+    }
+
     private fun getViewModel(): DashboardViewModel {
-        return DashboardViewModel(repository, themePrefs)
+        return DashboardViewModel(repository, themePrefs, dashboardEventHandler)
     }
 }

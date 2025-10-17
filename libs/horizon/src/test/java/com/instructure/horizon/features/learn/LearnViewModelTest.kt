@@ -44,6 +44,7 @@ class LearnViewModelTest {
     private val context: Context = mockk(relaxed = true)
     private val repository: LearnRepository = mockk(relaxed = true)
     private val savedStateHandle: SavedStateHandle = SavedStateHandle()
+    private val learnEventHandler: LearnEventHandler = LearnEventHandler()
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testCourses = listOf(
@@ -145,12 +146,46 @@ class LearnViewModelTest {
     fun `Test learningItemId from saved state`() = runTest {
         val savedStateWithId = SavedStateHandle(mapOf("learningItemId" to "testId"))
 
-        val viewModel = LearnViewModel(context, repository, savedStateWithId)
+        val viewModel = LearnViewModel(context, repository, savedStateWithId, learnEventHandler)
 
         assertFalse(viewModel.state.value.screenState.isLoading)
     }
 
+    @Test
+    fun `RefreshRequested event triggers refresh and reloads data`() = runTest {
+        val viewModel = getViewModel()
+
+        val updatedCourses = listOf(
+            CourseWithProgress(courseId = 4L, courseName = "Updated Course", courseSyllabus = "", progress = 90.0)
+        )
+        coEvery { repository.getCoursesWithProgress(any()) } returns updatedCourses
+
+        learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertTrue(viewModel.state.value.screenState.isRefreshing == false)
+    }
+
+    @Test
+    fun `Multiple refresh events update state correctly`() = runTest {
+        val viewModel = getViewModel()
+
+        learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        val secondCourses = listOf(
+            CourseWithProgress(courseId = 5L, courseName = "Second Update", courseSyllabus = "", progress = 100.0)
+        )
+        coEvery { repository.getCoursesWithProgress(any()) } returns secondCourses
+        coEvery { repository.getPrograms(any()) } returns emptyList()
+
+        learnEventHandler.postEvent(LearnEvent.RefreshRequested)
+        testDispatcher.scheduler.advanceUntilIdle()
+
+        assertFalse(viewModel.state.value.screenState.isRefreshing)
+    }
+
     private fun getViewModel(): LearnViewModel {
-        return LearnViewModel(context, repository, savedStateHandle)
+        return LearnViewModel(context, repository, savedStateHandle, learnEventHandler)
     }
 }

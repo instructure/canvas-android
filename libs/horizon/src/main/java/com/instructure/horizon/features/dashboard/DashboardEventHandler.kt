@@ -15,14 +15,23 @@
  */
 package com.instructure.horizon.features.dashboard
 
-data class DashboardUiState(
-    val logoUrl: String = "",
-    val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
-    val snackbarMessage: String? = null,
-    val onSnackbarDismiss: () -> Unit = {},
-)
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class DashboardUnreadState(
-    val unreadConversations: Int = 0,
-    val unreadNotifications: Int = 0,
-)
+sealed interface DashboardEvent {
+    data object RefreshRequested : DashboardEvent
+    data class ShowSnackbar(val message: String) : DashboardEvent
+}
+
+@Singleton
+class DashboardEventHandler @Inject constructor() {
+
+    private val _events = MutableSharedFlow<DashboardEvent>(replay = 0)
+    val events = _events.asSharedFlow()
+
+    suspend fun postEvent(event: DashboardEvent) {
+        _events.emit(event)
+    }
+}

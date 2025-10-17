@@ -24,6 +24,8 @@ import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.program.components.CourseCardChipState
 import com.instructure.horizon.features.learn.program.components.CourseCardStatus
 import com.instructure.horizon.features.learn.program.components.ProgramCourseCardState
@@ -49,7 +51,8 @@ import kotlin.time.Duration
 @HiltViewModel
 class ProgramDetailsViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: ProgramDetailsRepository
+    private val repository: ProgramDetailsRepository,
+    private val dashboardEventHandler: DashboardEventHandler
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -58,8 +61,7 @@ class ProgramDetailsViewModel @Inject constructor(
                 onRefresh = ::refreshProgram,
                 onSnackbarDismiss = ::dismissSnackbar
             ),
-            onNavigateToCourse = ::onNavigateToCourse,
-            onDashboardRefreshed = ::dashboardRefreshed
+            onNavigateToCourse = ::onNavigateToCourse
         )
     )
     val state = _uiState.asStateFlow()
@@ -354,7 +356,9 @@ class ProgramDetailsViewModel @Inject constructor(
                 return@launch
             }
             try {
-                _uiState.update { it.copy(shouldRefreshDashboard = true) }
+                viewModelScope.launch {
+                    dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+                }
                 loadData(forceNetwork = true)
             } catch (e: Exception) {
                 updateCourseEnrollLoadingState(courseId, false)
@@ -386,9 +390,5 @@ class ProgramDetailsViewModel @Inject constructor(
                 programProgressState = it.programProgressState.copy(courses = updatedCourses)
             )
         }
-    }
-
-    private fun dashboardRefreshed() {
-        _uiState.update { it.copy(shouldRefreshDashboard = false) }
     }
 }
