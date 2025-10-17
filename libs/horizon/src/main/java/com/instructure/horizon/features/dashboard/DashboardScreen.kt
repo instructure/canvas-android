@@ -96,6 +96,12 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
         }
     }
 
+    LaunchedEffect(uiState.externalShouldRefresh) {
+        if (uiState.externalShouldRefresh) {
+            shouldRefresh = true
+        }
+    }
+
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
             snackbarHostState.showSnackbar(
