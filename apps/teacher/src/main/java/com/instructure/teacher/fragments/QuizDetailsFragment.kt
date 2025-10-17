@@ -133,6 +133,7 @@ class QuizDetailsFragment : BasePresenterFragment<
         setupToolbar()
 
         binding.swipeRefreshLayout.isRefreshing = true
+        binding.quizPreviewButton.root.setGone()
     }
 
     override fun onPresenterPrepared(presenter: QuizDetailsPresenter) = Unit
@@ -468,6 +469,7 @@ class QuizDetailsFragment : BasePresenterFragment<
                 RouteMatcher.route(requireActivity(), Route(QuizPreviewWebviewFragment::class.java, course, args))
             } catch (e: UnsupportedEncodingException) {}
         }
+        quizPreviewButton.root.setVisible()
     }
 
     private fun navigateToSubmissions(course: Course, assignment: Assignment?, filter: SubmissionListFilter) {
