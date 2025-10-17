@@ -35,7 +35,6 @@ import com.instructure.pandautils.dialogs.RatingDialog
 import com.instructure.pandautils.features.reminder.ReminderRepository
 import com.instructure.pandautils.room.calendar.daos.CalendarFilterDao
 import com.instructure.pandautils.room.calendar.entities.CalendarFilterEntity
-import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.parentapp.R
 import io.mockk.coVerify
 import io.mockk.every
@@ -53,7 +52,6 @@ import java.time.ZoneId
 class FlutterAppMigrationTest {
 
     private val context: Context = mockk(relaxed = true)
-    private val themePrefs: ThemePrefs = mockk(relaxed = true)
     private val parentPrefs: ParentPrefs = mockk(relaxed = true)
     private val loginPrefs: LoginPrefs = mockk(relaxed = true)
     private val previousUsersUtils: PreviousUsersUtils = mockk(relaxed = true)
@@ -69,7 +67,6 @@ class FlutterAppMigrationTest {
 
     private val flutterAppMigration = FlutterAppMigration(
         context,
-        themePrefs,
         parentPrefs,
         loginPrefs,
         previousUsersUtils,
@@ -132,16 +129,6 @@ class FlutterAppMigrationTest {
 
         coVerify(exactly = 1) { parentPrefs.hasMigrated }
         coVerify(exactly = 0) { parentPrefs.hasMigrated = true }
-    }
-
-    @Test
-    fun `Migrate dark mode setting`() {
-        every { mockSharedPreferences.getBoolean("flutter.dark_mode", false) } returns true
-        every { context.getSharedPreferences("FlutterSharedPreferences", Context.MODE_PRIVATE) } returns mockSharedPreferences
-
-        flutterAppMigration.migrateIfNecessary()
-
-        coVerify(exactly = 1) { themePrefs.appTheme = 1 }
     }
 
     @Test
