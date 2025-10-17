@@ -91,4 +91,16 @@ class FakeGetWidgetsManager : GetWidgetsManager {
             )
         )
     }
+
+    override suspend fun getLearningStatusWidgetData(
+        courseId: Long?,
+        forceNetwork: Boolean
+    ): GetWidgetDataQuery.WidgetData {
+        return GetWidgetDataQuery.WidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                mapOf("module_count_completed" to 5)
+            )
+        )
+    }
 }
