@@ -268,10 +268,7 @@ class NotificationListRecyclerAdapter(
         if (courseMap == null || groupMap == null || streamItems == null) return
         for (streamItem in streamItems!!) {
             // Skip conversation type items from notification list.
-            val itemType = streamItem.getStreamItemType()
-            if (itemType === StreamItem.Type.CONVERSATION) {
-                continue
-            }
+            if (streamItem.getStreamItemType() === StreamItem.Type.CONVERSATION) continue
 
             streamItem.setCanvasContextFromMap(courseMap!!, groupMap!!)
 
