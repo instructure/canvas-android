@@ -26,6 +26,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -147,6 +148,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
             }
         ){
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
@@ -166,6 +168,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
+                        .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                         .padding(start = 16.dp)
                 ) {

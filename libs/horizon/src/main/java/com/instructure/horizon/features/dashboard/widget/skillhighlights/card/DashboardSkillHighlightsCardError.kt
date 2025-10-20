@@ -31,6 +31,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.Button
 import com.instructure.horizon.horizonui.molecules.ButtonColor
+import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 
 @Composable
@@ -65,6 +66,7 @@ fun DashboardSkillHighlightsCardError(
                 label = stringResource(R.string.dashboardSkillHighlightsRetry),
                 onClick = onRetryClick,
                 color = ButtonColor.WhiteWithOutline,
+                height = ButtonHeight.SMALL,
                 iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
             )
         }
