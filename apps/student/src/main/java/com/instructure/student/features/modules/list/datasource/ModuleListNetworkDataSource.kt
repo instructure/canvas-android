@@ -20,6 +20,8 @@ import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
 import com.instructure.canvasapi2.builders.RestParams
+import com.instructure.canvasapi2.managers.graphql.ModuleItemWithCheckpoints
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
@@ -31,7 +33,8 @@ import com.instructure.canvasapi2.utils.depaginate
 class ModuleListNetworkDataSource(
     private val moduleApi: ModuleAPI.ModuleInterface,
     private val tabApi: TabAPI.TabsInterface,
-    private val courseApi: CourseAPI.CoursesInterface) : ModuleListDataSource {
+    private val courseApi: CourseAPI.CoursesInterface,
+    private val moduleManager: ModuleManager) : ModuleListDataSource {
 
     override suspend fun getAllModuleObjects(canvasContext: CanvasContext, forceNetwork: Boolean): DataResult<List<ModuleObject>> {
         val params = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = forceNetwork)
@@ -68,5 +71,9 @@ class ModuleListNetworkDataSource(
     override suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings? {
         val restParams = RestParams(isForceReadFromNetwork = forceNetwork)
         return courseApi.getCourseSettings(courseId, restParams).dataOrNull
+    }
+
+    override suspend fun getModuleItemCheckpoints(courseId: String, forceNetwork: Boolean): List<ModuleItemWithCheckpoints> {
+        return moduleManager.getModuleItemCheckpoints(courseId, forceNetwork)
     }
 }

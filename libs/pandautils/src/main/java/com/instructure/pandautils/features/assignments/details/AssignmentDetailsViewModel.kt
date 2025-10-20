@@ -300,7 +300,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                                 isObserver,
                                 submission.attempt,
                                 assignmentResult.htmlUrl,
-                                isAssignmentEnhancementEnabled
+                                isAssignmentEnhancementEnabled,
+                                assignmentResult.isQuiz()
                             )
                         )
                     }
@@ -600,7 +601,8 @@ class AssignmentDetailsViewModel @Inject constructor(
                     isObserver,
                     selectedSubmission?.attempt,
                     assignment?.htmlUrl,
-                    isAssignmentEnhancementEnabled
+                    isAssignmentEnhancementEnabled,
+                    assignment?.isQuiz() == true
                 )
             )
         }

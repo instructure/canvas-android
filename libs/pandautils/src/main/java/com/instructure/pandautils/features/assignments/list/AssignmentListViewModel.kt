@@ -262,15 +262,29 @@ class AssignmentListViewModel @Inject constructor(
         filteredAssignments = assignmentFilters.flatMap { assignmentFilter ->
             when(assignmentFilter) {
                 AssignmentFilter.All -> filteredAssignments
-                AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { !it.isSubmitted && it.isOnlineSubmissionType } // TODO: Need to filter by Checkpoints but Sub-assignments do not have a submittedAt field yet
-                AssignmentFilter.ToBeGraded -> filteredAssignments.filter { it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType } // TODO: Need to filter by Checkpoints but Sub-assignments do not have a submittedAt field yet
-                AssignmentFilter.Graded -> filteredAssignments.filter {
-                    val hasGradedCheckpoint = it.submission?.subAssignmentSubmissions?.any { subAssignmentSubmission ->
-                        subAssignmentSubmission.grade != null || subAssignmentSubmission.customGradeStatusId != null
-                    }.orDefault()
-                    it.isGraded() || hasGradedCheckpoint && it.isOnlineSubmissionType
+                AssignmentFilter.NotYetSubmitted -> filteredAssignments.filter { assignment ->
+                    val parentNotSubmitted = !assignment.isSubmitted && assignment.isOnlineSubmissionType
+                    val hasUnsubmittedCheckpoint = assignment.hasAnyCheckpointWithoutGrade()
+                    parentNotSubmitted || hasUnsubmittedCheckpoint
                 }
-                AssignmentFilter.Other -> filteredAssignments.filterNot { (!it.isSubmitted && it.isOnlineSubmissionType) || (it.isSubmitted && !it.isGraded() && it.isOnlineSubmissionType) || (it.isGraded() && it.isOnlineSubmissionType) }
+                AssignmentFilter.ToBeGraded -> filteredAssignments.filter { assignment ->
+                    val parentToBeGraded = assignment.isSubmitted && !assignment.isGraded() && assignment.isOnlineSubmissionType
+                    val hasCheckpointToBeGraded = assignment.hasAnyCheckpointWithoutGrade()
+                    parentToBeGraded || (hasCheckpointToBeGraded && assignment.isOnlineSubmissionType)
+                }
+                AssignmentFilter.Graded -> filteredAssignments.filter { assignment ->
+                    val hasGradedCheckpoint = assignment.hasAnyCheckpointWithGrade()
+                    assignment.isGraded() || (hasGradedCheckpoint && assignment.isOnlineSubmissionType)
+                }
+                AssignmentFilter.Other -> filteredAssignments.filterNot { assignment ->
+                    val notYetSubmitted = !assignment.isSubmitted && assignment.isOnlineSubmissionType
+                    val toBeGraded = assignment.isSubmitted && !assignment.isGraded() && assignment.isOnlineSubmissionType
+                    val graded = assignment.isGraded() && assignment.isOnlineSubmissionType
+                    val hasCheckpointNotYetSubmitted = assignment.hasAnyCheckpointWithoutGrade()
+                    val hasCheckpointGraded = assignment.hasAnyCheckpointWithGrade()
+
+                    notYetSubmitted || toBeGraded || graded || hasCheckpointNotYetSubmitted || hasCheckpointGraded
+                }
                 AssignmentFilter.NeedsGrading -> filteredAssignments.filter { it.needsGradingCount > 0 }
                 AssignmentFilter.NotSubmitted -> filteredAssignments.filter { it.unpublishable }
             }
@@ -286,9 +300,25 @@ class AssignmentListViewModel @Inject constructor(
 
         selectedFilters.selectedGradingPeriodFilter?.let { gradingPeriodFilter ->
             if (uiState.value.gradingPeriods.isNotEmpty()) {
-                filteredAssignments = filteredAssignments.filter {
-                    uiState.value.gradingPeriodsWithAssignments[gradingPeriodFilter]?.map { it.id }
-                        ?.contains(it.id).orDefault()
+                filteredAssignments = filteredAssignments.filter { assignment ->
+                    val assignmentInPeriod = uiState.value.gradingPeriodsWithAssignments[gradingPeriodFilter]?.map { it.id }
+                        ?.contains(assignment.id).orDefault()
+
+                    // For DCP assignments, check if any checkpoint falls within the grading period
+                    val hasCheckpointInPeriod = if (assignment.checkpoints.isNotEmpty()) {
+                        val periodStart = gradingPeriodFilter.startDate?.toDate()
+                        val periodEnd = gradingPeriodFilter.endDate?.toDate()
+
+                        assignment.checkpoints.any { checkpoint ->
+                            val checkpointDueDate = checkpoint.dueDate
+                            checkpointDueDate != null && periodStart != null && periodEnd != null &&
+                                !checkpointDueDate.before(periodStart) && !checkpointDueDate.after(periodEnd)
+                        }
+                    } else {
+                        false
+                    }
+
+                    assignmentInPeriod || hasCheckpointInPeriod
                 }
             }
         }
@@ -422,5 +452,28 @@ class AssignmentListViewModel @Inject constructor(
 
     private fun Assignment.dueDateIncludingCheckpoints(): Date? {
         return (dueAt ?: orderedCheckpoints.firstOrNull { it.dueAt != null }?.dueAt).toDate()
+    }
+
+    private fun Assignment.hasAnyCheckpointWithGrade(): Boolean {
+        return if (checkpoints.isNotEmpty()) {
+            submission?.subAssignmentSubmissions?.any { subAssignmentSubmission ->
+                subAssignmentSubmission.grade != null || subAssignmentSubmission.customGradeStatusId != null
+            }.orDefault()
+        } else {
+            false
+        }
+    }
+
+    private fun Assignment.hasAnyCheckpointWithoutGrade(): Boolean {
+        return if (checkpoints.isNotEmpty()) {
+            submission?.subAssignmentSubmissions?.let { submissions ->
+                checkpoints.any { checkpoint ->
+                    val checkpointSubmission = submissions.find { it.subAssignmentTag == checkpoint.tag }
+                    checkpointSubmission?.grade == null && checkpointSubmission?.customGradeStatusId == null
+                }
+            } ?: true // If no submissions exist, all checkpoints are unsubmitted
+        } else {
+            false
+        }
     }
 }
