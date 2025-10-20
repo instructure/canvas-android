@@ -24,6 +24,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.FlowRow
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -65,7 +66,9 @@ import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
+import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
+import com.instructure.horizon.horizonui.foundation.SpaceSize
 import com.instructure.horizon.horizonui.molecules.ButtonColor
 import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
@@ -76,12 +79,13 @@ import com.instructure.horizon.horizonui.molecules.PillCase
 import com.instructure.horizon.horizonui.molecules.PillSize
 import com.instructure.horizon.horizonui.molecules.PillStyle
 import com.instructure.horizon.horizonui.molecules.PillType
-import com.instructure.horizon.horizonui.molecules.ProgressBar
-import com.instructure.horizon.horizonui.molecules.ProgressBarNumberStyle
+import com.instructure.horizon.horizonui.molecules.ProgressBarSmall
+import com.instructure.horizon.horizonui.molecules.ProgressBarStyle
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipState
 import com.instructure.pandautils.utils.localisedFormatMonthDay
 import java.util.Date
+import kotlin.math.roundToInt
 
 @Composable
 fun DashboardCourseCardContent(
@@ -270,7 +274,24 @@ private fun DescriptionText(description: String) {
 
 @Composable
 private fun CourseProgress(progress: Double) {
-    ProgressBar(progress = progress, numberStyle = ProgressBarNumberStyle.OUTSIDE)
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        ProgressBarSmall(
+            progress = progress,
+            style = ProgressBarStyle.Institution,
+            showLabels = false,
+            modifier = Modifier.weight(1f)
+        )
+
+        HorizonSpace(SpaceSize.SPACE_8)
+
+        Text(
+            text = stringResource(R.string.progressBar_percent, progress.roundToInt()),
+            style = HorizonTypography.p2,
+            color = HorizonColors.Surface.institution(),
+        )
+    }
 }
 
 @OptIn(ExperimentalLayoutApi::class)
