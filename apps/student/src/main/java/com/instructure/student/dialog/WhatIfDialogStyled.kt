@@ -22,7 +22,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.widget.TextView
-import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.AppCompatEditText
 import androidx.fragment.app.FragmentManager
@@ -32,6 +31,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.base.BaseCanvasDialogFragment
 import com.instructure.pandautils.utils.IntArg
 import com.instructure.pandautils.utils.ParcelableArg
+import com.instructure.pandautils.utils.toast
 import com.instructure.student.R
 import kotlin.properties.Delegates
 
@@ -73,7 +73,7 @@ class WhatIfDialogStyled : BaseCanvasDialogFragment() {
                     if (whatIfText.isNotBlank()) {
                         val enteredScore = whatIfText.toDouble()
                         if (enteredScore > assignment.pointsPossible) {
-                            Toast.makeText(requireContext(), R.string.whatIfScoreExceedsMaximum, Toast.LENGTH_SHORT).show()
+                            toast(R.string.whatIfScoreExceedsMaximum)
                             return@setOnClickListener
                         }
                         callback(enteredScore, assignment.pointsPossible)
