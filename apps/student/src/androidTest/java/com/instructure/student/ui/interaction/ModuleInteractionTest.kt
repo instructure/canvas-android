@@ -20,6 +20,7 @@ import androidx.compose.ui.platform.ComposeView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
+import androidx.test.platform.app.InstrumentationRegistry
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
 import com.google.android.apps.common.testing.accessibility.framework.checks.SpeakableTextPresentCheck
 import com.instructure.canvas.espresso.FeatureCategory
@@ -38,9 +39,13 @@ import com.instructure.canvas.espresso.mockcanvas.addPageToCourse
 import com.instructure.canvas.espresso.mockcanvas.addQuestionToQuiz
 import com.instructure.canvas.espresso.mockcanvas.addQuizToCourse
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeModuleManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
+import com.instructure.canvasapi2.di.graphql.ModuleManagerModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.ModuleItemCheckpoint
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.DiscussionTopicHeader
@@ -52,12 +57,13 @@ import com.instructure.canvasapi2.models.Page
 import com.instructure.canvasapi2.models.Quiz
 import com.instructure.canvasapi2.models.QuizAnswer
 import com.instructure.canvasapi2.models.Tab
+import com.instructure.canvasapi2.utils.DateHelper
 import com.instructure.dataseeding.util.days
 import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.student.R
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -65,14 +71,19 @@ import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
 import org.junit.Test
 import java.net.URLEncoder
+import java.util.Date
 
 @HiltAndroidTest
-@UninstallModules(CustomGradeStatusModule::class)
-class ModuleInteractionTest : StudentTest() {
+@UninstallModules(CustomGradeStatusModule::class, ModuleManagerModule::class)
+class ModuleInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField
     val customGradeStatusesManager: CustomGradeStatusesManager = FakeCustomGradeStatusesManager()
+
+    @BindValue
+    @JvmField
+    val moduleManager: ModuleManager = FakeModuleManager()
 
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
@@ -623,6 +634,100 @@ class ModuleInteractionTest : StudentTest() {
 
         modulesPage.refresh()
         modulesPage.assertPossiblePointsNotDisplayed(assignment.name.orEmpty())
+    }
+
+    // Discussion checkpoint dates should be displayed in module list
+    @Test
+    @TestMetaData(Priority.IMPORTANT, FeatureCategory.MODULES, TestCategory.INTERACTION, SecondaryFeatureCategory.MODULES_DISCUSSIONS)
+    fun testModules_discussionCheckpointDatesDisplayed() {
+        // Set up all mock data BEFORE navigating to the page
+        val data = MockCanvas.init(
+            studentCount = 1,
+            courseCount = 1,
+            favoriteCourseCount = 1
+        )
+
+        val course = data.courses.values.first()
+        val user = data.users.values.first()
+
+        // Add a course tab
+        val modulesTab = Tab(position = 2, label = "Modules", visibility = "public", tabId = Tab.MODULES_ID)
+        data.courseTabs[course.id]!! += modulesTab
+
+        // Create a module
+        data.addModuleToCourse(
+            course = course,
+            moduleName = "Big Module"
+        )
+
+        val module = data.courseModules[course.id]!!.first()
+
+        // Create a discussion and add it as a module item
+        val discussionTitle = "Discussion with Checkpoints"
+        topicHeader = data.addDiscussionTopicToCourse(
+            course = course,
+            user = user,
+            topicTitle = discussionTitle,
+            topicDescription = "A discussion with checkpoints"
+        )
+        data.addItemToModule(
+            course = course,
+            moduleId = module.id,
+            item = topicHeader!!,
+            moduleContentDetails = ModuleContentDetails()
+        )
+
+        // Get the module item ID from the module items
+        val updatedModule = data.courseModules[course.id]!!.first()
+        val discussionModuleItem = updatedModule.items.find { it.title == discussionTitle }!!
+
+        // Set up fake checkpoint data BEFORE navigating to the page
+        val fakeModuleManager = moduleManager as FakeModuleManager
+
+        val checkpointDate1 = Date(1750089600000L) // Jun 16, 2025 6:00 PM
+        val checkpointDate2 = Date(1750608000000L) // Jun 22, 2025 6:00 PM
+
+        fakeModuleManager.setCheckpoints(
+            courseId = course.id.toString(),
+            moduleItemId = discussionModuleItem.id.toString(),
+            checkpoints = listOf(
+                ModuleItemCheckpoint(
+                    dueAt = checkpointDate1,
+                    tag = "reply_to_topic",
+                    pointsPossible = 5.0
+                ),
+                ModuleItemCheckpoint(
+                    dueAt = checkpointDate2,
+                    tag = "reply_to_entry",
+                    pointsPossible = 5.0
+                )
+            )
+        )
+
+        // NOW navigate to the modules page with the checkpoint data already set up
+        val student = data.students[0]
+        val token = data.tokenFor(student)!!
+        tokenLogin(data.domain, token, student)
+        dashboardPage.waitForRender()
+
+        // Navigate to the course
+        dashboardPage.selectCourse(course)
+        // Navigate to the modules page - this will trigger the initial load with checkpoints
+        courseBrowserPage.selectModules()
+
+        val expectedDateText1 = DateHelper.createPrefixedDateTimeString(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            R.string.toDoDue,
+            checkpointDate1
+        )
+        val expectedDateText2 = DateHelper.createPrefixedDateTimeString(
+            InstrumentationRegistry.getInstrumentation().targetContext,
+            R.string.toDoDue,
+            checkpointDate2
+        )
+
+        // Assert that checkpoint dates are displayed
+        modulesPage.assertCheckpointDatesDisplayed(discussionTitle, listOf(expectedDateText1!!, expectedDateText2!!))
     }
 
     // Mock a specified number of students and courses, add some assorted assignments, discussions, etc...

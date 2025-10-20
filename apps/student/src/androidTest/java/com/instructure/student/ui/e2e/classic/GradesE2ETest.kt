@@ -21,14 +21,14 @@ import com.instructure.dataseeding.util.fromNow
 import com.instructure.dataseeding.util.iso8601
 import com.instructure.espresso.getDateInCanvasCalendarFormat
 import com.instructure.student.R
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.Test
 
 @HiltAndroidTest
-class GradesE2ETest: StudentTest() {
+class GradesE2ETest: StudentComposeTest() {
 
     override fun displaysPageObjects() = Unit
 
@@ -81,7 +81,8 @@ class GradesE2ETest: StudentTest() {
         courseGradesPage.assertItemDisplayed(quizMatcher)
         courseGradesPage.assertGradeNotDisplayed(quizMatcher)
 
-        val dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
+        var dueDateInCanvasFormat = getDateInCanvasCalendarFormat(1.days.fromNow.iso8601)
+        dueDateInCanvasFormat = dueDateInCanvasFormat.replace(" 0", " ")
         Log.d(ASSERTION_TAG, "Assert that the '${assignment.name}' assignment's due date is tomorrow ('$dueDateInCanvasFormat').")
         courseGradesPage.assertAssignmentDueDate(assignment.name, dueDateInCanvasFormat)
 

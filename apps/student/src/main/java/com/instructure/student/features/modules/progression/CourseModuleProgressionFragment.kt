@@ -344,7 +344,11 @@ class CourseModuleProgressionFragment : ParentFragment(), Bookmarkable {
                 repository.markAsRead(canvasContext, moduleItem)
 
                 // Update the module item locally, needed to unlock modules as the user ViewPages through them
-                getCurrentModuleItem(currentPos)?.completionRequirement?.completed = true
+                // Only mark as completed if the requirement is satisfied by viewing (not must_mark_done)
+                val completionRequirement = getCurrentModuleItem(currentPos)?.completionRequirement
+                if (completionRequirement?.type != ModuleItem.MUST_MARK_DONE) {
+                    completionRequirement?.completed = true
+                }
 
                 setupNextModule(getModuleItemGroup(currentPos))
 

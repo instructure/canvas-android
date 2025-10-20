@@ -23,7 +23,7 @@ dependencies {
     compile project(':dataseedingapi')
 
     // https://search.maven.org/#search%7Cga%7C1%7Cg%3A%22io.grpc%22%20a%3A%22grpc-netty%22
-    compile 'io.grpc:grpc-netty:1.61.1'
+    compile 'io.grpc:grpc-netty:1.75.0'
     compile Libs.KOTLIN_STD_LIB
 
     // https://mvnrepository.com/artifact/io.netty/netty-tcnative-boringssl-static

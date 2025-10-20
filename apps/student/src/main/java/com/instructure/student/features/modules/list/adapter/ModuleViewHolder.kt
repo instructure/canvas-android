@@ -5,6 +5,7 @@ import android.graphics.Typeface
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
+import com.instructure.canvasapi2.managers.graphql.ModuleItemCheckpoint
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.utils.DateHelper
@@ -13,7 +14,6 @@ import com.instructure.canvasapi2.utils.isValid
 import com.instructure.pandautils.utils.ColorKeeper
 import com.instructure.pandautils.utils.DP
 import com.instructure.pandautils.utils.setGone
-import com.instructure.pandautils.utils.setInvisible
 import com.instructure.pandautils.utils.setTextForVisibility
 import com.instructure.pandautils.utils.setVisible
 import com.instructure.student.R
@@ -33,7 +33,8 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         courseColor: Int,
         isFirstItem: Boolean,
         isLastItem: Boolean,
-        restrictQuantitativeData: Boolean
+        restrictQuantitativeData: Boolean,
+        checkpoints: List<ModuleItemCheckpoint>?
     ) = with(ViewholderModuleBinding.bind(itemView)) {
 
         val isLocked = ModuleUtility.isGroupLocked(moduleObject)
@@ -135,41 +136,67 @@ class ModuleViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         // Details
         val details = moduleItem.moduleDetails
         if (details != null) {
-            val hasDate: Boolean
-            val hasPoints: Boolean
-            if (details.dueDate != null) {
-                date.text = DateHelper.createPrefixedDateTimeString(
-                    context,
-                    R.string.toDoDue,
-                    details.dueDate
-                )
-                hasDate = true
+            // Handle checkpoints or regular due date
+            if (!checkpoints.isNullOrEmpty()) {
+                // Hide the single date field
+                date.setGone()
+
+                // Clear previous checkpoint views
+                checkpointDatesContainer.removeAllViews()
+                checkpointDatesContainer.setVisible()
+
+                // Create a TextView for each checkpoint
+                checkpoints.forEach { checkpoint ->
+                    val checkpointDateView = android.widget.TextView(context).apply {
+                        layoutParams = android.widget.LinearLayout.LayoutParams(
+                            android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                            android.widget.LinearLayout.LayoutParams.WRAP_CONTENT
+                        )
+                        setTextAppearance(R.style.AdapterItemDescriptionText)
+                        text = if (checkpoint.dueAt != null) {
+                            DateHelper.createPrefixedDateTimeString(
+                                context,
+                                R.string.toDoDue,
+                                checkpoint.dueAt
+                            )
+                        } else {
+                            context.getString(R.string.toDoNoDueDate)
+                        }
+                    }
+                    checkpointDatesContainer.addView(checkpointDateView)
+                }
             } else {
-                date.text = ""
-                hasDate = false
+                // Show single date field for regular module items
+                checkpointDatesContainer.setGone()
+                if (details.dueDate != null) {
+                    date.text = DateHelper.createPrefixedDateTimeString(
+                        context,
+                        R.string.toDoDue,
+                        details.dueDate
+                    )
+                    date.setVisible()
+                } else {
+                    date.text = ""
+                    date.setGone()
+                }
             }
+
             val pointsPossible = details.pointsPossible
             if (pointsPossible.isValid() && !restrictQuantitativeData) {
                 points.text = context.getString(
                     R.string.totalPoints,
                     NumberHelper.formatDecimal(pointsPossible.toDouble(), 2, true)
                 )
-                hasPoints = true
+                points.setVisible()
             } else {
                 points.text = ""
-                hasPoints = false
-            }
-            if (!hasDate && !hasPoints) {
-                date.setGone()
                 points.setGone()
-            } else {
-                if (hasDate) date.setVisible() else date.setInvisible()
-                if (hasPoints) points.setVisible() else points.setInvisible()
             }
         } else {
             points.text = ""
             date.text = ""
             date.setGone()
+            checkpointDatesContainer.setGone()
             points.setGone()
         }
         BinderUtils.updateShadows(isFirstItem, isLastItem, shadowTop, shadowBottom)

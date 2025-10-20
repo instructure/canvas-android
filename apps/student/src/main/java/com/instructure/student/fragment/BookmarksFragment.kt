@@ -39,7 +39,12 @@ import com.instructure.interactions.router.Route
 import com.instructure.pandautils.analytics.SCREEN_VIEW_BOOKMARKS
 import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
-import com.instructure.pandautils.utils.*
+import com.instructure.pandautils.utils.ThemePrefs
+import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.hideKeyboard
+import com.instructure.pandautils.utils.isTablet
+import com.instructure.pandautils.utils.setupAsBackButton
+import com.instructure.pandautils.utils.setupAsCloseButton
 import com.instructure.student.R
 import com.instructure.student.activity.BookmarkShortcutActivity
 import com.instructure.student.adapter.BookmarkRecyclerAdapter
@@ -129,7 +134,9 @@ class BookmarksFragment : ParentFragment() {
             recyclerAdapter = BookmarkRecyclerAdapter(requireContext(), isShortcutActivity, object : BookmarkAdapterToFragmentCallback<Bookmark> {
                 override fun onRowClicked(bookmark: Bookmark, position: Int, isOpenDetail: Boolean) {
                     bookmarkSelectedCallback(bookmark)
-                    dismiss()
+                    if (isShortcutActivity) {
+                        dismiss()
+                    }
                 }
 
                 override fun onRefreshFinished() {

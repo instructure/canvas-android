@@ -141,7 +141,7 @@ class AssignmentReminderE2ETest: ParentComposeTest() {
         Log.d(STEP_TAG, "Click on the '+' button (Add reminder) to pick up a new reminder.")
         assignmentReminderPage.clickAddReminder()
 
-        val reminderDateOneDay = futureDueDate.apply { add(Calendar.DAY_OF_MONTH, -1) }
+        val reminderDateOneDay = futureDueDate.apply { add(Calendar.DAY_OF_MONTH, -1) }.apply { add(Calendar.HOUR, -1) }
         Log.d(STEP_TAG, "Select '1 Day Before'.")
         assignmentReminderPage.clickCustomReminderOption()
         assignmentReminderPage.selectDate(reminderDateOneDay)

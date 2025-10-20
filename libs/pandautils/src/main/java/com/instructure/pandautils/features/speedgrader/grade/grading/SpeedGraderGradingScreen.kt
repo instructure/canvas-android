@@ -364,8 +364,15 @@ private fun LateHeader(
     submissionDate: Date?,
     onLateDaysChange: (Float?) -> Unit
 ) {
-    var textFieldValue by remember(daysLate) {
-        mutableStateOf(numberFormatter.format(daysLate),)
+    var textFieldValue by remember {
+        mutableStateOf(numberFormatter.format(daysLate))
+    }
+
+    LaunchedEffect(daysLate) {
+        val apiFormatted = numberFormatter.format(daysLate)
+        if (textFieldValue != apiFormatted) {
+            textFieldValue = apiFormatted
+        }
     }
 
     Row(
@@ -424,28 +431,37 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val defaultItem =
         if (uiState.excused) stringResource(R.string.gradeExcused) else stringResource(R.string.not_graded)
 
-    var textFieldScore by remember(uiState.enteredScore) {
-        mutableStateOf(uiState.enteredScore?.let {
-            numberFormatter.format(
-                it
-            )
-        }.orEmpty())
+    val initialScore = uiState.enteredScore
+    val initialGrade = initialScore?.let {
+        convertScoreToLetterGrade(
+            it.toDouble(),
+            uiState.pointsPossible.orDefault(),
+            uiState.letterGrades
+        )
+    } ?: defaultItem
+
+    var textFieldScore by remember {
+        mutableStateOf(initialScore?.let { numberFormatter.format(it) }.orEmpty())
     }
 
-    var selectedGrade by remember(
-        uiState.enteredScore,
-        uiState.pointsPossible,
-        uiState.letterGrades
-    ) {
-        mutableStateOf(
-            uiState.enteredScore?.let {
+    var selectedGrade by remember {
+        mutableStateOf(initialGrade)
+    }
+
+    LaunchedEffect(uiState.enteredScore) {
+        val apiScore = uiState.enteredScore
+        val apiFormatted = apiScore?.let { numberFormatter.format(it) }.orEmpty()
+
+        if (textFieldScore != apiFormatted) {
+            textFieldScore = apiFormatted
+            selectedGrade = apiScore?.let {
                 convertScoreToLetterGrade(
                     it.toDouble(),
                     uiState.pointsPossible.orDefault(),
                     uiState.letterGrades
                 )
             } ?: defaultItem
-        )
+        }
     }
 
     LaunchedEffect(textFieldScore) {
@@ -456,7 +472,7 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     }
 
     LaunchedEffect(selectedGrade) {
-        if (selectedGrade != uiState.enteredGrade) {
+        if (selectedGrade != defaultItem && selectedGrade != uiState.enteredGrade && uiState.letterGrades.any { it.name == selectedGrade }) {
             uiState.onPercentageChange(
                 uiState.letterGrades
                     .find { it.name == selectedGrade }
@@ -526,9 +542,17 @@ private fun LetterGradeGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 @Composable
 private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
-    var grade by remember(uiState.enteredGrade) {
+    var grade by remember {
         mutableStateOf(uiState.enteredGrade.orEmpty())
     }
+
+    LaunchedEffect(uiState.enteredGrade) {
+        val apiGrade = uiState.enteredGrade.orEmpty()
+        if (grade != apiGrade) {
+            grade = apiGrade
+        }
+    }
+
     Column {
         Row(
             modifier = Modifier
@@ -587,48 +611,58 @@ private fun CompleteIncompleteGradingTypeInput(uiState: SpeedGraderGradingUiStat
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
-    val grade = uiState.enteredGrade?.replace("%", "").orEmpty()
-    var sliderDrivenScore by remember { mutableFloatStateOf(grade.toFloatOrNull() ?: 0f) }
-    var textFieldScore by remember(uiState.enteredGrade) { mutableStateOf(grade) }
+    val initialGrade = uiState.enteredGrade?.replace("%", "").orEmpty()
+    val initialGradeAsFloat = initialGrade.toFloatOrNull() ?: 0f
 
-    val maxScore by remember(uiState.enteredGrade) {
-        mutableFloatStateOf(
-            max(
-                grade.toFloatOrNull() ?: 0f, 100f
-            )
-        )
+    var sliderDrivenScore by remember {
+        mutableFloatStateOf(initialGradeAsFloat)
     }
+    var textFieldScore by remember {
+        mutableStateOf(if (initialGradeAsFloat == 0f) "" else numberFormatter.format(initialGradeAsFloat))
+    }
+
+    var maxScore by remember {
+        mutableFloatStateOf(max(initialGradeAsFloat, 100f))
+    }
+
     val sliderState = remember(maxScore) {
         SliderState(
-            value = sliderDrivenScore.coerceAtLeast(0f),
+            value = sliderDrivenScore.coerceIn(0f, maxScore),
             valueRange = 0f..maxScore,
         )
     }
 
-    LaunchedEffect(textFieldScore) {
-        val scoreAsFloat = textFieldScore.toFloatOrNull()
-        if (scoreAsFloat != uiState.enteredScore) {
-            uiState.onPercentageChange(scoreAsFloat)
+    LaunchedEffect(uiState.enteredGrade) {
+        val apiGrade = uiState.enteredGrade?.replace("%", "")?.toFloatOrNull()
+        val apiFormatted = apiGrade?.let { if (it == 0f) "" else numberFormatter.format(it) }.orEmpty()
+
+        maxScore = max(apiGrade ?: 0f, 100f)
+
+        if (textFieldScore != apiFormatted) {
+            textFieldScore = apiFormatted
+            val newValue = apiGrade ?: 0f
+            sliderDrivenScore = newValue
         }
     }
 
-    LaunchedEffect(grade) {
-        val newScore = grade.toFloatOrNull()
-        if (textFieldScore != newScore?.toString()) {
-            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
+    LaunchedEffect(textFieldScore) {
+        val scoreAsFloat = textFieldScore.toFloatOrNull() ?: 0f
+        if (sliderDrivenScore != scoreAsFloat) {
+            sliderDrivenScore = scoreAsFloat
+            sliderState.value = scoreAsFloat.coerceIn(0f, maxScore)
+            maxScore = max(scoreAsFloat, maxScore)
         }
-        if (sliderDrivenScore != (newScore ?: 0f)) {
-            sliderDrivenScore = newScore ?: 0f
-            sliderState.value = (newScore ?: 0f).coerceAtLeast(0f)
+        val currentPercentage = uiState.enteredGrade?.replace("%", "")?.toFloatOrNull()
+        if (scoreAsFloat != currentPercentage) {
+            uiState.onPercentageChange(textFieldScore.toFloatOrNull())
         }
     }
 
     LaunchedEffect(sliderState.value) {
-        val newScoreFromSlider = sliderState.value
+        val newScoreFromSlider = round(sliderState.value)
         if (sliderDrivenScore != newScoreFromSlider) {
-            sliderDrivenScore = round(newScoreFromSlider)
-            uiState.onPercentageChange(sliderDrivenScore)
-            textFieldScore = numberFormatter.format(sliderDrivenScore)
+            sliderDrivenScore = newScoreFromSlider
+            textFieldScore = numberFormatter.format(newScoreFromSlider)
         }
     }
 
@@ -693,80 +727,81 @@ private fun PercentageGradingTypeInput(uiState: SpeedGraderGradingUiState) {
 private fun PointGradingTypeInput(uiState: SpeedGraderGradingUiState) {
     val haptic = LocalHapticFeedback.current
 
-    val maxScore by remember(uiState.enteredScore) {
-        mutableFloatStateOf(
-            max(
-                (uiState.pointsPossible?.toFloat() ?: 10f),
-                uiState.enteredScore ?: 0f
-            )
+    val initialScore = uiState.enteredScore ?: 0f
+    val naturalMaxScore = uiState.pointsPossible?.toFloat() ?: 10f
+    val initialMaxScore = max(naturalMaxScore, initialScore)
+    val initialMinScore = min(initialScore, 0f)
+    val initialPointScale = when {
+        initialMaxScore <= 10.0 -> 4f
+        initialMaxScore <= 20.0 -> 2f
+        else -> 1f
+    }
+
+    var maxScore by remember {
+        mutableFloatStateOf(initialMaxScore)
+    }
+
+    var minScore by remember {
+        mutableFloatStateOf(initialMinScore)
+    }
+
+    val pointScale by remember {
+        mutableFloatStateOf(initialPointScale)
+    }
+
+    var sliderDrivenScore by remember {
+        mutableFloatStateOf(initialScore * initialPointScale)
+    }
+    var textFieldScore by remember {
+        mutableStateOf(
+            if (initialScore == 0f) "" else numberFormatter.format(initialScore)
         )
     }
 
-    val pointScale by remember(maxScore) {
-        mutableFloatStateOf(
-            when {
-                maxScore <= 10.0 -> 4f
-                maxScore <= 20.0 -> 2f
-                else -> 1f
-            }
-        )
-    }
-
-    var sliderDrivenScore by remember(uiState.enteredScore) {
-        mutableFloatStateOf(
-            (uiState.enteredScore ?: 0f) * pointScale
-        )
-    }
-    var textFieldScore by remember(uiState.enteredScore) {
-        mutableStateOf(uiState.enteredScore?.let {
-            numberFormatter.format(
-                it
-            )
-        }.orEmpty())
-    }
-
-    val minScore by remember(uiState.enteredScore) {
-        mutableFloatStateOf(
-            min(
-                uiState.enteredScore ?: 0f,
-                0f
-            )
-        )
-    }
-
-    val sliderState = remember(uiState.enteredScore, maxScore, minScore) {
+    val sliderState = remember(maxScore, minScore) {
         SliderState(
-            value = sliderDrivenScore,
+            value = sliderDrivenScore.coerceIn(minScore * pointScale, maxScore * pointScale),
             valueRange = minScore * pointScale..maxScore * pointScale,
-            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(
-                1
-            )
+            steps = ((maxScore - minScore).roundToInt() * pointScale.roundToInt() - 1).coerceAtLeast(1)
         )
+    }
+
+    LaunchedEffect(uiState.enteredScore) {
+        val apiScore = uiState.enteredScore
+        val apiFormatted = apiScore?.let { numberFormatter.format(it) }.orEmpty()
+
+        maxScore = max(apiScore ?: 0f, naturalMaxScore)
+        minScore = min(apiScore ?: 0f, 0f)
+
+        if (textFieldScore != apiFormatted) {
+            textFieldScore = apiFormatted
+            val newValue = (apiScore ?: 0f) * pointScale
+            sliderDrivenScore = newValue
+            sliderState.value = newValue
+        }
     }
 
     LaunchedEffect(textFieldScore) {
         val scoreAsFloat = textFieldScore.toFloatOrNull()
+        val scaledScore = (scoreAsFloat ?: 0f) * pointScale
+
+        if (sliderDrivenScore != scaledScore) {
+            sliderDrivenScore = scaledScore
+            maxScore = max(scoreAsFloat ?: 0f, maxScore)
+            minScore = min(scoreAsFloat ?: 0f, minScore)
+            sliderState.value = scaledScore.coerceIn(minScore * pointScale, maxScore * pointScale)
+        }
+
         if (scoreAsFloat != uiState.enteredScore) {
             uiState.onScoreChange(scoreAsFloat)
-        }
-    }
-
-    LaunchedEffect(uiState.enteredScore) {
-        val newScore = uiState.enteredScore
-        if (textFieldScore != newScore?.toString()) {
-            textFieldScore = newScore?.let { numberFormatter.format(it) }.orEmpty()
-        }
-        if (sliderDrivenScore != (newScore ?: 0f)) {
-            sliderDrivenScore = (newScore ?: 0f) * pointScale
-            sliderState.value = sliderDrivenScore
         }
     }
 
     LaunchedEffect(sliderState.value) {
         haptic.performHapticFeedback(HapticFeedbackType.LongPress)
         val newScoreFromSlider = sliderState.value.roundToInt().toFloat() / pointScale
-        if (sliderDrivenScore != newScoreFromSlider) {
-            sliderDrivenScore = newScoreFromSlider
+        if (sliderDrivenScore != sliderState.value) {
+            sliderDrivenScore = sliderState.value
             textFieldScore = numberFormatter.format(newScoreFromSlider)
         }
     }

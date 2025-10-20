@@ -85,7 +85,7 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
-import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
+import com.instructure.teacher.features.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.teacher.fragments.AnnouncementListFragment
 import com.instructure.teacher.fragments.AssigneeListFragment
 import com.instructure.teacher.fragments.AttendanceListFragment
@@ -141,7 +141,7 @@ object RouteMatcher : BaseRouteMatcher() {
         routes.add(Route(courseOrGroup("/"), DashboardFragment::class.java))
         routes.add(Route(courseOrGroup("/:course_id"), CourseBrowserFragment::class.java))
 
-        routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusFragment::class.java))
+        routes.add(Route(courseOrGroup("/:course_id/assignments/syllabus"), SyllabusRepositoryFragment::class.java))
 
         routes.add(Route(courseOrGroup("/:course_id/modules/:module_id"), ModuleListFragment::class.java))
         routes.add(
