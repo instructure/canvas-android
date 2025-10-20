@@ -29,6 +29,7 @@ import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContextPermission
+import com.instructure.canvasapi2.models.Checkpoint
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.dataseeding.util.days
@@ -84,7 +85,22 @@ class SyllabusInteractionTest : StudentComposeTest() {
         assignmentDetailsPage.assertAssignmentTitle(assignment.name!!)
     }
 
-    private fun goToSyllabus(eventCount: Int, assignmentCount: Int) : MockCanvas {
+    @Test
+    @TestMetaData(Priority.MANDATORY, FeatureCategory.SYLLABUS, TestCategory.INTERACTION)
+    fun testSyllabus_subAssignment() {
+        val data = goToSyllabus(eventCount = 0, assignmentCount = 1, withCheckpoints = true)
+
+        val course = data.courses.values.first()
+        data.coursePermissions[course.id] = CanvasContextPermission(manageCalendar = true)
+        val assignment = data.assignments.entries.firstOrNull()!!.value
+
+        syllabusPage.selectSummaryTab()
+        syllabusPage.assertItemDisplayed(assignment.name!!)
+        syllabusPage.selectSummaryEvent(assignment.name!!)
+        assignmentDetailsPage.assertAssignmentTitle(assignment.name!!)
+    }
+
+    private fun goToSyllabus(eventCount: Int, assignmentCount: Int, withCheckpoints: Boolean = false) : MockCanvas {
 
         val data = MockCanvas.init(studentCount = 1, teacherCount = 1, courseCount = 1, favoriteCourseCount = 1)
 
@@ -112,10 +128,24 @@ class SyllabusInteractionTest : StudentComposeTest() {
         }
 
         repeat(assignmentCount) {
+            val checkpoints = if (withCheckpoints) {
+                listOf(
+                    Checkpoint(
+                        name = "Checkpoint 1",
+                        tag = "checkpoint_1",
+                        pointsPossible = 10.0,
+                        dueAt = 2.days.fromNow.iso8601
+                    )
+                )
+            } else {
+                emptyList()
+            }
+
             data.addAssignment(
                     courseId = course.id,
                     submissionTypeList = listOf(Assignment.SubmissionType.ONLINE_TEXT_ENTRY),
-                    dueAt = 2.days.fromNow.iso8601
+                    dueAt = 2.days.fromNow.iso8601,
+                    checkpoints = checkpoints
             )
         }
 
