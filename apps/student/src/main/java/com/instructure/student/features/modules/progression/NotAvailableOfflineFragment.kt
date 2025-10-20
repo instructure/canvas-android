@@ -57,6 +57,7 @@ class NotAvailableOfflineFragment : ParentFragment() {
         if (showToolbar) {
             binding.toolbar.title = moduleItemName
             binding.toolbar.setupAsBackButton(this)
+            binding.toolbar.applyTopSystemBarInsets()
             ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, course)
         } else {
             binding.toolbar.setGone()

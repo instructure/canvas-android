@@ -35,6 +35,7 @@ import com.instructure.pandautils.utils.Const
 import com.instructure.pandautils.utils.OnBackStackChangedEvent
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.loadHtmlWithIframes
 import com.instructure.pandautils.utils.setGone
@@ -179,6 +180,7 @@ class AssignmentBasicFragment : ParentFragment() {
         binding.toolbar.let {
             it.title = assignment.name ?: ""
             it.setupAsBackButton(this)
+            it.applyTopSystemBarInsets()
             ViewStyler.themeToolbarColored(requireActivity(), it, canvasContext)
         }
     }

@@ -41,6 +41,8 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.hideKeyboard
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.setupAsBackButton
@@ -105,6 +107,7 @@ class BookmarksFragment : ParentFragment() {
             }
         }
 
+        toolbar.applyTopSystemBarInsets()
         ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
     }
 
@@ -126,6 +129,7 @@ class BookmarksFragment : ParentFragment() {
         configureRecyclerView(requireView(), requireContext(), recyclerAdapter!!, R.id.swipeRefreshLayout, R.id.emptyView, R.id.listView, R.string.no_bookmarks)
         pandaRecyclerBinding.listView.addItemDecoration(DividerDecoration(requireContext()))
         pandaRecyclerBinding.listView.isSelectionEnabled = false
+        pandaRecyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     private fun configureRecyclerAdapter() {

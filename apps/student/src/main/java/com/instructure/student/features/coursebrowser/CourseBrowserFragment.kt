@@ -54,6 +54,7 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.a11yManager
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.color
 import com.instructure.pandautils.utils.isSwitchAccessEnabled
@@ -196,6 +197,8 @@ class CourseBrowserFragment : BaseCanvasFragment(), FragmentInteractions,
         }
 
         swipeRefreshLayout.setOnRefreshListener { loadTabs(true) }
+
+        swipeRefreshLayout.applyBottomSystemBarInsets()
 
         loadTabs()
     }

@@ -78,6 +78,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ProfileUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.getModuleItemId
 import com.instructure.pandautils.utils.isAccessibilityEnabled
 import com.instructure.pandautils.utils.isGroup
@@ -172,6 +174,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
             // Send out bus events to trigger a refresh for discussion list
             DiscussionUpdatedEvent(discussionTopicHeader, javaClass.simpleName).post()
         }
+        binding.discussionsScrollView.applyBottomSystemBarInsets()
 
         networkStateProvider.isOnlineLiveData.observe(viewLifecycleOwner) { isOnline ->
             if (isOnline) {
@@ -237,6 +240,7 @@ class DiscussionDetailsFragment : ParentFragment(), Bookmarkable {
         }
         */
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, canvasContext)
+            toolbar.applyTopSystemBarInsets()
         }
     }
 

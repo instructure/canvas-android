@@ -93,6 +93,10 @@ fun View.applyTopSystemBarInsets() {
         view.updatePadding(top = systemBars.top)
         insets
     }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
+    }
 }
 
 fun View.applyBottomSystemBarInsets() {
@@ -100,6 +104,10 @@ fun View.applyBottomSystemBarInsets() {
         val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
         view.updatePadding(bottom = systemBars.bottom)
         insets
+    }
+    // Request insets to be dispatched immediately if view is attached
+    if (isAttachedToWindow) {
+        ViewCompat.requestApplyInsets(this)
     }
 }
 

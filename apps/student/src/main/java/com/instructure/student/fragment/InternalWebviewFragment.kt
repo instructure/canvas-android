@@ -55,6 +55,8 @@ import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.PermissionUtils
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.argsWithContext
 import com.instructure.pandautils.utils.makeBundle
 import com.instructure.pandautils.utils.setGone
@@ -230,6 +232,8 @@ open class InternalWebviewFragment : ParentFragment() {
 
         })
 
+        canvasWebViewWrapper.applyBottomSystemBarInsets()
+
         if (savedInstanceState != null) {
             canvasWebViewWrapper?.webView?.restoreState(savedInstanceState)
         }
@@ -299,6 +303,7 @@ open class InternalWebviewFragment : ParentFragment() {
     override fun applyTheme() = with(binding) {
         toolbar.title = title()
         toolbar.setupAsBackButton(this@InternalWebviewFragment)
+        toolbar.applyTopSystemBarInsets()
         if (canvasContext.type != CanvasContext.Type.COURSE && canvasContext.type != CanvasContext.Type.GROUP) {
             ViewStyler.themeToolbarColored(requireActivity(), toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
         } else {
