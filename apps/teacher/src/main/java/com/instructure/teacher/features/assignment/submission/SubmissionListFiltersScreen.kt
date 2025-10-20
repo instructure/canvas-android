@@ -33,6 +33,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -123,22 +124,22 @@ private fun SubmissionFilterScreenContent(
     actionHandler: (SubmissionListAction) -> Unit,
     dismiss: () -> Unit
 ) {
-    var filters by remember { mutableStateOf(selectedFilters) }
-    var valueAbove by remember {
+    var filters by rememberSaveable { mutableStateOf(selectedFilters) }
+    var valueAbove by rememberSaveable {
         mutableStateOf(filterValueAbove?.let {
             NumberHelper.formatDecimal(it, 2, true)
         }.orEmpty())
     }
-    var valueBelow by remember {
+    var valueBelow by rememberSaveable {
         mutableStateOf(filterValueBelow?.let {
             NumberHelper.formatDecimal(it, 2, true)
         }.orEmpty())
     }
-    var selectedSections by remember { mutableStateOf(initialSelectedSections.toSet()) }
-    var selectedTags by remember { mutableStateOf(selectedDifferentiationTagIds) }
-    var includeWithoutTags by remember { mutableStateOf(includeStudentsWithoutTags) }
-    var selectedSortOrder by remember { mutableStateOf(sortOrder) }
-    var selectedCustomStatuses by remember { mutableStateOf(initialSelectedCustomStatusIds) }
+    var selectedSections by rememberSaveable { mutableStateOf(initialSelectedSections.toSet()) }
+    var selectedTags by rememberSaveable { mutableStateOf(selectedDifferentiationTagIds) }
+    var includeWithoutTags by rememberSaveable { mutableStateOf(includeStudentsWithoutTags) }
+    var selectedSortOrder by rememberSaveable { mutableStateOf(sortOrder) }
+    var selectedCustomStatuses by rememberSaveable { mutableStateOf(initialSelectedCustomStatusIds) }
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {

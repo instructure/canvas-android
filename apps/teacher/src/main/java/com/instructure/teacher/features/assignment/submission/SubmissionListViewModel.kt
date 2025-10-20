@@ -192,7 +192,7 @@ class SubmissionListViewModel @Inject constructor(
                             AssignmentUtils2.ASSIGNMENT_STATE_GRADED_LATE,
                             AssignmentUtils2.ASSIGNMENT_STATE_GRADED_MISSING,
                             AssignmentUtils2.ASSIGNMENT_STATE_EXCUSED
-                        ) && it.isGradeMatchesCurrentSubmission) || submission.submission?.customGradeStatusId != null
+                        ) && it.isGradeMatchesCurrentSubmission)
                     } == true
 
                     SubmissionListFilter.MISSING -> submission.submission?.workflowState == "unsubmitted" || submission.submission == null
