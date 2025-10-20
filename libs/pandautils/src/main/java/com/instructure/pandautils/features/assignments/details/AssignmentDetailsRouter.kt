@@ -40,7 +40,8 @@ open class AssignmentDetailsRouter {
         assignmentUrl: String?,
         isAssignmentEnhancementEnabled: Boolean,
         isObserver: Boolean = false,
-        initialSelectedSubmissionAttempt: Long? = null
+        initialSelectedSubmissionAttempt: Long? = null,
+        isQuiz: Boolean = false
     ) = Unit
 
     open fun navigateToQuizScreen(activity: FragmentActivity, canvasContext: CanvasContext, quiz: Quiz, url: String) = Unit

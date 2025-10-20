@@ -63,13 +63,11 @@ object ThemePrefs : PrefManager("CanvasTheme") {
 
     var isThemeApplied by BooleanPref()
 
-    var appTheme by IntPref(defaultValue = 0)
-
-    var themeSelectionShown by BooleanPref()
+    var appTheme by IntPref(defaultValue = 2) // Default to system
 
     private var canvasTheme: CanvasTheme? = null
 
-    override fun keepBaseProps() = listOf(::appTheme, ::themeSelectionShown)
+    override fun keepBaseProps() = listOf(::appTheme)
 
     override fun onClearPrefs() {
     }

@@ -29,7 +29,7 @@ sealed class FileUploadEvent {
     data class FileSelected(val filePaths: List<String>) : FileUploadEvent()
     data class UploadStarted(
         val uuid: UUID?,
-        val workInfoLiveData: LiveData<WorkInfo>,
+        val workInfoLiveData: LiveData<WorkInfo?>,
         val filePaths: List<String>
     ) : FileUploadEvent()
 }

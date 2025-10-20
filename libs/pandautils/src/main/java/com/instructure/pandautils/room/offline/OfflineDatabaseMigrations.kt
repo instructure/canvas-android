@@ -187,6 +187,30 @@ val offlineDatabaseMigrations = arrayOf(
         )
     },
     createMigration(7, 8) { database ->
+        database.execSQL(
+            "CREATE TABLE IF NOT EXISTS `CheckpointEntity_temp` (" +
+                    "`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," +
+                    "`assignmentId` INTEGER," +
+                    "`name` TEXT," +
+                    "`tag` TEXT," +
+                    "`pointsPossible` REAL," +
+                    "`dueAt` TEXT," +
+                    "`onlyVisibleToOverrides` INTEGER NOT NULL," +
+                    "`lockAt` TEXT," +
+                    "`unlockAt` TEXT," +
+                    "`moduleItemId` INTEGER," +
+                    "`courseId` INTEGER," +
+                    "FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE," +
+                    "FOREIGN KEY(`moduleItemId`) REFERENCES `ModuleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE)"
+        )
+        database.execSQL(
+            "INSERT INTO CheckpointEntity_temp (id, assignmentId, name, tag, pointsPossible, dueAt, onlyVisibleToOverrides, lockAt, unlockAt) " +
+                    "SELECT id, assignmentId, name, tag, pointsPossible, dueAt, onlyVisibleToOverrides, lockAt, unlockAt FROM CheckpointEntity"
+        )
+        database.execSQL("DROP TABLE CheckpointEntity")
+        database.execSQL("ALTER TABLE CheckpointEntity_temp RENAME TO CheckpointEntity")
+    },
+    createMigration(8, 9) { database ->
         database.execSQL("ALTER TABLE `ScheduleItemEntity` ADD COLUMN `subAssignmentId` INTEGER")
     }
 )

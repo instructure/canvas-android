@@ -16,6 +16,7 @@
  */
 package com.instructure.student.features.modules.list.datasource
 
+import com.instructure.canvasapi2.managers.graphql.ModuleItemWithCheckpoints
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
@@ -34,4 +35,6 @@ interface ModuleListDataSource {
     suspend fun getFirstPageModuleItems(canvasContext: CanvasContext, moduleId: Long, forceNetwork: Boolean): DataResult<List<ModuleItem>>
 
     suspend fun loadCourseSettings(courseId: Long, forceNetwork: Boolean): CourseSettings?
+
+    suspend fun getModuleItemCheckpoints(courseId: String, forceNetwork: Boolean): List<ModuleItemWithCheckpoints>
 }

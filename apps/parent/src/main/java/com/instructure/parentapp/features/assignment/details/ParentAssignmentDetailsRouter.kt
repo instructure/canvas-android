@@ -47,13 +47,14 @@ class ParentAssignmentDetailsRouter(
         assignmentUrl: String?,
         isAssignmentEnhancementEnabled: Boolean,
         isObserver: Boolean,
-        initialSelectedSubmissionAttempt: Long?
+        initialSelectedSubmissionAttempt: Long?,
+        isQuiz: Boolean
     ) {
         assignmentUrl ?: return
         val parentId = apiPrefs.user?.id ?: return
         val currentStudentId = parentPrefs.currentStudent?.id ?: return
         val cookies = mapOf("k5_observed_user_for_$parentId" to "$currentStudentId")
-        val url = if (isAssignmentEnhancementEnabled) {
+        val url = if (isAssignmentEnhancementEnabled && !isQuiz) {
             assignmentUrl
         } else {
             "$assignmentUrl/submissions/$currentStudentId"

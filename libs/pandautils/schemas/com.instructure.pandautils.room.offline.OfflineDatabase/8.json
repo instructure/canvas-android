@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 8,
-    "identityHash": "a93aa1ea97567c9b362e8b0620a19f3e",
+    "identityHash": "371b12b510101fec6ff4b7155ac8b092",
     "entities": [
       {
         "tableName": "AssignmentDueDateEntity",
@@ -3674,7 +3674,7 @@
       },
       {
         "tableName": "ScheduleItemEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `description` TEXT, `startAt` TEXT, `endAt` TEXT, `isAllDay` INTEGER NOT NULL, `allDayAt` TEXT, `locationAddress` TEXT, `locationName` TEXT, `htmlUrl` TEXT, `contextCode` TEXT, `effectiveContextCode` TEXT, `isHidden` INTEGER NOT NULL, `importantDates` INTEGER NOT NULL, `assignmentId` INTEGER, `subAssignmentId` INTEGER, `type` TEXT NOT NULL, `itemType` TEXT, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` TEXT NOT NULL, `title` TEXT, `description` TEXT, `startAt` TEXT, `endAt` TEXT, `isAllDay` INTEGER NOT NULL, `allDayAt` TEXT, `locationAddress` TEXT, `locationName` TEXT, `htmlUrl` TEXT, `contextCode` TEXT, `effectiveContextCode` TEXT, `isHidden` INTEGER NOT NULL, `importantDates` INTEGER NOT NULL, `assignmentId` INTEGER, `type` TEXT NOT NULL, `itemType` TEXT, `courseId` INTEGER NOT NULL, PRIMARY KEY(`id`), FOREIGN KEY(`courseId`) REFERENCES `CourseEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
         "fields": [
           {
             "fieldPath": "id",
@@ -3763,12 +3763,6 @@
           {
             "fieldPath": "assignmentId",
             "columnName": "assignmentId",
-            "affinity": "INTEGER",
-            "notNull": false
-          },
-          {
-            "fieldPath": "subAssignmentId",
-            "columnName": "subAssignmentId",
             "affinity": "INTEGER",
             "notNull": false
           },
@@ -5802,7 +5796,7 @@
       },
       {
         "tableName": "CheckpointEntity",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `assignmentId` INTEGER NOT NULL, `name` TEXT, `tag` TEXT, `pointsPossible` REAL, `dueAt` TEXT, `onlyVisibleToOverrides` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `assignmentId` INTEGER, `name` TEXT, `tag` TEXT, `pointsPossible` REAL, `dueAt` TEXT, `onlyVisibleToOverrides` INTEGER NOT NULL, `lockAt` TEXT, `unlockAt` TEXT, `moduleItemId` INTEGER, `courseId` INTEGER, FOREIGN KEY(`assignmentId`) REFERENCES `AssignmentEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED, FOREIGN KEY(`moduleItemId`) REFERENCES `ModuleItemEntity`(`id`) ON UPDATE NO ACTION ON DELETE CASCADE DEFERRABLE INITIALLY DEFERRED)",
         "fields": [
           {
             "fieldPath": "id",
@@ -5814,7 +5808,7 @@
             "fieldPath": "assignmentId",
             "columnName": "assignmentId",
             "affinity": "INTEGER",
-            "notNull": true
+            "notNull": false
           },
           {
             "fieldPath": "name",
@@ -5857,6 +5851,18 @@
             "columnName": "unlockAt",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "moduleItemId",
+            "columnName": "moduleItemId",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "courseId",
+            "columnName": "courseId",
+            "affinity": "INTEGER",
+            "notNull": false
           }
         ],
         "primaryKey": {
@@ -5873,6 +5879,17 @@
             "onUpdate": "NO ACTION",
             "columns": [
               "assignmentId"
+            ],
+            "referencedColumns": [
+              "id"
+            ]
+          },
+          {
+            "table": "ModuleItemEntity",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "moduleItemId"
             ],
             "referencedColumns": [
               "id"
@@ -6002,7 +6019,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'a93aa1ea97567c9b362e8b0620a19f3e')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '371b12b510101fec6ff4b7155ac8b092')"
     ]
   }
 }

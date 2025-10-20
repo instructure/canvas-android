@@ -5,7 +5,6 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.LifecycleRegistry
-import androidx.lifecycle.MutableLiveData
 import androidx.work.Data
 import androidx.work.WorkInfo
 import androidx.work.WorkManager
@@ -24,6 +23,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.test.UnconfinedTestDispatcher
 import kotlinx.coroutines.test.resetMain
 import kotlinx.coroutines.test.setMain
@@ -51,7 +51,7 @@ class ShareExtensionProgressViewModelTest {
     private val dashboardFileUploadDao: DashboardFileUploadDao = mockk(relaxed = true)
     private val fileUploadUtilsHelper: FileUploadUtilsHelper = mockk(relaxed = true)
 
-    private lateinit var mockLiveData: MutableLiveData<WorkInfo>
+    private lateinit var mockFlow: MutableStateFlow<WorkInfo?>
     private lateinit var viewModel: ShareExtensionProgressDialogViewModel
     private lateinit var uuid: UUID
 
@@ -64,8 +64,8 @@ class ShareExtensionProgressViewModelTest {
 
         uuid = UUID.randomUUID()
 
-        mockLiveData = MutableLiveData<WorkInfo>()
-        every { workManager.getWorkInfoByIdLiveData(uuid) } returns mockLiveData
+        mockFlow = MutableStateFlow<WorkInfo?>(null)
+        every { workManager.getWorkInfoByIdFlow(uuid) } returns mockFlow
 
         viewModel = createViewModel()
     }
@@ -78,7 +78,7 @@ class ShareExtensionProgressViewModelTest {
     @Test
     fun `Show success dialog after uploading`() {
         viewModel.setUUID(uuid)
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.SUCCEEDED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1))
+        mockFlow.value = WorkInfo(uuid, WorkInfo.State.SUCCEEDED, emptySet(), Data.EMPTY, Data.EMPTY, 1, 1)
 
         viewModel.events.observe(lifecycleOwner) {}
         assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())
@@ -93,7 +93,7 @@ class ShareExtensionProgressViewModelTest {
             .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, emptyArray())
             .build()
 
-        mockLiveData.postValue(WorkInfo(uuid, WorkInfo.State.FAILED, emptySet(), outputData, Data.EMPTY, 1, 1))
+        mockFlow.value = WorkInfo(uuid, WorkInfo.State.FAILED, emptySet(), outputData, Data.EMPTY, 1, 1)
 
         assertEquals("Error", viewModel.data.value?.subtitle)
     }
@@ -127,16 +127,14 @@ class ShareExtensionProgressViewModelTest {
             .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
             .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, emptyArray())
             .build()
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.RUNNING,
-                emptySet(),
-                Data.EMPTY,
-                progressData,
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.RUNNING,
+            emptySet(),
+            Data.EMPTY,
+            progressData,
+            1,
+            1
         )
 
         assertEquals(ViewState.Success, viewModel.state.value)
@@ -147,7 +145,7 @@ class ShareExtensionProgressViewModelTest {
 
         every { resources.getString(R.string.submissionProgressSubtitle, "Assignment") } returns "Uploading submission to \"Assignment\""
 
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
@@ -159,16 +157,14 @@ class ShareExtensionProgressViewModelTest {
             .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, "Assignment")
             .build()
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.RUNNING,
-                emptySet(),
-                Data.EMPTY,
-                progressData,
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.RUNNING,
+            emptySet(),
+            Data.EMPTY,
+            progressData,
+            1,
+            1
         )
 
         val expectedItemData = listOf(
@@ -205,7 +201,7 @@ class ShareExtensionProgressViewModelTest {
     fun `Update view data when live data changes`() {
         every { resources.getString(R.string.submissionProgressSubtitle, "Assignment") } returns "Uploading submission to \"Assignment\""
 
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
@@ -216,16 +212,14 @@ class ShareExtensionProgressViewModelTest {
             .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 0L)
             .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, "Assignment")
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.RUNNING,
-                emptySet(),
-                Data.EMPTY,
-                progressData.build(),
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.RUNNING,
+            emptySet(),
+            Data.EMPTY,
+            progressData.build(),
+            1,
+            1
         )
 
         val expectedItemData = listOf(
@@ -251,16 +245,14 @@ class ShareExtensionProgressViewModelTest {
             .putStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES, arrayOf(filesToUpload[0]))
             .putLong(FileUploadWorker.PROGRESS_DATA_UPLOADED_SIZE, 1L)
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.RUNNING,
-                emptySet(),
-                Data.EMPTY,
-                progressData.build(),
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.RUNNING,
+            emptySet(),
+            Data.EMPTY,
+            progressData.build(),
+            1,
+            1
         )
 
         val viewData = viewModel.data.value
@@ -277,12 +269,12 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Failed upload maps correctly`() {
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = ""),
             FileSubmitObject(name = "Test 2", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
 
-        val uploadedFiles = listOf(
+        val uploadedFiles: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
 
@@ -293,16 +285,14 @@ class ShareExtensionProgressViewModelTest {
             .putString(FileUploadWorker.PROGRESS_DATA_ASSIGNMENT_NAME, "Assignment")
             .build()
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.FAILED,
-                emptySet(),
-                progressData,
-                Data.EMPTY,
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.FAILED,
+            emptySet(),
+            progressData,
+            Data.EMPTY,
+            1,
+            1
         )
 
         val expectedItemData = listOf(
@@ -336,7 +326,7 @@ class ShareExtensionProgressViewModelTest {
 
     @Test
     fun `Failed upload retry`() {
-        val filesToUpload = listOf(
+        val filesToUpload: Array<String?> = listOf(
             FileSubmitObject(name = "Test 1", size = 1L, contentType = "text/file", fullPath = "")
         ).map { it.toJson() }.toTypedArray()
 
@@ -345,26 +335,24 @@ class ShareExtensionProgressViewModelTest {
             .putStringArray(FileUploadWorker.PROGRESS_DATA_FILES_TO_UPLOAD, filesToUpload)
             .build()
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.FAILED,
-                emptySet(),
-                failedOutputData,
-                Data.EMPTY,
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.FAILED,
+            emptySet(),
+            failedOutputData,
+            Data.EMPTY,
+            1,
+            1
         )
 
         viewModel.setUUID(uuid)
+        viewModel.data.observe(lifecycleOwner) {}
+        viewModel.events.observe(lifecycleOwner) {}
 
         val viewData = viewModel.data.value
         assertEquals("File Upload", viewData?.dialogTitle)
         assertEquals("Error", viewData?.subtitle)
         assertEquals(true, viewData?.failed)
-
-        viewModel.onRetryClick()
 
         coEvery { fileUploadInputDao.findByWorkerId(uuid.toString()) } returns FileUploadInputEntity(
             workerId = uuid.toString(),
@@ -372,9 +360,11 @@ class ShareExtensionProgressViewModelTest {
             filePaths = emptyList()
         )
 
-        every { workManager.getWorkInfoByIdLiveData(any()) } returns mockLiveData
+        every { workManager.getWorkInfoByIdFlow(any()) } returns mockFlow
 
         every { resources.getString(R.string.fileUploadProgressSubtitle) } returns "Uploading files"
+
+        viewModel.onRetryClick()
 
         val successProgressData = Data.Builder()
             .putLong(FileUploadWorker.PROGRESS_DATA_FULL_SIZE, 1L)
@@ -382,32 +372,28 @@ class ShareExtensionProgressViewModelTest {
             .putStringArray(FileUploadWorker.PROGRESS_DATA_UPLOADED_FILES, filesToUpload)
             .build()
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.RUNNING,
-                emptySet(),
-                Data.EMPTY,
-                successProgressData,
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.RUNNING,
+            emptySet(),
+            Data.EMPTY,
+            successProgressData,
+            1,
+            1
         )
 
         val successViewData = viewModel.data.value
         assertEquals("Uploading files", successViewData?.subtitle)
         assertEquals(false, successViewData?.failed)
 
-        mockLiveData.postValue(
-            WorkInfo(
-                uuid,
-                WorkInfo.State.SUCCEEDED,
-                emptySet(),
-                Data.EMPTY,
-                successProgressData,
-                1,
-                1
-            )
+        mockFlow.value = WorkInfo(
+            uuid,
+            WorkInfo.State.SUCCEEDED,
+            emptySet(),
+            Data.EMPTY,
+            successProgressData,
+            1,
+            1
         )
 
         assertEquals(ShareExtensionProgressAction.ShowSuccessDialog(FileUploadType.USER), viewModel.events.value?.getContentIfNotHandled())

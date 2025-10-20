@@ -551,8 +551,9 @@ class FileListFragment : ParentFragment(), Bookmarkable, FileUploadDialogParent 
         }
     }
 
-    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo>) {
+    override fun workInfoLiveDataCallback(uuid: UUID?, workInfoLiveData: LiveData<WorkInfo?>) {
         workInfoLiveData.observe(viewLifecycleOwner) {
+            if (it == null) return@observe
             if (it.state == WorkInfo.State.SUCCEEDED) {
                 updateFileList(true)
                 folder?.let { fileFolder ->

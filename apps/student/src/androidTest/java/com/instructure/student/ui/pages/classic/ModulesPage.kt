@@ -111,10 +111,36 @@ class ModulesPage : BasePage(R.id.modulesPage) {
     }
 
     fun assertPossiblePointsNotDisplayed(name: String) {
-        val matcher = withParent(hasSibling(withChild(withId(R.id.title) + withText(name)))) + withId(R.id.points)
+        val matcher = allOf(
+            withId(R.id.points),
+            hasSibling(withChild(withId(R.id.title) + withText(name)))
+        )
 
         scrollRecyclerView(R.id.listView, matcher)
         onView(matcher).assertNotDisplayed()
+    }
+
+    fun assertCheckpointDatesDisplayed(discussionTitle: String, expectedDateTexts: List<String>) {
+        // First scroll to the discussion item
+        scrollRecyclerView(R.id.listView, withText(discussionTitle))
+
+        // Find the checkpointDatesContainer within the same parent as the title
+        val checkpointContainerMatcher = allOf(
+            withId(R.id.checkpointDatesContainer),
+            hasSibling(withChild(withId(R.id.title) + withText(discussionTitle)))
+        )
+
+        // Assert that the checkpoint dates container is visible (not GONE)
+        onView(checkpointContainerMatcher).check(matches(isDisplayed()))
+
+        // Assert each expected date text is displayed within the container
+        expectedDateTexts.forEach { dateText ->
+            val dateTextMatcher = allOf(
+                withText(dateText),
+                withParent(checkpointContainerMatcher)
+            )
+            onView(dateTextMatcher).check(matches(isDisplayed()))
+        }
     }
 
     /**
