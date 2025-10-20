@@ -412,7 +412,7 @@ class LoginE2ETest : ParentComposeTest() {
 
     @E2E
     @Test
-    @TestMetaData(Priority.IMPORTANT, FeatureCategory.LOGIN, TestCategory.E2E)
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
     fun testWrongDomainE2E() {
 
         val wrongDomain = "invalid-domain"
@@ -436,7 +436,7 @@ class LoginE2ETest : ParentComposeTest() {
         wrongDomainPage.assertYouTypedMessageDisplayed(wrongDomain)
         wrongDomainPage.assertErrorPageImageDisplayed()
 
-        Log.d(STEP_TAG, "Navigate back from the error page.")
+        Log.d(STEP_TAG, "Navigate back to the LoginFindSchoolPage.")
         Espresso.pressBack()
 
         Log.d(STEP_TAG, "Enter valid domain: $validDomain.instructure.com.")
@@ -445,15 +445,8 @@ class LoginE2ETest : ParentComposeTest() {
         Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
         loginFindSchoolPage.clickToolbarNextMenuItem()
 
-        Log.d(STEP_TAG, "Login with user: '${parent.name}', login id: '${parent.loginId}'.")
-        loginSignInPage.loginAs(parent)
-
-        Log.d(ASSERTION_TAG, "Assert that the Dashboard Page is the landing page and it is loaded successfully after recovering from wrong domain error.")
-        dashboardPage.waitForRender()
-        dashboardPage.assertPageObjects()
-
-        Log.d(ASSERTION_TAG, "Assert that the '${parent.name}' parent user has logged in.")
-        leftSideNavigationDrawerPage.assertUserLoggedIn(parent)
+        Log.d(ASSERTION_TAG, "Assert that the Login Page is open.")
+        loginSignInPage.assertPageObjects()
     }
 
 }

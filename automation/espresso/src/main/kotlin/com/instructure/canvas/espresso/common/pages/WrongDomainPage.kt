@@ -16,7 +16,6 @@
  */
 package com.instructure.canvas.espresso.common.pages
 
-import android.annotation.SuppressLint
 import androidx.test.espresso.web.assertion.WebViewAssertions.webMatches
 import androidx.test.espresso.web.sugar.Web.onWebView
 import androidx.test.espresso.web.webdriver.DriverAtoms.findElement
