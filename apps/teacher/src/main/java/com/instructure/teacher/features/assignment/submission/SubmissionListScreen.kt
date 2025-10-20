@@ -134,22 +134,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
     ) { padding ->
         if (showFilterDialog) {
             SubmissionListFilters(
-                selectedFilters = uiState.selectedFilters,
-                filterValueAbove = uiState.filterValueAbove,
-                filterValueBelow = uiState.filterValueBelow,
-                assignmentMaxPoints = uiState.assignmentMaxPoints,
-                courseColor = uiState.courseColor,
-                assignmentName = uiState.assignmentName,
-                anonymousGrading = uiState.anonymousGrading,
-                sections = uiState.sections,
-                initialSelectedSections = uiState.selectedSections,
-                differentiationTags = uiState.differentiationTags,
-                selectedDifferentiationTagIds = uiState.selectedDifferentiationTagIds,
-                includeStudentsWithoutTags = uiState.includeStudentsWithoutTags,
-                sortOrder = uiState.sortOrder,
-                customGradeStatuses = uiState.customGradeStatuses,
-                selectedCustomStatusIds = uiState.selectedCustomStatusIds,
-                actionHandler = uiState.actionHandler,
+                uiState = uiState.filtersUiState
             ) {
                 showFilterDialog = false
             }
@@ -362,11 +347,25 @@ private fun SubmissionTag(tag: SubmissionTag, hasDivider: Boolean) {
 fun SubmissionListScreenPreview() {
     SubmissionListScreen(
         SubmissionListUiState(
-            "Test assignment",
-            courseColor = Color.Magenta,
             headerTitle = "All Submissions",
-            selectedFilters = setOf(SubmissionListFilter.GRADED),
-            anonymousGrading = false,
+            filtersUiState = SubmissionListFiltersUiState(
+                assignmentName = "Test assignment",
+                courseColor = Color.Magenta,
+                anonymousGrading = false,
+                selectedFilters = setOf(SubmissionListFilter.GRADED),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                assignmentMaxPoints = 100.0,
+                sections = emptyList(),
+                initialSelectedSections = emptyList(),
+                differentiationTags = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                customGradeStatuses = emptyList(),
+                selectedCustomStatusIds = emptySet(),
+                actionHandler = {}
+            ),
             submissions = listOf(
                 SubmissionUiState(
                     1,
@@ -432,7 +431,7 @@ fun SubmissionListScreenPreview() {
                     hidden = false
                 )
             )
-        ) {}
+        )
     ) {}
 }
 
@@ -441,11 +440,25 @@ fun SubmissionListScreenPreview() {
 fun SubmissionListScreenDarkPreview() {
     SubmissionListScreen(
         SubmissionListUiState(
-            "Test assignment",
-            courseColor = Color.Magenta,
-            anonymousGrading = false,
             headerTitle = "All Submissions",
-            selectedFilters = setOf(SubmissionListFilter.GRADED),
+            filtersUiState = SubmissionListFiltersUiState(
+                assignmentName = "Test assignment",
+                courseColor = Color.Magenta,
+                anonymousGrading = false,
+                selectedFilters = setOf(SubmissionListFilter.GRADED),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                assignmentMaxPoints = 100.0,
+                sections = emptyList(),
+                initialSelectedSections = emptyList(),
+                differentiationTags = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                customGradeStatuses = emptyList(),
+                selectedCustomStatusIds = emptySet(),
+                actionHandler = {}
+            ),
             submissions = listOf(
                 SubmissionUiState(
                     1,
@@ -518,7 +531,7 @@ fun SubmissionListScreenDarkPreview() {
                     hidden = false
                 )
             )
-        ) {}
+        )
     ) {}
 }
 
@@ -527,12 +540,27 @@ fun SubmissionListScreenDarkPreview() {
 private fun SubmissionListErrorPreview() {
     SubmissionListScreen(
         SubmissionListUiState(
-            "Test assignment",
-            courseColor = Color.Magenta,
-            anonymousGrading = false,
             headerTitle = "All Submissions",
+            filtersUiState = SubmissionListFiltersUiState(
+                assignmentName = "Test assignment",
+                courseColor = Color.Magenta,
+                anonymousGrading = false,
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                assignmentMaxPoints = 100.0,
+                sections = emptyList(),
+                initialSelectedSections = emptyList(),
+                differentiationTags = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                customGradeStatuses = emptyList(),
+                selectedCustomStatusIds = emptySet(),
+                actionHandler = {}
+            ),
             error = true
-        ) {}
+        )
     ) {}
 }
 
@@ -541,11 +569,26 @@ private fun SubmissionListErrorPreview() {
 private fun SubmissionListEmptyPreview() {
     SubmissionListScreen(
         SubmissionListUiState(
-            "Test assignment",
-            courseColor = Color.Magenta,
-            anonymousGrading = false,
             headerTitle = "All Submissions",
+            filtersUiState = SubmissionListFiltersUiState(
+                assignmentName = "Test assignment",
+                courseColor = Color.Magenta,
+                anonymousGrading = false,
+                selectedFilters = setOf(SubmissionListFilter.ALL),
+                filterValueAbove = null,
+                filterValueBelow = null,
+                assignmentMaxPoints = 100.0,
+                sections = emptyList(),
+                initialSelectedSections = emptyList(),
+                differentiationTags = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+                customGradeStatuses = emptyList(),
+                selectedCustomStatusIds = emptySet(),
+                actionHandler = {}
+            ),
             submissions = emptyList()
-        ) {}
+        )
     ) {}
 }

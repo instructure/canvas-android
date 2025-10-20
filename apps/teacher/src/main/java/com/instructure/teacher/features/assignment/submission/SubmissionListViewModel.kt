@@ -17,13 +17,11 @@
 package com.instructure.teacher.features.assignment.submission
 
 import android.content.res.Resources
-import android.util.Log
 import androidx.compose.ui.graphics.Color
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.CustomGradeStatusesQuery
-import com.instructure.canvasapi2.DifferentiationTagsQuery
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.GradeableStudentSubmission
@@ -60,11 +58,6 @@ class SubmissionListViewModel @Inject constructor(
     private val submissionListRepository: AssignmentSubmissionRepository
 ) : ViewModel() {
 
-    companion object {
-        // Fixed seed ensures consistent ordering across app restarts for anonymous grading
-        private const val ANONYMOUS_SHUFFLE_SEED = 1234
-    }
-
     private val assignment: Assignment = savedStateHandle[SubmissionListFragment.ASSIGNMENT]
         ?: throw IllegalArgumentException("Assignment must be passed to SubmissionListViewModel")
     private val course: Course = savedStateHandle[SubmissionListFragment.COURSE]
@@ -88,14 +81,26 @@ class SubmissionListViewModel @Inject constructor(
 
     private val _uiState = MutableStateFlow(
         SubmissionListUiState(
-            assignmentName = assignment.name.orEmpty(),
-            courseColor = Color(course.color),
-            anonymousGrading = assignment.anonymousGrading,
-            selectedFilters = selectedFilters,
-            assignmentMaxPoints = assignment.pointsPossible,
             headerTitle = getHeaderTitle(selectedFilters, filterValueAbove, filterValueBelow),
             searchQuery = "",
-            actionHandler = this::handleAction
+            filtersUiState = SubmissionListFiltersUiState(
+                assignmentName = assignment.name.orEmpty(),
+                courseColor = Color(course.color),
+                anonymousGrading = assignment.anonymousGrading,
+                selectedFilters = selectedFilters,
+                filterValueAbove = filterValueAbove,
+                filterValueBelow = filterValueBelow,
+                assignmentMaxPoints = assignment.pointsPossible,
+                sections = emptyList(),
+                initialSelectedSections = emptyList(),
+                differentiationTags = emptyList(),
+                selectedDifferentiationTagIds = emptySet(),
+                includeStudentsWithoutTags = false,
+                sortOrder = sortOrder,
+                customGradeStatuses = emptyList(),
+                selectedCustomStatusIds = emptySet(),
+                actionHandler = this::handleAction
+            )
         )
     )
     val uiState: StateFlow<SubmissionListUiState>
@@ -140,14 +145,16 @@ class SubmissionListViewModel @Inject constructor(
 
             _uiState.update {
                 it.copy(
-                    sections = sections,
-                    differentiationTags = differentiationTags,
-                    customGradeStatuses = customStatuses.map { status ->
-                        CustomGradeStatus(
-                            id = status._id,
-                            name = status.name
-                        )
-                    }
+                    filtersUiState = it.filtersUiState.copy(
+                        sections = sections,
+                        differentiationTags = differentiationTags,
+                        customGradeStatuses = customStatuses.map { status ->
+                            CustomGradeStatus(
+                                id = status._id,
+                                name = status.name
+                            )
+                        }
+                    )
                 )
             }
             filterData()
@@ -430,15 +437,17 @@ class SubmissionListViewModel @Inject constructor(
                 selectedCustomStatusIds = action.selectedCustomStatusIds
                 _uiState.update {
                     it.copy(
-                        selectedFilters = action.selectedFilters,
-                        filterValueAbove = action.filterValueAbove,
-                        filterValueBelow = action.filterValueBelow,
-                        selectedSections = action.selectedSections,
-                        selectedDifferentiationTagIds = action.selectedDifferentiationTagIds,
-                        includeStudentsWithoutTags = action.includeStudentsWithoutTags,
-                        sortOrder = action.sortOrder,
-                        selectedCustomStatusIds = action.selectedCustomStatusIds,
-                        headerTitle = getHeaderTitle(action.selectedFilters, action.filterValueAbove, action.filterValueBelow)
+                        headerTitle = getHeaderTitle(action.selectedFilters, action.filterValueAbove, action.filterValueBelow),
+                        filtersUiState = it.filtersUiState.copy(
+                            selectedFilters = action.selectedFilters,
+                            filterValueAbove = action.filterValueAbove,
+                            filterValueBelow = action.filterValueBelow,
+                            initialSelectedSections = action.selectedSections,
+                            selectedDifferentiationTagIds = action.selectedDifferentiationTagIds,
+                            includeStudentsWithoutTags = action.includeStudentsWithoutTags,
+                            sortOrder = action.sortOrder,
+                            selectedCustomStatusIds = action.selectedCustomStatusIds
+                        )
                     )
                 }
                 filterData()
@@ -590,5 +599,10 @@ class SubmissionListViewModel @Inject constructor(
                 is GroupAssignee -> Recipient.from(assignee.group)
             }
         }
+    }
+
+    companion object {
+        // Fixed seed ensures consistent ordering across app restarts for anonymous grading
+        private const val ANONYMOUS_SHUFFLE_SEED = 1234
     }
 }

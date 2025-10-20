@@ -60,7 +60,43 @@ import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.pandautils.utils.orDefault
 import com.instructure.teacher.R
 
+data class SubmissionListFiltersUiState(
+    val selectedFilters: Set<SubmissionListFilter>,
+    val filterValueAbove: Double?,
+    val filterValueBelow: Double?,
+    val assignmentMaxPoints: Double?,
+    val courseColor: Color,
+    val assignmentName: String,
+    val anonymousGrading: Boolean,
+    val sections: List<CanvasContext>,
+    val initialSelectedSections: List<Long>,
+    val differentiationTags: List<DifferentiationTag>,
+    val selectedDifferentiationTagIds: Set<String>,
+    val includeStudentsWithoutTags: Boolean,
+    val sortOrder: SubmissionSortOrder,
+    val customGradeStatuses: List<CustomGradeStatus>,
+    val selectedCustomStatusIds: Set<String>,
+    val actionHandler: (SubmissionListAction) -> Unit
+)
+
 @Composable
+fun SubmissionListFilters(
+    uiState: SubmissionListFiltersUiState,
+    modifier: Modifier = Modifier,
+    dismiss: () -> Unit
+) {
+
+    FullScreenDialog(onDismissRequest = { dismiss() }) {
+        SubmissionFilterScreenContent(
+            uiState = uiState,
+            modifier = modifier,
+            dismiss = dismiss
+        )
+    }
+}
+
+@Composable
+@Deprecated("Use SubmissionListFilters with SubmissionListFiltersUiState instead")
 fun SubmissionListFilters(
     selectedFilters: Set<SubmissionListFilter>,
     filterValueAbove: Double?,
@@ -81,8 +117,8 @@ fun SubmissionListFilters(
     dismiss: () -> Unit
 ) {
 
-    FullScreenDialog(onDismissRequest = { dismiss() }) {
-        SubmissionFilterScreenContent(
+    SubmissionListFilters(
+        uiState = SubmissionListFiltersUiState(
             selectedFilters = selectedFilters,
             filterValueAbove = filterValueAbove,
             filterValueBelow = filterValueBelow,
@@ -97,67 +133,53 @@ fun SubmissionListFilters(
             includeStudentsWithoutTags = includeStudentsWithoutTags,
             sortOrder = sortOrder,
             customGradeStatuses = customGradeStatuses,
-            initialSelectedCustomStatusIds = selectedCustomStatusIds,
-            actionHandler = actionHandler,
-            dismiss = dismiss
-        )
-    }
+            selectedCustomStatusIds = selectedCustomStatusIds,
+            actionHandler = actionHandler
+        ),
+        dismiss = dismiss
+    )
 }
 
 @Composable
 private fun SubmissionFilterScreenContent(
-    selectedFilters: Set<SubmissionListFilter>,
-    filterValueAbove: Double?,
-    filterValueBelow: Double?,
-    assignmentMaxPoints: Double?,
-    courseColor: Color,
-    assignmentName: String,
-    anonymousGrading: Boolean,
-    sections: List<CanvasContext>,
-    initialSelectedSections: List<Long>,
-    differentiationTags: List<DifferentiationTag>,
-    selectedDifferentiationTagIds: Set<String>,
-    includeStudentsWithoutTags: Boolean,
-    sortOrder: SubmissionSortOrder,
-    customGradeStatuses: List<CustomGradeStatus>,
-    initialSelectedCustomStatusIds: Set<String>,
-    actionHandler: (SubmissionListAction) -> Unit,
+    uiState: SubmissionListFiltersUiState,
+    modifier: Modifier = Modifier,
     dismiss: () -> Unit
 ) {
-    var filters by rememberSaveable { mutableStateOf(selectedFilters) }
+    var filters by rememberSaveable { mutableStateOf(uiState.selectedFilters) }
     var valueAbove by rememberSaveable {
-        mutableStateOf(filterValueAbove?.let {
+        mutableStateOf(uiState.filterValueAbove?.let {
             NumberHelper.formatDecimal(it, 2, true)
         }.orEmpty())
     }
     var valueBelow by rememberSaveable {
-        mutableStateOf(filterValueBelow?.let {
+        mutableStateOf(uiState.filterValueBelow?.let {
             NumberHelper.formatDecimal(it, 2, true)
         }.orEmpty())
     }
-    var selectedSections by rememberSaveable { mutableStateOf(initialSelectedSections.toSet()) }
-    var selectedTags by rememberSaveable { mutableStateOf(selectedDifferentiationTagIds) }
-    var includeWithoutTags by rememberSaveable { mutableStateOf(includeStudentsWithoutTags) }
-    var selectedSortOrder by rememberSaveable { mutableStateOf(sortOrder) }
-    var selectedCustomStatuses by rememberSaveable { mutableStateOf(initialSelectedCustomStatusIds) }
+    var selectedSections by rememberSaveable { mutableStateOf(uiState.initialSelectedSections.toSet()) }
+    var selectedTags by rememberSaveable { mutableStateOf(uiState.selectedDifferentiationTagIds) }
+    var includeWithoutTags by rememberSaveable { mutableStateOf(uiState.includeStudentsWithoutTags) }
+    var selectedSortOrder by rememberSaveable { mutableStateOf(uiState.sortOrder) }
+    var selectedCustomStatuses by rememberSaveable { mutableStateOf(uiState.selectedCustomStatusIds) }
     Scaffold(
         backgroundColor = colorResource(id = R.color.backgroundLightest),
         topBar = {
             CanvasAppBar(
                 title = stringResource(R.string.preferences),
-                subtitle = assignmentName,
+                subtitle = uiState.assignmentName,
                 navigationActionClick = {
                     dismiss()
                 },
                 navIconContentDescription = stringResource(R.string.close),
                 navIconRes = R.drawable.ic_close,
-                backgroundColor = courseColor,
+                backgroundColor = uiState.courseColor,
                 textColor = colorResource(id = R.color.textLightest),
                 actions = {
                     TextButton(
                         modifier = Modifier.testTag("appBarDoneButton"),
                         onClick = {
-                            actionHandler(
+                            uiState.actionHandler(
                                 SubmissionListAction.SetFilters(
                                     selectedFilters = filters,
                                     filterValueAbove = valueAbove.toDoubleOrNull(),
@@ -203,7 +225,7 @@ private fun SubmissionFilterScreenContent(
                     },
                     testTag = "statusCheckBox",
                     selected = filters.contains(filter),
-                    color = courseColor,
+                    color = uiState.courseColor,
                     onCheckedChanged = {
                         filters = if (filters.contains(filter)) {
                             filters - filter
@@ -219,12 +241,12 @@ private fun SubmissionFilterScreenContent(
             }
 
             // Custom grade statuses
-            customGradeStatuses.forEach { status ->
+            uiState.customGradeStatuses.forEach { status ->
                 CheckboxText(
                     text = status.name,
                     testTag = "customStatusCheckBox",
                     selected = selectedCustomStatuses.contains(status.id),
-                    color = courseColor,
+                    color = uiState.courseColor,
                     onCheckedChanged = {
                         selectedCustomStatuses = if (selectedCustomStatuses.contains(status.id)) {
                             selectedCustomStatuses - status.id
@@ -263,7 +285,7 @@ private fun SubmissionFilterScreenContent(
                     value = valueAbove,
                     onValueChange = { valueAbove = it },
                     hint = stringResource(R.string.write_score_here),
-                    textColor = courseColor,
+                    textColor = uiState.courseColor,
                     hintColor = colorResource(R.color.textDark),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
@@ -272,8 +294,8 @@ private fun SubmissionFilterScreenContent(
                 Text(
                     text = pluralStringResource(
                         R.plurals.pointsPossible,
-                        assignmentMaxPoints?.toInt().orDefault(),
-                        assignmentMaxPoints.orDefault()
+                        uiState.assignmentMaxPoints?.toInt().orDefault(),
+                        uiState.assignmentMaxPoints.orDefault()
                     ),
                     fontSize = 16.sp,
                     color = colorResource(R.color.textDark)
@@ -302,7 +324,7 @@ private fun SubmissionFilterScreenContent(
                     value = valueBelow,
                     onValueChange = { valueBelow = it },
                     hint = stringResource(R.string.write_score_here),
-                    textColor = courseColor,
+                    textColor = uiState.courseColor,
                     hintColor = colorResource(R.color.textDark),
                     keyboardOptions = KeyboardOptions.Default.copy(
                         keyboardType = KeyboardType.Number
@@ -311,22 +333,22 @@ private fun SubmissionFilterScreenContent(
                 Text(
                     text = pluralStringResource(
                         R.plurals.pointsPossible,
-                        assignmentMaxPoints?.toInt().orDefault(),
-                        assignmentMaxPoints.orDefault()
+                        uiState.assignmentMaxPoints?.toInt().orDefault(),
+                        uiState.assignmentMaxPoints.orDefault()
                     ),
                     fontSize = 16.sp,
                     color = colorResource(R.color.textDark)
                 )
             }
 
-            if (sections.isNotEmpty()) {
+            if (uiState.sections.isNotEmpty()) {
                 Header(text = stringResource(R.string.filterBySection))
-                sections.forEach { section ->
+                uiState.sections.forEach { section ->
                     CheckboxText(
                         text = section.name.orEmpty(),
                         testTag = "sectionCheckBox",
                         selected = selectedSections.contains(section.id),
-                        color = courseColor,
+                        color = uiState.courseColor,
                         onCheckedChanged = {
                             selectedSections = if (selectedSections.contains(section.id)) {
                                 selectedSections - section.id
@@ -342,26 +364,26 @@ private fun SubmissionFilterScreenContent(
                 }
             }
 
-            if (differentiationTags.isNotEmpty()) {
+            if (uiState.differentiationTags.isNotEmpty()) {
                 Header(text = stringResource(R.string.differentiation_tags))
                 CheckboxText(
                     text = stringResource(R.string.students_without_differentiation_tags),
                     testTag = "includeWithoutTagsCheckBox",
                     selected = includeWithoutTags,
-                    color = courseColor,
+                    color = uiState.courseColor,
                     onCheckedChanged = { includeWithoutTags = it },
                     modifier = Modifier
                         .fillMaxWidth()
                         .defaultMinSize(minHeight = 56.dp)
                         .padding(horizontal = 4.dp)
                 )
-                differentiationTags.forEach { tag ->
+                uiState.differentiationTags.forEach { tag ->
                     CheckboxText(
                         text = tag.name,
                         subtitle = tag.groupSetName,
                         testTag = "differentiationTagCheckBox",
                         selected = selectedTags.contains(tag.id),
-                        color = courseColor,
+                        color = uiState.courseColor,
                         onCheckedChanged = {
                             selectedTags = if (selectedTags.contains(tag.id)) {
                                 selectedTags - tag.id
@@ -379,7 +401,7 @@ private fun SubmissionFilterScreenContent(
 
             Header(text = stringResource(R.string.sort_by))
             SubmissionSortOrder.entries.filter {
-                if (anonymousGrading) {
+                if (uiState.anonymousGrading) {
                     it != SubmissionSortOrder.STUDENT_NAME && it != SubmissionSortOrder.STUDENT_SORTABLE_NAME
                 } else {
                     true
@@ -398,7 +420,7 @@ private fun SubmissionFilterScreenContent(
                         SubmissionSortOrder.SUBMISSION_STATUS -> stringResource(R.string.submission_status)
                     },
                     selected = selectedSortOrder == order,
-                    color = courseColor,
+                    color = uiState.courseColor,
                     onClick = { selectedSortOrder = order }
                 )
             }
@@ -424,22 +446,24 @@ private fun Header(text: String) {
 @Composable
 private fun SubmissionFilterScreenPreview() {
     SubmissionFilterScreenContent(
-        selectedFilters = setOf(SubmissionListFilter.ALL),
-        filterValueAbove = null,
-        filterValueBelow = null,
-        assignmentMaxPoints = 100.0,
-        courseColor = Color.Black,
-        assignmentName = "Assignment Name",
-        anonymousGrading = false,
-        sections = listOf(Section(id = 1, name = "Section 1"), Section(id = 2, name = "Section 2")),
-        initialSelectedSections = listOf(1L),
-        differentiationTags = emptyList(),
-        selectedDifferentiationTagIds = emptySet(),
-        includeStudentsWithoutTags = false,
-        sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
-        customGradeStatuses = emptyList(),
-        initialSelectedCustomStatusIds = emptySet(),
-        actionHandler = {},
+        uiState = SubmissionListFiltersUiState(
+            selectedFilters = setOf(SubmissionListFilter.ALL),
+            filterValueAbove = null,
+            filterValueBelow = null,
+            assignmentMaxPoints = 100.0,
+            courseColor = Color.Black,
+            assignmentName = "Assignment Name",
+            anonymousGrading = false,
+            sections = listOf(Section(id = 1, name = "Section 1"), Section(id = 2, name = "Section 2")),
+            initialSelectedSections = listOf(1L),
+            differentiationTags = emptyList(),
+            selectedDifferentiationTagIds = emptySet(),
+            includeStudentsWithoutTags = false,
+            sortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
+            customGradeStatuses = emptyList(),
+            selectedCustomStatusIds = emptySet(),
+            actionHandler = {}
+        ),
         dismiss = {}
     )
 }

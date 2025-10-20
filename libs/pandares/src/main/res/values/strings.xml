@@ -2170,6 +2170,6 @@
     <string name="write_score_here">Write score here</string>
     <string name="scored_more_than_with_max">Scored More than / %s pts</string>
     <string name="scored_less_than_with_max">Scored Less than / %s pts</string>
-    <string name="scored_between_values">Scored %s - %s</string>
+    <string name="scored_between_values">Scored %1$s - %2$s</string>
     <string name="multiple_filters">Multiple filters</string>
 </resources>

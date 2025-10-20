@@ -21,6 +21,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.compose.ui.graphics.Color
 import com.instructure.canvasapi2.models.Assignment
+import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.Recipient
 import com.instructure.canvasapi2.models.Section
@@ -28,29 +29,32 @@ import com.instructure.pandautils.features.speedgrader.SubmissionListFilter
 import com.instructure.teacher.R
 
 data class SubmissionListUiState(
-    val assignmentName: String,
-    val courseColor: Color,
     val headerTitle: String,
-    val anonymousGrading: Boolean,
     val searchQuery: String = "",
-    val selectedFilters: Set<SubmissionListFilter> = setOf(SubmissionListFilter.ALL),
-    val filterValueAbove: Double? = null,
-    val filterValueBelow: Double? = null,
-    val assignmentMaxPoints: Double? = null,
-    val sections: List<Section> = emptyList(),
-    val selectedSections: List<Long> = emptyList(),
-    val differentiationTags: List<DifferentiationTag> = emptyList(),
-    val selectedDifferentiationTagIds: Set<String> = emptySet(),
-    val includeStudentsWithoutTags: Boolean = false,
-    val sortOrder: SubmissionSortOrder = SubmissionSortOrder.STUDENT_SORTABLE_NAME,
-    val customGradeStatuses: List<CustomGradeStatus> = emptyList(),
-    val selectedCustomStatusIds: Set<String> = emptySet(),
+    val filtersUiState: SubmissionListFiltersUiState,
     val submissions: List<SubmissionUiState> = emptyList(),
     val loading: Boolean = false,
     val refreshing: Boolean = false,
-    val error: Boolean = false,
-    val actionHandler: (SubmissionListAction) -> Unit
-)
+    val error: Boolean = false
+) {
+    // Convenience properties for backward compatibility
+    val assignmentName: String get() = filtersUiState.assignmentName
+    val courseColor: Color get() = filtersUiState.courseColor
+    val anonymousGrading: Boolean get() = filtersUiState.anonymousGrading
+    val selectedFilters: Set<SubmissionListFilter> get() = filtersUiState.selectedFilters
+    val filterValueAbove: Double? get() = filtersUiState.filterValueAbove
+    val filterValueBelow: Double? get() = filtersUiState.filterValueBelow
+    val assignmentMaxPoints: Double? get() = filtersUiState.assignmentMaxPoints
+    val sections: List<CanvasContext> get() = filtersUiState.sections
+    val selectedSections: List<Long> get() = filtersUiState.initialSelectedSections
+    val differentiationTags: List<DifferentiationTag> get() = filtersUiState.differentiationTags
+    val selectedDifferentiationTagIds: Set<String> get() = filtersUiState.selectedDifferentiationTagIds
+    val includeStudentsWithoutTags: Boolean get() = filtersUiState.includeStudentsWithoutTags
+    val sortOrder: SubmissionSortOrder get() = filtersUiState.sortOrder
+    val customGradeStatuses: List<CustomGradeStatus> get() = filtersUiState.customGradeStatuses
+    val selectedCustomStatusIds: Set<String> get() = filtersUiState.selectedCustomStatusIds
+    val actionHandler: (SubmissionListAction) -> Unit get() = filtersUiState.actionHandler
+}
 
 data class CustomGradeStatus(
     val id: String,
