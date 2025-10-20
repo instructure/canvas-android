@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2025 - present Instructure, Inc.
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-package com.instructure.canvasapi2.managers
+package com.instructure.canvasapi2.managers.graphql.horizon
 
 import com.auth0.jwt.JWT
 import com.instructure.canvasapi2.apis.DomainServicesAuthenticationAPI
@@ -54,12 +38,13 @@ abstract class DomainServicesAuthenticationManager(
         val workflow = domainService.workflow
         val params = RestParams()
         val newToken = domainServicesAuthenticationAPI
-            .getDomainServiceAuthentication(null, false, DomainServicesWorkflow(listOf(workflow)), params)
+            .getDomainServiceAuthentication(null, false,
+                DomainServicesWorkflow(listOf(workflow)), params)
             .map { it.token }
             .dataOrNull
             .orEmpty()
 
-        return String(Base64.decode(newToken))
+        return String(Base64.Default.decode(newToken))
     }
 
     private fun isTokenExpired(token: String?): Boolean {

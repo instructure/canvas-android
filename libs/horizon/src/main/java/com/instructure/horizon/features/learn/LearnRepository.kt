@@ -15,11 +15,11 @@
  */
 package com.instructure.horizon.features.learn
 
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.canvasapi2.utils.ApiPrefs
 import kotlinx.coroutines.async
 import kotlinx.coroutines.awaitAll
@@ -28,7 +28,7 @@ import javax.inject.Inject
 
 class LearnRepository @Inject constructor(
     private val horizonGetCoursesManager: HorizonGetCoursesManager,
-    private val journeyApiManager: JourneyApiManager,
+    private val getProgramsManager: GetProgramsManager,
     private val apiPrefs: ApiPrefs
 ) {
     suspend fun getCoursesWithProgress(forceNetwork: Boolean): List<CourseWithProgress> {
@@ -37,7 +37,7 @@ class LearnRepository @Inject constructor(
     }
 
     suspend fun getPrograms(forceNetwork: Boolean = false): List<Program> {
-        return journeyApiManager.getPrograms(forceNetwork)
+        return getProgramsManager.getPrograms(forceNetwork)
     }
 
     suspend fun getCoursesById(courseIds: List<Long>, forceNetwork: Boolean = false): List<CourseWithModuleItemDurations> = coroutineScope {

@@ -22,13 +22,16 @@ import android.content.pm.PackageManager
 import android.os.Build
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
@@ -60,6 +63,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonElevation
@@ -71,6 +75,7 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 const val DASHBOARD_REFRESH = "refreshDashboard"
@@ -104,6 +109,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     LaunchedEffect(shouldRefresh, externalRefreshState) {
         if (shouldRefresh || externalRefreshState) {
             savedStateHandle[DASHBOARD_REFRESH] = false
+            delay(50)
             shouldRefresh = false
         }
     }
@@ -139,27 +145,34 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 )
             }
         ){
-            LazyColumn(
+            Column(
                 modifier = Modifier
                     .padding(paddingValues)
+                    .verticalScroll(rememberScrollState())
             ) {
-                item {
-                    HomeScreenTopBar(
-                        uiState,
-                        mainNavController,
-                        modifier = Modifier.height(56.dp)
+                HomeScreenTopBar(
+                    uiState,
+                    mainNavController,
+                    modifier = Modifier.height(56.dp)
+                )
+                HorizonSpace(SpaceSize.SPACE_24)
+                DashboardCourseSection(
+                    mainNavController,
+                    homeNavController,
+                    shouldRefresh,
+                    refreshStateFlow
+                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier
+                        .horizontalScroll(rememberScrollState())
+                        .padding(start = 16.dp)
+                ) {
+                    DashboardTimeSpentWidget(
+                        shouldRefresh,
+                        refreshStateFlow
                     )
-                }
-                item {
-                    Column {
-                        HorizonSpace(SpaceSize.SPACE_24)
-                        DashboardCourseSection(
-                            mainNavController,
-                            homeNavController,
-                            shouldRefresh,
-                            refreshStateFlow
-                        )
-                    }
+                    Spacer(modifier = Modifier.width(16.dp))
                 }
             }
         }

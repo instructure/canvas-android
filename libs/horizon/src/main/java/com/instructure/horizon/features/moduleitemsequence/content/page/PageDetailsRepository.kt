@@ -19,7 +19,7 @@ import com.apollographql.apollo.api.Optional
 import com.instructure.canvasapi2.apis.OAuthAPI
 import com.instructure.canvasapi2.apis.PageAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.RedwoodApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.redwood.RedwoodApiManager
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Page
 import com.instructure.horizon.features.notebook.common.model.Note

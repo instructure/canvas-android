@@ -16,11 +16,11 @@
  */
 package com.instructure.canvasapi2.utils
 
-import com.instructure.canvasapi2.managers.CedarAuthenticationManager
-import com.instructure.canvasapi2.managers.DomainServicesAuthenticationManager
-import com.instructure.canvasapi2.managers.JourneyAuthenticationManager
-import com.instructure.canvasapi2.managers.PineAuthenticationManager
-import com.instructure.canvasapi2.managers.RedwoodAuthenticationManager
+import com.instructure.canvasapi2.managers.graphql.horizon.CedarAuthenticationManager
+import com.instructure.canvasapi2.managers.graphql.horizon.DomainServicesAuthenticationManager
+import com.instructure.canvasapi2.managers.graphql.horizon.JourneyAuthenticationManager
+import com.instructure.canvasapi2.managers.graphql.horizon.PineAuthenticationManager
+import com.instructure.canvasapi2.managers.graphql.horizon.RedwoodAuthenticationManager
 import kotlinx.coroutines.runBlocking
 import okhttp3.Authenticator
 import okhttp3.Request

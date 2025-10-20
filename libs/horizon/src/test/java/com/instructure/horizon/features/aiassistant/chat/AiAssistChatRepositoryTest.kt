@@ -16,9 +16,9 @@
  */
 package com.instructure.horizon.features.aiassistant.chat
 
-import com.instructure.canvasapi2.managers.CedarApiManager
-import com.instructure.canvasapi2.managers.DocumentSource
-import com.instructure.canvasapi2.managers.PineApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.cedar.CedarApiManager
+import com.instructure.canvasapi2.managers.graphql.horizon.pine.DocumentSource
+import com.instructure.canvasapi2.managers.graphql.horizon.pine.PineApiManager
 import com.instructure.pine.type.MessageInput
 import com.instructure.pine.type.Role
 import io.mockk.coEvery

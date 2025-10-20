@@ -17,31 +17,34 @@
 package com.instructure.canvas.espresso.mockcanvas.fakes
 
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.journey.GetWidgetDataQuery
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
+import java.util.Date
 
-class FakeJourneyApiManager(): JourneyApiManager {
+class FakeGetProgramsManager : GetProgramsManager {
     override suspend fun getPrograms(forceNetwork: Boolean): List<Program> {
-        return getPrograms()
+        return getProgramsData()
     }
 
     override suspend fun getProgramById(programId: String, forceNetwork: Boolean): Program {
-        return getPrograms().first { it.id == programId }
+        return getProgramsData().first { it.id == programId }
     }
 
     override suspend fun enrollCourse(progressId: String): DataResult<Unit> {
-        return if (getPrograms().first().sortedRequirements.any { it.progressId == progressId }) {
+        return if (getProgramsData().first().sortedRequirements.any { it.progressId == progressId }) {
             DataResult.Success(Unit)
         } else {
             DataResult.Fail()
         }
     }
 
-    fun getPrograms(): List<Program> {
+    private fun getProgramsData(): List<Program> {
         val program1 = Program(
             id = "1",
             name = "Program 1",
@@ -70,5 +73,22 @@ class FakeJourneyApiManager(): JourneyApiManager {
             variant = ProgramVariantType.NON_LINEAR
         )
         return listOf(program1, program2)
+    }
+}
+
+class FakeGetWidgetsManager : GetWidgetsManager {
+    override suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData {
+        return GetWidgetDataQuery.WidgetData(
+            lastModifiedDate = Date(),
+            data = listOf(
+                mapOf(
+                    "date" to "2025-10-08",
+                    "user_id" to 1.0,
+                    "course_id" to 101.0,
+                    "course_name" to "Test Course",
+                    "minutes_per_day" to 600.0
+                )
+            )
+        )
     }
 }
