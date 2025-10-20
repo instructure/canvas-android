@@ -36,7 +36,6 @@ import androidx.compose.material.CheckboxDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.RadioButton
 import androidx.compose.material.RadioButtonDefaults
-import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.material.TextButton
 import androidx.compose.runtime.Composable
@@ -59,6 +58,7 @@ import androidx.compose.ui.unit.sp
 import com.instructure.canvasapi2.models.SmartSearchFilter
 import com.instructure.pandautils.R
 import com.instructure.pandautils.compose.composables.CanvasAppBar
+import com.instructure.pandautils.compose.composables.CanvasScaffold
 import com.instructure.pandautils.compose.composables.FullScreenDialog
 
 enum class SmartSearchSortType {
@@ -76,7 +76,7 @@ fun SmartSearchPreferencesScreen(
     val selectedTypes = remember { filters.toMutableStateList() }
     var selectedSort by remember { mutableStateOf(sortType) }
     FullScreenDialog(onDismissRequest = { navigationClick(selectedTypes, selectedSort) }) {
-        Scaffold(
+        CanvasScaffold(
             topBar = {
                 CanvasAppBar(
                     backgroundColor = color,

@@ -29,9 +29,8 @@ import android.view.MotionEvent
 import android.view.MotionEvent.ACTION_CANCEL
 import android.view.View
 import android.view.ViewGroup
-import com.instructure.pandautils.utils.applyBottomSystemBarInsets
-import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import androidx.lifecycle.lifecycleScope
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.DefaultItemAnimator
 import androidx.recyclerview.widget.GridLayoutManager
@@ -258,7 +257,6 @@ class DashboardFragment : ParentFragment() {
 
         configureRecyclerView()
         recyclerBinding.listView.isSelectionEnabled = false
-        recyclerBinding.swipeRefreshLayout.applyBottomSystemBarInsets()
         initMenu()
     }
 

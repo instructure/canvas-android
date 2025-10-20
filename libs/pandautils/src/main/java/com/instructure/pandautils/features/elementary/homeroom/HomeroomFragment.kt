@@ -39,6 +39,7 @@ import com.instructure.pandautils.databinding.FragmentHomeroomBinding
 import com.instructure.pandautils.discussions.DiscussionUtils
 import com.instructure.pandautils.features.dashboard.notifications.DashboardNotificationsFragment
 import com.instructure.pandautils.navigation.WebViewRouter
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
 import com.instructure.pandautils.utils.children
 import com.instructure.pandautils.utils.toast
 import com.instructure.pandautils.views.CanvasWebView
