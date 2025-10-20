@@ -23,8 +23,10 @@ import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiType
 import com.instructure.canvasapi2.utils.DataResult
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.CourseSettingsDao
 import com.instructure.pandautils.room.offline.daos.TabDao
+import com.instructure.pandautils.room.offline.entities.CheckpointEntity
 import com.instructure.pandautils.room.offline.entities.CourseSettingsEntity
 import com.instructure.pandautils.room.offline.entities.TabEntity
 import com.instructure.pandautils.room.offline.facade.ModuleFacade
@@ -33,15 +35,17 @@ import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ModuleListLocalDataSourceTest {
 
     private val tabDao = mockk<TabDao>(relaxed = true)
     private val moduleFacade = mockk<ModuleFacade>(relaxed = true)
-    private val courseSettingsDao: CourseSettingsDao = mockk(relaxed = true)
+    private val courseSettingsDao = mockk<CourseSettingsDao>(relaxed = true)
+    private val checkpointDao = mockk<CheckpointDao>(relaxed = true)
 
-    private val dataSource = ModuleListLocalDataSource(tabDao, moduleFacade, courseSettingsDao)
+    private val dataSource = ModuleListLocalDataSource(tabDao, moduleFacade, courseSettingsDao, checkpointDao)
 
     @Test
     fun `getAllModuleObjects returns all module objects with DB api type`() = runTest {
@@ -98,5 +102,101 @@ class ModuleListLocalDataSourceTest {
         val result = dataSource.loadCourseSettings(1, true)
 
         assertEquals(expected, result)
+    }
+
+    @Test
+    fun `Get module item checkpoints groups by module item id`() = runTest {
+        val checkpointEntities = listOf(
+            CheckpointEntity(
+                id = 1,
+                assignmentId = null,
+                name = null,
+                tag = "reply_to_topic",
+                pointsPossible = 5.0,
+                dueAt = "2025-10-15T23:59:59Z",
+                onlyVisibleToOverrides = false,
+                lockAt = null,
+                unlockAt = null,
+                moduleItemId = 100L,
+                courseId = 1L
+            ),
+            CheckpointEntity(
+                id = 2,
+                assignmentId = null,
+                name = null,
+                tag = "reply_to_entry",
+                pointsPossible = 5.0,
+                dueAt = "2025-10-20T23:59:59Z",
+                onlyVisibleToOverrides = false,
+                lockAt = null,
+                unlockAt = null,
+                moduleItemId = 100L,
+                courseId = 1L
+            )
+        )
+        coEvery { checkpointDao.findByCourseIdWithModuleItem(any()) } returns checkpointEntities
+
+        val result = dataSource.getModuleItemCheckpoints("1", false)
+
+        assertEquals(1, result.size)
+        assertEquals("100", result[0].moduleItemId)
+        assertEquals(2, result[0].checkpoints.size)
+    }
+
+    @Test
+    fun `Get module item checkpoints filters out null module item ids`() = runTest {
+        val checkpointEntities = listOf(
+            CheckpointEntity(
+                id = 1,
+                assignmentId = 1L,
+                name = null,
+                tag = "reply_to_topic",
+                pointsPossible = 5.0,
+                dueAt = "2025-10-15T23:59:59Z",
+                onlyVisibleToOverrides = false,
+                lockAt = null,
+                unlockAt = null,
+                moduleItemId = null,
+                courseId = 1L
+            )
+        )
+        coEvery { checkpointDao.findByCourseIdWithModuleItem(any()) } returns checkpointEntities
+
+        val result = dataSource.getModuleItemCheckpoints("1", false)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `Get module item checkpoints returns empty list when no checkpoints found`() = runTest {
+        coEvery { checkpointDao.findByCourseIdWithModuleItem(any()) } returns emptyList()
+
+        val result = dataSource.getModuleItemCheckpoints("1", false)
+
+        assertTrue(result.isEmpty())
+    }
+
+    @Test
+    fun `Get module item checkpoints converts checkpoint entities to api models`() = runTest {
+        val checkpointEntity = CheckpointEntity(
+            id = 1,
+            assignmentId = null,
+            name = null,
+            tag = "reply_to_topic",
+            pointsPossible = 10.0,
+            dueAt = "2025-10-15T23:59:59Z",
+            onlyVisibleToOverrides = false,
+            lockAt = null,
+            unlockAt = null,
+            moduleItemId = 100L,
+            courseId = 1L
+        )
+        coEvery { checkpointDao.findByCourseIdWithModuleItem(any()) } returns listOf(checkpointEntity)
+
+        val result = dataSource.getModuleItemCheckpoints("1", false)
+
+        assertEquals(1, result.size)
+        assertEquals("reply_to_topic", result[0].checkpoints[0].tag)
+        assertEquals(10.0, result[0].checkpoints[0].pointsPossible, 0.01)
     }
 }
