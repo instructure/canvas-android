@@ -67,6 +67,8 @@ import com.instructure.pandautils.mvvm.ViewState
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
 import com.instructure.pandautils.utils.addListener
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.collectOneOffEvents
 import com.instructure.pandautils.utils.isTablet
 import com.instructure.pandautils.utils.isVisible
@@ -345,6 +347,9 @@ class InboxFragment : BaseCanvasFragment(), NavigationCallbacks, FragmentInterac
         binding.scopeFilterText.setTextColor(ThemePrefs.textButtonColor)
         binding.scopeFilterIcon.setColorFilter(ThemePrefs.textButtonColor)
         inboxRouter.attachNavigationIcon(binding.toolbar)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.editToolbar.applyTopSystemBarInsets()
+        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     override fun getFragment(): Fragment? = this

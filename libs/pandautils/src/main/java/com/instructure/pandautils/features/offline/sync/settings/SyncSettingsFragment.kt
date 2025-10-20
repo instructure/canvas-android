@@ -33,6 +33,8 @@ import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.databinding.FragmentSyncSettingsBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import com.instructure.pandautils.utils.showThemed
 import dagger.hilt.android.AndroidEntryPoint
@@ -120,6 +122,9 @@ class SyncSettingsFragment : BaseCanvasFragment(), FragmentInteractions {
         )
 
         binding.toolbar.setupAsBackButton(this@SyncSettingsFragment)
+        binding.toolbar.applyTopSystemBarInsets()
+
+        view?.findViewById<View>(R.id.scrollView)?.applyBottomSystemBarInsets()
     }
 
     override fun getFragment(): Fragment = this

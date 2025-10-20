@@ -90,6 +90,8 @@ class HomeroomFragment : BaseCanvasFragment() {
             viewModel.refresh()
             (childFragmentManager.findFragmentByTag("notifications_fragment") as DashboardNotificationsFragment).refresh()
         }
+
+        binding.homeroomSwipeRefreshLayout.applyBottomSystemBarInsets()
     }
 
     private fun setUpRecyclerViewSpan() {

@@ -30,6 +30,8 @@ import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.databinding.FragmentNotificationPreferencesBinding
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.ViewStyler
+import com.instructure.pandautils.utils.applyBottomSystemBarInsets
+import com.instructure.pandautils.utils.applyTopSystemBarInsets
 import com.instructure.pandautils.utils.setupAsBackButton
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -55,6 +57,8 @@ class PushNotificationPreferencesFragment : BaseCanvasFragment() {
         super.onViewCreated(view, savedInstanceState)
         binding.toolbar.setupAsBackButton { requireActivity().onBackPressed() }
         ViewStyler.themeToolbarColored(requireActivity(), binding.toolbar, ThemePrefs.primaryColor, ThemePrefs.primaryTextColor)
+        binding.toolbar.applyTopSystemBarInsets()
+        binding.swipeRefreshLayout.applyBottomSystemBarInsets()
         viewModel.events.observe(viewLifecycleOwner) { event ->
             event.getContentIfNotHandled()?.let {
                 handleAction(it)
