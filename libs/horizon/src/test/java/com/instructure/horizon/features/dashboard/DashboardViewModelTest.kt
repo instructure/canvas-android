@@ -109,7 +109,7 @@ class DashboardViewModelTest {
         )
         coEvery { repository.getUnreadCounts(any()) } returns updatedCounts
 
-        dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+        dashboardEventHandler.postEvent(DashboardEvent.DashboardRefresh)
         testScheduler.advanceUntilIdle()
 
         coVerify(atLeast = 2) { repository.getUnreadCounts(true) }
@@ -134,7 +134,7 @@ class DashboardViewModelTest {
     fun `Multiple refresh events update state correctly`() = runTest {
         val viewModel = getViewModel()
 
-        dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+        dashboardEventHandler.postEvent(DashboardEvent.DashboardRefresh)
         testScheduler.advanceUntilIdle()
 
         val secondCounts = listOf(
@@ -142,7 +142,7 @@ class DashboardViewModelTest {
         )
         coEvery { repository.getUnreadCounts(any()) } returns secondCounts
 
-        dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+        dashboardEventHandler.postEvent(DashboardEvent.DashboardRefresh)
         testScheduler.advanceUntilIdle()
 
         val state = viewModel.uiState.value

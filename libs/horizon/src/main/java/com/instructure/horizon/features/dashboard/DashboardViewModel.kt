@@ -50,13 +50,14 @@ class DashboardViewModel @Inject constructor(
         viewModelScope.launch {
             dashboardEventHandler.events.collect { event ->
                 when (event) {
-                    is DashboardEvent.RefreshRequested -> {
+                    is DashboardEvent.DashboardRefresh -> {
                         _uiState.update { it.copy(externalShouldRefresh = true) }
                         refresh()
                         delay(50) // Give some time for the refresh to start
                         _uiState.update { it.copy(externalShouldRefresh = false) }
                     }
                     is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
+                    else -> { /* No-op */ }
                 }
             }
         }

@@ -21,7 +21,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 sealed interface DashboardEvent {
-    data object RefreshRequested : DashboardEvent
+    data object DashboardRefresh : DashboardEvent
+    data object ProgressRefresh : DashboardEvent
     data class ShowSnackbar(val message: String) : DashboardEvent
 }
 

@@ -29,12 +29,12 @@ import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
 import com.instructure.horizon.features.aiassistant.common.AiAssistContextProvider
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
+import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.dashboard.DashboardEvent
 import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.learn.LearnEvent
 import com.instructure.horizon.features.learn.LearnEventHandler
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContext
-import com.instructure.horizon.features.aiassistant.common.model.AiAssistContextSource
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageItem
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressPageUiState
 import com.instructure.horizon.features.moduleitemsequence.progress.ProgressScreenUiState
@@ -584,7 +584,7 @@ class ModuleItemSequenceViewModel @Inject constructor(
     private fun courseProgressChanged() {
         courseProgressChanged = true
         viewModelScope.launch {
-            dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+            dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
             learnEventHandler.postEvent(LearnEvent.RefreshRequested)
         }
     }

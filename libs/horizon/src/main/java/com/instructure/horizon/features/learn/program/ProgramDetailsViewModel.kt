@@ -357,7 +357,7 @@ class ProgramDetailsViewModel @Inject constructor(
             }
             try {
                 viewModelScope.launch {
-                    dashboardEventHandler.postEvent(DashboardEvent.RefreshRequested)
+                    dashboardEventHandler.postEvent(DashboardEvent.ProgressRefresh)
                 }
                 loadData(forceNetwork = true)
             } catch (e: Exception) {
