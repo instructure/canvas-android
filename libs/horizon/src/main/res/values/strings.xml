@@ -403,4 +403,7 @@
     <string name="dashboardAnnouncementBannerFrom">From %1$s</string>
     <string name="dashboardAnnouncementBannerGoToAnnouncement">Go to announcement</string>
     <string name="dashboardAnnouncementBannerErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
+    <string name="dashboardAnnouncementBannerPaginationLabel">%1$d of %2$d</string>
+    <string name="dashboardAnnouncementBannerPreviousAnnouncement">Previous announcement</string>
+    <string name="dashboardAnnouncementBannerNextAnnouncement">Next announcement</string>
 </resources>
