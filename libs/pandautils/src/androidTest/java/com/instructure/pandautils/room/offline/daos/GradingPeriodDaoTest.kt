@@ -61,15 +61,13 @@ class GradingPeriodDaoTest {
         Assert.assertEquals(gradingPeriodEntity, result)
     }
 
-    @Test
-    fun testFindEntityByIdReturnsNullIfNotFound() = runTest {
+    @Test(expected = IllegalStateException::class)
+    fun testFindEntityByIdThrowsExceptionIfNotFound() = runTest {
         val gradingPeriodEntity = GradingPeriodEntity(GradingPeriod(id = 1, "Grading period 1"))
         val gradingPeriodEntity2 = GradingPeriodEntity(GradingPeriod(id = 2, "Grading period 2"))
         gradingPeriodDao.insert(gradingPeriodEntity)
         gradingPeriodDao.insert(gradingPeriodEntity2)
 
         val result = gradingPeriodDao.findById(3)
-
-        Assert.assertNull(result)
     }
 }

@@ -19,13 +19,14 @@ package com.instructure.student.ui.e2e.classic.usergroups
 import android.util.Log
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
-import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
+import com.instructure.canvas.espresso.annotations.E2E
 import com.instructure.dataseeding.api.GroupsApi
+import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.student.ui.utils.StudentTest
 import com.instructure.student.ui.utils.extensions.seedData
 import com.instructure.student.ui.utils.extensions.tokenLogin
@@ -104,6 +105,7 @@ class UserGroupFilesE2ETest : StudentTest() {
             Intents.release()
         }
         fileChooserPage.clickUpload()
+        handleWorkManagerTask("FileUploadWorker", 20000)
 
         Log.d(ASSERTION_TAG, "Assert that the file upload was successful.")
         fileListPage.assertItemDisplayed("samplepdf.pdf")

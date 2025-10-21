@@ -10,7 +10,7 @@ import com.instructure.canvasapi2.models.DiscussionTopic
 data class DiscussionTopicEntity(
     @PrimaryKey
     val id: Long,
-    val unreadEntries: MutableList<Long>,
+    val unreadEntries: List<Long>,
     val participantIds: List<Long>,
     val viewIds: List<Long>,
 ) {
@@ -23,7 +23,7 @@ data class DiscussionTopicEntity(
 
     fun toApiModel(participants: List<DiscussionParticipant>, views: List<DiscussionEntry>): DiscussionTopic {
         return DiscussionTopic(
-            unreadEntries = unreadEntries,
+            unreadEntries = unreadEntries.toMutableList(),
             participants = participants,
             unreadEntriesMap = hashMapOf(),
             entryRatings = hashMapOf(),

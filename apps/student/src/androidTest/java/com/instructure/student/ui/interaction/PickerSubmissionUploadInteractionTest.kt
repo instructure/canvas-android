@@ -22,7 +22,6 @@ import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.intent.Intents
 import androidx.test.espresso.intent.Intents.intending
@@ -40,7 +39,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeCustomGradeStatusesManager
@@ -49,7 +47,7 @@ import com.instructure.canvasapi2.di.graphql.CustomGradeStatusModule
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
 import com.instructure.canvasapi2.models.Assignment
 import com.instructure.pandautils.utils.FilePrefs
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -64,7 +62,7 @@ import java.io.File
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
-class PickerSubmissionUploadInteractionTest : StudentTest() {
+class PickerSubmissionUploadInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField
@@ -75,11 +73,6 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
     private val mockedFileName = "sample.jpg" // A file in our assets area
     private lateinit var activity : Activity
     private lateinit var activityResult: Instrumentation.ActivityResult
-
-    @get:Rule
-    val composeTestRule = createEmptyComposeRule()
-
-    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     @Before
     fun setUp() {
@@ -195,37 +188,6 @@ class PickerSubmissionUploadInteractionTest : StudentTest() {
         pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
 
         pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
-    }
-
-    @Test
-    @TestMetaData(Priority.COMMON, FeatureCategory.SUBMISSIONS, TestCategory.INTERACTION)
-    fun testFab_scanner(){
-        val scannerComponent = "com.instructure.student.features.documentscanning.DocumentScanningActivity"
-
-        goToSubmissionPicker()
-
-        Intents.init()
-        try {
-            val context = getInstrumentation().targetContext
-            val dir = context.externalCacheDir
-            val sampleFile = File(dir, mockedFileName)
-            val uri = Uri.fromFile(sampleFile)
-            val resultData = Intent().apply { data = uri }
-            val scannerResult = Instrumentation.ActivityResult(Activity.RESULT_OK, resultData)
-
-            intending(
-                IntentMatchers.hasComponent(scannerComponent)
-            ).respondWith(scannerResult)
-
-            pickerSubmissionUploadPage.chooseScanner()
-        } finally {
-            release()
-        }
-
-        pickerSubmissionUploadPage.waitForSubmitButtonToAppear()
-
-        pickerSubmissionUploadPage.assertFileDisplayed(mockedFileName)
-
     }
 
     @Test

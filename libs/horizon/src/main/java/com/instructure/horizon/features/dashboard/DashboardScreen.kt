@@ -26,6 +26,7 @@ import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
@@ -63,6 +64,7 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
+import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
 import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
@@ -148,6 +150,7 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
             }
         ){
             Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
                 modifier = Modifier
                     .padding(paddingValues)
                     .verticalScroll(rememberScrollState())
@@ -167,9 +170,15 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
+                        .fillMaxWidth()
                         .horizontalScroll(rememberScrollState())
                         .padding(start = 16.dp)
                 ) {
+                    DashboardMyProgressWidget(
+                        shouldRefresh,
+                        refreshStateFlow
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow

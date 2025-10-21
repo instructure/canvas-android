@@ -206,7 +206,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             fileUploadEventHandler.events.collect { event ->
                 when (event) {
                     is FileUploadEvent.UploadStarted -> {
-                        onFileUploadStarted(event.workInfoLiveData)
+                        onFileUploadStarted(event.workInfoLiveData, event.filePaths)
                     }
                     is FileUploadEvent.FileSelected -> {
                         selectedFilePaths = event.filePaths
@@ -347,7 +347,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             }
 
             is SpeedGraderCommentsAction.FileUploadStarted -> {
-                onFileUploadStarted(action.workInfoLiveData)
+                onFileUploadStarted(action.workInfoLiveData, selectedFilePaths.orEmpty())
             }
 
             is SpeedGraderCommentsAction.FilesSelected -> {
@@ -356,7 +356,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         }
     }
 
-    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo>) {
+    private fun onFileUploadStarted(workInfoLiveData: LiveData<WorkInfo?>, filePaths: List<String>) {
         _uiState.update { state ->
             state.copy(
                 fileSelectorDialogData = null,
@@ -366,8 +366,8 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         // Subscribe to the worker's LiveData to observe its state
         viewModelScope.launch {
             workInfoLiveData.asFlow().collect { workInfo ->
-                when (workInfo.state) {
-                    WorkInfo.State.RUNNING -> createPendingFileComment(workInfo)
+                when (workInfo?.state) {
+                    WorkInfo.State.RUNNING -> createPendingFileComment(workInfo, filePaths)
                     WorkInfo.State.SUCCEEDED -> handleFileUploadSuccess(workInfo)
                     WorkInfo.State.FAILED -> handleFileUploadFailure(workInfo)
                     else -> {}
@@ -376,7 +376,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun createPendingFileComment(workInfo: WorkInfo) {
+    private suspend fun createPendingFileComment(workInfo: WorkInfo, filePaths: List<String>) {
         var fileUploadInput = fileUploadInputDao.findByWorkerId(workInfo.id.toString())
         if (fileUploadInput == null) {
             fileUploadInput = FileUploadInputEntity(
@@ -384,7 +384,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 courseId = courseId,
                 assignmentId = assignmentId,
                 userId = studentId,
-                filePaths = selectedFilePaths.orEmpty(),
+                filePaths = filePaths,
                 action = FileUploadWorker.ACTION_TEACHER_SUBMISSION_COMMENT,
                 attemptId = selectedAttemptId.takeIf { assignmentEnhancementsEnabled }
             )
@@ -399,7 +399,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
                 this.workerId = workInfo.id
                 this.status = CommentSendStatus.SENDING
                 this.workerInputData = FileUploadWorkerData(
-                    selectedFilePaths.orEmpty(),
+                    filePaths,
                     courseId,
                     assignmentId,
                     studentId
@@ -480,7 +480,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             attemptId = selectedAttemptId,
             mediaCommentId = id
         ).collect { result ->
-            when (result.state) {
+            when (result?.state) {
                 WorkInfo.State.SUCCEEDED -> {
                     fetchedComments.add(
                         SpeedGraderComment(
@@ -647,7 +647,7 @@ class SpeedGraderCommentsViewModel @Inject constructor(
             fileUploadInputDao.insert(inputData)
 
             WorkManager.getInstance(context).apply {
-                onFileUploadStarted(getWorkInfoByIdLiveData(worker.id))
+                onFileUploadStarted(getWorkInfoByIdLiveData(worker.id), filePaths)
                 enqueue(worker)
             }
         }

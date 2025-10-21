@@ -16,6 +16,7 @@
 package com.instructure.student.ui.pages.classic
 
 import androidx.appcompat.widget.AppCompatButton
+import androidx.compose.ui.test.junit4.ComposeTestRule
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom
 import com.instructure.canvas.espresso.CanvasTest
@@ -36,7 +37,7 @@ import com.instructure.espresso.typeText
 import com.instructure.student.R
 import org.hamcrest.Matchers.allOf
 
-class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteractions): AssignmentDetailsPage(moduleItemInteractions) {
+class StudentAssignmentDetailsPage(moduleItemInteractions: ModuleItemInteractions, composeTestRule: ComposeTestRule): AssignmentDetailsPage(moduleItemInteractions, composeTestRule) {
 
     fun addBookmark(bookmarkName: String) {
         openOverflowMenu()

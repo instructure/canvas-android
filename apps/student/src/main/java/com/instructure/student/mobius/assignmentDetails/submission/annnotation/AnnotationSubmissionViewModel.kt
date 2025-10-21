@@ -59,6 +59,7 @@ class AnnotationSubmissionViewModel @Inject constructor(
                         ViewState.Error(resources.getString(R.string.failedToLoadSubmission))
                 }
             } catch (e: Exception) {
+                e.printStackTrace()
                 _state.value = ViewState.Error(resources.getString(R.string.failedToLoadSubmission))
             }
         }

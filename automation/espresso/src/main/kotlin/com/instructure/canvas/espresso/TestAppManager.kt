@@ -18,8 +18,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.work.Configuration
+import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
-import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.TestDriver
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
@@ -27,22 +27,23 @@ import com.instructure.canvasapi2.utils.RemoteConfigUtils
 
 open class TestAppManager: AppManager() {
 
+    var testDriver: TestDriver? = null
+
+    var workerFactory: WorkerFactory? = null
+
     @SuppressLint("RestrictedApi")
     override fun onCreate() {
         super.onCreate()
         RemoteConfigUtils.initialize()
 
         if (workerFactory == null) {
-            workerFactory = WorkerFactory.getDefaultWorkerFactory()
+            workerFactory = getWorkManagerFactory()
         }
     }
 
-    var testDriver: TestDriver? = null
-
-    var workerFactory: WorkerFactory? = null
     @SuppressLint("RestrictedApi")
     override fun getWorkManagerFactory(): WorkerFactory {
-        return workerFactory ?: WorkerFactory.getDefaultWorkerFactory()
+        return workerFactory ?: DefaultWorkerFactory
     }
 
     override fun performLogoutOnAuthError() = Unit
@@ -51,7 +52,7 @@ open class TestAppManager: AppManager() {
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(SynchronousExecutor())
+                .setExecutor(java.util.concurrent.Executors.newSingleThreadExecutor())
                 .setWorkerFactory(this.getWorkManagerFactory())
                 .build()
             WorkManagerTestInitHelper.initializeTestWorkManager(context, config)

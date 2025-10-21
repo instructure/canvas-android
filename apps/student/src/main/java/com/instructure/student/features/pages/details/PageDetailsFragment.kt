@@ -45,6 +45,7 @@ import com.instructure.pandautils.analytics.ScreenView
 import com.instructure.pandautils.features.lti.LtiLaunchFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.BooleanArg
+import com.instructure.pandautils.utils.FileDownloader
 import com.instructure.pandautils.utils.NullableStringArg
 import com.instructure.pandautils.utils.ParcelableArg
 import com.instructure.pandautils.utils.ViewStyler
@@ -78,6 +79,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
 
     @Inject
     lateinit var webViewRouter: WebViewRouter
+
+    @Inject
+    lateinit var fileDownloader: FileDownloader
 
     private var loadHtmlJob: Job? = null
     private var pageName: String? by NullableStringArg(key = PAGE_NAME)
@@ -232,7 +236,7 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
                 RouteMatcher.route(requireActivity(), LtiLaunchFragment.makeSessionlessLtiUrlRoute(requireActivity(), canvasContext, it))
             }
         } else if (page.body == null || page.body?.endsWith("") == true) {
-            loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
+            populateWebView(resources.getString(R.string.noPageFound), getString(R.string.pages))
         }
 
         toolbar.title = title()
@@ -283,9 +287,9 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
             // We want it to be lowercase.
             context = context.lowercase(Locale.getDefault())
 
-            loadHtml(resources.getString(R.string.noPagesInContext) + " " + context, "text/html", "utf-8", null)
+            populateWebView(resources.getString(R.string.noPagesInContext) + " " + context, getString(R.string.pages))
         } else {
-            loadHtml(resources.getString(R.string.noPageFound), "text/html", "utf-8", null)
+            populateWebView(resources.getString(R.string.noPageFound), getString(R.string.pages))
         }
     }
 
@@ -350,6 +354,10 @@ class PageDetailsFragment : InternalWebviewFragment(), Bookmarkable {
     }
 
     override fun handleBackPressed() = false
+
+    override fun downloadInternalMedia(mime: String?, url: String?, filename: String?) {
+        fileDownloader.downloadFileToDevice(url, filename, mime)
+    }
 
     companion object {
         const val PAGE_NAME = "pageDetailsName"

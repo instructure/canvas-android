@@ -66,9 +66,7 @@ fun DashboardSkillHighlightsCardContent(
         modifier = modifier
     ) {
         if (state.skills.isEmpty()) {
-            Column(
-                modifier = Modifier.fillMaxWidth()
-            ) {
+            Column {
                 HorizonSpace(SpaceSize.SPACE_8)
                 Text(
                     text = stringResource(R.string.dashboardSkillHighlightsNoDataTitle),
@@ -88,7 +86,6 @@ fun DashboardSkillHighlightsCardContent(
             HorizonSpace(SpaceSize.SPACE_8)
             Column(
                 verticalArrangement = Arrangement.spacedBy(16.dp),
-                modifier = Modifier.fillMaxWidth()
             ) {
                 state.skills.forEach { skill ->
                     SkillCard(
