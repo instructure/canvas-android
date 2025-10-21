@@ -50,7 +50,8 @@ class SmartSearchPreferencesScreenTest {
                 color = Color.Magenta,
                 filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.ANNOUNCEMENTS),
                 sortType = SmartSearchSortType.RELEVANCE,
-                navigationClick = {_, _ ->}
+                onDone = { _, _ -> },
+                onCancel = {}
             )
         }
 
@@ -92,7 +93,8 @@ class SmartSearchPreferencesScreenTest {
                 color = Color.Magenta,
                 filters = listOf(SmartSearchFilter.ASSIGNMENTS, SmartSearchFilter.ANNOUNCEMENTS),
                 sortType = SmartSearchSortType.RELEVANCE,
-                navigationClick = {_, _ ->}
+                onDone = { _, _ -> },
+                onCancel = {}
             )
         }
 
@@ -138,7 +140,8 @@ class SmartSearchPreferencesScreenTest {
                 color = Color.Magenta,
                 filters = emptyList(),
                 sortType = SmartSearchSortType.RELEVANCE,
-                navigationClick = {_, _ ->}
+                onDone = { _, _ -> },
+                onCancel = {}
             )
         }
 
@@ -164,7 +167,8 @@ class SmartSearchPreferencesScreenTest {
                 color = Color.Magenta,
                 filters = emptyList(),
                 sortType = SmartSearchSortType.RELEVANCE,
-                navigationClick = {_, _ ->}
+                onDone = { _, _ -> },
+                onCancel = {}
             )
         }
 
@@ -187,7 +191,8 @@ class SmartSearchPreferencesScreenTest {
                 color = Color.Magenta,
                 filters = emptyList(),
                 sortType = SmartSearchSortType.TYPE,
-                navigationClick = {_, _ ->}
+                onDone = { _, _ -> },
+                onCancel = {}
             )
         }
 
@@ -213,7 +218,8 @@ class SmartSearchPreferencesScreenTest {
                 color = Color.Magenta,
                 filters = emptyList(),
                 sortType = SmartSearchSortType.RELEVANCE,
-                navigationClick = {_, _ ->}
+                onDone = { _, _ -> },
+                onCancel = {}
             )
         }
 

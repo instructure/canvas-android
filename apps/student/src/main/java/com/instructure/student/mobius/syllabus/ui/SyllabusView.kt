@@ -21,9 +21,9 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import com.google.android.material.tabs.TabLayout
-import com.instructure.canvasapi2.models.Assignment
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.ScheduleItem
+import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.pandautils.features.calendarevent.details.EventFragment
 import com.instructure.pandautils.navigation.WebViewRouter
 import com.instructure.pandautils.utils.ViewStyler
@@ -38,7 +38,6 @@ import com.instructure.student.R
 import com.instructure.student.databinding.FragmentSyllabusBinding
 import com.instructure.student.databinding.FragmentSyllabusEventsBinding
 import com.instructure.student.databinding.FragmentSyllabusWebviewBinding
-import com.instructure.pandautils.features.assignments.details.AssignmentDetailsFragment
 import com.instructure.student.mobius.common.ui.MobiusView
 import com.instructure.student.mobius.syllabus.SyllabusEvent
 import com.instructure.student.router.RouteMatcher
@@ -170,8 +169,8 @@ class SyllabusView(
         }
     }
 
-    fun showAssignmentView(assignment: Assignment, canvasContext: CanvasContext) {
-        RouteMatcher.route(activity as FragmentActivity, AssignmentDetailsFragment.makeRoute(canvasContext, assignment.id))
+    fun showAssignmentView(assignmentId: Long, canvasContext: CanvasContext) {
+        RouteMatcher.route(activity as FragmentActivity, AssignmentDetailsFragment.makeRoute(canvasContext, assignmentId))
     }
 
     fun showScheduleItemView(scheduleItem: ScheduleItem, canvasContext: CanvasContext) {

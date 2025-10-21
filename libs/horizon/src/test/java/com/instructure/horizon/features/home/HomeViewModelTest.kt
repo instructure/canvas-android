@@ -17,7 +17,7 @@
 package com.instructure.horizon.features.home
 
 import android.content.Context
-import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.canvasapi2.models.CanvasTheme
 import com.instructure.canvasapi2.models.User
 import com.instructure.canvasapi2.utils.ApiPrefs
@@ -55,8 +55,18 @@ class HomeViewModelTest {
     private val testUser = User(id = 1L, name = "Test User", locale = "en")
     private val testTheme = CanvasTheme("", "", "", "", "", "", "", "")
     private val testCourses = listOf(
-        CourseWithProgress(courseId = 1L, courseName = "Course 1", courseSyllabus = "", progress = 50.0),
-        CourseWithProgress(courseId = 2L, courseName = "Course 2", courseSyllabus = "", progress = 75.0)
+        CourseWithProgress(
+            courseId = 1L,
+            courseName = "Course 1",
+            courseSyllabus = "",
+            progress = 50.0
+        ),
+        CourseWithProgress(
+            courseId = 2L,
+            courseName = "Course 2",
+            courseSyllabus = "",
+            progress = 75.0
+        )
     )
 
     @Before

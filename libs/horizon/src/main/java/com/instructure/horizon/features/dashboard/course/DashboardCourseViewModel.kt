@@ -22,6 +22,8 @@ import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.course.card.CardClickAction
 import com.instructure.horizon.features.dashboard.course.card.DashboardCourseCardModuleItemState
@@ -34,18 +36,31 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardCourseViewModel @Inject constructor(
     @ApplicationContext private val context: Context,
-    private val repository: DashboardCourseRepository
+    private val repository: DashboardCourseRepository,
+    private val dashboardEventHandler: DashboardEventHandler
 ): ViewModel() {
     private val _uiState = MutableStateFlow(DashboardCourseUiState(onRefresh = ::onRefresh))
     val uiState = _uiState.asStateFlow()
 
     init {
         loadData()
+
+        viewModelScope.launch {
+            dashboardEventHandler.events.collect { event ->
+                when (event) {
+                    is DashboardEvent.ProgressRefresh -> {
+                        onRefresh()
+                    }
+                    else -> { /* No-op */ }
+                }
+            }
+        }
     }
 
     private fun loadData() {

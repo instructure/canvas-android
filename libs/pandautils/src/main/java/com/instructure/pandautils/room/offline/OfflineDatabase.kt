@@ -236,7 +236,7 @@ import com.instructure.pandautils.room.offline.entities.UserEntity
         CustomGradeStatusEntity::class,
         CheckpointEntity::class,
         SubAssignmentSubmissionEntity::class
-    ], version = 7
+    ], version = 9
 )
 @TypeConverters(value = [Converters::class, OfflineConverters::class])
 abstract class OfflineDatabase : RoomDatabase() {

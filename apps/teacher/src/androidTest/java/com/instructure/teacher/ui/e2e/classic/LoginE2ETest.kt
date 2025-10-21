@@ -17,6 +17,7 @@
 package com.instructure.teacher.ui.e2e.classic
 
 import android.util.Log
+import androidx.test.espresso.Espresso
 import com.instructure.canvas.espresso.FeatureCategory
 import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.SecondaryFeatureCategory
@@ -257,6 +258,45 @@ class LoginE2ETest : TeacherTest() {
 
         Log.d(ASSERTION_TAG, "Assert that the Canvas Network Page has been displayed.")
         canvasNetworkSignInPage.assertPageObjects()
+    }
+
+    @E2E
+    @Test
+    @TestMetaData(Priority.NICE_TO_HAVE, FeatureCategory.LOGIN, TestCategory.E2E)
+    fun testWrongDomainE2E() {
+
+        val wrongDomain = "invalid-domain"
+        val validDomain = "mobileqa.beta"
+
+        Log.d(PREPARATION_TAG, "Seeding data.")
+        val data = seedData(students = 1, teachers = 1, courses = 1)
+        val teacher = data.teachersList[0]
+
+        Log.d(STEP_TAG, "Click 'Find My School' button.")
+        loginLandingPage.clickFindMySchoolButton()
+
+        Log.d(STEP_TAG, "Enter non-existent domain: $wrongDomain.instructure.com.")
+        loginFindSchoolPage.enterDomain(wrongDomain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(ASSERTION_TAG, "Assert that the error page is displayed with 'You typed: $wrongDomain.instructure.com' message and the Canvas dinosaur error image.")
+        wrongDomainPage.assertPageObjects()
+        wrongDomainPage.assertYouTypedMessageDisplayed(wrongDomain)
+        wrongDomainPage.assertErrorPageImageDisplayed()
+
+        Log.d(STEP_TAG, "Navigate back to the LoginFindSchoolPage.")
+        Espresso.pressBack()
+
+        Log.d(STEP_TAG, "Enter valid domain: $validDomain.instructure.com.")
+        loginFindSchoolPage.enterDomain(validDomain)
+
+        Log.d(STEP_TAG, "Click on 'Next' button on the Toolbar.")
+        loginFindSchoolPage.clickToolbarNextMenuItem()
+
+        Log.d(ASSERTION_TAG, "Assert that the Login Page is open.")
+        loginSignInPage.assertPageObjects()
     }
 
     private fun loginWithUser(user: CanvasUserApiModel, lastSchoolSaved: Boolean = false) {

@@ -87,10 +87,6 @@ import com.instructure.pandautils.utils.getActivityOrNull
 import com.instructure.pandautils.utils.localisedFormat
 import java.util.Date
 
-const val HORIZON_REFRESH_INBOX_LIST = "horizon_refresh_inbox_list"
-const val HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED = "horizon_inbox_list_new_conversation_created"
-const val HORIZON_INBOX_LIST_ANNOUNCEMENT_READ = "horizon_inbox_list_announcement_read"
-
 @Composable
 fun HorizonInboxListScreen(
     state: HorizonInboxListUiState,
@@ -109,21 +105,6 @@ fun HorizonInboxListScreen(
     LaunchedEffect(Unit) {
         if (activity != null) {
             ViewStyler.setStatusBarColor(activity, ContextCompat.getColor(activity, R.color.surface_pagePrimary))
-        }
-    }
-
-    val listEntry = remember(navController.currentBackStackEntry) { navController.getBackStackEntry(HorizonInboxRoute.InboxList.route) }
-    val savedStateHandle = listEntry.savedStateHandle
-    val refreshFlow = remember { savedStateHandle.getStateFlow<String?>(HORIZON_REFRESH_INBOX_LIST, null) }
-    val refreshTrigger by refreshFlow.collectAsState()
-    val snackbarMessage = stringResource(R.string.inboxListConversationCreatedMessage)
-    LaunchedEffect(refreshTrigger) {
-        if (refreshTrigger != null) {
-            state.loadingState.onRefresh()
-            if (refreshTrigger == HORIZON_INBOX_LIST_NEW_CONVERSATION_CREATED) {
-                state.showSnackbar(snackbarMessage)
-            }
-            savedStateHandle[HORIZON_REFRESH_INBOX_LIST] = null
         }
     }
 

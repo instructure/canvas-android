@@ -14,13 +14,12 @@
  *     limitations under the License.
  */package com.instructure.canvas.espresso
 
-import androidx.work.DefaultWorkerFactory
 import android.annotation.SuppressLint
 import android.content.Context
 import android.util.Log
 import androidx.work.Configuration
+import androidx.work.DefaultWorkerFactory
 import androidx.work.WorkerFactory
-import androidx.work.testing.SynchronousExecutor
 import androidx.work.testing.TestDriver
 import androidx.work.testing.WorkManagerTestInitHelper
 import com.instructure.canvasapi2.AppManager
@@ -53,7 +52,7 @@ open class TestAppManager: AppManager() {
         try {
             val config = Configuration.Builder()
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setExecutor(SynchronousExecutor())
+                .setExecutor(java.util.concurrent.Executors.newSingleThreadExecutor())
                 .setWorkerFactory(this.getWorkManagerFactory())
                 .build()
             WorkManagerTestInitHelper.initializeTestWorkManager(context, config)

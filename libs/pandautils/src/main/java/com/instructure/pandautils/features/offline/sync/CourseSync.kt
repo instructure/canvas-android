@@ -36,6 +36,7 @@ import com.instructure.canvasapi2.apis.QuizAPI
 import com.instructure.canvasapi2.apis.UserAPI
 import com.instructure.canvasapi2.builders.RestParams
 import com.instructure.canvasapi2.managers.graphql.CustomGradeStatusesManager
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
 import com.instructure.canvasapi2.models.AssignmentGroup
 import com.instructure.canvasapi2.models.CanvasContext
 import com.instructure.canvasapi2.models.Conference
@@ -50,7 +51,9 @@ import com.instructure.canvasapi2.models.Tab
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.canvasapi2.utils.DataResult
 import com.instructure.canvasapi2.utils.depaginate
+import com.instructure.canvasapi2.utils.toApiString
 import com.instructure.pandautils.features.offline.offlinecontent.CourseFileSharedRepository
+import com.instructure.pandautils.room.offline.daos.CheckpointDao
 import com.instructure.pandautils.room.offline.daos.CourseFeaturesDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncProgressDao
 import com.instructure.pandautils.room.offline.daos.CourseSyncSettingsDao
@@ -59,6 +62,7 @@ import com.instructure.pandautils.room.offline.daos.FileFolderDao
 import com.instructure.pandautils.room.offline.daos.PageDao
 import com.instructure.pandautils.room.offline.daos.PlannerItemDao
 import com.instructure.pandautils.room.offline.daos.QuizDao
+import com.instructure.pandautils.room.offline.entities.CheckpointEntity
 import com.instructure.pandautils.room.offline.entities.CourseFeaturesEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncProgressEntity
 import com.instructure.pandautils.room.offline.entities.CourseSyncSettingsEntity
@@ -119,7 +123,9 @@ class CourseSync(
     private val fileSync: FileSync,
     private val customGradeStatusDao: CustomGradeStatusDao,
     private val customGradeStatusesManager: CustomGradeStatusesManager,
-    private val plannerItemDao: PlannerItemDao
+    private val plannerItemDao: PlannerItemDao,
+    private val checkpointDao: CheckpointDao,
+    private val moduleManager: ModuleManager
 ) {
 
     private val additionalFileIdsToSync = mutableMapOf<Long, Set<Long>>()
@@ -243,11 +249,13 @@ class CourseSync(
     private suspend fun fetchSyllabus(courseId: Long) {
         fetchTab(courseId, Tab.SYLLABUS_ID) {
             val calendarEvents = fetchCalendarEvents(courseId)
-            val assignmentEvents = fetchCalendarAssignments(courseId)
+            val assignmentEvents = fetchCalendarAssignments(courseId, CalendarEventAPI.CalendarEventType.ASSIGNMENT)
+            val subAssignmentEvents = fetchCalendarAssignments(courseId, CalendarEventAPI.CalendarEventType.SUB_ASSIGNMENT)
             val scheduleItems = mutableListOf<ScheduleItem>()
 
             scheduleItems.addAll(calendarEvents)
             scheduleItems.addAll(assignmentEvents)
+            scheduleItems.addAll(subAssignmentEvents)
 
             scheduleItemFacade.insertScheduleItems(scheduleItems, courseId)
 
@@ -290,11 +298,11 @@ class CourseSync(
         return calendarEvents
     }
 
-    private suspend fun fetchCalendarAssignments(courseId: Long): List<ScheduleItem> {
+    private suspend fun fetchCalendarAssignments(courseId: Long, type: CalendarEventAPI.CalendarEventType): List<ScheduleItem> {
         val restParams = RestParams(usePerPageQueryParam = true, isForceReadFromNetwork = true, shouldLoginOnTokenError = false)
         val calendarAssignments = calendarEventApi.getCalendarEvents(
             true,
-            CalendarEventAPI.CalendarEventType.ASSIGNMENT.apiName,
+            type.apiName,
             null,
             null,
             listOf("course_$courseId"),
@@ -567,6 +575,33 @@ class CourseSync(
                     ModuleItem.Type.Quiz.name -> fetchQuizModuleItem(courseId, it, params)
                 }
             }
+
+            fetchModuleItemCheckpoints(courseId)
+        }
+    }
+
+    private suspend fun fetchModuleItemCheckpoints(courseId: Long) {
+        try {
+            val checkpointsWithModuleItems = moduleManager.getModuleItemCheckpoints(courseId.toString(), true)
+            val checkpointEntities = checkpointsWithModuleItems.flatMap { moduleItemWithCheckpoints ->
+                moduleItemWithCheckpoints.checkpoints.map { checkpoint ->
+                    CheckpointEntity(
+                        assignmentId = null,
+                        name = null,
+                        tag = checkpoint.tag,
+                        pointsPossible = checkpoint.pointsPossible,
+                        dueAt = checkpoint.dueAt?.toApiString(),
+                        onlyVisibleToOverrides = false,
+                        lockAt = null,
+                        unlockAt = null,
+                        moduleItemId = moduleItemWithCheckpoints.moduleItemId.toLongOrNull(),
+                        courseId = courseId
+                    )
+                }
+            }
+            checkpointDao.insertAll(checkpointEntities)
+        } catch (e: Exception) {
+            firebaseCrashlytics.recordException(e)
         }
     }
 
