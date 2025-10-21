@@ -13,18 +13,26 @@
  *     See the License for the specific language governing permissions and
  *     limitations under the License.
  */
-package com.instructure.horizon.features.dashboard
+package com.instructure.horizon.features.inbox
 
-data class DashboardUiState(
-    val logoUrl: String = "",
-    val externalShouldRefresh: Boolean = false,
-    val updateExternalShouldRefresh: (Boolean) -> Unit = {},
-    val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
-    val snackbarMessage: String? = null,
-    val onSnackbarDismiss: () -> Unit = {},
-)
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import javax.inject.Inject
+import javax.inject.Singleton
 
-data class DashboardUnreadState(
-    val unreadConversations: Int = 0,
-    val unreadNotifications: Int = 0,
-)
+sealed interface InboxEvent {
+    data object RefreshRequested : InboxEvent
+    data object AnnouncementRead : InboxEvent
+    data class ConversationCreated(val message: String) : InboxEvent
+}
+
+@Singleton
+class InboxEventHandler @Inject constructor() {
+
+    private val _events = MutableSharedFlow<InboxEvent>(replay = 0)
+    val events = _events.asSharedFlow()
+
+    suspend fun postEvent(event: InboxEvent) {
+        _events.emit(event)
+    }
+}

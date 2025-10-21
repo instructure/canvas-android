@@ -37,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -79,25 +80,13 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-
-const val DASHBOARD_REFRESH = "refreshDashboard"
-const val DASHBOARD_SNACKBAR = "dashboardSnackbar"
 
 @Composable
 fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostController, homeNavController: NavHostController) {
     val snackbarHostState = remember { SnackbarHostState() }
 
-    val parentEntry = remember(mainNavController.currentBackStackEntry) { mainNavController.getBackStackEntry("home") }
-    val savedStateHandle = parentEntry.savedStateHandle
-
-    val externalRefreshFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_REFRESH, false) }
-    val externalRefreshState by externalRefreshFlow.collectAsState()
     var shouldRefresh by rememberSaveable { mutableStateOf(false) }
-
-    val snackbarFlow = remember { savedStateHandle.getStateFlow(DASHBOARD_SNACKBAR, "") }
-    val snackbar by snackbarFlow.collectAsState()
 
     /*
     Using a list of booleans to represent each refreshing component.
@@ -110,20 +99,27 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
 
     NotificationPermissionRequest()
 
-    LaunchedEffect(shouldRefresh, externalRefreshState) {
-        if (shouldRefresh || externalRefreshState) {
-            savedStateHandle[DASHBOARD_REFRESH] = false
-            delay(50)
+    LaunchedEffect(shouldRefresh) {
+        if (shouldRefresh) {
             shouldRefresh = false
         }
     }
 
-    LaunchedEffect(snackbar) {
-        if (snackbar.isNotEmpty()) {
-            snackbarHostState.showSnackbar(
-                message = snackbar,
+    LaunchedEffect(uiState.externalShouldRefresh) {
+        if (uiState.externalShouldRefresh) {
+            shouldRefresh = true
+            uiState.updateExternalShouldRefresh(false)
+        }
+    }
+
+    LaunchedEffect(uiState.snackbarMessage) {
+        if (uiState.snackbarMessage != null) {
+            val result = snackbarHostState.showSnackbar(
+                message = uiState.snackbarMessage,
             )
-            savedStateHandle[DASHBOARD_SNACKBAR] = ""
+            if (result == SnackbarResult.Dismissed) {
+                uiState.onSnackbarDismiss()
+            }
         }
     }
 
