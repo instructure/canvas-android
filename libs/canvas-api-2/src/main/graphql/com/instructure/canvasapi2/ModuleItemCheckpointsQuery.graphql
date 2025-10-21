@@ -1,0 +1,29 @@
+query ModuleItemCheckpointsQuery($courseId: ID!, $pageSize: Int!, $nextCursor: String) {
+    course(id: $courseId) {
+        modulesConnection(first: $pageSize, after: $nextCursor) {
+            pageInfo {
+                endCursor
+                startCursor
+                hasNextPage
+                hasPreviousPage
+            }
+            edges {
+                node {
+                    moduleItems {
+                        _id
+                        content {
+                            ... on Discussion {
+                                id
+                                checkpoints {
+                                    dueAt
+                                    tag
+                                    pointsPossible
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

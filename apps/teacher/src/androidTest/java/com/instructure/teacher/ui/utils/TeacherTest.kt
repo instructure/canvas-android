@@ -32,6 +32,7 @@ import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
 import com.instructure.canvas.espresso.common.pages.LoginLandingPage
 import com.instructure.canvas.espresso.common.pages.LoginSignInPage
+import com.instructure.canvas.espresso.common.pages.WrongDomainPage
 import com.instructure.espresso.InstructureActivityTestRule
 import com.instructure.espresso.ModuleItemInteractions
 import com.instructure.espresso.Searchable
@@ -126,6 +127,7 @@ abstract class TeacherTest : CanvasTest() {
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginLandingPage = LoginLandingPage()
     val loginSignInPage = LoginSignInPage()
+    val wrongDomainPage = WrongDomainPage()
     val canvasNetworkSignInPage = CanvasNetworkSignInPage()
     val moduleListPage = ModulesPage()
     val navDrawerPage = NavDrawerPage()

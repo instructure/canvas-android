@@ -89,7 +89,6 @@ import com.instructure.pandautils.features.notification.preferences.PushNotifica
 import com.instructure.pandautils.features.offline.sync.OfflineSyncHelper
 import com.instructure.pandautils.features.reminder.AlarmScheduler
 import com.instructure.pandautils.features.settings.SettingsFragment
-import com.instructure.pandautils.features.themeselector.ThemeSelectorBottomSheet
 import com.instructure.pandautils.interfaces.NavigationCallbacks
 import com.instructure.pandautils.models.PushNotification
 import com.instructure.pandautils.receivers.PushExternalReceiver
@@ -384,12 +383,6 @@ class NavigationActivity : BaseRouterActivity(), Navigation, MasqueradingDialog.
 
         val savedBottomScreens = savedInstanceState?.getStringArrayList(BOTTOM_SCREENS_BUNDLE_KEY)
         restoreBottomNavState(savedBottomScreens)
-
-        if (!ThemePrefs.themeSelectionShown) {
-            val themeSelector = ThemeSelectorBottomSheet()
-            themeSelector.show(supportFragmentManager, ThemeSelectorBottomSheet::javaClass.name)
-            ThemePrefs.themeSelectionShown = true
-        }
 
         requestNotificationsPermission()
 

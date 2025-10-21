@@ -19,12 +19,16 @@ package com.instructure.horizon.interaction.features.notification
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAccountNotification
 import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetHorizonCourseManager
-import com.instructure.canvas.espresso.mockcanvas.fakes.FakeJourneyApiManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetProgramsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetSkillsManager
+import com.instructure.canvas.espresso.mockcanvas.fakes.FakeGetWidgetsManager
 import com.instructure.canvas.espresso.mockcanvas.init
 import com.instructure.canvasapi2.di.graphql.GetCoursesModule
-import com.instructure.canvasapi2.di.graphql.JourneyApiManagerModule
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
+import com.instructure.canvasapi2.di.graphql.JourneyModule
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetProgramsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetWidgetsManager
 import com.instructure.horizon.espresso.HorizonTest
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -32,14 +36,24 @@ import dagger.hilt.android.testing.UninstallModules
 import org.junit.Test
 
 @HiltAndroidTest
-@UninstallModules(GetCoursesModule::class, JourneyApiManagerModule::class)
+@UninstallModules(GetCoursesModule::class, JourneyModule::class)
 class HorizonNotificationInteractionTest: HorizonTest() {
     private val fakeGetHorizonCourseManager = FakeGetHorizonCourseManager()
-    private val fakeJourneyApiManager = FakeJourneyApiManager()
+    private val fakeGetProgramsManager = FakeGetProgramsManager()
+    private val fakeGetWidgetsManager = FakeGetWidgetsManager()
+    private val fakeGetSkillsManager = FakeGetSkillsManager()
 
     @BindValue
     @JvmField
-    val journeyApiManager: JourneyApiManager = fakeJourneyApiManager
+    val getProgramsManager: GetProgramsManager = fakeGetProgramsManager
+
+    @BindValue
+    @JvmField
+    val getWidgetsManager: GetWidgetsManager = fakeGetWidgetsManager
+
+    @BindValue
+    @JvmField
+    val getSkillsManager: GetSkillsManager = fakeGetSkillsManager
 
     @BindValue
     @JvmField

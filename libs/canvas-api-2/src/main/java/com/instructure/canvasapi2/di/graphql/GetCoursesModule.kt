@@ -17,8 +17,8 @@ package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.DefaultApolloClient
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManager
-import com.instructure.canvasapi2.managers.HorizonGetCoursesManagerImpl
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManager
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCoursesManagerImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
