@@ -4,6 +4,7 @@ import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.junit4.createComposeRule
 import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
+import androidx.navigation.compose.rememberNavController
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.platform.app.InstrumentationRegistry
 import com.instructure.horizon.R
@@ -31,7 +32,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillHighlightsTitle)
@@ -46,7 +47,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillHighlightsTitle)
@@ -69,7 +70,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         val retryLabel = context.getString(R.string.dashboardSkillHighlightsRetry)
@@ -86,7 +87,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillHighlightsTitle)
@@ -111,7 +112,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         val title = context.getString(R.string.dashboardSkillHighlightsTitle)
@@ -141,7 +142,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         val expertLabel = context.getString(R.string.dashboardSkillProficienyLevelExpert)
@@ -169,7 +170,7 @@ class DashboardSkillHighlightsWidgetUiTest {
         )
 
         composeTestRule.setContent {
-            DashboardSkillHighlightsSection(uiState)
+            DashboardSkillHighlightsSection(uiState, rememberNavController())
         }
 
         // Text will be truncated but should still be findable by partial match

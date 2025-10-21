@@ -384,13 +384,6 @@
     <string name="dashboardSkillProficienyLevelProficient">Proficient</string>
     <string name="dashboardSkillProficienyLevelAdvanced">Advanced</string>
     <string name="dashboardSkillProficienyLevelExpert">Expert</string>
-    <string name="dashboardTimeSpentTitle">Time</string>
-    <string name="dashboardTimeSpentEmptyMessage">This widget will update once data becomes available.</string>
-    <string name="dashboardTimeSpentErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
-    <string name="dashboardTimeSpentRetry">Refresh</string>
-    <string name="dashboardTimeSpentHoursIn">hours in</string>
-    <string name="dashboardTimeSpentHoursInYourCourse">hours in your course</string>
-    <string name="dashboardTimeSpentAllCourses">all courses</string>
     <string name="dashboardCompletedCourseDetails">Congrats! You\'ve completed your course. View your progress and scores on the Learn page.</string>
     <string name="dashboardMyProgressTitle">Activities</string>
     <string name="dashboardMyProgressCompleted">completed</string>
@@ -399,7 +392,6 @@
     <string name="dashboardMyProgressRetry">Refresh</string>
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
-    <string name="dashboardCompletedCourseDetails">Congrats! You’ve completed your course. View your progress and scores on the Learn page.</string>
     <string name="a11y_expanded">Expanded</string>
     <string name="a11y_collapsed">Collapsed</string>
     <string name="a11y_expand">Expand</string>

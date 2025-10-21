@@ -60,7 +60,7 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("2", "Beginner Skill", "beginner", Date(), Date()),
             Skill("3", "Proficient Skill", "proficient", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -68,7 +68,7 @@ class DashboardSkillHighlightsViewModelTest {
         val state = viewModel.uiState.value
         assertEquals(DashboardItemState.SUCCESS, state.state)
         assertEquals(3, state.cardState.skills.size)
-        coVerify { repository.getSkills(null, false) }
+        coVerify { repository.getSkills(true, false) }
     }
 
     @Test
@@ -79,7 +79,7 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("3", "Banana Skill", "expert", Date(), Date()),
             Skill("4", "Cherry Skill", "advanced", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -104,7 +104,7 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("4", "Skill 4", "advanced", Date(), Date()),
             Skill("5", "Skill 5", "beginner", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -143,7 +143,7 @@ class DashboardSkillHighlightsViewModelTest {
 
     @Test
     fun `Test error state when repository throws exception`() = runTest {
-        coEvery { repository.getSkills(null, false) } throws Exception("Network error")
+        coEvery { repository.getSkills(true, false) } throws Exception("Network error")
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -159,8 +159,8 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("2", "Skill 2", "proficient", Date(), Date()),
             Skill("3", "Skill 3", "beginner", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
-        coEvery { repository.getSkills(null, true) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
+        coEvery { repository.getSkills(true, true) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -170,7 +170,7 @@ class DashboardSkillHighlightsViewModelTest {
         advanceUntilIdle()
 
         assertTrue(completed)
-        coVerify { repository.getSkills(null, true) }
+        coVerify { repository.getSkills(true, true) }
     }
 
     @Test
@@ -201,8 +201,8 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("2", "Skill 2", "advanced", Date(), Date()),
             Skill("3", "Skill 3", "proficient", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
-        coEvery { repository.getSkills(null, true) } throws Exception("Refresh failed")
+        coEvery { repository.getSkills(true, false) } returns skills
+        coEvery { repository.getSkills(true, true) } throws Exception("Refresh failed")
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -223,7 +223,7 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("2", "Advanced Skill", "advanced", Date(), Date()),
             Skill("3", "Proficient Skill", "proficient", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -240,7 +240,7 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("2", "Advanced Skill", "advanced", Date(), Date()),
             Skill("3", "Proficient Skill", "proficient", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
@@ -257,7 +257,7 @@ class DashboardSkillHighlightsViewModelTest {
             Skill("2", "Skill 2", "Advanced", Date(), Date()),
             Skill("3", "Skill 3", "ProFicIent", Date(), Date())
         )
-        coEvery { repository.getSkills(null, false) } returns skills
+        coEvery { repository.getSkills(true, false) } returns skills
 
         val viewModel = getViewModel()
         advanceUntilIdle()
