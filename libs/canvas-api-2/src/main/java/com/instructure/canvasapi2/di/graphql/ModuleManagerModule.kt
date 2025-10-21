@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.util
+package com.instructure.canvasapi2.di.graphql
 
 import com.apollographql.apollo.ApolloClient
 import com.instructure.canvasapi2.di.DefaultApolloClient
