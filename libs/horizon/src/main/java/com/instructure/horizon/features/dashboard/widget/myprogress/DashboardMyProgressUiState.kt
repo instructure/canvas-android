@@ -14,24 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.di.graphql
+package com.instructure.horizon.features.dashboard.widget.myprogress
 
-import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.di.DefaultApolloClient
-import com.instructure.canvasapi2.managers.graphql.ModuleManager
-import com.instructure.canvasapi2.managers.graphql.ModuleManagerImpl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.myprogress.card.DashboardMyProgressCardState
 
-@Module
-@InstallIn(SingletonComponent::class)
-class ModuleManagerModule {
-
-    @Provides
-    fun provideModuleManager(@DefaultApolloClient apolloClient: ApolloClient): ModuleManager {
-        return ModuleManagerImpl(apolloClient)
-    }
-
-}
+data class DashboardMyProgressUiState(
+    val state: DashboardItemState = DashboardItemState.LOADING,
+    val cardState: DashboardMyProgressCardState = DashboardMyProgressCardState(),
+    val onRefresh: (onComplete: () -> Unit) -> Unit = {}
+)

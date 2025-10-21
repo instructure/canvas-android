@@ -27,6 +27,7 @@ import javax.inject.Inject
 
 interface GetWidgetsManager {
     suspend fun getTimeSpentWidgetData(courseId: Long?, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData
+    suspend fun getLearningStatusWidgetData(courseId: Long?, forceNetwork: Boolean): GetWidgetDataQuery.WidgetData
 }
 
 class GetWidgetsManagerImpl @Inject constructor(
@@ -55,7 +56,32 @@ class GetWidgetsManagerImpl @Inject constructor(
         )
 
         val result = journeyClient.enqueueQuery(query, forceNetwork)
+        return result.dataAssertNoErrors.widgetData
+    }
 
+    override suspend fun getLearningStatusWidgetData(
+        courseId: Long?,
+        forceNetwork: Boolean,
+    ): GetWidgetDataQuery.WidgetData {
+        val widgetType = "learning_status_details"
+        val timeSpanInput = TimeSpanInput(type = TimeSpanType.PAST_7_DAYS)
+        val dataScope = "learner"
+        val queryParams = if (courseId != null) {
+            Optional.present(
+                WidgetDataFiltersInput(courseId = Optional.present(courseId.toDouble()))
+            )
+        } else {
+            Optional.absent()
+        }
+
+        val query = GetWidgetDataQuery(
+            widgetType = widgetType,
+            timeSpan = timeSpanInput,
+            dataScope = dataScope,
+            queryParams = queryParams
+        )
+
+        val result = journeyClient.enqueueQuery(query, forceNetwork)
         return result.dataAssertNoErrors.widgetData
     }
 }
