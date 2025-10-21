@@ -46,6 +46,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
+import com.instructure.pandautils.compose.modifiers.conditional
 
 @Composable
 fun DashboardWidgetCard(
@@ -54,13 +55,16 @@ fun DashboardWidgetCard(
     widgetColor: Color,
     modifier: Modifier = Modifier,
     isLoading: Boolean = false,
+    useMinWidth: Boolean = true,
     content: @Composable ColumnScope.() -> Unit
 ) {
     DashboardCard(modifier) {
         Column(
             modifier = Modifier
                 .padding(24.dp)
-                .width(IntrinsicSize.Min)
+                .conditional(useMinWidth) {
+                    width(IntrinsicSize.Min)
+                }
         ) {
             Row(
                 horizontalArrangement = Arrangement.SpaceBetween,

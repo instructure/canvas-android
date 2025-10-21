@@ -254,7 +254,6 @@ class DashboardTimeSpentWidgetUiTest {
 
     @Test
     fun testCourseDropdownInteraction() {
-        var selectedCourseName: String? = null
         val state = DashboardTimeSpentUiState(
             state = DashboardItemState.SUCCESS,
             cardState = DashboardTimeSpentCardState(
@@ -264,9 +263,7 @@ class DashboardTimeSpentWidgetUiTest {
                     CourseOption(id = 2L, name = "Data Structures")
                 ),
                 selectedCourseId = null,
-                onCourseSelected = { courseName ->
-                    selectedCourseName = courseName
-                }
+                onCourseSelected = { }
             )
         )
 
