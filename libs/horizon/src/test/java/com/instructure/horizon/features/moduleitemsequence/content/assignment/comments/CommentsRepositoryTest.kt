@@ -18,9 +18,9 @@ package com.instructure.horizon.features.moduleitemsequence.content.assignment.c
 
 import com.instructure.canvasapi2.apis.SubmissionAPI
 import com.instructure.canvasapi2.builders.RestParams
-import com.instructure.canvasapi2.managers.Comment
-import com.instructure.canvasapi2.managers.CommentsData
-import com.instructure.canvasapi2.managers.HorizonGetCommentsManager
+import com.instructure.canvasapi2.managers.graphql.horizon.Comment
+import com.instructure.canvasapi2.managers.graphql.horizon.CommentsData
+import com.instructure.canvasapi2.managers.graphql.horizon.HorizonGetCommentsManager
 import com.instructure.canvasapi2.models.Submission
 import com.instructure.canvasapi2.utils.DataResult
 import io.mockk.coEvery

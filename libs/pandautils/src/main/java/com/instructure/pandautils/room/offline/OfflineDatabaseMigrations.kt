@@ -209,5 +209,8 @@ val offlineDatabaseMigrations = arrayOf(
         )
         database.execSQL("DROP TABLE CheckpointEntity")
         database.execSQL("ALTER TABLE CheckpointEntity_temp RENAME TO CheckpointEntity")
+    },
+    createMigration(8, 9) { database ->
+        database.execSQL("ALTER TABLE `ScheduleItemEntity` ADD COLUMN `subAssignmentId` INTEGER")
     }
 )

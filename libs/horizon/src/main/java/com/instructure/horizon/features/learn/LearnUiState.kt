@@ -15,9 +15,9 @@
  */
 package com.instructure.horizon.features.learn
 
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
 import com.instructure.horizon.horizonui.platform.LoadingState
 
 data class LearnUiState(

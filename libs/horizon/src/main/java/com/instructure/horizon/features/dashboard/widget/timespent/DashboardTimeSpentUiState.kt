@@ -14,23 +14,13 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.canvasapi2.di.graphql
+package com.instructure.horizon.features.dashboard.widget.timespent
 
-import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.di.JourneyApolloClient
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManager
-import com.instructure.canvasapi2.managers.graphql.JourneyApiManagerImpl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
+import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardState
 
-@Module
-@InstallIn(SingletonComponent::class)
-class JourneyApiManagerModule {
-
-    @Provides
-    fun provideJourneyApiManager(@JourneyApolloClient apolloClient: ApolloClient): JourneyApiManager {
-        return JourneyApiManagerImpl(apolloClient)
-    }
-}
+data class DashboardTimeSpentUiState(
+    val state: DashboardItemState = DashboardItemState.LOADING,
+    val cardState: DashboardTimeSpentCardState = DashboardTimeSpentCardState(),
+    val onRefresh: (onComplete: () -> Unit) -> Unit = {}
+)

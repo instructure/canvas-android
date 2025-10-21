@@ -1,20 +1,4 @@
-/*
- * Copyright (C) 2025 - present Instructure, Inc.
- *
- *     This program is free software: you can redistribute it and/or modify
- *     it under the terms of the GNU General Public License as published by
- *     the Free Software Foundation, version 3 of the License.
- *
- *     This program is distributed in the hope that it will be useful,
- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- *     GNU General Public License for more details.
- *
- *     You should have received a copy of the GNU General Public License
- *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
- *
- */
-package com.instructure.canvasapi2.managers
+package com.instructure.canvasapi2.managers.graphql.horizon.cedar
 
 import com.apollographql.apollo.ApolloClient
 import com.apollographql.apollo.api.Optional
@@ -96,7 +80,12 @@ class CedarApiManager @Inject constructor(
         maxLengthOfQuestions: Int = 100
     ): List<GeneratedQuiz> {
         val mutation = GenerateQuizMutation(
-            QuizInput(context, numberOfQuestions.toDouble(), numberOfOptionsPerQuestion.toDouble(), maxLengthOfQuestions.toDouble())
+            QuizInput(
+                context,
+                numberOfQuestions.toDouble(),
+                numberOfOptionsPerQuestion.toDouble(),
+                maxLengthOfQuestions.toDouble()
+            )
         )
         val result = cedarClient
             .enqueueMutation(mutation)

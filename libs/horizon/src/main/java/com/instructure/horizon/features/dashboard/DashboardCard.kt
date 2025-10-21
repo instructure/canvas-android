@@ -14,7 +14,7 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.course.card
+package com.instructure.horizon.features.dashboard
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -29,7 +29,7 @@ import com.instructure.horizon.horizonui.foundation.HorizonElevation
 import com.instructure.horizon.horizonui.foundation.horizonShadow
 
 @Composable
-fun DashboardCourseCard(
+fun DashboardCard(
     modifier: Modifier = Modifier,
     content: @Composable () -> Unit
 ) {
