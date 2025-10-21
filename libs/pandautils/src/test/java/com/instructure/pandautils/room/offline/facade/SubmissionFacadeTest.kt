@@ -26,6 +26,7 @@ import com.instructure.pandautils.room.offline.daos.AuthorDao
 import com.instructure.pandautils.room.offline.daos.GroupDao
 import com.instructure.pandautils.room.offline.daos.MediaCommentDao
 import com.instructure.pandautils.room.offline.daos.RubricCriterionAssessmentDao
+import com.instructure.pandautils.room.offline.daos.SubAssignmentSubmissionDao
 import com.instructure.pandautils.room.offline.daos.SubmissionCommentDao
 import com.instructure.pandautils.room.offline.daos.SubmissionDao
 import com.instructure.pandautils.room.offline.daos.UserDao
@@ -33,8 +34,10 @@ import com.instructure.pandautils.room.offline.entities.GroupEntity
 import com.instructure.pandautils.room.offline.entities.MediaCommentEntity
 import com.instructure.pandautils.room.offline.entities.SubmissionEntity
 import com.instructure.pandautils.room.offline.entities.UserEntity
+import io.mockk.Runs
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.just
 import io.mockk.mockk
 import kotlinx.coroutines.test.runTest
 import org.junit.Assert
@@ -50,10 +53,11 @@ class SubmissionFacadeTest {
     private val attachmentDao: AttachmentDao = mockk(relaxed = true)
     private val authorDao: AuthorDao = mockk(relaxed = true)
     private val rubricCriterionAssessmentDao: RubricCriterionAssessmentDao = mockk(relaxed = true)
+    private val subAssignmentSubmissionDao: SubAssignmentSubmissionDao = mockk(relaxed = true)
 
     private val facade = SubmissionFacade(
         submissionDao, groupDao, mediaCommentDao, userDao,
-        submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao
+        submissionCommentDao, attachmentDao, authorDao, rubricCriterionAssessmentDao, subAssignmentSubmissionDao
     )
 
     @Test
@@ -73,6 +77,7 @@ class SubmissionFacadeTest {
         )
 
         coEvery { submissionDao.insert(any()) } returns 1L
+        coEvery { subAssignmentSubmissionDao.insertAll(any()) } just Runs
 
         facade.insertSubmission(submission)
 
@@ -80,6 +85,7 @@ class SubmissionFacadeTest {
         coVerify { mediaCommentDao.insert(MediaCommentEntity(mediaComment, 1L, 0)) }
         coVerify { userDao.insertOrUpdate(UserEntity(user)) }
         coVerify { submissionDao.insertOrUpdate(SubmissionEntity(submission, group.id, mediaComment.mediaId)) }
+        coVerify { subAssignmentSubmissionDao.insertAll(emptyList()) }
     }
 
     @Test
@@ -95,6 +101,7 @@ class SubmissionFacadeTest {
         coEvery { mediaCommentDao.findById(any()) } returns MediaCommentEntity(mediaComment, 1L, 0)
         coEvery { userDao.findById(any()) } returns UserEntity(user)
         coEvery { submissionDao.findById(any()) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
+        coEvery { subAssignmentSubmissionDao.findBySubmissionIdAndAttempt(any(), any()) } returns emptyList()
 
         val result = facade.getSubmissionById(submissionId)!!
 
@@ -134,6 +141,7 @@ class SubmissionFacadeTest {
             )
         }
         coEvery { submissionDao.findById(submissionId) } returns submissionHistory.map { SubmissionEntity(it, group.id, mediaComment.mediaId) }
+        coEvery { subAssignmentSubmissionDao.findBySubmissionIdAndAttempt(any(), any()) } returns emptyList()
 
         val result = facade.findByAssignmentIds(listOf(assignmentId))
 

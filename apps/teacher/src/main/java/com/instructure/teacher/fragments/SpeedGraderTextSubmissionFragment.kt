@@ -22,10 +22,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.webkit.WebChromeClient
 import android.webkit.WebView
-import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.canvasapi2.utils.ApiPrefs
 import com.instructure.pandautils.analytics.SCREEN_VIEW_SPEED_GRADER_TEXT_SUBMISSION
 import com.instructure.pandautils.analytics.ScreenView
+import com.instructure.pandautils.base.BaseCanvasFragment
 import com.instructure.pandautils.binding.viewBinding
 import com.instructure.pandautils.utils.StringArg
 import com.instructure.pandautils.utils.setGone
@@ -77,9 +77,13 @@ class SpeedGraderTextSubmissionFragment : BaseCanvasFragment(), SpeedGraderWebNa
         }
 
         textSubmissionWebViewWrapper.webView.canvasEmbeddedWebViewCallback = object : CanvasWebView.CanvasEmbeddedWebViewCallback {
-            override fun launchInternalWebViewFragment(url: String) = requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
+            override fun launchInternalWebViewFragment(url: String) =
+                requireActivity().startActivity(InternalWebViewActivity.createIntent(requireActivity(), url, "", true))
+
             override fun shouldLaunchInternalWebViewFragment(url: String): Boolean = true
         }
+
+        textSubmissionWebViewWrapper.webView.setInitialScale(100)
 
         textSubmissionWebViewWrapper.loadHtml(submissionText, getString(R.string.a11y_submissionText))
     }

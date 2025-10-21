@@ -277,6 +277,7 @@
     <string name="checkBoxFinalGradeOption">Based on graded assignments</string>
     <string name="checkBoxWhatIfGradeOption">Show What-If Score</string>
     <string name="whatIfDialogText">What-If Score</string>
+    <string name="whatIfScoreExceedsMaximum">Score cannot exceed maximum points</string>
     <string name="formattedScoreWithPointsPossibleAndGrade">%1$s/%2$s (%3$s)</string>
     <string name="contentDescriptionScoreWithPointsPossibleAndGrade">%1$s out of %2$s points, %3$s</string>
     <string name="inbox">Inbox</string>
@@ -1043,6 +1044,10 @@
     <string name="downloadingFile">Downloading</string>
     <string name="downloadFailed">Download failed</string>
     <string name="downloadSuccessful">Download successful</string>
+    <string name="downloading">Downloading</string>
+    <string name="downloadComplete">Download complete</string>
+    <string name="notificationChannelNameFileDownloadsName">Download Notifications</string>
+    <string name="notificationChannelNameFileDownloadsDescription">Canvas notifications for ongoing downloads.</string>
 
     <string name="full_due_date_details">Full due date details</string>
     <string name="submissions">Submissions</string>
@@ -2151,6 +2156,8 @@
     <string name="daysLateHint">Write days late</string>
     <string name="reply_to_topic">Reply to topic</string>
     <string name="additional_replies">Additional replies (%d)</string>
+    <string name="reply_to_topic_due">Reply to topic due</string>
+    <string name="additional_replies_due">Additional replies (%d) due</string>
     <string name="a11y_discussion_checkpoints">Discussion Checkpoints</string>
     <string name="multipleDueDates">Multiple Due Dates</string>
     <string name="courseConcludedError">Course concluded. Unable to send messages!</string>

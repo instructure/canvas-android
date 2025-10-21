@@ -36,7 +36,7 @@ import com.instructure.teacher.features.modules.list.ui.ModuleListFragment
 import com.instructure.teacher.features.modules.progression.ModuleProgressionFragment
 import com.instructure.teacher.features.postpolicies.ui.PostPolicyFragment
 import com.instructure.teacher.features.syllabus.edit.EditSyllabusFragment
-import com.instructure.teacher.features.syllabus.ui.SyllabusFragment
+import com.instructure.teacher.features.syllabus.ui.SyllabusRepositoryFragment
 import com.instructure.teacher.fragments.AnnouncementListFragment
 import com.instructure.teacher.fragments.AssigneeListFragment
 import com.instructure.teacher.fragments.AttendanceListFragment
@@ -218,8 +218,8 @@ object RouteResolver {
             fragment = EditFileFolderFragment.newInstance(route.arguments)
         } else if (CreateOrEditPageDetailsFragment::class.java.isAssignableFrom(cls)) {
             fragment = CreateOrEditPageDetailsFragment.newInstance(route.arguments)
-        } else if (SyllabusFragment::class.java.isAssignableFrom(cls)) {
-            fragment = SyllabusFragment.newInstance(canvasContext ?: route.canvasContext)
+        } else if (SyllabusRepositoryFragment::class.java.isAssignableFrom(cls)) {
+            fragment = SyllabusRepositoryFragment.newInstance(canvasContext ?: route.canvasContext)
         } else if (EditSyllabusFragment::class.java.isAssignableFrom(cls)) {
             fragment = EditSyllabusFragment.newInstance(route.arguments)
         } else if (EventFragment::class.java.isAssignableFrom(cls)) {

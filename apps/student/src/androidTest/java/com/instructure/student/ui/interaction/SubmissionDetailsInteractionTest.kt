@@ -17,7 +17,6 @@
 package com.instructure.student.ui.interaction
 
 import androidx.compose.ui.platform.ComposeView
-import androidx.compose.ui.test.junit4.createEmptyComposeRule
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.web.webdriver.Locator
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils
@@ -27,7 +26,6 @@ import com.instructure.canvas.espresso.Priority
 import com.instructure.canvas.espresso.TestCategory
 import com.instructure.canvas.espresso.TestMetaData
 import com.instructure.canvas.espresso.annotations.Stub
-import com.instructure.canvas.espresso.common.pages.compose.AssignmentListPage
 import com.instructure.canvas.espresso.mockcanvas.MockCanvas
 import com.instructure.canvas.espresso.mockcanvas.addAssignment
 import com.instructure.canvas.espresso.mockcanvas.addFileToCourse
@@ -46,19 +44,18 @@ import com.instructure.canvasapi2.models.RubricCriterionRating
 import com.instructure.canvasapi2.models.SubmissionComment
 import com.instructure.espresso.handleWorkManagerTask
 import com.instructure.student.ui.pages.classic.WebViewTextCheck
-import com.instructure.student.ui.utils.StudentTest
+import com.instructure.student.ui.utils.StudentComposeTest
 import com.instructure.student.ui.utils.extensions.tokenLogin
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
 import org.hamcrest.Matchers
-import org.junit.Rule
 import org.junit.Test
 import java.util.Date
 
 @HiltAndroidTest
 @UninstallModules(CustomGradeStatusModule::class)
-class SubmissionDetailsInteractionTest : StudentTest() {
+class SubmissionDetailsInteractionTest : StudentComposeTest() {
 
     @BindValue
     @JvmField
@@ -67,11 +64,6 @@ class SubmissionDetailsInteractionTest : StudentTest() {
     override fun displaysPageObjects() = Unit // Not used for interaction tests
 
     private lateinit var course: Course
-
-    @get:Rule
-    val composeTestRule = createEmptyComposeRule()
-
-    val assignmentListPage by lazy { AssignmentListPage(composeTestRule) }
 
     // Should be able to add a comment on a submission
     @Test

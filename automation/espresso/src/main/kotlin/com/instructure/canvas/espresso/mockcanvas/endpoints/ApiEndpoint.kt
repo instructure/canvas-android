@@ -193,7 +193,7 @@ object ApiEndpoint : Endpoint(
                             "assignment" -> data
                                 .assignments
                                 .values
-                                .filter { a -> a.courseId in courseIds }
+                                .filter { a -> a.courseId in courseIds && a.checkpoints.isEmpty() }
                                 .map { a ->
                                     ScheduleItem(
                                         itemId = a.id.toString(),
@@ -204,6 +204,27 @@ object ApiEndpoint : Endpoint(
                                         contextCode = "course_${a.courseId}",
                                         contextName = data.courses[a.courseId]?.name
                                     )
+                                }
+
+                            "sub_assignment" -> data
+                                .assignments
+                                .values
+                                .filter { a -> a.courseId in courseIds && a.checkpoints.isNotEmpty() }
+                                .flatMap { a ->
+                                    a.checkpoints.map { checkpoint ->
+                                        ScheduleItem(
+                                            itemId = checkpoint.tag ?: "",
+                                            title = a.name,
+                                            description = a.description,
+                                            startAt = checkpoint.dueAt,
+                                            assignment = a.copy(
+                                                dueAt = checkpoint.dueAt,
+                                                pointsPossible = checkpoint.pointsPossible ?: a.pointsPossible
+                                            ),
+                                            contextCode = "course_${a.courseId}",
+                                            contextName = data.courses[a.courseId]?.name
+                                        )
+                                    }
                                 }
 
                             // default handler assumes "event" event type
@@ -289,6 +310,29 @@ object ApiEndpoint : Endpoint(
             POST {
                 val plannerOverride = getJsonFromRequestBody<PlannerOverride>(request.body)
                 request.successResponse(plannerOverride!!)
+            }
+        },
+        Segment("items") to Endpoint {
+            GET {
+                val contextCodes = request.url.queryParameterValues("context_codes[]")
+                val startDate = request.url.queryParameter("start_date").toDate()
+                val endDate = request.url.queryParameter("end_date").toDate()
+                val filter = request.url.queryParameter("filter")
+                val courseIds = contextCodes
+                    .filter { it?.startsWith("course_").orDefault() }
+                    .map { it?.substringAfter("course_")?.toLong() }
+                val userIds = contextCodes
+                    .filter { it?.startsWith("user_").orDefault() }
+                    .map { it?.substringAfter("user_")?.toLong() }
+
+                val plannerItems = data.todos.filter {
+                    courseIds.contains(it.courseId) || userIds.contains(it.userId)
+                }.filter {
+                    if (it.plannableDate == null) return@filter true
+                    if (startDate == null || endDate == null) return@filter true
+                    it.plannableDate.time in startDate.time..endDate.time
+                }
+                request.successResponse(plannerItems)
             }
         }
     ),

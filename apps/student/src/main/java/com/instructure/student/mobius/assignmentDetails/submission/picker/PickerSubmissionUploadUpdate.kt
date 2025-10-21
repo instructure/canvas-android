@@ -38,7 +38,6 @@ class PickerSubmissionUploadUpdate :
         PickerSubmissionUploadEvent.CameraClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchCamera))
         PickerSubmissionUploadEvent.GalleryClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchGallery))
         PickerSubmissionUploadEvent.SelectFileClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchSelectFile))
-        PickerSubmissionUploadEvent.DocumentScanningClicked -> Next.dispatch(setOf(PickerSubmissionUploadEffect.LaunchDocumentScanning))
         is PickerSubmissionUploadEvent.OnFileSelected -> {
             Next.next(
                 model.copy(isLoadingFile = true),
