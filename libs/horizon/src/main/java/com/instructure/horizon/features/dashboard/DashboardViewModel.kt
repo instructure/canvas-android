@@ -22,7 +22,6 @@ import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.pandautils.utils.ThemePrefs
 import com.instructure.pandautils.utils.poll
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -36,7 +35,7 @@ class DashboardViewModel @Inject constructor(
     private val dashboardEventHandler: DashboardEventHandler
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar))
+    private val _uiState = MutableStateFlow(DashboardUiState(onSnackbarDismiss = ::dismissSnackbar, updateExternalShouldRefresh = ::updateExternalShouldRefresh))
     val uiState = _uiState.asStateFlow()
 
     init {
@@ -53,8 +52,6 @@ class DashboardViewModel @Inject constructor(
                     is DashboardEvent.DashboardRefresh -> {
                         _uiState.update { it.copy(externalShouldRefresh = true) }
                         refresh()
-                        delay(50) // Give some time for the refresh to start
-                        _uiState.update { it.copy(externalShouldRefresh = false) }
                     }
                     is DashboardEvent.ShowSnackbar -> showSnackbar(event.message)
                     else -> { /* No-op */ }
@@ -104,6 +101,12 @@ class DashboardViewModel @Inject constructor(
     private fun dismissSnackbar() {
         _uiState.update {
             it.copy(snackbarMessage = null)
+        }
+    }
+
+    private fun updateExternalShouldRefresh(value: Boolean) {
+        _uiState.update {
+            it.copy(externalShouldRefresh = value)
         }
     }
 }

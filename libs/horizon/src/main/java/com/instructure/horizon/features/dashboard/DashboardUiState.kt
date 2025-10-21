@@ -18,6 +18,7 @@ package com.instructure.horizon.features.dashboard
 data class DashboardUiState(
     val logoUrl: String = "",
     val externalShouldRefresh: Boolean = false,
+    val updateExternalShouldRefresh: (Boolean) -> Unit = {},
     val unreadCountState: DashboardUnreadState = DashboardUnreadState(),
     val snackbarMessage: String? = null,
     val onSnackbarDismiss: () -> Unit = {},

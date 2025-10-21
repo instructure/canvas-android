@@ -37,6 +37,7 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SnackbarHost
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.pulltorefresh.PullToRefreshBox
 import androidx.compose.material3.pulltorefresh.PullToRefreshDefaults.Indicator
 import androidx.compose.material3.pulltorefresh.rememberPullToRefreshState
@@ -79,7 +80,6 @@ import com.instructure.horizon.horizonui.molecules.BadgeType
 import com.instructure.horizon.horizonui.molecules.IconButton
 import com.instructure.horizon.horizonui.molecules.IconButtonColor
 import com.instructure.horizon.navigation.MainNavigationRoute
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 
 @Composable
@@ -108,15 +108,18 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
     LaunchedEffect(uiState.externalShouldRefresh) {
         if (uiState.externalShouldRefresh) {
             shouldRefresh = true
+            uiState.updateExternalShouldRefresh(false)
         }
     }
 
     LaunchedEffect(uiState.snackbarMessage) {
         if (uiState.snackbarMessage != null) {
-            snackbarHostState.showSnackbar(
+            val result = snackbarHostState.showSnackbar(
                 message = uiState.snackbarMessage,
             )
-            uiState.onSnackbarDismiss()
+            if (result == SnackbarResult.Dismissed) {
+                uiState.onSnackbarDismiss()
+            }
         }
     }
 
