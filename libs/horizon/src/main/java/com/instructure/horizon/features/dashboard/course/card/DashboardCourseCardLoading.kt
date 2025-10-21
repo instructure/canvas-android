@@ -26,6 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -36,7 +37,7 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 fun DashboardCourseCardLoading(
     modifier: Modifier = Modifier,
 ) {
-    DashboardCourseCard(modifier.padding(bottom = 8.dp)) {
+    DashboardCard(modifier.padding(bottom = 8.dp)) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

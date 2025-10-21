@@ -25,6 +25,7 @@ import com.instructure.canvas.espresso.common.pages.LegalPage
 import com.instructure.canvas.espresso.common.pages.LoginFindSchoolPage
 import com.instructure.canvas.espresso.common.pages.LoginLandingPage
 import com.instructure.canvas.espresso.common.pages.LoginSignInPage
+import com.instructure.canvas.espresso.common.pages.WrongDomainPage
 import com.instructure.parentapp.BuildConfig
 import com.instructure.parentapp.features.login.LoginActivity
 import com.instructure.parentapp.ui.pages.classic.DashboardPage
@@ -52,6 +53,7 @@ abstract class ParentTest : CanvasTest() {
     val canvasNetworkSignInPage = CanvasNetworkSignInPage()
     val loginFindSchoolPage = LoginFindSchoolPage()
     val loginSignInPage = LoginSignInPage()
+    val wrongDomainPage = WrongDomainPage()
     val inboxPage = InboxPage()
     val legalPage = LegalPage()
     val aboutPage = AboutPage()

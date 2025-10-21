@@ -19,6 +19,9 @@ package com.instructure.student.features.modules.list.datasource
 import com.instructure.canvasapi2.apis.CourseAPI
 import com.instructure.canvasapi2.apis.ModuleAPI
 import com.instructure.canvasapi2.apis.TabAPI
+import com.instructure.canvasapi2.managers.graphql.ModuleItemCheckpoint
+import com.instructure.canvasapi2.managers.graphql.ModuleItemWithCheckpoints
+import com.instructure.canvasapi2.managers.graphql.ModuleManager
 import com.instructure.canvasapi2.models.Course
 import com.instructure.canvasapi2.models.CourseSettings
 import com.instructure.canvasapi2.models.ModuleItem
@@ -37,8 +40,9 @@ class ModuleListNetworkDataSourceTest {
     private val moduleApi: ModuleAPI.ModuleInterface = mockk(relaxed = true)
     private val tabApi: TabAPI.TabsInterface = mockk(relaxed = true)
     private val courseApi: CourseAPI.CoursesInterface = mockk(relaxed = true)
+    private val moduleManager: ModuleManager = mockk(relaxed = true)
 
-    private val dataSource = ModuleListNetworkDataSource(moduleApi, tabApi, courseApi)
+    private val dataSource = ModuleListNetworkDataSource(moduleApi, tabApi, courseApi, moduleManager)
 
     @Test
     fun `Return failed result when getAllModuleObjects fails`() = runTest {
@@ -182,5 +186,34 @@ class ModuleListNetworkDataSourceTest {
         val result = dataSource.loadCourseSettings(1, true)
 
         Assert.assertNull(result)
+    }
+
+    @Test
+    fun `Get module item checkpoints returns data from module manager`() = runTest {
+        val expectedCheckpoints = listOf(
+            ModuleItemWithCheckpoints(
+                "1",
+                listOf(
+                    ModuleItemCheckpoint(null, "reply_to_topic", 5.0),
+                    ModuleItemCheckpoint(null, "reply_to_entry", 5.0)
+                )
+            )
+        )
+        coEvery { moduleManager.getModuleItemCheckpoints(any(), any()) } returns expectedCheckpoints
+
+        val result = dataSource.getModuleItemCheckpoints("123", true)
+
+        Assert.assertEquals(1, result.size)
+        Assert.assertEquals("1", result[0].moduleItemId)
+        Assert.assertEquals(2, result[0].checkpoints.size)
+    }
+
+    @Test
+    fun `Get module item checkpoints returns empty list when no checkpoints available`() = runTest {
+        coEvery { moduleManager.getModuleItemCheckpoints(any(), any()) } returns emptyList()
+
+        val result = dataSource.getModuleItemCheckpoints("123", true)
+
+        Assert.assertTrue(result.isEmpty())
     }
 }

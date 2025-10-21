@@ -18,10 +18,10 @@ package com.instructure.horizon.features.learn
 
 import android.content.Context
 import androidx.lifecycle.SavedStateHandle
-import com.instructure.canvasapi2.managers.CourseWithModuleItemDurations
-import com.instructure.canvasapi2.managers.CourseWithProgress
-import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithModuleItemDurations
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.journey.type.ProgramProgressCourseEnrollmentStatus
 import com.instructure.journey.type.ProgramVariantType
 import io.mockk.coEvery
@@ -48,9 +48,24 @@ class LearnViewModelTest {
     private val testDispatcher = UnconfinedTestDispatcher()
 
     private val testCourses = listOf(
-        CourseWithProgress(courseId = 1L, courseName = "Course 1", courseSyllabus = "", progress = 50.0),
-        CourseWithProgress(courseId = 2L, courseName = "Course 2", courseSyllabus = "", progress = 75.0),
-        CourseWithProgress(courseId = 3L, courseName = "Course 3", courseSyllabus = "", progress = 25.0)
+        CourseWithProgress(
+            courseId = 1L,
+            courseName = "Course 1",
+            courseSyllabus = "",
+            progress = 50.0
+        ),
+        CourseWithProgress(
+            courseId = 2L,
+            courseName = "Course 2",
+            courseSyllabus = "",
+            progress = 75.0
+        ),
+        CourseWithProgress(
+            courseId = 3L,
+            courseName = "Course 3",
+            courseSyllabus = "",
+            progress = 25.0
+        )
     )
 
     private val testProgram = Program(
