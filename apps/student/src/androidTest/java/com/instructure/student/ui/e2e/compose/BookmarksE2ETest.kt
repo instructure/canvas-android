@@ -224,7 +224,8 @@ class BookmarksE2ETest : StudentComposeTest() {
         device.pressBack()
 
         Log.d(ASSERTION_TAG, "Assert that the app returned to the system home screen by verifying the bookmark shortcut is visible.")
-        bookmarkPage.assertBookmarkShortcutVisibleOnHomeScreen(bookmarkName, device)
+        val homeScreenShortcut = device.findObject(UiSelector().textContains(bookmarkName))
+        assert(homeScreenShortcut.exists()) { "Expected to be on system home screen with bookmark shortcut visible, but it was not found." }
     }
 
 }

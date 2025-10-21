@@ -93,9 +93,4 @@ class BookmarkPage : BasePage() {
         onView(allOf(withId(R.id.title), containsTextCaseInsensitive("Add to Home"), isDisplayed())).click()
         device.findObject(UiSelector().textContains("Add automatically")).click()
     }
-
-    fun assertBookmarkShortcutVisibleOnHomeScreen(bookmarkName: String, device: UiDevice) {
-        val homeScreenShortcut = device.findObject(UiSelector().textContains(bookmarkName))
-        assert(homeScreenShortcut.exists()) { "Expected to be on system home screen with bookmark shortcut visible, but it was not found." }
-    }
 }
