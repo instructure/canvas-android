@@ -66,6 +66,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.course.DashboardCourseSection
 import com.instructure.horizon.features.dashboard.widget.myprogress.DashboardMyProgressWidget
 import com.instructure.horizon.features.dashboard.widget.skillhighlights.DashboardSkillHighlightsWidget
+import com.instructure.horizon.features.dashboard.widget.skilloverview.DashboardSkillOverviewWidget
 import com.instructure.horizon.features.dashboard.widget.timespent.DashboardTimeSpentWidget
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -173,12 +174,18 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                         .horizontalScroll(rememberScrollState())
                         .padding(start = 16.dp)
                 ) {
+                    DashboardMyProgressWidget(
+                        shouldRefresh,
+                        refreshStateFlow
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
                     DashboardTimeSpentWidget(
                         shouldRefresh,
                         refreshStateFlow
                     )
                     Spacer(modifier = Modifier.width(8.dp))
-                    DashboardMyProgressWidget(
+                    DashboardSkillOverviewWidget(
+                        homeNavController,
                         shouldRefresh,
                         refreshStateFlow
                     )

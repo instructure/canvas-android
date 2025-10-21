@@ -390,6 +390,11 @@
     <string name="dashboardMyProgressEmptyMessage">This widget will update once data becomes available.</string>
     <string name="dashboardMyProgressErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardMyProgressRetry">Refresh</string>
+    <string name="dashboardSkillOverviewTitle">Skills</string>
+    <string name="dashboardSkillOverviewEarnedLabel">earned</string>
+    <string name="dashboardSkillOverviewNoDataMessage">This widget will update once data becomes available.</string>
+    <string name="dashboardSkillOverviewErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
+    <string name="dashboardSkillOverviewRetry">Refresh</string>
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
     <string name="a11y_expanded">Expanded</string>
