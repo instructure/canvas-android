@@ -80,13 +80,14 @@ object SyllabusPresenter : Presenter<SyllabusModel, SyllabusViewState> {
     }
 
     private fun getIcon(event: ScheduleItem): Int {
-        if (event.assignment?.isLocked == true || event.assignment?.lockExplanation?.takeIf {
-                it.isValid() && event.assignment?.lockDate?.before(Date()) == true
+        val assignment = event.assignment ?: event.subAssignment
+        if (assignment?.isLocked == true || assignment?.lockExplanation?.takeIf {
+                it.isValid() && assignment.lockDate?.before(Date()) == true
             } != null) {
             return com.instructure.student.R.drawable.ic_lock_lined
         }
 
-        return event.assignment?.let {
+        return assignment?.let {
             getAssignmentIcon(it)
         } ?: com.instructure.student.R.drawable.ic_calendar
     }

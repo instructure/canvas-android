@@ -18,8 +18,8 @@ package com.instructure.horizon.features.dashboard.course
 
 import android.content.Context
 import com.instructure.canvasapi2.GetCoursesQuery
-import com.instructure.canvasapi2.managers.graphql.Program
-import com.instructure.canvasapi2.managers.graphql.ProgramRequirement
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.Program
+import com.instructure.canvasapi2.managers.graphql.horizon.journey.ProgramRequirement
 import com.instructure.canvasapi2.models.ModuleItem
 import com.instructure.canvasapi2.models.ModuleObject
 import com.instructure.canvasapi2.type.EnrollmentWorkflowState

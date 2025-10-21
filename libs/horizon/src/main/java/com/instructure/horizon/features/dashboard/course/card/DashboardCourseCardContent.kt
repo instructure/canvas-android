@@ -63,6 +63,7 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
@@ -93,7 +94,7 @@ fun DashboardCourseCardContent(
     handleOnClickAction: (CardClickAction?) -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DashboardCourseCard(modifier) {
+    DashboardCard(modifier) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

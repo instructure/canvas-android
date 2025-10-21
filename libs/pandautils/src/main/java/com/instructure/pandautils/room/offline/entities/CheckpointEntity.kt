@@ -20,7 +20,9 @@ package com.instructure.pandautils.room.offline.entities
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import com.instructure.canvasapi2.managers.graphql.ModuleItemCheckpoint
 import com.instructure.canvasapi2.models.Checkpoint
+import com.instructure.canvasapi2.utils.toDate
 
 @Entity(
     foreignKeys = [
@@ -28,21 +30,29 @@ import com.instructure.canvasapi2.models.Checkpoint
             entity = AssignmentEntity::class,
             parentColumns = ["id"],
             childColumns = ["assignmentId"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
+        ),
+        ForeignKey(
+            entity = ModuleItemEntity::class,
+            parentColumns = ["id"],
+            childColumns = ["moduleItemId"],
+            onDelete = ForeignKey.CASCADE,
         )
     ]
 )
 data class CheckpointEntity(
     @PrimaryKey(autoGenerate = true)
     val id: Long = 0,
-    val assignmentId: Long,
+    val assignmentId: Long? = null,
     val name: String?,
     val tag: String?,
     val pointsPossible: Double?,
     val dueAt: String?,
     val onlyVisibleToOverrides: Boolean,
     val lockAt: String?,
-    val unlockAt: String?
+    val unlockAt: String?,
+    val moduleItemId: Long? = null,
+    val courseId: Long? = null
 ) {
     constructor(checkpoint: Checkpoint, assignmentId: Long) : this(
         assignmentId = assignmentId,
@@ -65,4 +75,12 @@ data class CheckpointEntity(
         lockAt = lockAt,
         unlockAt = unlockAt
     )
+
+    fun toModuleItemCheckpoint(): ModuleItemCheckpoint {
+        return ModuleItemCheckpoint(
+            dueAt = dueAt?.toDate(),
+            tag = tag.orEmpty(),
+            pointsPossible = pointsPossible ?: 0.0
+        )
+    }
 }

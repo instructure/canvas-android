@@ -1,0 +1,13 @@
+mutation CreateWidget(
+    $input: CreateWidgetInput!,
+    $userAccountId: String!
+) {
+    createWidget(input: $input, userAccountId: $userAccountId) {
+        id
+        name
+        type
+        position
+        createdAt
+        updatedAt
+    }
+}

@@ -17,7 +17,7 @@
 package com.instructure.horizon.features.learn.course
 
 import androidx.annotation.StringRes
-import com.instructure.canvasapi2.managers.CourseWithProgress
+import com.instructure.canvasapi2.managers.graphql.horizon.CourseWithProgress
 import com.instructure.horizon.R
 
 data class CourseDetailsUiState(

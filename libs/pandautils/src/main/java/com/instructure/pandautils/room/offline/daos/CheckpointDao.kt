@@ -37,4 +37,7 @@ interface CheckpointDao {
 
     @Query("DELETE FROM CheckpointEntity WHERE assignmentId = :assignmentId")
     suspend fun deleteByAssignmentId(assignmentId: Long)
+
+    @Query("SELECT * FROM CheckpointEntity WHERE courseId = :courseId AND moduleItemId IS NOT NULL")
+    suspend fun findByCourseIdWithModuleItem(courseId: Long): List<CheckpointEntity>
 }
