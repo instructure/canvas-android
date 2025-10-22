@@ -99,7 +99,10 @@ class ParentInboxCoursePickerViewModelTest {
     fun `loadCoursePickerItems should update uiState with data when enrollments and courses are successful`() {
         val courses = listOf(Course(1, "Course 1"), Course(2, "Course 2"))
         val users = listOf(User(1, "User 1"), User(2, "User 2"))
-        val enrollments = listOf(Enrollment(1, courseId = 1, observedUser = users[0]), Enrollment(2, courseId = 2, observedUser = users[1]))
+        val enrollments = listOf(
+            Enrollment(1, courseId = 1, enrollmentState = "active", observedUser = users[0]),
+            Enrollment(2, courseId = 2, enrollmentState = "active", observedUser = users[1])
+        )
         coEvery { repository.getCourses() } returns DataResult.Success(courses)
         coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
 
@@ -110,6 +113,123 @@ class ParentInboxCoursePickerViewModelTest {
         assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)
         assertEquals(courses[1], viewModel.uiState.value.studentContextItems[1].course)
         assertEquals(users[1], viewModel.uiState.value.studentContextItems[1].user)
+    }
+
+    @Test
+    fun `loadCoursePickerItems should filter out completed and inactive enrollments`() {
+        val courses = listOf(
+            Course(1, "Active Course"),
+            Course(2, "Completed Course"),
+            Course(3, "Inactive Course")
+        )
+        val users = listOf(User(1, "User 1"), User(2, "User 2"), User(3, "User 3"))
+        val enrollments = listOf(
+            Enrollment(1, courseId = 1, enrollmentState = "active", observedUser = users[0]),
+            Enrollment(2, courseId = 2, enrollmentState = "completed", observedUser = users[1]),
+            Enrollment(3, courseId = 3, enrollmentState = "inactive", observedUser = users[2])
+        )
+        coEvery { repository.getCourses() } returns DataResult.Success(courses)
+        coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
+
+        val viewModel = getViewModel()
+        assertEquals(ScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(1, viewModel.uiState.value.studentContextItems.size)
+        assertEquals(courses[0], viewModel.uiState.value.studentContextItems[0].course)
+        assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)
+    }
+
+    @Test
+    fun `loadCoursePickerItems should include active, invited, and creation_pending enrollments`() {
+        val courses = listOf(
+            Course(1, "Active Course"),
+            Course(2, "Invited Course"),
+            Course(3, "Creation Pending Course")
+        )
+        val users = listOf(User(1, "User 1"), User(2, "User 2"), User(3, "User 3"))
+        val enrollments = listOf(
+            Enrollment(1, courseId = 1, enrollmentState = "active", observedUser = users[0]),
+            Enrollment(2, courseId = 2, enrollmentState = "invited", observedUser = users[1]),
+            Enrollment(3, courseId = 3, enrollmentState = "creation_pending", observedUser = users[2])
+        )
+        coEvery { repository.getCourses() } returns DataResult.Success(courses)
+        coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
+
+        val viewModel = getViewModel()
+        assertEquals(ScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(3, viewModel.uiState.value.studentContextItems.size)
+        assertEquals(courses[0], viewModel.uiState.value.studentContextItems[0].course)
+        assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)
+        assertEquals(courses[1], viewModel.uiState.value.studentContextItems[1].course)
+        assertEquals(users[1], viewModel.uiState.value.studentContextItems[1].user)
+        assertEquals(courses[2], viewModel.uiState.value.studentContextItems[2].course)
+        assertEquals(users[2], viewModel.uiState.value.studentContextItems[2].user)
+    }
+
+    @Test
+    fun `loadCoursePickerItems should filter out soft concluded courses with past term dates`() {
+        val pastTermEndDate = "2024-01-01T00:00:00Z"
+        val futureTermEndDate = "2026-12-31T23:59:59Z"
+        val courses = listOf(
+            Course(1, "Current Course", term = com.instructure.canvasapi2.models.Term(endAt = futureTermEndDate)),
+            Course(2, "Soft Concluded Course", term = com.instructure.canvasapi2.models.Term(endAt = pastTermEndDate))
+        )
+        val users = listOf(User(1, "User 1"), User(2, "User 2"))
+        val enrollments = listOf(
+            Enrollment(1, courseId = 1, enrollmentState = "active", observedUser = users[0]),
+            Enrollment(2, courseId = 2, enrollmentState = "active", observedUser = users[1])
+        )
+        coEvery { repository.getCourses() } returns DataResult.Success(courses)
+        coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
+
+        val viewModel = getViewModel()
+        assertEquals(ScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(1, viewModel.uiState.value.studentContextItems.size)
+        assertEquals(courses[0], viewModel.uiState.value.studentContextItems[0].course)
+        assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)
+    }
+
+    @Test
+    fun `loadCoursePickerItems should filter out soft concluded courses with past course end dates`() {
+        val pastCourseEndDate = "2024-01-01T00:00:00Z"
+        val futureCourseEndDate = "2026-12-31T23:59:59Z"
+        val courses = listOf(
+            Course(1, "Current Course", endAt = futureCourseEndDate, restrictEnrollmentsToCourseDate = true),
+            Course(2, "Soft Concluded Course", endAt = pastCourseEndDate, restrictEnrollmentsToCourseDate = true)
+        )
+        val users = listOf(User(1, "User 1"), User(2, "User 2"))
+        val enrollments = listOf(
+            Enrollment(1, courseId = 1, enrollmentState = "active", observedUser = users[0]),
+            Enrollment(2, courseId = 2, enrollmentState = "active", observedUser = users[1])
+        )
+        coEvery { repository.getCourses() } returns DataResult.Success(courses)
+        coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
+
+        val viewModel = getViewModel()
+        assertEquals(ScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(1, viewModel.uiState.value.studentContextItems.size)
+        assertEquals(courses[0], viewModel.uiState.value.studentContextItems[0].course)
+        assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)
+    }
+
+    @Test
+    fun `loadCoursePickerItems should filter out hard concluded courses with completed workflow state`() {
+        val courses = listOf(
+            Course(1, "Active Course", workflowState = Course.WorkflowState.AVAILABLE),
+            Course(2, "Hard Concluded Course", workflowState = Course.WorkflowState.COMPLETED)
+        )
+        val users = listOf(User(1, "User 1"), User(2, "User 2"))
+        val enrollments = listOf(
+            Enrollment(1, courseId = 1, enrollmentState = "active", observedUser = users[0]),
+            Enrollment(2, courseId = 2, enrollmentState = "active", observedUser = users[1])
+        )
+        coEvery { repository.getCourses() } returns DataResult.Success(courses)
+        coEvery { repository.getEnrollments() } returns DataResult.Success(enrollments)
+
+        val viewModel = getViewModel()
+        assertEquals(ScreenState.Content, viewModel.uiState.value.screenState)
+        assertEquals(1, viewModel.uiState.value.studentContextItems.size)
+        assertEquals(courses[0], viewModel.uiState.value.studentContextItems[0].course)
+        assertEquals(users[0], viewModel.uiState.value.studentContextItems[0].user)
     }
 
     private fun getViewModel(): ParentInboxCoursePickerViewModel {

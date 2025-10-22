@@ -120,7 +120,7 @@ object CourseAPI {
         @GET("courses?state[]=completed&state[]=available&state[]=unpublished")
         fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String): Call<List<Course>>
 
-        @GET("courses?state[]=completed&state[]=available")
+        @GET("courses?state[]=completed&state[]=available&include[]=term")
         suspend fun getCoursesByEnrollmentType(@Query("enrollment_type") type: String, @Tag params: RestParams): DataResult<List<Course>>
 
         // TODO: Set up pagination when API is fixed and remove per_page query parameterø
