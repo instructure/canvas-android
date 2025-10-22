@@ -40,7 +40,8 @@ import kotlinx.coroutines.flow.update
 @Composable
 fun DashboardTimeSpentWidget(
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardTimeSpentViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -54,16 +55,17 @@ fun DashboardTimeSpentWidget(
         }
     }
 
-    DashboardTimeSpentSection(state)
+    DashboardTimeSpentSection(state, modifier)
 }
 
 @Composable
 fun DashboardTimeSpentSection(
-    state: DashboardTimeSpentUiState
+    state: DashboardTimeSpentUiState,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardTimeSpentCardContent(state.cardState, isLoading = true)
+            DashboardTimeSpentCardContent(state.cardState, true, modifier)
         }
         DashboardItemState.ERROR -> {
             DashboardWidgetCardError(
@@ -72,7 +74,7 @@ fun DashboardTimeSpentSection(
                 HorizonColors.PrimitivesHoney.honey12(),
                 true,
                 { state.onRefresh {} },
-                modifier = Modifier
+                modifier = modifier
                     .widthIn(max = 300.dp)
                     .padding(bottom = 8.dp)
             )
@@ -82,7 +84,7 @@ fun DashboardTimeSpentSection(
                 contentAlignment = Alignment.Center,
                 modifier = Modifier.fillMaxWidth()
             ) {
-                DashboardTimeSpentCardContent(state.cardState, isLoading = false)
+                DashboardTimeSpentCardContent(state.cardState, false, modifier)
             }
         }
     }

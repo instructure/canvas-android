@@ -24,7 +24,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.onClick
+import androidx.compose.ui.semantics.role
 import androidx.compose.ui.semantics.semantics
 import com.instructure.horizon.R
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -45,13 +50,20 @@ fun DashboardWidgetCardError(
     onRetryClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
     DashboardWidgetCard(
         title = title,
         iconRes = iconRes,
         widgetColor = widgetColor,
         useMinWidth = useMinWidth,
         modifier = modifier
-            .semantics(mergeDescendants = true) {}
+            .semantics(mergeDescendants = true) {
+                role = Role.Button
+                onClick(context.getString(R.string.dashboardWidgetCardErrorRetry)) {
+                    onRetryClick()
+                    true
+                }
+            }
     ) {
         Column(
             modifier = Modifier.width(IntrinsicSize.Max)
@@ -63,11 +75,12 @@ fun DashboardWidgetCardError(
             )
             HorizonSpace(SpaceSize.SPACE_8)
             Button(
-                label = stringResource(R.string.dashboardSkillOverviewRetry),
+                label = stringResource(R.string.dashboardWidgetCardErrorRetry),
                 onClick = onRetryClick,
                 color = ButtonColor.WhiteWithOutline,
                 height = ButtonHeight.SMALL,
-                iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
+                iconPosition = ButtonIconPosition.End(R.drawable.restart_alt),
+                modifier = Modifier.clearAndSetSemantics { }
             )
         }
     }

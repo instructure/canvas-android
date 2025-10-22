@@ -40,7 +40,8 @@ import kotlinx.coroutines.flow.update
 @Composable
 fun DashboardMyProgressWidget(
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardMyProgressViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -54,12 +55,13 @@ fun DashboardMyProgressWidget(
         }
     }
 
-    DashboardMyProgressSection(state)
+    DashboardMyProgressSection(state, modifier)
 }
 
 @Composable
 fun DashboardMyProgressSection(
-    state: DashboardMyProgressUiState
+    state: DashboardMyProgressUiState,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
@@ -69,7 +71,8 @@ fun DashboardMyProgressSection(
             ) {
                 DashboardMyProgressCardContent(
                     state.cardState,
-                    isLoading = true
+                    true,
+                    modifier
                 )
             }
         }
@@ -80,7 +83,7 @@ fun DashboardMyProgressSection(
                 HorizonColors.PrimitivesSky.sky12,
                 true,
                 { state.onRefresh {} },
-                modifier = Modifier
+                modifier = modifier
                     .widthIn(max = 300.dp)
                     .padding(bottom = 8.dp)
             )
@@ -92,7 +95,8 @@ fun DashboardMyProgressSection(
             ) {
                 DashboardMyProgressCardContent(
                     state.cardState,
-                    isLoading = false
+                    false,
+                    modifier
                 )
             }
         }

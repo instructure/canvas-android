@@ -68,11 +68,11 @@ fun DashboardWidgetCard(
         modifier
             .semantics(mergeDescendants = true) { }
             .conditional(isLoading) {
-            clearAndSetSemantics {
-                contentDescription =
-                    context.getString(R.string.a11y_dashboardWidgetLoadingContentDescription, title)
-            }
-        },
+                clearAndSetSemantics {
+                    contentDescription =
+                        context.getString(R.string.a11y_dashboardWidgetLoadingContentDescription, title)
+                }
+            },
         onClick
     ) {
         Column(

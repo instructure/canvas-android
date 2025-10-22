@@ -38,7 +38,8 @@ import kotlinx.coroutines.flow.update
 fun DashboardSkillHighlightsWidget(
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillHighlightsViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -52,13 +53,14 @@ fun DashboardSkillHighlightsWidget(
         }
     }
 
-    DashboardSkillHighlightsSection(state, homeNavController)
+    DashboardSkillHighlightsSection(state, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardSkillHighlightsSection(
     state: DashboardSkillHighlightsUiState,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
@@ -66,7 +68,7 @@ fun DashboardSkillHighlightsSection(
                 state.cardState,
                 homeNavController,
                 true,
-                Modifier.padding(horizontal = 16.dp),
+                modifier.padding(horizontal = 16.dp),
             )
         }
         DashboardItemState.ERROR -> {
@@ -76,7 +78,7 @@ fun DashboardSkillHighlightsSection(
                 HorizonColors.PrimitivesGreen.green12(),
                 false,
                 { state.onRefresh {} },
-                modifier = Modifier.padding(horizontal = 16.dp)
+                modifier = modifier.padding(horizontal = 16.dp)
             )
         }
         DashboardItemState.SUCCESS -> {
@@ -84,7 +86,7 @@ fun DashboardSkillHighlightsSection(
                 state.cardState,
                 homeNavController,
                 false,
-                Modifier.padding(horizontal = 16.dp),
+                modifier.padding(horizontal = 16.dp),
             )
         }
     }

@@ -39,7 +39,8 @@ import kotlinx.coroutines.flow.update
 fun DashboardSkillOverviewWidget(
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillOverviewViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -53,20 +54,22 @@ fun DashboardSkillOverviewWidget(
         }
     }
 
-    DashboardSkillOverviewSection(state, homeNavController)
+    DashboardSkillOverviewSection(state, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardSkillOverviewSection(
     state: DashboardSkillOverviewUiState,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillOverviewCardContent(
                 state.cardState,
                 homeNavController,
-                isLoading = true
+                true,
+                modifier
             )
         }
         DashboardItemState.ERROR -> {
@@ -76,7 +79,7 @@ fun DashboardSkillOverviewSection(
                 HorizonColors.PrimitivesGreen.green12(),
                 true,
                 { state.onRefresh {} },
-                modifier = Modifier
+                modifier = modifier
                     .widthIn(max = 300.dp)
                     .padding(bottom = 8.dp)
             )
@@ -85,7 +88,8 @@ fun DashboardSkillOverviewSection(
             DashboardSkillOverviewCardContent(
                 state.cardState,
                 homeNavController,
-                isLoading = false
+                false,
+                modifier
             )
         }
     }
