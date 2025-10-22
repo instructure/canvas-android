@@ -54,6 +54,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.Role
+import androidx.compose.ui.semantics.ScrollAxisRange
+import androidx.compose.ui.semantics.horizontalScrollAxisRange
+import androidx.compose.ui.semantics.role
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
@@ -163,12 +168,20 @@ fun DashboardScreen(uiState: DashboardUiState, mainNavController: NavHostControl
                     shouldRefresh,
                     refreshStateFlow
                 )
+                val scrollState = rememberScrollState()
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     modifier = Modifier
                         .fillMaxWidth()
-                        .horizontalScroll(rememberScrollState())
+                        .horizontalScroll(scrollState)
                         .padding(start = 16.dp)
+                        .semantics {
+                            horizontalScrollAxisRange = ScrollAxisRange(
+                                value = { scrollState.value.toFloat() },
+                                maxValue = { scrollState.maxValue.toFloat() }
+                            )
+                            role = Role.Carousel
+                        }
                 ) {
                     DashboardMyProgressWidget(
                         shouldRefresh,

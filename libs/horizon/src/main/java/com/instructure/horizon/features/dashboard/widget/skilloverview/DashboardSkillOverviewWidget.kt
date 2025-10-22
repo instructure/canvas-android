@@ -16,15 +16,22 @@
  */
 package com.instructure.horizon.features.dashboard.widget.skilloverview
 
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardContent
-import com.instructure.horizon.features.dashboard.widget.skilloverview.card.DashboardSkillOverviewCardError
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -32,7 +39,8 @@ import kotlinx.coroutines.flow.update
 fun DashboardSkillOverviewWidget(
     homeNavController: NavHostController,
     shouldRefresh: Boolean,
-    refreshState: MutableStateFlow<List<Boolean>>
+    refreshState: MutableStateFlow<List<Boolean>>,
+    modifier: Modifier = Modifier
 ) {
     val viewModel = hiltViewModel<DashboardSkillOverviewViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -46,32 +54,42 @@ fun DashboardSkillOverviewWidget(
         }
     }
 
-    DashboardSkillOverviewSection(state, homeNavController)
+    DashboardSkillOverviewSection(state, homeNavController, modifier)
 }
 
 @Composable
 fun DashboardSkillOverviewSection(
     state: DashboardSkillOverviewUiState,
     homeNavController: NavHostController,
+    modifier: Modifier = Modifier
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
             DashboardSkillOverviewCardContent(
                 state.cardState,
                 homeNavController,
-                isLoading = true
+                true,
+                modifier
             )
         }
         DashboardItemState.ERROR -> {
-            DashboardSkillOverviewCardError(
-                { state.onRefresh {} }
+            DashboardWidgetCardError(
+                stringResource(R.string.dashboardSkillOverviewTitle),
+                R.drawable.hub,
+                HorizonColors.PrimitivesGreen.green12(),
+                true,
+                { state.onRefresh {} },
+                modifier = modifier
+                    .widthIn(max = 300.dp)
+                    .padding(bottom = 8.dp)
             )
         }
         DashboardItemState.SUCCESS -> {
             DashboardSkillOverviewCardContent(
                 state.cardState,
                 homeNavController,
-                isLoading = false
+                false,
+                modifier
             )
         }
     }
