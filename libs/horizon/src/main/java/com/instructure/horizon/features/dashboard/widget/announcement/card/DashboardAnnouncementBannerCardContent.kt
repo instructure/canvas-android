@@ -41,6 +41,7 @@ import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.features.dashboard.widget.announcement.AnnouncementBannerItem
 import com.instructure.horizon.features.dashboard.widget.announcement.AnnouncementType
+import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -62,6 +63,7 @@ import java.util.Date
 @Composable
 fun DashboardAnnouncementBannerCardContent(
     state: DashboardAnnouncementBannerCardState,
+    isLoading: Boolean,
     mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -86,13 +88,16 @@ fun DashboardAnnouncementBannerCardContent(
             ) { page ->
                 AnnouncementPageContent(
                     announcement = state.announcements[page],
+                    isLoading = isLoading,
                     mainNavController = mainNavController
                 )
             }
 
-            HorizonSpace(SpaceSize.SPACE_16)
+            if (state.announcements.size > 1) {
+                HorizonSpace(SpaceSize.SPACE_16)
 
-            PagerIndicator(pagerState)
+                PagerIndicator(isLoading, pagerState)
+            }
 
             HorizonSpace(SpaceSize.SPACE_24)
         }
@@ -101,6 +106,7 @@ fun DashboardAnnouncementBannerCardContent(
 
 @Composable
 private fun PagerIndicator(
+    isLoading: Boolean,
     pagerState: PagerState,
 ) {
     val scope = rememberCoroutineScope()
@@ -123,7 +129,8 @@ private fun PagerIndicator(
                 scope.launch {
                     pagerState.animateScrollToPage(pagerState.currentPage - 1)
                 }
-            }
+            },
+            modifier = Modifier.shimmerEffect(isLoading)
         )
 
         Spacer(Modifier.weight(1f))
@@ -135,7 +142,8 @@ private fun PagerIndicator(
                 pagerState.pageCount
             ),
             style = HorizonTypography.p1,
-            color = HorizonColors.Text.title()
+            color = HorizonColors.Text.title(),
+            modifier = Modifier.shimmerEffect(isLoading)
         )
 
         Spacer(Modifier.weight(1f))
@@ -154,7 +162,8 @@ private fun PagerIndicator(
                 scope.launch {
                     pagerState.animateScrollToPage(pagerState.currentPage + 1)
                 }
-            }
+            },
+            modifier = Modifier.shimmerEffect(isLoading)
         )
     }
 }
@@ -162,6 +171,7 @@ private fun PagerIndicator(
 @Composable
 private fun AnnouncementPageContent(
     announcement: AnnouncementBannerItem,
+    isLoading: Boolean,
     mainNavController: NavHostController,
     modifier: Modifier = Modifier
 ) {
@@ -173,9 +183,13 @@ private fun AnnouncementPageContent(
                 label = stringResource(R.string.notificationsAnnouncementCategoryLabel),
                 color = StatusChipColor.Sky,
                 fill = true
+            ),
+            modifier = Modifier.shimmerEffect(
+                isLoading,
+                backgroundColor = HorizonColors.PrimitivesSky.sky12.copy(0.8f),
+                shimmerColor = HorizonColors.PrimitivesSky.sky12.copy(0.5f)
             )
         )
-
         HorizonSpace(SpaceSize.SPACE_16)
         announcement.source?.let {
             Text(
@@ -184,7 +198,8 @@ private fun AnnouncementPageContent(
                     it
                 ),
                 style = HorizonTypography.p2,
-                color = HorizonColors.Text.dataPoint()
+                color = HorizonColors.Text.dataPoint(),
+                modifier = Modifier.shimmerEffect(isLoading)
             )
             HorizonSpace(SpaceSize.SPACE_4)
         }
@@ -193,6 +208,7 @@ private fun AnnouncementPageContent(
                 text = date.localisedFormat("MMM dd, yyyy"),
                 style = HorizonTypography.p2,
                 color = HorizonColors.Text.timestamp(),
+                modifier = Modifier.shimmerEffect(isLoading)
             )
         }
 
@@ -204,6 +220,7 @@ private fun AnnouncementPageContent(
             color = HorizonColors.Text.body(),
             modifier = Modifier
                 .fillMaxWidth()
+                .shimmerEffect(isLoading)
         )
 
         HorizonSpace(SpaceSize.SPACE_16)
@@ -215,7 +232,8 @@ private fun AnnouncementPageContent(
             },
             height = ButtonHeight.SMALL,
             width = ButtonWidth.FILL,
-            color = ButtonColor.BlackOutline
+            color = ButtonColor.BlackOutline,
+            modifier = Modifier.shimmerEffect(isLoading)
         )
     }
 }
@@ -249,6 +267,41 @@ private fun DashboardAnnouncementBannerCardContentPreview() {
                 )
             )
         ),
+        isLoading = false,
+        mainNavController = rememberNavController()
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardAnnouncementBannerCardLoadingPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    DashboardAnnouncementBannerCardContent(
+        state = DashboardAnnouncementBannerCardState(
+            announcements = listOf(
+                AnnouncementBannerItem(
+                    title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
+                    source = "Institution or Course Name Here",
+                    date = Date(),
+                    type = AnnouncementType.COURSE,
+                    route = ""
+                ),
+                AnnouncementBannerItem(
+                    title = "Second announcement with different content to show pagination.",
+                    source = "Another Course Name",
+                    date = Date(),
+                    type = AnnouncementType.COURSE,
+                    route = ""
+                ),
+                AnnouncementBannerItem(
+                    title = "Third global announcement without a source.",
+                    date = Date(),
+                    type = AnnouncementType.GLOBAL,
+                    route = ""
+                )
+            )
+        ),
+        isLoading = true,
         mainNavController = rememberNavController()
     )
 }

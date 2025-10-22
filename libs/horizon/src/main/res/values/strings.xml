@@ -412,4 +412,5 @@
     <string name="dashboardAnnouncementBannerNextAnnouncement">Next announcement</string>
     <string name="dashboardCourseCardProgramChipLabel">Program</string>
     <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
+    <string name="dashboardAnnouncementRefreshMessage">Refresh</string>
 </resources>

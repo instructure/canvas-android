@@ -28,9 +28,9 @@ import androidx.navigation.NavHostController
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardContent
 import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardError
-import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardLoading
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
+import java.util.Date
 
 @Composable
 fun DashboardAnnouncementBannerWidget(
@@ -50,7 +50,7 @@ fun DashboardAnnouncementBannerWidget(
         }
     }
 
-    if (!state.cardState.announcements.isNullOrEmpty()) {
+    if (state.state == DashboardItemState.LOADING || state.cardState.announcements.isNotEmpty()) {
         DashboardAnnouncementBannerSection(state, mainNavController)
     }
 }
@@ -62,7 +62,22 @@ fun DashboardAnnouncementBannerSection(
 ) {
     when (state.state) {
         DashboardItemState.LOADING -> {
-            DashboardAnnouncementBannerCardLoading(Modifier.padding(horizontal = 16.dp))
+            DashboardAnnouncementBannerCardContent(
+                state.cardState.copy(
+                    announcements = listOf(
+                        AnnouncementBannerItem(
+                            title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
+                            source = "Institution or Course Name Here",
+                            date = Date(),
+                            type = AnnouncementType.COURSE,
+                            route = ""
+                        )
+                    )
+                ),
+                true,
+                mainNavController,
+                Modifier.padding(horizontal = 16.dp)
+            )
         }
         DashboardItemState.ERROR -> {
             DashboardAnnouncementBannerCardError(
@@ -73,6 +88,7 @@ fun DashboardAnnouncementBannerSection(
         DashboardItemState.SUCCESS -> {
             DashboardAnnouncementBannerCardContent(
                 state.cardState,
+                false,
                 mainNavController,
                 Modifier.padding(horizontal = 16.dp)
             )
