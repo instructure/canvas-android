@@ -20,17 +20,21 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.dashboard.DashboardItemState
 import com.instructure.horizon.features.dashboard.widget.announcement.card.DashboardAnnouncementBannerCardState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class DashboardAnnouncementBannerViewModel @Inject constructor(
-    private val repository: DashboardAnnouncementBannerRepository
+    private val repository: DashboardAnnouncementBannerRepository,
+    private val dashboardEventHandler: DashboardEventHandler,
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(
@@ -45,6 +49,17 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
             loadAnnouncementData()
         } catch {
             _uiState.update { it.copy(state = DashboardItemState.ERROR) }
+        }
+
+        viewModelScope.launch {
+            dashboardEventHandler.events.collect { event ->
+                when (event) {
+                    is DashboardEvent.AnnouncementRefresh -> {
+                        refresh()
+                    }
+                    else -> { /* No-op */ }
+                }
+            }
         }
     }
 
@@ -62,7 +77,7 @@ class DashboardAnnouncementBannerViewModel @Inject constructor(
         }
     }
 
-    private fun refresh(onComplete: () -> Unit) {
+    private fun refresh(onComplete: () -> Unit = {}) {
         viewModelScope.tryLaunch {
             _uiState.update { it.copy(state = DashboardItemState.LOADING) }
             loadAnnouncementData(forceNetwork = true)

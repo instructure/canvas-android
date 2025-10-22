@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.molecules.Button
@@ -38,9 +38,7 @@ fun DashboardAnnouncementBannerCardError(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DashboardWidgetCard(
-        widgetColor = HorizonColors.PrimitivesSky.sky12,
-        useMinWidth = false,
+    DashboardCard(
         modifier = modifier
     ) {
         Column(

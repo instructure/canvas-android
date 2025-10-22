@@ -44,10 +44,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
-import kotlinx.coroutines.launch
 import com.instructure.canvasapi2.utils.ContextKeeper
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.features.dashboard.widget.announcement.AnnouncementBannerItem
 import com.instructure.horizon.features.dashboard.widget.announcement.AnnouncementType
 import com.instructure.horizon.horizonui.foundation.HorizonColors
@@ -61,6 +60,7 @@ import com.instructure.horizon.horizonui.molecules.ButtonWidth
 import com.instructure.horizon.horizonui.molecules.StatusChip
 import com.instructure.horizon.horizonui.molecules.StatusChipColor
 import com.instructure.horizon.horizonui.molecules.StatusChipState
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
@@ -74,9 +74,7 @@ fun DashboardAnnouncementBannerCardContent(
     val pagerState = rememberPagerState(pageCount = { state.announcements.size })
     val scope = rememberCoroutineScope()
 
-    DashboardWidgetCard(
-        widgetColor = HorizonColors.Surface.pageSecondary(),
-        useMinWidth = false,
+    DashboardCard(
         modifier = modifier
     ) {
         Column(

@@ -29,6 +29,8 @@ import com.instructure.canvasapi2.utils.toDate
 import com.instructure.canvasapi2.utils.weave.catch
 import com.instructure.canvasapi2.utils.weave.tryLaunch
 import com.instructure.horizon.R
+import com.instructure.horizon.features.dashboard.DashboardEvent
+import com.instructure.horizon.features.dashboard.DashboardEventHandler
 import com.instructure.horizon.features.inbox.HorizonInboxItemType
 import com.instructure.horizon.features.inbox.InboxEvent
 import com.instructure.horizon.features.inbox.InboxEventHandler
@@ -57,7 +59,8 @@ class HorizonInboxDetailsViewModel @Inject constructor(
     private val workManager: WorkManager,
     private val fileDownloadProgressDao: FileDownloadProgressDao,
     savedStateHandle: SavedStateHandle,
-    private val inboxEventHandler: InboxEventHandler
+    private val inboxEventHandler: InboxEventHandler,
+    private val dashboardEventHandler: DashboardEventHandler,
 ): ViewModel() {
     private val courseId: String? = savedStateHandle[HorizonInboxRoute.InboxDetails.COURSE_ID]
     private val typeStringValue: String? = savedStateHandle[HorizonInboxRoute.InboxDetails.TYPE]
@@ -144,7 +147,8 @@ class HorizonInboxDetailsViewModel @Inject constructor(
                     viewModelScope.async {
                         val result = repository.deleteAccountAnnouncement(id)
                         if (result.isSuccess) {
-                            _uiState.update { it.copy(announcementMarkedAsRead = true) }
+                            inboxEventHandler.postEvent(InboxEvent.AnnouncementRead)
+                            dashboardEventHandler.postEvent(DashboardEvent.AnnouncementRefresh)
                         }
 
                         // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread
@@ -186,6 +190,7 @@ class HorizonInboxDetailsViewModel @Inject constructor(
 
                         if (result.isSuccess) {
                             inboxEventHandler.postEvent(InboxEvent.AnnouncementRead)
+                            dashboardEventHandler.postEvent(DashboardEvent.AnnouncementRefresh)
                         }
 
                         // We need to refresh the announcement in the background, so the next time we open and it's opened from the cache it wouldn't show as unread

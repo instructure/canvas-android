@@ -16,7 +16,6 @@
  */
 package com.instructure.horizon.features.dashboard.widget.skillhighlights
 
-<<<<<<<< HEAD:libs/horizon/src/main/java/com/instructure/horizon/features/dashboard/widget/skillhighlights/DashboardSkillHighlightsRepository.kt
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.GetSkillsManager
 import com.instructure.canvasapi2.managers.graphql.horizon.journey.Skill
 import javax.inject.Inject
@@ -28,24 +27,3 @@ class DashboardSkillHighlightsRepository @Inject constructor(
         return getSkillsManager.getSkills(completedOnly = completedOnly, forceNetwork = forceNetwork)
     }
 }
-========
-import com.apollographql.apollo.ApolloClient
-import com.instructure.canvasapi2.di.DefaultApolloClient
-import com.instructure.canvasapi2.managers.graphql.ModuleManager
-import com.instructure.canvasapi2.managers.graphql.ModuleManagerImpl
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-
-@Module
-@InstallIn(SingletonComponent::class)
-class ModuleManagerModule {
-
-    @Provides
-    fun provideModuleManager(@DefaultApolloClient apolloClient: ApolloClient): ModuleManager {
-        return ModuleManagerImpl(apolloClient)
-    }
-
-}
->>>>>>>> master:libs/canvas-api-2/src/main/java/com/instructure/canvasapi2/di/graphql/ModuleManagerModule.kt

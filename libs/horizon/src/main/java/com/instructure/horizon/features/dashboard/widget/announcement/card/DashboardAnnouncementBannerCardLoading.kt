@@ -24,7 +24,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
+import com.instructure.horizon.features.dashboard.DashboardCard
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
@@ -34,13 +34,11 @@ import com.instructure.horizon.horizonui.foundation.SpaceSize
 fun DashboardAnnouncementBannerCardLoading(
     modifier: Modifier = Modifier
 ) {
-    DashboardWidgetCard(
-        widgetColor = HorizonColors.PrimitivesSky.sky12,
-        useMinWidth = false,
+    DashboardCard(
         modifier = modifier
     ) {
-        HorizonSpace(SpaceSize.SPACE_8)
         Column(modifier = Modifier.fillMaxWidth()) {
+            HorizonSpace(SpaceSize.SPACE_8)
             repeat(3) {
                 Box(
                     modifier = Modifier
