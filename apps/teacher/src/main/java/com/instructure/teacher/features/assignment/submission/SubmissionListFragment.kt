@@ -146,25 +146,25 @@ class SubmissionListFragment : BaseCanvasFragment() {
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onAssignmentGraded(event: AssignmentGradedEvent) {
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Refresh)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onQuizGraded(event: QuizSubmissionGradedEvent) {
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Refresh)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN, sticky = true)
     fun onSubmissionCommentUpdated(event: SubmissionCommentsUpdated) {
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Refresh)
     }
 
     @Suppress("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onSubmissionFilterChanged(event: SubmissionFilterChangedEvent) {
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Refresh)
     }
 
     companion object {

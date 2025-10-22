@@ -96,51 +96,6 @@ fun SubmissionListFilters(
 }
 
 @Composable
-@Deprecated("Use SubmissionListFilters with SubmissionListFiltersUiState instead")
-fun SubmissionListFilters(
-    selectedFilters: Set<SubmissionListFilter>,
-    filterValueAbove: Double?,
-    filterValueBelow: Double?,
-    assignmentMaxPoints: Double?,
-    courseColor: Color,
-    assignmentName: String,
-    anonymousGrading: Boolean,
-    sections: List<CanvasContext>,
-    initialSelectedSections: List<Long>,
-    differentiationTags: List<DifferentiationTag>,
-    selectedDifferentiationTagIds: Set<String>,
-    includeStudentsWithoutTags: Boolean,
-    sortOrder: SubmissionSortOrder,
-    customGradeStatuses: List<CustomGradeStatus>,
-    selectedCustomStatusIds: Set<String>,
-    actionHandler: (SubmissionListAction) -> Unit,
-    dismiss: () -> Unit
-) {
-
-    SubmissionListFilters(
-        uiState = SubmissionListFiltersUiState(
-            selectedFilters = selectedFilters,
-            filterValueAbove = filterValueAbove,
-            filterValueBelow = filterValueBelow,
-            assignmentMaxPoints = assignmentMaxPoints,
-            courseColor = courseColor,
-            assignmentName = assignmentName,
-            anonymousGrading = anonymousGrading,
-            sections = sections,
-            initialSelectedSections = initialSelectedSections,
-            differentiationTags = differentiationTags,
-            selectedDifferentiationTagIds = selectedDifferentiationTagIds,
-            includeStudentsWithoutTags = includeStudentsWithoutTags,
-            sortOrder = sortOrder,
-            customGradeStatuses = customGradeStatuses,
-            selectedCustomStatusIds = selectedCustomStatusIds,
-            actionHandler = actionHandler
-        ),
-        dismiss = dismiss
-    )
-}
-
-@Composable
 private fun SubmissionFilterScreenContent(
     uiState: SubmissionListFiltersUiState,
     modifier: Modifier = Modifier,

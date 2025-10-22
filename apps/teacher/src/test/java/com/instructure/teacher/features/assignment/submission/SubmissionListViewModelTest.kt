@@ -354,7 +354,7 @@ class SubmissionListViewModelTest {
     fun `Filter late submissions`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.LATE),
                 filterValueAbove = null,
@@ -387,7 +387,7 @@ class SubmissionListViewModelTest {
     fun `Filter graded submissions`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.GRADED),
                 filterValueAbove = null,
@@ -450,7 +450,7 @@ class SubmissionListViewModelTest {
     fun `Filter not graded submissions`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.NOT_GRADED),
                 filterValueAbove = null,
@@ -513,7 +513,7 @@ class SubmissionListViewModelTest {
     fun `Filter not submitted`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.MISSING),
                 filterValueAbove = null,
@@ -546,7 +546,7 @@ class SubmissionListViewModelTest {
     fun `Filter scored more than`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = 5.0,
@@ -589,7 +589,7 @@ class SubmissionListViewModelTest {
     fun `Filter scored less than`() {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -674,7 +674,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -788,7 +788,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(SubmissionListAction.SubmissionClicked(1L))
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.SubmissionClicked(1L))
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -827,7 +827,7 @@ class SubmissionListViewModelTest {
                 any()
             )
         } returns submissions
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Refresh)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Refresh)
 
         coVerify {
             submissionListRepository.getGradeableStudentSubmissions(any<Assignment>(), any(), true)
@@ -839,7 +839,7 @@ class SubmissionListViewModelTest {
     @Test
     fun `Route to user profile`() = runTest {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.AvatarClicked(1L))
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.AvatarClicked(1L))
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -851,7 +851,7 @@ class SubmissionListViewModelTest {
     @Test
     fun `Search action`() = runTest {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.Search("On Time Student"))
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.Search("On Time Student"))
 
         val expected = listOf(
             SubmissionUiState(
@@ -873,7 +873,7 @@ class SubmissionListViewModelTest {
     @Test
     fun `Set filters update uiState`() {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = 5.0,
@@ -886,15 +886,15 @@ class SubmissionListViewModelTest {
             )
         )
 
-        assertEquals(setOf(SubmissionListFilter.ALL), viewModel.uiState.value.selectedFilters)
-        assertEquals(5.0, viewModel.uiState.value.filterValueAbove)
-        assertEquals(listOf(1L), viewModel.uiState.value.selectedSections)
+        assertEquals(setOf(SubmissionListFilter.ALL), viewModel.uiState.value.filtersUiState.selectedFilters)
+        assertEquals(5.0, viewModel.uiState.value.filtersUiState.filterValueAbove)
+        assertEquals(listOf(1L), viewModel.uiState.value.filtersUiState.initialSelectedSections)
     }
 
     @Test
     fun `Open post policy`() = runTest {
         val viewModel = createViewModel()
-        viewModel.uiState.value.actionHandler(SubmissionListAction.ShowPostPolicy)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.ShowPostPolicy)
 
         val events = mutableListOf<SubmissionListViewModelAction>()
         backgroundScope.launch(testDispatcher) {
@@ -917,7 +917,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.NOT_GRADED),
                 filterValueAbove = null,
@@ -930,7 +930,7 @@ class SubmissionListViewModelTest {
             )
         )
 
-        viewModel.uiState.value.actionHandler(SubmissionListAction.SendMessage)
+        viewModel.uiState.value.filtersUiState.actionHandler(SubmissionListAction.SendMessage)
 
         val expectedRecipients =
             listOf(submissions[0], submissions[1], submissions[2], submissions[6]).map {
@@ -1094,7 +1094,7 @@ class SubmissionListViewModelTest {
     fun `Set filter to 'All' if nothing is set`() {
         every { savedStateHandle.get<SubmissionListFilter>(SubmissionListFragment.FILTER_TYPE) } returns null
         val viewModel = createViewModel()
-        assertEquals(setOf(SubmissionListFilter.ALL), viewModel.uiState.value.selectedFilters)
+        assertEquals(setOf(SubmissionListFilter.ALL), viewModel.uiState.value.filtersUiState.selectedFilters)
     }
 
     @Test
@@ -1180,14 +1180,14 @@ class SubmissionListViewModelTest {
         excepted.forEach {
             assert(viewModel.uiState.value.submissions.contains(it))
         }
-        assertEquals(true, viewModel.uiState.value.anonymousGrading)
+        assertEquals(true, viewModel.uiState.value.filtersUiState.anonymousGrading)
     }
 
     @Test
     fun `Filter by custom grade status`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1220,7 +1220,7 @@ class SubmissionListViewModelTest {
     fun `Custom status filter uses OR logic with standard filters`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.LATE),
                 filterValueAbove = null,
@@ -1264,7 +1264,7 @@ class SubmissionListViewModelTest {
     fun `Custom status excludes ALL filter when selected`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1333,7 +1333,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1390,7 +1390,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1447,7 +1447,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1495,7 +1495,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1545,7 +1545,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1602,7 +1602,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,
@@ -1627,7 +1627,7 @@ class SubmissionListViewModelTest {
     fun `Multiple status filters use OR logic`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.LATE, SubmissionListFilter.MISSING),
                 filterValueAbove = null,
@@ -1653,7 +1653,7 @@ class SubmissionListViewModelTest {
     fun `Filter by scored above and status filters combined`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.GRADED),
                 filterValueAbove = 5.0,
@@ -1677,7 +1677,7 @@ class SubmissionListViewModelTest {
     fun `Filter by scored below and custom status combined`() = runTest {
         val viewModel = createViewModel()
 
-        viewModel.uiState.value.actionHandler(
+        viewModel.uiState.value.filtersUiState.actionHandler(
             SubmissionListAction.SetFilters(
                 selectedFilters = setOf(SubmissionListFilter.ALL),
                 filterValueAbove = null,

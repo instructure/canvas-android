@@ -76,11 +76,11 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
         topBar = {
             CanvasAppBar(
                 title = stringResource(R.string.submissions),
-                subtitle = uiState.assignmentName,
+                subtitle = uiState.filtersUiState.assignmentName,
                 navigationActionClick = { navigationIconClick() },
                 navIconContentDescription = stringResource(R.string.back),
                 navIconRes = R.drawable.ic_back_arrow,
-                backgroundColor = uiState.courseColor,
+                backgroundColor = uiState.filtersUiState.courseColor,
                 textColor = colorResource(id = R.color.textLightest),
                 actions = {
                     IconButton(
@@ -88,10 +88,10 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
                         onClick = {
                             showFilterDialog = true
                         }) {
-                        val hasActiveFilters = uiState.selectedFilters != setOf(SubmissionListFilter.ALL) ||
-                                uiState.selectedSections.isNotEmpty() ||
-                                uiState.selectedDifferentiationTagIds.isNotEmpty() ||
-                                uiState.selectedCustomStatusIds.isNotEmpty()
+                        val hasActiveFilters = uiState.filtersUiState.selectedFilters != setOf(SubmissionListFilter.ALL) ||
+                                uiState.filtersUiState.initialSelectedSections.isNotEmpty() ||
+                                uiState.filtersUiState.selectedDifferentiationTagIds.isNotEmpty() ||
+                                uiState.filtersUiState.selectedCustomStatusIds.isNotEmpty()
                         Icon(
                             painter = painterResource(
                                 id = if (hasActiveFilters) {
@@ -111,7 +111,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
 
                     IconButton(
                         modifier = Modifier.testTag("postPolicyButton"),
-                        onClick = { uiState.actionHandler(SubmissionListAction.ShowPostPolicy) }) {
+                        onClick = { uiState.filtersUiState.actionHandler(SubmissionListAction.ShowPostPolicy) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_eye),
                             contentDescription = stringResource(R.string.a11y_contentDescription_postPolicy),
@@ -121,7 +121,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
 
                     IconButton(
                         modifier = Modifier.testTag("addMessageButton"),
-                        onClick = { uiState.actionHandler(SubmissionListAction.SendMessage) }) {
+                        onClick = { uiState.filtersUiState.actionHandler(SubmissionListAction.SendMessage) }) {
                         Icon(
                             painter = painterResource(id = R.drawable.ic_mail),
                             contentDescription = stringResource(R.string.a11y_sendMessage),
@@ -148,7 +148,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
             uiState.error -> {
                 ErrorContent(
                     errorMessage = stringResource(R.string.errorLoadingSubmission),
-                    retryClick = { uiState.actionHandler(SubmissionListAction.Refresh) },
+                    retryClick = { uiState.filtersUiState.actionHandler(SubmissionListAction.Refresh) },
                     modifier = Modifier.fillMaxSize()
                 )
             }
@@ -162,7 +162,7 @@ fun SubmissionListScreen(uiState: SubmissionListUiState, navigationIconClick: ()
             }
 
             else -> {
-                SubmissionListContent(uiState, Modifier.padding(padding), uiState.courseColor)
+                SubmissionListContent(uiState, Modifier.padding(padding), uiState.filtersUiState.courseColor)
             }
         }
     }
@@ -176,7 +176,7 @@ private fun SubmissionListContent(
     courseColor: Color
 ) {
     val pullRefreshState = rememberPullRefreshState(refreshing = uiState.refreshing, onRefresh = {
-        uiState.actionHandler(SubmissionListAction.Refresh)
+        uiState.filtersUiState.actionHandler(SubmissionListAction.Refresh)
     })
     Box(
         modifier = Modifier
@@ -184,7 +184,7 @@ private fun SubmissionListContent(
             .pullRefresh(pullRefreshState)
     ) {
         LazyColumn(modifier = modifier.testTag("submissionList")) {
-            if (!uiState.anonymousGrading) {
+            if (!uiState.filtersUiState.anonymousGrading) {
                 item {
                     SearchBar(
                         icon = R.drawable.ic_search_white_24dp,
@@ -193,22 +193,22 @@ private fun SubmissionListContent(
                         placeholder = stringResource(R.string.search),
                         collapsable = false,
                         onSearch = {
-                            uiState.actionHandler(SubmissionListAction.Search(it))
+                            uiState.filtersUiState.actionHandler(SubmissionListAction.Search(it))
                         },
                         onClear = {
-                            uiState.actionHandler(SubmissionListAction.Search(""))
+                            uiState.filtersUiState.actionHandler(SubmissionListAction.Search(""))
                         })
                 }
             }
             items(uiState.submissions, key = { it.submissionId }) { submission ->
                 SubmissionListItem(submission,
                     courseColor,
-                    uiState.anonymousGrading,
+                    uiState.filtersUiState.anonymousGrading,
                     avatarClick = {
-                        uiState.actionHandler(SubmissionListAction.AvatarClicked(it))
+                        uiState.filtersUiState.actionHandler(SubmissionListAction.AvatarClicked(it))
                     },
                     itemClick = {
-                        uiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
+                        uiState.filtersUiState.actionHandler(SubmissionListAction.SubmissionClicked(it))
                     })
                 CanvasDivider()
             }
@@ -220,7 +220,7 @@ private fun SubmissionListContent(
             modifier = Modifier
                 .align(Alignment.TopCenter)
                 .testTag("pullRefreshIndicator"),
-            contentColor = uiState.courseColor
+            contentColor = courseColor
         )
     }
 }
