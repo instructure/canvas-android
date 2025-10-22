@@ -19,6 +19,7 @@ package com.instructure.canvasapi2.models
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Parcelize
 data class SubAssignmentSubmission(
