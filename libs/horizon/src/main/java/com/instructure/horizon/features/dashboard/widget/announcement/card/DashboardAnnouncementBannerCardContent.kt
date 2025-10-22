@@ -44,6 +44,7 @@ import com.instructure.horizon.features.dashboard.widget.announcement.Announceme
 import com.instructure.horizon.features.dashboard.widget.announcement.AnnouncementType
 import com.instructure.horizon.horizonui.animation.shimmerEffect
 import com.instructure.horizon.horizonui.foundation.HorizonColors
+import com.instructure.horizon.horizonui.foundation.HorizonCornerRadius
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
 import com.instructure.horizon.horizonui.foundation.SpaceSize
@@ -77,12 +78,12 @@ fun DashboardAnnouncementBannerCardContent(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
         ) {
             HorizonSpace(SpaceSize.SPACE_24)
             HorizontalPager(
                 state = pagerState,
                 pageSpacing = 24.dp,
+                verticalAlignment = Alignment.Top,
                 modifier = Modifier
                     .fillMaxWidth()
                     .animateContentSize()
@@ -91,14 +92,20 @@ fun DashboardAnnouncementBannerCardContent(
                     announcement = state.announcements[page],
                     isLoading = isLoading,
                     mainNavController = mainNavController,
-                    modifier = Modifier.semantics(mergeDescendants = true) {}
+                    modifier = Modifier
+                        .padding(horizontal = 24.dp)
+                        .semantics(mergeDescendants = true) {}
                 )
             }
 
             if (state.announcements.size > 1) {
                 HorizonSpace(SpaceSize.SPACE_16)
 
-                PagerIndicator(isLoading, pagerState)
+                PagerIndicator(
+                    isLoading,
+                    pagerState,
+                    Modifier.padding(horizontal = 24.dp)
+                )
             }
 
             HorizonSpace(SpaceSize.SPACE_24)
@@ -110,11 +117,12 @@ fun DashboardAnnouncementBannerCardContent(
 private fun PagerIndicator(
     isLoading: Boolean,
     pagerState: PagerState,
+    modifier: Modifier = Modifier
 ) {
     val scope = rememberCoroutineScope()
 
     Row(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         verticalAlignment = Alignment.CenterVertically
     ) {
         IconButton(
@@ -235,7 +243,11 @@ private fun AnnouncementPageContent(
             height = ButtonHeight.SMALL,
             width = ButtonWidth.FILL,
             color = ButtonColor.BlackOutline,
-            modifier = Modifier.shimmerEffect(isLoading)
+            modifier = Modifier
+                .shimmerEffect(
+                    isLoading,
+                    shape = HorizonCornerRadius.level6
+                )
         )
     }
 }
@@ -265,6 +277,27 @@ private fun DashboardAnnouncementBannerCardContentPreview() {
                     title = "Third global announcement without a source.",
                     date = Date(),
                     type = AnnouncementType.GLOBAL,
+                    route = ""
+                )
+            )
+        ),
+        isLoading = false,
+        mainNavController = rememberNavController()
+    )
+}
+
+@Composable
+@Preview
+private fun DashboardAnnouncementBannerCardSingleCourseContentPreview() {
+    ContextKeeper.appContext = LocalContext.current
+    DashboardAnnouncementBannerCardContent(
+        state = DashboardAnnouncementBannerCardState(
+            announcements = listOf(
+                AnnouncementBannerItem(
+                    title = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Announcement title shown here.",
+                    source = "Institution or Course Name Here",
+                    date = Date(),
+                    type = AnnouncementType.COURSE,
                     route = ""
                 )
             )
