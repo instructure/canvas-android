@@ -214,7 +214,7 @@ private val enrollmentApi: EnrollmentAPI.EnrollmentInterface,
                         DifferentiationTagsQuery.Group(
                             _id = groupSet._id,
                             name = groupSet.name,
-                            nonCollaborative = false,
+                            nonCollaborative = true,
                             membersConnection = null
                         ),
                         null

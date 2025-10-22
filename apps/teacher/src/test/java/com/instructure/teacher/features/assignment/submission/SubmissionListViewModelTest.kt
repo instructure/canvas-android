@@ -1144,7 +1144,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        val excepted = listOf(
+        val expected = listOf(
             SubmissionUiState(
                 1L,
                 1L,
@@ -1177,7 +1177,7 @@ class SubmissionListViewModelTest {
             )
         )
 
-        excepted.forEach {
+        expected.forEach {
             assert(viewModel.uiState.value.submissions.contains(it))
         }
         assertEquals(true, viewModel.uiState.value.filtersUiState.anonymousGrading)
@@ -1722,7 +1722,7 @@ class SubmissionListViewModelTest {
 
         val viewModel = createViewModel()
 
-        val excepted = SubmissionUiState(
+        val expected = SubmissionUiState(
             1L,
             1L,
             "Student 1",
@@ -1733,7 +1733,7 @@ class SubmissionListViewModelTest {
             true
         )
 
-        assertEquals(excepted, viewModel.uiState.value.submissions.first())
+        assertEquals(expected, viewModel.uiState.value.submissions.first())
     }
 
     private fun createViewModel(): SubmissionListViewModel {
