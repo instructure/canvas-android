@@ -47,8 +47,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 fun DashboardSkillOverviewCardContent(
     state: DashboardSkillOverviewCardState,
     homeNavController: NavHostController,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         title = stringResource(R.string.dashboardSkillOverviewTitle),
@@ -107,7 +107,8 @@ private fun DashboardSkillOverviewCardContentPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 24),
-        rememberNavController()
+        rememberNavController(),
+        false
     )
 }
 
@@ -117,7 +118,8 @@ private fun DashboardSkillOverviewCardContentNoDataPreview() {
     ContextKeeper.appContext = LocalContext.current
     DashboardSkillOverviewCardContent(
         state = DashboardSkillOverviewCardState(completedSkillCount = 0),
-        rememberNavController()
+        rememberNavController(),
+        false
     )
 }
 

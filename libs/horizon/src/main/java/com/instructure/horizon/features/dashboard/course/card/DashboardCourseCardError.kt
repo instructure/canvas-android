@@ -8,7 +8,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.unit.dp
 import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardCard
@@ -25,7 +28,14 @@ fun DashboardCourseCardError(
     onRetry: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    DashboardCard(modifier) {
+    val context = LocalContext.current
+    DashboardCard(
+        modifier
+            .semantics(mergeDescendants = true) {
+                contentDescription =
+                    context.getString(R.string.a11y_dashboardCoursesSectionErrorTitle)
+            }
+    ) {
         Column(
             modifier = Modifier
                 .fillMaxWidth()

@@ -392,8 +392,8 @@
     <string name="dashboardSkillOverviewTitle">Skills</string>
     <string name="dashboardSkillOverviewEarnedLabel">earned</string>
     <string name="dashboardSkillOverviewNoDataMessage">This widget will update once data becomes available.</string>
-    <string name="dashboardSkillOverviewErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="dashboardSkillOverviewRetry">Refresh</string>
+    <string name="dashboardWidgetCardErrorMessage">We weren\'t able to load this content.\nPlease try again.</string>
     <string name="a11y_inboxComposeSelectCourse">Select Course</string>
     <string name="a11y_close">Close</string>
     <string name="a11y_expanded">Expanded</string>
@@ -406,4 +406,6 @@
     <string name="a11y_unselected">Unselected</string>
     <string name="dashboardCourseCardProgramChipLabel">Program</string>
     <string name="dashboardCourseCardProgramDetailsMessage">Welcome to %1$s! View your program to enroll in your first course.</string>
+    <string name="a11y_dashboardWidgetLoadingContentDescription">%1$s widget is loading</string>
+    <string name="a11y_dashboardCoursesSectionErrorTitle">Courses</string>
 </resources>

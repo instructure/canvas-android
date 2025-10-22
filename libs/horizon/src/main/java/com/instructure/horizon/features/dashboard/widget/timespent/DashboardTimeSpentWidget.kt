@@ -18,16 +18,22 @@ package com.instructure.horizon.features.dashboard.widget.timespent
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.instructure.horizon.R
 import com.instructure.horizon.features.dashboard.DashboardItemState
+import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCardError
 import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardContent
-import com.instructure.horizon.features.dashboard.widget.timespent.card.DashboardTimeSpentCardError
+import com.instructure.horizon.horizonui.foundation.HorizonColors
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -60,8 +66,15 @@ fun DashboardTimeSpentSection(
             DashboardTimeSpentCardContent(state.cardState, isLoading = true)
         }
         DashboardItemState.ERROR -> {
-            DashboardTimeSpentCardError(
-                { state.onRefresh {} }
+            DashboardWidgetCardError(
+                stringResource(R.string.dashboardTimeSpentTitle),
+                R.drawable.schedule,
+                HorizonColors.PrimitivesHoney.honey12(),
+                true,
+                { state.onRefresh {} },
+                modifier = Modifier
+                    .widthIn(max = 300.dp)
+                    .padding(bottom = 8.dp)
             )
         }
         DashboardItemState.SUCCESS -> {

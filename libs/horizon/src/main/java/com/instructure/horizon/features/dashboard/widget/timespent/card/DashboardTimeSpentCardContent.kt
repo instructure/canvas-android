@@ -53,8 +53,8 @@ import kotlin.math.roundToInt
 @Composable
 fun DashboardTimeSpentCardContent(
     state: DashboardTimeSpentCardState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false,
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardTimeSpentTitle),

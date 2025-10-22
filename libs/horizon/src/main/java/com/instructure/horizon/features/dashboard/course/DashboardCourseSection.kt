@@ -232,6 +232,9 @@ private fun DashboardCourseCardIndicator(pagerState: PagerState) {
         horizontalArrangement = Arrangement.Center,
         modifier = Modifier
             .fillMaxWidth()
+            .clearAndSetSemantics {
+                hideFromAccessibility()
+            }
     ) {
         items(pagerState.pageCount) { itemIndex ->
             val context = LocalContext.current

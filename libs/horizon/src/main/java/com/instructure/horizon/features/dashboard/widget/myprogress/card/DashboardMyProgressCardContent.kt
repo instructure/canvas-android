@@ -42,8 +42,8 @@ import com.instructure.horizon.horizonui.foundation.HorizonTypography
 @Composable
 fun DashboardMyProgressCardContent(
     state: DashboardMyProgressCardState,
+    isLoading: Boolean,
     modifier: Modifier = Modifier,
-    isLoading: Boolean = false
 ) {
     DashboardWidgetCard(
         stringResource(R.string.dashboardMyProgressTitle),
@@ -95,7 +95,8 @@ private fun DashboardMyProgressCardContentPreview() {
     DashboardMyProgressCardContent(
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 24
-        )
+        ),
+        false
     )
 }
 
@@ -105,7 +106,8 @@ private fun DashboardMyProgressCardContentZeroPreview() {
     DashboardMyProgressCardContent(
         state = DashboardMyProgressCardState(
             moduleCountCompleted = 0
-        )
+        ),
+        false
     )
 }
 

@@ -14,19 +14,19 @@
  *     along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  */
-package com.instructure.horizon.features.dashboard.widget.myprogress.card
+package com.instructure.horizon.features.dashboard.widget
 
+import androidx.annotation.DrawableRes
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.compose.ui.semantics.semantics
 import com.instructure.horizon.R
-import com.instructure.horizon.features.dashboard.widget.DashboardWidgetCard
 import com.instructure.horizon.horizonui.foundation.HorizonColors
 import com.instructure.horizon.horizonui.foundation.HorizonSpace
 import com.instructure.horizon.horizonui.foundation.HorizonTypography
@@ -37,38 +37,38 @@ import com.instructure.horizon.horizonui.molecules.ButtonHeight
 import com.instructure.horizon.horizonui.molecules.ButtonIconPosition
 
 @Composable
-fun DashboardMyProgressCardError(
-    onRetry: () -> Unit,
-    modifier: Modifier = Modifier,
+fun DashboardWidgetCardError(
+    title: String,
+    @DrawableRes iconRes: Int,
+    widgetColor: Color,
+    useMinWidth: Boolean,
+    onRetryClick: () -> Unit,
+    modifier: Modifier = Modifier
 ) {
     DashboardWidgetCard(
-        stringResource(R.string.dashboardMyProgressTitle),
-        R.drawable.trending_up,
-        HorizonColors.PrimitivesSky.sky12,
-        modifier.padding(bottom = 8.dp)
+        title = title,
+        iconRes = iconRes,
+        widgetColor = widgetColor,
+        useMinWidth = useMinWidth,
+        modifier = modifier
+            .semantics(mergeDescendants = true) {}
     ) {
-
-        Text(
-            text = stringResource(R.string.dashboardMyProgressErrorMessage),
-            style = HorizonTypography.p2,
-            color = HorizonColors.Text.timestamp(),
+        Column(
             modifier = Modifier.width(IntrinsicSize.Max)
-        )
-
-        HorizonSpace(SpaceSize.SPACE_8)
-
-        Button(
-            label = stringResource(R.string.dashboardMyProgressRetry),
-            onClick = onRetry,
-            color = ButtonColor.WhiteWithOutline,
-            height = ButtonHeight.SMALL,
-            iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
-        )
+        ) {
+            Text(
+                text = stringResource(R.string.dashboardWidgetCardErrorMessage),
+                style = HorizonTypography.p2,
+                color = HorizonColors.Text.timestamp()
+            )
+            HorizonSpace(SpaceSize.SPACE_8)
+            Button(
+                label = stringResource(R.string.dashboardSkillOverviewRetry),
+                onClick = onRetryClick,
+                color = ButtonColor.WhiteWithOutline,
+                height = ButtonHeight.SMALL,
+                iconPosition = ButtonIconPosition.End(R.drawable.restart_alt)
+            )
+        }
     }
-}
-
-@Composable
-@Preview
-private fun DashboardMyProgressCardErrorPreview() {
-    DashboardMyProgressCardError(onRetry = {})
 }
